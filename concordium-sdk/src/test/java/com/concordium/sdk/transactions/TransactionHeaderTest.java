@@ -1,8 +1,8 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.types.UInt32;
-import com.concordium.sdk.types.UInt64;
+import com.concordium.sdk.transactions.*;
 import lombok.val;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -12,7 +12,7 @@ public class TransactionHeaderTest {
     public void testGetBytes() {
         val header = TransactionHeader
                 .builder()
-                .sender(Account.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
+                .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .accountNonce(UInt64.from(78910))
                 .expiry(UInt64.from(123456))
                 .build();
@@ -20,6 +20,6 @@ public class TransactionHeaderTest {
         header.setMaxEnergyCost(UInt64.from(610));
 
         val headerBytes = header.getBytes();
-        assertEquals(AccountAddress.BYTES + UInt64.BYTES + UInt64.BYTES + UInt32.BYTES + UInt64.BYTES, headerBytes.length);
+        Assert.assertEquals(AccountAddress.BYTES + UInt64.BYTES + UInt64.BYTES + UInt32.BYTES + UInt64.BYTES, headerBytes.length);
     }
 }

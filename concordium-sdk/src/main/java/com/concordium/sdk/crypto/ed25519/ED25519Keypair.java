@@ -1,5 +1,7 @@
 package com.concordium.sdk.crypto.ed25519;
 
+import com.concordium.sdk.exceptions.ED25519Exception;
+
 import java.util.Objects;
 
 public final class ED25519Keypair {
@@ -11,11 +13,11 @@ public final class ED25519Keypair {
         this.publicKey = publicKey;
     }
 
-    public byte[] sign(byte[] message){
+    public byte[] sign(byte[] message) throws ED25519Exception {
         return secretKey.sign(message);
     }
 
-    public boolean verify(byte[] message, byte[] signature) {
+    public boolean verify(byte[] message, byte[] signature) throws ED25519Exception {
         return publicKey.verify(message, signature);
     }
 

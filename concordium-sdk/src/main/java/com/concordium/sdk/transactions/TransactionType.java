@@ -20,7 +20,7 @@ enum TransactionType {
     UPDATE_CREDENTIALS((byte) 20),
     REGISTER_DATA((byte) 21);
 
-    public static final int BYTES = 1;
+    static final int BYTES = 1;
 
     @Getter
     private final byte value;

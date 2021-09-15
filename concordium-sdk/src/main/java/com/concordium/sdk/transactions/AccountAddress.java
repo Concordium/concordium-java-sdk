@@ -1,13 +1,12 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.Base58;
 import lombok.Getter;
 import lombok.val;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-public class AccountAddress {
+public final class AccountAddress {
     public static final int BYTES = 32;
     private final static int VERSION = 1;
 

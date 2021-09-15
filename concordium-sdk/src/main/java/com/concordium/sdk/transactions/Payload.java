@@ -1,18 +1,18 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.SHA256;
-import com.concordium.sdk.types.UInt32;
-import com.concordium.sdk.types.UInt64;
-
+import com.concordium.sdk.exceptions.ED25519Exception;
+import com.concordium.sdk.exceptions.TransactionCreationException;
 import lombok.val;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 abstract class Payload {
     TransactionHeader header;
     TransactionSignature signature;
 
-    public BlockItem toBlockItem() {
+    BlockItem toBlockItem() {
         return BlockItem.from(new AccountTransaction(signature, header, this));
     }
 
@@ -30,14 +30,21 @@ abstract class Payload {
         return this;
     }
 
-    final Payload withSigner(TransactionSigner signer) {
+    final Payload signWith(TransactionSigner signer) throws TransactionCreationException {
+        if (Objects.isNull(this.header)) {
+            throw TransactionCreationException.from(new IllegalStateException("TransactionHeader must be set before signing"));
+        }
         this.header.setMaxEnergyCost(
                 calculateEnergyCost(
                         signer.size(),
                         getBytes().length,
                         getTransactionTypeCost()
                 ));
-        this.signature = signer.sign(getSignData());
+        try {
+            this.signature = signer.sign(getSignData());
+        } catch (ED25519Exception e) {
+            throw TransactionCreationException.from(e);
+        }
         return this;
     }
 

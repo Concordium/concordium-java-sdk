@@ -5,7 +5,7 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
-public final class BlockItem {
+final class BlockItem {
     private static final int VERSION = 0;
     private final BlockItemType type;
     private final AccountTransaction accountTransaction;
@@ -29,8 +29,8 @@ public final class BlockItem {
         return buffer.array();
     }
 
-    public BlockItemHash getHash() {
-        return BlockItemHash.from(SHA256.hash(getBytes()));
+    public Hash getHash() {
+        return Hash.from(SHA256.hash(getBytes()));
     }
 
     byte[] getBytes() {

@@ -1,6 +1,5 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.types.UInt16;
 import lombok.val;
 
 import java.nio.ByteBuffer;
@@ -9,24 +8,24 @@ import java.util.Map;
 import java.util.Objects;
 
 public class TransactionSignature {
-    private final Map<Byte, Map<Byte, byte[]>> signatures = new HashMap<>();
+    private final Map<Index, Map<Index, byte[]>> signatures = new HashMap<>();
 
-    void put(Byte credentialIndex, Byte keyIndex, byte[] signature) {
+    void put(Index credentialIndex, Index index, byte[] signature) {
         if (Objects.isNull(signatures.get(credentialIndex))) {
             signatures.put(credentialIndex, new HashMap<>());
         }
-        signatures.get(credentialIndex).put(keyIndex, signature);
+        signatures.get(credentialIndex).put(index, signature);
     }
 
     byte[] getBytes() {
         val buffer = getByteBuffer();
         buffer.put((byte) signatures.size());
         for (val credentialIndex : signatures.keySet()) {
-            buffer.put(credentialIndex);
+            buffer.put(credentialIndex.getValue());
             val keySignatureMap = signatures.get(credentialIndex);
             buffer.put((byte) keySignatureMap.size());
-            for (Byte keyIdx : keySignatureMap.keySet()) {
-                buffer.put(keyIdx);
+            for (Index keyIdx : keySignatureMap.keySet()) {
+                buffer.put(keyIdx.getValue());
                 buffer.put(UInt16.from((short) keySignatureMap.get(keyIdx).length).getBytes());
                 buffer.put(keySignatureMap.get(keyIdx));
             }
@@ -36,9 +35,9 @@ public class TransactionSignature {
 
     private ByteBuffer getByteBuffer() {
         int size = OUTER_LENGTH;
-        for (Map<Byte, byte[]> value : signatures.values()) {
+        for (Map<Index, byte[]> value : signatures.values()) {
             size += INNER_LENGTH + CREDENTIAL_INDEX;
-            for (Byte ignored : value.keySet()) {
+            for (Index ignored : value.keySet()) {
                 size += KEY_INDEX + SIGNATURE_LENGTH + SIGNATURE_SIZE;
             }
         }

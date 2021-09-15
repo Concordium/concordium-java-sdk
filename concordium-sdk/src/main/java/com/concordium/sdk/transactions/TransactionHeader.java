@@ -1,7 +1,5 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.types.UInt32;
-import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
 import java.nio.ByteBuffer;
@@ -9,7 +7,7 @@ import java.nio.ByteBuffer;
 @Getter
 @EqualsAndHashCode
 class TransactionHeader {
-    private final Account sender;
+    private final AccountAddress sender;
     private final UInt64 accountNonce;
     private final UInt64 expiry;
 
@@ -19,16 +17,16 @@ class TransactionHeader {
     private UInt32 payloadSize;
 
     @Builder
-    TransactionHeader(Account sender, UInt64 accountNonce, UInt64 expiry) {
+    TransactionHeader(AccountAddress sender, UInt64 accountNonce, UInt64 expiry) {
         this.sender = sender;
         this.accountNonce = accountNonce;
         this.expiry = expiry;
-        this.maxEnergyCost = UInt64.from(0); // dummy value for calculating cost. Is overwritten before signing the transaction.
+        this.maxEnergyCost = UInt64.from(0); // dummy value used for calculating the energy cost.
     }
 
     byte[] getBytes() {
         val buffer = ByteBuffer.allocate(AccountAddress.BYTES + UInt64.BYTES + UInt64.BYTES + UInt32.BYTES + UInt64.BYTES);
-        buffer.put(sender.getAddress().getBytes());
+        buffer.put(sender.getBytes());
         buffer.put(accountNonce.getBytes());
         buffer.put(maxEnergyCost.getBytes());
         buffer.put(payloadSize.getBytes());
