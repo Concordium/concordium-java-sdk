@@ -1,6 +1,5 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.Client;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -10,11 +9,11 @@ import org.junit.Test;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class SimpleTransferTest {
+public class TransferTest {
     @SneakyThrows
     @Test
-    public void testCreateSimpleTransfer() {
-        val transfer = SimpleTransfer.makeNew(
+    public void testCreateTransfer() {
+        val transfer = Transfer.createNew(
                         AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"),
                         UInt64.from(17))
                 .withHeader(TransactionHeader
@@ -34,7 +33,7 @@ public class SimpleTransferTest {
 
         assertEquals(41, transfer.getBytes().length);
         assertEquals(601, transfer.header.getMaxEnergyCost().getValue());
-        assertEquals("60afc40624ba9c9698efb5f49cae32810bce082b08bd55ca625d63f3e4dd56a2", Hex.encodeHexString(transfer.getSignData()));
+        assertEquals("60afc40624ba9c9698efb5f49cae32810bce082b08bd55ca625d63f3e4dd56a2", Hex.encodeHexString(transfer.getDataToSign()));
 
         val blockItem = transfer.toAccountTransaction().toBlockItem();
 

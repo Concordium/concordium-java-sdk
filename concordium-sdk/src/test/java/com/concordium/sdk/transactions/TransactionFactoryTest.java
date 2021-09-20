@@ -9,7 +9,13 @@ public class TransactionFactoryTest {
 
     @Test
     public void testCanCreateSimpleTransferFactory() {
-        val builder = TransactionFactory.newSimpleTransfer();
+        val builder = TransactionFactory.newTransfer();
+        assertNotNull(builder);
+    }
+
+    @Test
+    public void testCanCreateTransferWithMemoFactory() {
+        val builder = TransactionFactory.newTransferWithMemo();
         assertNotNull(builder);
     }
 }

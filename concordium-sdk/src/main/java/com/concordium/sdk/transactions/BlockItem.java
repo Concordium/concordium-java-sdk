@@ -6,6 +6,7 @@ import lombok.val;
 import java.nio.ByteBuffer;
 
 final class BlockItem {
+    private static final int VERSION_SIZE = 1;
     private static final int VERSION = 0;
     private final BlockItemType type;
     private final AccountTransaction accountTransaction;
@@ -21,8 +22,7 @@ final class BlockItem {
 
     public byte[] getVersionedBytes() {
         val accountTransactionBytes = accountTransaction.getBytes();
-        int VERSION = 1;
-        val buffer = ByteBuffer.allocate(VERSION + BlockItemType.BYTES + accountTransactionBytes.length);
+        val buffer = ByteBuffer.allocate(VERSION_SIZE + BlockItemType.BYTES + accountTransactionBytes.length);
         buffer.put((byte) BlockItem.VERSION);
         buffer.put(type.getByte());
         buffer.put(accountTransactionBytes);

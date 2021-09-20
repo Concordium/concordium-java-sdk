@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
 class UInt16 {
+    static final int BYTES = 2;
+
     private final int value;
 
     private UInt16(int value) {

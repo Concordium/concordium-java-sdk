@@ -10,16 +10,16 @@ import org.junit.Test;
 import static com.concordium.sdk.transactions.Utils.signedByteArrayToUnsigned;
 import static org.junit.Assert.*;
 
-public class SimpleTransferTransactionTest {
+public class TransferTransactionTest {
 
     @Test
-    public void testCreateSimpleTransfer() {
+    public void testCreateTransfer() {
         try {
-            val transfer = SimpleTransferTransaction
+            val transfer = TransferTransaction
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.asMicro(17))
+                    .amount(GTUAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(getValidSigner())
@@ -33,17 +33,17 @@ public class SimpleTransferTransactionTest {
     }
 
     @Test
-    public void testCreateSimpleTransferTransactionWithoutSenderFails() {
+    public void testCreateTransferTransactionWithoutSenderFails() {
         try {
-            SimpleTransferTransaction
+            TransferTransaction
                     .builder()
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.asMicro(17))
+                    .amount(GTUAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(getValidSigner())
                     .build();
-            fail("Expected SimpleTransferTransaction to fail");
+            fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. Sender cannot be null")) {
                 fail("Unexpected error: " + e);
@@ -52,17 +52,17 @@ public class SimpleTransferTransactionTest {
     }
 
     @Test
-    public void testCreateSimpleTransferTransactionWithoutReceiverFails() {
+    public void testCreateTransferTransactionWithoutReceiverFails() {
         try {
-            SimpleTransferTransaction
+            TransferTransaction
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                    .amount(GTUAmount.asMicro(17))
+                    .amount(GTUAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(getValidSigner())
                     .build();
-            fail("Expected SimpleTransferTransaction to fail");
+            fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. Receiver cannot be null")) {
                 fail("Unexpected error: " + e);
@@ -71,9 +71,9 @@ public class SimpleTransferTransactionTest {
     }
 
     @Test
-    public void testCreateSimpleTransferTransactionWithoutAmountFails() {
+    public void testCreateTransferTransactionWithoutAmountFails() {
         try {
-            SimpleTransferTransaction
+            TransferTransaction
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
@@ -81,7 +81,7 @@ public class SimpleTransferTransactionTest {
                     .expiry(Expiry.from(123456))
                     .signer(getValidSigner())
                     .build();
-            fail("Expected SimpleTransferTransaction to fail");
+            fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. Amount cannot be null")) {
                 fail("Unexpected error: " + e);
@@ -90,17 +90,17 @@ public class SimpleTransferTransactionTest {
     }
 
     @Test
-    public void testCreateSimpleTransferTransactionWithoutNonceFails() {
+    public void testCreateTransferTransactionWithoutNonceFails() {
         try {
-            SimpleTransferTransaction
+            TransferTransaction
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.asMicro(17))
+                    .amount(GTUAmount.fromMicro(17))
                     .expiry(Expiry.from(123456))
                     .signer(getValidSigner())
                     .build();
-            fail("Expected SimpleTransferTransaction to fail");
+            fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. AccountNonce cannot be null")) {
                 fail("Unexpected error: " + e);
@@ -109,14 +109,14 @@ public class SimpleTransferTransactionTest {
     }
 
     @Test
-    public void testCreateSimpleTransferTransactionWithoutExpiryFails() {
+    public void testCreateTransferTransactionWithoutExpiryFails() {
         try {
             AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc");
             AccountAddress receiver = AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM");
-            GTUAmount amount = GTUAmount.asMicro(17);
+            GTUAmount amount = GTUAmount.fromMicro(17);
             AccountNonce accountNonce = AccountNonce.from(78910);
 
-            SimpleTransferTransaction
+            TransferTransaction
                     .builder()
                     .sender(sender)
                     .receiver(receiver)
@@ -124,7 +124,7 @@ public class SimpleTransferTransactionTest {
                     .nonce(accountNonce)
                     .signer(getValidSigner())
                     .build();
-            fail("Expected SimpleTransferTransaction to fail");
+            fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. Expiry cannot be null")) {
                 fail("Unexpected error: " + e);
@@ -133,17 +133,17 @@ public class SimpleTransferTransactionTest {
     }
 
     @Test
-    public void testCreateSimpleTransferTransactionWithoutSignerShouldFail() {
+    public void testCreateTransferTransactionWithoutSignerShouldFail() {
         try {
-            SimpleTransferTransaction
+            TransferTransaction
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.asMicro(17))
+                    .amount(GTUAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .build();
-            fail("Expected SimpleTransferTransaction to fail");
+            fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. Signer cannot be null or empty")) {
                 fail("Unexpected error: " + e);
@@ -152,13 +152,13 @@ public class SimpleTransferTransactionTest {
     }
 
     @Test
-    public void testCreateSimpleTransferTransactionWithInvalidSignerFails() {
+    public void testCreateTransferTransactionWithInvalidSignerFails() {
         try {
-            SimpleTransferTransaction
+            TransferTransaction
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.asMicro(17))
+                    .amount(GTUAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(getSignerWithMalformedSecretKey())
