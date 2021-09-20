@@ -13,10 +13,6 @@ import static org.junit.Assert.*;
 
 public class ED25519Test {
 
-    static {
-        ED25519.loadNatives();
-    }
-
     @Test
     public void testSignVerify() {
         try {

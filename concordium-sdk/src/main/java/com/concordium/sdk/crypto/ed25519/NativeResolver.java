@@ -23,7 +23,7 @@ class NativeResolver {
                 val libName = os.getPrefix() + BASE_LIB_NAME + os.getExtension();
                 val libPath = "/native/" + libName;
 
-                val resourceAsStream = Object.class.getResourceAsStream(libPath);
+                val resourceAsStream = NativeResolver.class.getResourceAsStream(libPath);
                 if (Objects.isNull(resourceAsStream)) {
                     throw new RuntimeException("FAILED LOADING LIB");
                 }
