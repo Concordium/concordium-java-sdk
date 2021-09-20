@@ -181,7 +181,7 @@ The exception contains the account address and the block hash that could not be 
 
 # Code Examples
 
-## Setting Client
+## Creating the Client
 
 ```java
 Connection connection = Connection.builder()
