@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import lombok.Getter;
 
+// Types must match https://github.com/Concordium/concordium-base/blob/main/haskell-src/Concordium/Types/Execution.hs
 enum TransactionType {
     DEPLOY_MODULE((byte) 0),
     INITIALIZE_SMART_CONTRACT_INSTANCE((byte) 1),
@@ -18,7 +19,8 @@ enum TransactionType {
     TRANSFER_TO_PUBLIC((byte) 18),
     TRANSFER_WITH_SCHEDULE((byte) 19),
     UPDATE_CREDENTIALS((byte) 20),
-    REGISTER_DATA((byte) 21);
+    REGISTER_DATA((byte) 21),
+    TRANSFER_WITH_MEMO((byte) 22);
 
     static final int BYTES = 1;
 

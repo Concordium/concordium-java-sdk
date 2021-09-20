@@ -8,13 +8,12 @@ import java.nio.ByteBuffer;
 
 @ToString
 @Getter
-final class SimpleTransfer extends Payload {
+final class Transfer extends Payload {
 
-    private final static TransactionType TYPE = TransactionType.SIMPLE_TRANSFER;
     private final AccountAddress receiver;
     private final UInt64 amount;
 
-    private SimpleTransfer(AccountAddress receiver, UInt64 amount) {
+    private Transfer(AccountAddress receiver, UInt64 amount) {
         this.receiver = receiver;
         this.amount = amount;
     }
@@ -33,8 +32,8 @@ final class SimpleTransfer extends Payload {
         return BASE_ENERGY_COST;
     }
 
-    static SimpleTransfer makeNew(AccountAddress receiver, UInt64 amount) {
-        return new SimpleTransfer(receiver, amount);
+    static Transfer createNew(AccountAddress receiver, UInt64 amount) {
+        return new Transfer(receiver, amount);
     }
 
     private final static UInt64 BASE_ENERGY_COST = UInt64.from(300);

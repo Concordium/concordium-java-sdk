@@ -130,15 +130,19 @@ Throws a `BlockNotFoundException` if the block was not found.
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
-Sends a `SimpleTransfer` transaction to the node. If it suceeds the `sendTransaction` function will
+Sends a transaction to the node. If it suceeds the `sendTransaction` function will 
 return the associated transation `Hash`.
 
 If the transaction was rejected by the node, then `sendTransaction` will throw a checked `TransactionException` (see below for details of common errors).
 
 ### Supported Transactions
 
-- SimpleTransferTransaction
+- TransferTransaction 
 Sends funds from one account to another.
+
+- TransferWithMemo
+Sends funds from one account to another with an associated `Memo`.
+
 
 ## Exceptions and general error handling
 

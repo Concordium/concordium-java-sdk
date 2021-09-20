@@ -41,14 +41,14 @@ abstract class Payload {
                         getTransactionTypeCost()
                 ));
         try {
-            this.signature = signer.sign(getSignData());
+            this.signature = signer.sign(getDataToSign());
         } catch (ED25519Exception e) {
             throw TransactionCreationException.from(e);
         }
         return this;
     }
 
-    byte[] getSignData() {
+    byte[] getDataToSign() {
         val headerBytes = header.getBytes();
         val payloadBytes = getBytes();
         val buffer = ByteBuffer.allocate(headerBytes.length + payloadBytes.length);
@@ -75,4 +75,5 @@ abstract class Payload {
                 CONSTANT_B * (TRANSACTION_HEADER_SIZE + payloadSize)
                 + transactionSpecificCost.getValue());
     }
+
 }

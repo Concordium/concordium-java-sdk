@@ -10,7 +10,7 @@ public class GTUAmount {
         this.value = value;
     }
 
-    public static GTUAmount asMicro(long val) {
+    public static GTUAmount fromMicro(long val) {
         return new GTUAmount(UInt64.from(val));
     }
 

@@ -7,11 +7,22 @@ package com.concordium.sdk.transactions;
 public class TransactionFactory {
 
     /**
-     * Creates a new {@link SimpleTransferTransaction.SimpleTransferTransactionBuilder} for the purpose of
-     * creating a {@link SimpleTransferTransaction}
-     * @return the builder for a {@link SimpleTransferTransaction}
+     * Creates a new {@link TransferTransaction.TransferTransactionBuilder} for
+     * creating a {@link TransferTransaction}
+     *
+     * @return the builder for a {@link TransferTransaction}
      */
-    public static SimpleTransferTransaction.SimpleTransferTransactionBuilder newSimpleTransfer() {
-        return SimpleTransferTransaction.builder();
+    public static TransferTransaction.TransferTransactionBuilder newTransfer() {
+        return TransferTransaction.builder();
+    }
+
+    /**
+     * Creates a new {@link TransferWithMemoTransaction.TransferWithMemoTransactionBuilder} for
+     * creating a {@link TransferWithMemoTransaction}
+     *
+     * @return the builder for a {@link TransferWithMemoTransaction}
+     */
+    public static TransferWithMemoTransaction.TransferWithMemoTransactionBuilder newTransferWithMemo() {
+        return TransferWithMemoTransaction.builder();
     }
 }
