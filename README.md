@@ -227,7 +227,7 @@ try {
 
 ## Transactions
 
-The [`TransactionFactory`](//concordium-sdk/src/main/java/com/concordium/sdk/transactions/TransactionFactory.java) provides a
+The [`TransactionFactory`](./concordium-sdk/src/main/java/com/concordium/sdk/transactions/TransactionFactory.java) provides a
 overview of the supported `Transaction` types and a convenient way of obtaining the required `builder`.
 
 ### sendTransaction
