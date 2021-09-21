@@ -1,7 +1,5 @@
 package com.concordium.sdk.transactions;
 
-import lombok.Setter;
-
 abstract class AbstractTransaction implements Transaction {
 
     abstract BlockItem getBlockItem();
