@@ -17,7 +17,9 @@ The Concordium Java SDK provides an interface to communicating with a Concordium
 To build the native library and put it into the correct folders all one has to do the following:
 
 1. Clone this repositry and remember to update submodules, for example when cloning via
-`git clone git@github.com:Concordium/concordium-java-sdk.git --recurse-submodules`
+```bash
+git clone git@github.com:Concordium/concordium-java-sdk.git --recurse-submodules
+```
 1. Run `make` from the root of this repository.
 1. Run `mvn install` from the root of the [concordium-sdk](./concordium-sdk) folder.
 
@@ -29,7 +31,7 @@ The two steps builds results in the following two `.jar` files.
 
 The "normal" jar can then be used from another project by adding it to the `pom.xml`:
 
-```
+```xml
  <dependencies>
         <dependency>
             <groupId>com.concordium.sdk</groupId>
@@ -41,7 +43,7 @@ The "normal" jar can then be used from another project by adding it to the `pom.
 
 The `fat` jar can then be used from another project by adding it to the `pom.xml`:
 
-```
+```xml
  <dependencies>
         <dependency>
             <groupId>com.concordium.sdk</groupId>
@@ -84,10 +86,10 @@ Client client = Client.from(connection);
 ```
 where
 
-- `password` the password to use
-- `node_url`  The url of the node
-- `node_port` The nodes rpc port
-- `timeout` The timeout for the GRPC connection (default is 15000 ms)
+- `password` is the password to use
+- `node_url`  is the url of the node
+- `node_port` is the nodes rpc port
+- `timeout` is the timeout for the GRPC connection (default is 15000 ms)
 
 Further the `Client` exposes a `close()` function which should be called when finished using the client in order to
 perform an orderly shutdown of the underlying grpc connection.
