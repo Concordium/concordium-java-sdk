@@ -7,7 +7,7 @@ import com.concordium.sdk.exceptions.TransactionCreationException;
 import lombok.val;
 import org.junit.Test;
 
-import static com.concordium.sdk.transactions.Utils.signedByteArrayToUnsigned;
+import static com.concordium.sdk.transactions.TestUtils.signedByteArrayToUnsigned;
 import static org.junit.Assert.*;
 
 public class TransferTransactionTest {
@@ -24,7 +24,7 @@ public class TransferTransactionTest {
                     .expiry(Expiry.from(123456))
                     .signer(getValidSigner())
                     .build();
-            assertArrayEquals(Utils.EXPECTED_BLOCK_ITEM_VERSIONED_BYTES, signedByteArrayToUnsigned(transfer.getBytes()));
+            assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_VERSIONED_BYTES, signedByteArrayToUnsigned(transfer.getBytes()));
             assertEquals("6a209eab54720aad71370a6adb4f0661d3606fca25ac544dc0ac0e76e099feba", transfer.getHash().asHex());
         } catch (TransactionCreationException e) {
             fail("Unexpected error: " + e.getMessage());

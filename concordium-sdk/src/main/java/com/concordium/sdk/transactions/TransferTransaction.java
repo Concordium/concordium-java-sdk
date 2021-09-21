@@ -53,7 +53,7 @@ public class TransferTransaction extends AbstractTransaction {
         private Payload createSimpleTransfer(TransferTransaction transaction) throws TransactionCreationException {
             return Transfer.createNew(
                             transaction.receiver,
-                            transaction.amount.getValue()).
+                            transaction.amount).
                     withHeader(TransactionHeader.builder()
                             .sender(transaction.sender)
                             .accountNonce(transaction.nonce.getNonce())
