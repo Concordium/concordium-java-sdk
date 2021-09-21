@@ -18,6 +18,10 @@ public class GTUAmount {
         return new GTUAmount(UInt64.from(val));
     }
 
+    byte[] getBytes() {
+        return value.getBytes();
+    }
+
     @Override
     public String toString() {
         return value.toString();

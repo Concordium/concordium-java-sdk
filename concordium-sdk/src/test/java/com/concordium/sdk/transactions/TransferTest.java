@@ -15,7 +15,7 @@ public class TransferTest {
     public void testCreateTransfer() {
         val transfer = Transfer.createNew(
                         AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"),
-                        UInt64.from(17))
+                        GTUAmount.fromMicro(17))
                 .withHeader(TransactionHeader
                         .builder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -38,8 +38,8 @@ public class TransferTest {
         val blockItem = transfer.toAccountTransaction().toBlockItem();
 
         val blockItemHash = blockItem.getHash();
-        assertArrayEquals(Utils.EXPECTED_BLOCK_ITEM_BYTES, Utils.signedByteArrayToUnsigned(blockItem.getBytes()));
-        assertArrayEquals(Utils.EXPECTED_BLOCK_ITEM_VERSIONED_BYTES, Utils.signedByteArrayToUnsigned(blockItem.getVersionedBytes()));
+        assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getBytes()));
+        assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getVersionedBytes()));
         assertEquals("6a209eab54720aad71370a6adb4f0661d3606fca25ac544dc0ac0e76e099feba", blockItemHash.asHex());
     }
 }
