@@ -1,0 +1,84 @@
+# Workflow triggered by pushes to the master branch and PRs targeting it
+# (as long as the commits contain code changes).
+#
+# Jobs:
+# - build-test: Build and test both the Java and Rust sources.
+#               The job is skipped if the workflow was triggered by a PR
+#               marked as a draft.
+#
+# The steps in 'build-test' are ordered to fail as fast as possible
+# and restore caches as late as possible.
+# The dependencies between the steps are described in inline comments below
+# along with a few suggestions for improving parallelization.
+
+name: Build and test
+
+on:
+  push:
+    branches: main
+    paths:
+    - '.github/workflows/build-test.yaml'
+    - '**/Cargo.toml'
+    - '**.rs'
+    - '**.yaml'
+    - '**/pom.xml'
+    - '**.java'
+    - 'concordium-sdk'
+    - 'ed25519-jni'
+
+  pull_request:
+    branches: main
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+    - '.github/workflows/build-test.yaml'
+    - '**/Cargo.toml'
+    - '**.rs'
+    - '**.yaml'
+    - '**/pom.xml'
+    - '**.java'
+    - 'concordium-sdk'
+    - 'ed25519-jni'
+  workflow_dispatch: # allow manual trigger
+
+env:
+  dummy: 2                 # change to force cache invalidation
+  CARGO_TERM_COLOR: always # implicitly adds '--color=always' to all cargo commands
+
+jobs:
+  build:
+    # Use fixed OS version because we install packages on the system.
+    runs-on: ubuntu-20.04
+    if: ${{ !github.event.pull_request.draft }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        #token: ${{ secrets.CONCORDIUM_CI }}
+        submodules: recursive
+    - name: Setup JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: 8
+        distribution: 'adopt'
+        cache: maven
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.53
+    - name: Create native dependencies
+      run: make
+    - name: Cache cargo dependencies and targets
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ed25519-jni/target
+          ~/.m2
+        key: ${{ runner.os }}-${{ env.dummy }}-rust-java-deps-${{ hashFiles('**/Cargo.toml', '**/Cargo.lock', '**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.dummy }}-rust-java-deps
+    - name: Build & Test Java
+      run: cd concordium-sdk && mvn --batch-mode --update-snapshots install
+
