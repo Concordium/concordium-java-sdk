@@ -16,8 +16,10 @@ The Concordium Java SDK provides an interface to communicating with a Concordium
 # Build and usage
 To build the native library and put it into the correct folders all one has to do the following:
 
+1. Clone this repositry and remember to update submodules, for example when cloning via
+`git clone git@github.com:Concordium/concordium-java-sdk.git --recurse-submodules`
 1. Run `make` from the root of this repository.
-2. Run `mvn install` from the root of the [concordium-sdk](./concordium-sdk) folder.
+1. Run `mvn install` from the root of the [concordium-sdk](./concordium-sdk) folder.
 
 The first step builds the native dependencies and the latter builds the resulting `.jar` file.
 
