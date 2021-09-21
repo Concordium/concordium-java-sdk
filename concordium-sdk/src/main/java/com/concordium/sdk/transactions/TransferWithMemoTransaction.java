@@ -18,6 +18,8 @@ public class TransferWithMemoTransaction extends AbstractTransaction {
     private final Expiry expiry;
     private final TransactionSigner signer;
 
+    private BlockItem blockItem;
+
     @Builder
     TransferWithMemoTransaction(AccountAddress sender, AccountAddress receiver, GTUAmount amount, Memo memo, AccountNonce nonce, Expiry expiry, TransactionSigner signer) throws TransactionCreationException {
         this.receiver = receiver;
@@ -27,6 +29,11 @@ public class TransferWithMemoTransaction extends AbstractTransaction {
         this.sender = sender;
         this.expiry = expiry;
         this.signer = signer;
+    }
+
+    @Override
+    BlockItem getBlockItem() {
+        return blockItem;
     }
 
     public static TransferWithMemoTransactionBuilder builder() {
@@ -41,7 +48,7 @@ public class TransferWithMemoTransaction extends AbstractTransaction {
             if (Objects.isNull(transaction.memo)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Memo cannot be null"));
             }
-            transaction.setItem(createNewTransaction(transaction).toBlockItem());
+            transaction.blockItem = createNewTransaction(transaction).toBlockItem();
             return transaction;
         }
 

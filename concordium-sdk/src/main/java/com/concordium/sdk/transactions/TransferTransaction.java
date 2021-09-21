@@ -15,6 +15,8 @@ public class TransferTransaction extends AbstractTransaction {
     private final Expiry expiry;
     private final TransactionSigner signer;
 
+    private BlockItem blockItem;
+
     @Builder
     public TransferTransaction(AccountAddress sender,
                                AccountAddress receiver,
@@ -34,12 +36,17 @@ public class TransferTransaction extends AbstractTransaction {
         return new CustomBuilder();
     }
 
+    @Override
+    BlockItem getBlockItem() {
+        return blockItem;
+    }
+
     private static class CustomBuilder extends TransferTransaction.TransferTransactionBuilder {
         @Override
         public TransferTransaction build() throws TransactionCreationException {
             val transaction = super.build();
             Transaction.verifyTransferInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.receiver, transaction.amount, transaction.signer);
-            transaction.setItem(createSimpleTransfer(transaction).toBlockItem());
+            transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
             return transaction;
         }
 

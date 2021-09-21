@@ -2,19 +2,18 @@ package com.concordium.sdk.transactions;
 
 import lombok.Setter;
 
-class AbstractTransaction implements Transaction {
+abstract class AbstractTransaction implements Transaction {
 
-    @Setter
-    private BlockItem item;
+    abstract BlockItem getBlockItem();
 
     @Override
     public byte[] getBytes() {
-        return item.getVersionedBytes();
+        return getBlockItem().getVersionedBytes();
     }
 
     @Override
     public Hash getHash() {
-        return item.getHash();
+        return getBlockItem().getHash();
     }
 
     @Override
