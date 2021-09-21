@@ -8,7 +8,7 @@ import lombok.val;
 import java.util.Objects;
 
 @Getter
-public class TransferWithMemoTransaction implements Transaction {
+public class TransferWithMemoTransaction extends AbstractTransaction {
     private final AccountAddress receiver;
     private final GTUAmount amount;
     private final Memo memo;
@@ -17,9 +17,6 @@ public class TransferWithMemoTransaction implements Transaction {
     private final AccountNonce nonce;
     private final Expiry expiry;
     private final TransactionSigner signer;
-
-
-    private BlockItem item;
 
     @Builder
     TransferWithMemoTransaction(AccountAddress sender, AccountAddress receiver, GTUAmount amount, Memo memo, AccountNonce nonce, Expiry expiry, TransactionSigner signer) throws TransactionCreationException {
@@ -30,26 +27,10 @@ public class TransferWithMemoTransaction implements Transaction {
         this.sender = sender;
         this.expiry = expiry;
         this.signer = signer;
-
     }
 
     public static TransferWithMemoTransactionBuilder builder() {
         return new CustomBuilder();
-    }
-
-    @Override
-    public byte[] getBytes() {
-        return item.getBytes();
-    }
-
-    @Override
-    public Hash getHash() {
-        return item.getHash();
-    }
-
-    @Override
-    public int getNetworkId() {
-        return DEFAULT_NETWORK_ID;
     }
 
     private static class CustomBuilder extends TransferWithMemoTransactionBuilder {
@@ -60,7 +41,7 @@ public class TransferWithMemoTransaction implements Transaction {
             if (Objects.isNull(transaction.memo)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Memo cannot be null"));
             }
-            transaction.item = createNewTransaction(transaction).toBlockItem();
+            transaction.setItem(createNewTransaction(transaction).toBlockItem());
             return transaction;
         }
 

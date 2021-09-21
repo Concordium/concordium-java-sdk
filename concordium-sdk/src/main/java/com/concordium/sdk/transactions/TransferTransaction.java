@@ -7,15 +7,13 @@ import lombok.Getter;
 import lombok.val;
 
 @Getter
-public class TransferTransaction implements Transaction {
+public class TransferTransaction extends AbstractTransaction {
     private final AccountAddress sender;
     private final AccountAddress receiver;
     private final GTUAmount amount;
     private final AccountNonce nonce;
     private final Expiry expiry;
     private final TransactionSigner signer;
-
-    private BlockItem item;
 
     @Builder
     public TransferTransaction(AccountAddress sender,
@@ -36,27 +34,12 @@ public class TransferTransaction implements Transaction {
         return new CustomBuilder();
     }
 
-    @Override
-    public byte[] getBytes() {
-        return item.getVersionedBytes();
-    }
-
-    @Override
-    public Hash getHash() {
-        return item.getHash();
-    }
-
-    @Override
-    public int getNetworkId() {
-        return DEFAULT_NETWORK_ID;
-    }
-
     private static class CustomBuilder extends TransferTransaction.TransferTransactionBuilder {
         @Override
         public TransferTransaction build() throws TransactionCreationException {
             val transaction = super.build();
             Transaction.verifyTransferInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.receiver, transaction.amount, transaction.signer);
-            transaction.item = createSimpleTransfer(transaction).toBlockItem();
+            transaction.setItem(createSimpleTransfer(transaction).toBlockItem());
             return transaction;
         }
 
