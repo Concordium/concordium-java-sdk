@@ -9,8 +9,7 @@ import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class TransferWithMemoTransactionTest {
 
@@ -33,6 +32,7 @@ public class TransferWithMemoTransactionTest {
                     ))
                     .build();
             assertEquals("2cf00d7d5064ab6f70102a8bba4082b7d85b9b411f981f00b5994adc0b461083", transaction.getHash().asHex());
+            assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_TRANSFER_WITH_MEMO_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
         } catch (TransactionCreationException e) {
             fail("Unexpected error: " + e.getMessage());
         }

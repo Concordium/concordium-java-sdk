@@ -5,7 +5,6 @@ import com.concordium.sdk.exceptions.TransactionCreationException;
 import lombok.val;
 import org.junit.Test;
 
-import static com.concordium.sdk.transactions.TestUtils.EXPECTED_BLOCK_ITEM_TRANSFER_WITH_MEMO_VERSIONED_BYTES;
 import static org.junit.Assert.*;
 
 public class TransferWithMemoTest {
@@ -37,7 +36,7 @@ public class TransferWithMemoTest {
 
             val blockItem = transferWithMemo.toBlockItem();
             assertEquals(Hash.from("2cf00d7d5064ab6f70102a8bba4082b7d85b9b411f981f00b5994adc0b461083"), blockItem.getHash());
-            assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_WITH_MEMO_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getVersionedBytes()));
+            assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_TRANSFER_WITH_MEMO_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getVersionedBytes()));
         } catch (TransactionCreationException e) {
             fail("Unexpected error: " + e.getMessage());
         }
