@@ -2,7 +2,7 @@ package com.concordium.sdk.transactions;
 
 import lombok.Setter;
 
-public class AbstractTransaction implements Transaction {
+class AbstractTransaction implements Transaction {
 
     @Setter
     private BlockItem item;
