@@ -18,7 +18,7 @@ To build the native library and put it into the correct folders all one has to d
 
 1. Clone this repositry and remember to update submodules, for example when cloning via
 ```bash
-git clone git@github.com:Concordium/concordium-java-sdk.git --recurse-submodules
+git clone https://github.com/Concordium/concordium-java-sdk.git --recurse-submodules
 ```
 2. Run `make` from the root of this repository.
 3. Run `mvn install` from the root of the [concordium-sdk](./concordium-sdk) folder.
