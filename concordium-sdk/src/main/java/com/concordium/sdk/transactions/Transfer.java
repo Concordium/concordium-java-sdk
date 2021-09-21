@@ -11,9 +11,9 @@ import java.nio.ByteBuffer;
 final class Transfer extends Payload {
 
     private final AccountAddress receiver;
-    private final UInt64 amount;
+    private final GTUAmount amount;
 
-    private Transfer(AccountAddress receiver, UInt64 amount) {
+    private Transfer(AccountAddress receiver, GTUAmount amount) {
         this.receiver = receiver;
         this.amount = amount;
     }
@@ -32,7 +32,7 @@ final class Transfer extends Payload {
         return BASE_ENERGY_COST;
     }
 
-    static Transfer createNew(AccountAddress receiver, UInt64 amount) {
+    static Transfer createNew(AccountAddress receiver, GTUAmount amount) {
         return new Transfer(receiver, amount);
     }
 

@@ -18,7 +18,6 @@ public class TransferWithMemoTransaction implements Transaction {
     private final Expiry expiry;
     private final TransactionSigner signer;
 
-
     private BlockItem item;
 
     @Builder
@@ -39,7 +38,7 @@ public class TransferWithMemoTransaction implements Transaction {
 
     @Override
     public byte[] getBytes() {
-        return item.getBytes();
+        return item.getVersionedBytes();
     }
 
     @Override
