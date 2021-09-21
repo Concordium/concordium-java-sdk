@@ -153,11 +153,11 @@ Sends funds from one account to another with an associated `Memo`.
 - `TransactionCreationException`
 A checked exception which contains an inner exception with the reason for why the `Transaction` could not be created.
 
-This could for an example happen when building a `SimpleTransferTransaction`:
+This could for an example happen when building a `TransferTransaction`:
 
 ```java
 try {
-    Transaction simpleTransfer = SimpleTransferTransaction
+    Transaction transfer = TransferTransaction
                             .builder()
                             .sender(sender)
                             .receiver(receiver)
@@ -272,7 +272,7 @@ TransactionSigner signer = TransactionSigner.from(
                         secondSecretKey))
 
 try {
-    Transaction simpleTransfer = TransactionFactory.newSimpleTransfer()
+    Transaction transaction = TransactionFactory.newTransfer()
                             .sender(sender)
                             .receiver(receiver)
                             .amount(amount)
@@ -281,7 +281,7 @@ try {
                             .signer(signer)
                             .build();
 
-    Hash transactionHash  = client.sendTransaction(simpleTransfer);
+    Hash transactionHash  = client.sendTransaction(transaction);
     // Do something with the succesfully sent transaction hash.
     // Here we simply log it.
     Log.Info("Transaction "+ transactionHash.asHex() +" was sent to node.");
