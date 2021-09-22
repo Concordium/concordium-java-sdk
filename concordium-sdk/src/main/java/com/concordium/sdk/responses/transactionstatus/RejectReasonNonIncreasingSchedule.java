@@ -1,6 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-public class RejectReasonNonIncreasingSchedule extends RejectReasonContent {
+import lombok.ToString;
+
+@ToString
+public class RejectReasonNonIncreasingSchedule extends RejectReason {
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.NON_INCREASING_SCHEDULE;

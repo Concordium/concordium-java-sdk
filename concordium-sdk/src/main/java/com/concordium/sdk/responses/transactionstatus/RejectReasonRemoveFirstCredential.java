@@ -1,6 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-public class RejectReasonRemoveFirstCredential extends RejectReasonContent {
+import lombok.ToString;
+
+@ToString
+public class RejectReasonRemoveFirstCredential extends RejectReason {
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.REMOVE_FIRST_CREDENTIAL;

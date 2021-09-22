@@ -1,8 +1,6 @@
 package com.concordium.sdk.types;
 
 
-import com.concordium.sdk.types.UInt16;
-import com.concordium.sdk.types.UInt64;
 import lombok.val;
 import org.junit.Test;
 

@@ -1,6 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-public class RejectReasonNotAllowedToReceiveEncrypted extends RejectReasonContent{
+import lombok.ToString;
+
+@ToString
+public class RejectReasonNotAllowedToReceiveEncrypted extends RejectReason {
 
     @Override
     public RejectReasonType getType() {

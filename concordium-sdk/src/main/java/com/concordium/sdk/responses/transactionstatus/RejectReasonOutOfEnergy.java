@@ -1,6 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-public class RejectReasonOutOfEnergy extends RejectReasonContent {
+import lombok.ToString;
+
+@ToString
+public class RejectReasonOutOfEnergy extends RejectReason {
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.OUT_OF_ENERGY;

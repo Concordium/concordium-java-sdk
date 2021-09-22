@@ -4,13 +4,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+import java.util.List;
+import java.util.Map;
+
 @Getter
-public class RejectReasonInvalidContractAddress extends RejectReasonContent{
+public class RejectReasonInvalidContractAddress extends RejectReason {
     private final ContractAddress contractAddress;
 
     @JsonCreator
-    RejectReasonInvalidContractAddress(@JsonProperty("contractAddress") ContractAddress contractAddress) {
-        this.contractAddress = contractAddress;
+    RejectReasonInvalidContractAddress(@JsonProperty("contents") Map<String, Object> contractAddress) {
+        this.contractAddress = (ContractAddress) ContractAddress.parseAccount(contractAddress);
     }
 
     @Override

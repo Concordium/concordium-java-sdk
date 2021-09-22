@@ -1,14 +1,17 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
-public class RejectReasonDuplicateAggregationKey extends RejectReasonContent{
+@ToString
+public class RejectReasonDuplicateAggregationKey extends RejectReason {
     @Getter
     private final String publicKey;
 
     @JsonCreator
-    RejectReasonDuplicateAggregationKey(String key) {
+    RejectReasonDuplicateAggregationKey(@JsonProperty("contents") String key) {
         this.publicKey = key;
     }
 
@@ -16,4 +19,5 @@ public class RejectReasonDuplicateAggregationKey extends RejectReasonContent{
     public RejectReasonType getType() {
         return RejectReasonType.DUPLICATE_AGGREGATION_KEY;
     }
+
 }

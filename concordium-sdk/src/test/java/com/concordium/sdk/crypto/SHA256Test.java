@@ -10,8 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 
 // Test vectors taken from: https://www.di-mgt.com.au/sha_testvectors.html
 public class SHA256Test {

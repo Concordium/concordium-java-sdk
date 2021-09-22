@@ -1,8 +1,8 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
+import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import lombok.val;
 import org.junit.Test;

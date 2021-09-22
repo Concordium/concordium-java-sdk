@@ -4,14 +4,16 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
-public class RejectReasonNonExistentRewardAccount extends RejectReasonContent{
+@ToString
+public class RejectReasonNonExistentRewardAccount extends RejectReason {
     @Getter
     private final AccountAddress address;
 
     @JsonCreator
-    RejectReasonNonExistentRewardAccount(@JsonProperty("address") AccountAddress address) {
-        this.address = address;
+    RejectReasonNonExistentRewardAccount(@JsonProperty("contents") String address) {
+        this.address = AccountAddress.from(address);
     }
 
     @Override

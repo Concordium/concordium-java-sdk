@@ -4,13 +4,15 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
-public class RejectReasonScheduledSelfTransfer extends RejectReasonContent {
+@ToString
+public class RejectReasonScheduledSelfTransfer extends RejectReason {
     @Getter
     private final AccountAddress accountAddress;
 
     @JsonCreator
-    RejectReasonScheduledSelfTransfer(@JsonProperty("accountAddress") String accountAddress) {
+    RejectReasonScheduledSelfTransfer(@JsonProperty("contents") String accountAddress) {
         this.accountAddress = AccountAddress.from(accountAddress);
     }
 

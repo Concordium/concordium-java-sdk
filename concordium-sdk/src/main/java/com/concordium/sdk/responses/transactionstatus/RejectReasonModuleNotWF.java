@@ -1,6 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-public class RejectReasonModuleNotWF extends RejectReasonContent {
+import lombok.ToString;
+
+@ToString
+public class RejectReasonModuleNotWF extends RejectReason {
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.MODULE_NOT_WF;

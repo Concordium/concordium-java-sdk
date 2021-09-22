@@ -3,13 +3,15 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
-public class RejectReasonModuleHashAlreadyExists extends RejectReasonContent {
+@ToString
+public class RejectReasonModuleHashAlreadyExists extends RejectReason {
     private final String moduleRef;
 
     @JsonCreator
-    RejectReasonModuleHashAlreadyExists(@JsonProperty("moduleRef") String moduleRef) {
+    RejectReasonModuleHashAlreadyExists(@JsonProperty("contents") String moduleRef) {
         this.moduleRef = moduleRef;
     }
 

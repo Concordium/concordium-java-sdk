@@ -1,16 +1,19 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
-public class RejectReasonNonExistentCredIDs extends RejectReasonContent {
+@ToString
+public class RejectReasonNonExistentCredIDs extends RejectReason {
     @Getter
     private final List<String> ids;
 
     @JsonCreator
-    RejectReasonNonExistentCredIDs(List<String> ids) {
+    RejectReasonNonExistentCredIDs(@JsonProperty("contents") List<String> ids) {
         this.ids = ids;
     }
 

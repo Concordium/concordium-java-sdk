@@ -1,6 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-class RejectReasonInvalidCredentials extends RejectReasonContent {
+import lombok.ToString;
+
+@ToString
+class RejectReasonInvalidCredentials extends RejectReason {
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.INVALID_CREDENTIALS;

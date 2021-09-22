@@ -1,6 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-public class RejectReasonInvalidCredentialKeySignThreshold extends RejectReasonContent {
+import lombok.ToString;
+
+@ToString
+public class RejectReasonInvalidCredentialKeySignThreshold extends RejectReason {
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.INVALID_CREDENTIAL_KEY_SIGN_THRESHOLD;

@@ -1,6 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-public class RejectReasonInvalidAccountThreshold extends RejectReasonContent {
+import lombok.ToString;
+
+@ToString
+public class RejectReasonInvalidAccountThreshold extends RejectReason {
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.INVALID_ACCOUNT_THRESHOLD;

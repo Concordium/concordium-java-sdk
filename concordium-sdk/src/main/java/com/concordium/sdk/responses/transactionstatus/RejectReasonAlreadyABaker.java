@@ -5,13 +5,15 @@ import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
-public class RejectReasonAlreadyABaker extends RejectReasonContent {
-    @Getter
+@ToString
+@Getter
+public class RejectReasonAlreadyABaker extends RejectReason {
     private final UInt64 bakerId;
 
     @JsonCreator
-    RejectReasonAlreadyABaker(@JsonProperty("bakerId") long bakerId) {
+    RejectReasonAlreadyABaker(@JsonProperty("contents") long bakerId) {
         this.bakerId = UInt64.from(bakerId);
     }
 

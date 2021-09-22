@@ -1,6 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-public class RejectReasonInvalidProof extends RejectReasonContent {
+import lombok.ToString;
+
+@ToString
+public class RejectReasonInvalidProof extends RejectReason {
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.INVALID_PROOF;

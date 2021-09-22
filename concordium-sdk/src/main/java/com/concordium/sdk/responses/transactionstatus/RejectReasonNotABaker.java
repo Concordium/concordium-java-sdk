@@ -4,13 +4,15 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
-public class RejectReasonNotABaker extends RejectReasonContent {
+@ToString
+public class RejectReasonNotABaker extends RejectReason {
     @Getter
     private final AccountAddress accountAddress;
 
     @JsonCreator
-    public RejectReasonNotABaker(@JsonProperty("accountAddress") String accountAddress) {
+    public RejectReasonNotABaker(@JsonProperty("contents") String accountAddress) {
         this.accountAddress = AccountAddress.from(accountAddress);
     }
 
