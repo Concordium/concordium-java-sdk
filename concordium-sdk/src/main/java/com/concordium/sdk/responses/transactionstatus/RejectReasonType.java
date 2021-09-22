@@ -1,7 +1,10 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+// These types must correspond the 'RejectReason' types found here
+// https://github.com/Concordium/concordium-base/blob/f0e1275dfde8502e3aabdb153b3246c18bee59f9/haskell-src/Concordium/Types/Execution.hs#L737
 enum RejectReasonType {
     @JsonProperty("AmountTooLarge")
     AMOUNT_TOO_LARGE,
@@ -84,6 +87,5 @@ enum RejectReasonType {
     @JsonProperty("RemoveFirstCredential")
     REMOVE_FIRST_CREDENTIAL,
     @JsonProperty("CredentialHolderDidNotSign")
-    CREDENTIAL_HOLDER_DID_NOT_SIGN;
-
+    CREDENTIAL_HOLDER_DID_NOT_SIGN
 }

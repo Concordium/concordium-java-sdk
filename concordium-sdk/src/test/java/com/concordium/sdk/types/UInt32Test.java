@@ -1,7 +1,7 @@
-package com.concordium.sdk.transactions;
+package com.concordium.sdk.types;
 
-import com.concordium.sdk.transactions.UInt32;
-import com.concordium.sdk.transactions.UInt64;
+import com.concordium.sdk.types.UInt32;
+import com.concordium.sdk.types.UInt64;
 import lombok.val;
 import org.junit.Test;
 

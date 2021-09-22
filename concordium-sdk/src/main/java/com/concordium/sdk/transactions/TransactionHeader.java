@@ -1,5 +1,7 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.UInt32;
+import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
 import java.nio.ByteBuffer;

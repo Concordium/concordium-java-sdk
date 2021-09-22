@@ -1,10 +1,10 @@
-package com.concordium.sdk.transactions;
+package com.concordium.sdk.types;
 
-import com.concordium.sdk.transactions.UInt64;
 import lombok.val;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class UInt64Test {
 

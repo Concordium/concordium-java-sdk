@@ -3,6 +3,8 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.SHA256;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.UInt32;
+import com.concordium.sdk.types.UInt64;
 import lombok.val;
 
 import java.nio.ByteBuffer;

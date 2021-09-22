@@ -25,6 +25,7 @@ public final class TransactionStatus {
 
     public static TransactionStatus fromJson(String transactionStatus) {
         try {
+            System.out.println(transactionStatus);
             return JsonMapper.INSTANCE.readValue(transactionStatus, TransactionStatus.class);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse TransactionStatus JSON", e);

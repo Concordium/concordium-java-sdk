@@ -2,7 +2,6 @@ package com.concordium.sdk.transactions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum AccountType {

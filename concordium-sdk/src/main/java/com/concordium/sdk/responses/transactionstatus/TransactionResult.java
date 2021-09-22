@@ -39,6 +39,7 @@ public final class TransactionResult {
     })
     private final List<TransactionResultEvent> events;
     private final Outcome outcome;
+
     private final RejectReason rejectReason;
 
     @JsonCreator
