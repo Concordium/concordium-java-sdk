@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt64;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 public class GTUAmount {

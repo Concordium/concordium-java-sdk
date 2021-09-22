@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import lombok.Getter;
@@ -94,10 +95,11 @@ public final class RejectReason {
                 for (Object item : list) {
                     if (item instanceof String) {
                         result.add(new RejectReasonAmountTooLargeEntryAmount(GTUAmount.fromMicro((String) item)));
-                    }
-                    if (item instanceof Map) {
+                    } if (item instanceof Map) {
                         val account = AbstractAccount.parseAccount((Map<String, Object>) item);
                         result.add(new RejectReasonAmountTooLargeEntryAccount(account));
+                    } else {
+                        throw new JsonMappingException(p, "Unable to parse RejectReasonContent");
                     }
                 }
             }
