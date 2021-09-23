@@ -21,14 +21,11 @@ public class RejectReasonAmountTooLarge extends RejectReason {
         if (contents.size() != 2) {
             throw new IllegalArgumentException("Cannot parse AmountTooLarge. Unexpected array length.");
         }
-        for (Object content : contents) {
-            if (content instanceof String) {
-                this.amount = GTUAmount.fromMicro((String) content);
-            } else if (content instanceof Map) {
-                this.account = AbstractAccount.parseAccount((Map<String, Object>) content);
-            } else {
-                throw new IllegalArgumentException("Cannot parse AmountTooLarge. Unexpected type.");
-            }
+        try {
+            this.account = AbstractAccount.parseAccount((Map<String, Object>) contents.get(0));
+            this.amount = GTUAmount.fromMicro((String) contents.get(1));
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Cannot parse AmountTooLarge. Unexpected type.", e);
         }
     }
 
