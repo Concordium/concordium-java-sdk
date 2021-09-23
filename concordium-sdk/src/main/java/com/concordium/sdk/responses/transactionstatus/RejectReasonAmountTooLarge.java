@@ -13,8 +13,8 @@ import java.util.Map;
 @ToString
 public class RejectReasonAmountTooLarge extends RejectReason {
 
-    private AbstractAccount account;
-    private GTUAmount amount;
+    private final AbstractAccount account;
+    private final GTUAmount amount;
 
     @JsonCreator
     RejectReasonAmountTooLarge(@JsonProperty("contents") List<Object> contents) {
