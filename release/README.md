@@ -4,7 +4,7 @@
 In order to release the code, do the following.
 
 
-1. Bump the version to the new desired version by invoking
+1. Bump the version to the new desired version by invoking (from [the root of the java sdk](../concordium-sdk/)
 
 ```
 mvn versions:set -DnewVersion=$VERSION
