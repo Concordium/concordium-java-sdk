@@ -1,8 +1,11 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-enum RejectReasonType {
+// These types must correspond the 'RejectReason' types found here
+// https://github.com/Concordium/concordium-base/blob/f0e1275dfde8502e3aabdb153b3246c18bee59f9/haskell-src/Concordium/Types/Execution.hs#L737
+public enum RejectReasonType {
     @JsonProperty("AmountTooLarge")
     AMOUNT_TOO_LARGE,
     @JsonProperty("DuplicateAggregationKey")
@@ -86,4 +89,11 @@ enum RejectReasonType {
     @JsonProperty("CredentialHolderDidNotSign")
     CREDENTIAL_HOLDER_DID_NOT_SIGN;
 
+    // Convenience methods for do 'safe' casting.
+    public <T> T convert(RejectReason reason) {
+        if (this != reason.getType()) {
+            throw new IllegalArgumentException("Unexpected conversion. Expected " + this + " but received " + reason.getType());
+        }
+        return (T) reason;
+    }
 }

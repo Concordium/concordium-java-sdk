@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.UInt16;
 import lombok.Getter;
 import lombok.val;
 import org.apache.commons.codec.DecoderException;

@@ -1,12 +1,10 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.sdk.transactions.AccountType;
 import com.concordium.sdk.transactions.GTUAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.val;
 
 import java.util.Map;
 import java.util.Objects;
@@ -23,8 +21,8 @@ public final class TransferredResult extends TransactionResultEvent {
                       @JsonProperty("from") Map<String, Object> from,
                       @JsonProperty("amount") String amount) {
 
-        this.to = AbstractAccount.parseAddress(to);
-        this.from = AbstractAccount.parseAddress(from);
+        this.to = AbstractAccount.parseAccount(to);
+        this.from = AbstractAccount.parseAccount(from);
         if (!Objects.isNull(amount)) {
             this.amount = GTUAmount.fromMicro(amount);
         }

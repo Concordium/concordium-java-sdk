@@ -15,7 +15,7 @@ import java.util.Objects;
 public class ContractUpdated extends TransactionResultEvent {
     private GTUAmount amount;
     private final AbstractAccount instigator;
-    private final AbstractAccount address;
+    private final ContractAddress address;
     private final String receiveName;
     private final List<String> events;
     private final String message;
@@ -27,8 +27,8 @@ public class ContractUpdated extends TransactionResultEvent {
                     @JsonProperty("receiveName") String receiveName,
                     @JsonProperty("events") List<String> events,
                     @JsonProperty("message") String message) {
-        this.instigator = AbstractAccount.parseAddress(instigator);
-        this.address = AbstractAccount.parseAddress(address);
+        this.instigator = AbstractAccount.parseAccount(instigator);
+        this.address = (ContractAddress) AbstractAccount.parseAccount(address);
         this.receiveName = receiveName;
         this.events = events;
         this.message = message;

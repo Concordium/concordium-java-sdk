@@ -1,13 +1,15 @@
-package com.concordium.sdk.transactions;
+package com.concordium.sdk.types;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.val;
 
 import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
-class UInt16 {
-    static final int BYTES = 2;
+@Getter
+public final class UInt16 {
+    public static final int BYTES = 2;
 
     private final int value;
 
@@ -16,18 +18,18 @@ class UInt16 {
     }
 
     //Big endian
-    byte[] getBytes() {
+    public byte[] getBytes() {
         val bytes = new byte[2];
         bytes[0] = (byte) ((value >> 8) & 0xff);
         bytes[1] = (byte) (value & 0xff);
         return bytes;
     }
 
-    static UInt16 from(String value) {
+    public static UInt16 from(String value) {
         return UInt16.from(Integer.parseUnsignedInt(value));
     }
 
-    static UInt16 from(int value) {
+    public static UInt16 from(int value) {
         if (value < 0) {
             throw new NumberFormatException("Value of UInt16 cannot be negative");
         }
@@ -37,7 +39,7 @@ class UInt16 {
         return new UInt16(value);
     }
 
-    static UInt16 from(byte[] valueBytes) {
+    public static UInt16 from(byte[] valueBytes) {
         val buffer = ByteBuffer.allocate(Short.BYTES);
         buffer.put(valueBytes);
         buffer.flip();

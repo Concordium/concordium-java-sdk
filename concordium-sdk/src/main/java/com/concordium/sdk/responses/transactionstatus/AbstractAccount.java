@@ -11,7 +11,7 @@ import java.util.Map;
 abstract class AbstractAccount {
 
     //not pretty - find a better way of handling this.
-    static AbstractAccount parseAddress(Map<String, Object> o) {
+    static AbstractAccount parseAccount(Map<String, Object> o) {
         try {
             if (isContractAddress(o)) {
                 val contract = (Map<String, Integer>) o.get("address");

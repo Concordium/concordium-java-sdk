@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.UInt16;
 import lombok.val;
 
 import java.nio.ByteBuffer;

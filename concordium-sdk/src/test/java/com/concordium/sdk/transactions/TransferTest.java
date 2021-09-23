@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
+import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
