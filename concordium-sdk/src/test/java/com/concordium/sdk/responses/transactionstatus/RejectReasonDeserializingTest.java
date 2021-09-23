@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.serializing.JsonMapper;
-import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.Hash;
 import lombok.SneakyThrows;
 import lombok.val;

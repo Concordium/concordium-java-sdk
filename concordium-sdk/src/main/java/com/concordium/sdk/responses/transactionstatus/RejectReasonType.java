@@ -2,7 +2,6 @@ package com.concordium.sdk.responses.transactionstatus;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 
 // These types must correspond the 'RejectReason' types found here
 // https://github.com/Concordium/concordium-base/blob/f0e1275dfde8502e3aabdb153b3246c18bee59f9/haskell-src/Concordium/Types/Execution.hs#L737
