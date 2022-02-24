@@ -5,21 +5,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Getter
 @ToString
 public final class MicroGTUPerEuro {
-    private final int denominator;
-    private final int numerator;
+    private final BigInteger denominator;
+    private final BigInteger numerator;
     private final int threshold;
     private final List<Integer> authorizedKeys;
     private final int nextSequenceNumber;
     private final List<Object> queue;
 
     @JsonCreator
-    MicroGTUPerEuro(@JsonProperty("denominator") int denominator,
-                    @JsonProperty("numerator") int numerator,
+    MicroGTUPerEuro(@JsonProperty("denominator") BigInteger denominator,
+                    @JsonProperty("numerator") BigInteger numerator,
                     @JsonProperty("threshold") int threshold,
                     @JsonProperty("authorizedKeys") List<Integer> authorizedKeys,
                     @JsonProperty("nextSequenceNumber") int nextSequenceNumber,
