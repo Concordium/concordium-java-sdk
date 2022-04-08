@@ -3,8 +3,7 @@ package com.concordium.sdk.transactions;
 import lombok.val;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class AccountAddressTest {
 
@@ -28,16 +27,36 @@ public class AccountAddressTest {
         }
     }
 
-        @Test
-        public void testCannotCreatAccountAddressFromTooLongAddress() {
-            try {
-                val tooLongAddress = Base58.encodeChecked(1, new byte[33]);
-                AccountAddress.from(tooLongAddress);
-                fail("Expected account address to be invalid.");
-            } catch (RuntimeException e) {
-                if (!e.getMessage().contains("Address bytes must be exactly 32 bytes long.")) {
-                    fail("Unexpected error: " + e.getMessage());
-                }
+    @Test
+    public void testCannotCreatAccountAddressFromTooLongAddress() {
+        try {
+            val tooLongAddress = Base58.encodeChecked(1, new byte[33]);
+            AccountAddress.from(tooLongAddress);
+            fail("Expected account address to be invalid.");
+        } catch (RuntimeException e) {
+            if (!e.getMessage().contains("Address bytes must be exactly 32 bytes long.")) {
+                fail("Unexpected error: " + e.getMessage());
             }
         }
+    }
+
+    @Test
+    public void testIsAliasOf() {
+        val base = AccountAddress.from("2wkH4kHMn2WPndf8CxmsoFkX93ouZMJUwTBFSZpDCeNeGWa7dj");
+        assertTrue(base.isAliasOf(base));
+        assertTrue(base.newAlias(1).isAliasOf(base));
+        assertTrue(base.newAlias(197121).isAliasOf(base));
+        assertTrue(base.newAlias(1 + 2 * 256 + 3 * 256 * 256 + 4 * 256 * 256 * 256).isAliasOf(base));
+        assertTrue(base.newAlias(2147483647).isAliasOf(base));
+        assertFalse(AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P").isAliasOf(base));
+    }
+
+    @Test
+    public void testCreateAccountAlias() {
+        val base = AccountAddress.from("2wkH4kHMn2WPndf8CxmsoFkX93ouZMJUwTBFSZpDCeNeGWa7dj");
+        assertEquals("2wkH4kHMn2WPndf8CxmsoFkX93ouZMJUwTBFSZpDBez9cfL8oC", base.newAlias(1 + 2 * 256 + 3 * 65536).encoded());
+        assertEquals("2wkH4kHMn2WPndf8CxmsoFkX93ouZMJUwTBFSZpDBez9cfL8oC", base.newAlias(1 + 2 * 256 + 3 * 256 * 256 + 4 * 256 * 256 * 256).encoded());
+        assertEquals(base.newAlias(0).encoded(), base.newAlias(16777216).encoded());
+        assertEquals(base.newAlias(1).encoded(), base.newAlias((2 << 24) + 1).encoded()); // max alias size is 2^24 = 16777216
+    }
 }
