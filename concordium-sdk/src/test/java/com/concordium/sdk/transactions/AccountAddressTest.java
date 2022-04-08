@@ -46,8 +46,6 @@ public class AccountAddressTest {
         assertTrue(base.isAliasOf(base));
         assertTrue(base.newAlias(1).isAliasOf(base));
         assertTrue(base.newAlias(197121).isAliasOf(base));
-        assertTrue(base.newAlias(1 + 2 * 256 + 3 * 256 * 256 + 4 * 256 * 256 * 256).isAliasOf(base));
-        assertTrue(base.newAlias(2147483647).isAliasOf(base));
         assertFalse(AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P").isAliasOf(base));
     }
 
@@ -55,8 +53,15 @@ public class AccountAddressTest {
     public void testCreateAccountAlias() {
         val base = AccountAddress.from("2wkH4kHMn2WPndf8CxmsoFkX93ouZMJUwTBFSZpDCeNeGWa7dj");
         assertEquals("2wkH4kHMn2WPndf8CxmsoFkX93ouZMJUwTBFSZpDBez9cfL8oC", base.newAlias(1 + 2 * 256 + 3 * 65536).encoded());
-        assertEquals("2wkH4kHMn2WPndf8CxmsoFkX93ouZMJUwTBFSZpDBez9cfL8oC", base.newAlias(1 + 2 * 256 + 3 * 256 * 256 + 4 * 256 * 256 * 256).encoded());
         assertEquals(base.newAlias(0).encoded(), base.newAlias(16777216).encoded());
-        assertEquals(base.newAlias(1).encoded(), base.newAlias((2 << 24) + 1).encoded()); // max alias size is 2^24 = 16777216
+
+        try {
+            base.newAlias((2 << 23) + 1);
+            fail("Expected invalid alias.");
+        } catch (IllegalArgumentException e) {
+            if (!e.getMessage().contains("Alias too large, the provided alias must not be larger than 2^24.")) {
+                fail("Unexpected error: " + e.getMessage());
+            }
+        }
     }
 }

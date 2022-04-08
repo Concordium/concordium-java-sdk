@@ -16,7 +16,7 @@ public final class AccountAddress {
     public static final int BYTES = 32;
     private final static int VERSION = 1;
     private final static int ACCOUNT_ADDRESS_PREFIX_SIZE = 29;
-    private final static int ALIAS_MAX_VALUE = 2 << 24;
+    private final static int ALIAS_MAX_VALUE = (2 << 23); // 2^24
 
     @Getter
     private final byte[] bytes;
@@ -40,10 +40,10 @@ public final class AccountAddress {
 
     public AccountAddress newAlias(int alias) {
         if (alias < 0) {
-            throw new NumberFormatException("Alias must be non negative");
+            throw new NumberFormatException("Alias must be non negative.");
         }
         if (alias > ALIAS_MAX_VALUE) {
-            alias = alias % ALIAS_MAX_VALUE;
+            throw new IllegalArgumentException("Alias too large, the provided alias must not be larger than 2^24.");
         }
         val buffer = ByteBuffer.allocate(Integer.BYTES);
         buffer.putInt(alias);
