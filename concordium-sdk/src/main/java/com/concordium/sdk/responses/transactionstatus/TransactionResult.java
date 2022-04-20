@@ -35,7 +35,17 @@ public final class TransactionResult {
             @JsonSubTypes.Type(value = TransferredResult.class, name = "Transferred"),
             @JsonSubTypes.Type(value = TransferMemoResult.class, name = "TransferMemo"),
             @JsonSubTypes.Type(value = EncryptedAmountsRemovedResult.class, name = "EncryptedAmountsRemoved"),
-            @JsonSubTypes.Type(value = ContractUpdated.class, name = "Updated")
+            @JsonSubTypes.Type(value = ContractUpdated.class, name = "Updated"),
+            @JsonSubTypes.Type(value = BakerSetOpenStatus.class, name = "BakerSetOpenStatus"),
+            @JsonSubTypes.Type(value = BakerSetMetadataURL.class, name = "BakerSetMetadataURL"),
+            @JsonSubTypes.Type(value = BakerSetTransactionFeeCommission.class, name = "BakerSetTransactionFeeCommission"),
+            @JsonSubTypes.Type(value = BakerSetBakingRewardCommission.class, name = "BakerSetBakingRewardCommission"),
+            @JsonSubTypes.Type(value = DelegationStakeIncreased.class, name = "DelegationStakeIncreased"),
+            @JsonSubTypes.Type(value = DelegationStakeDecreased.class, name = "DelegationStakeDecreased"),
+            @JsonSubTypes.Type(value = DelegationSetRestakeEarnings.class, name = "DelegationSetRestakeEarnings"),
+            @JsonSubTypes.Type(value = DelegationSetDelegationTarget.class, name = "DelegationSetDelegationTarget"),
+            @JsonSubTypes.Type(value = DelegationAdded.class, name = "DelegationAdded"),
+            @JsonSubTypes.Type(value = DelegationRemoved.class, name = "DelegationRemoved")
     })
     private final List<TransactionResultEvent> events;
     private final Outcome outcome;
