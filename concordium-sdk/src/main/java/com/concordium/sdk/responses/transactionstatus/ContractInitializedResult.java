@@ -17,14 +17,15 @@ public final class ContractInitializedResult extends TransactionResultEvent {
     private GTUAmount amount;
     private final String initName;
     private final List<String> events;
-
+    private final int version;
 
     @JsonCreator
     ContractInitializedResult(@JsonProperty("ref") String ref,
                               @JsonProperty("address") ContractAddress address,
                               @JsonProperty("amount") String amount,
                               @JsonProperty("initName") String initName,
-                              @JsonProperty("events") List<String> events) {
+                              @JsonProperty("events") List<String> events,
+                              @JsonProperty("version") int version) {
         this.ref = ref;
         this.address = address;
         if(!Objects.isNull(amount)) {
@@ -32,5 +33,6 @@ public final class ContractInitializedResult extends TransactionResultEvent {
         }
         this.initName = initName;
         this.events = events;
+        this.version = version;
     }
 }

@@ -35,7 +35,9 @@ public final class TransactionResult {
             @JsonSubTypes.Type(value = TransferredResult.class, name = "Transferred"),
             @JsonSubTypes.Type(value = TransferMemoResult.class, name = "TransferMemo"),
             @JsonSubTypes.Type(value = EncryptedAmountsRemovedResult.class, name = "EncryptedAmountsRemoved"),
-            @JsonSubTypes.Type(value = ContractUpdated.class, name = "Updated")
+            @JsonSubTypes.Type(value = ContractUpdated.class, name = "Updated"),
+            @JsonSubTypes.Type(value = InterruptedResult.class, name = "Interrupted"),
+            @JsonSubTypes.Type(value = ResumedResult.class, name = "Resumed")
     })
     private final List<TransactionResultEvent> events;
     private final Outcome outcome;

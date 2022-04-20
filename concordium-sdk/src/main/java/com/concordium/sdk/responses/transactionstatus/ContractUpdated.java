@@ -19,6 +19,7 @@ public class ContractUpdated extends TransactionResultEvent {
     private final String receiveName;
     private final List<String> events;
     private final String message;
+    private final int version;
 
     @JsonCreator
     ContractUpdated(@JsonProperty("amount") String amount,
@@ -26,7 +27,8 @@ public class ContractUpdated extends TransactionResultEvent {
                     @JsonProperty("address") Map<String, Object> address,
                     @JsonProperty("receiveName") String receiveName,
                     @JsonProperty("events") List<String> events,
-                    @JsonProperty("message") String message) {
+                    @JsonProperty("message") String message,
+                    @JsonProperty("version") int version) {
         this.instigator = AbstractAccount.parseAccount(instigator);
         this.address = (ContractAddress) AbstractAccount.parseAccount(address);
         this.receiveName = receiveName;
@@ -35,5 +37,6 @@ public class ContractUpdated extends TransactionResultEvent {
         if (!Objects.isNull(amount)) {
             this.amount = GTUAmount.fromMicro(amount);
         }
+        this.version = version;
     }
 }
