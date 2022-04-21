@@ -26,7 +26,7 @@ public class BlocksAtHeight {
         try {
             return JsonMapper.INSTANCE.readValue(blocksAtHeightJsonString, BlocksAtHeight.class);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse AccountInfo JSON", e);
+            throw new IllegalArgumentException("Cannot parse BlocksAtHeight JSON", e);
         }
     }
 }
