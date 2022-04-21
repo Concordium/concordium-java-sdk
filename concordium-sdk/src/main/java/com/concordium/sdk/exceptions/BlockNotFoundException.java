@@ -3,9 +3,10 @@ package com.concordium.sdk.exceptions;
 import com.concordium.sdk.transactions.Hash;
 import lombok.Getter;
 
+@Getter
 public final class BlockNotFoundException extends Exception {
-    @Getter
-    private final Hash blockHash;
+    private Hash blockHash;
+    private long atHeight;
 
     /**
      * Creates a new {@link BlockNotFoundException} from a {@link Hash}
@@ -20,7 +21,16 @@ public final class BlockNotFoundException extends Exception {
         this.blockHash = blockHash;
     }
 
+    private BlockNotFoundException(long height) {
+        super("Block not found at height " + height);
+        this.atHeight = height;
+    }
+
     public static BlockNotFoundException from(Hash blockHash) {
         return new BlockNotFoundException(blockHash);
+    }
+
+    public static BlockNotFoundException from(long height) {
+        return new BlockNotFoundException(height);
     }
 }

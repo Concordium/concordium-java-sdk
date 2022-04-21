@@ -4,6 +4,7 @@ import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.exceptions.TransactionRejectionException;
+import com.concordium.sdk.responses.BlocksAtHeight;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
@@ -151,6 +152,25 @@ public final class Client {
             throw BlockNotFoundException.from(blockHash);
         }
         return blockSummary;
+    }
+
+    /**
+     * Retrieves a {@link BlocksAtHeight}
+     * @param height the height to query blocks for.
+     * @return A {@link BlocksAtHeight} if one or more blocks was present at the given height.
+     * @throws BlockNotFoundException if no blocks were present at the given height.
+     */
+    public BlocksAtHeight getBlocksAtHeight(long height) throws BlockNotFoundException {
+        val request = ConcordiumP2PRpc.BlockHeight.getDefaultInstance()
+                .newBuilderForType()
+                .setBlockHeight(height)
+                .build();
+        val response = blockingStub.getBlocksAtHeight(request);
+        val blocksAtHeight = BlocksAtHeight.fromJson(response.getValue());
+        if (Objects.isNull(blocksAtHeight)) {
+            throw BlockNotFoundException.from(height);
+        }
+        return blocksAtHeight;
     }
 
     /**
