@@ -160,14 +160,18 @@ public final class Client {
      * @return A {@link BlocksAtHeight} if one or more blocks was present at the given height.
      * @throws BlockNotFoundException if no blocks were present at the given height.
      */
-    public BlocksAtHeight getBlocksAtHeight(long height) throws BlockNotFoundException {
-        val request = ConcordiumP2PRpc.BlockHeight.getDefaultInstance()
+    public BlocksAtHeight getBlocksAtHeight(BlocksAtHeightRequest height) throws BlockNotFoundException {
+        val requestBuilder = ConcordiumP2PRpc.BlockHeight.getDefaultInstance()
                 .newBuilderForType()
-                .setBlockHeight(height)
-                .build();
+                .setBlockHeight(height.getHeight());
+        if (height.getType() == BlocksAtHeightRequest.Type.RELATIVE) {
+            requestBuilder.setFromGenesisIndex(height.getGenesisIndex());
+            requestBuilder.setRestrictToGenesisIndex(height.isRestrictedToGenesisIndex());
+        }
+        val request = requestBuilder.build();
         val response = blockingStub.getBlocksAtHeight(request);
         val blocksAtHeight = BlocksAtHeight.fromJson(response.getValue());
-        if (Objects.isNull(blocksAtHeight)) {
+        if (Objects.isNull(blocksAtHeight) || blocksAtHeight.getBlocks().isEmpty() ) {
             throw BlockNotFoundException.from(height);
         }
         return blocksAtHeight;

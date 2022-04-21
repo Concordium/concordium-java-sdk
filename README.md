@@ -133,7 +133,7 @@ Throws a `BlockNotFoundException` if the block was not found.
 
 - `getBlocksAtHeight`
 ```java
-BlocksAtHeight getBlocksAtHeight(long height) throws BlockNotFoundException
+BlocksAtHeight getBlocksAtHeight(BlocksAtHeightRequest height) throws BlockNotFoundException
 ```
 Retrieves the `BlocksAtHeight` at the given height if one or more was found.
 Throws a `BlockNotFoundException` if no blocks were found.
