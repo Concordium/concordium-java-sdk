@@ -156,7 +156,7 @@ public final class Client {
 
     /**
      * Retrieves a {@link BlocksAtHeight}
-     * @param height the height to query blocks for.
+     * @param height the {@link BlocksAtHeightRequest} request.
      * @return A {@link BlocksAtHeight} if one or more blocks was present at the given height.
      * @throws BlockNotFoundException if no blocks were present at the given height.
      */

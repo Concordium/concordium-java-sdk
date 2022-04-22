@@ -3,6 +3,14 @@ package com.concordium.sdk;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Request type for {@link Client#getBlocksAtHeight(BlocksAtHeightRequest)}
+ * This type allows for requesting blocks at a specified height either by an absolute
+ * value or by a relative one.
+ *
+ * Refer to {@link BlocksAtHeightRequest#newAbsolute(long)} and {@link BlocksAtHeightRequest#newRelative(long, int, boolean)}
+ * for creating the request.
+ */
 @Getter
 @ToString
 public class BlocksAtHeightRequest {
@@ -23,10 +31,22 @@ public class BlocksAtHeightRequest {
         this.restrictedToGenesisIndex = restrictedToGenesisIndex;
     }
 
+    /**
+     * Request blocks at an absolute height.
+     * @param height the absolute height.
+     * @return the request.
+     */
     public static BlocksAtHeightRequest newAbsolute(long height) {
         return new BlocksAtHeightRequest(Type.ABSOLUTE, height);
     }
 
+    /**
+     * Request blocks at a relative height wrt. a specified genesis index.
+     * @param height the relative height.
+     * @param genesisIndex the genesis index.
+     * @param restrictedToGenesisIndex if true then only blocks at the specified genesis index will be returned.
+     * @return the request.
+     */
     public static BlocksAtHeightRequest newRelative(long height, int genesisIndex, boolean restrictedToGenesisIndex) {
         return new BlocksAtHeightRequest(Type.RELATIVE, height, genesisIndex, restrictedToGenesisIndex);
     }
