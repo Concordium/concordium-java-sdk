@@ -42,7 +42,7 @@ public class BlocksAtHeightRequest {
 
     /**
      * Request blocks at a relative height wrt. a specified genesis index.
-     * @param height the relative height.
+     * @param height the height counting from the last protocol update, 
      * @param genesisIndex the genesis index.
      * @param restrictedToGenesisIndex if true then only blocks at the specified genesis index will be returned.
      * @return the request.
