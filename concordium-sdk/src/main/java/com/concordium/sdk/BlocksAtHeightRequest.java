@@ -33,7 +33,7 @@ public class BlocksAtHeightRequest {
 
     /**
      * Request blocks at an absolute height.
-     * @param height the absolute height.
+     * @param height the absolute height, i.e., height starting from the genesis block
      * @return the request.
      */
     public static BlocksAtHeightRequest newAbsolute(long height) {
