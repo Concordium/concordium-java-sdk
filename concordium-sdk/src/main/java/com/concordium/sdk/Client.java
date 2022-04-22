@@ -4,6 +4,7 @@ import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.exceptions.TransactionRejectionException;
+import com.concordium.sdk.responses.BlocksAtHeight;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
@@ -151,6 +152,29 @@ public final class Client {
             throw BlockNotFoundException.from(blockHash);
         }
         return blockSummary;
+    }
+
+    /**
+     * Retrieves a {@link BlocksAtHeight}
+     * @param height the {@link BlocksAtHeightRequest} request.
+     * @return A {@link BlocksAtHeight} if one or more blocks was present at the given height.
+     * @throws BlockNotFoundException if no blocks were present at the given height.
+     */
+    public BlocksAtHeight getBlocksAtHeight(BlocksAtHeightRequest height) throws BlockNotFoundException {
+        val requestBuilder = ConcordiumP2PRpc.BlockHeight.getDefaultInstance()
+                .newBuilderForType()
+                .setBlockHeight(height.getHeight());
+        if (height.getType() == BlocksAtHeightRequest.Type.RELATIVE) {
+            requestBuilder.setFromGenesisIndex(height.getGenesisIndex());
+            requestBuilder.setRestrictToGenesisIndex(height.isRestrictedToGenesisIndex());
+        }
+        val request = requestBuilder.build();
+        val response = blockingStub.getBlocksAtHeight(request);
+        val blocksAtHeight = BlocksAtHeight.fromJson(response.getValue());
+        if (Objects.isNull(blocksAtHeight) || blocksAtHeight.getBlocks().isEmpty() ) {
+            throw BlockNotFoundException.from(height);
+        }
+        return blocksAtHeight;
     }
 
     /**

@@ -150,12 +150,12 @@ class Base58 {
 
     static byte[] decodeChecked(int version, String input) {
         byte[] decoded = decode(input);
+        if (decoded.length < 4) {
+            throw new IllegalArgumentException("Input too short: " + decoded.length);
+        }
         byte versionByte = decoded[0];
         if (versionByte != version) {
             throw new IllegalArgumentException("Invalid version");
-        }
-        if (decoded.length < 4) {
-            throw new IllegalArgumentException("Input too short: " + decoded.length);
         }
         byte[] data = Arrays.copyOfRange(decoded, 0, decoded.length - 4);
         byte[] expectedChecksum = Arrays.copyOfRange(decoded, decoded.length - 4, decoded.length);

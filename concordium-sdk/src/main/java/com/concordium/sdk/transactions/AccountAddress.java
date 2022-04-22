@@ -33,11 +33,24 @@ public final class AccountAddress {
         return Base58.encodeChecked(VERSION, bytes);
     }
 
+    /**
+     * Create a new {@link AccountAddress} given the base58 encoded address.
+     * PRECONDITION: The encoded account address must conform to the {@link AccountAddress#VERSION}
+     * @param address A base58 encoded address.
+     * @return The created {@link AccountAddress}
+     */
     public static AccountAddress from(String address) {
         val addressBytes = Base58.decodeChecked(VERSION, address);
         return AccountAddress.from(addressBytes);
     }
 
+    /**
+     * Create a new alias.
+     * @param alias the counter to be used for the alias.
+     *              The alias counter must be non-negative and the max value allowed is {@link AccountAddress#ALIAS_MAX_VALUE}
+     * @return a new {@link AccountAddress} for the specified alias.
+     *
+     */
     public AccountAddress newAlias(int alias) {
         if (alias < 0) {
             throw new NumberFormatException("Alias must be non negative.");
@@ -52,6 +65,11 @@ public final class AccountAddress {
         return AccountAddress.from(newAlias);
     }
 
+    /**
+     * Check if one {@link AccountAddress} is an <i>alias</i> of another.
+     * @param other the other {@link AccountAddress}
+     * @return whether this {@link AccountAddress} is an alias of the other.
+     */
     public boolean isAliasOf(AccountAddress other) {
         return Arrays.equals(Arrays.copyOfRange(this.bytes, 0, ACCOUNT_ADDRESS_PREFIX_SIZE),
                 Arrays.copyOfRange(other.bytes, 0, ACCOUNT_ADDRESS_PREFIX_SIZE));
