@@ -24,6 +24,8 @@ import lombok.val;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import static com.concordium.sdk.transactions.Transaction.DEFAULT_NETWORK_ID;
+
 /**
  * The Client is responsible for sending requests to the node.
  */

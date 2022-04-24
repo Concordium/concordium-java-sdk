@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt64;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
@@ -9,6 +10,7 @@ import java.nio.ByteBuffer;
 
 @ToString
 @Getter
+@EqualsAndHashCode
 final class Transfer extends Payload {
 
     private final AccountAddress receiver;
@@ -26,6 +28,12 @@ final class Transfer extends Payload {
         buffer.put(receiver.getBytes());
         buffer.put(amount.getBytes());
         return buffer.array();
+    }
+
+    public static Transfer fromBytes(ByteBuffer source) {
+        val receiver = AccountAddress.fromBytes(source);
+        val amount = GTUAmount.fromBytes(source);
+        return new Transfer(receiver, amount);
     }
 
     @Override

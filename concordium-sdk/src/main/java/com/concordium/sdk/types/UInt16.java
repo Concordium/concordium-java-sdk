@@ -46,4 +46,9 @@ public final class UInt16 {
         return new UInt16(buffer.getShort());
     }
 
+    public static UInt16 fromBytes(ByteBuffer source) {
+        byte[] valueBytes = new byte[2];
+        source.get(valueBytes);
+        return UInt16.from(valueBytes);
+    }
 }

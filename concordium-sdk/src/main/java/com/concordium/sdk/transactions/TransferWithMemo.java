@@ -1,12 +1,16 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt64;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
 
 @Getter
+@EqualsAndHashCode
+@ToString
 class TransferWithMemo extends Payload {
 
     private final static TransactionType TYPE = TransactionType.TRANSFER_WITH_MEMO;
@@ -37,6 +41,12 @@ class TransferWithMemo extends Payload {
         buffer.put(memo.getBytes());
         buffer.put(getAmount().getValue().getBytes());
         return buffer.array();
+    }
+    public static TransferWithMemo fromBytes(ByteBuffer source) {
+        val receiver = AccountAddress.fromBytes(source);
+        val memo = Memo.fromBytes(source);
+        val amount = GTUAmount.fromBytes(source);
+        return new TransferWithMemo(receiver, amount, memo);
     }
 
     @Override

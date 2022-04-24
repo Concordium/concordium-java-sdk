@@ -40,4 +40,9 @@ public final class UInt32 {
         return new UInt32(buffer.getInt());
     }
 
+    public static UInt32 fromBytes(ByteBuffer source) {
+        byte[] valueBytes = new byte[4];
+        source.get(valueBytes);
+        return UInt32.from(valueBytes);
+    }
 }

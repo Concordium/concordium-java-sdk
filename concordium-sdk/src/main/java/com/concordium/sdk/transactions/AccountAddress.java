@@ -84,4 +84,10 @@ public final class AccountAddress {
         }
         return new AccountAddress(addressBytes);
     }
+
+    public static AccountAddress fromBytes(ByteBuffer source) {
+        byte[] addressBytes = new byte[BYTES];
+        source.get(addressBytes);
+        return AccountAddress.from(addressBytes);
+    }
 }

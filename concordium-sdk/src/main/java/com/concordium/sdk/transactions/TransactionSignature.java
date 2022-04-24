@@ -1,19 +1,23 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt16;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
+@EqualsAndHashCode
+@ToString
 public class TransactionSignature {
-    private final Map<Index, Map<Index, byte[]>> signatures = new HashMap<>();
+    private final Map<Index, Map<Index, byte[]>> signatures = new TreeMap<>();
 
     void put(Index credentialIndex, Index index, byte[] signature) {
         if (Objects.isNull(signatures.get(credentialIndex))) {
-            signatures.put(credentialIndex, new HashMap<>());
+            signatures.put(credentialIndex, new TreeMap<>());
         }
         signatures.get(credentialIndex).put(index, signature);
     }
@@ -32,6 +36,24 @@ public class TransactionSignature {
             }
         }
         return buffer.array();
+    }
+
+    public static TransactionSignature fromBytes(ByteBuffer source) {
+        byte outerLen = source.get();
+        TransactionSignature signatures = new TransactionSignature();
+        for (byte outerCount = 0; outerCount < outerLen; ++outerCount) {
+            Index credIdx = Index.fromBytes(source);
+            byte innerLen = source.get();
+            for (byte innerCount = 0; innerCount < innerLen; ++innerCount) {
+                Index keyIndex = Index.fromBytes(source);
+                UInt16 sigLen = UInt16.fromBytes(source);
+                // preallocating here is relatively safe since it can be at most 65kB.
+                byte[] sig = new byte[sigLen.getValue()];
+                source.get(sig);
+                signatures.put(credIdx, keyIndex, sig);
+            }
+        }
+        return signatures;
     }
 
     private ByteBuffer getByteBuffer() {

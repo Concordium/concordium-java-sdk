@@ -1,10 +1,14 @@
 package com.concordium.sdk.transactions;
 
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
 
+@EqualsAndHashCode
+@ToString
 final class AccountTransaction {
     private final TransactionSignature signature;
     private final TransactionHeader header;
@@ -29,5 +33,23 @@ final class AccountTransaction {
 
     BlockItem toBlockItem() {
         return BlockItem.from(this);
+    }
+
+    public static AccountTransaction fromBytes(ByteBuffer source) {
+        val signature = TransactionSignature.fromBytes(source);
+        val header = TransactionHeader.fromBytes(source);
+        byte tag = source.get();
+        Payload payload;
+        switch (tag) {
+            case 3:
+                payload = Transfer.fromBytes(source);
+                break;
+            case 22:
+                payload = TransferWithMemo.fromBytes(source);
+                break;
+            default:
+                throw new UnsupportedOperationException("Only transfers and transfers with memo are currently supported.");
+        }
+        return new AccountTransaction(signature, header, payload);
     }
 }
