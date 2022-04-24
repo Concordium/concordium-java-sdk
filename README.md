@@ -245,6 +245,16 @@ try {
 ConsensusStatus consensusStatus = client.getConsensusStatus();
 ```
 
+### getBlockInfo
+```java
+Hash blockHash = Hash.from("3d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1");
+try {
+    BlockInfo blockInfo = client.getBlockInfo(blockHash);
+} catch(BlockNotFoundException e) {
+    Log.Err(e.getMessage());
+}
+```
+
 ### getBlockSummary
 ```java
 Hash blockHash = Hash.from("3d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1");

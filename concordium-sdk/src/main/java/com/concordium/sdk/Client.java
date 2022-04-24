@@ -6,6 +6,7 @@ import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.BlocksAtHeight;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
@@ -154,6 +155,25 @@ public final class Client {
             throw BlockNotFoundException.from(blockHash);
         }
         return blockSummary;
+    }
+
+    /**
+     * Retrieves a {@link BlockInfo}
+     * @param blockHash the block {@link Hash} to query.
+     * @return A {@link BlockInfo} for the block
+     * @throws BlockNotFoundException If the block was not found.
+     */
+    public BlockInfo getBlockInfo(Hash blockHash) throws BlockNotFoundException {
+        val request = ConcordiumP2PRpc.BlockHash.getDefaultInstance()
+                .newBuilderForType()
+                .setBlockHashBytes(ByteString.copyFromUtf8(blockHash.asHex()))
+                .build();
+        val response = blockingStub.getBlockInfo(request);
+        val blockInfo = BlockInfo.fromJson(response.getValue());
+        if (Objects.isNull(blockInfo)) {
+            throw BlockNotFoundException.from(blockHash);
+        }
+        return blockInfo;
     }
 
     /**
