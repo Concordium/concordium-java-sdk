@@ -1,13 +1,14 @@
 package com.concordium.sdk.transactions;
 
-
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
+@Getter
 @ToString
 final class AccountTransaction {
     private final TransactionSignature signature;

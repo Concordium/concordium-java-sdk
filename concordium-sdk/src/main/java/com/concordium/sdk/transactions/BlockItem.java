@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.val;
 
+import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
@@ -18,6 +19,18 @@ final class BlockItem {
     private BlockItem(AccountTransaction accountTransaction) {
         this.type = BlockItemType.ACCOUNT_TRANSACTION;
         this.accountTransaction = accountTransaction;
+    }
+
+    @Nullable
+    /**
+     * Retrieve the account transaction from the block item, if the block item contains it. Otherwise, returns null.
+     */
+    public AccountTransaction getAccountTransaction() {
+        if (type == BlockItemType.ACCOUNT_TRANSACTION) {
+            return accountTransaction;
+        } else {
+            return null;
+        }
     }
 
     public static BlockItem from(AccountTransaction accountTransaction) {
