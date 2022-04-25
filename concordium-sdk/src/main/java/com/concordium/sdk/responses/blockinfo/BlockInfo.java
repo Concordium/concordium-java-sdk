@@ -85,8 +85,8 @@ public class BlockInfo {
      */
     private Integer transactionCount;
     /**
-     * / Time when the block was added to the node's tree. This is a subjective
-     * / (i.e., node specific) value.
+     *  Time when the block was added to the node's tree. This is a subjective
+     *  (i.e., node specific) value.
      */
     private OffsetDateTime blockArriveTime;
     public static BlockInfo fromJson(String blockInfoJsonString) {

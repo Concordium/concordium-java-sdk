@@ -21,10 +21,10 @@ final class BlockItem {
         this.accountTransaction = accountTransaction;
     }
 
-    @Nullable
     /**
      * Retrieve the account transaction from the block item, if the block item contains it. Otherwise, returns null.
      */
+    @Nullable
     public AccountTransaction getAccountTransaction() {
         if (type == BlockItemType.ACCOUNT_TRANSACTION) {
             return accountTransaction;
@@ -58,7 +58,7 @@ final class BlockItem {
         return buffer.array();
     }
 
-    public static BlockItem fromBytes(ByteBuffer source) {
+    static BlockItem fromBytes(ByteBuffer source) {
         val kind = BlockItemType.fromBytes(source);
         switch (kind) {
             case ACCOUNT_TRANSACTION:
@@ -75,7 +75,7 @@ final class BlockItem {
 
     public static BlockItem fromVersionedBytes(ByteBuffer source) {
         byte tag = source.get();
-        if (tag == 0) {
+        if ((int)tag == VERSION) {
             return BlockItem.fromBytes(source);
         } else {
             throw new UnsupportedOperationException("Only block items in version 0 format are supported.");
