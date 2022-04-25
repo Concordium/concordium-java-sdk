@@ -5,9 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * A credential on the chain.
+ */
 @Getter
 @ToString
 public final class Credential {
+    /**
+     * The version.
+     */
     private final String version;
     private final Value value;
 

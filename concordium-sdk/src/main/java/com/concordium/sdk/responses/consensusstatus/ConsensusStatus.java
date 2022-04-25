@@ -16,7 +16,7 @@ import java.util.Objects;
  */
 @Getter
 @ToString
-public final class ConsensusInfo {
+public final class ConsensusStatus {
     /**
      * Hash of the current best block. The best block is a protocol defined
      * block that the node must use a parent block to build the chain on.
@@ -46,7 +46,7 @@ public final class ConsensusInfo {
     private Hash lastFinalizedBlock;
     /**
      * The absolute height of the best block.
-     * See {@link ConsensusInfo#bestBlock}
+     * See {@link ConsensusStatus#bestBlock}
      */
     private final int bestBlockHeight;
     /**
@@ -86,7 +86,7 @@ public final class ConsensusInfo {
     /**
      * Number of blocks that arrived, i.e., were added to the tree. Note that
      * in some cases this can be more than
-     * {@link ConsensusInfo#blocksReceivedCount} since blocks that the node itself
+     * {@link ConsensusStatus#blocksReceivedCount} since blocks that the node itself
      * produces count towards this, but are not received.
      */
     private final int blocksVerifiedCount;
@@ -161,7 +161,7 @@ public final class ConsensusInfo {
     /**
      * Block hash of the genesis block of current era, i.e., since the last
      * protocol update. Initially this is equal to
-     * {@link ConsensusInfo#genesisBlock}.
+     * {@link ConsensusStatus#genesisBlock}.
      */
     private final String currentEraGenesisBlock;
     /**
@@ -169,45 +169,45 @@ public final class ConsensusInfo {
      */
     private final Date currentEraGenesisTime;
 
-    public static ConsensusInfo fromJson(String json) {
+    public static ConsensusStatus fromJson(String json) {
         try {
-            return JsonMapper.INSTANCE.readValue(json, ConsensusInfo.class);
+            return JsonMapper.INSTANCE.readValue(json, ConsensusStatus.class);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse ConsensusStatus JSON", e);
         }
     }
 
     @JsonCreator
-    ConsensusInfo(@JsonProperty("bestBlock") String bestBlock,
-                  @JsonProperty("genesisBlock") String genesisBlock,
-                  @JsonProperty("genesisTime") Date genesisTime,
-                  @JsonProperty("slotDuration") int slotDuration,
-                  @JsonProperty("epochDuration") int epochDuration,
-                  @JsonProperty("lastFinalizedBlock") String lastFinalizedBlock,
-                  @JsonProperty("bestBlockHeight") int bestBlockHeight,
-                  @JsonProperty("lastFinalizedBlockHeight") int lastFinalizedBlockHeight,
-                  @JsonProperty("blocksReceivedCount") int blocksReceivedCount,
-                  @JsonProperty("blockLastReceivedTime") String blockLastReceivedTime,
-                  @JsonProperty("blockReceiveLatencyEMA") double blockReceiveLatencyEMA,
-                  @JsonProperty("blockReceiveLatencyEMSD") double blockReceiveLatencyEMSD,
-                  @JsonProperty("blockReceivePeriodEMA") double blockReceivePeriodEMA,
-                  @JsonProperty("blockReceivePeriodEMSD") double blockReceivePeriodEMSD,
-                  @JsonProperty("blocksVerifiedCount") int blocksVerifiedCount,
-                  @JsonProperty("blockLastArrivedTime") String blockLastArrivedTime,
-                  @JsonProperty("blockArriveLatencyEMA") double blockArriveLatencyEMA,
-                  @JsonProperty("blockArriveLatencyEMSD") double blockArriveLatencyEMSD,
-                  @JsonProperty("blockArrivePeriodEMA") double blockArrivePeriodEMA,
-                  @JsonProperty("blockArrivePeriodEMSD") double blockArrivePeriodEMSD,
-                  @JsonProperty("transactionsPerBlockEMA") double transactionsPerBlockEMA,
-                  @JsonProperty("transactionsPerBlockEMSD") double transactionsPerBlockEMSD,
-                  @JsonProperty("finalizationCount") int finalizationCount,
-                  @JsonProperty("lastFinalizedTime") String lastFinalizedTime,
-                  @JsonProperty("finalizationPeriodEMA") double finalizationPeriodEMA,
-                  @JsonProperty("finalizationPeriodEMSD") double finalizationPeriodEMSD,
-                  @JsonProperty("protocolVersion") int protocolVersion,
-                  @JsonProperty("genesisIndex") int genesisIndex,
-                  @JsonProperty("currentEraGenesisBlock") String currentEraGenesisBlock,
-                  @JsonProperty("currentEraGenesisTime") Date currentEraGenesisTime) {
+    ConsensusStatus(@JsonProperty("bestBlock") String bestBlock,
+                    @JsonProperty("genesisBlock") String genesisBlock,
+                    @JsonProperty("genesisTime") Date genesisTime,
+                    @JsonProperty("slotDuration") int slotDuration,
+                    @JsonProperty("epochDuration") int epochDuration,
+                    @JsonProperty("lastFinalizedBlock") String lastFinalizedBlock,
+                    @JsonProperty("bestBlockHeight") int bestBlockHeight,
+                    @JsonProperty("lastFinalizedBlockHeight") int lastFinalizedBlockHeight,
+                    @JsonProperty("blocksReceivedCount") int blocksReceivedCount,
+                    @JsonProperty("blockLastReceivedTime") String blockLastReceivedTime,
+                    @JsonProperty("blockReceiveLatencyEMA") double blockReceiveLatencyEMA,
+                    @JsonProperty("blockReceiveLatencyEMSD") double blockReceiveLatencyEMSD,
+                    @JsonProperty("blockReceivePeriodEMA") double blockReceivePeriodEMA,
+                    @JsonProperty("blockReceivePeriodEMSD") double blockReceivePeriodEMSD,
+                    @JsonProperty("blocksVerifiedCount") int blocksVerifiedCount,
+                    @JsonProperty("blockLastArrivedTime") String blockLastArrivedTime,
+                    @JsonProperty("blockArriveLatencyEMA") double blockArriveLatencyEMA,
+                    @JsonProperty("blockArriveLatencyEMSD") double blockArriveLatencyEMSD,
+                    @JsonProperty("blockArrivePeriodEMA") double blockArrivePeriodEMA,
+                    @JsonProperty("blockArrivePeriodEMSD") double blockArrivePeriodEMSD,
+                    @JsonProperty("transactionsPerBlockEMA") double transactionsPerBlockEMA,
+                    @JsonProperty("transactionsPerBlockEMSD") double transactionsPerBlockEMSD,
+                    @JsonProperty("finalizationCount") int finalizationCount,
+                    @JsonProperty("lastFinalizedTime") String lastFinalizedTime,
+                    @JsonProperty("finalizationPeriodEMA") double finalizationPeriodEMA,
+                    @JsonProperty("finalizationPeriodEMSD") double finalizationPeriodEMSD,
+                    @JsonProperty("protocolVersion") int protocolVersion,
+                    @JsonProperty("genesisIndex") int genesisIndex,
+                    @JsonProperty("currentEraGenesisBlock") String currentEraGenesisBlock,
+                    @JsonProperty("currentEraGenesisTime") Date currentEraGenesisTime) {
         if (!Objects.isNull(bestBlock)) {
             this.bestBlock = Hash.from(bestBlock);
         }

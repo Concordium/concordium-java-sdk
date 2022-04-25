@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.accountinfo.credential;
 
+import com.concordium.sdk.transactions.Index;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -10,11 +11,11 @@ import java.util.Map;
 @Getter
 @ToString
 public final class CredentialPublicKeys {
-    private final Map<String, Key> keys;
+    private final Map<Index, Key> keys;
     private final int threshold;
 
     @JsonCreator
-    CredentialPublicKeys(@JsonProperty("keys") Map<String, Key> keys,
+    CredentialPublicKeys(@JsonProperty("keys") Map<Index, Key> keys,
                          @JsonProperty("threshold") int threshold) {
         this.keys = keys;
         this.threshold = threshold;

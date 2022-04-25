@@ -9,11 +9,14 @@ import lombok.ToString;
 @ToString
 public final class Value {
     private final Contents contents;
-    private final String type;
+    /**
+     * The type of the {@link Credential}
+     */
+    private final CredentialType type;
 
     @JsonCreator
     public Value(@JsonProperty("contents") Contents contents,
-                 @JsonProperty("type") String type) {
+                 @JsonProperty("type") CredentialType type) {
         this.contents = contents;
         this.type = type;
     }

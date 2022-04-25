@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The attributes associated with an `Identity`
+ * The various fields are encrypted.
+ */
 @Getter
 @ToString
 public final class Attributes {

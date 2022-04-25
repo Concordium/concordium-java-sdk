@@ -9,11 +9,30 @@ import lombok.ToString;
 @Getter
 @ToString
 public final class Baker {
+    /**
+     * The baker id.
+     * Note. The baker id is non-negative.
+     */
     private final int bakerId;
+    /**
+     * The staked amount.
+     */
     private final GTUAmount stakedAmount;
+    /**
+     * Whether earnings should be restaked automatically or not.
+     */
     private final boolean restakeEarnings;
+    /**
+     * The baker's public VRF key
+     */
     private final String bakerElectionVerifyKey;
+    /**
+     * The baker's public signature key
+     */
     private final String bakerSignatureVerifyKey;
+    /**
+     * The baker's public key for finalization record aggregation
+     */
     private final String bakerAggregationVerifyKey;
 
     @JsonCreator

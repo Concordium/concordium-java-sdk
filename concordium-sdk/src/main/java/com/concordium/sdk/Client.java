@@ -8,7 +8,7 @@ import com.concordium.sdk.responses.BlocksAtHeight;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
-import com.concordium.sdk.responses.consensusstatus.ConsensusInfo;
+import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
@@ -126,14 +126,14 @@ public final class Client {
     }
 
     /**
-     * Retrieves the {@link ConsensusInfo}
+     * Retrieves the {@link ConsensusStatus}
      * which yields information of the chain,
      * examples are the protocol version, slot duration, genesis block etc.
-     * @return the {@link ConsensusInfo}
+     * @return the {@link ConsensusStatus}
      */
-    public ConsensusInfo getConsensusStatus() {
+    public ConsensusStatus getConsensusStatus() {
         val response = blockingStub.getConsensusStatus(ConcordiumP2PRpc.Empty.getDefaultInstance());
-        return ConsensusInfo.fromJson(response.getValue());
+        return ConsensusStatus.fromJson(response.getValue());
     }
 
     /**
