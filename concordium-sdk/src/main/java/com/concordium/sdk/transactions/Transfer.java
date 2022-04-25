@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 
 @ToString
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 final class Transfer extends Payload {
 
     private final AccountAddress receiver;

@@ -9,7 +9,7 @@ import lombok.val;
 import java.nio.ByteBuffer;
 
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString
 class TransferWithMemo extends Payload {
 
