@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 
 @Getter
 @EqualsAndHashCode
+@ToString
 class TransactionHeader {
     private final AccountAddress sender;
     private final UInt64 accountNonce;
@@ -34,5 +35,17 @@ class TransactionHeader {
         buffer.put(payloadSize.getBytes());
         buffer.put(expiry.getBytes());
         return buffer.array();
+    }
+
+    public static TransactionHeader fromBytes(ByteBuffer source) {
+        AccountAddress sender = AccountAddress.fromBytes(source);
+        UInt64 accountNonce = UInt64.fromBytes(source);
+        UInt64 maxEnergyCost = UInt64.fromBytes(source);
+        UInt32 payloadSize = UInt32.fromBytes(source);
+        UInt64 expiry = UInt64.fromBytes(source);
+        TransactionHeader header = new TransactionHeader(sender, accountNonce, expiry);
+        header.setMaxEnergyCost(maxEnergyCost);
+        header.setPayloadSize(payloadSize);
+        return header;
     }
 }

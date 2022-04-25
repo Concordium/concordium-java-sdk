@@ -5,11 +5,13 @@ import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
+import lombok.EqualsAndHashCode;
 import lombok.val;
 
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
+@EqualsAndHashCode
 abstract class Payload {
     TransactionHeader header;
     TransactionSignature signature;

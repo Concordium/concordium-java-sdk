@@ -2,6 +2,10 @@
 
 ## Unreleased changes
 
+## 1.3.0
+- Support for transaction deserialization.
+- Support for `getBlockInfo`.
+
 ## 1.2.0
 - Support for `getBlocksAtHeight`
 

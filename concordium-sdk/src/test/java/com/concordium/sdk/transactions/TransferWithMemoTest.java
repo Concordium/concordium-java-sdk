@@ -6,6 +6,8 @@ import com.concordium.sdk.types.UInt64;
 import lombok.val;
 import org.junit.Test;
 
+import java.nio.ByteBuffer;
+
 import static org.junit.Assert.*;
 
 public class TransferWithMemoTest {
@@ -37,6 +39,7 @@ public class TransferWithMemoTest {
 
             val blockItem = transferWithMemo.toBlockItem();
             assertEquals(Hash.from("2cf00d7d5064ab6f70102a8bba4082b7d85b9b411f981f00b5994adc0b461083"), blockItem.getHash());
+            assertEquals(blockItem.getHash(), BlockItem.fromVersionedBytes(ByteBuffer.wrap(blockItem.getVersionedBytes())).getHash());
             assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_TRANSFER_WITH_MEMO_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getVersionedBytes()));
         } catch (TransactionCreationException e) {
             fail("Unexpected error: " + e.getMessage());

@@ -41,4 +41,10 @@ public final class UInt64 {
         buffer.flip();
         return new UInt64(buffer.getLong());
     }
+
+    public static UInt64 fromBytes(ByteBuffer source) {
+        byte[] valueBytes = new byte[8];
+        source.get(valueBytes);
+        return UInt64.from(valueBytes);
+    }
 }

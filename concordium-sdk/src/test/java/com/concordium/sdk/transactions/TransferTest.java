@@ -7,6 +7,8 @@ import lombok.val;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 
+import java.nio.ByteBuffer;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -35,12 +37,12 @@ public class TransferTest {
         assertEquals(41, transfer.getBytes().length);
         assertEquals(601, transfer.header.getMaxEnergyCost().getValue());
         assertEquals("60afc40624ba9c9698efb5f49cae32810bce082b08bd55ca625d63f3e4dd56a2", Hex.encodeHexString(transfer.getDataToSign()));
-
         val blockItem = transfer.toAccountTransaction().toBlockItem();
 
         val blockItemHash = blockItem.getHash();
         assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getBytes()));
         assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getVersionedBytes()));
+        assertEquals(blockItem.getHash(), BlockItem.fromVersionedBytes(ByteBuffer.wrap(blockItem.getVersionedBytes())).getHash());
         assertEquals("6a209eab54720aad71370a6adb4f0661d3606fca25ac544dc0ac0e76e099feba", blockItemHash.asHex());
     }
 }

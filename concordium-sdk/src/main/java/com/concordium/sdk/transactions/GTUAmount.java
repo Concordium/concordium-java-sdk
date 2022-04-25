@@ -3,6 +3,8 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.types.UInt64;
 import lombok.Getter;
 
+import java.nio.ByteBuffer;
+
 @Getter
 public class GTUAmount {
     private final UInt64 value;
@@ -23,6 +25,10 @@ public class GTUAmount {
         return value.getBytes();
     }
 
+    public static GTUAmount fromBytes(ByteBuffer source) {
+        UInt64 value = UInt64.fromBytes(source);
+        return new GTUAmount(value);
+    }
     @Override
     public String toString() {
         return value.toString();
