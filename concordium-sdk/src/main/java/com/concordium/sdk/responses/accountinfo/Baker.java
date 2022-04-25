@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.accountinfo;
 
+import com.concordium.sdk.transactions.GTUAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.ToString;
 @ToString
 public final class Baker {
     private final int bakerId;
-    private final String stakedAmount;
+    private final GTUAmount stakedAmount;
     private final boolean restakeEarnings;
     private final String bakerElectionVerifyKey;
     private final String bakerSignatureVerifyKey;
@@ -17,7 +18,7 @@ public final class Baker {
 
     @JsonCreator
     Baker(@JsonProperty("bakerId") int bakerId,
-          @JsonProperty("stakedAmount") String stakedAmount,
+          @JsonProperty("stakedAmount") GTUAmount stakedAmount,
           @JsonProperty("restakeEarnings") boolean restakeEarnings,
           @JsonProperty("bakerElectionVerifyKey") String bakerElectionVerifyKey,
           @JsonProperty("bakerSignatureVerifyKey") String bakerSignatureVerifyKey,

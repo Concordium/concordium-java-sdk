@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+- Documentation for `AccountInfo`.
+- Fix bug in `AccountInfo` such that it supports `ScheduledRelease`s.
+- Rename and documentation for ConsensusStatus. It is now called ConsensusInfo.
 
 ## 1.3.0
 - Support for transaction deserialization.

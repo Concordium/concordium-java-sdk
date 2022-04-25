@@ -8,7 +8,7 @@ import com.concordium.sdk.responses.BlocksAtHeight;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
-import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.consensusstatus.ConsensusInfo;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
@@ -24,8 +24,6 @@ import lombok.val;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import static com.concordium.sdk.transactions.Transaction.DEFAULT_NETWORK_ID;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -128,14 +126,14 @@ public final class Client {
     }
 
     /**
-     * Retrieves the {@link ConsensusStatus}
+     * Retrieves the {@link ConsensusInfo}
      * which yields information of the chain,
      * examples are the protocol version, slot duration, genesis block etc.
-     * @return the {@link ConsensusStatus}
+     * @return the {@link ConsensusInfo}
      */
-    public ConsensusStatus getConsensusStatus() {
+    public ConsensusInfo getConsensusStatus() {
         val response = blockingStub.getConsensusStatus(ConcordiumP2PRpc.Empty.getDefaultInstance());
-        return ConsensusStatus.fromJson(response.getValue());
+        return ConsensusInfo.fromJson(response.getValue());
     }
 
     /**

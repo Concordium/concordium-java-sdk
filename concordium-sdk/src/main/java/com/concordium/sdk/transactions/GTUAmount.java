@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt64;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;
@@ -19,6 +20,11 @@ public class GTUAmount {
 
     public static GTUAmount fromMicro(String val) {
         return new GTUAmount(UInt64.from(val));
+    }
+
+    @JsonCreator
+    GTUAmount(String amount) {
+        this.value = UInt64.from(amount);
     }
 
     byte[] getBytes() {
