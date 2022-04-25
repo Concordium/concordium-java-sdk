@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Fix parsing bug for `AccountInfo`
 
 ## 1.3.0
 - Support for transaction deserialization.
