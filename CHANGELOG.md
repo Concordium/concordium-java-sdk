@@ -2,6 +2,8 @@
 
 ## Unreleased changes
 - Fix parsing bug for `AccountInfo`
+- Transaction `Status` now public
+- `BlockItem` now public
 
 ## 1.3.0
 - Support for transaction deserialization.
