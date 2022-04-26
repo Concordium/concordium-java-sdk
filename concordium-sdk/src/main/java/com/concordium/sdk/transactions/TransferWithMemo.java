@@ -30,6 +30,11 @@ public class TransferWithMemo extends Payload {
     }
 
     @Override
+    public PayloadType getType() {
+        return PayloadType.TRANSFER_WITH_MEMO;
+    }
+
+    @Override
     byte[] getBytes() {
         val buffer = ByteBuffer.allocate(
                 TransactionType.BYTES +
