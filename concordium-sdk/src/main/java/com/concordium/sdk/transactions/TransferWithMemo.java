@@ -16,16 +16,16 @@ class TransferWithMemo extends Payload {
     private final static TransactionType TYPE = TransactionType.TRANSFER_WITH_MEMO;
 
     private final AccountAddress receiver;
-    private final GTUAmount amount;
+    private final CCDAmount amount;
     private final Memo memo;
 
-    private TransferWithMemo(AccountAddress receiver, GTUAmount amount, Memo memo) {
+    private TransferWithMemo(AccountAddress receiver, CCDAmount amount, Memo memo) {
         this.receiver = receiver;
         this.amount = amount;
         this.memo = memo;
     }
 
-    static TransferWithMemo createNew(AccountAddress receiver, GTUAmount amount, Memo memo) {
+    static TransferWithMemo createNew(AccountAddress receiver, CCDAmount amount, Memo memo) {
         return new TransferWithMemo(receiver, amount, memo);
     }
 
@@ -45,7 +45,7 @@ class TransferWithMemo extends Payload {
     public static TransferWithMemo fromBytes(ByteBuffer source) {
         val receiver = AccountAddress.fromBytes(source);
         val memo = Memo.fromBytes(source);
-        val amount = GTUAmount.fromBytes(source);
+        val amount = CCDAmount.fromBytes(source);
         return new TransferWithMemo(receiver, amount, memo);
     }
 

@@ -3,7 +3,7 @@ package com.concordium.sdk.responses.accountinfo;
 import com.concordium.sdk.responses.accountinfo.credential.Credential;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.AccountAddress;
-import com.concordium.sdk.transactions.GTUAmount;
+import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Index;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,7 +30,7 @@ public final class AccountInfo {
     /**
      * The amount of CCD available for the account.
      */
-    private final GTUAmount accountAmount;
+    private final CCDAmount accountAmount;
     /**
      * The account threshold for this account i.e., how
      * many credentials that needs to sign transactions for this account.
@@ -72,7 +72,7 @@ public final class AccountInfo {
     @JsonCreator
     AccountInfo(@JsonProperty("accountAddress") String accountAddress,
                 @JsonProperty("accountNonce") int accountNonce,
-                @JsonProperty("accountAmount") GTUAmount accountAmount,
+                @JsonProperty("accountAmount") CCDAmount accountAmount,
                 @JsonProperty("accountThreshold") int accountThreshold,
                 @JsonProperty("accountEncryptionKey") String accountEncryptionKey,
                 @JsonProperty("accountIndex") int accountIndex,
@@ -94,7 +94,6 @@ public final class AccountInfo {
 
     public static AccountInfo fromJson(String accountInfoJsonString) {
         try {
-            System.out.println("accountInfoJsonString = " + accountInfoJsonString);
             return JsonMapper.INSTANCE.readValue(accountInfoJsonString, AccountInfo.class);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse AccountInfo JSON", e);

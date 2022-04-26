@@ -1,6 +1,6 @@
 package com.concordium.sdk.responses.accountinfo;
 
-import com.concordium.sdk.transactions.GTUAmount;
+import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public final class Baker {
     /**
      * The staked amount.
      */
-    private final GTUAmount stakedAmount;
+    private final CCDAmount stakedAmount;
     /**
      * Whether earnings should be restaked automatically or not.
      */
@@ -37,7 +37,7 @@ public final class Baker {
 
     @JsonCreator
     Baker(@JsonProperty("bakerId") int bakerId,
-          @JsonProperty("stakedAmount") GTUAmount stakedAmount,
+          @JsonProperty("stakedAmount") CCDAmount stakedAmount,
           @JsonProperty("restakeEarnings") boolean restakeEarnings,
           @JsonProperty("bakerElectionVerifyKey") String bakerElectionVerifyKey,
           @JsonProperty("bakerSignatureVerifyKey") String bakerSignatureVerifyKey,

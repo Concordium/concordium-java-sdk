@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
@@ -12,15 +13,23 @@ import java.nio.ByteBuffer;
 class TransactionHeader {
     private final AccountAddress sender;
     private final UInt64 accountNonce;
-    private final UInt64 expiry;
+    private final TransactionExpiry expiry;
 
     @Setter
     private UInt64 maxEnergyCost;
     @Setter
     private UInt32 payloadSize;
 
+    /**
+     * Create a {@link TransactionHeader}
+     * @param sender the sender {@link AccountAddress}
+     * @param accountNonce the nonce.
+     *                     Note. this should be the next available account nonce.
+     *                     This can e.g. be retrieved via {@link com.concordium.sdk.responses.accountinfo.AccountInfo}
+     * @param expiry A Unix timestamp indicating when the transaction should expire.
+     */
     @Builder
-    TransactionHeader(AccountAddress sender, UInt64 accountNonce, UInt64 expiry) {
+    TransactionHeader(AccountAddress sender, UInt64 accountNonce, TransactionExpiry expiry) {
         this.sender = sender;
         this.accountNonce = accountNonce;
         this.expiry = expiry;

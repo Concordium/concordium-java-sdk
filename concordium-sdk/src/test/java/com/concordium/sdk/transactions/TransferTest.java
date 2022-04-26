@@ -18,7 +18,7 @@ public class TransferTest {
     public void testCreateTransfer() {
         val transfer = Transfer.createNew(
                         AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"),
-                        GTUAmount.fromMicro(17))
+                        CCDAmount.fromMicro(17))
                 .withHeader(TransactionHeader
                         .builder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))

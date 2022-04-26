@@ -14,9 +14,9 @@ import java.nio.ByteBuffer;
 final class Transfer extends Payload {
 
     private final AccountAddress receiver;
-    private final GTUAmount amount;
+    private final CCDAmount amount;
 
-    private Transfer(AccountAddress receiver, GTUAmount amount) {
+    private Transfer(AccountAddress receiver, CCDAmount amount) {
         this.receiver = receiver;
         this.amount = amount;
     }
@@ -32,7 +32,7 @@ final class Transfer extends Payload {
 
     public static Transfer fromBytes(ByteBuffer source) {
         val receiver = AccountAddress.fromBytes(source);
-        val amount = GTUAmount.fromBytes(source);
+        val amount = CCDAmount.fromBytes(source);
         return new Transfer(receiver, amount);
     }
 
@@ -41,7 +41,7 @@ final class Transfer extends Payload {
         return BASE_ENERGY_COST;
     }
 
-    static Transfer createNew(AccountAddress receiver, GTUAmount amount) {
+    static Transfer createNew(AccountAddress receiver, CCDAmount amount) {
         return new Transfer(receiver, amount);
     }
 

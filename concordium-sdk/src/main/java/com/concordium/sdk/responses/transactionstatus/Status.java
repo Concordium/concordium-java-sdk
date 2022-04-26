@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = JsonFormat.Shape.STRING)
-enum Status {
+public enum Status {
     @JsonProperty("received")
     RECEIVED,
     @JsonProperty("finalized")

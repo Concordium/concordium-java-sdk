@@ -30,7 +30,7 @@ public interface Transaction {
 
     int DEFAULT_NETWORK_ID = 100;
 
-    static void verifyTransferInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress receiver, GTUAmount amount, TransactionSigner signer) throws TransactionCreationException {
+    static void verifyTransferInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress receiver, CCDAmount amount, TransactionSigner signer) throws TransactionCreationException {
         if (Objects.isNull(sender)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
         }

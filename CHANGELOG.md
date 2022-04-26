@@ -1,8 +1,9 @@
 # Changelog
 
 ## Unreleased changes
-- Documentation for `AccountInfo`.
-- Fix bug in `AccountInfo` such that it supports `ScheduledRelease`s.
+- Fix parsing bug for `AccountInfo`
+- Transaction `Status` now public
+- `BlockItem` now public
 
 ## 1.3.0
 - Support for transaction deserialization.

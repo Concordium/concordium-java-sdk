@@ -10,7 +10,7 @@ import lombok.val;
 public class TransferTransaction extends AbstractTransaction {
     private final AccountAddress sender;
     private final AccountAddress receiver;
-    private final GTUAmount amount;
+    private final CCDAmount amount;
     private final AccountNonce nonce;
     private final Expiry expiry;
     private final TransactionSigner signer;
@@ -20,7 +20,7 @@ public class TransferTransaction extends AbstractTransaction {
     @Builder
     public TransferTransaction(AccountAddress sender,
                                AccountAddress receiver,
-                               GTUAmount amount,
+                               CCDAmount amount,
                                AccountNonce nonce,
                                Expiry expiry,
                                TransactionSigner signer) throws TransactionCreationException {

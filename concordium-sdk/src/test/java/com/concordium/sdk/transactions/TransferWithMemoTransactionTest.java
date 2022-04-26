@@ -21,7 +21,7 @@ public class TransferWithMemoTransactionTest {
                     .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(TransactionSigner.from(
@@ -45,7 +45,7 @@ public class TransferWithMemoTransactionTest {
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(getValidSigner())
@@ -65,7 +65,7 @@ public class TransferWithMemoTransactionTest {
                     .builder()
                     .memo(Memo.from("Hello, World!".getBytes(StandardCharsets.UTF_8)))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(getValidSigner())
@@ -85,7 +85,7 @@ public class TransferWithMemoTransactionTest {
                     .builder()
                     .memo(Memo.from("Hello, World!".getBytes(StandardCharsets.UTF_8)))
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(getValidSigner())
@@ -126,7 +126,7 @@ public class TransferWithMemoTransactionTest {
                     .memo(Memo.from("Hello, World!".getBytes(StandardCharsets.UTF_8)))
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .expiry(Expiry.from(123456))
                     .signer(getValidSigner())
                     .build();
@@ -143,7 +143,7 @@ public class TransferWithMemoTransactionTest {
         try {
             AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc");
             AccountAddress receiver = AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM");
-            GTUAmount amount = GTUAmount.fromMicro(17);
+            CCDAmount amount = CCDAmount.fromMicro(17);
             AccountNonce accountNonce = AccountNonce.from(78910);
 
             TransferWithMemoTransaction
@@ -171,7 +171,7 @@ public class TransferWithMemoTransactionTest {
                     .memo(Memo.from("Hello, World!".getBytes(StandardCharsets.UTF_8)))
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .build();
@@ -191,7 +191,7 @@ public class TransferWithMemoTransactionTest {
                     .memo(Memo.from("Hello, World!".getBytes(StandardCharsets.UTF_8)))
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(getSignerWithMalformedSecretKey())

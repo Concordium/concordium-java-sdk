@@ -17,7 +17,7 @@ public class TransferWithMemoTest {
         try {
             val transferWithMemo = TransferWithMemo.createNew(
                             AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"),
-                            GTUAmount.fromMicro(17),
+                            CCDAmount.fromMicro(17),
                             Memo.from(new byte[]{1, 2, 3, 4, 5}))
                     .withHeader(TransactionHeader
                             .builder()
