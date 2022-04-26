@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+
+## 1.6.0
 - `AccountTransaction` now exposes a `getType` function which
    returns the type of the underlying `Payload`.
 
