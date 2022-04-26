@@ -4,6 +4,7 @@
 - Fix parsing bug for `AccountInfo`
 - Transaction `Status` now public
 - `BlockItem` now public
+- `Payload` now exposes `getDataToSign`
 
 ## 1.3.0
 - Support for transaction deserialization.

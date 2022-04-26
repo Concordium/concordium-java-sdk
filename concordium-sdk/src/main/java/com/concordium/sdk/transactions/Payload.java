@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 
 @EqualsAndHashCode
-abstract class Payload {
+public abstract class Payload {
     TransactionHeader header;
     TransactionSignature signature;
 
@@ -52,7 +52,7 @@ abstract class Payload {
         return this;
     }
 
-    byte[] getDataToSign() {
+    public byte[] getDataToSign() {
         val headerBytes = header.getBytes();
         val payloadBytes = getBytes();
         val buffer = ByteBuffer.allocate(headerBytes.length + payloadBytes.length);
