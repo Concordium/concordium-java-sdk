@@ -32,6 +32,15 @@ public final class AccountTransaction {
         return buffer.array();
     }
 
+    /**
+     * Returns the type of the {@link Payload} associated
+     * with this `AccountTransaction`.
+     * @return the {@link com.concordium.sdk.transactions.Payload.PayloadType}
+     */
+    public Payload.PayloadType getType() {
+        return this.payload.getType();
+    }
+
     BlockItem toBlockItem() {
         return BlockItem.from(this);
     }
@@ -53,4 +62,5 @@ public final class AccountTransaction {
         }
         return new AccountTransaction(signature, header, payload);
     }
+
 }

@@ -22,6 +22,11 @@ public final class Transfer extends Payload {
     }
 
     @Override
+    public PayloadType getType() {
+        return PayloadType.TRANSFER;
+    }
+
+    @Override
     byte[] getBytes() {
         val buffer = ByteBuffer.allocate(TransactionType.BYTES + AccountAddress.BYTES + UInt64.BYTES);
         buffer.put(TransactionType.SIMPLE_TRANSFER.getValue());
