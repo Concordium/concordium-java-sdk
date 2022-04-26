@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+
+## 1.5.0
 - Exposed more of the `transactions` in the API.
 
 ## 1.4.0
