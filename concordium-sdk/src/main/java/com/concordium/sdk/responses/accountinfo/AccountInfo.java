@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.accountinfo;
 
 import com.concordium.sdk.responses.accountinfo.credential.Credential;
 import com.concordium.sdk.serializing.JsonMapper;
+import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,6 +17,7 @@ import java.util.Map;
 @Getter
 @ToString
 public final class AccountInfo {
+    private final AccountAddress accountAddress;
     private final int accountNonce;
     private final String accountAmount;
     private final int accountThreshold;
@@ -27,7 +29,8 @@ public final class AccountInfo {
     private final Map<String, Credential> accountCredentials;
 
     @JsonCreator
-    AccountInfo(@JsonProperty("accountNonce") int accountNonce,
+    AccountInfo(@JsonProperty("accountAddress") String accountAddress,
+                @JsonProperty("accountNonce") int accountNonce,
                 @JsonProperty("accountAmount") String accountAmount,
                 @JsonProperty("accountThreshold") int accountThreshold,
                 @JsonProperty("accountEncryptionKey") String accountEncryptionKey,
@@ -36,6 +39,7 @@ public final class AccountInfo {
                 @JsonProperty("accountEncryptedAmount") EncryptedAmount accountEncryptedAmount,
                 @JsonProperty("accountReleaseSchedule") ReleaseSchedule accountReleaseSchedule,
                 @JsonProperty("accountCredentials") Map<String, Credential> accountCredentials) {
+        this.accountAddress = AccountAddress.from(accountAddress);
         this.accountNonce = accountNonce;
         this.accountAmount = accountAmount;
         this.accountThreshold = accountThreshold;
