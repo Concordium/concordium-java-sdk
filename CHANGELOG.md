@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Exposed more of the `transactions` in the API.
 
 ## 1.4.0
 - Fix parsing bug for `AccountInfo` where scheduled releases was not included.

@@ -6,7 +6,7 @@ import lombok.ToString;
 import java.nio.ByteBuffer;
 
 @ToString
-enum BlockItemType {
+public enum BlockItemType {
     ACCOUNT_TRANSACTION((byte)0),
     CREDENTIAL_DEPLOYMENT((byte)1),
     UPDATE_INSTRUCTION((byte)2);

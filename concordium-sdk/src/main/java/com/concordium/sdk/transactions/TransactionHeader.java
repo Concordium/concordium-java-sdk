@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 @Getter
 @EqualsAndHashCode
 @ToString
-class TransactionHeader {
+public class TransactionHeader {
     private final AccountAddress sender;
     private final UInt64 accountNonce;
     private final UInt64 expiry;

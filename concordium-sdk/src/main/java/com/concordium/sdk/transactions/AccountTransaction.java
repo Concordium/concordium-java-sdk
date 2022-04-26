@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode
 @Getter
 @ToString
-final class AccountTransaction {
+public final class AccountTransaction {
     private final TransactionSignature signature;
     private final TransactionHeader header;
     private final Payload payload;

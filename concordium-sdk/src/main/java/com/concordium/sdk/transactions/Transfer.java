@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 @ToString
 @Getter
 @EqualsAndHashCode(callSuper = true)
-final class Transfer extends Payload {
+public final class Transfer extends Payload {
 
     private final AccountAddress receiver;
     private final GTUAmount amount;

@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString
-class TransferWithMemo extends Payload {
+public class TransferWithMemo extends Payload {
 
     private final static TransactionType TYPE = TransactionType.TRANSFER_WITH_MEMO;
 
