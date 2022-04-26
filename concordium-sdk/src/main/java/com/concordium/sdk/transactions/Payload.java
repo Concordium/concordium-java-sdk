@@ -33,7 +33,7 @@ public abstract class Payload {
     abstract UInt64 getTransactionTypeCost();
 
     final AccountTransaction toAccountTransaction() {
-        return new AccountTransaction(signature, header,this);
+        return new AccountTransaction(signature, header, this);
     }
 
     final Payload withHeader(TransactionHeader header) {
