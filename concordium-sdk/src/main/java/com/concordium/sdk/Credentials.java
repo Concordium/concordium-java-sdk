@@ -52,7 +52,7 @@ public class Credentials extends CallCredentials {
 
         private Metadata cachedMetadata;
 
-        private final Metadata.Key<String> META_DATA_KEY = Metadata.Key.of((Header.AUTHENTICATION_HEADER), Metadata.ASCII_STRING_MARSHALLER);
+        private final Metadata.Key<String> AUTHENTICATION_META_DATA_KEY = Metadata.Key.of((Header.AUTHENTICATION_HEADER), Metadata.ASCII_STRING_MARSHALLER);
 
         CallCredentials(final String authenticationToken) {
             this.authenticationToken = authenticationToken;
@@ -79,7 +79,7 @@ public class Credentials extends CallCredentials {
         private Metadata createMetadata() {
             val metadata = new Metadata();
             if (!Objects.isNull(authenticationToken)) {
-                metadata.put(META_DATA_KEY, this.authenticationToken);
+                metadata.put(AUTHENTICATION_META_DATA_KEY, this.authenticationToken);
             }
             for (Header header : additionalHeaders) {
                 addHeader(metadata, header);
