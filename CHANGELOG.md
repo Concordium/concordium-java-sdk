@@ -1,8 +1,10 @@
 # Changelog
 
 ## Unreleased changes
-- Fix a bug which caused the Client to have a global absolute timeout from when it was initialized.
 
+
+## 1.6.1
+- Fix a bug which caused the `Client` to use a global absolute timeout from when it was initialized.
 
 ## 1.6.0
 - `AccountTransaction` now exposes a `getType` function which
