@@ -17,7 +17,6 @@ import com.concordium.sdk.transactions.Transaction;
 import com.google.protobuf.ByteString;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
-import io.grpc.Deadline;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.val;
@@ -42,6 +41,11 @@ public final class Client {
     private final ManagedChannel channel;
 
     /**
+     * The timeout in milliseconds for each gRPC request.
+     */
+    private final int timeout;
+
+    /**
      * Convenient way of creating a new {@link Client} based on the {@link Connection}
      *
      * @param connection the connection which this client should use.
@@ -56,12 +60,11 @@ public final class Client {
     }
 
     private Client(Connection connection, ManagedChannelBuilder<?> builder) {
-        val deadline = Deadline.after(connection.getTimeout(), TimeUnit.MILLISECONDS);
+        this.timeout = connection.getTimeout();
         this.channel = builder.build();
         this.blockingStub = P2PGrpc
                 .newBlockingStub(channel)
-                .withCallCredentials(connection.getCredentials())
-                .withDeadline(deadline);
+                .withCallCredentials(connection.getCredentials());
     }
 
     /**
@@ -78,7 +81,7 @@ public final class Client {
                 .setAddressBytes(accountAddressAsByteString(address))
                 .setBlockHash(blockHash.asHex())
                 .build();
-        val response = blockingStub.getAccountInfo(request);
+        val response = server().getAccountInfo(request);
         val accountInfo = AccountInfo.fromJson(response.getValue());
         if (Objects.isNull(accountInfo)) {
             throw AccountNotFoundException.from(address, blockHash);
@@ -99,7 +102,7 @@ public final class Client {
                 .newBuilder()
                 .setAccountAddressBytes(accountAddressAsByteString(address))
                 .build();
-        val nextAccountNonce = blockingStub.getNextAccountNonce(request);
+        val nextAccountNonce = server().getNextAccountNonce(request);
         return AccountNonce.fromJson(nextAccountNonce.getValue());
     }
 
@@ -119,7 +122,7 @@ public final class Client {
                 .newBuilder()
                 .setTransactionHash(transactionHash.asHex())
                 .build();
-        val transactionStatus = blockingStub.getTransactionStatus(request);
+        val transactionStatus = server().getTransactionStatus(request);
         val status = TransactionStatus.fromJson(transactionStatus.getValue());
         if (Objects.isNull(status)) {
             throw TransactionNotFoundException.from(transactionHash);
@@ -134,7 +137,7 @@ public final class Client {
      * @return the {@link ConsensusStatus}
      */
     public ConsensusStatus getConsensusStatus() {
-        val response = blockingStub.getConsensusStatus(ConcordiumP2PRpc.Empty.getDefaultInstance());
+        val response = server().getConsensusStatus(ConcordiumP2PRpc.Empty.getDefaultInstance());
         return ConsensusStatus.fromJson(response.getValue());
     }
 
@@ -149,7 +152,7 @@ public final class Client {
                 .newBuilderForType()
                 .setBlockHashBytes(ByteString.copyFromUtf8(blockHash.asHex()))
                 .build();
-        val response = blockingStub.getBlockSummary(request);
+        val response = server().getBlockSummary(request);
         val blockSummary = BlockSummary.fromJson(response.getValue());
         if (Objects.isNull(blockSummary)) {
             throw BlockNotFoundException.from(blockHash);
@@ -168,7 +171,7 @@ public final class Client {
                 .newBuilderForType()
                 .setBlockHashBytes(ByteString.copyFromUtf8(blockHash.asHex()))
                 .build();
-        val response = blockingStub.getBlockInfo(request);
+        val response = server().getBlockInfo(request);
         val blockInfo = BlockInfo.fromJson(response.getValue());
         if (Objects.isNull(blockInfo)) {
             throw BlockNotFoundException.from(blockHash);
@@ -191,7 +194,7 @@ public final class Client {
             requestBuilder.setRestrictToGenesisIndex(height.isRestrictedToGenesisIndex());
         }
         val request = requestBuilder.build();
-        val response = blockingStub.getBlocksAtHeight(request);
+        val response = server().getBlocksAtHeight(request);
         val blocksAtHeight = BlocksAtHeight.fromJson(response.getValue());
         if (Objects.isNull(blocksAtHeight) || blocksAtHeight.getBlocks().isEmpty() ) {
             throw BlockNotFoundException.from(height);
@@ -213,7 +216,7 @@ public final class Client {
                 .setNetworkId(transaction.getNetworkId())
                 .setPayload(ByteString.copyFrom(transaction.getBytes()))
                 .build();
-        val response = blockingStub.sendTransaction(request);
+        val response = server().sendTransaction(request);
         if (response.getValue()) {
             return transaction.getHash();
         }
@@ -227,5 +230,15 @@ public final class Client {
      */
     public void close() {
         this.channel.shutdown();
+    }
+
+    /**
+     * Get a {@link concordium.P2PGrpc.P2PBlockingStub} with a timeout
+     * The timeout is the one specified in via the {@link Connection} object used to
+     * initialize `this`.
+     * @return A new stub with a timeout.
+     */
+    private P2PGrpc.P2PBlockingStub server() {
+        return this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.MILLISECONDS);
     }
 }
