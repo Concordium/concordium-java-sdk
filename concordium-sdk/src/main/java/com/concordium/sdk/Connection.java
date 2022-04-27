@@ -1,11 +1,15 @@
 package com.concordium.sdk;
 
 
+import com.google.common.collect.Sets;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Connection properties
