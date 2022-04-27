@@ -2,6 +2,7 @@
 
 ## Unreleased changes
 
+## 1.7.0
 - Allow consumers to provide extra HTTP headers for the gRPC connection.
 
 ## 1.6.1
