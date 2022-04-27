@@ -86,6 +86,7 @@ Client client = Client.from(connection);
 ```
 One can also provide extra HTTP headers to the grpc calls by setting up the client as the following:
 
+```java
 Connection connection = Connection.builder()
                 .credentials(Credentials.builder()
                         .authenticationToken(${password})
@@ -97,6 +98,7 @@ Connection connection = Connection.builder()
                 .timeout(${timeout})
                 .build();
 Client client = Client.from(connection);
+```
 
 Note. One cannot provide an additional `Header` 'Authentication' as this is already used for the ${password}.
 
