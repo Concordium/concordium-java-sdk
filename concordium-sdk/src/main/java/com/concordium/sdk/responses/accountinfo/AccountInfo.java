@@ -80,6 +80,7 @@ public final class AccountInfo {
                 @JsonProperty("accountEncryptedAmount") EncryptedAmount accountEncryptedAmount,
                 @JsonProperty("accountReleaseSchedule") ReleaseSchedule accountReleaseSchedule,
                 @JsonProperty("accountCredentials") Map<Index, Credential> accountCredentials) {
+
         this.accountAddress = AccountAddress.from(accountAddress);
         this.accountNonce = accountNonce;
         this.accountAmount = accountAmount;

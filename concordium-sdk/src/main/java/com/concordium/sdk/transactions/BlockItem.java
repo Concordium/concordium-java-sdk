@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
 @ToString
-final class BlockItem {
+public final class BlockItem {
     private static final int VERSION_SIZE = 1;
     private static final int VERSION = 0;
     private final BlockItemType type;

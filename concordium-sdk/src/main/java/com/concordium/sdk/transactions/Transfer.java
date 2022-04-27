@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 @ToString
 @Getter
 @EqualsAndHashCode(callSuper = true)
-final class Transfer extends Payload {
+public final class Transfer extends Payload {
 
     private final AccountAddress receiver;
     private final GTUAmount amount;
@@ -19,6 +19,11 @@ final class Transfer extends Payload {
     private Transfer(AccountAddress receiver, GTUAmount amount) {
         this.receiver = receiver;
         this.amount = amount;
+    }
+
+    @Override
+    public PayloadType getType() {
+        return PayloadType.TRANSFER;
     }
 
     @Override
