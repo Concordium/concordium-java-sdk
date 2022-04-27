@@ -8,16 +8,16 @@ import lombok.ToString;
 @Getter
 @ToString
 public final class RewardParameters {
-    private final MintDistribution mintDistribution;
-    private final TransactionFeeDistribution transactionFeeDistribution;
+    private final MintDistributionUpdates mintDistributionUpdates;
+    private final TransactionFeeDistributionUpdates transactionFeeDistributionUpdates;
     private final GasRewards gasRewards;
 
     @JsonCreator
-    RewardParameters(@JsonProperty("mintDistribution") MintDistribution mintDistribution,
-                     @JsonProperty("transactionFeeDistribution") TransactionFeeDistribution transactionFeeDistribution,
+    RewardParameters(@JsonProperty("mintDistribution") MintDistributionUpdates mintDistributionUpdates,
+                     @JsonProperty("transactionFeeDistribution") TransactionFeeDistributionUpdates transactionFeeDistributionUpdates,
                      @JsonProperty("gASRewards") GasRewards gasRewards) {
-        this.mintDistribution = mintDistribution;
-        this.transactionFeeDistribution = transactionFeeDistribution;
+        this.mintDistributionUpdates = mintDistributionUpdates;
+        this.transactionFeeDistributionUpdates = transactionFeeDistributionUpdates;
         this.gasRewards = gasRewards;
     }
 }

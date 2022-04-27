@@ -7,23 +7,23 @@ import lombok.Getter;
 import java.nio.ByteBuffer;
 
 @Getter
-public class GTUAmount {
+public class CCDAmount {
     private final UInt64 value;
 
-    private GTUAmount(UInt64 value) {
+    private CCDAmount(UInt64 value) {
         this.value = value;
     }
 
-    public static GTUAmount fromMicro(long val) {
-        return new GTUAmount(UInt64.from(val));
+    public static CCDAmount fromMicro(long val) {
+        return new CCDAmount(UInt64.from(val));
     }
 
-    public static GTUAmount fromMicro(String val) {
-        return new GTUAmount(UInt64.from(val));
+    public static CCDAmount fromMicro(String val) {
+        return new CCDAmount(UInt64.from(val));
     }
 
     @JsonCreator
-    GTUAmount(String amount) {
+    CCDAmount(String amount) {
         this.value = UInt64.from(amount);
     }
 
@@ -31,9 +31,9 @@ public class GTUAmount {
         return value.getBytes();
     }
 
-    public static GTUAmount fromBytes(ByteBuffer source) {
+    public static CCDAmount fromBytes(ByteBuffer source) {
         UInt64 value = UInt64.fromBytes(source);
-        return new GTUAmount(value);
+        return new CCDAmount(value);
     }
     @Override
     public String toString() {

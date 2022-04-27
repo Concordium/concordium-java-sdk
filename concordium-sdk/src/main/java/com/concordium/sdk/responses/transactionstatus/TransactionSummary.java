@@ -2,7 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 
 import com.concordium.sdk.transactions.AccountAddress;
-import com.concordium.sdk.transactions.GTUAmount;
+import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +17,7 @@ public final class TransactionSummary {
     private final int index;
     private Hash hash;
     private AccountAddress sender;
-    private GTUAmount cost;
+    private CCDAmount cost;
     private final int energyCost;
     private final TransactionResult result;
     private final TransactionTypeInfo type;
@@ -38,7 +38,7 @@ public final class TransactionSummary {
             this.sender = AccountAddress.from(sender);
         }
         if (!Objects.isNull(cost)) {
-            this.cost = GTUAmount.fromMicro(cost);
+            this.cost = CCDAmount.fromMicro(cost);
         }
         this.energyCost = energyCost;
         this.result = result;

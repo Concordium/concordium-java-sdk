@@ -2,7 +2,10 @@
 
 ## Unreleased changes
 - Documentation for `AccountInfo`.
-- Fix bug in `AccountInfo` such that it supports `ScheduledRelease`s.
+- Stronger typing for various places in the API. 
+  todo: specify changes here
+- Stronger typing for BlockSummary.
+- Renamed GTUAmount to CCDAmount
 
 
 ## 1.6.1

@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses;
+package com.concordium.sdk.responses.blocksatheight;
 
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;

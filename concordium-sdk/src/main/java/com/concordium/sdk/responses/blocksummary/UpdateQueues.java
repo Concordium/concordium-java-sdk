@@ -8,49 +8,49 @@ import lombok.ToString;
 @Getter
 @ToString
 public final class UpdateQueues {
-    private final MintDistribution mintDistribution;
-    private final RootKeys rootKeys;
-    private final AddAnonymityRevoker addAnonymityRevoker;
-    private final TransactionFeeDistribution transactionFeeDistribution;
-    private final BakerStakeThreshold bakerStakeThreshold;
-    private final Level2Keys level2Keys;
-    private final MicroGTUPerEuro microGTUPerEuro;
-    private final Protocol protocol;
-    private final AddIdentityProvider addIdentityProvider;
-    private final GasRewards2 gasRewards;
-    private final FoundationAccount foundationAccount;
-    private final ElectionDifficulty electionDifficulty;
-    private final EuroPerEnergy euroPerEnergy;
-    private final Level1Keys level1Keys;
+    private final MintDistributionUpdates mintDistributionUpdates;
+    private final RootKeysUpdates rootKeysUpdates;
+    private final AddAnonymityRevokerUpdates addAnonymityRevokerUpdates;
+    private final TransactionFeeDistributionUpdates transactionFeeDistributionUpdates;
+    private final BakerStakeThresholdUpdates bakerStakeThresholdUpdates;
+    private final Level2KeysUpdates level2KeysUpdates;
+    private final MicroGTUPerEuroUpdates microGTUPerEuroUpdates;
+    private final ProtocolUpdates protocolUpdates;
+    private final AddIdentityProviderUpdates addIdentityProviderUpdates;
+    private final GasRewardsUpdates gasRewards;
+    private final FoundationAccountUpdates foundationAccountUpdates;
+    private final ElectionDifficultyUpdates electionDifficultyUpdates;
+    private final EuroPerEnergyUpdates euroPerEnergyUpdates;
+    private final Level1KeysUpdates level1KeysUpdates;
 
     @JsonCreator
-    UpdateQueues(@JsonProperty("mintDistribution") MintDistribution mintDistribution,
-                 @JsonProperty("rootKeys") RootKeys rootKeys,
-                 @JsonProperty("addAnonymityRevoker") AddAnonymityRevoker addAnonymityRevoker,
-                 @JsonProperty("transactionFeeDistribution") TransactionFeeDistribution transactionFeeDistribution,
-                 @JsonProperty("bakerStakeThreshold") BakerStakeThreshold bakerStakeThreshold,
-                 @JsonProperty("level2Keys") Level2Keys level2Keys,
-                 @JsonProperty("microGTUPerEuro") MicroGTUPerEuro microGTUPerEuro,
-                 @JsonProperty("protocol") Protocol protocol,
-                 @JsonProperty("addIdentityProvider") AddIdentityProvider addIdentityProvider,
-                 @JsonProperty("gasRewards") GasRewards2 gasRewards,
-                 @JsonProperty("foundationAccount") FoundationAccount foundationAccount,
-                 @JsonProperty("electionDifficulty") ElectionDifficulty electionDifficulty,
-                 @JsonProperty("euroPerEnergy") EuroPerEnergy euroPerEnergy,
-                 @JsonProperty("level1Keys") Level1Keys level1Keys) {
-        this.mintDistribution = mintDistribution;
-        this.rootKeys = rootKeys;
-        this.addAnonymityRevoker = addAnonymityRevoker;
-        this.transactionFeeDistribution = transactionFeeDistribution;
-        this.bakerStakeThreshold = bakerStakeThreshold;
-        this.level2Keys = level2Keys;
-        this.microGTUPerEuro = microGTUPerEuro;
-        this.protocol = protocol;
-        this.addIdentityProvider = addIdentityProvider;
+    UpdateQueues(@JsonProperty("mintDistribution") MintDistributionUpdates mintDistributionUpdates,
+                 @JsonProperty("rootKeys") RootKeysUpdates rootKeysUpdates,
+                 @JsonProperty("addAnonymityRevoker") AddAnonymityRevokerUpdates addAnonymityRevokerUpdates,
+                 @JsonProperty("transactionFeeDistribution") TransactionFeeDistributionUpdates transactionFeeDistributionUpdates,
+                 @JsonProperty("bakerStakeThreshold") BakerStakeThresholdUpdates bakerStakeThresholdUpdates,
+                 @JsonProperty("level2Keys") Level2KeysUpdates level2KeysUpdates,
+                 @JsonProperty("microGTUPerEuro") MicroGTUPerEuroUpdates microGTUPerEuroUpdates,
+                 @JsonProperty("protocol") ProtocolUpdates protocolUpdates,
+                 @JsonProperty("addIdentityProvider") AddIdentityProviderUpdates addIdentityProviderUpdates,
+                 @JsonProperty("gasRewards") GasRewardsUpdates gasRewards,
+                 @JsonProperty("foundationAccount") FoundationAccountUpdates foundationAccountUpdates,
+                 @JsonProperty("electionDifficulty") ElectionDifficultyUpdates electionDifficultyUpdates,
+                 @JsonProperty("euroPerEnergy") EuroPerEnergyUpdates euroPerEnergyUpdates,
+                 @JsonProperty("level1Keys") Level1KeysUpdates level1KeysUpdates) {
+        this.mintDistributionUpdates = mintDistributionUpdates;
+        this.rootKeysUpdates = rootKeysUpdates;
+        this.addAnonymityRevokerUpdates = addAnonymityRevokerUpdates;
+        this.transactionFeeDistributionUpdates = transactionFeeDistributionUpdates;
+        this.bakerStakeThresholdUpdates = bakerStakeThresholdUpdates;
+        this.level2KeysUpdates = level2KeysUpdates;
+        this.microGTUPerEuroUpdates = microGTUPerEuroUpdates;
+        this.protocolUpdates = protocolUpdates;
+        this.addIdentityProviderUpdates = addIdentityProviderUpdates;
         this.gasRewards = gasRewards;
-        this.foundationAccount = foundationAccount;
-        this.electionDifficulty = electionDifficulty;
-        this.euroPerEnergy = euroPerEnergy;
-        this.level1Keys = level1Keys;
+        this.foundationAccountUpdates = foundationAccountUpdates;
+        this.electionDifficultyUpdates = electionDifficultyUpdates;
+        this.euroPerEnergyUpdates = euroPerEnergyUpdates;
+        this.level1KeysUpdates = level1KeysUpdates;
     }
 }

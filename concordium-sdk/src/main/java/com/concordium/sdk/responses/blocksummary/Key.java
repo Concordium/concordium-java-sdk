@@ -10,20 +10,20 @@ import lombok.ToString;
 public final class Key {
     private final String verifyKey;
     private final String schemeId;
-    private final RootKeys rootKeys;
-    private final Level2Keys level2Keys;
-    private final Level1Keys level1Keys;
+    private final RootKeysUpdates rootKeysUpdates;
+    private final Level2KeysUpdates level2KeysUpdates;
+    private final Level1KeysUpdates level1KeysUpdates;
 
     @JsonCreator
     Key(@JsonProperty("verifyKey") String verifyKey,
                @JsonProperty("schemeId") String schemeId,
-               @JsonProperty("rootKeys") RootKeys rootKeys,
-               @JsonProperty("level2Keys") Level2Keys level2Keys,
-               @JsonProperty("level1Keys") Level1Keys level1Keys) {
+               @JsonProperty("rootKeys") RootKeysUpdates rootKeysUpdates,
+               @JsonProperty("level2Keys") Level2KeysUpdates level2KeysUpdates,
+               @JsonProperty("level1Keys") Level1KeysUpdates level1KeysUpdates) {
         this.verifyKey = verifyKey;
         this.schemeId = schemeId;
-        this.rootKeys = rootKeys;
-        this.level2Keys = level2Keys;
-        this.level1Keys = level1Keys;
+        this.rootKeysUpdates = rootKeysUpdates;
+        this.level2KeysUpdates = level2KeysUpdates;
+        this.level1KeysUpdates = level1KeysUpdates;
     }
 }

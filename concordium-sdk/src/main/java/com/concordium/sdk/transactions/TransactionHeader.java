@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
@@ -11,7 +12,7 @@ import java.nio.ByteBuffer;
 @ToString
 public class TransactionHeader {
     private final AccountAddress sender;
-    private final UInt64 accountNonce;
+    private final Nonce accountNonce;
     private final UInt64 expiry;
 
     @Setter
@@ -20,7 +21,7 @@ public class TransactionHeader {
     private UInt32 payloadSize;
 
     @Builder
-    TransactionHeader(AccountAddress sender, UInt64 accountNonce, UInt64 expiry) {
+    TransactionHeader(AccountAddress sender, Nonce accountNonce, UInt64 expiry) {
         this.sender = sender;
         this.accountNonce = accountNonce;
         this.expiry = expiry;
@@ -39,7 +40,7 @@ public class TransactionHeader {
 
     public static TransactionHeader fromBytes(ByteBuffer source) {
         AccountAddress sender = AccountAddress.fromBytes(source);
-        UInt64 accountNonce = UInt64.fromBytes(source);
+        Nonce accountNonce = Nonce.fromBytes(source);
         UInt64 maxEnergyCost = UInt64.fromBytes(source);
         UInt32 payloadSize = UInt32.fromBytes(source);
         UInt64 expiry = UInt64.fromBytes(source);

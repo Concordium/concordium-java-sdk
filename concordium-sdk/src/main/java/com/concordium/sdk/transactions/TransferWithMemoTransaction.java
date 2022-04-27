@@ -10,7 +10,7 @@ import java.util.Objects;
 @Getter
 public class TransferWithMemoTransaction extends AbstractTransaction {
     private final AccountAddress receiver;
-    private final GTUAmount amount;
+    private final CCDAmount amount;
     private final Memo memo;
 
     private final AccountAddress sender;
@@ -21,7 +21,7 @@ public class TransferWithMemoTransaction extends AbstractTransaction {
     private BlockItem blockItem;
 
     @Builder
-    TransferWithMemoTransaction(AccountAddress sender, AccountAddress receiver, GTUAmount amount, Memo memo, AccountNonce nonce, Expiry expiry, TransactionSigner signer) throws TransactionCreationException {
+    TransferWithMemoTransaction(AccountAddress sender, AccountAddress receiver, CCDAmount amount, Memo memo, AccountNonce nonce, Expiry expiry, TransactionSigner signer) throws TransactionCreationException {
         this.receiver = receiver;
         this.amount = amount;
         this.memo = memo;

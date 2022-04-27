@@ -1,6 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.sdk.transactions.GTUAmount;
+import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.util.Objects;
 public final class ContractInitializedResult extends TransactionResultEvent {
     private final String ref;
     private final ContractAddress address;
-    private GTUAmount amount;
+    private CCDAmount amount;
     private final String initName;
     private final List<String> events;
 
@@ -28,7 +28,7 @@ public final class ContractInitializedResult extends TransactionResultEvent {
         this.ref = ref;
         this.address = address;
         if(!Objects.isNull(amount)) {
-            this.amount = GTUAmount.fromMicro(amount);
+            this.amount = CCDAmount.fromMicro(amount);
         }
         this.initName = initName;
         this.events = events;
