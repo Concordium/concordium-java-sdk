@@ -128,7 +128,7 @@ public final class Connection {
             return TlsChannelCredentials.create();
         }else {
             val builder = TlsChannelCredentials.newBuilder();
-            if(!Objects.isNull(tlsConfig.getClientCert())) {
+            if(!Objects.isNull(tlsConfig.getServerCert())) {
                 builder.trustManager(tlsConfig.getServerCert());
             }
             if (getTlsConfig().isMTLS()) {
