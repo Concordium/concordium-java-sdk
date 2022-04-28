@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+- Support for configuring TLS.
+  (Note for release - this breaks API because initialization of the client can now 
+  throw a `ClientInitializationException`.)
 
 ## 1.7.0
 - Allow consumers to provide extra HTTP headers for the gRPC connection.
