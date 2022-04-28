@@ -1,6 +1,5 @@
 package com.concordium.sdk;
 
-import com.sun.istack.internal.NotNull;
 import io.grpc.TlsChannelCredentials;
 import lombok.Getter;
 import lombok.val;
@@ -61,7 +60,7 @@ public class TLSConfig {
      * @param clientKeyFile The PEM encoded PKCS#8 private key for the client.
      * @return the TLSConfig
      */
-    public static TLSConfig mTLS(File serverCert, @NotNull File clientCert, @NotNull File clientKeyFile) {
+    public static TLSConfig mTLS(File serverCert, File clientCert, File clientKeyFile) {
         val tlsConfig = new TLSConfig(serverCert);
         tlsConfig.clientCert = clientCert;
         tlsConfig.clientKeyFile = clientKeyFile;

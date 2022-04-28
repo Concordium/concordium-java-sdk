@@ -1,7 +1,6 @@
 package com.concordium.sdk;
 
 
-import com.sun.istack.internal.NotNull;
 import io.grpc.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -124,7 +123,7 @@ public final class Connection {
         return channel;
     }
 
-    private ChannelCredentials getTLSChannel(@NotNull TLSConfig tlsConfig) throws IOException {
+    private ChannelCredentials getTLSChannel(TLSConfig tlsConfig) throws IOException {
         if (Objects.isNull(tlsConfig.getServerCert())) {
             return TlsChannelCredentials.create();
         }else {
