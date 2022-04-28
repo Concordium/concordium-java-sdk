@@ -1,5 +1,6 @@
-package com.concordium.sdk;
+package com.concordium.sdk.responses.blocksatheight;
 
+import com.concordium.sdk.Client;
 import lombok.Getter;
 import lombok.ToString;
 

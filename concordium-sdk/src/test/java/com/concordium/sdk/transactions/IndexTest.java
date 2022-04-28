@@ -26,7 +26,7 @@ public class IndexTest {
             Index.from(256);
             fail("Should have failed");
         } catch (IllegalArgumentException e) {
-            if (!e.getMessage().equals("KeyIndex cannot exceed one byte (255) was 256")) {
+            if (!e.getMessage().equals("Index cannot exceed one byte (255) was 256")) {
                 fail("Unexpected error when creating KeyIndex: " + e.getMessage());
             }
         }
@@ -37,7 +37,7 @@ public class IndexTest {
             Index.from(-1);
             fail("Should have failed");
         } catch (IllegalArgumentException e) {
-            if (!e.getMessage().equals("KeyIndex cannot be negative")) {
+            if (!e.getMessage().equals("Index cannot be negative")) {
                 fail("Unexpected error when creating KeyIndex: " + e.getMessage());
             }
         }

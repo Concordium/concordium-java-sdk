@@ -16,9 +16,17 @@ public abstract class Payload {
     TransactionHeader header;
     TransactionSignature signature;
 
+    PayloadType type;
+
     BlockItem toBlockItem() {
         return BlockItem.from(new AccountTransaction(signature, header, this));
     }
+
+    /**
+     * Get the {@link PayloadType}
+     * @return the type of the {@link Payload}
+     */
+    public abstract PayloadType getType();
 
     abstract byte[] getBytes();
 
@@ -78,6 +86,11 @@ public abstract class Payload {
                 CONSTANT_A * noOfSignatures +
                 CONSTANT_B * (TRANSACTION_HEADER_SIZE + payloadSize)
                 + transactionSpecificCost.getValue());
+    }
+
+    public enum PayloadType {
+        TRANSFER,
+        TRANSFER_WITH_MEMO
     }
 
 }

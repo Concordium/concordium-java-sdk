@@ -7,12 +7,29 @@ import lombok.val;
 
 import java.util.Objects;
 
+/**
+ * Connection properties
+ */
 @Getter
 public final class Connection {
+    /**
+     * The host to connect to.
+     */
     private final String host;
+    /**
+     * The port to use.
+     */
     private final int port;
+    /**
+     * The timeout for each request (in milliseconds).
+     * The default timeout is 15000 milliseconds if a non-positive value is supplied then
+     * the default value will be used.
+     */
     private int timeout;
 
+    /**
+     * The gRPC `Authentication` token.
+     */
     private final Credentials credentials;
 
     @Builder
@@ -41,7 +58,7 @@ public final class Connection {
                 throw new IllegalArgumentException("Connection credentials cannot be null");
             }
             // setting a default timeout of 15 000 ms
-            if (connection.timeout == 0) {
+            if (connection.timeout < 1) {
                 connection.timeout = DEFAULT_TIMEOUT_MS;
             }
             return connection;

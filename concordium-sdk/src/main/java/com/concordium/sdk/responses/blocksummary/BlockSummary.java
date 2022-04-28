@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blocksummary;
 
+import com.concordium.sdk.responses.transactionstatus.TransactionSummary;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,9 +13,20 @@ import java.util.List;
 @Getter
 @ToString
 public final class BlockSummary {
-    private final List<Object> transactionSummaries;
+    /**
+     * The list of transaction summaries for the block.
+     */
+    private final List<TransactionSummary> transactionSummaries;
     private final List<SpecialEvent> specialEvents;
+
+    /**
+     * Finalization data for the block.
+     */
     private final FinalizationData finalizationData;
+
+    /**
+     * Chain updates
+     */
     private final Updates updates;
 
     public static BlockSummary fromJson(String json) {
@@ -26,7 +38,7 @@ public final class BlockSummary {
     }
 
     @JsonCreator
-    BlockSummary(@JsonProperty("transactionSummaries") List<Object> transactionSummaries,
+    BlockSummary(@JsonProperty("transactionSummaries") List<TransactionSummary> transactionSummaries,
                  @JsonProperty("specialEvents") List<SpecialEvent> specialEvents,
                  @JsonProperty("finalizationData") FinalizationData finalizationData,
                  @JsonProperty("updates") Updates updates) {

@@ -37,7 +37,7 @@ public class TransferTransaction extends AbstractTransaction {
     }
 
     @Override
-    BlockItem getBlockItem() {
+    public BlockItem getBlockItem() {
         return blockItem;
     }
 

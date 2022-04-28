@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode
 @Getter
 @ToString
-final class AccountTransaction {
+public final class AccountTransaction {
     private final TransactionSignature signature;
     private final TransactionHeader header;
     private final Payload payload;
@@ -30,6 +30,15 @@ final class AccountTransaction {
         buffer.put(headerBytes);
         buffer.put(payloadBytes);
         return buffer.array();
+    }
+
+    /**
+     * Returns the type of the {@link Payload} associated
+     * with this `AccountTransaction`.
+     * @return the {@link com.concordium.sdk.transactions.Payload.PayloadType}
+     */
+    public Payload.PayloadType getType() {
+        return this.payload.getType();
     }
 
     BlockItem toBlockItem() {

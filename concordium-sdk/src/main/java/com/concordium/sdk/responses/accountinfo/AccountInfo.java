@@ -5,6 +5,7 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Index;
+import com.concordium.sdk.types.Nonce;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,9 +25,9 @@ public final class AccountInfo {
      */
     private final AccountAddress accountAddress;
     /**
-     * The next available nonce for the account.
+     * The nonce for the account.
      */
-    private final int accountNonce;
+    private final Nonce accountNonce;
     /**
      * The amount of CCD available for the account.
      */
@@ -71,7 +72,7 @@ public final class AccountInfo {
 
     @JsonCreator
     AccountInfo(@JsonProperty("accountAddress") String accountAddress,
-                @JsonProperty("accountNonce") int accountNonce,
+                @JsonProperty("accountNonce") Nonce accountNonce,
                 @JsonProperty("accountAmount") CCDAmount accountAmount,
                 @JsonProperty("accountThreshold") int accountThreshold,
                 @JsonProperty("accountEncryptionKey") String accountEncryptionKey,
@@ -80,6 +81,7 @@ public final class AccountInfo {
                 @JsonProperty("accountEncryptedAmount") EncryptedAmount accountEncryptedAmount,
                 @JsonProperty("accountReleaseSchedule") ReleaseSchedule accountReleaseSchedule,
                 @JsonProperty("accountCredentials") Map<Index, Credential> accountCredentials) {
+
         this.accountAddress = AccountAddress.from(accountAddress);
         this.accountNonce = accountNonce;
         this.accountAmount = accountAmount;

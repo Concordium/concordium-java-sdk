@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.serializing.JsonMapper;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
@@ -13,10 +14,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 public final class AccountNonce {
-    private UInt64 nonce;
+    private Nonce nonce;
     private boolean allFinal;
 
-    private AccountNonce(UInt64 value, boolean allFinal) {
+    private AccountNonce(Nonce value, boolean allFinal) {
         this.nonce = value;
         this.allFinal = allFinal;
     }
@@ -35,10 +36,10 @@ public final class AccountNonce {
      * @return The new incremented AccountNonce
      */
     public AccountNonce increment() {
-        return new AccountNonce(UInt64.from(this.nonce.getValue() + 1), this.allFinal);
+        return new AccountNonce(this.nonce.increment(), this.allFinal);
     }
 
     public static AccountNonce from(long value) {
-        return new AccountNonce(UInt64.from(value), true);
+        return new AccountNonce(Nonce.from(value), true);
     }
 }

@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.blocksummary;
 
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -13,33 +14,33 @@ import java.util.Objects;
 @ToString
 public class SpecialEvent {
     private final String tag;
-    private final String mintBakingReward;
-    private final String mintFinalizationReward;
-    private final String mintPlatformDevelopmentCharge;
+    private final CCDAmount mintBakingReward;
+    private final CCDAmount mintFinalizationReward;
+    private final CCDAmount mintPlatformDevelopmentCharge;
     private AccountAddress foundationAccount;
     private final List<FinalizationReward> finalizationRewards;
-    private final String remainder;
-    private final String transactionFees;
-    private final String oldGASAccount;
-    private final String newGASAccount;
-    private final String bakerReward;
-    private final String foundationCharge;
+    private final CCDAmount remainder;
+    private final CCDAmount transactionFees;
+    private final CCDAmount oldGASAccount;
+    private final CCDAmount newGASAccount;
+    private final CCDAmount bakerReward;
+    private final CCDAmount foundationCharge;
     private AccountAddress baker;
     private final List<BakerReward> bakerRewards;
 
     @JsonCreator
     SpecialEvent(@JsonProperty("tag") String tag,
-                 @JsonProperty("mintBakingReward") String mintBakingReward,
-                 @JsonProperty("mintFinalizationReward") String mintFinalizationReward,
-                 @JsonProperty("mintPlatformDevelopmentCharge") String mintPlatformDevelopmentCharge,
+                 @JsonProperty("mintBakingReward") CCDAmount mintBakingReward,
+                 @JsonProperty("mintFinalizationReward") CCDAmount mintFinalizationReward,
+                 @JsonProperty("mintPlatformDevelopmentCharge") CCDAmount mintPlatformDevelopmentCharge,
                  @JsonProperty("foundationAccount") String foundationAccount,
                  @JsonProperty("finalizationRewards") List<FinalizationReward> finalizationRewards,
-                 @JsonProperty("remainder") String remainder,
-                 @JsonProperty("transactionFees") String transactionFees,
-                 @JsonProperty("oldGASAccount") String oldGASAccount,
-                 @JsonProperty("newGASAccount") String newGASAccount,
-                 @JsonProperty("bakerReward") String bakerReward,
-                 @JsonProperty("foundationCharge") String foundationCharge,
+                 @JsonProperty("remainder") CCDAmount remainder,
+                 @JsonProperty("transactionFees") CCDAmount transactionFees,
+                 @JsonProperty("oldGASAccount") CCDAmount oldGASAccount,
+                 @JsonProperty("newGASAccount") CCDAmount newGASAccount,
+                 @JsonProperty("bakerReward") CCDAmount bakerReward,
+                 @JsonProperty("foundationCharge") CCDAmount foundationCharge,
                  @JsonProperty("baker") String baker,
                  @JsonProperty("bakerRewards") List<BakerReward> bakerRewards) {
         if (!Objects.isNull(foundationAccount)) {

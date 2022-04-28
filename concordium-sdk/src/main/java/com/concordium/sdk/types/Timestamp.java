@@ -14,11 +14,11 @@ import java.util.Date;
 public class Timestamp {
 
     @Getter
-    private final UInt64 millis;
+    private final long millis;
 
     @JsonCreator
     Timestamp(long millis) {
-        this.millis = UInt64.from(millis);
+        this.millis = millis;
     }
 
     /**
@@ -40,7 +40,7 @@ public class Timestamp {
     }
 
     public Date getDate() {
-        return new Date(millis.getValue());
+        return new Date(millis);
     }
 
     @Override

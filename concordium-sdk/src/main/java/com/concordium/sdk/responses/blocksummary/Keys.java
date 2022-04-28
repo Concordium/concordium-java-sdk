@@ -8,16 +8,16 @@ import lombok.ToString;
 @Getter
 @ToString
 public final class Keys {
-    private final RootKeys rootKeys;
-    private final Level1Keys level1Keys;
-    private final Level2Keys level2Keys;
+    private final RootKeysUpdates rootKeysUpdates;
+    private final Level1KeysUpdates level1KeysUpdates;
+    private final Level2KeysUpdates level2KeysUpdates;
 
     @JsonCreator
-    Keys(@JsonProperty("rootKeys") RootKeys rootKeys,
-                @JsonProperty("level1Keys") Level1Keys level1Keys,
-                @JsonProperty("level2Keys") Level2Keys level2Keys) {
-        this.rootKeys = rootKeys;
-        this.level1Keys = level1Keys;
-        this.level2Keys = level2Keys;
+    Keys(@JsonProperty("rootKeys") RootKeysUpdates rootKeysUpdates,
+                @JsonProperty("level1Keys") Level1KeysUpdates level1KeysUpdates,
+                @JsonProperty("level2Keys") Level2KeysUpdates level2KeysUpdates) {
+        this.rootKeysUpdates = rootKeysUpdates;
+        this.level1KeysUpdates = level1KeysUpdates;
+        this.level2KeysUpdates = level2KeysUpdates;
     }
 }

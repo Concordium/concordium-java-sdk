@@ -1,6 +1,6 @@
 package com.concordium.sdk.exceptions;
 
-import com.concordium.sdk.BlocksAtHeightRequest;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.transactions.Hash;
 import lombok.Getter;
 
