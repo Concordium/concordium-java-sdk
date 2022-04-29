@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Some of the credential IDs already exist or are duplicated in the transaction.
+ */
 @Getter
 @ToString
 public class RejectReasonDuplicateCredIDs extends RejectReason {

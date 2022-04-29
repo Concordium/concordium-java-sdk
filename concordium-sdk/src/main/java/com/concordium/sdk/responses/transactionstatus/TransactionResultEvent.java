@@ -5,6 +5,6 @@ import lombok.ToString;
 
 @Getter
 @ToString
-abstract class TransactionResultEvent {
+public abstract class TransactionResultEvent {
 // Used for tagging the underlying TransactionResultEvents
 }

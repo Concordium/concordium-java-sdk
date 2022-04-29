@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Reward account desired by the baker does not exist.
+ */
 @ToString
 public class RejectReasonNonExistentRewardAccount extends RejectReason {
     @Getter

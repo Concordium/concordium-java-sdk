@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A credential id that was to be removed is not part of the account.
+ */
 @ToString
 public class RejectReasonNonExistentCredIDs extends RejectReason {
     @Getter

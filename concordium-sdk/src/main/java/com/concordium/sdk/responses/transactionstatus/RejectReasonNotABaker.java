@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Account is not a baker account.
+ */
 @ToString
 public class RejectReasonNotABaker extends RejectReason {
     @Getter

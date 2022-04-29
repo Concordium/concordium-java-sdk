@@ -14,6 +14,10 @@ import java.util.List;
 @ToString
 public final class BlockSummary {
     /**
+     * The protocol version of the chain at the block.
+     */
+    private final int protocolVersion;
+    /**
      * The list of transaction summaries for the block.
      */
     private final List<TransactionSummary> transactionSummaries;
@@ -33,15 +37,18 @@ public final class BlockSummary {
         try {
             return JsonMapper.INSTANCE.readValue(json, BlockSummary.class);
         } catch (JsonProcessingException e) {
+            System.out.println(json);
             throw new IllegalArgumentException("Cannot parse BlockSummary JSON", e);
         }
     }
 
     @JsonCreator
-    BlockSummary(@JsonProperty("transactionSummaries") List<TransactionSummary> transactionSummaries,
+    BlockSummary(@JsonProperty("protocolVersion") int protocolVersion,
+                 @JsonProperty("transactionSummaries") List<TransactionSummary> transactionSummaries,
                  @JsonProperty("specialEvents") List<SpecialEvent> specialEvents,
                  @JsonProperty("finalizationData") FinalizationData finalizationData,
                  @JsonProperty("updates") Updates updates) {
+        this.protocolVersion = protocolVersion;
         this.transactionSummaries = transactionSummaries;
         this.specialEvents = specialEvents;
         this.finalizationData = finalizationData;

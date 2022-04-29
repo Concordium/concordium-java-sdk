@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import java.util.List;
 
+//todo: a bunch of these should be just 'AccessStructure' types.
 @Getter
 @ToString
 public final class Level2KeysUpdates {
@@ -26,6 +27,7 @@ public final class Level2KeysUpdates {
     private final EuroPerEnergyUpdates euroPerEnergyUpdates;
     private final Nonce nextSequenceNumber;
     private final List<Object> queue;
+    private final PoolParameters poolParameters;
 
     @JsonCreator
     Level2KeysUpdates(@JsonProperty("mintDistribution") MintDistributionUpdates mintDistributionUpdates,
@@ -42,6 +44,7 @@ public final class Level2KeysUpdates {
                       @JsonProperty("electionDifficulty") ElectionDifficultyUpdates electionDifficultyUpdates,
                       @JsonProperty("euroPerEnergy") EuroPerEnergyUpdates euroPerEnergyUpdates,
                       @JsonProperty("nextSequenceNumber") Nonce nextSequenceNumber,
+                      @JsonProperty("poolParameters") PoolParameters poolParameters,
                       @JsonProperty("queue") List<Object> queue) {
         this.mintDistributionUpdates = mintDistributionUpdates;
         this.addAnonymityRevokerUpdates = addAnonymityRevokerUpdates;
@@ -58,5 +61,6 @@ public final class Level2KeysUpdates {
         this.euroPerEnergyUpdates = euroPerEnergyUpdates;
         this.nextSequenceNumber = nextSequenceNumber;
         this.queue = queue;
+        this.poolParameters = poolParameters;
     }
 }

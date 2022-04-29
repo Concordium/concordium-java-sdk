@@ -6,6 +6,9 @@ import lombok.Getter;
 
 import java.util.Map;
 
+/**
+ * Contract instance does not exist on chain.
+ */
 @Getter
 public class RejectReasonInvalidContractAddress extends RejectReason {
     private final ContractAddress contractAddress;

@@ -9,11 +9,20 @@ import lombok.ToString;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * When the sender did not have enough funds to cover his transfer.
+ */
 @Getter
 @ToString
 public class RejectReasonAmountTooLarge extends RejectReason {
 
+    /**
+     * The sender of the transaction.
+     */
     private final AbstractAccount account;
+    /**
+     * The transfer amount.
+     */
     private final CCDAmount amount;
 
     @JsonCreator

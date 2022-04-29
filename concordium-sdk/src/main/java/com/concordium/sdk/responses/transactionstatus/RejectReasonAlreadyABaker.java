@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Tried to add baker/delegator for an account that already has a baker.
+ */
 @ToString
 @Getter
 public class RejectReasonAlreadyABaker extends RejectReason {

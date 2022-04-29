@@ -7,6 +7,9 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ * Reference to a non-existing contract receive method.
+ */
 @Getter
 @ToString
 class RejectReasonInvalidReceiveMethod extends RejectReason {

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Reference to a non-existing module.
+ */
 @ToString
 public class RejectReasonInvalidModuleReference extends RejectReason {
     @Getter

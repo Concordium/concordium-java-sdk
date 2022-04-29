@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Account does not exist
+ */
 @ToString
 public class RejectReasonInvalidAccountReference extends RejectReason {
     @Getter
