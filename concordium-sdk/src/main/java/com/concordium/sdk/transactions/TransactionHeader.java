@@ -1,10 +1,6 @@
 package com.concordium.sdk.transactions;
 
-<<<<<<< HEAD
-import com.concordium.sdk.types.Timestamp;
-=======
 import com.concordium.sdk.types.Nonce;
->>>>>>> 98378411ff3b36ec1911d7b698611798d768e056
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
