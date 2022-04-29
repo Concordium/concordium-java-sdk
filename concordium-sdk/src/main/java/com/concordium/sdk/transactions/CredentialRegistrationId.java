@@ -29,6 +29,7 @@ public class CredentialRegistrationId {
 
     /**
      * Create a {@link CredentialRegistrationId} from raw bytes
+     *
      * @param bytes the credential registration id bytes
      * @return a {@link CredentialRegistrationId}
      */
