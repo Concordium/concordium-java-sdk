@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.accountinfo.credential;
 
+import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.transactions.Index;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @ToString
@@ -21,13 +23,10 @@ public final class Contents {
      */
     private final int revocationThreshold;
     /**
-     * Registration id of this credential
-     */
-    private final String credId;
-    /**
      * Policy.
      * Note. At the moment only opening of specific commitments.
      */
+    private CredentialRegistrationId credId;
     private final Policy policy;
     /**
      * Commitments associated with this credential.
@@ -52,7 +51,9 @@ public final class Contents {
              @JsonProperty("arData") Map<Index, ArData> arData) {
         this.ipIdentity = ipIdentity;
         this.revocationThreshold = revocationThreshold;
-        this.credId = credId;
+        if (!Objects.isNull(credId))  {
+            this.credId = CredentialRegistrationId.from(credId);
+        }
         this.policy = policy;
         this.commitments = commitments;
         this.credentialPublicKeys = credentialPublicKeys;
