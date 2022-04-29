@@ -1,6 +1,5 @@
 package com.concordium.sdk.transactions;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -20,11 +19,19 @@ public class CredentialRegistrationId {
         this.regId = regId;
     }
 
+    /**
+     * Create a {@link CredentialRegistrationId} from the hex encoded registration id.
+     */
     @SneakyThrows
     public static CredentialRegistrationId from(String encoded) {
         return new CredentialRegistrationId(Hex.decodeHex(encoded));
     }
 
+    /**
+     * Create a {@link CredentialRegistrationId} from raw bytes
+     * @param bytes the credential registration id bytes
+     * @return a {@link CredentialRegistrationId}
+     */
     public static CredentialRegistrationId fromBytes(byte[] bytes) {
         return new CredentialRegistrationId(bytes);
     }
