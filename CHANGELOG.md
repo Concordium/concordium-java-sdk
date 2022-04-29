@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- CredentialRegistrationID type added and AccountAddress can be derived from it.
 
 ## 2.0.0
 - Support for configuring TLS.
