@@ -84,12 +84,53 @@ Connection connection = Connection.builder()
                 .build();
 Client client = Client.from(connection);
 ```
+
 where
 
 - `password` is the password to use
 - `node_url`  is the url of the node
 - `node_port` is the nodes rpc port
 - `timeout` is the timeout for the GRPC connection (default is 15000 ms)
+
+### Configuring the connection
+
+One can also provide extra HTTP headers to the grpc calls by setting up the client as the following:
+
+```java
+Connection connection = Connection.builder()
+                .credentials(Credentials.builder()
+                        .authenticationToken(${password})
+                        .withAdditionalHeader(Header.from("HEADER1", "VALUE1"))
+                        .withAdditionalHeader(Header.from("HEADER2", "VALUE2"))
+                        .build())
+                .host(${node_url})
+                .port(${node_port})
+                .timeout(${timeout})
+                .build();
+Client client = Client.from(connection);
+```
+
+Note. One cannot provide an additional `Header` 'Authentication' as this is already used for the ${password}.
+
+#### Enforcing TLS
+
+It is also possible to enforce TLS to be used in the underlying connection e.g.
+
+```java
+Connection connection = Connection.builder()
+                .credentials(Credentials.builder()
+                        .authenticationToken(${password})
+                        .withAdditionalHeader(Header.from("HEADER1", "VALUE1"))
+                        .withAdditionalHeader(Header.from("HEADER2", "VALUE2"))
+                        .build())
+                .host(${node_url})
+                .port(${node_port})
+                .timeout(${timeout})
+                .useTLS(TLSConfig.from(new File("/a/path/to/the/servers/certificate.pem")))
+                .build();
+Client client = Client.from(connection);
+```
+
 
 Further the `Client` exposes a `close()` function which should be called when finished using the client in order to
 perform an orderly shutdown of the underlying grpc connection.

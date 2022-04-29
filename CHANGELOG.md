@@ -8,6 +8,14 @@
   todo: specify changes here
 - Stronger typing for BlockSummary.
 - Renamed GTUAmount to CCDAmount
+- New CredentialRegistrationId type.
+
+
+## 2.0.0
+- Support for configuring TLS.
+
+## 1.7.0
+- Allow consumers to provide extra HTTP headers for the gRPC connection.
 
 
 ## 1.6.1
