@@ -6,6 +6,10 @@ import lombok.Getter;
 
 import java.nio.ByteBuffer;
 
+/**
+ * CCD amount
+ * Internally this type holds micro CCDs.
+ */
 @Getter
 public class CCDAmount {
     private final UInt64 value;

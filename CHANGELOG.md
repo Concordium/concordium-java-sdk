@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+
+- `Payload` now exposes `getDataToSign`
 - Documentation for `AccountInfo`.
 - Stronger typing for various places in the API. 
   todo: specify changes here

@@ -1,6 +1,10 @@
 package com.concordium.sdk.transactions;
 
+<<<<<<< HEAD
+import com.concordium.sdk.types.Timestamp;
+=======
 import com.concordium.sdk.types.Nonce;
+>>>>>>> 98378411ff3b36ec1911d7b698611798d768e056
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
@@ -20,7 +24,16 @@ public class TransactionHeader {
     @Setter
     private UInt32 payloadSize;
 
+    /**
+     * Create a {@link TransactionHeader}
+     * @param sender the sender {@link AccountAddress}
+     * @param accountNonce the nonce.
+     *                     Note. this should be the next available account nonce.
+     *                     This can e.g. be retrieved via {@link com.concordium.sdk.responses.accountinfo.AccountInfo}
+     * @param expiry A Unix timestamp indicating when the transaction should expire.
+     */
     @Builder
+
     TransactionHeader(AccountAddress sender, Nonce accountNonce, UInt64 expiry) {
         this.sender = sender;
         this.accountNonce = accountNonce;

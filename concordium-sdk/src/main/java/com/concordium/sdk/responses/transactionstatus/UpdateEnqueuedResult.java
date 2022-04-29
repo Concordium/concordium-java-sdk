@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.types.Timestamp;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -12,11 +13,11 @@ public final class UpdateEnqueuedResult extends TransactionResultEvent {
     private final UpdateEnqueuedPayloadResult payload;
 
     @Getter
-    private final long effectiveTime;
+    private final Timestamp effectiveTime;
 
     @JsonCreator
     UpdateEnqueuedResult(@JsonProperty("payload") UpdateEnqueuedPayloadResult<Object> payload,
-                         @JsonProperty("effectiveTime") long effectiveTime) {
+                         @JsonProperty("effectiveTime") Timestamp effectiveTime) {
 
         this.payload = payload;
         this.effectiveTime = effectiveTime;

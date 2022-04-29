@@ -60,7 +60,7 @@ public abstract class Payload {
         return this;
     }
 
-    byte[] getDataToSign() {
+    public byte[] getDataToSign() {
         val headerBytes = header.getBytes();
         val payloadBytes = getBytes();
         val buffer = ByteBuffer.allocate(headerBytes.length + payloadBytes.length);

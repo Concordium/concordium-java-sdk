@@ -31,7 +31,7 @@ public class Timestamp {
     }
 
     /**
-     * Create a new {@link Timestamp} from seconds.
+     * Create a new {@link Timestamp} from seconds i.e. a Unix timestamp.
      * @param seconds the amount of seconds that have passed since 1/1-1970.
      * @return a new timestamp
      */
