@@ -7,6 +7,11 @@
 - Stronger typing for BlockSummary.
 - Renamed GTUAmount to CCDAmount
 
+## 2.0.0
+- Support for configuring TLS.
+
+## 1.7.0
+- Allow consumers to provide extra HTTP headers for the gRPC connection.
 
 ## 1.6.1
 - Fix a bug which caused the `Client` to use a global absolute timeout from when it was initialized.

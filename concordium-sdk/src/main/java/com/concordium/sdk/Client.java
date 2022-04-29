@@ -5,6 +5,7 @@ import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
+import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
@@ -19,9 +20,9 @@ import com.google.protobuf.ByteString;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 import lombok.val;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -49,21 +50,23 @@ public final class Client {
      *
      * @param connection the connection which this client should use.
      * @return A new {@link Client}
+     * @throws ClientInitializationException if the {@link Client} could not be constructed.
      */
-    public static Client from(Connection connection) {
+    public static Client from(Connection connection) throws ClientInitializationException {
         return new Client(connection);
     }
 
-    private Client(Connection connection) {
-        this(connection, ManagedChannelBuilder.forAddress(connection.getHost(), connection.getPort()).usePlaintext());
-    }
+    private Client(Connection connection) throws ClientInitializationException {
+        try {
+            this.timeout = connection.getTimeout();
+            this.channel = connection.newChannel();
+            this.blockingStub = P2PGrpc
+                    .newBlockingStub(this.channel)
+                    .withCallCredentials(connection.getCredentials());
+        } catch (IOException e) {
+            throw ClientInitializationException.from(e);
+        }
 
-    private Client(Connection connection, ManagedChannelBuilder<?> builder) {
-        this.timeout = connection.getTimeout();
-        this.channel = builder.build();
-        this.blockingStub = P2PGrpc
-                .newBlockingStub(channel)
-                .withCallCredentials(connection.getCredentials());
     }
 
     /**
