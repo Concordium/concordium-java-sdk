@@ -7,6 +7,9 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ * A credential id that was to be removed is not part of the account.
+ */
 @ToString
 public class RejectReasonNonExistentCredIDs extends RejectReason {
     @Getter

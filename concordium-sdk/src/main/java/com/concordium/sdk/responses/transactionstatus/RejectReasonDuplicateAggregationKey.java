@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * A baker with the given aggregation key already exists
+ */
 @ToString
 public class RejectReasonDuplicateAggregationKey extends RejectReason {
     @Getter

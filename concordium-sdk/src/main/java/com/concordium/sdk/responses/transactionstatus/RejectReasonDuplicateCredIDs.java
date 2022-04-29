@@ -7,6 +7,9 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ * Some of the credential IDs already exist or are duplicated in the transaction.
+ */
 @Getter
 @ToString
 public class RejectReasonDuplicateCredIDs extends RejectReason {

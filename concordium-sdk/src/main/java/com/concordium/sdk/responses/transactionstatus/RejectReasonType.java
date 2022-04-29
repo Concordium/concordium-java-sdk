@@ -87,7 +87,35 @@ public enum RejectReasonType {
     @JsonProperty("RemoveFirstCredential")
     REMOVE_FIRST_CREDENTIAL,
     @JsonProperty("CredentialHolderDidNotSign")
-    CREDENTIAL_HOLDER_DID_NOT_SIGN;
+    CREDENTIAL_HOLDER_DID_NOT_SIGN,
+    @JsonProperty("MissingBakerAddParameters")
+    MISSING_BAKER_ADD_PARAMETERS,
+    @JsonProperty("FinalizationRewardCommissionNotInRange")
+    FINALIZATION_REWARD_COMMISSION_NOT_IN_RANGE,
+    @JsonProperty("BakingRewardCommissionNotInRange")
+    BAKING_REWARD_COMMISSION_NOT_IN_RANGE,
+    @JsonProperty("TransactionFeeCommissionNotInRange")
+    TRANSACTION_FEE_COMMISSION_NOT_IN_RANGE,
+    @JsonProperty("AlreadyADelegator")
+    ALREADY_A_DELEGATOR,
+    @JsonProperty("InsufficientBalanceForDelegationStake")
+    INSUFFICIENT_BALANCE_FOR_DELEGATION_STAKE,
+    @JsonProperty("MissingDelegationAddParameters")
+    MISSING_DELEGATION_ADD_PARAMETERS,
+    @JsonProperty("InsufficientDelegationStake")
+    INSUFFICIENT_DELEGATION_STAKE,
+    @JsonProperty("DelegatorInCooldown")
+    DELEGATOR_IN_COOLDOWN,
+    @JsonProperty("NotADelegator")
+    NOT_A_DELEGATOR,
+    @JsonProperty("DelegationTargetNotABaker")
+    DELEGATION_TARGET_NOT_A_BAKER,
+    @JsonProperty("StakeOverMaximumThresholdForPool")
+    STAKE_OVER_MAXIMUM_THRESHOLD_FOR_POOL,
+    @JsonProperty("PoolWouldBecomeOverDelegated")
+    POOL_WOULD_BECOME_OVER_DELEGATED,
+    @JsonProperty("PoolClosed")
+    POOL_CLOSED;
 
     // Convenience methods for do 'safe' casting.
     public <T> T convert(RejectReason reason) {

@@ -7,20 +7,20 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * Account does not exist
+ * Account is not a delegation account.
  */
 @ToString
-public class RejectReasonInvalidAccountReference extends RejectReason {
-    @Getter
-    private final AccountAddress address;
+@Getter
+public class RejectReasonNotADelegator extends RejectReason {
+    private final AccountAddress accountAddress;
 
     @JsonCreator
-    RejectReasonInvalidAccountReference(@JsonProperty("contents") String address) {
-        this.address = AccountAddress.from(address);
+    RejectReasonNotADelegator(@JsonProperty("contents") String accountAddress) {
+        this.accountAddress = AccountAddress.from(accountAddress);
     }
 
     @Override
     public RejectReasonType getType() {
-        return RejectReasonType.INVALID_ACCOUNT_REFERENCE;
+        return RejectReasonType.NOT_A_DELEGATOR;
     }
 }
