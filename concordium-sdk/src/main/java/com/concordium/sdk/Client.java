@@ -227,8 +227,10 @@ public final class Client {
 
     /**
      * Closes the underlying grpc channel
-     * This should be done when the {@link Client}
-     * is of no more use.
+     * 
+     * This should only be done when the {@link Client}
+     * is of no more use as creating a new {@link Client} (and the associated)
+     * channel is rather expensive.
      */
     public void close() {
         this.channel.shutdown();
