@@ -37,16 +37,16 @@ public final class AccountAddress {
     /**
      * Create a new {@link AccountAddress} given the base58 encoded address.
      * PRECONDITION: The encoded account address must conform to the {@link AccountAddress#VERSION}
-     * @param address A base58 encoded address.
+     * @param encoded A base58 encoded address.
      * @return The created {@link AccountAddress}
      */
-    public static AccountAddress from(String address) {
-        val addressBytes = Base58.decodeChecked(VERSION, address);
+    public static AccountAddress from(String encoded) {
+        val addressBytes = Base58.decodeChecked(VERSION, encoded);
         return AccountAddress.from(addressBytes);
     }
 
     /**
-     * Create a {@link AccountAddress} from the supplied {@link CredentialRegistrationId}
+     * Create a {@link AccountAddress} from a {@link CredentialRegistrationId}.
      * @param regId the credential registration id to derive the {@link AccountAddress} from
      * @return the derived {@link AccountAddress}
      */

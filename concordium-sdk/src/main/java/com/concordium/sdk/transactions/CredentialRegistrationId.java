@@ -3,7 +3,9 @@ package com.concordium.sdk.transactions;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.ToString;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  * A credential registration id
@@ -18,8 +20,9 @@ public class CredentialRegistrationId {
         this.regId = regId;
     }
 
+    @SneakyThrows
     public static CredentialRegistrationId from(String encoded) {
-        return new CredentialRegistrationId(Base58.decodeChecked(1, encoded));
+        return new CredentialRegistrationId(Hex.decodeHex(encoded));
     }
 
     public static CredentialRegistrationId fromBytes(byte[] bytes) {
