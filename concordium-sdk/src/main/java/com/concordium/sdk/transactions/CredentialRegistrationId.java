@@ -1,10 +1,10 @@
 package com.concordium.sdk.transactions;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.ToString;
+import lombok.*;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+
+import java.util.Objects;
 
 /**
  * A credential registration id
@@ -12,6 +12,8 @@ import org.apache.commons.codec.binary.Hex;
 @ToString
 @EqualsAndHashCode
 public class CredentialRegistrationId {
+    //the length of `CredentialRegistrationId` bytes
+    private static final int LENGTH = 48;
     @Getter
     private final byte[] regId;
 
@@ -22,9 +24,13 @@ public class CredentialRegistrationId {
     /**
      * Create a {@link CredentialRegistrationId} from the hex encoded registration id.
      */
-    @SneakyThrows
     public static CredentialRegistrationId from(String encoded) {
-        return new CredentialRegistrationId(Hex.decodeHex(encoded));
+        try {
+            val regId = Hex.decodeHex(encoded);
+            return CredentialRegistrationId.fromBytes(regId);
+        } catch (DecoderException e) {
+            throw new IllegalArgumentException("CredentialRegistrationId is not a valid HEX encoding", e);
+        }
     }
 
     /**
@@ -34,6 +40,10 @@ public class CredentialRegistrationId {
      * @return a {@link CredentialRegistrationId}
      */
     public static CredentialRegistrationId fromBytes(byte[] bytes) {
+        if (bytes.length != LENGTH) {
+            throw new IllegalArgumentException("Unexpected CredentialRegistrationId bytes length. " +
+                    "Expected " + LENGTH + " but was " + bytes.length);
+        }
         return new CredentialRegistrationId(bytes);
     }
 }
