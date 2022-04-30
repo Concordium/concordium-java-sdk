@@ -67,8 +67,8 @@ public class AccountAddressTest {
 
     @Test
     public void testCreateAccountAddressFromCredentialRegistrationId() {
-        val regId = CredentialRegistrationId.from("8e37800e11cdaa6b6e281e284ce3d0021935adb0bec6c9e987ae9bc1880668ea75b9a487b4318badda6763d21aa25f56");
+        val regId = CredentialRegistrationId.from("8e5c75fda3f791efd025e7e8fb0c26c3e111211e375fc9423b1ca308a696140e44c90dcabe75108b41db625152acae50");
         val address = AccountAddress.from(regId);
-        assertEquals("3o1oLidRY8wnRDMB2gAjxC5MswVYammyw4WG5i64j89ce7o3cs", address.encoded());
+        assertEquals("4LYFWsgZvL6bXC5edMgy7SpPg7BV7qK2TcPQRq3YZP9YgShrSQ", address.encoded());
     }
 }
