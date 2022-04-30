@@ -64,4 +64,11 @@ public class AccountAddressTest {
             }
         }
     }
+
+    @Test
+    public void testCreateAccountAddressFromCredentialRegistrationId() {
+        val regId = CredentialRegistrationId.from("8e5c75fda3f791efd025e7e8fb0c26c3e111211e375fc9423b1ca308a696140e44c90dcabe75108b41db625152acae50");
+        val address = AccountAddress.from(regId);
+        assertEquals("4LYFWsgZvL6bXC5edMgy7SpPg7BV7qK2TcPQRq3YZP9YgShrSQ", address.encoded());
+    }
 }

@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.crypto.SHA256;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -42,6 +43,16 @@ public final class AccountAddress {
     public static AccountAddress from(String address) {
         val addressBytes = Base58.decodeChecked(VERSION, address);
         return AccountAddress.from(addressBytes);
+    }
+
+    /**
+     * Create a {@link AccountAddress} from a {@link CredentialRegistrationId}.
+     * @param regId the credential registration id to derive the {@link AccountAddress} from
+     * @return the derived {@link AccountAddress}
+     * Note that this is only valid if the account was created via a credential with the given credential registration ID. That is, the derived address will only be correct for the account if the credential is the first credential on the account.
+     */
+    public static AccountAddress from(CredentialRegistrationId regId) {
+        return AccountAddress.from(SHA256.hash(regId.getRegId()));
     }
 
     /**
