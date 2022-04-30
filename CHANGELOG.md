@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- CredentialRegistrationID type added and AccountAddress can be derived from it.
 
 - `Payload` now exposes `getDataToSign`
 - Documentation for `AccountInfo`.
