@@ -36,6 +36,13 @@ public class CredentialRegistrationId {
     /**
      * Create a {@link CredentialRegistrationId} from raw bytes
      *
+     * Note. This is not the most optimal check as in fact the credential registration id
+     * is a group element in the G1 curve of the BLS pairing.
+     * Hence, not every series of bytes (with the correct size) is a valid credential registration id.
+     *
+     * Maintainer note. A future implementation could make use of the above comment and
+     * provide stronger verification of the credential registration id.
+     *
      * @param bytes the credential registration id bytes
      * @return a {@link CredentialRegistrationId}
      */
