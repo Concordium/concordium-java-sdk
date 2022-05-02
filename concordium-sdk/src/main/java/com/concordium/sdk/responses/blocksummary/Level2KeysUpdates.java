@@ -28,6 +28,8 @@ public final class Level2KeysUpdates {
     private final Nonce nextSequenceNumber;
     private final List<Object> queue;
     private final PoolParameters poolParameters;
+    private final CooldownParameters cooldownParameters;
+    private final TimeParameters timeParameters;
 
     @JsonCreator
     Level2KeysUpdates(@JsonProperty("mintDistribution") MintDistributionUpdates mintDistributionUpdates,
@@ -45,7 +47,9 @@ public final class Level2KeysUpdates {
                       @JsonProperty("euroPerEnergy") EuroPerEnergyUpdates euroPerEnergyUpdates,
                       @JsonProperty("nextSequenceNumber") Nonce nextSequenceNumber,
                       @JsonProperty("poolParameters") PoolParameters poolParameters,
-                      @JsonProperty("queue") List<Object> queue) {
+                      @JsonProperty("queue") List<Object> queue,
+                      @JsonProperty("cooldownParameters") CooldownParameters cooldownParameters,
+                      @JsonProperty("timeParameters") TimeParameters timeParameters) {
         this.mintDistributionUpdates = mintDistributionUpdates;
         this.addAnonymityRevokerUpdates = addAnonymityRevokerUpdates;
         this.transactionFeeDistributionUpdates = transactionFeeDistributionUpdates;
@@ -62,5 +66,7 @@ public final class Level2KeysUpdates {
         this.nextSequenceNumber = nextSequenceNumber;
         this.queue = queue;
         this.poolParameters = poolParameters;
+        this.cooldownParameters = cooldownParameters;
+        this.timeParameters = timeParameters;
     }
 }

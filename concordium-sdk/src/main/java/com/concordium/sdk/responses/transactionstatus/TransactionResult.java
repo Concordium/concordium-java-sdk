@@ -46,7 +46,9 @@ public final class TransactionResult {
             @JsonSubTypes.Type(value = DelegationSetRestakeEarnings.class, name = "DelegationSetRestakeEarnings"),
             @JsonSubTypes.Type(value = DelegationSetDelegationTarget.class, name = "DelegationSetDelegationTarget"),
             @JsonSubTypes.Type(value = DelegationAdded.class, name = "DelegationAdded"),
-            @JsonSubTypes.Type(value = DelegationRemoved.class, name = "DelegationRemoved")
+            @JsonSubTypes.Type(value = DelegationRemoved.class, name = "DelegationRemoved"),
+            @JsonSubTypes.Type(value = InterruptedResult.class, name = "Interrupted"),
+            @JsonSubTypes.Type(value = ResumedResult.class, name = "Resumed")
     })
     private final List<TransactionResultEvent> events;
     private final Outcome outcome;

@@ -76,5 +76,9 @@ enum TransactionContents {
     @JsonProperty("addIdentityProvider")
     ADD_IDENTITY_PROVIDER,
     @JsonProperty("updateAddIdentityProvider")
-    UPDATE_ADD_IDENTITY_PROVIDER
+    UPDATE_ADD_IDENTITY_PROVIDER,
+    @JsonProperty("configureDelegation")
+    CONFIGURE_DELEGATION,
+    @JsonProperty("configureBaker")
+    CONFIGURE_BAKER;
 }

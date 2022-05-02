@@ -22,6 +22,10 @@ public final class UpdateQueues {
     private final ElectionDifficultyUpdates electionDifficultyUpdates;
     private final EuroPerEnergyUpdates euroPerEnergyUpdates;
     private final Level1KeysUpdates level1KeysUpdates;
+    private final CooldownParameters cooldownParameters;
+    private final TimeParameters timeParameters;
+    private final PoolParameters poolParameters;
+
     @JsonCreator
     UpdateQueues(@JsonProperty("mintDistribution") MintDistributionUpdates mintDistributionUpdates,
                  @JsonProperty("rootKeys") RootKeysUpdates rootKeysUpdates,
@@ -36,7 +40,10 @@ public final class UpdateQueues {
                  @JsonProperty("foundationAccount") FoundationAccountUpdates foundationAccountUpdates,
                  @JsonProperty("electionDifficulty") ElectionDifficultyUpdates electionDifficultyUpdates,
                  @JsonProperty("euroPerEnergy") EuroPerEnergyUpdates euroPerEnergyUpdates,
-                 @JsonProperty("level1Keys") Level1KeysUpdates level1KeysUpdates) {
+                 @JsonProperty("level1Keys") Level1KeysUpdates level1KeysUpdates,
+                 @JsonProperty("cooldownParameters") CooldownParameters cooldownParameters,
+                 @JsonProperty("timeParameters") TimeParameters timeParameters,
+                 @JsonProperty("poolParameters") PoolParameters poolParameters) {
         this.mintDistributionUpdates = mintDistributionUpdates;
         this.rootKeysUpdates = rootKeysUpdates;
         this.addAnonymityRevokerUpdates = addAnonymityRevokerUpdates;
@@ -51,5 +58,8 @@ public final class UpdateQueues {
         this.electionDifficultyUpdates = electionDifficultyUpdates;
         this.euroPerEnergyUpdates = euroPerEnergyUpdates;
         this.level1KeysUpdates = level1KeysUpdates;
+        this.cooldownParameters = cooldownParameters;
+        this.timeParameters = timeParameters;
+        this.poolParameters = poolParameters;
     }
 }

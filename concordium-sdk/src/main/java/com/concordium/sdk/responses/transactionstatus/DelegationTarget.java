@@ -19,7 +19,9 @@ public class DelegationTarget {
 
     @ToString
     public enum DelegationType {
+        @JsonProperty("Passive")
         PASSIVE,
+        @JsonProperty("Baker")
         BAKER
     }
 

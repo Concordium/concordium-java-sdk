@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.blocksummary;
 
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -27,6 +28,12 @@ public class SpecialEvent {
     private final CCDAmount foundationCharge;
     private AccountAddress baker;
     private final List<BakerReward> bakerRewards;
+    private final UInt64 bakerId;
+    private final CCDAmount passiveReward;
+    private final CCDAmount developmentCharge;
+    private final CCDAmount finalizationReward;
+    private final Integer poolOwner;
+    private AccountAddress account;
 
     @JsonCreator
     SpecialEvent(@JsonProperty("tag") String tag,
@@ -42,7 +49,13 @@ public class SpecialEvent {
                  @JsonProperty("bakerReward") CCDAmount bakerReward,
                  @JsonProperty("foundationCharge") CCDAmount foundationCharge,
                  @JsonProperty("baker") String baker,
-                 @JsonProperty("bakerRewards") List<BakerReward> bakerRewards) {
+                 @JsonProperty("bakerRewards") List<BakerReward> bakerRewards,
+                 @JsonProperty("bakerId") long bakerId,
+                 @JsonProperty("passiveReward") CCDAmount passiveReward,
+                 @JsonProperty("developmentCharge") CCDAmount developmentCharge,
+                 @JsonProperty("finalizationReward") CCDAmount finalizationReward,
+                 @JsonProperty("poolOwner") Integer poolOwner,
+                 @JsonProperty("account") String account) {
         if (!Objects.isNull(foundationAccount)) {
             this.foundationAccount = AccountAddress.from(foundationAccount);
         }
@@ -61,6 +74,13 @@ public class SpecialEvent {
         if (!Objects.isNull(baker)) {
             this.baker = AccountAddress.from(baker);
         }
-
+        this.bakerId = UInt64.from(bakerId);
+        this.passiveReward = passiveReward;
+        this.developmentCharge = developmentCharge;
+        this.finalizationReward = finalizationReward;
+        this.poolOwner = poolOwner;
+        if(!Objects.isNull(account)) {
+            this.account = AccountAddress.from(account);
+        }
     }
 }
