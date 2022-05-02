@@ -22,7 +22,6 @@ public final class UpdateQueues {
     private final ElectionDifficultyUpdates electionDifficultyUpdates;
     private final EuroPerEnergyUpdates euroPerEnergyUpdates;
     private final Level1KeysUpdates level1KeysUpdates;
-
     @JsonCreator
     UpdateQueues(@JsonProperty("mintDistribution") MintDistributionUpdates mintDistributionUpdates,
                  @JsonProperty("rootKeys") RootKeysUpdates rootKeysUpdates,
