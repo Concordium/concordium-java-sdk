@@ -7,8 +7,7 @@ import lombok.Getter;
 import java.util.Date;
 
 /**
- * A Unix like timestamp with 1/1-1970 as the offset.
- * Note. {@link Timestamp} holds milliseconds as opposed to seconds.
+ * A Unix like timestamp with 1/1-1970 as the offset with millisecond precision.
  */
 @EqualsAndHashCode
 public class Timestamp {

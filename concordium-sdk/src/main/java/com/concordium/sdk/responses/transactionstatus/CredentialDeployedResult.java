@@ -12,17 +12,13 @@ import java.util.Objects;
 @Getter
 @ToString
 public final class CredentialDeployedResult extends TransactionResultEvent {
-    private CredentialRegistrationId regId;
-    private AccountAddress account;
+    private final CredentialRegistrationId regId;
+    private final AccountAddress account;
 
     @JsonCreator
-    CredentialDeployedResult(@JsonProperty("regId") String regId,
-                             @JsonProperty("account") String account) {
-        if (!Objects.isNull(regId)) {
-            this.regId = CredentialRegistrationId.from(regId);
-        }
-        if(!Objects.isNull(account)) {
-            this.account = AccountAddress.from(account);
-        }
+    CredentialDeployedResult(@JsonProperty("regId") CredentialRegistrationId regId,
+                             @JsonProperty("account") AccountAddress account) {
+        this.regId = regId;
+        this.account = account;
     }
 }

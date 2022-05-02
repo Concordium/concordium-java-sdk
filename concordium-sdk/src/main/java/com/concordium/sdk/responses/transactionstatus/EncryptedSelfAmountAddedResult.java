@@ -12,17 +12,15 @@ import java.util.Objects;
 @ToString
 public final class EncryptedSelfAmountAddedResult extends TransactionResultEvent {
     private final String amount;
-    private AccountAddress account;
+    private final AccountAddress account;
     private final String newAmount;
 
     @JsonCreator
     EncryptedSelfAmountAddedResult(@JsonProperty("amount") String amount,
-                                   @JsonProperty("account") String account,
+                                   @JsonProperty("account") AccountAddress account,
                                    @JsonProperty("newAmount") String newAmount) {
         this.amount = amount;
-        if(!Objects.isNull(account)) {
-            this.account = AccountAddress.from(account);
-        }
+        this.account = account;
         this.newAmount = newAmount;
     }
 }

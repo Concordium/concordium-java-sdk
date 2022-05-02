@@ -13,14 +13,13 @@ import java.util.Objects;
 @ToString
 public final class AmountAddedByDecryptionResult extends TransactionResultEvent {
     private final String amount;
-    private AccountAddress account;
+    private final AccountAddress account;
 
     @JsonCreator
     AmountAddedByDecryptionResult(@JsonProperty("amount") String amount,
-                                  @JsonProperty("account") String account) {
+                                  @JsonProperty("account") AccountAddress account) {
         this.amount = amount;
-        if(!Objects.isNull(account)) {
-            this.account = AccountAddress.from(account);
-        }
+        this.account = account;
+
     }
 }

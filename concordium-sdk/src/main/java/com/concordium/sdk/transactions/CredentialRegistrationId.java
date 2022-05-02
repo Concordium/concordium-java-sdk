@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -55,5 +56,10 @@ public class CredentialRegistrationId {
                     "Expected " + LENGTH + " but was " + bytes.length);
         }
         return new CredentialRegistrationId(bytes);
+    }
+
+    @JsonCreator
+    CredentialRegistrationId(String regId) {
+        this.regId = CredentialRegistrationId.from(regId).getRegId();
     }
 }

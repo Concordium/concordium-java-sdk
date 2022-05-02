@@ -16,7 +16,7 @@ public class Hash {
         try {
             this.bytes = Hex.decodeHex(encoded);
         } catch (DecoderException e) {
-            throw newDecodingException(e);
+            throw new IllegalArgumentException("Cannot create Hash", e);
         }
     }
 
@@ -30,10 +30,6 @@ public class Hash {
 
     public static Hash from(String hexHash) {
         return new Hash(hexHash);
-    }
-
-    private static IllegalArgumentException newDecodingException(DecoderException e) {
-        return new IllegalArgumentException("Cannot create Hash", e);
     }
 
     public static Hash from(byte[] hash) {

@@ -15,8 +15,8 @@ public class RejectReasonEncryptedAmountSelfTransfer extends RejectReason {
     private final AccountAddress address;
 
     @JsonCreator
-    RejectReasonEncryptedAmountSelfTransfer(@JsonProperty("contents") String address) {
-        this.address = AccountAddress.from(address);
+    RejectReasonEncryptedAmountSelfTransfer(@JsonProperty("contents") AccountAddress address) {
+        this.address = address;
     }
 
     @Override

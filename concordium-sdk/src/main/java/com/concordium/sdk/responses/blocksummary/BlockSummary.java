@@ -1,5 +1,7 @@
 package com.concordium.sdk.responses.blocksummary;
 
+import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
+import com.concordium.sdk.responses.blocksummary.updates.Updates;
 import com.concordium.sdk.responses.transactionstatus.TransactionSummary;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -21,7 +23,11 @@ public final class BlockSummary {
      * The list of transaction summaries for the block.
      */
     private final List<TransactionSummary> transactionSummaries;
-    private final List<SpecialEvent> specialEvents;
+
+    /**
+     * List of special transaction outcomes.
+     */
+    private final List<SpecialOutcome> specialOutcomes;
 
     /**
      * Finalization data for the block.
@@ -45,12 +51,12 @@ public final class BlockSummary {
     @JsonCreator
     BlockSummary(@JsonProperty("protocolVersion") int protocolVersion,
                  @JsonProperty("transactionSummaries") List<TransactionSummary> transactionSummaries,
-                 @JsonProperty("specialEvents") List<SpecialEvent> specialEvents,
+                 @JsonProperty("specialEvents") List<SpecialOutcome> specialOutcomes,
                  @JsonProperty("finalizationData") FinalizationData finalizationData,
                  @JsonProperty("updates") Updates updates) {
         this.protocolVersion = protocolVersion;
         this.transactionSummaries = transactionSummaries;
-        this.specialEvents = specialEvents;
+        this.specialOutcomes = specialOutcomes;
         this.finalizationData = finalizationData;
         this.updates = updates;
     }

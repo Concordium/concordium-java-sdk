@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -12,7 +13,7 @@ public final class BakerStakeDecreasedResult extends AbstractBakerResult {
 
     @JsonCreator
     BakerStakeDecreasedResult(@JsonProperty("bakerId") String bakerId,
-                              @JsonProperty("account") String account,
+                              @JsonProperty("account") AccountAddress account,
                               @JsonProperty("newStake") String newStake) {
         super(bakerId, account);
         this.newStake = newStake;

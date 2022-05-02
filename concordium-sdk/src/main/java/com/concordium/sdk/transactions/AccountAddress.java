@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.SHA256;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -99,5 +100,10 @@ public final class AccountAddress {
         byte[] addressBytes = new byte[BYTES];
         source.get(addressBytes);
         return AccountAddress.from(addressBytes);
+    }
+
+    @JsonCreator
+    AccountAddress(String encodedAddress) {
+        this.bytes = AccountAddress.from(encodedAddress).getBytes();
     }
 }

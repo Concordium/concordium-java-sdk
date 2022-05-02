@@ -15,8 +15,8 @@ public class RejectReasonInvalidAccountReference extends RejectReason {
     private final AccountAddress address;
 
     @JsonCreator
-    RejectReasonInvalidAccountReference(@JsonProperty("contents") String address) {
-        this.address = AccountAddress.from(address);
+    RejectReasonInvalidAccountReference(@JsonProperty("contents") AccountAddress address) {
+        this.address = address;
     }
 
     @Override

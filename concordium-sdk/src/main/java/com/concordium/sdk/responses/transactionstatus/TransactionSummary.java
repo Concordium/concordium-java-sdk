@@ -15,31 +15,25 @@ import java.util.Objects;
 @ToString
 public final class TransactionSummary {
     private final int index;
-    private Hash hash;
-    private AccountAddress sender;
-    private CCDAmount cost;
+    private final Hash hash;
+    private final AccountAddress sender;
+    private final CCDAmount cost;
     private final int energyCost;
     private final TransactionResult result;
     private final TransactionTypeInfo type;
 
     @JsonCreator
     TransactionSummary(@JsonProperty("index") int index,
-                       @JsonProperty("hash") String hash,
-                       @JsonProperty("sender") String sender,
-                       @JsonProperty("cost") String cost,
+                       @JsonProperty("hash") Hash hash,
+                       @JsonProperty("sender") AccountAddress sender,
+                       @JsonProperty("cost") CCDAmount cost,
                        @JsonProperty("energyCost") int energyCost,
                        @JsonProperty("result") TransactionResult result,
                        @JsonProperty("type") TransactionTypeInfo type) {
         this.index = index;
-        if (!Objects.isNull(hash)) {
-            this.hash = Hash.from(hash);
-        }
-        if (!Objects.isNull((sender))) {
-            this.sender = AccountAddress.from(sender);
-        }
-        if (!Objects.isNull(cost)) {
-            this.cost = CCDAmount.fromMicro(cost);
-        }
+        this.hash = hash;
+        this.sender = sender;
+        this.cost = cost;
         this.energyCost = energyCost;
         this.result = result;
         this.type = type;

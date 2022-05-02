@@ -12,14 +12,12 @@ import java.util.Objects;
 @Getter
 public abstract class AbstractDelegatorResult extends TransactionResultEvent {
     private final String delegatorId;
-    private AccountAddress delegatorAddress;
+    private final AccountAddress delegatorAddress;
 
     @JsonCreator
     AbstractDelegatorResult(@JsonProperty("delegatorId") String delegatorId,
-                            @JsonProperty("account") String delegatorAddress) {
+                            @JsonProperty("account") AccountAddress delegatorAddress) {
         this.delegatorId = delegatorId;
-        if (!Objects.isNull(delegatorAddress)) {
-            this.delegatorAddress = AccountAddress.from(delegatorAddress);
-        }
+        this.delegatorAddress = delegatorAddress;
     }
 }

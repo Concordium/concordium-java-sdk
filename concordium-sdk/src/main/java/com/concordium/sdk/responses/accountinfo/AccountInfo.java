@@ -71,7 +71,7 @@ public final class AccountInfo {
     private final Map<Index, Credential> accountCredentials;
 
     @JsonCreator
-    AccountInfo(@JsonProperty("accountAddress") String accountAddress,
+    AccountInfo(@JsonProperty("accountAddress") AccountAddress accountAddress,
                 @JsonProperty("accountNonce") Nonce accountNonce,
                 @JsonProperty("accountAmount") CCDAmount accountAmount,
                 @JsonProperty("accountThreshold") int accountThreshold,
@@ -82,7 +82,7 @@ public final class AccountInfo {
                 @JsonProperty("accountReleaseSchedule") ReleaseSchedule accountReleaseSchedule,
                 @JsonProperty("accountCredentials") Map<Index, Credential> accountCredentials) {
 
-        this.accountAddress = AccountAddress.from(accountAddress);
+        this.accountAddress = accountAddress;
         this.accountNonce = accountNonce;
         this.accountAmount = accountAmount;
         this.accountThreshold = accountThreshold;

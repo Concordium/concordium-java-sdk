@@ -11,19 +11,17 @@ import java.util.Objects;
 @Getter
 @ToString
 public final class NewEncryptedAmountResult extends TransactionResultEvent {
-    private AccountAddress account;
+    private final AccountAddress account;
     private final String newIndex;
     private final String encryptedAmount;
 
 
     @JsonCreator
-    NewEncryptedAmountResult(@JsonProperty("account") String account,
+    NewEncryptedAmountResult(@JsonProperty("account") AccountAddress account,
                              @JsonProperty("newIndex") String newIndex,
                              @JsonProperty("encryptedAmount") String encryptedAmount) {
 
-        if(!Objects.isNull(account)) {
-            this.account = AccountAddress.from(account);
-        }
+        this.account = account;
         this.newIndex = newIndex;
         this.encryptedAmount = encryptedAmount;
     }

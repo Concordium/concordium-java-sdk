@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -13,7 +14,7 @@ public class BakerSetFinalizationRewardCommission extends AbstractBakerResult {
 
     @JsonCreator
     BakerSetFinalizationRewardCommission(@JsonProperty("bakerId") String bakerId,
-                                         @JsonProperty("account") String bakerAccount,
+                                         @JsonProperty("account") AccountAddress bakerAccount,
                                          @JsonProperty("finalizationRewardCommission") int finalizationRewardCommission){
         super(bakerId, bakerAccount);
         this.finalizationRewardCommission = finalizationRewardCommission;

@@ -15,8 +15,8 @@ public class RejectReasonScheduledSelfTransfer extends RejectReason {
     private final AccountAddress accountAddress;
 
     @JsonCreator
-    RejectReasonScheduledSelfTransfer(@JsonProperty("contents") String accountAddress) {
-        this.accountAddress = AccountAddress.from(accountAddress);
+    RejectReasonScheduledSelfTransfer(@JsonProperty("contents") AccountAddress accountAddress) {
+        this.accountAddress = accountAddress;
     }
 
     @Override

@@ -6,20 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Objects;
-
 @Getter
 @ToString
 public abstract class AbstractBakerResult extends TransactionResultEvent {
     private final String bakerId;
-    private AccountAddress account;
+    private final AccountAddress account;
 
     @JsonCreator
     AbstractBakerResult(@JsonProperty("bakerId") String bakerId,
-                        @JsonProperty("account") String account) {
+                        @JsonProperty("account") AccountAddress account) {
         this.bakerId = bakerId;
-        if (!Objects.isNull(account)) {
-            this.account = AccountAddress.from(account);
-        }
+        this.account = account;
     }
 }

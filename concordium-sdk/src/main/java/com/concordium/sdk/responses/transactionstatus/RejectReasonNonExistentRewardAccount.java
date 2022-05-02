@@ -15,8 +15,8 @@ public class RejectReasonNonExistentRewardAccount extends RejectReason {
     private final AccountAddress address;
 
     @JsonCreator
-    RejectReasonNonExistentRewardAccount(@JsonProperty("contents") String address) {
-        this.address = AccountAddress.from(address);
+    RejectReasonNonExistentRewardAccount(@JsonProperty("contents") AccountAddress address) {
+        this.address = address;
     }
 
     @Override

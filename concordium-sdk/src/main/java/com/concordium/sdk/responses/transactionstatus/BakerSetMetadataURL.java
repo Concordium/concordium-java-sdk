@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -12,7 +13,7 @@ public class BakerSetMetadataURL extends AbstractBakerResult {
 
     @JsonCreator
     BakerSetMetadataURL(@JsonProperty("bakerId") String bakerId,
-                        @JsonProperty("account") String bakerAccount,
+                        @JsonProperty("account") AccountAddress bakerAccount,
                         @JsonProperty("metadataURL") String metadataUrl){
         super(bakerId, bakerAccount);
         this.metadataUrl = metadataUrl;

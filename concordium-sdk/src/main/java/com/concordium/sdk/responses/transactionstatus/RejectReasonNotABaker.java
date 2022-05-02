@@ -15,8 +15,8 @@ public class RejectReasonNotABaker extends RejectReason {
     private final AccountAddress accountAddress;
 
     @JsonCreator
-    public RejectReasonNotABaker(@JsonProperty("contents") String accountAddress) {
-        this.accountAddress = AccountAddress.from(accountAddress);
+    public RejectReasonNotABaker(@JsonProperty("contents") AccountAddress accountAddress) {
+        this.accountAddress = accountAddress;
     }
 
     @Override
