@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,7 +23,7 @@ public final class BakingRewards extends SpecialOutcome {
     /**
      * The amount awarded to each baker.
      */
-    private final Map<AccountAddress, CCDAmount> bakerRewards;
+    private final List<Reward> bakerRewards;
 
     /**
      * The remaining balance of the baker reward account.
@@ -31,7 +32,7 @@ public final class BakingRewards extends SpecialOutcome {
 
     @JsonCreator
     BakingRewards(
-            @JsonProperty("bakerRewards") Map<AccountAddress, CCDAmount> bakerRewards,
+            @JsonProperty("bakerRewards") List<Reward> bakerRewards,
             @JsonProperty("remainder") CCDAmount remainder) {
         this.bakerRewards = bakerRewards;
         this.remainder = remainder;

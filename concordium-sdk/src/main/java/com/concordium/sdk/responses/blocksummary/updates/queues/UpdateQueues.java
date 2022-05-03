@@ -8,7 +8,6 @@ import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards
 import com.concordium.sdk.responses.blocksummary.updates.keys.Level1KeysUpdates;
 import com.concordium.sdk.responses.blocksummary.updates.keys.Level2KeysUpdates;
 import com.concordium.sdk.responses.blocksummary.updates.keys.RootKeysUpdates;
-import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
