@@ -1,6 +1,5 @@
 package com.concordium.sdk.transactions;
 
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
