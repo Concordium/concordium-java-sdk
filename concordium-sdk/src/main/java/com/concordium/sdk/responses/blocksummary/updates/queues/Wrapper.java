@@ -13,9 +13,8 @@ public class Wrapper<T> {
     private final Timestamp effectiveTime;
     private final T update;
 
-
-    Wrapper(Timestamp effectiveTime, T update) {
-        this.effectiveTime = effectiveTime;
+    Wrapper(long effectiveTimeUnixTimestamp, T update) {
+        this.effectiveTime = Timestamp.newSeconds(effectiveTimeUnixTimestamp);
         this.update = update;
     }
 }

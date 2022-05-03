@@ -27,16 +27,8 @@ public final class EnqueuedUpdate<T> {
 
     @JsonCreator
     EnqueuedUpdate(@JsonProperty("nextSequenceNumber") Nonce nextSequenceNumber,
-                   @JsonProperty("queue") List<List<Object>> pendingUpdates) {
+                   @JsonProperty("queue") List<Wrapper<T>> pendingUpdates) {
         this.nextSequenceNumber = nextSequenceNumber;
-        this.pendingUpdates = new ArrayList<>();
-        for (List<Object> pendingUpdate : pendingUpdates) {
-            if (pendingUpdate.size() != 2) {
-                throw new IllegalArgumentException("Unexected tuple length. Expected 2 but was " + pendingUpdate.size());
-            }
-            Long effectiveTime = (Long) pendingUpdate.get(0);
-            T update = (T) pendingUpdate.get(1);
-            this.pendingUpdates.add(new Wrapper<>(Timestamp.newSeconds(effectiveTime), update));
-        }
+        this.pendingUpdates = pendingUpdates;
     }
 }

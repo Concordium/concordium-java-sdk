@@ -2,7 +2,6 @@ package com.concordium.sdk.responses.blocksummary.updates.queues;
 
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.ProtocolUpdate;
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.MicroGTUPerEuroUpdates;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.GasRewards;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.MintDistribution;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.TransactionFeeDistribution;
@@ -112,23 +111,23 @@ public final class UpdateQueues {
     private final EnqueuedUpdate<TimeParameters> timeParameters;
 
     @JsonCreator
-    UpdateQueues(@JsonProperty("mintDistribution") MintDistribution mintDistribution,
-                 @JsonProperty("rootKeys") RootKeysUpdates rootKeysUpdates,
-                 @JsonProperty("addAnonymityRevoker") AnonymityRevokerInfo addAnonymityRevokerUpdates,
-                 @JsonProperty("transactionFeeDistribution") TransactionFeeDistribution transactionFeeDistribution,
-                 @JsonProperty("bakerStakeThreshold") CCDAmount bakerStakeThreshold,
-                 @JsonProperty("level2Keys") Level2KeysUpdates level2KeysUpdates,
-                 @JsonProperty("microGTUPerEuro") MicroGTUPerEuroUpdates microGTUPerEuroUpdates,
-                 @JsonProperty("protocol") ProtocolUpdate protocolUpdates,
-                 @JsonProperty("addIdentityProvider") IdentityProviderInfo addIdentityProviderUpdates,
-                 @JsonProperty("gasRewards") GasRewards gasRewards,
-                 @JsonProperty("foundationAccount") AccountAddress foundationAccountUpdates,
-                 @JsonProperty("electionDifficulty") double electionDifficultyUpdates,
-                 @JsonProperty("euroPerEnergy") double euroPerEnergyUpdates,
-                 @JsonProperty("level1Keys") Level1KeysUpdates level1KeysUpdates,
-                 @JsonProperty("cooldownParameters") CooldownParameters cooldownParameters,
-                 @JsonProperty("timeParameters") TimeParameters timeParameters,
-                 @JsonProperty("poolParameters") PoolParameters poolParameters) {
+    UpdateQueues(@JsonProperty("mintDistribution") EnqueuedUpdate<MintDistribution> mintDistribution,
+                 @JsonProperty("rootKeys") EnqueuedUpdate<RootKeysUpdates> rootKeysUpdates,
+                 @JsonProperty("addAnonymityRevoker") EnqueuedUpdate<AnonymityRevokerInfo> addAnonymityRevokerUpdates,
+                 @JsonProperty("transactionFeeDistribution") EnqueuedUpdate<TransactionFeeDistribution> transactionFeeDistribution,
+                 @JsonProperty("bakerStakeThreshold") EnqueuedUpdate<CCDAmount> bakerStakeThreshold,
+                 @JsonProperty("level2Keys") EnqueuedUpdate<Level2KeysUpdates> level2KeysUpdates,
+                 @JsonProperty("microGTUPerEuro") EnqueuedUpdate<Fraction> microGTUPerEuroUpdates,
+                 @JsonProperty("protocol") EnqueuedUpdate<ProtocolUpdate> protocolUpdates,
+                 @JsonProperty("addIdentityProvider") EnqueuedUpdate<IdentityProviderInfo> addIdentityProviderUpdates,
+                 @JsonProperty("gasRewards") EnqueuedUpdate<GasRewards> gasRewards,
+                 @JsonProperty("foundationAccount") EnqueuedUpdate<Integer> foundationAccountUpdates,
+                 @JsonProperty("electionDifficulty") EnqueuedUpdate<Double> electionDifficultyUpdates,
+                 @JsonProperty("euroPerEnergy") EnqueuedUpdate<Fraction> euroPerEnergyUpdates,
+                 @JsonProperty("level1Keys") EnqueuedUpdate<Level1KeysUpdates> level1KeysUpdates,
+                 @JsonProperty("cooldownParameters") EnqueuedUpdate<CooldownParameters> cooldownParameters,
+                 @JsonProperty("timeParameters") EnqueuedUpdate<TimeParameters> timeParameters,
+                 @JsonProperty("poolParameters") EnqueuedUpdate<PoolParameters> poolParameters) {
         this.mintDistribution = mintDistribution;
         this.rootKeysUpdates = rootKeysUpdates;
         this.addAnonymityRevokerUpdates = addAnonymityRevokerUpdates;
