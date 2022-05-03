@@ -8,5 +8,5 @@ public enum OpenStatus {
     @JsonProperty("closedForNew")
     CLOSED_FOR_NEW,
     @JsonProperty("closedForAll")
-    CLOSED_FOR_ALL;
+    CLOSED_FOR_ALL
 }
