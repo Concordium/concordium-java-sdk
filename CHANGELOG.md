@@ -6,11 +6,9 @@
 - `Payload` now exposes `getDataToSign`
 - Documentation for `AccountInfo`.
 - Stronger typing for various places in the API. 
-  todo: specify changes here
-- Stronger typing for BlockSummary.
 - Renamed GTUAmount to CCDAmount
 - New CredentialRegistrationId type.
-
+- BlockSummary API now reflects the underlying types better.
 
 ## 2.0.0
 - Support for configuring TLS.
