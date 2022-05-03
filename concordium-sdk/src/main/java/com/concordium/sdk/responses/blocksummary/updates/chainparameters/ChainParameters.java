@@ -13,12 +13,12 @@ import lombok.ToString;
 public final class ChainParameters {
     private final CCDAmount minimumThresholdForBaking;
     private final RewardParameters rewardParameters;
-    private final Fraction microGTUPerEuroUpdates;
+    private final Fraction microGTUPerEuro;
     private final int foundationAccountIndex;
     private final int accountCreationLimit;
     private final int bakerCooldownEpochs;
     private final double electionDifficulty;
-    private final Fraction euroPerEnergyUpdates;
+    private final Fraction euroPerEnergy;
     private final double mintPerPayday;
     private final int poolOwnerCooldown;
     private final double capitalBound;
@@ -37,12 +37,12 @@ public final class ChainParameters {
     ChainParameters(
             @JsonProperty("minimumThresholdForBaking") CCDAmount minimumThresholdForBaking,
             @JsonProperty("rewardParameters") RewardParameters rewardParameters,
-            @JsonProperty("microGTUPerEuro") Fraction microGTUPerEuroUpdates,
+            @JsonProperty("microGTUPerEuro") Fraction microGTUPerEuro,
             @JsonProperty("foundationAccountIndex") int foundationAccountIndex,
             @JsonProperty("accountCreationLimit") int accountCreationLimit,
             @JsonProperty("bakerCooldownEpochs") int bakerCooldownEpochs,
             @JsonProperty("electionDifficulty") double electionDifficulty,
-            @JsonProperty("euroPerEnergy") Fraction euroPerEnergyUpdates,
+            @JsonProperty("euroPerEnergy") Fraction euroPerEnergy,
             @JsonProperty("mintPerPayday") double mintPerPayday,
             @JsonProperty("poolOwnerCooldown") int poolOwnerCooldown,
             @JsonProperty("capitalBound") double capitalBound,
@@ -58,12 +58,12 @@ public final class ChainParameters {
             @JsonProperty("minimumEquityCapital") CCDAmount minimumEquityCapital) {
         this.minimumThresholdForBaking = minimumThresholdForBaking;
         this.rewardParameters = rewardParameters;
-        this.microGTUPerEuroUpdates = microGTUPerEuroUpdates;
+        this.microGTUPerEuro = microGTUPerEuro;
         this.foundationAccountIndex = foundationAccountIndex;
         this.accountCreationLimit = accountCreationLimit;
         this.bakerCooldownEpochs = bakerCooldownEpochs;
         this.electionDifficulty = electionDifficulty;
-        this.euroPerEnergyUpdates = euroPerEnergyUpdates;
+        this.euroPerEnergy = euroPerEnergy;
         this.mintPerPayday = mintPerPayday;
         this.poolOwnerCooldown = poolOwnerCooldown;
         this.capitalBound = capitalBound;
