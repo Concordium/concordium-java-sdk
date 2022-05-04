@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A wrapper around an enqueued update containing the 'nextSequenceNumber' and an enqueued update.
+ * @param <T> The actual pending update
+ */
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -31,9 +35,6 @@ public final class EnqueuedUpdate<T> {
     EnqueuedUpdate(@JsonProperty("nextSequenceNumber") Nonce nextSequenceNumber,
                    @JsonProperty("queue") List<PendingUpdate<T>> pendingUpdates) {
         this.nextSequenceNumber = nextSequenceNumber;
-        // pending updates is either a type or a tuple consisting e i.e. in json terms a list containing two elements.
-        // the first element is a unix timestamp of the effectiveTime.
-        // The second element is the actual update.
         this.pendingUpdates = pendingUpdates;
     }
 }

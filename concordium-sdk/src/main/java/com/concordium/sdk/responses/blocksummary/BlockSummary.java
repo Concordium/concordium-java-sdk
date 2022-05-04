@@ -1,12 +1,11 @@
 package com.concordium.sdk.responses.blocksummary;
 
-import com.concordium.sdk.responses.blocksummary.specialoutcomes.BakingRewards;
-import com.concordium.sdk.responses.blocksummary.specialoutcomes.Mint;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import com.concordium.sdk.responses.blocksummary.updates.Updates;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParameters;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParametersV0;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParametersV1;
+
 import com.concordium.sdk.responses.transactionstatus.TransactionSummary;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;

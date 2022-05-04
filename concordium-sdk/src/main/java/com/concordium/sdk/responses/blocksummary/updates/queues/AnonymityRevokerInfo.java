@@ -6,14 +6,24 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Anonymity revoker info
+ *
+ * Note. the current implementation does not support the public key of the anonymity revoker.
+ */
 @Getter
 @ToString
 @EqualsAndHashCode
 public final class AnonymityRevokerInfo {
+    /**
+     * The anonymity revoker id
+     */
     private final int arIdentity;
-    private final Description description;
 
-    //todo: handle the elgamal public key in some way.
+    /**
+     * A description of the anonymity revoker
+     */
+    private final Description description;
 
     @JsonCreator
     AnonymityRevokerInfo(@JsonProperty("arIdentity") int arIdentity, @JsonProperty("description") Description description) {

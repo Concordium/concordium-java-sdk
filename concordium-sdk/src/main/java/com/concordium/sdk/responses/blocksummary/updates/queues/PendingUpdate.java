@@ -7,6 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The effective time of a pending update associated with the actual update.
+ * @param <T> the update.
+ */
 @Getter
 @ToString
 @EqualsAndHashCode

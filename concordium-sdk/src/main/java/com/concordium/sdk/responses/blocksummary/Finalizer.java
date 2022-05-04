@@ -7,11 +7,25 @@ import lombok.ToString;
 
 import java.math.BigInteger;
 
+/**
+ * A finalizer on chain
+ */
 @Getter
 @ToString
 public final class Finalizer {
+    /**
+     * The baker id
+     */
     private final int bakerId;
+
+    /**
+     * The finalizer's relative weight in the committee.
+     */
     private final BigInteger weight;
+
+    /**
+     * Whether the finalizer's signature is present.
+     */
     private final boolean signed;
 
 

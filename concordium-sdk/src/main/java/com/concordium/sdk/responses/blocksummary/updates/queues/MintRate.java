@@ -6,15 +6,28 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Mint rate
+ * <p>
+ * A base-10 floating point number representation.
+ * The value is `mantissa * 10^(-exponent)`.
+ */
 @Getter
 @ToString
 @EqualsAndHashCode
 public final class MintRate {
-    private final int mantissa;
-    private final int exponent;
+    /**
+     * The mantissa
+     */
+    private final double mantissa;
+
+    /**
+     * The exponent
+     */
+    private final double exponent;
 
     @JsonCreator
-    MintRate(@JsonProperty("mantissa") int mantissa, @JsonProperty("exponent") int exponent) {
+    MintRate(@JsonProperty("mantissa") long mantissa, @JsonProperty("exponent") long exponent) {
         this.mantissa = mantissa;
         this.exponent = exponent;
     }

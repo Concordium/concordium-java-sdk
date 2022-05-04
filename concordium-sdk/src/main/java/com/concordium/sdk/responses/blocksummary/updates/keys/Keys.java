@@ -5,6 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Authorizations for updating chain parameters.
+ * Root keys can change root and level 1 keys.
+ * Level one keys can change level 1 and 2 keys.
+ * Level 2 keys are the actual keys used updating chain parameters.
+ */
 @Getter
 @ToString
 public final class Keys {

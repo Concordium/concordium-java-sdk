@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.blocksummary.updates.queues;
 
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.ProtocolUpdate;
+import com.concordium.sdk.responses.blocksummary.updates.chainparameters.PoolParameters;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.GasRewards;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.MintDistribution;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.TransactionFeeDistribution;

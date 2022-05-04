@@ -7,6 +7,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Identity provider info
+ *
+ * Note. the current implementation does not support the public key of the identity provider.
+ *
+ */
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -15,9 +21,6 @@ public final class IdentityProviderInfo {
     private final int ipIdentity;
     private final Description description;
     private final byte[] ipCdiVerifyKey;
-
-    //todo: handle the pairing public key in some way
-
 
     @JsonCreator
     IdentityProviderInfo(@JsonProperty("ipIdentity") int ipIdentity,

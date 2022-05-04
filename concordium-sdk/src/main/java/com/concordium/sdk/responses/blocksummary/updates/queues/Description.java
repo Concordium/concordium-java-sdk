@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * A description contains meta information about an {@link IdentityProviderInfo} or {@link AnonymityRevokerInfo}
+ */
 @ToString
 @EqualsAndHashCode
 @Getter

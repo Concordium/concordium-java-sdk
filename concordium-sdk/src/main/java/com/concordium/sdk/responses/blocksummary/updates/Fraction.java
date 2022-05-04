@@ -8,6 +8,9 @@ import lombok.ToString;
 
 import java.math.BigInteger;
 
+/**
+ * A fraction
+ */
 @ToString
 @EqualsAndHashCode
 @Getter

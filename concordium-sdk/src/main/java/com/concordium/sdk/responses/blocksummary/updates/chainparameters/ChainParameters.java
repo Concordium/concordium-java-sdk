@@ -6,7 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-
+/**
+ * Chain parameters common to {@link ChainParametersV0} and {@link ChainParametersV1}.
+ */
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -43,6 +45,11 @@ public abstract class ChainParameters {
      */
     private final int foundationAccountIndex;
 
+    /**
+     * The pool parameters
+     */
+    private final PoolParameters poolParameters;
+
 
     ChainParameters(
             RewardParameters rewardParameters,
@@ -50,12 +57,14 @@ public abstract class ChainParameters {
             int foundationAccountIndex,
             int accountCreationLimit,
             double electionDifficulty,
-            Fraction euroPerEnergy) {
+            Fraction euroPerEnergy,
+            PoolParameters poolParameters) {
         this.rewardParameters = rewardParameters;
         this.microCCDPerEuro = microCCDPerEuro;
         this.foundationAccountIndex = foundationAccountIndex;
         this.accountCreationLimit = accountCreationLimit;
         this.electionDifficulty = electionDifficulty;
         this.euroPerEnergy = euroPerEnergy;
+        this.poolParameters = poolParameters;
     }
 }

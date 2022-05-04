@@ -6,13 +6,16 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Cooldown parameters
+ */
 @Getter
 @ToString
 @EqualsAndHashCode
 public final class CooldownParameters {
 
     /**
-     * Baker extra cooldown in epochs (for versions < 4 only)
+     * Baker extra cooldown in epochs (for protocol versions < 4 only)
      */
     private final long bakerExtraCooldownEpochs;
 
