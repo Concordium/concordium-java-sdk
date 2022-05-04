@@ -1,8 +1,6 @@
 # Changelog
 
 ## Unreleased changes
-
-- `Payload` now exposes `getDataToSign`
 - Stronger typing for various places in the API. 
 - Renamed GTUAmount to CCDAmount
 - New CredentialRegistrationId type.
