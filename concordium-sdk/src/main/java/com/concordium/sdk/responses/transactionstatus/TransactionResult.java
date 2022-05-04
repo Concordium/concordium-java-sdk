@@ -111,7 +111,7 @@ public final class TransactionResult {
             @JsonSubTypes.Type(value = RejectReasonDelegationTargetNotABaker.class, name = "DelegationTargetNotABaker"),
             @JsonSubTypes.Type(value = RejectReasonStakeOverMaximumThresholdForPool.class, name = "StakeOverMaximumThresholdForPool"),
             @JsonSubTypes.Type(value = RejectReasonPoolWouldBecomeOverDelegated.class, name = "PoolWouldBecomeOverDelegated"),
-            @JsonSubTypes.Type(value = RejectReasonPoolClosed.class, name = "PoolWouldBecomeOverDelegated"),
+            @JsonSubTypes.Type(value = RejectReasonPoolClosed.class, name = "PoolClosed"),
     })
     private final RejectReason rejectReason;
 
