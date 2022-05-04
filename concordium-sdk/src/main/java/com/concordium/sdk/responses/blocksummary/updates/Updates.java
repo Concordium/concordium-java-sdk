@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public final class Updates {
+public final class Updates<ChainParameters> {
 
     /**
      * The current chain parameters.

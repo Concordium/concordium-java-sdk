@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.blocksummary.specialoutcomes;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -14,6 +15,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
+@EqualsAndHashCode
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "tag")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = BakingRewards.class, name = "BakingRewards"),
