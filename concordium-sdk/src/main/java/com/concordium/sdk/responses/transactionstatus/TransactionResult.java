@@ -15,7 +15,7 @@ public final class TransactionResult {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "tag")
     @JsonSubTypes({
             @JsonSubTypes.Type(value = CredentialDeployedResult.class, name = "CredentialDeployed"),
-            @JsonSubTypes.Type(value = ModuleCreatedResult.class, name = "ModuleDeployed"),
+            @JsonSubTypes.Type(value = ModuleDeployedResult.class, name = "ModuleDeployed"),
             @JsonSubTypes.Type(value = ContractInitializedResult.class, name = "ContractInitialized"),
             @JsonSubTypes.Type(value = AccountCreatedResult.class, name = "AccountCreated"),
             @JsonSubTypes.Type(value = BakerAddedResult.class, name = "BakerAdded"),
