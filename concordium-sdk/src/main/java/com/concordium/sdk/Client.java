@@ -7,10 +7,7 @@ import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.transactions.AccountAddress;
-import com.concordium.sdk.transactions.AccountNonce;
-import com.concordium.sdk.transactions.Hash;
-import com.concordium.sdk.transactions.Transaction;
+import com.concordium.sdk.transactions.*;
 import com.google.protobuf.ByteString;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
@@ -131,6 +128,7 @@ public final class Client {
      * Retrieves the {@link ConsensusStatus}
      * which yields information of the chain,
      * examples are the protocol version, slot duration, genesis block etc.
+     *
      * @return the {@link ConsensusStatus}
      */
     public ConsensusStatus getConsensusStatus() {
@@ -140,6 +138,7 @@ public final class Client {
 
     /**
      * Retrieves a {@link BlockSummary}
+     *
      * @param blockHash the block {@link Hash} to query.
      * @return A {@link BlockSummary} for the block
      * @throws BlockNotFoundException If the block was not found.
@@ -159,6 +158,7 @@ public final class Client {
 
     /**
      * Retrieves a {@link BlockInfo}
+     *
      * @param blockHash the block {@link Hash} to query.
      * @return A {@link BlockInfo} for the block
      * @throws BlockNotFoundException If the block was not found.
@@ -178,6 +178,7 @@ public final class Client {
 
     /**
      * Retrieves a {@link BlocksAtHeight}
+     *
      * @param height the {@link BlocksAtHeightRequest} request.
      * @return A {@link BlocksAtHeight} if one or more blocks was present at the given height.
      * @throws BlockNotFoundException if no blocks were present at the given height.
@@ -193,7 +194,7 @@ public final class Client {
         val request = requestBuilder.build();
         val response = server().getBlocksAtHeight(request);
         val blocksAtHeight = BlocksAtHeight.fromJson(response.getValue());
-        if (Objects.isNull(blocksAtHeight) || blocksAtHeight.getBlocks().isEmpty() ) {
+        if (Objects.isNull(blocksAtHeight) || blocksAtHeight.getBlocks().isEmpty()) {
             throw BlockNotFoundException.from(height);
         }
         return blocksAtHeight;
@@ -233,6 +234,7 @@ public final class Client {
      * Get a {@link concordium.P2PGrpc.P2PBlockingStub} with a timeout
      * The timeout is the one specified in via the {@link Connection} object used to
      * initialize `this`.
+     *
      * @return A new stub with a timeout.
      */
     private P2PGrpc.P2PBlockingStub server() {
