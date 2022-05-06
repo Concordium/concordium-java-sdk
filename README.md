@@ -356,6 +356,28 @@ try {
 
 ```
 
+#### Sending a raw transaction
+It is also possible to send a `raw` transaction via the client. 
+Use `RawTransaction.from(rawTransactionBytes)` in order to retrieve a `Transaction` object which 
+can then be passed to the `Client.sendTransaction`.
+
+```java
+try{
+    RawTransaction rawTransaction = RawTransaction.from(transfer.getBytes());
+    Hash transactionHash  = client.sendTransaction(transaction);
+    // Do something with the succesfully sent transaction hash.
+    // Here we simply log it.
+    Log.Info("Transaction "+ transactionHash.asHex() +" was sent to node.");
+} catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+
+```
+
 
 # Custom Signing
 By default the java library supports ED25519 signing via the native binding [ED25519SecretKey](./concordium-sdk/src/main/java/com/concordium/sdk/crypto/ed25519/ED25519SecretKey.java).

@@ -22,7 +22,7 @@ public class TransferTransactionTest {
                     .amount(GTUAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
-                    .signer(getValidSigner())
+                    .signer(TransactionTestHelper.getValidSigner())
                     .build();
             assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_VERSIONED_BYTES, signedByteArrayToUnsigned(transfer.getBytes()));
             assertEquals("6a209eab54720aad71370a6adb4f0661d3606fca25ac544dc0ac0e76e099feba", transfer.getHash().asHex());
@@ -41,7 +41,7 @@ public class TransferTransactionTest {
                     .amount(GTUAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
-                    .signer(getValidSigner())
+                    .signer(TransactionTestHelper.getValidSigner())
                     .build();
             fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -60,7 +60,7 @@ public class TransferTransactionTest {
                     .amount(GTUAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
-                    .signer(getValidSigner())
+                    .signer(TransactionTestHelper.getValidSigner())
                     .build();
             fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -79,7 +79,7 @@ public class TransferTransactionTest {
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
-                    .signer(getValidSigner())
+                    .signer(TransactionTestHelper.getValidSigner())
                     .build();
             fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -98,7 +98,7 @@ public class TransferTransactionTest {
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
                     .amount(GTUAmount.fromMicro(17))
                     .expiry(Expiry.from(123456))
-                    .signer(getValidSigner())
+                    .signer(TransactionTestHelper.getValidSigner())
                     .build();
             fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -122,7 +122,7 @@ public class TransferTransactionTest {
                     .receiver(receiver)
                     .amount(amount)
                     .nonce(accountNonce)
-                    .signer(getValidSigner())
+                    .signer(TransactionTestHelper.getValidSigner())
                     .build();
             fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -170,16 +170,6 @@ public class TransferTransactionTest {
         }
     }
 
-
-    private TransactionSigner getValidSigner() {
-        ED25519SecretKey firstSecretKey = ED25519SecretKey.from("7100071c835a0a35e86dccba7ee9d10b89e36d1e596771cdc8ee36a17f7abbf2");
-        ED25519SecretKey secondSecretKey = ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9");
-        return TransactionSigner.from(
-                SignerEntry.from(Index.from(0), Index.from(0),
-                        firstSecretKey),
-                SignerEntry.from(Index.from(0), Index.from(1),
-                        secondSecretKey));
-    }
 
     private TransactionSigner getSignerWithMalformedSecretKey() {
         return new TransactionSigner() {
