@@ -1,8 +1,11 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.GTUAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -35,5 +38,10 @@ public class ContractUpdated extends TransactionResultEvent {
         if (!Objects.isNull(amount)) {
             this.amount = GTUAmount.fromMicro(amount);
         }
+    }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.CONTRACT_UPDATED;
     }
 }

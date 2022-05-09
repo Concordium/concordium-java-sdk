@@ -14,4 +14,9 @@ public final class ModuleCreatedResult extends TransactionResultEvent {
     ModuleCreatedResult(@JsonProperty("contents") String contents) {
         this.contents = contents;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.MODULE_DEPLOYED;
+    }
 }

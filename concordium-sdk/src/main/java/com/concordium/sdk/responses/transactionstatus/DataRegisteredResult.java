@@ -14,4 +14,9 @@ public final class DataRegisteredResult extends TransactionResultEvent {
     DataRegisteredResult(@JsonProperty("data") String data) {
         this.data = data;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.DATA_REGISTERED;
+    }
 }

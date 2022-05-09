@@ -15,4 +15,9 @@ public final class CredentialKeysUpdatedResult extends TransactionResultEvent {
         this.credId = credId;
 
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.CREDENTIAL_KEYS_UPDATED;
+    }
 }

@@ -14,10 +14,12 @@ import java.util.List;
 public final class TransactionResult {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "tag")
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = CredentialDeployedResult.class, name = "CredentialDeployed"),
             @JsonSubTypes.Type(value = ModuleCreatedResult.class, name = "ModuleDeployed"),
             @JsonSubTypes.Type(value = ContractInitializedResult.class, name = "ContractInitialized"),
+            @JsonSubTypes.Type(value = ContractUpdated.class, name = "Updated"),
+            @JsonSubTypes.Type(value = TransferredResult.class, name = "Transferred"),
             @JsonSubTypes.Type(value = AccountCreatedResult.class, name = "AccountCreated"),
+            @JsonSubTypes.Type(value = CredentialDeployedResult.class, name = "CredentialDeployed"),
             @JsonSubTypes.Type(value = BakerAddedResult.class, name = "BakerAdded"),
             @JsonSubTypes.Type(value = BakerRemovedResult.class, name = "BakerRemoved"),
             @JsonSubTypes.Type(value = BakerStakeIncreasedResult.class, name = "BakerStakeIncreased"),
@@ -26,16 +28,14 @@ public final class TransactionResult {
             @JsonSubTypes.Type(value = BakerKeysUpdatedResult.class, name = "BakerKeysUpdated"),
             @JsonSubTypes.Type(value = CredentialKeysUpdatedResult.class, name = "CredentialKeysUpdated"),
             @JsonSubTypes.Type(value = NewEncryptedAmountResult.class, name = "NewEncryptedAmount"),
+            @JsonSubTypes.Type(value = EncryptedAmountsRemovedResult.class, name = "EncryptedAmountsRemoved"),
             @JsonSubTypes.Type(value = AmountAddedByDecryptionResult.class, name = "AmountAddedByDecryption"),
             @JsonSubTypes.Type(value = EncryptedSelfAmountAddedResult.class, name = "EncryptedSelfAmountAdded"),
             @JsonSubTypes.Type(value = UpdateEnqueuedResult.class, name = "UpdateEnqueued"),
             @JsonSubTypes.Type(value = TransferredWithScheduleResult.class, name = "TransferredWithSchedule"),
             @JsonSubTypes.Type(value = CredentialsUpdatedResult.class, name = "CredentialsUpdated"),
             @JsonSubTypes.Type(value = DataRegisteredResult.class, name = "DataRegistered"),
-            @JsonSubTypes.Type(value = TransferredResult.class, name = "Transferred"),
             @JsonSubTypes.Type(value = TransferMemoResult.class, name = "TransferMemo"),
-            @JsonSubTypes.Type(value = EncryptedAmountsRemovedResult.class, name = "EncryptedAmountsRemoved"),
-            @JsonSubTypes.Type(value = ContractUpdated.class, name = "Updated")
     })
     private final List<TransactionResultEvent> events;
     private final Outcome outcome;

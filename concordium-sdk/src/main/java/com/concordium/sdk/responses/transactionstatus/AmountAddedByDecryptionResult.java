@@ -23,4 +23,9 @@ public final class AmountAddedByDecryptionResult extends TransactionResultEvent 
             this.account = AccountAddress.from(account);
         }
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.AMOUNT_ADDED_BY_DECRYPTION;
+    }
 }

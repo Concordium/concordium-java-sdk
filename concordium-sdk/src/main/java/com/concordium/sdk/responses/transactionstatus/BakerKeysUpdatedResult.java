@@ -16,4 +16,9 @@ public final class BakerKeysUpdatedResult extends AbstractBakerChangeResult {
                            @JsonProperty("signKey") String signKey) {
         super(bakerId, account, electionKey, aggregationKey, signKey);
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.BAKER_KEYS_UPDATED;
+    }
 }

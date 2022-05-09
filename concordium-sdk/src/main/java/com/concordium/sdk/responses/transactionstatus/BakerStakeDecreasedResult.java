@@ -17,4 +17,9 @@ public final class BakerStakeDecreasedResult extends AbstractBakerResult {
         super(bakerId, account);
         this.newStake = newStake;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.BAKER_STAKE_DECREASED;
+    }
 }

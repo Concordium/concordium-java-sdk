@@ -12,4 +12,9 @@ public final class AccountCreatedResult extends TransactionResultEvent {
     AccountCreatedResult(@JsonProperty("contents") String contents) {
         this.contents = contents;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.ACCOUNT_CREATED;
+    }
 }

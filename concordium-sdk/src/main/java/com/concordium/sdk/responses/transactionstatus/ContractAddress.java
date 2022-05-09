@@ -11,14 +11,12 @@ import lombok.ToString;
 public final class ContractAddress extends AbstractAccount {
     private final int subIndex;
     private final int index;
-    private final AccountType type;
-
     @JsonCreator
     ContractAddress(@JsonProperty("subindex") int subIndex,
                     @JsonProperty("index") int index,
                     @JsonProperty("type") AccountType type) {
+        super(type);
         this.subIndex = subIndex;
         this.index = index;
-        this.type = type;
     }
 }

@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Expose more types related to `TransactionSummary`
 
 ## 2.2.0
 - Support for sending raw transactions.
