@@ -17,12 +17,7 @@ import java.util.Objects;
 @Getter
 public class ContractUpdated extends TransactionResultEvent {
     private GTUAmount amount;
-
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-    @JsonSubTypes({
-            @JsonSubTypes.Type(value = AccountAddress.class, name = "AddressAccount"),
-            @JsonSubTypes.Type(value = ContractAddress.class, name = "AddressContract")
-    })
+    
     private final AbstractAccount instigator;
     private final ContractAddress address;
     private final String receiveName;
