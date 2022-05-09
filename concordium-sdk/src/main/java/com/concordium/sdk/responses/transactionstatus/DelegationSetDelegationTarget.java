@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @ToString
 @Getter
-public abstract class DelegationSetDelegationTarget extends AbstractDelegatorResult {
+public class DelegationSetDelegationTarget extends AbstractDelegatorResult {
     private final DelegationTarget delegationTarget;
 
     @JsonCreator
@@ -19,4 +19,8 @@ public abstract class DelegationSetDelegationTarget extends AbstractDelegatorRes
         this.delegationTarget = delegationTarget;
     }
 
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.DELEGATION_SET_DELEGATION_TARGET;
+    }
 }

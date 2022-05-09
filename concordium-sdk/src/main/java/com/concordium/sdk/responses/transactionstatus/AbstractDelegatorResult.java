@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Objects;
-
 @ToString
 @Getter
 public abstract class AbstractDelegatorResult extends TransactionResultEvent {
@@ -20,4 +18,6 @@ public abstract class AbstractDelegatorResult extends TransactionResultEvent {
         this.delegatorId = delegatorId;
         this.delegatorAddress = delegatorAddress;
     }
+
+
 }
