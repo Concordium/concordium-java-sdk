@@ -6,6 +6,12 @@
 - New CredentialRegistrationId type.
 - BlockSummary API now reflects the underlying types better.
 
+## 2.3.0
+- Expose more types related to `TransactionSummary`
+
+## 2.2.0
+- Support for sending raw transactions.
+
 ## 2.1.0
 - CredentialRegistrationID type introduced and AccountAddress can be derived from it.
 

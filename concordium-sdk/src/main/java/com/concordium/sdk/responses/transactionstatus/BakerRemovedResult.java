@@ -14,4 +14,9 @@ public final class BakerRemovedResult extends AbstractBakerResult {
                        @JsonProperty("account") AccountAddress account) {
         super(bakerId, account);
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.BAKER_REMOVED;
+    }
 }

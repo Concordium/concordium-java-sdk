@@ -28,4 +28,8 @@ public final class TransferredResult extends TransactionResultEvent {
         }
     }
 
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.TRANSFERRED;
+    }
 }

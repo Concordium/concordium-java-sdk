@@ -18,4 +18,9 @@ public class BakerSetOpenStatus extends AbstractBakerResult {
         super(bakerId, bakerAccount);
         this.openStatus = openStatus;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.BAKER_SET_OPEN_STATUS;
+    }
 }

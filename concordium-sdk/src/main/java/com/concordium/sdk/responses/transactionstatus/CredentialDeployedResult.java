@@ -21,4 +21,9 @@ public final class CredentialDeployedResult extends TransactionResultEvent {
         this.regId = regId;
         this.account = account;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.CREDENTIAL_DEPLOYED;
+    }
 }

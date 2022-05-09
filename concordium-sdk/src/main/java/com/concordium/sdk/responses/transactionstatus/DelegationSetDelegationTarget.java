@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @ToString
 @Getter
-public class DelegationSetDelegationTarget extends AbstractDelegatorResult {
+public abstract class DelegationSetDelegationTarget extends AbstractDelegatorResult {
     private final DelegationTarget delegationTarget;
 
     @JsonCreator

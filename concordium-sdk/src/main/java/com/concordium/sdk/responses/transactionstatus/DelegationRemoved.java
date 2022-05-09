@@ -15,4 +15,9 @@ public class DelegationRemoved extends AbstractDelegatorResult {
                     @JsonProperty("account") AccountAddress delegatorAddress) {
         super(delegatorId, delegatorAddress);
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.DELEGATION_REMOVED;
+    }
 }

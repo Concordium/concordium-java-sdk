@@ -20,4 +20,9 @@ public class BakerSetTransactionFeeCommission extends AbstractBakerResult {
         this.feeCommission = feeCommission;
 
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.BAKER_SET_TRANSACTION_FEE_COMMISSION;
+    }
 }

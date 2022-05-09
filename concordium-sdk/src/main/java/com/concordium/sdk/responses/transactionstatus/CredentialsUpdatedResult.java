@@ -39,4 +39,9 @@ public final class CredentialsUpdatedResult extends TransactionResultEvent {
         }
         this.newThreshold = Integer.parseInt(newThreshold);
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.CREDENTIALS_UPDATED;
+    }
 }

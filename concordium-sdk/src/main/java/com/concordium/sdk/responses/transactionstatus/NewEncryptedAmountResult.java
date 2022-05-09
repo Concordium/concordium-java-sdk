@@ -25,4 +25,9 @@ public final class NewEncryptedAmountResult extends TransactionResultEvent {
         this.newIndex = newIndex;
         this.encryptedAmount = encryptedAmount;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.NEW_ENCRYPTED_AMOUNT;
+    }
 }

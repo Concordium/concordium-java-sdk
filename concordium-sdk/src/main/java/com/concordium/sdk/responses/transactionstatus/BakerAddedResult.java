@@ -25,4 +25,9 @@ public final class BakerAddedResult extends AbstractBakerChangeResult {
         this.restakeEarnings = restakeEarnings;
         this.stake = stake;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.BAKER_ADDED;
+    }
 }

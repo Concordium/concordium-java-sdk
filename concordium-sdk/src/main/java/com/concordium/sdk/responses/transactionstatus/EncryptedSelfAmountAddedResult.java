@@ -23,4 +23,9 @@ public final class EncryptedSelfAmountAddedResult extends TransactionResultEvent
         this.account = account;
         this.newAmount = newAmount;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.ENCRYPTED_SELF_AMOUNT_ADDED;
+    }
 }

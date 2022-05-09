@@ -18,4 +18,9 @@ public class BakerSetMetadataURL extends AbstractBakerResult {
         super(bakerId, bakerAccount);
         this.metadataUrl = metadataUrl;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.BAKER_SET_METADATA_URL;
+    }
 }

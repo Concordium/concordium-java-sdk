@@ -1,5 +1,7 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.responses.transactionstatus.AbstractAccount;
+import com.concordium.sdk.responses.transactionstatus.TransactionResultEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,5 +24,13 @@ public enum AccountType {
             }
         }
         throw new IllegalArgumentException("Unsupported AccountType: " + val);
+    }
+
+    // Convenience methods for doing 'safe' casting.
+    public <T> T convert(AbstractAccount account) {
+        if (this != account.getType()) {
+            throw new IllegalArgumentException("Unexpected conversion. Expected " + this + " but received " + account.getType());
+        }
+        return (T) account;
     }
 }

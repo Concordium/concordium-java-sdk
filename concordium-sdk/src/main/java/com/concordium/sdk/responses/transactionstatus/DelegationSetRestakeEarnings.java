@@ -19,4 +19,9 @@ public class DelegationSetRestakeEarnings extends AbstractDelegatorResult {
        super(delegatorId, delegatorAddress);
         this.restakeEarnings = restakeEarnings;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.DELEGATION_SET_RESTAKE_EARNINGS;
+    }
 }

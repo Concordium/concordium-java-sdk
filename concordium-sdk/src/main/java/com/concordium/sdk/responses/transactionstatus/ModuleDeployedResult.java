@@ -21,4 +21,9 @@ public final class ModuleDeployedResult extends TransactionResultEvent {
     ModuleDeployedResult(@JsonProperty("contents") String reference) {
         this.reference = reference;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.MODULE_DEPLOYED;
+    }
 }

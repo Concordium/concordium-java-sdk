@@ -63,4 +63,9 @@ public final class ContractInitializedResult extends TransactionResultEvent {
         this.events = events;
         this.version = version;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.CONTRACT_INITIALIZED;
+    }
 }

@@ -21,4 +21,9 @@ public class InterruptedResult extends TransactionResultEvent {
         this.address = (ContractAddress) AbstractAccount.parseAccount(address);
         this.events = events;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.INTERRUPTED;
+    }
 }

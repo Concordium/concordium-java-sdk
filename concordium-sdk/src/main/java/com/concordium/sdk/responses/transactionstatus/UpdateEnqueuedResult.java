@@ -22,4 +22,9 @@ public final class UpdateEnqueuedResult extends TransactionResultEvent {
         this.payload = payload;
         this.effectiveTime = effectiveTime;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.UPDATE_ENQUEUED;
+    }
 }

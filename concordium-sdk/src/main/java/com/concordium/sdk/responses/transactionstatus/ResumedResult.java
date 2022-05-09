@@ -19,4 +19,9 @@ public class ResumedResult extends TransactionResultEvent {
         this.success = success;
         this.address = (ContractAddress) AbstractAccount.parseAccount(address);
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.RESUMED;
+    }
 }

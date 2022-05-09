@@ -18,4 +18,9 @@ public class DelegationStakeIncreased extends AbstractDelegatorResult {
         super(delegatorId, delegatorAddress);
         this.newStake = newStake;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.DELEGATION_STAKE_INCREASED;
+    }
 }

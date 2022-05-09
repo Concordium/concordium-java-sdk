@@ -71,4 +71,9 @@ public class ContractUpdated extends TransactionResultEvent {
         }
         this.version = version;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.CONTRACT_UPDATED;
+    }
 }

@@ -19,4 +19,9 @@ public class BakerSetBakingRewardCommission extends AbstractBakerResult {
         super(bakerId, bakerAccount);
         this.bakingRewardCommission = bakingRewardCommission;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.BAKER_SET_BAKING_REWARD_COMMISSION;
+    }
 }

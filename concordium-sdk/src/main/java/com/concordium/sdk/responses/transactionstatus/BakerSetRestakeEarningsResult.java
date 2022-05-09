@@ -18,4 +18,9 @@ public final class BakerSetRestakeEarningsResult extends AbstractBakerResult {
         super(bakerId, account);
         this.restakeEarnings = restakeEarnings;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.BAKER_SET_RESTAKE_EARNINGS;
+    }
 }
