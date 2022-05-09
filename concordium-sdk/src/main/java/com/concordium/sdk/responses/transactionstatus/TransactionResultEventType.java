@@ -52,7 +52,7 @@ public enum TransactionResultEventType {
     @JsonProperty("TransferMemo")
     TRANSFER_MEMO;
 
-    // Convenience methods for do 'safe' casting.
+    // Convenience methods for doing 'safe' casting.
     public <T> T convert(TransactionResultEvent event) {
         if (this != event.getType()) {
             throw new IllegalArgumentException("Unexpected conversion. Expected " + this + " but received " + event.getType());
