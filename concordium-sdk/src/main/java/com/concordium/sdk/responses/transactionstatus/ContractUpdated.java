@@ -17,7 +17,6 @@ import java.util.Objects;
 @Getter
 public class ContractUpdated extends TransactionResultEvent {
     private GTUAmount amount;
-    
     private final AbstractAccount instigator;
     private final ContractAddress address;
     private final String receiveName;
