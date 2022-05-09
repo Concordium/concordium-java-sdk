@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+
+## 2.3.0
 - Expose more types related to `TransactionSummary`
 
 ## 2.2.0
