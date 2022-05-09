@@ -11,8 +11,8 @@ public class RejectReasonInvalidContractAddress extends RejectReason {
     private final ContractAddress contractAddress;
 
     @JsonCreator
-    RejectReasonInvalidContractAddress(@JsonProperty("contents") Map<String, Object> contractAddress) {
-        this.contractAddress = (ContractAddress) ContractAddress.parseAccount(contractAddress);
+    RejectReasonInvalidContractAddress(@JsonProperty("contents") ContractAddress contractAddress) {
+        this.contractAddress = contractAddress;
     }
 
     @Override

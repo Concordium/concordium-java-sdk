@@ -22,4 +22,9 @@ public final class CredentialDeployedResult extends TransactionResultEvent {
             this.account = AccountAddress.from(account);
         }
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.CREDENTIAL_DEPLOYED;
+    }
 }

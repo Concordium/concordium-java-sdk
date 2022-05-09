@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class AbstractBakerChangeResult extends AbstractBakerResult {
+public abstract class AbstractBakerChangeResult extends AbstractBakerResult {
     private final String electionKey;
     private final String aggregationKey;
     private final String signKey;

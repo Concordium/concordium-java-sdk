@@ -14,4 +14,9 @@ public final class TransferMemoResult extends TransactionResultEvent {
     TransferMemoResult(@JsonProperty("memo") String memo) {
         this.memo = memo;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.TRANSFER_MEMO;
+    }
 }

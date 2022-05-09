@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.transactions.AccountType;
+import lombok.Getter;
 import lombok.val;
 
 import java.util.Map;
@@ -8,7 +9,14 @@ import java.util.Map;
 /**
  * Base class for {@link com.concordium.sdk.transactions.AccountType}
  */
-abstract class AbstractAccount {
+public abstract class AbstractAccount {
+
+    @Getter
+    private final AccountType type;
+
+    AbstractAccount(AccountType type) {
+        this.type = type;
+    }
 
     //not pretty - find a better way of handling this.
     static AbstractAccount parseAccount(Map<String, Object> o) {

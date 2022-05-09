@@ -24,4 +24,9 @@ public final class EncryptedAmountsRemovedResult extends TransactionResultEvent 
         this.inputAmount = inputAmount;
         this.newAmount = newAmount;
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.ENCRYPTED_AMOUNTS_REMOVED;
+    }
 }

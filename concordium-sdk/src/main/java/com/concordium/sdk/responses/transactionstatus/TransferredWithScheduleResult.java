@@ -23,4 +23,9 @@ public final class TransferredWithScheduleResult extends TransactionResultEvent 
         this.to = AccountAddress.from(to);
         this.from = AccountAddress.from(from);
     }
+
+    @Override
+    public TransactionResultEventType getType() {
+        return TransactionResultEventType.TRANSFERRED_WITH_SCHEDULE;
+    }
 }
