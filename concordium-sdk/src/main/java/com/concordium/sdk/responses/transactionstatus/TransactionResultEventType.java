@@ -42,7 +42,7 @@ public enum TransactionResultEventType {
     @JsonProperty("EncryptedSelfAmountAdded")
     ENCRYPTED_SELF_AMOUNT_ADDED,
     @JsonProperty("UpdateEnqueued")
-    UPDATEA_ENQUEUED,
+    UPDATE_ENQUEUED,
     @JsonProperty("TransferredWithSchedule")
     TRANSFERRED_WITH_SCHEDULE,
     @JsonProperty("CredentialsUpdated")
