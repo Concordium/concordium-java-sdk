@@ -26,7 +26,7 @@ public enum AccountType {
         throw new IllegalArgumentException("Unsupported AccountType: " + val);
     }
 
-    // Convenience methods for do 'safe' casting.
+    // Convenience methods for doing 'safe' casting.
     public <T> T convert(AbstractAccount account) {
         if (this != account.getType()) {
             throw new IllegalArgumentException("Unexpected conversion. Expected " + this + " but received " + account.getType());
