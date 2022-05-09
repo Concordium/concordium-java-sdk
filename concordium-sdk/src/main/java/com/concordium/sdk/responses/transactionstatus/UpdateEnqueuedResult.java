@@ -24,6 +24,6 @@ public final class UpdateEnqueuedResult extends TransactionResultEvent {
 
     @Override
     public TransactionResultEventType getType() {
-        return TransactionResultEventType.UPDATEA_ENQUEUED;
+        return TransactionResultEventType.UPDATE_ENQUEUED;
     }
 }
