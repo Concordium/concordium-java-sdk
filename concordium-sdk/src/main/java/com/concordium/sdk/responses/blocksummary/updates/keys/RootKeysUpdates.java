@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.util.List;
 
 /**
- * Root update keys
+ * Root update keys.
  */
 @Getter
 @ToString
