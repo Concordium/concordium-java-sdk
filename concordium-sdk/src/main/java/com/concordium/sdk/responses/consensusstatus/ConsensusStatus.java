@@ -166,7 +166,7 @@ public final class ConsensusStatus {
      */
     private final String currentEraGenesisBlock;
     /**
-     * ime when the current era started.
+     * Time when the current era started.
      */
     private final Date currentEraGenesisTime;
 
