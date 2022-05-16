@@ -19,7 +19,7 @@ public class RejectReasonAmountTooLarge extends RejectReason {
     /**
      * The sender of the transaction.
      */
-    private final AbstractAccount account;
+    private final AbstractAddress account;
     /**
      * The transfer amount.
      */
@@ -31,7 +31,7 @@ public class RejectReasonAmountTooLarge extends RejectReason {
             throw new IllegalArgumentException("Cannot parse AmountTooLarge. Unexpected array length.");
         }
         try {
-            this.account = AbstractAccount.parseAccount((Map<String, Object>) contents.get(0));
+            this.account = AbstractAddress.parseAccount((Map<String, Object>) contents.get(0));
             this.amount = CCDAmount.fromMicro((String) contents.get(1));
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("Cannot parse AmountTooLarge. Unexpected type.", e);

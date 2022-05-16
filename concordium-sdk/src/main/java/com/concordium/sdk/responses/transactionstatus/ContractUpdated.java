@@ -29,7 +29,7 @@ public class ContractUpdated extends TransactionResultEvent {
      * The instigator i.e. the source invoking the contract.
      * This can either be account or a contract.
      */
-    private final AbstractAccount instigator;
+    private final AbstractAddress instigator;
 
     /**
      * The address of the contract
@@ -55,7 +55,7 @@ public class ContractUpdated extends TransactionResultEvent {
     /**
      * The contract version.
      */
-    private final int version;
+    private final ContractVersion version;
 
     @SneakyThrows
     @JsonCreator
@@ -65,9 +65,9 @@ public class ContractUpdated extends TransactionResultEvent {
                     @JsonProperty("receiveName") String receiveName,
                     @JsonProperty("events") List<String> events,
                     @JsonProperty("message") String message,
-                    @JsonProperty("contractVersion") int version) {
-        this.instigator = AbstractAccount.parseAccount(instigator);
-        this.address = (ContractAddress) AbstractAccount.parseAccount(address);
+                    @JsonProperty("contractVersion") ContractVersion version) {
+        this.instigator = AbstractAddress.parseAccount(instigator);
+        this.address = (ContractAddress) AbstractAddress.parseAccount(address);
         this.receiveName = receiveName;
         this.events = new ArrayList<>();
         for (String event : events) {

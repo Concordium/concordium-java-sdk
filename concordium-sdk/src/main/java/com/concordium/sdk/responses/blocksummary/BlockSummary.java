@@ -17,6 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -29,12 +30,12 @@ public final class BlockSummary {
     /**
      * The list of transaction summaries for the block.
      */
-    private final List<TransactionSummary> transactionSummaries;
+    private final ArrayList<TransactionSummary> transactionSummaries;
 
     /**
      * List of special transaction outcomes.
      */
-    private final List<SpecialOutcome> specialOutcomes;
+    private final ArrayList<SpecialOutcome> specialOutcomes;
 
     /**
      * Finalization data for the block.
@@ -60,8 +61,8 @@ public final class BlockSummary {
 
     @JsonCreator
     BlockSummary(@JsonProperty("protocolVersion") ProtocolVersion protocolVersion,
-                 @JsonProperty("transactionSummaries") List<TransactionSummary> transactionSummaries,
-                 @JsonProperty("specialEvents") List<SpecialOutcome> specialOutcomes,
+                 @JsonProperty("transactionSummaries") ArrayList<TransactionSummary> transactionSummaries,
+                 @JsonProperty("specialEvents") ArrayList<SpecialOutcome> specialOutcomes,
                  @JsonProperty("finalizationData") FinalizationData finalizationData,
                  @JsonProperty("updates") Updates updates) {
         this.protocolVersion = protocolVersion;

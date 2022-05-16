@@ -22,7 +22,7 @@ public class InterruptedResult extends TransactionResultEvent {
     @JsonCreator
     InterruptedResult(@JsonProperty("address") Map<String, Object> address,
                       @JsonProperty("events") List<String> events){
-        this.address = (ContractAddress) AbstractAccount.parseAccount(address);
+        this.address = (ContractAddress) AbstractAddress.parseAccount(address);
         this.events = new ArrayList<>();
         for (String event : events) {
             this.events.add(Hex.decodeHex(event));

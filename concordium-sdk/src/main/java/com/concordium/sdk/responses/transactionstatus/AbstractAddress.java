@@ -7,19 +7,20 @@ import lombok.val;
 import java.util.Map;
 
 /**
- * Base class for {@link com.concordium.sdk.transactions.AccountType}
+ * An abstract Address.
+ * Implementations are either Account - or Contract addresses.
  */
-public abstract class AbstractAccount {
+public abstract class AbstractAddress {
 
     @Getter
     private final AccountType type;
 
-    AbstractAccount(AccountType type) {
+    AbstractAddress(AccountType type) {
         this.type = type;
     }
 
     //not pretty - find a better way of handling this.
-    static AbstractAccount parseAccount(Map<String, Object> o) {
+    static AbstractAddress parseAccount(Map<String, Object> o) {
         try {
             if (isContractAddress(o)) {
                 val contract = (Map<String, Integer>) o.get("address");

@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Objects;
-
 @Getter
 @ToString
-public final class Account extends AbstractAccount {
+public final class Account extends AbstractAddress {
     private final AccountAddress address;
 
     @JsonCreator

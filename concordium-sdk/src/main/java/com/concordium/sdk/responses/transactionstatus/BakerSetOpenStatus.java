@@ -6,9 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The Baker updated its {@link OpenStatus}
+ */
 @ToString
 @Getter
 public class BakerSetOpenStatus extends AbstractBakerResult {
+
+    /**
+     * The updated {@link OpenStatus} for the baker.
+     */
     private final OpenStatus openStatus;
 
     @JsonCreator

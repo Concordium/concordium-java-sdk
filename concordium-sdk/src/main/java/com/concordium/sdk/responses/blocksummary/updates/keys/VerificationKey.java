@@ -23,11 +23,11 @@ public final class VerificationKey {
     /**
      * The scheme
      */
-    private final String schemeId;
+    private final SigningScheme schemeId;
 
     @JsonCreator
     VerificationKey(@JsonProperty("verifyKey") String verifyKey,
-                    @JsonProperty("schemeId") String schemeId) {
+                    @JsonProperty("schemeId") SigningScheme schemeId) {
         try {
             this.verifyKey = Hex.decodeHex(verifyKey);
             this.schemeId = schemeId;

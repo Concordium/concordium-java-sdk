@@ -12,8 +12,8 @@ import java.util.Objects;
 @Getter
 @ToString
 public final class TransferredResult extends TransactionResultEvent {
-    private final AbstractAccount to;
-    private final AbstractAccount from;
+    private final AbstractAddress to;
+    private final AbstractAddress from;
     private CCDAmount amount;
 
     @JsonCreator
@@ -21,8 +21,8 @@ public final class TransferredResult extends TransactionResultEvent {
                       @JsonProperty("from") Map<String, Object> from,
                       @JsonProperty("amount") String amount) {
 
-        this.to = AbstractAccount.parseAccount(to);
-        this.from = AbstractAccount.parseAccount(from);
+        this.to = AbstractAddress.parseAccount(to);
+        this.from = AbstractAddress.parseAccount(from);
         if (!Objects.isNull(amount)) {
             this.amount = CCDAmount.fromMicro(amount);
         }

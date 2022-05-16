@@ -17,7 +17,7 @@ public class ResumedResult extends TransactionResultEvent {
     ResumedResult(@JsonProperty("address") Map<String, Object> address,
                   @JsonProperty("success") boolean success) {
         this.success = success;
-        this.address = (ContractAddress) AbstractAccount.parseAccount(address);
+        this.address = (ContractAddress) AbstractAddress.parseAccount(address);
     }
 
     @Override
