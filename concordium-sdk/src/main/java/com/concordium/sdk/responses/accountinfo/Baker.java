@@ -24,7 +24,7 @@ public final class Baker {
      */
     private final boolean restakeEarnings;
     /**
-     * The baker's public VRF key
+     * The baker's public VRF key used to verify that the baker has won the lottery.
      */
     private final String bakerElectionVerifyKey;
     /**
