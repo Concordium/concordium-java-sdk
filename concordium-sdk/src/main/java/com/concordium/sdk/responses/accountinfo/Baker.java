@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.accountinfo;
 
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -13,7 +14,7 @@ public final class Baker {
      * The baker id.
      * Note. The baker id is non-negative.
      */
-    private final int bakerId;
+    private final UInt64 bakerId;
     /**
      * The staked amount.
      */
@@ -36,13 +37,13 @@ public final class Baker {
     private final String bakerAggregationVerifyKey;
 
     @JsonCreator
-    Baker(@JsonProperty("bakerId") int bakerId,
+    Baker(@JsonProperty("bakerId") long bakerId,
           @JsonProperty("stakedAmount") CCDAmount stakedAmount,
           @JsonProperty("restakeEarnings") boolean restakeEarnings,
           @JsonProperty("bakerElectionVerifyKey") String bakerElectionVerifyKey,
           @JsonProperty("bakerSignatureVerifyKey") String bakerSignatureVerifyKey,
           @JsonProperty("bakerAggregationVerifyKey") String bakerAggregationVerifyKey) {
-        this.bakerId = bakerId;
+        this.bakerId = UInt64.from(bakerId);
         this.stakedAmount = stakedAmount;
         this.restakeEarnings = restakeEarnings;
         this.bakerElectionVerifyKey = bakerElectionVerifyKey;

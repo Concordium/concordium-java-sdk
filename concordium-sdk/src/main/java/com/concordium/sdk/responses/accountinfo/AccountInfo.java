@@ -6,6 +6,7 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Index;
 import com.concordium.sdk.types.Nonce;
+import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,48 +26,51 @@ public final class AccountInfo {
      */
     private final AccountAddress accountAddress;
     /**
-     * The nonce for the account.
+     * The current nonce for the account.
+     * That is, this is the first unused nonce from the perspective of the block that
+     * `AccountInfo` for.
      */
     private final Nonce accountNonce;
     /**
-     * The amount of CCD available for the account.
+     * The amount of CCD owned by this account.
      */
     private final CCDAmount accountAmount;
     /**
      * The account threshold for this account i.e., how
      * many credentials that needs to sign transactions for this account.
      *
-     * Note. the account threshold is a positive number <i>t</i> < n, where n is
+     * Note. the account threshold is a positive number <i>t</i> <= n, where n is
      * the number of credentials associated with the account.
      * See {@link AccountInfo#accountCredentials}
      */
     private final int accountThreshold;
     /**
      * The encryption key for the account.
+     * Note. This is the encryption key used for receiving encrypted amounts.
      */
     private final String accountEncryptionKey;
     /**
-     * The account index.
+     * A positive and sequential index of the account which is increasing in the order of creation.
+     * If the account is registered as a baker, then this is also
+     * the `baker id`.
      */
-    private final int accountIndex;
+    private final UInt64 accountIndex;
     /**
      * If the account is registered as a baker, then this will be not null
      * containing {@link Baker} information.
      */
     private final Baker accountBaker;
     /**
-     * If the account has an {@link EncryptedAmount} associated then this is not null.
+     * If the account has an {@link EncryptedAmount} associated.
      */
     private final EncryptedAmount accountEncryptedAmount;
     /**
-     * If there is a release schedule associated with the account then this
-     * is not null.
+     * If there is a release schedule associated with the account.
      * See {@link ReleaseSchedule}
      */
     private final ReleaseSchedule accountReleaseSchedule;
     /**
      * The credentials associated with this account.
-     * The
      */
     private final Map<Index, Credential> accountCredentials;
 
@@ -76,18 +80,17 @@ public final class AccountInfo {
                 @JsonProperty("accountAmount") CCDAmount accountAmount,
                 @JsonProperty("accountThreshold") int accountThreshold,
                 @JsonProperty("accountEncryptionKey") String accountEncryptionKey,
-                @JsonProperty("accountIndex") int accountIndex,
+                @JsonProperty("accountIndex") long accountIndex,
                 @JsonProperty("accountBaker") Baker accountBaker,
                 @JsonProperty("accountEncryptedAmount") EncryptedAmount accountEncryptedAmount,
                 @JsonProperty("accountReleaseSchedule") ReleaseSchedule accountReleaseSchedule,
                 @JsonProperty("accountCredentials") Map<Index, Credential> accountCredentials) {
-
         this.accountAddress = accountAddress;
         this.accountNonce = accountNonce;
         this.accountAmount = accountAmount;
         this.accountThreshold = accountThreshold;
         this.accountEncryptionKey = accountEncryptionKey;
-        this.accountIndex = accountIndex;
+        this.accountIndex = UInt64.from(accountIndex);
         this.accountBaker = accountBaker;
         this.accountEncryptedAmount = accountEncryptedAmount;
         this.accountReleaseSchedule = accountReleaseSchedule;

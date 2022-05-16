@@ -232,6 +232,8 @@ public final class Client {
      * This should only be done when the {@link Client}
      * is of no more use as creating a new {@link Client} (and the associated)
      * channel is rather expensive.
+     *
+     * Subsequent calls following a closed channel will throw a {@link io.grpc.StatusRuntimeException}
      */
     public void close() {
         this.channel.shutdown();
