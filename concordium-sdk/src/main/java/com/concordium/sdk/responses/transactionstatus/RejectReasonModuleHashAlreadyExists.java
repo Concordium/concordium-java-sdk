@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * The module already exists
+ * The module already exists.
  */
 @Getter
 @ToString
