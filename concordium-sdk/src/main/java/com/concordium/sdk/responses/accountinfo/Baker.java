@@ -32,7 +32,7 @@ public final class Baker {
      */
     private final String bakerSignatureVerifyKey;
     /**
-     * The baker's public key for finalization record aggregation
+     * The baker's public key used to verify the baker's signature on finalization records in case the baker is a finalizer.
      */
     private final String bakerAggregationVerifyKey;
 
