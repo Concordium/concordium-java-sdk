@@ -4,8 +4,11 @@ import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.ToString;
+import org.apache.commons.codec.binary.Hex;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -24,6 +27,7 @@ public class ContractUpdated extends TransactionResultEvent {
 
     /**
      * The instigator i.e. the source invoking the contract.
+     * This can either be account or a contract.
      */
     private final AbstractAccount instigator;
 
@@ -41,7 +45,7 @@ public class ContractUpdated extends TransactionResultEvent {
      * Events as reported by the contract via the log method, in the
      * order they were reported.
      */
-    private final List<String> events;
+    private final List<byte[]> events;
 
     /**
      * The message which was sent to the contract.
@@ -53,6 +57,7 @@ public class ContractUpdated extends TransactionResultEvent {
      */
     private final int version;
 
+    @SneakyThrows
     @JsonCreator
     ContractUpdated(@JsonProperty("amount") String amount,
                     @JsonProperty("instigator") Map<String, Object> instigator,
@@ -64,7 +69,10 @@ public class ContractUpdated extends TransactionResultEvent {
         this.instigator = AbstractAccount.parseAccount(instigator);
         this.address = (ContractAddress) AbstractAccount.parseAccount(address);
         this.receiveName = receiveName;
-        this.events = events;
+        this.events = new ArrayList<>();
+        for (String event : events) {
+            this.events.add(Hex.decodeHex(event));
+        }
         this.message = message;
         if (!Objects.isNull(amount)) {
             this.amount = CCDAmount.fromMicro(amount);

@@ -12,14 +12,13 @@ import java.util.Objects;
 @Getter
 @ToString
 public final class Account extends AbstractAccount {
-    private AccountAddress address;
+    private final AccountAddress address;
 
     @JsonCreator
     Account(@JsonProperty("type") AccountType type,
             @JsonProperty("address") String address) {
         super(type);
-        if(!Objects.isNull(address)) {
-            this.address = AccountAddress.from(address);
-        }
+        this.address = AccountAddress.from(address);
+
     }
 }

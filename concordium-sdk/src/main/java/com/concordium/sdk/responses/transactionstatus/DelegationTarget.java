@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
@@ -9,12 +10,12 @@ import lombok.ToString;
 public class DelegationTarget {
 
     private final DelegationType type;
-    private final String bakerId;
+    private final UInt64 bakerId;
 
     DelegationTarget(@JsonProperty("delegateType") DelegationType type,
-                     @JsonProperty("bakerId") String bakerId) {
+                     @JsonProperty("bakerId") long bakerId) {
         this.type = type;
-        this.bakerId = bakerId;
+        this.bakerId = UInt64.from(bakerId);
     }
 
     @ToString

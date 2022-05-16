@@ -6,10 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The delegator set its restake property.
+ */
 @Getter
 @ToString
 public class DelegationSetRestakeEarnings extends AbstractDelegatorResult {
 
+
+    /**
+     * Whether earnings should be automatically restaked or not.
+     */
     private final boolean restakeEarnings;
 
     @JsonCreator

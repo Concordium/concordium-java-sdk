@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The sender of the transaction has started delegating.
+ */
 @Getter
 @ToString
 public class DelegationAdded extends AbstractDelegatorResult {

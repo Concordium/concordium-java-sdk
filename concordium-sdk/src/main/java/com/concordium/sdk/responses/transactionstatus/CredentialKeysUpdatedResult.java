@@ -11,13 +11,12 @@ import java.util.Objects;
 @Getter
 @ToString
 public final class CredentialKeysUpdatedResult extends TransactionResultEvent {
-    private CredentialRegistrationId credId;
+    private final CredentialRegistrationId credId;
 
     @JsonCreator
     CredentialKeysUpdatedResult(@JsonProperty("credId") String credId) {
-        if(!Objects.isNull(credId)) {
-            this.credId = CredentialRegistrationId.from(credId);
-        }
+        this.credId = CredentialRegistrationId.from(credId);
+
     }
 
     @Override

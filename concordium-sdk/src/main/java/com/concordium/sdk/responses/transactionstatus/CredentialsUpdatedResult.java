@@ -11,12 +11,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The credentials have been updated.
+ */
 @Getter
 @ToString
 public final class CredentialsUpdatedResult extends TransactionResultEvent {
+
+    /**
+     * The account which credentials has been updated.
+     */
     private final AccountAddress account;
-    private List<CredentialRegistrationId> newCredIds;
-    private List<CredentialRegistrationId> removedCredIds;
+
+    /**
+     * The new {@link CredentialRegistrationId}`s.
+     */
+    private final List<CredentialRegistrationId> newCredIds;
+
+    /**
+     * The removed {@link CredentialRegistrationId}`s.
+     */
+    private final List<CredentialRegistrationId> removedCredIds;
+
+    /**
+     * The new account threshold
+     */
     private final int newThreshold;
 
     @JsonCreator
@@ -25,17 +44,13 @@ public final class CredentialsUpdatedResult extends TransactionResultEvent {
                              @JsonProperty("removedCredIds") List<String> removedCredIds,
                              @JsonProperty("newThreshold") String newThreshold) {
         this.account = account;
-        if (!Objects.isNull(newCredIds)) {
-            this.newCredIds = new ArrayList<>();
-            for (String newCredId : newCredIds) {
-                this.newCredIds.add(CredentialRegistrationId.from(newCredId));
-            }
+        this.newCredIds = new ArrayList<>();
+        for (String newCredId : newCredIds) {
+            this.newCredIds.add(CredentialRegistrationId.from(newCredId));
         }
-        if (!Objects.isNull(removedCredIds)) {
-            this.removedCredIds = new ArrayList<>();
-            for (String removedCredId : removedCredIds) {
-                this.removedCredIds.add(CredentialRegistrationId.from(removedCredId));
-            }
+        this.removedCredIds = new ArrayList<>();
+        for (String removedCredId : removedCredIds) {
+            this.removedCredIds.add(CredentialRegistrationId.from(removedCredId));
         }
         this.newThreshold = Integer.parseInt(newThreshold);
     }

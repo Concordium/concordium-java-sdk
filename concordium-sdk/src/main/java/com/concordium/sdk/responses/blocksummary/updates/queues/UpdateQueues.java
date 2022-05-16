@@ -16,11 +16,13 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * UpdateQueues must match
- * https://github.com/Concordium/concordium-base/blob/23c2f4f2fb524e60548f052d0422b567ec977822/haskell-src/Concordium/Types/UpdateQueues.hs#L119
- *
- * Note. bakerStakeThreshold for versions < 4 and 'poolParameters' for versions > 3
+ * Enqueued updates.
  */
+// UpdateQueues must match
+// https://github.com/Concordium/concordium-base/blob/23c2f4f2fb524e60548f052d0422b567ec977822/haskell-src/Concordium/Types/UpdateQueues.hs#L119
+//
+// Note. bakerStakeThreshold for versions < 4 and 'poolParameters' for versions > 3
+//
 @Getter
 @ToString
 public final class UpdateQueues {

@@ -4,6 +4,7 @@ import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -20,11 +21,9 @@ public class RejectReasonNonExistentCredIDs extends RejectReason {
 
     @JsonCreator
     RejectReasonNonExistentCredIDs(@JsonProperty("contents") List<String> ids) {
-        if (!Objects.isNull(ids)) {
-            this.ids = new ArrayList<>();
-            for (String id : ids) {
-                this.ids.add(CredentialRegistrationId.from(id));
-            }
+        this.ids = new ArrayList<>();
+        for (String id : ids) {
+            this.ids.add(CredentialRegistrationId.from(id));
         }
     }
 

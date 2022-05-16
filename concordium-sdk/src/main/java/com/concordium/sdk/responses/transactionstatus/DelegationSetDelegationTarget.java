@@ -6,9 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The delegator set a target for delegation.
+ */
 @ToString
 @Getter
 public class DelegationSetDelegationTarget extends AbstractDelegatorResult {
+
+    /**
+     * The target to delegate to.
+     */
     private final DelegationTarget delegationTarget;
 
     @JsonCreator
