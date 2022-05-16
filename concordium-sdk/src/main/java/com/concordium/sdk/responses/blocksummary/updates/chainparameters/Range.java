@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * A range consisting of a minimum value and a maximum value.
+ * An inclusive range consisting of a minimum value and a maximum value.
  */
 @ToString
 @EqualsAndHashCode

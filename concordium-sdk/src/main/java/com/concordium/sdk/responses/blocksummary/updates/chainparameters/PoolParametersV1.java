@@ -1,8 +1,6 @@
 package com.concordium.sdk.responses.blocksummary.updates.chainparameters;
 
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.PoolParameters;
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.Range;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -7,7 +7,7 @@ import lombok.ToString;
 
 /**
  * The attributes associated with an `Identity`
- * The various fields are encrypted.
+ * The attributes are commitments if they are present for the `Credential`.
  */
 @Getter
 @ToString

@@ -10,9 +10,13 @@ import lombok.ToString;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Exists only for annotation driven deserializing.
+ * See {@link Credential}
+ */
 @Getter
 @ToString
-public final class Contents {
+final class Contents {
     /**
      * Identity of the identity provider who signed the identity object from
      * which this credential is derived.
@@ -23,10 +27,13 @@ public final class Contents {
      */
     private final int revocationThreshold;
     /**
+     * The credential registration id
+     */
+    private final CredentialRegistrationId credId;
+    /**
      * Policy.
      * Note. At the moment only opening of specific commitments.
      */
-    private CredentialRegistrationId credId;
     private final Policy policy;
     /**
      * Commitments associated with this credential.
@@ -51,9 +58,7 @@ public final class Contents {
              @JsonProperty("arData") Map<Index, ArData> arData) {
         this.ipIdentity = ipIdentity;
         this.revocationThreshold = revocationThreshold;
-        if (!Objects.isNull(credId))  {
-            this.credId = CredentialRegistrationId.from(credId);
-        }
+        this.credId = CredentialRegistrationId.from(credId);
         this.policy = policy;
         this.commitments = commitments;
         this.credentialPublicKeys = credentialPublicKeys;

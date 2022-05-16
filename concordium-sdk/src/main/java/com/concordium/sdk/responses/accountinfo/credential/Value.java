@@ -5,12 +5,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Exists only for annotation driven deserializing.
+ * See {@link Credential}
+ */
 @Getter
 @ToString
-public final class Value {
+final class Value {
+    /**
+     * Credential
+     */
     private final Contents contents;
     /**
-     * The type of the {@link Credential}
+     * Type of the {@link Credential}
      */
     private final CredentialType type;
 

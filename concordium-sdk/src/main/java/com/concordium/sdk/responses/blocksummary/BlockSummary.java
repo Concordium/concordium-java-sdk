@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blocksummary;
 
+import com.concordium.sdk.responses.ProtocolVersion;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import com.concordium.sdk.responses.blocksummary.updates.Updates;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParameters;
@@ -24,7 +25,7 @@ public final class BlockSummary {
     /**
      * The protocol version of the chain at the block.
      */
-    private final int protocolVersion;
+    private final ProtocolVersion protocolVersion;
     /**
      * The list of transaction summaries for the block.
      */
@@ -58,7 +59,7 @@ public final class BlockSummary {
     }
 
     @JsonCreator
-    BlockSummary(@JsonProperty("protocolVersion") int protocolVersion,
+    BlockSummary(@JsonProperty("protocolVersion") ProtocolVersion protocolVersion,
                  @JsonProperty("transactionSummaries") List<TransactionSummary> transactionSummaries,
                  @JsonProperty("specialEvents") List<SpecialOutcome> specialOutcomes,
                  @JsonProperty("finalizationData") FinalizationData finalizationData,

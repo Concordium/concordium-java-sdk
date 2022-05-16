@@ -16,7 +16,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 public final class Mint extends SpecialOutcome {
     /**
-     * The amount allocated to the banking reward account
+     * The amount allocated to the baking reward account
      */
     private final CCDAmount mintBakingReward;
     /**

@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.ToString;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  * A protocol update
@@ -23,7 +25,7 @@ public class ProtocolUpdate {
     /**
      * Auxiliary data whose interpretation is defined by the new specification
      */
-    private final String specificationAuxiliaryData;
+    private final byte[] specificationAuxiliaryData;
 
     /**
      * A brief message about the update
@@ -35,13 +37,14 @@ public class ProtocolUpdate {
      */
     private final String specificationURL;
 
+    @SneakyThrows
     @JsonCreator
     ProtocolUpdate(@JsonProperty("specificationHash") Hash specificationHash,
                    @JsonProperty("specificationAuxiliaryData") String specificationAuxiliaryData,
                    @JsonProperty("message") String message,
                    @JsonProperty("specificationURL") String specificationURL) {
         this.specificationHash = specificationHash;
-        this.specificationAuxiliaryData = specificationAuxiliaryData;
+        this.specificationAuxiliaryData = Hex.decodeHex(specificationAuxiliaryData);
         this.message = message;
         this.specificationURL = specificationURL;
     }

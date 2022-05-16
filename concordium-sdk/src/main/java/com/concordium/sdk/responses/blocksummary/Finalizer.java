@@ -1,8 +1,10 @@
 package com.concordium.sdk.responses.blocksummary;
 
+import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
 
 import java.math.BigInteger;
@@ -16,10 +18,10 @@ public final class Finalizer {
     /**
      * The baker id
      */
-    private final int bakerId;
+    private final UInt64 bakerId;
 
     /**
-     * The finalizer's relative weight in the committee.
+     * The finalizer's weight in the committee.
      */
     private final BigInteger weight;
 
@@ -30,10 +32,10 @@ public final class Finalizer {
 
 
     @JsonCreator
-    Finalizer(@JsonProperty("bakerId") int bakerId,
-                     @JsonProperty("weight") BigInteger weight,
-                     @JsonProperty("signed") boolean signed) {
-        this.bakerId = bakerId;
+    Finalizer(@JsonProperty("bakerId") long bakerId,
+              @JsonProperty("weight") BigInteger weight,
+              @JsonProperty("signed") boolean signed) {
+        this.bakerId = UInt64.from(bakerId);
         this.weight = weight;
         this.signed = signed;
     }

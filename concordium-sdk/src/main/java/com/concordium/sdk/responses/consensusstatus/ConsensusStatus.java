@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.consensusstatus;
 
+import com.concordium.sdk.responses.ProtocolVersion;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -150,7 +151,7 @@ public final class ConsensusStatus {
     /**
      * The current active protocol version.
      */
-    private final int protocolVersion;
+    private final ProtocolVersion protocolVersion;
     /**
      * The number of chain restarts via a protocol update. An effected
      * protocol update instruction might not change the protocol version
@@ -204,7 +205,7 @@ public final class ConsensusStatus {
                     @JsonProperty("lastFinalizedTime") String lastFinalizedTime,
                     @JsonProperty("finalizationPeriodEMA") double finalizationPeriodEMA,
                     @JsonProperty("finalizationPeriodEMSD") double finalizationPeriodEMSD,
-                    @JsonProperty("protocolVersion") int protocolVersion,
+                    @JsonProperty("protocolVersion") ProtocolVersion protocolVersion,
                     @JsonProperty("genesisIndex") int genesisIndex,
                     @JsonProperty("currentEraGenesisBlock") String currentEraGenesisBlock,
                     @JsonProperty("currentEraGenesisTime") Date currentEraGenesisTime) {
