@@ -49,7 +49,7 @@ public class ContractUpdated extends TransactionResultEvent {
     private final String message;
 
     /**
-     * The contract version
+     * The contract version.
      */
     private final int version;
 
