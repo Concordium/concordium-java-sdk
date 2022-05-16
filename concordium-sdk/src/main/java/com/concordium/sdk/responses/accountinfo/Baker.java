@@ -24,15 +24,15 @@ public final class Baker {
      */
     private final boolean restakeEarnings;
     /**
-     * The baker's public VRF key
+     * The baker's public VRF key used to verify that the baker has won the lottery.
      */
     private final String bakerElectionVerifyKey;
     /**
-     * The baker's public signature key
+     * The baker's public key, used to verify baker's signatures on the blocks and finalization messages.
      */
     private final String bakerSignatureVerifyKey;
     /**
-     * The baker's public key for finalization record aggregation
+     * The baker's public key used to verify the baker's signature on finalization records in case the baker is a finalizer.
      */
     private final String bakerAggregationVerifyKey;
 
