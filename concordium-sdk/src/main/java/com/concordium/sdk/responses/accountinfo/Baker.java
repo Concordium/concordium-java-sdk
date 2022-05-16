@@ -28,7 +28,7 @@ public final class Baker {
      */
     private final String bakerElectionVerifyKey;
     /**
-     * The baker's public signature key
+     * The baker's public key, used to verify baker's signatures on the blocks and finalization messages.
      */
     private final String bakerSignatureVerifyKey;
     /**
