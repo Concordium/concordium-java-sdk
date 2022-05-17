@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.blocksummary.updates;
 
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParameters;
 import com.concordium.sdk.responses.blocksummary.updates.keys.Keys;
 import com.concordium.sdk.responses.blocksummary.updates.queues.UpdateQueues;
 import com.fasterxml.jackson.annotation.JsonCreator;

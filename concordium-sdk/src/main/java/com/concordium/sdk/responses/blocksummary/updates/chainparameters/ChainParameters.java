@@ -2,6 +2,8 @@ package com.concordium.sdk.responses.blocksummary.updates.chainparameters;
 
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.RewardParameters;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

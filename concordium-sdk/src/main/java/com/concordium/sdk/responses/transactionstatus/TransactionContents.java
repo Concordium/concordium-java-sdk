@@ -80,5 +80,7 @@ enum TransactionContents {
     @JsonProperty("configureDelegation")
     CONFIGURE_DELEGATION,
     @JsonProperty("configureBaker")
-    CONFIGURE_BAKER
+    CONFIGURE_BAKER,
+    @JsonProperty("updatePoolParameters")
+    UPDATE_POOL_PARAMETERS;
 }
