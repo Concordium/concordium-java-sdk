@@ -6,16 +6,24 @@ import lombok.val;
 import java.util.*;
 
 public enum ProtocolVersion {
-    V0,
     V1,
+    /**
+     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P2.txt
+     */
     V2,
+    /**
+     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P3.txt
+     */
     V3,
+    /**
+     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P4.txt
+     */
     V4;
 
     private static final List<ProtocolVersion> protocolVersions = new ArrayList<>();
 
     static {
-        protocolVersions.add(ProtocolVersion.V0);
+        protocolVersions.add(null);
         protocolVersions.add(ProtocolVersion.V1);
         protocolVersions.add(ProtocolVersion.V2);
         protocolVersions.add(ProtocolVersion.V3);

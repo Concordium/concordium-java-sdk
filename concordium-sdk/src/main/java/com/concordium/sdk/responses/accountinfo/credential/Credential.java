@@ -18,7 +18,7 @@ public final class Credential {
     /**
      * The version.
      */
-    private final String version;
+    private final int version;
 
     /**
      * The credential type.
@@ -57,7 +57,7 @@ public final class Credential {
     private final Map<Index, ArData> arData;
 
     @JsonCreator
-    Credential(@JsonProperty("v") String version,
+    Credential(@JsonProperty("v") int version,
                @JsonProperty("value") Value value) {
         this.version = version;
         this.type = value.getType();
