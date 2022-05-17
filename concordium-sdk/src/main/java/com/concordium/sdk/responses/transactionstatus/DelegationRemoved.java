@@ -14,7 +14,7 @@ import lombok.Setter;
 public class DelegationRemoved extends AbstractDelegatorResult {
 
     @JsonCreator
-    DelegationRemoved(@JsonProperty("delegatorId") String delegatorId,
+    DelegationRemoved(@JsonProperty("delegatorId") long delegatorId,
                     @JsonProperty("account") AccountAddress delegatorAddress) {
         super(delegatorId, delegatorAddress);
     }

@@ -12,7 +12,7 @@ public final class BakerSetRestakeEarningsResult extends AbstractBakerResult {
     private final boolean restakeEarnings;
 
     @JsonCreator
-    BakerSetRestakeEarningsResult(@JsonProperty("bakerId") String bakerId,
+    BakerSetRestakeEarningsResult(@JsonProperty("bakerId") long bakerId,
                                   @JsonProperty("account") AccountAddress account,
                                   @JsonProperty("restakeEarnings") boolean restakeEarnings) {
         super(bakerId, account);

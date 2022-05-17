@@ -20,7 +20,7 @@ public class DelegationSetRestakeEarnings extends AbstractDelegatorResult {
     private final boolean restakeEarnings;
 
     @JsonCreator
-    DelegationSetRestakeEarnings(@JsonProperty("delegatorId") String delegatorId,
+    DelegationSetRestakeEarnings(@JsonProperty("delegatorId") long delegatorId,
                                  @JsonProperty("account") AccountAddress delegatorAddress,
                                  @JsonProperty("restakeEarnings") boolean restakeEarnings) {
        super(delegatorId, delegatorAddress);

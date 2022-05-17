@@ -14,7 +14,7 @@ public final class BakerAddedResult extends AbstractBakerChangeResult {
 
     @JsonCreator
     BakerAddedResult(
-            @JsonProperty("bakerId") String bakerId,
+            @JsonProperty("bakerId") long bakerId,
             @JsonProperty("account") AccountAddress account,
             @JsonProperty("electionKey") String electionKey,
             @JsonProperty("aggregationKey") String aggregationKey,

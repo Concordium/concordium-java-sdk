@@ -15,7 +15,7 @@ public class DelegationAdded extends AbstractDelegatorResult {
 
 
     @JsonCreator
-    DelegationAdded(@JsonProperty("delegatorId") String delegatorId,
+    DelegationAdded(@JsonProperty("delegatorId") long delegatorId,
                     @JsonProperty("account") AccountAddress delegatorAddress) {
         super(delegatorId, delegatorAddress);
     }

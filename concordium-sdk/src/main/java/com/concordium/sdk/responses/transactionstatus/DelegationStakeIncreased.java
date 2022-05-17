@@ -20,7 +20,7 @@ public class DelegationStakeIncreased extends AbstractDelegatorResult {
     private final CCDAmount newStake;
 
     @JsonCreator
-    DelegationStakeIncreased(@JsonProperty("delegatorId") String delegatorId,
+    DelegationStakeIncreased(@JsonProperty("delegatorId") long delegatorId,
                              @JsonProperty("account") AccountAddress delegatorAddress,
                              @JsonProperty("newStake") CCDAmount newStake) {
         super(delegatorId, delegatorAddress);

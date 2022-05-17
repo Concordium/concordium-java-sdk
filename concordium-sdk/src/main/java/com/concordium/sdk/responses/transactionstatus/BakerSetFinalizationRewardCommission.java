@@ -16,7 +16,7 @@ public class BakerSetFinalizationRewardCommission extends AbstractBakerResult {
     private final PartsPerHundredThousand finalizationRewardCommission;
 
     @JsonCreator
-    BakerSetFinalizationRewardCommission(@JsonProperty("bakerId") String bakerId,
+    BakerSetFinalizationRewardCommission(@JsonProperty("bakerId") long bakerId,
                                          @JsonProperty("account") AccountAddress bakerAccount,
                                          @JsonProperty("finalizationRewardCommission") PartsPerHundredThousand finalizationRewardCommission){
         super(bakerId, bakerAccount);

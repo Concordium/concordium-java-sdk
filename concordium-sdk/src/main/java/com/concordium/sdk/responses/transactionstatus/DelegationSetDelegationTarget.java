@@ -19,7 +19,7 @@ public class DelegationSetDelegationTarget extends AbstractDelegatorResult {
     private final DelegationTarget delegationTarget;
 
     @JsonCreator
-    DelegationSetDelegationTarget(@JsonProperty("delegatorId") String delegatorId,
+    DelegationSetDelegationTarget(@JsonProperty("delegatorId") long delegatorId,
                                   @JsonProperty("account") AccountAddress delegatorAddress,
                                   @JsonProperty("delegationTarget") DelegationTarget delegationTarget) {
         super(delegatorId, delegatorAddress);

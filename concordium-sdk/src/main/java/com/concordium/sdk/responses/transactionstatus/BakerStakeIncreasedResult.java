@@ -12,7 +12,7 @@ public final class BakerStakeIncreasedResult extends AbstractBakerResult {
     private final String newStake;
 
     @JsonCreator
-    BakerStakeIncreasedResult(@JsonProperty("bakerId") String bakerId,
+    BakerStakeIncreasedResult(@JsonProperty("bakerId") long bakerId,
                               @JsonProperty("account") AccountAddress account,
                               @JsonProperty("newStake") String newStake) {
         super(bakerId, account);

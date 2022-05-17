@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 public final class BakerKeysUpdatedResult extends AbstractBakerChangeResult {
     @JsonCreator
-    BakerKeysUpdatedResult(@JsonProperty("bakerId") String bakerId,
+    BakerKeysUpdatedResult(@JsonProperty("bakerId") long bakerId,
                            @JsonProperty("account") AccountAddress account,
                            @JsonProperty("electionKey") String electionKey,
                            @JsonProperty("aggregationKey") String aggregationKey,

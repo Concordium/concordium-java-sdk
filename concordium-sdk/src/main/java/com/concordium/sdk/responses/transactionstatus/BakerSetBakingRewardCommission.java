@@ -13,7 +13,7 @@ public class BakerSetBakingRewardCommission extends AbstractBakerResult {
     private final int bakingRewardCommission;
 
     @JsonCreator
-    BakerSetBakingRewardCommission(@JsonProperty("bakerId") String bakerId,
+    BakerSetBakingRewardCommission(@JsonProperty("bakerId") long bakerId,
                                    @JsonProperty("account") AccountAddress bakerAccount,
                                    @JsonProperty("bakingRewardCommission") int bakingRewardCommission) {
         super(bakerId, bakerAccount);

@@ -12,7 +12,7 @@ public class DelegationStakeDecreased extends AbstractDelegatorResult {
     private final String newStake;
 
     @JsonCreator
-    DelegationStakeDecreased(@JsonProperty("delegatorId") String delegatorId,
+    DelegationStakeDecreased(@JsonProperty("delegatorId") long delegatorId,
                              @JsonProperty("account") AccountAddress delegatorAddress,
                              @JsonProperty("newStake") String newStake) {
         super(delegatorId, delegatorAddress);

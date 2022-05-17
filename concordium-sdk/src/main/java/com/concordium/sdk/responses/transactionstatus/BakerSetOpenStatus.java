@@ -19,7 +19,7 @@ public class BakerSetOpenStatus extends AbstractBakerResult {
     private final OpenStatus openStatus;
 
     @JsonCreator
-    BakerSetOpenStatus(@JsonProperty("bakerId") String bakerId,
+    BakerSetOpenStatus(@JsonProperty("bakerId") long bakerId,
                        @JsonProperty("account") AccountAddress bakerAccount,
                        @JsonProperty("openStatus") OpenStatus openStatus) {
         super(bakerId, bakerAccount);

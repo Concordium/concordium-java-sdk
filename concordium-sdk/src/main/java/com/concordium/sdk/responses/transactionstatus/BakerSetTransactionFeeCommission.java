@@ -13,7 +13,7 @@ public class BakerSetTransactionFeeCommission extends AbstractBakerResult {
     private final int feeCommission;
 
     @JsonCreator
-    BakerSetTransactionFeeCommission(@JsonProperty("bakerId") String bakerId,
+    BakerSetTransactionFeeCommission(@JsonProperty("bakerId") long bakerId,
                                      @JsonProperty("account") AccountAddress bakerAccount,
                                      @JsonProperty("transactionFeeCommission") int feeCommission) {
         super(bakerId, bakerAccount);

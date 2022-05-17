@@ -14,7 +14,7 @@ public abstract class AbstractBakerChangeResult extends AbstractBakerResult {
     private final String signKey;
 
     @JsonCreator
-    AbstractBakerChangeResult(@JsonProperty("bakerId") String bakerId,
+    AbstractBakerChangeResult(@JsonProperty("bakerId") long bakerId,
                                      @JsonProperty("account") AccountAddress account,
                                      @JsonProperty("electionKey") String electionKey,
                                      @JsonProperty("aggregationKey") String aggregationKey,

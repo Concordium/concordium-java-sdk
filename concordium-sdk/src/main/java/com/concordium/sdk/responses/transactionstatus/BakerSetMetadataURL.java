@@ -12,7 +12,7 @@ public class BakerSetMetadataURL extends AbstractBakerResult {
     private final String metadataUrl;
 
     @JsonCreator
-    BakerSetMetadataURL(@JsonProperty("bakerId") String bakerId,
+    BakerSetMetadataURL(@JsonProperty("bakerId") long bakerId,
                         @JsonProperty("account") AccountAddress bakerAccount,
                         @JsonProperty("metadataURL") String metadataUrl){
         super(bakerId, bakerAccount);

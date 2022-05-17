@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 public final class BakerRemovedResult extends AbstractBakerResult {
     @JsonCreator
-    BakerRemovedResult(@JsonProperty("bakerId") String bakerId,
+    BakerRemovedResult(@JsonProperty("bakerId") long bakerId,
                        @JsonProperty("account") AccountAddress account) {
         super(bakerId, account);
     }
