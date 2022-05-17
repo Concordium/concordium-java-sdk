@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * Chain parameters used up til P4
+ * Chain parameters used up till P4
  */
 @EqualsAndHashCode(callSuper = true)
 @Getter
