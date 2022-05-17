@@ -1,0 +1,39 @@
+package com.concordium.sdk.responses;
+
+import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.types.UInt64;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
+/**
+ * Account index
+ * A sequential index unique for each account.
+ *
+ * If the account is registered as a Baker or as a Delegator then
+ * the baker index and vice versa the delegator index is
+ */
+@ToString
+@Getter
+@EqualsAndHashCode
+public final class AccountIndex {
+
+    /**
+     * The account index
+     */
+    private final UInt64 index;
+
+    AccountIndex(UInt64 index) {
+        this.index = index;
+    }
+
+    @JsonCreator
+    AccountIndex(long index) {
+        this.index = UInt64.from(index);
+    }
+
+    public static AccountIndex from(long index) {
+        return new AccountIndex(UInt64.from(index));
+    }
+}

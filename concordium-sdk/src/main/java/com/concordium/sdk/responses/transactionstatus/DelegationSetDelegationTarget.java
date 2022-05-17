@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +20,7 @@ public class DelegationSetDelegationTarget extends AbstractDelegatorResult {
     private final DelegationTarget delegationTarget;
 
     @JsonCreator
-    DelegationSetDelegationTarget(@JsonProperty("delegatorId") long delegatorId,
+    DelegationSetDelegationTarget(@JsonProperty("delegatorId") AccountIndex delegatorId,
                                   @JsonProperty("account") AccountAddress delegatorAddress,
                                   @JsonProperty("delegationTarget") DelegationTarget delegationTarget) {
         super(delegatorId, delegatorAddress);

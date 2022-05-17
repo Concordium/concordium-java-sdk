@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +20,7 @@ public class BakerSetOpenStatus extends AbstractBakerResult {
     private final OpenStatus openStatus;
 
     @JsonCreator
-    BakerSetOpenStatus(@JsonProperty("bakerId") long bakerId,
+    BakerSetOpenStatus(@JsonProperty("bakerId") AccountIndex bakerId,
                        @JsonProperty("account") AccountAddress bakerAccount,
                        @JsonProperty("openStatus") OpenStatus openStatus) {
         super(bakerId, bakerAccount);

@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -20,7 +21,7 @@ public class DelegationStakeIncreased extends AbstractDelegatorResult {
     private final CCDAmount newStake;
 
     @JsonCreator
-    DelegationStakeIncreased(@JsonProperty("delegatorId") long delegatorId,
+    DelegationStakeIncreased(@JsonProperty("delegatorId") AccountIndex delegatorId,
                              @JsonProperty("account") AccountAddress delegatorAddress,
                              @JsonProperty("newStake") CCDAmount newStake) {
         super(delegatorId, delegatorAddress);

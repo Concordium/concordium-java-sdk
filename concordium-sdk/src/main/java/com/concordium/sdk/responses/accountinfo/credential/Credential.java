@@ -4,6 +4,7 @@ import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.transactions.Index;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -14,6 +15,7 @@ import java.util.Map;
  */
 @Getter
 @ToString
+@EqualsAndHashCode
 public final class Credential {
     /**
      * The version.
@@ -63,7 +65,7 @@ public final class Credential {
         this.type = value.getType();
         this.ipIdentity = value.getContents().getIpIdentity();
         this.revocationThreshold = value.getContents().getRevocationThreshold();
-        this.credId = value.getContents().getCredId();
+        this.credId = value.getContents().getRegistrationId();
         this.policy = value.getContents().getPolicy();
         this.commitments = value.getContents().getCommitments();
         this.credentialPublicKeys = value.getContents().getCredentialPublicKeys();

@@ -14,7 +14,6 @@ import java.math.BigInteger;
 public class PartsPerHundredThousand {
     private final Fraction value;
 
-    // 100 000
     private final BigInteger HUNDRED_THOUSAND = new BigInteger("100000");
 
     @JsonCreator

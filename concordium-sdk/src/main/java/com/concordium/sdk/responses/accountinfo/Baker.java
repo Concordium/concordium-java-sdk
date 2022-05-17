@@ -1,20 +1,24 @@
 package com.concordium.sdk.responses.accountinfo;
 
+import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.CCDAmount;
-import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.ToString;
+import org.apache.commons.codec.binary.Hex;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 public final class Baker {
     /**
      * The baker id.
      * Note. The baker id is non-negative.
      */
-    private final UInt64 bakerId;
+    private final AccountIndex bakerId;
     /**
      * The staked amount.
      */
@@ -26,28 +30,36 @@ public final class Baker {
     /**
      * The baker's public VRF key used to verify that the baker has won the lottery.
      */
-    private final String bakerElectionVerifyKey;
+    private final byte[] bakerElectionVerifyKey;
     /**
      * The baker's public key, used to verify baker's signatures on the blocks and finalization messages.
      */
-    private final String bakerSignatureVerifyKey;
+    private final byte[] bakerSignatureVerifyKey;
     /**
      * The baker's public key used to verify the baker's signature on finalization records in case the baker is a finalizer.
      */
-    private final String bakerAggregationVerifyKey;
+    private final byte[] bakerAggregationVerifyKey;
 
+    /**
+     * The baker pool info
+     */
+    private final BakerPoolInfo bakerPoolInfo;
+
+    @SneakyThrows
     @JsonCreator
-    Baker(@JsonProperty("bakerId") long bakerId,
+    Baker(@JsonProperty("bakerId") AccountIndex bakerId,
           @JsonProperty("stakedAmount") CCDAmount stakedAmount,
           @JsonProperty("restakeEarnings") boolean restakeEarnings,
           @JsonProperty("bakerElectionVerifyKey") String bakerElectionVerifyKey,
           @JsonProperty("bakerSignatureVerifyKey") String bakerSignatureVerifyKey,
-          @JsonProperty("bakerAggregationVerifyKey") String bakerAggregationVerifyKey) {
-        this.bakerId = UInt64.from(bakerId);
+          @JsonProperty("bakerAggregationVerifyKey") String bakerAggregationVerifyKey,
+          @JsonProperty("bakerPoolInfo") BakerPoolInfo bakerPoolInfo) {
+        this.bakerId = bakerId;
         this.stakedAmount = stakedAmount;
         this.restakeEarnings = restakeEarnings;
-        this.bakerElectionVerifyKey = bakerElectionVerifyKey;
-        this.bakerSignatureVerifyKey = bakerSignatureVerifyKey;
-        this.bakerAggregationVerifyKey = bakerAggregationVerifyKey;
+        this.bakerElectionVerifyKey = Hex.decodeHex(bakerElectionVerifyKey);
+        this.bakerSignatureVerifyKey = Hex.decodeHex(bakerSignatureVerifyKey);
+        this.bakerAggregationVerifyKey = Hex.decodeHex(bakerAggregationVerifyKey);
+        this.bakerPoolInfo = bakerPoolInfo;
     }
 }

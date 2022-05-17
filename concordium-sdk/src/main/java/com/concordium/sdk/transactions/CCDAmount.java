@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;
@@ -10,6 +11,7 @@ import java.nio.ByteBuffer;
  * A CCD amount with 'micro' precision.
  */
 @Getter
+@EqualsAndHashCode
 public class CCDAmount {
     private final UInt64 value;
 

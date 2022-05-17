@@ -1,6 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
+import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
@@ -69,21 +70,23 @@ public final class Client {
     /**
      * Retrieves the {@link AccountInfo} based on the address {@link Hash} and the block {@link Hash}
      *
-     * @param address   The address
+     * @param accountRequest The {@link AccountRequest}
+     *                       See {@link AccountRequest#from(AccountAddress)},
+     *                       {@link AccountRequest#from(AccountIndex)}
      * @param blockHash the block hash
      * @return The {@link AccountInfo}
      * @throws AccountNotFoundException if the account was not found.
      */
-    public AccountInfo getAccountInfo(AccountAddress address, Hash blockHash) throws AccountNotFoundException {
+    public AccountInfo getAccountInfo(AccountRequest accountRequest, Hash blockHash) throws AccountNotFoundException {
         val request = ConcordiumP2PRpc.GetAddressInfoRequest
                 .newBuilder()
-                .setAddressBytes(accountAddressAsByteString(address))
+                .setAddressBytes(accountRequest.getByteString())
                 .setBlockHash(blockHash.asHex())
                 .build();
         val response = server().getAccountInfo(request);
         val accountInfo = AccountInfo.fromJson(response.getValue());
         if (Objects.isNull(accountInfo)) {
-            throw AccountNotFoundException.from(address, blockHash);
+            throw AccountNotFoundException.from(accountRequest, blockHash);
         }
         return accountInfo;
     }
@@ -99,14 +102,10 @@ public final class Client {
     public AccountNonce getNextAccountNonce(AccountAddress address) {
         val request = ConcordiumP2PRpc.AccountAddress
                 .newBuilder()
-                .setAccountAddressBytes(accountAddressAsByteString(address))
+                .setAccountAddressBytes(ByteString.copyFrom(address.getEncodedBytes()))
                 .build();
         val nextAccountNonce = server().getNextAccountNonce(request);
         return AccountNonce.fromJson(nextAccountNonce.getValue());
-    }
-
-    private ByteString accountAddressAsByteString(AccountAddress address) {
-        return ByteString.copyFrom(address.getEncodedBytes());
     }
 
     /**

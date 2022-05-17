@@ -1,6 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.sdk.types.UInt64;
+import com.concordium.sdk.responses.AccountIndex;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -15,10 +15,10 @@ public class RejectReasonDelegationTargetNotABaker {
     /**
      * The delegation target which was not a baker.
      */
-    private final UInt64 bakerId;
+    private final AccountIndex bakerId;
 
     @JsonCreator
-    RejectReasonDelegationTargetNotABaker(@JsonProperty("contents") long bakerId) {
-        this.bakerId = UInt64.from(bakerId);
+    RejectReasonDelegationTargetNotABaker(@JsonProperty("contents") AccountIndex bakerId) {
+        this.bakerId = bakerId;
     }
 }

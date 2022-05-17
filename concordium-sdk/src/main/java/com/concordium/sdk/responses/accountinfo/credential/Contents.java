@@ -2,13 +2,13 @@ package com.concordium.sdk.responses.accountinfo.credential;
 
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.transactions.Index;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Exists only for annotation driven deserializing.
@@ -29,7 +29,7 @@ final class Contents {
     /**
      * The credential registration id
      */
-    private final CredentialRegistrationId credId;
+    private final CredentialRegistrationId registrationId;
     /**
      * Policy.
      * Note. At the moment only opening of specific commitments.
@@ -51,14 +51,14 @@ final class Contents {
     @JsonCreator
     Contents(@JsonProperty("ipIdentity") int ipIdentity,
              @JsonProperty("revocationThreshold") int revocationThreshold,
-             @JsonProperty("credId") String credId,
+             @JsonProperty("credId") @JsonAlias("regId") String registrationId,
              @JsonProperty("policy") Policy policy,
              @JsonProperty("commitments") Commitments commitments,
              @JsonProperty("credentialPublicKeys") CredentialPublicKeys credentialPublicKeys,
              @JsonProperty("arData") Map<Index, ArData> arData) {
         this.ipIdentity = ipIdentity;
         this.revocationThreshold = revocationThreshold;
-        this.credId = CredentialRegistrationId.from(credId);
+        this.registrationId = CredentialRegistrationId.from(registrationId);
         this.policy = policy;
         this.commitments = commitments;
         this.credentialPublicKeys = credentialPublicKeys;
