@@ -6,16 +6,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.math.BigInteger;
+
 @Getter
 @ToString
 public class BakerSetFinalizationRewardCommission extends AbstractBakerResult {
     // parts per 100000
-    private final int finalizationRewardCommission;
+
+    private final PartsPerHundredThousand finalizationRewardCommission;
 
     @JsonCreator
     BakerSetFinalizationRewardCommission(@JsonProperty("bakerId") String bakerId,
                                          @JsonProperty("account") AccountAddress bakerAccount,
-                                         @JsonProperty("finalizationRewardCommission") int finalizationRewardCommission){
+                                         @JsonProperty("finalizationRewardCommission") PartsPerHundredThousand finalizationRewardCommission){
         super(bakerId, bakerAccount);
         this.finalizationRewardCommission = finalizationRewardCommission;
     }

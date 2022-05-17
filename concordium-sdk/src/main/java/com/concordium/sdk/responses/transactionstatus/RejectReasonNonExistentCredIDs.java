@@ -17,7 +17,7 @@ import java.util.Objects;
 @ToString
 public class RejectReasonNonExistentCredIDs extends RejectReason {
     @Getter
-    private List<CredentialRegistrationId> ids;
+    private final List<CredentialRegistrationId> ids;
 
     @JsonCreator
     RejectReasonNonExistentCredIDs(@JsonProperty("contents") List<String> ids) {

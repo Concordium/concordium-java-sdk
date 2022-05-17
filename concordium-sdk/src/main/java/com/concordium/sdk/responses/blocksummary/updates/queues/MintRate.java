@@ -19,16 +19,24 @@ public final class MintRate {
     /**
      * The mantissa
      */
-    private final double mantissa;
+    private final long mantissa;
 
     /**
      * The exponent
      */
-    private final double exponent;
+    private final int exponent;
 
     @JsonCreator
-    MintRate(@JsonProperty("mantissa") long mantissa, @JsonProperty("exponent") long exponent) {
+    MintRate(@JsonProperty("mantissa") long mantissa, @JsonProperty("exponent") int exponent) {
         this.mantissa = mantissa;
         this.exponent = exponent;
+    }
+
+    /**
+     * Compute the floating point number
+     * @return the mint rate.
+     */
+    public double getValue() {
+        return mantissa * Math.pow(10, -exponent);
     }
 }

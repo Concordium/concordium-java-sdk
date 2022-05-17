@@ -18,7 +18,7 @@ public final class Authorization {
     /**
      * The threshold
      */
-    private final int threshold;
+    private final byte threshold;
 
     /**
      * The indices of the authorized keys.
@@ -27,7 +27,7 @@ public final class Authorization {
     private final List<Integer> authorizedKeys;
 
     @JsonCreator
-    Authorization(@JsonProperty("threshold") int threshold, @JsonProperty("authorizedKeys") List<Integer> authorizedKeys) {
+    Authorization(@JsonProperty("threshold") byte threshold, @JsonProperty("authorizedKeys") List<Integer> authorizedKeys) {
         this.threshold = threshold;
         this.authorizedKeys = authorizedKeys;
     }

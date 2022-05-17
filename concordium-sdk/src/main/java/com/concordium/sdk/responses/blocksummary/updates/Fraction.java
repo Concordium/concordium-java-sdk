@@ -19,7 +19,7 @@ public class Fraction {
     private final BigInteger numerator;
 
     @JsonCreator
-    Fraction(@JsonProperty("denominator") BigInteger denominator, @JsonProperty("numerator") BigInteger numerator) {
+    public Fraction(@JsonProperty("denominator") BigInteger denominator, @JsonProperty("numerator") BigInteger numerator) {
         if (denominator.equals(BigInteger.ZERO)) {
             throw new IllegalArgumentException("Unable to compute gcd.");
         }

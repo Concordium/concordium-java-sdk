@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * A reward either stems from baking or finalization.
+ * A reward either stems from baking, including transactions in a block or finalization.
  */
 @Getter
 @ToString

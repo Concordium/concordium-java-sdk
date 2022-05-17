@@ -13,7 +13,7 @@ public enum SigningScheme {
     private static final Map<String, SigningScheme> signingSchemes = new HashMap<>();
 
     static {
-        signingSchemes.put("ed25519", SigningScheme.ED25519);
+        signingSchemes.put("Ed25519", SigningScheme.ED25519);
     }
 
     @JsonCreator
