@@ -3,6 +3,7 @@ package com.concordium.sdk.responses.blocksummary.updates.chainparameters;
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.RewardParameters;
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -19,9 +20,10 @@ import lombok.ToString;
 public final class ChainParametersV0 extends ChainParameters {
 
     /**
-     * The minimum threshold of CCD required for participating in baking.
+     * The cooldown (in epochs) that a baker is entering
+     * when de-registering as a baker.
      */
-    private final CCDAmount minimumThresholdForBaking;
+    private final UInt64 bakerCooldownEpochs;
 
     @JsonCreator
     ChainParametersV0(
@@ -31,9 +33,9 @@ public final class ChainParametersV0 extends ChainParameters {
             @JsonProperty("accountCreationLimit") int accountCreationLimit,
             @JsonProperty("electionDifficulty") double electionDifficulty,
             @JsonProperty("euroPerEnergy") Fraction euroPerEnergy,
-            @JsonProperty("minimumThresholdForBaking") CCDAmount minimumThresholdForBaking,
-            @JsonUnwrapped PoolParametersV0 bakerCooldownEpochs) {
-        super(rewardParameters, microCCDPerEuro, foundationAccountIndex, accountCreationLimit, electionDifficulty, euroPerEnergy, bakerCooldownEpochs);
-        this.minimumThresholdForBaking = minimumThresholdForBaking;
+            @JsonUnwrapped PoolParametersV0 poolParametersV0,
+            @JsonProperty("bakerCooldownEpochs") UInt64 bakerCooldownEpochs) {
+        super(rewardParameters, microCCDPerEuro, foundationAccountIndex, accountCreationLimit, electionDifficulty, euroPerEnergy, poolParametersV0);
+        this.bakerCooldownEpochs = bakerCooldownEpochs;
     }
 }
