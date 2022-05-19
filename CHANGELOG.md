@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Support for `getCryptographicParameters`
 
 ## 2.3.0
 - Expose more types related to `TransactionSummary`

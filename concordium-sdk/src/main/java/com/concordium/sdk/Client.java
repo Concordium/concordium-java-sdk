@@ -6,6 +6,7 @@ import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
 import com.google.protobuf.ByteString;
@@ -219,6 +220,25 @@ public final class Client {
             return transaction.getHash();
         }
         throw TransactionRejectionException.from(transaction);
+    }
+
+    /**
+     * Get the {@link CryptographicParameters} at a given block.
+     * @param blockHash the hash of the block
+     * @return the cryptographic parameters at the given block.
+     * @throws BlockNotFoundException if the block was not found.
+     */
+    public CryptographicParameters getCryptographicParameters(Hash blockHash) throws BlockNotFoundException {
+        val request = ConcordiumP2PRpc.BlockHash.getDefaultInstance()
+                .newBuilderForType()
+                .setBlockHashBytes(ByteString.copyFromUtf8(blockHash.asHex()))
+                .build();
+        val response = server().getCryptographicParameters(request);
+        val cryptographicParameters = CryptographicParameters.from(response.getValue());
+        if (Objects.isNull(cryptographicParameters)) {
+            throw BlockNotFoundException.from(blockHash);
+        }
+        return cryptographicParameters;
     }
 
     /**
