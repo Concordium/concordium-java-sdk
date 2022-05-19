@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * The account request to use when querying accounts on chain.
- * Examples {@link Client#getAccountInfo(AccountRequest, Hash)}, {@link Client#getNextAccountNonce(AccountRequest)}
+ * See {@link Client#getAccountInfo(AccountRequest, Hash)}
  */
 public final class AccountRequest {
 
