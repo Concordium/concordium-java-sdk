@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Hex;
 
-//exists for easier json parsing only
+//exists for json parsing only
 @Getter
 final class Value {
 
