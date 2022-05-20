@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+
+## 2.4.0
 - Support for `getCryptographicParameters`
 
 ## 2.3.0
