@@ -16,7 +16,6 @@ import org.apache.commons.codec.binary.Hex;
 public final class Baker {
     /**
      * The baker id.
-     * Note. The baker id is non-negative.
      */
     private final AccountIndex bakerId;
     /**

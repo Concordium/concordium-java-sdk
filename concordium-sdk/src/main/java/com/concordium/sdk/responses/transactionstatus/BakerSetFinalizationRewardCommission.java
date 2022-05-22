@@ -12,7 +12,6 @@ import java.math.BigInteger;
 @Getter
 @ToString
 public class BakerSetFinalizationRewardCommission extends AbstractBakerResult {
-    // parts per 100000
 
     private final PartsPerHundredThousand finalizationRewardCommission;
 

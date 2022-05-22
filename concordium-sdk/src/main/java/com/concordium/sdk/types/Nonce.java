@@ -40,7 +40,7 @@ public class Nonce {
      * Create a new nonce with an incremented underlying value.
      * @return the new `Nonce`.
      */
-    public Nonce increment() {
+    public Nonce nextNonce() {
         return new Nonce(UInt64.from(this.value.getValue() + 1));
     }
 

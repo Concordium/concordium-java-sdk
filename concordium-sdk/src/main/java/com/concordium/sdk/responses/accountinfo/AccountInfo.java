@@ -25,14 +25,14 @@ import java.util.Objects;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public final class AccountInfo {
     /**
-     * The account address
+     * The account address.
      */
     @EqualsAndHashCode.Include
     private final AccountAddress accountAddress;
     /**
      * The current nonce for the account.
      * That is, this is the first unused nonce from the perspective of the block that
-     * `AccountInfo` for.
+     * `AccountInfo` is for.
      */
     private final Nonce accountNonce;
     /**
