@@ -5,7 +5,7 @@
 - Renamed GTUAmount to CCDAmount
 - New CredentialRegistrationId type.
 - BlockSummary API now reflects the underlying types better.
-- getAccountInfo can now be queried either via `AccountAddress` or `AccountIndex` via `AccountRequest`.
+- getAccountInfo can now be queried either via `AccountAddress`, `AccountIndex` or `CredentialRegistrationId` via `AccountRequest`.
 
 ## 2.3.0
 - Expose more types related to `TransactionSummary`

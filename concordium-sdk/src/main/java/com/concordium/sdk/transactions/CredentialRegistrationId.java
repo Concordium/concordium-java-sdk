@@ -37,6 +37,14 @@ public class CredentialRegistrationId {
     }
 
     /**
+     * Get the hex encoded credential registration id
+     * @return the hex encoded credential registration id
+     */
+    public String getEncoded() {
+        return Hex.encodeHexString(regId);
+    }
+
+    /**
      * Create a {@link CredentialRegistrationId} from raw bytes
      *
      * Note. This is not the most optimal check as in fact the credential registration id
