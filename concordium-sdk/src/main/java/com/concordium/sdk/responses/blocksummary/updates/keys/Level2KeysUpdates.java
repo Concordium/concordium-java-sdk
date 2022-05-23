@@ -110,9 +110,7 @@ public final class Level2KeysUpdates {
                       @JsonProperty("foundationAccount") Authorization foundationAccount,
                       @JsonProperty("electionDifficulty") Authorization electionDifficulty,
                       @JsonProperty("euroPerEnergy") Authorization euroPerEnergy,
-                      @JsonProperty("nextSequenceNumber") Nonce nextSequenceNumber,
                       @JsonProperty("poolParameters") Authorization poolParameters,
-                      @JsonProperty("queue") List<Object> queue,
                       @JsonProperty("cooldownParameters") Authorization cooldownParameters,
                       @JsonProperty("timeParameters") Authorization timeParameters) {
         this.mintDistribution = mintDistribution;
