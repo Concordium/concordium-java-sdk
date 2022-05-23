@@ -23,7 +23,6 @@ public enum ProtocolVersion {
     private static final List<ProtocolVersion> protocolVersions = new ArrayList<>();
 
     static {
-        protocolVersions.add(null);
         protocolVersions.add(ProtocolVersion.V1);
         protocolVersions.add(ProtocolVersion.V2);
         protocolVersions.add(ProtocolVersion.V3);
@@ -33,6 +32,10 @@ public enum ProtocolVersion {
 
     @JsonCreator
     public static ProtocolVersion forValue(int protocolVersion) {
+        // The protocol starts with version 1.
+        if (protocolVersion < 1) {
+            throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
+        }
         val version = ProtocolVersion.protocolVersions.get(protocolVersion);
         if (Objects.isNull(version)) {
             throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
