@@ -2,9 +2,6 @@ package com.concordium.sdk.responses.blocksummary.updates.queues;
 
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.ProtocolUpdate;
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.PoolParameters;
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.PoolParametersV0;
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.PoolParametersV1;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.GasRewards;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.MintDistribution;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.TransactionFeeDistribution;
@@ -14,8 +11,6 @@ import com.concordium.sdk.responses.blocksummary.updates.keys.RootKeysUpdates;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -29,7 +24,7 @@ import lombok.ToString;
 //
 @Getter
 @ToString
-public final class UpdateQueues<PoolParameters> {
+public final class UpdateQueues {
 
     /**
      * Root keys updates enqueued.
@@ -88,16 +83,14 @@ public final class UpdateQueues<PoolParameters> {
 
     /**
      * Baker stake threshold.
+     * Note. only present for PV < 4
      */
     private final EnqueuedUpdate<CCDAmount> bakerStakeThreshold;
 
     /**
      * Pool parameter updates enqueued.
+     * Note. Only present for PV > 3
      */
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NONE, defaultImpl = PoolParametersV0.class)
-    @JsonSubTypes({
-            @JsonSubTypes.Type(value = PoolParametersV1.class)
-    })
     private final EnqueuedUpdate<PoolParameters> poolParameters;
 
     /**

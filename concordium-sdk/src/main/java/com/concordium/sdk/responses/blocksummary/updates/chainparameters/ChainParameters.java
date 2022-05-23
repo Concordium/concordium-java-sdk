@@ -2,11 +2,12 @@ package com.concordium.sdk.responses.blocksummary.updates.chainparameters;
 
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.RewardParameters;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.Map;
 
 /**
  * Chain parameters common to {@link ChainParametersV0} and {@link ChainParametersV1}.
@@ -47,26 +48,18 @@ public abstract class ChainParameters {
      */
     private final int foundationAccountIndex;
 
-    /**
-     * The pool parameters
-     */
-    private final PoolParameters poolParameters;
-
-
     ChainParameters(
             RewardParameters rewardParameters,
             Fraction microCCDPerEuro,
             int foundationAccountIndex,
             int accountCreationLimit,
             double electionDifficulty,
-            Fraction euroPerEnergy,
-            PoolParameters poolParameters) {
+            Fraction euroPerEnergy) {
         this.rewardParameters = rewardParameters;
         this.microCCDPerEuro = microCCDPerEuro;
         this.foundationAccountIndex = foundationAccountIndex;
         this.accountCreationLimit = accountCreationLimit;
         this.electionDifficulty = electionDifficulty;
         this.euroPerEnergy = euroPerEnergy;
-        this.poolParameters = poolParameters;
     }
 }

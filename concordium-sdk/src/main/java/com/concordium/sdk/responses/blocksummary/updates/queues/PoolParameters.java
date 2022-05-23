@@ -1,6 +1,7 @@
-package com.concordium.sdk.responses.blocksummary.updates.chainparameters;
+package com.concordium.sdk.responses.blocksummary.updates.queues;
 
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
+import com.concordium.sdk.responses.blocksummary.updates.chainparameters.Range;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,8 +14,8 @@ import lombok.ToString;
  */
 @ToString
 @Getter
-@EqualsAndHashCode(callSuper = true)
-public final class PoolParametersV1 extends PoolParameters {
+@EqualsAndHashCode
+public final class PoolParameters {
 
     /**
      * The range of allowed finalization commissions.
@@ -65,7 +66,7 @@ public final class PoolParametersV1 extends PoolParameters {
 
 
     @JsonCreator
-    PoolParametersV1(
+    PoolParameters(
             @JsonProperty("passiveTransactionCommission") double passiveTransactionCommission,
             @JsonProperty("bakingCommissionRange") Range bakingCommissionRange,
             @JsonProperty("finalizationCommissionRange") Range finalizationCommissionRange,

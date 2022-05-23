@@ -1,9 +1,14 @@
 package com.concordium.sdk.responses.blocksummary.updates;
 
+import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParameters;
+import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParametersV0;
+import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParametersV1;
 import com.concordium.sdk.responses.blocksummary.updates.keys.Keys;
 import com.concordium.sdk.responses.blocksummary.updates.queues.UpdateQueues;
+import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,11 +16,12 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public final class Updates<ChainParameters> {
+public final class Updates {
 
     /**
      * The current chain parameters.
      */
+
     private final ChainParameters chainParameters;
 
     /**
@@ -34,11 +40,15 @@ public final class Updates<ChainParameters> {
     private final ProtocolUpdate protocolUpdate;
 
     @JsonCreator
-    Updates(@JsonProperty("chainParameters") ChainParameters chainParameters,
+    Updates(@JsonProperty("chainParameters") JsonNode chainParameters,
             @JsonProperty("keys") Keys keys,
             @JsonProperty("updateQueues") UpdateQueues updateQueues,
             @JsonProperty("protocolUpdate") ProtocolUpdate protocolUpdate) {
-        this.chainParameters = chainParameters;
+        if (chainParameters.findPath("minimumThresholdForBaking").isTextual()) {
+            this.chainParameters = JsonMapper.INSTANCE.convertValue(chainParameters, ChainParametersV0.class);
+        }else {
+            this.chainParameters = JsonMapper.INSTANCE.convertValue(chainParameters, ChainParametersV1.class);
+        }
         this.keys = keys;
         this.updateQueues = updateQueues;
         this.protocolUpdate = protocolUpdate;

@@ -7,6 +7,7 @@ import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -25,6 +26,11 @@ public final class ChainParametersV0 extends ChainParameters {
      */
     private final UInt64 bakerCooldownEpochs;
 
+    /**
+     * Baker stake threshold
+     */
+    private final CCDAmount bakerStakeThreshold;
+
     @JsonCreator
     ChainParametersV0(
             @JsonProperty("rewardParameters") RewardParameters rewardParameters,
@@ -33,9 +39,10 @@ public final class ChainParametersV0 extends ChainParameters {
             @JsonProperty("accountCreationLimit") int accountCreationLimit,
             @JsonProperty("electionDifficulty") double electionDifficulty,
             @JsonProperty("euroPerEnergy") Fraction euroPerEnergy,
-            @JsonUnwrapped PoolParametersV0 poolParametersV0,
+            @JsonProperty("minimumThresholdForBaking") CCDAmount bakerStakeThreshold,
             @JsonProperty("bakerCooldownEpochs") UInt64 bakerCooldownEpochs) {
-        super(rewardParameters, microCCDPerEuro, foundationAccountIndex, accountCreationLimit, electionDifficulty, euroPerEnergy, poolParametersV0);
+        super(rewardParameters, microCCDPerEuro, foundationAccountIndex, accountCreationLimit, electionDifficulty, euroPerEnergy);
         this.bakerCooldownEpochs = bakerCooldownEpochs;
+        this.bakerStakeThreshold = bakerStakeThreshold;
     }
 }
