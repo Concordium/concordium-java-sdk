@@ -36,7 +36,7 @@ public enum ProtocolVersion {
         if (protocolVersion < 1) {
             throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }
-        val version = ProtocolVersion.protocolVersions.get(protocolVersion);
+        val version = ProtocolVersion.protocolVersions.get(protocolVersion - 1);
         if (Objects.isNull(version)) {
             throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }
