@@ -112,7 +112,6 @@ public final class AccountInfo {
         try {
             return JsonMapper.INSTANCE.readValue(accountInfoJsonString, AccountInfo.class);
         } catch (JsonProcessingException e) {
-            System.out.println(accountInfoJsonString);
             throw new IllegalArgumentException("Cannot parse AccountInfo JSON", e);
         }
     }
