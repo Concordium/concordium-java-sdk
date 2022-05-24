@@ -1,9 +1,12 @@
 package com.concordium.sdk.responses.accountinfo;
 
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.transactionstatus.ModuleCreatedResult;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -40,6 +43,17 @@ public final class Baker {
     private final byte[] bakerAggregationVerifyKey;
 
     /**
+     * The pending changes for the baker.
+     */
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "change")
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = ReduceStakeChange.class, name = "ReduceStake"),
+            @JsonSubTypes.Type(value = RemoveStakeChange.class, name = "RemoveStake")
+    })
+    private final PendingChange pendingChange;
+
+
+    /**
      * The baker pool info
      */
     private final BakerPoolInfo bakerPoolInfo;
@@ -52,7 +66,8 @@ public final class Baker {
           @JsonProperty("bakerElectionVerifyKey") String bakerElectionVerifyKey,
           @JsonProperty("bakerSignatureVerifyKey") String bakerSignatureVerifyKey,
           @JsonProperty("bakerAggregationVerifyKey") String bakerAggregationVerifyKey,
-          @JsonProperty("bakerPoolInfo") BakerPoolInfo bakerPoolInfo) {
+          @JsonProperty("bakerPoolInfo") BakerPoolInfo bakerPoolInfo,
+          @JsonProperty("pendingChange") PendingChange pendingChange) {
         this.bakerId = bakerId;
         this.stakedAmount = stakedAmount;
         this.restakeEarnings = restakeEarnings;
@@ -60,5 +75,6 @@ public final class Baker {
         this.bakerSignatureVerifyKey = Hex.decodeHex(bakerSignatureVerifyKey);
         this.bakerAggregationVerifyKey = Hex.decodeHex(bakerAggregationVerifyKey);
         this.bakerPoolInfo = bakerPoolInfo;
+        this.pendingChange = pendingChange;
     }
 }

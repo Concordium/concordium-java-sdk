@@ -15,6 +15,37 @@ public final class Expiry {
         this.timestampInMillis = value;
     }
 
+    private static final int MILLISECONDS_PER_SECOND = 1000;
+    private static final int SECONDS_PER_MINUTE = 60;
+
+    /**
+     * Create a new `Expiry` with current offset added the amount of minutes.
+     *
+     * @param minutes minutes to add.
+     *                The amount of minutes must be positive.
+     * @return The Expiry with the added minutes.
+     */
+    public Expiry addMinutes(int minutes) {
+        if (minutes < 1) {
+            throw new IllegalArgumentException("Minutes must be positive.");
+        }
+        return Expiry.from(Timestamp.newMillis(this.timestampInMillis.getMillis() + ((long) minutes * MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE)));
+    }
+
+    /**
+     * Create a new `Expiry` with current offset added the amount of seconds.
+     *
+     * @param seconds seconds to add.
+     *                The amount of seconds provided must be positive.
+     * @return The Expiry with the added minutes.
+     */
+    public Expiry addSeconds(int seconds) {
+        if (seconds < 0) {
+            throw new IllegalArgumentException("Seconds must be positive.");
+        }
+        return Expiry.from(Timestamp.newMillis(this.timestampInMillis.getMillis() + (long) seconds * MILLISECONDS_PER_SECOND));
+    }
+
     /**
      * Create an `Expiry` from a raw unix timestamp.
      *
@@ -29,6 +60,15 @@ public final class Expiry {
     }
 
     /**
+     * Create a new `Expiry` with an offset of the current time.
+     *
+     * @return the Expiry
+     */
+    public static Expiry createNew() {
+        return Expiry.from(Timestamp.newMillis(System.currentTimeMillis()));
+    }
+
+    /**
      * Create an `Expiry` from a {@link Date}
      *
      * @param date the date
@@ -40,6 +80,7 @@ public final class Expiry {
 
     /**
      * Create an `Expiry` from a {@link Timestamp}
+     *
      * @param timestamp the timestamp
      * @return the expiry
      */
