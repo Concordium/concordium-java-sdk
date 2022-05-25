@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+
+## 3.0.0
 - Stronger typing for various places in the API. 
 - Renamed GTUAmount to CCDAmount
 - New CredentialRegistrationId type.

@@ -141,9 +141,9 @@ perform an orderly shutdown of the underlying grpc connection.
 
 - `getAccountInfo`
 ```java
-AccountInfo getAccountInfo(AccountAddress address, Hash blockHash) throws AccountNotFoundException
+AccountInfo getAccountInfo(AccountRequest request, Hash blockHash) throws AccountNotFoundException
 ```
-Retrieves the [AccountInfo](./concordium-java-sdk/blob/main/concordium-sdk/src/main/java/com/concordium/sdk/responses/accountinfo/AccountInfo.java) given an `AccountAddress` and a block `Hash`.
+Retrieves the [AccountInfo](./concordium-java-sdk/blob/main/concordium-sdk/src/main/java/com/concordium/sdk/responses/accountinfo/AccountInfo.java) given an `AccountRequest` and a block `Hash`.
 Throws a `AccountNotFoundException` if the account was not found.
 
 - `getNextAccountNonce`
@@ -254,9 +254,9 @@ Client client = Client.from(connection);
 
 ```java
 Hash blockHash = Hash.from("3d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1");
-AccountAddress accountAddress = AccountAddress.from("3uyRpq2NPSY4VJn8Qd1uWGcUQTGpCAarHTtqpneiSGqv36Uhna");
+AccountRequest accountRequest = AccountRequest.from(AccountAddress.from("3uyRpq2NPSY4VJn8Qd1uWGcUQTGpCAarHTtqpneiSGqv36Uhna"));
 try {
-    AccountInfo accountInfo = client.getAccountInfo(accountAddress, blockHash);
+    AccountInfo accountInfo = client.getAccountInfo(accountRequest, blockHash);
 } catch(AccountNotFoundException e) {
     Log.err(e.getMessage);
 }
