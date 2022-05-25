@@ -16,11 +16,11 @@ public final class EncryptedAmountsRemovedResult extends TransactionResultEvent 
 
     @JsonCreator
     EncryptedAmountsRemovedResult(@JsonProperty("upToIndex") int upToIndex,
-                                  @JsonProperty("account") String account,
+                                  @JsonProperty("account") AccountAddress account,
                                   @JsonProperty("inputAmount") String inputAmount,
                                   @JsonProperty("newAmount") String newAmount) {
         this.upToIndex = upToIndex;
-        this.account = AccountAddress.from(account);
+        this.account = account;
         this.inputAmount = inputAmount;
         this.newAmount = newAmount;
     }

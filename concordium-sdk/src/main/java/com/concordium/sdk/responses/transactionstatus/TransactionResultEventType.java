@@ -50,7 +50,33 @@ public enum TransactionResultEventType {
     @JsonProperty("DataRegistered")
     DATA_REGISTERED,
     @JsonProperty("TransferMemo")
-    TRANSFER_MEMO;
+    TRANSFER_MEMO,
+    @JsonProperty("Interrupted")
+    INTERRUPTED,
+    @JsonProperty("Resumed")
+    RESUMED,
+    @JsonProperty("BakerSetOpenStatus")
+    BAKER_SET_OPEN_STATUS,
+    @JsonProperty("BakerSetMetadataURL")
+    BAKER_SET_METADATA_URL,
+    @JsonProperty("BakerSetTransactionFeeCommission")
+    BAKER_SET_TRANSACTION_FEE_COMMISSION,
+    @JsonProperty("BakerSetBakingRewardCommission")
+    BAKER_SET_BAKING_REWARD_COMMISSION,
+    @JsonProperty("BakerSetFinalizationRewardCommission")
+    BAKER_SET_FINALIZATION_REWARD_COMMISSION,
+    @JsonProperty("DelegationStakeIncreased")
+    DELEGATION_STAKE_INCREASED,
+    @JsonProperty("DelegationStakeDecreased")
+    DELEGATION_STAKE_DECREASED,
+    @JsonProperty("DelegationSetRestakeEarnings")
+    DELEGATION_SET_RESTAKE_EARNINGS,
+    @JsonProperty("DelegationSetDelegationTarget")
+    DELEGATION_SET_DELEGATION_TARGET,
+    @JsonProperty("DelegationAdded")
+    DELEGATION_ADDED,
+    @JsonProperty("DelegationRemoved")
+    DELEGATION_REMOVED;
 
     // Convenience methods for doing 'safe' casting.
     public <T> T convert(TransactionResultEvent event) {

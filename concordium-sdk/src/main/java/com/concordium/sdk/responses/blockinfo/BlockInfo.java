@@ -1,13 +1,9 @@
 package com.concordium.sdk.responses.blockinfo;
 
-import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.*;
-
 import java.time.OffsetDateTime;
 
 @ToString

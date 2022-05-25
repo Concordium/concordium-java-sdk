@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.SHA256;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -37,16 +38,18 @@ public final class AccountAddress {
     /**
      * Create a new {@link AccountAddress} given the base58 encoded address.
      * PRECONDITION: The encoded account address must conform to the {@link AccountAddress#VERSION}
-     * @param address A base58 encoded address.
+     *
+     * @param encoded A base58 encoded address.
      * @return The created {@link AccountAddress}
      */
-    public static AccountAddress from(String address) {
-        val addressBytes = Base58.decodeChecked(VERSION, address);
+    public static AccountAddress from(String encoded) {
+        val addressBytes = Base58.decodeChecked(VERSION, encoded);
         return AccountAddress.from(addressBytes);
     }
 
     /**
      * Create a {@link AccountAddress} from a {@link CredentialRegistrationId}.
+     *
      * @param regId the credential registration id to derive the {@link AccountAddress} from
      * @return the derived {@link AccountAddress}
      * Note that this is only valid if the account was created via a credential with the given credential registration ID. That is, the derived address will only be correct for the account if the credential is the first credential on the account.
@@ -57,10 +60,10 @@ public final class AccountAddress {
 
     /**
      * Create a new alias.
+     *
      * @param alias the counter to be used for the alias.
      *              The alias counter must be non-negative and the max value allowed is {@link AccountAddress#ALIAS_MAX_VALUE}
      * @return a new {@link AccountAddress} for the specified alias.
-     *
      */
     public AccountAddress newAlias(int alias) {
         if (alias < 0) {
@@ -78,6 +81,7 @@ public final class AccountAddress {
 
     /**
      * Check if one {@link AccountAddress} is an <i>alias</i> of another.
+     *
      * @param other the other {@link AccountAddress}
      * @return whether this {@link AccountAddress} is an alias of the other.
      */
@@ -100,5 +104,10 @@ public final class AccountAddress {
         byte[] addressBytes = new byte[BYTES];
         source.get(addressBytes);
         return AccountAddress.from(addressBytes);
+    }
+
+    @JsonCreator
+    AccountAddress(String encodedAddress) {
+        this.bytes = AccountAddress.from(encodedAddress).getBytes();
     }
 }

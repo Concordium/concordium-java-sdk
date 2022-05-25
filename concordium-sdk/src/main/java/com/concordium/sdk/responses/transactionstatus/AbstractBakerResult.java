@@ -1,25 +1,22 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Objects;
-
 @Getter
 @ToString
 public abstract class AbstractBakerResult extends TransactionResultEvent {
-    private final String bakerId;
-    private AccountAddress account;
+    private final AccountIndex bakerId;
+    private final AccountAddress account;
 
     @JsonCreator
-    AbstractBakerResult(@JsonProperty("bakerId") String bakerId,
-                        @JsonProperty("account") String account) {
+    AbstractBakerResult(@JsonProperty("bakerId") AccountIndex bakerId,
+                        @JsonProperty("account") AccountAddress account) {
         this.bakerId = bakerId;
-        if (!Objects.isNull(account)) {
-            this.account = AccountAddress.from(account);
-        }
+        this.account = account;
     }
 }

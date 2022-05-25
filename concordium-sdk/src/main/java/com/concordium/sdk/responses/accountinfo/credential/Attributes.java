@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The attributes associated with an `Identity`
+ */
 @Getter
 @ToString
 public final class Attributes {
@@ -21,21 +24,23 @@ public final class Attributes {
     private final String idDocExpiresAt;
     private final String nationalIdNo;
     private final String taxIdNo;
+    private final String lei;
 
     @JsonCreator
     Attributes(@JsonProperty("firstName") String firstName,
-                      @JsonProperty("lastName") String lastName,
-                      @JsonProperty("sex") String sex,
-                      @JsonProperty("dob") String dob,
-                      @JsonProperty("countryOfResidence") String countryOfResidence,
-                      @JsonProperty("nationality") String nationality,
-                      @JsonProperty("idDocType") String idDocType,
-                      @JsonProperty("idDocNo") String idDocNo,
-                      @JsonProperty("idDocIssuer") String idDocIssuer,
-                      @JsonProperty("idDocIssuedAt") String idDocIssuedAt,
-                      @JsonProperty("idDocExpiresAt") String idDocExpiresAt,
-                      @JsonProperty("nationalIdNo") String nationalIdNo,
-                      @JsonProperty("taxIdNo") String taxIdNo) {
+               @JsonProperty("lastName") String lastName,
+               @JsonProperty("sex") String sex,
+               @JsonProperty("dob") String dob,
+               @JsonProperty("countryOfResidence") String countryOfResidence,
+               @JsonProperty("nationality") String nationality,
+               @JsonProperty("idDocType") String idDocType,
+               @JsonProperty("idDocNo") String idDocNo,
+               @JsonProperty("idDocIssuer") String idDocIssuer,
+               @JsonProperty("idDocIssuedAt") String idDocIssuedAt,
+               @JsonProperty("idDocExpiresAt") String idDocExpiresAt,
+               @JsonProperty("nationalIdNo") String nationalIdNo,
+               @JsonProperty("taxIdNo") String taxIdNo,
+               @JsonProperty("lei") String lei) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.sex = sex;
@@ -49,5 +54,6 @@ public final class Attributes {
         this.idDocExpiresAt = idDocExpiresAt;
         this.nationalIdNo = nationalIdNo;
         this.taxIdNo = taxIdNo;
+        this.lei = lei;
     }
 }

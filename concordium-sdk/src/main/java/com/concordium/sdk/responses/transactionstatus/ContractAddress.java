@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public final class ContractAddress extends AbstractAccount {
+public final class ContractAddress extends AbstractAddress {
     private final int subIndex;
     private final int index;
     @JsonCreator

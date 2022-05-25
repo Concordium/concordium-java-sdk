@@ -1,10 +1,13 @@
 package com.concordium.sdk.transactions;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+import org.apache.commons.codec.binary.Hex;
 import lombok.*;
 import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 
-import java.util.Objects;
 
 /**
  * A credential registration id
@@ -34,6 +37,14 @@ public class CredentialRegistrationId {
     }
 
     /**
+     * Get the hex encoded credential registration id
+     * @return the hex encoded credential registration id
+     */
+    public String getEncoded() {
+        return Hex.encodeHexString(regId);
+    }
+
+    /**
      * Create a {@link CredentialRegistrationId} from raw bytes
      *
      * Note. This is not the most optimal check as in fact the credential registration id
@@ -52,5 +63,10 @@ public class CredentialRegistrationId {
                     "Expected " + LENGTH + " but was " + bytes.length);
         }
         return new CredentialRegistrationId(bytes);
+    }
+
+    @JsonCreator
+    CredentialRegistrationId(String regId) {
+        this.regId = CredentialRegistrationId.from(regId).getRegId();
     }
 }

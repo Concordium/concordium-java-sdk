@@ -19,7 +19,7 @@ public class TransferTransactionTest {
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
@@ -38,7 +38,7 @@ public class TransferTransactionTest {
             TransferTransaction
                     .builder()
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
@@ -57,7 +57,7 @@ public class TransferTransactionTest {
             TransferTransaction
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
@@ -96,7 +96,7 @@ public class TransferTransactionTest {
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
                     .build();
@@ -113,7 +113,7 @@ public class TransferTransactionTest {
         try {
             AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc");
             AccountAddress receiver = AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM");
-            GTUAmount amount = GTUAmount.fromMicro(17);
+            CCDAmount amount = CCDAmount.fromMicro(17);
             AccountNonce accountNonce = AccountNonce.from(78910);
 
             TransferTransaction
@@ -139,7 +139,7 @@ public class TransferTransactionTest {
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .build();
@@ -158,7 +158,7 @@ public class TransferTransactionTest {
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                    .amount(GTUAmount.fromMicro(17))
+                    .amount(CCDAmount.fromMicro(17))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(getSignerWithMalformedSecretKey())

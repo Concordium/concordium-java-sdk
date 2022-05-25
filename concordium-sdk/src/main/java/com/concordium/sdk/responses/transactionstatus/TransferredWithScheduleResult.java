@@ -17,11 +17,11 @@ public final class TransferredWithScheduleResult extends TransactionResultEvent 
 
     @JsonCreator
     TransferredWithScheduleResult(@JsonProperty("amount") List<List<String>> amount,
-                                  @JsonProperty("to") String to,
-                                  @JsonProperty("from") String from) {
+                                  @JsonProperty("to") AccountAddress to,
+                                  @JsonProperty("from") AccountAddress from) {
         this.amount = amount;
-        this.to = AccountAddress.from(to);
-        this.from = AccountAddress.from(from);
+        this.to = to;
+        this.from = from;
     }
 
     @Override

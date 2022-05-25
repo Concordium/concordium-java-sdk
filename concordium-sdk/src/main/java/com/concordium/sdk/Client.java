@@ -1,9 +1,15 @@
 package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
-import com.concordium.sdk.responses.BlocksAtHeight;
+import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
+import com.concordium.sdk.exceptions.AccountNotFoundException;
+import com.concordium.sdk.exceptions.BlockNotFoundException;
+import com.concordium.sdk.exceptions.TransactionNotFoundException;
+import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
@@ -65,21 +71,23 @@ public final class Client {
     /**
      * Retrieves the {@link AccountInfo} based on the address {@link Hash} and the block {@link Hash}
      *
-     * @param address   The address
+     * @param accountRequest The {@link AccountRequest}
+     *                       See {@link AccountRequest#from(AccountAddress)},
+     *                       {@link AccountRequest#from(AccountIndex)}
      * @param blockHash the block hash
      * @return The {@link AccountInfo}
      * @throws AccountNotFoundException if the account was not found.
      */
-    public AccountInfo getAccountInfo(AccountAddress address, Hash blockHash) throws AccountNotFoundException {
+    public AccountInfo getAccountInfo(AccountRequest accountRequest, Hash blockHash) throws AccountNotFoundException {
         val request = ConcordiumP2PRpc.GetAddressInfoRequest
                 .newBuilder()
-                .setAddressBytes(accountAddressAsByteString(address))
+                .setAddressBytes(accountRequest.getByteString())
                 .setBlockHash(blockHash.asHex())
                 .build();
         val response = server().getAccountInfo(request);
         val accountInfo = AccountInfo.fromJson(response.getValue());
         if (Objects.isNull(accountInfo)) {
-            throw AccountNotFoundException.from(address, blockHash);
+            throw AccountNotFoundException.from(accountRequest, blockHash);
         }
         return accountInfo;
     }
@@ -95,14 +103,10 @@ public final class Client {
     public AccountNonce getNextAccountNonce(AccountAddress address) {
         val request = ConcordiumP2PRpc.AccountAddress
                 .newBuilder()
-                .setAccountAddressBytes(accountAddressAsByteString(address))
+                .setAccountAddressBytes(ByteString.copyFrom(address.getEncodedBytes()))
                 .build();
         val nextAccountNonce = server().getNextAccountNonce(request);
         return AccountNonce.fromJson(nextAccountNonce.getValue());
-    }
-
-    private ByteString accountAddressAsByteString(AccountAddress address) {
-        return ByteString.copyFrom(address.getEncodedBytes());
     }
 
     /**
@@ -243,8 +247,12 @@ public final class Client {
 
     /**
      * Closes the underlying grpc channel
-     * This should be done when the {@link Client}
-     * is of no more use.
+     * 
+     * This should only be done when the {@link Client}
+     * is of no more use as creating a new {@link Client} (and the associated)
+     * channel is rather expensive.
+     *
+     * Subsequent calls following a closed channel will throw a {@link io.grpc.StatusRuntimeException}
      */
     public void close() {
         this.channel.shutdown();

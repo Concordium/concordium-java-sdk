@@ -6,14 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Account tried to transfer with schedule to itself, that's not allowed.
+ */
 @ToString
 public class RejectReasonScheduledSelfTransfer extends RejectReason {
     @Getter
     private final AccountAddress accountAddress;
 
     @JsonCreator
-    RejectReasonScheduledSelfTransfer(@JsonProperty("contents") String accountAddress) {
-        this.accountAddress = AccountAddress.from(accountAddress);
+    RejectReasonScheduledSelfTransfer(@JsonProperty("contents") AccountAddress accountAddress) {
+        this.accountAddress = accountAddress;
     }
 
     @Override

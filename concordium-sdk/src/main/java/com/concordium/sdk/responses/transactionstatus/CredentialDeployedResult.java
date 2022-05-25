@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -11,16 +12,14 @@ import java.util.Objects;
 @Getter
 @ToString
 public final class CredentialDeployedResult extends TransactionResultEvent {
-    private final String regId;
-    private AccountAddress account;
+    private final CredentialRegistrationId regId;
+    private final AccountAddress account;
 
     @JsonCreator
-    CredentialDeployedResult(@JsonProperty("regId") String regId,
-                             @JsonProperty("account") String account) {
+    CredentialDeployedResult(@JsonProperty("regId") CredentialRegistrationId regId,
+                             @JsonProperty("account") AccountAddress account) {
         this.regId = regId;
-        if(!Objects.isNull(account)) {
-            this.account = AccountAddress.from(account);
-        }
+        this.account = account;
     }
 
     @Override

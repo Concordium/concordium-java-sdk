@@ -30,5 +30,7 @@ enum UpdateType {
     @JsonProperty("addAnonymityRevoker")
     ADD_ANONYMITY_REVOKER,
     @JsonProperty("addIdentityProvider")
-    ADD_IDENTITY_PROVIDER
+    ADD_IDENTITY_PROVIDER,
+    @JsonProperty("poolParametersCPV1")
+    POOL_PARAMETERS;
 }

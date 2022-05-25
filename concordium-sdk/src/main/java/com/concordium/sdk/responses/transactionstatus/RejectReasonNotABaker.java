@@ -6,14 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Account is not a baker account.
+ */
 @ToString
 public class RejectReasonNotABaker extends RejectReason {
     @Getter
     private final AccountAddress accountAddress;
 
     @JsonCreator
-    public RejectReasonNotABaker(@JsonProperty("contents") String accountAddress) {
-        this.accountAddress = AccountAddress.from(accountAddress);
+    public RejectReasonNotABaker(@JsonProperty("contents") AccountAddress accountAddress) {
+        this.accountAddress = accountAddress;
     }
 
     @Override

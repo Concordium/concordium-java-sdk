@@ -17,7 +17,7 @@ public class RawTransactionTest {
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                .amount(GTUAmount.fromMicro(17))
+                .amount(CCDAmount.fromMicro(17))
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())

@@ -318,7 +318,7 @@ AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2
 AccountAddress receiver = AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM");
 GTUAmount amount = GTUAmount.asMicro(17);
 AccountNonce accountNonce = AccountNonce.from(78910);
-Expiry expiry = Expiry.from(123456);
+Expiry expiry = Expiry.createNew().addMinutes(5);
 
 ED25519SecretKey firstSecretKey = ED25519SecretKey.from("8f6494e89bb984dfd80bf9e5e9df9573754c9c245ed0981e95785406ca4969e7");
 ED25519SecretKey secondSecretKey = ED25519SecretKey.from("d34c74af5db462c96b30360e74657bc74bf73a64ef7c43679e748e3f2de38f01");

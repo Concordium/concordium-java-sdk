@@ -5,15 +5,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Exists only for annotation driven deserializing.
+ * See {@link Credential}
+ */
 @Getter
 @ToString
-public final class Value {
+final class Value {
+    /**
+     * Credential
+     */
     private final Contents contents;
-    private final String type;
+    /**
+     * Type of the {@link Credential}
+     */
+    private final CredentialType type;
 
     @JsonCreator
     public Value(@JsonProperty("contents") Contents contents,
-                 @JsonProperty("type") String type) {
+                 @JsonProperty("type") CredentialType type) {
         this.contents = contents;
         this.type = type;
     }

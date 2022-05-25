@@ -6,14 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Account tried to transfer an encrypted amount to itself, that's not allowed.
+ */
 @Getter
 @ToString
 public class RejectReasonEncryptedAmountSelfTransfer extends RejectReason {
     private final AccountAddress address;
 
     @JsonCreator
-    RejectReasonEncryptedAmountSelfTransfer(@JsonProperty("contents") String address) {
-        this.address = AccountAddress.from(address);
+    RejectReasonEncryptedAmountSelfTransfer(@JsonProperty("contents") AccountAddress address) {
+        this.address = address;
     }
 
     @Override

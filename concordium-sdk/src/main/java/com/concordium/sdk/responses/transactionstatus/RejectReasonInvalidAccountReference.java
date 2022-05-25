@@ -6,14 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Account does not exist
+ */
 @ToString
 public class RejectReasonInvalidAccountReference extends RejectReason {
     @Getter
     private final AccountAddress address;
 
     @JsonCreator
-    RejectReasonInvalidAccountReference(@JsonProperty("contents") String address) {
-        this.address = AccountAddress.from(address);
+    RejectReasonInvalidAccountReference(@JsonProperty("contents") AccountAddress address) {
+        this.address = address;
     }
 
     @Override

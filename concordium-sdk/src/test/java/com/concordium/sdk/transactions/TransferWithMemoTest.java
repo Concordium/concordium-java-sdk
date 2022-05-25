@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.val;
 import org.junit.Test;
@@ -17,12 +18,12 @@ public class TransferWithMemoTest {
         try {
             val transferWithMemo = TransferWithMemo.createNew(
                             AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"),
-                            GTUAmount.fromMicro(17),
+                            CCDAmount.fromMicro(17),
                             Memo.from(new byte[]{1, 2, 3, 4, 5}))
                     .withHeader(TransactionHeader
                             .builder()
                             .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                            .accountNonce(UInt64.from(78910))
+                            .accountNonce(Nonce.from(78910))
                             .expiry(UInt64.from(123456))
                             .build())
                     .signWith(

@@ -1,12 +1,16 @@
 package com.concordium.sdk.transactions;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.val;
 
 import java.nio.ByteBuffer;
 
 /**
+ * A non-negative index between 0 and 255.
+ *
  * The {@link Index} is used when setting up the {@link TransactionSigner} when signing a {@link Transaction}.
  * That is, the {@link Index} serves both as `CredentialIndex` and `KeyIndex`.
  */
@@ -22,12 +26,21 @@ public class Index implements Comparable {
         this.value = value;
     }
 
+    @JsonCreator
+    Index(String index) {
+        val idx = Integer.parseUnsignedInt(index);
+        if (idx > BYTE_MAX_VALUE) {
+            throw new IllegalArgumentException("Index cannot exceed one byte (" + BYTE_MAX_VALUE + ") was " + index);
+        }
+        this.value = (byte) idx;
+    }
+
     public static Index from(int index) {
         if (index < 0) {
-            throw new IllegalArgumentException("KeyIndex cannot be negative");
+            throw new IllegalArgumentException("Index cannot be negative");
         }
         if (index > BYTE_MAX_VALUE) {
-            throw new IllegalArgumentException("KeyIndex cannot exceed one byte (" + BYTE_MAX_VALUE + ") was " + index);
+            throw new IllegalArgumentException("Index cannot exceed one byte (" + BYTE_MAX_VALUE + ") was " + index);
         }
         return new Index((byte) index);
     }

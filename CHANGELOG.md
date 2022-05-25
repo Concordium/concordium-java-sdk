@@ -1,6 +1,11 @@
 # Changelog
 
 ## Unreleased changes
+- Stronger typing for various places in the API. 
+- Renamed GTUAmount to CCDAmount
+- New CredentialRegistrationId type.
+- BlockSummary API now reflects the underlying types better.
+- getAccountInfo can now be queried either via `AccountAddress`, `AccountIndex` or `CredentialRegistrationId` via `AccountRequest`.
 
 ## 2.4.0
 - Support for `getCryptographicParameters`

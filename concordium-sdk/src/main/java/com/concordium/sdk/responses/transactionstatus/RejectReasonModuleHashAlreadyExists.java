@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The module already exists.
+ */
 @Getter
 @ToString
 public class RejectReasonModuleHashAlreadyExists extends RejectReason {
