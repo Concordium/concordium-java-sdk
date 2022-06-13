@@ -17,10 +17,9 @@ public final class UpdateEnqueuedResult extends TransactionResultEvent {
 
     @JsonCreator
     UpdateEnqueuedResult(@JsonProperty("payload") UpdateEnqueuedPayloadResult<Object> payload,
-                         @JsonProperty("effectiveTime") Timestamp effectiveTime) {
-
+                         @JsonProperty("effectiveTime") long effectiveTime) {
         this.payload = payload;
-        this.effectiveTime = effectiveTime;
+        this.effectiveTime = Timestamp.newSeconds(effectiveTime);
     }
 
     @Override
