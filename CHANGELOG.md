@@ -2,6 +2,8 @@
 
 ## Unreleased changes
 
+- Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.
+
 ## 3.0.0
 - Stronger typing for various places in the API. 
 - Renamed GTUAmount to CCDAmount
