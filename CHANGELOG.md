@@ -2,8 +2,7 @@
 
 ## Unreleased changes
 
-## 3.0.1
-- Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` wrong.
+- Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
