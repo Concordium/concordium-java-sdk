@@ -11,7 +11,7 @@ public interface Transaction {
      *
      * @return The serialized {@link Transaction}
      */
-    byte[] getBytes();
+    byte[] getSerializedPayload();
 
     /**
      * Get the {@link Hash} of the {@link Transaction}

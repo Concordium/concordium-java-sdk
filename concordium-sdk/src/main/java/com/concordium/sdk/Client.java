@@ -15,6 +15,8 @@ import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.account.IAccountTransaction2;
+import com.concordium.sdk.transactions.account.IAccountTransactionPayload2;
 import com.google.protobuf.ByteString;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
@@ -217,13 +219,26 @@ public final class Client {
         val request = ConcordiumP2PRpc.SendTransactionRequest
                 .newBuilder()
                 .setNetworkId(transaction.getNetworkId())
-                .setPayload(ByteString.copyFrom(transaction.getBytes()))
+                .setPayload(ByteString.copyFrom(transaction.getSerializedPayload()))
                 .build();
         val response = server().sendTransaction(request);
         if (response.getValue()) {
             return transaction.getHash();
         }
         throw TransactionRejectionException.from(transaction);
+    }
+
+    public <P extends IAccountTransactionPayload2> boolean sendTransaction2(
+            ITransactionRequest2<P> request
+    ) {
+        val req = ConcordiumP2PRpc.SendTransactionRequest
+                .newBuilder()
+                .setNetworkId(request.getNetworkId())
+                .setPayload(ByteString.copyFrom(request.getPayload().serialize()))
+                .build();
+        val response = server().sendTransaction(req);
+
+        return response.getValue();
     }
 
     /**

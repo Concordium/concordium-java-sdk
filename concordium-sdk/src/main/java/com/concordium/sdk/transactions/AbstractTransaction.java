@@ -5,7 +5,7 @@ abstract class AbstractTransaction implements Transaction {
     abstract BlockItem getBlockItem();
 
     @Override
-    public byte[] getBytes() {
+    public byte[] getSerializedPayload() {
         return getBlockItem().getVersionedBytes();
     }
 
