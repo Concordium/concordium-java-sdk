@@ -1,6 +1,5 @@
 package com.concordium.sdk.transactions.account;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 

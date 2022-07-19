@@ -1,7 +1,5 @@
 package com.concordium.sdk.transactions.account;
 
-import com.concordium.sdk.transactions.BlockItem;
-import com.concordium.sdk.transactions.BlockItemType;
 import com.concordium.sdk.transactions.TransactionHeader;
 import com.concordium.sdk.transactions.TransactionSignature;
 import lombok.val;
@@ -10,7 +8,9 @@ import java.nio.ByteBuffer;
 
 public abstract class IAccountTransaction2<T extends IAccountTransactionPayload2> {
     abstract TransactionSignature getSignature();
+
     abstract TransactionHeader getHeader();
+
     public abstract T getPayload();
 
     public byte[] serialize() {

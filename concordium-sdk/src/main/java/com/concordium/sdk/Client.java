@@ -2,20 +2,18 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
-import com.concordium.sdk.exceptions.AccountNotFoundException;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
-import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.transactions.*;
-import com.concordium.sdk.transactions.account.IAccountTransaction2;
+import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.account.IAccountTransactionPayload2;
 import com.google.protobuf.ByteString;
 import concordium.ConcordiumP2PRpc;
@@ -76,7 +74,7 @@ public final class Client {
      * @param accountRequest The {@link AccountRequest}
      *                       See {@link AccountRequest#from(AccountAddress)},
      *                       {@link AccountRequest#from(AccountIndex)}
-     * @param blockHash the block hash
+     * @param blockHash      the block hash
      * @return The {@link AccountInfo}
      * @throws AccountNotFoundException if the account was not found.
      */
@@ -243,6 +241,7 @@ public final class Client {
 
     /**
      * Get the {@link CryptographicParameters} at a given block.
+     *
      * @param blockHash the hash of the block
      * @return the cryptographic parameters at the given block.
      * @throws BlockNotFoundException if the block was not found.
@@ -262,11 +261,11 @@ public final class Client {
 
     /**
      * Closes the underlying grpc channel
-     * 
+     * <p>
      * This should only be done when the {@link Client}
      * is of no more use as creating a new {@link Client} (and the associated)
      * channel is rather expensive.
-     *
+     * <p>
      * Subsequent calls following a closed channel will throw a {@link io.grpc.StatusRuntimeException}
      */
     public void close() {

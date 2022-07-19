@@ -2,7 +2,6 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.transactions.account.IAccountTransaction2;
 import com.concordium.sdk.transactions.account.IAccountTransactionPayload2;
-import com.google.common.primitives.Ints;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 

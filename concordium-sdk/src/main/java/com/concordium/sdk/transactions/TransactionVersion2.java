@@ -8,5 +8,5 @@ public abstract class TransactionVersion2 {
 
     public byte[] serialize() {
         return new byte[]{(byte) this.version};
-    };
+    }
 }
