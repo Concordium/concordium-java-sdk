@@ -22,7 +22,7 @@ public class TransactionSignature {
         signatures.get(credentialIndex).put(index, signature);
     }
 
-    byte[] getBytes() {
+    public byte[] getBytes() {
         val buffer = getByteBuffer();
         buffer.put((byte) signatures.size());
         for (val credentialIndex : signatures.keySet()) {

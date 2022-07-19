@@ -32,7 +32,7 @@ public class CCDAmount {
         this.value = UInt64.from(amount);
     }
 
-    byte[] getBytes() {
+    public byte[] getBytes() {
         return value.getBytes();
     }
 

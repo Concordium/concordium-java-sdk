@@ -37,7 +37,7 @@ public class TransactionHeader {
         this.maxEnergyCost = UInt64.from(0); // dummy value used for calculating the energy cost.
     }
 
-    byte[] getBytes() {
+    public byte[] getBytes() {
         val buffer = ByteBuffer.allocate(AccountAddress.BYTES + UInt64.BYTES + UInt64.BYTES + UInt32.BYTES + UInt64.BYTES);
         buffer.put(sender.getBytes());
         buffer.put(accountNonce.getBytes());

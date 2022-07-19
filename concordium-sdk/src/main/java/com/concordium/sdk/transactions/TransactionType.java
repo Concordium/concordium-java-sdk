@@ -22,7 +22,7 @@ public enum TransactionType {
     REGISTER_DATA((byte) 21),
     TRANSFER_WITH_MEMO((byte) 22);
 
-    static final int BYTES = 1;
+    public static final int BYTES = 1;
 
     @Getter
     private final byte value;
