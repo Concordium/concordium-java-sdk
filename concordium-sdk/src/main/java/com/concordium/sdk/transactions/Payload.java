@@ -16,8 +16,6 @@ public abstract class Payload {
     TransactionHeader header;
     TransactionSignature signature;
 
-    PayloadType type;
-
     BlockItem toBlockItem() {
         return BlockItem.from(new AccountTransaction(signature, header, this));
     }
@@ -89,6 +87,7 @@ public abstract class Payload {
     }
 
     public enum PayloadType {
+        DEPLOY_MODULE,
         TRANSFER,
         TRANSFER_WITH_MEMO
     }

@@ -13,8 +13,6 @@ import java.nio.ByteBuffer;
 @ToString
 public class TransferWithMemo extends Payload {
 
-    private final static TransactionType TYPE = TransactionType.TRANSFER_WITH_MEMO;
-
     private final AccountAddress receiver;
     private final CCDAmount amount;
     private final Memo memo;
