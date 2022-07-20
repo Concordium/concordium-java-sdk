@@ -25,4 +25,8 @@ public class TransactionFactory {
     public static TransferWithMemoTransaction.TransferWithMemoTransactionBuilder newTransferWithMemo() {
         return TransferWithMemoTransaction.builder();
     }
+
+    public static DeployModuleTransaction.DeployModuleTransactionBuilder newDeployModule() {
+        return DeployModuleTransaction.builder();
+    }
 }

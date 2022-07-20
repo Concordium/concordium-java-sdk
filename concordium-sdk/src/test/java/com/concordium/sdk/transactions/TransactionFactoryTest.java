@@ -18,4 +18,10 @@ public class TransactionFactoryTest {
         val builder = TransactionFactory.newTransferWithMemo();
         assertNotNull(builder);
     }
+
+    @Test
+    public void testCanCreateDeployModuleFactory() {
+        val builder = TransactionFactory.newDeployModule();
+        assertNotNull(builder);
+    }
 }
