@@ -3,6 +3,7 @@
 ## Unreleased changes
 
 - Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.
+- Created Account Transaction Register Data.
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
