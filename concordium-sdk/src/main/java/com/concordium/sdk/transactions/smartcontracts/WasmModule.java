@@ -1,10 +1,12 @@
 package com.concordium.sdk.transactions.smartcontracts;
 
+import com.concordium.sdk.crypto.SHA256;
 import com.concordium.sdk.transactions.TransactionType;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
+import org.apache.commons.codec.binary.Hex;
 
 import java.nio.ByteBuffer;
 import java.util.Objects;
@@ -22,6 +24,15 @@ public class WasmModule {
         }
         this.version = version;
         this.moduleSource = moduleSource;
+    }
+
+    /**
+     * Get the identifier of the WasmModule.
+     * The identifier is a SHA256 hash of the raw module bytes.
+     * @return the identifier of the Module.
+     */
+    public String getIdentifier() {
+        return Hex.encodeHexString(SHA256.hash(this.moduleSource.getBytes()));
     }
 
     /**
