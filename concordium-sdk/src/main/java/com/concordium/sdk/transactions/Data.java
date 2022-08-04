@@ -57,10 +57,6 @@ public class Data {
         if (Objects.isNull(data)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));
         }
-        if (data.length > BYTES) {
-            throw TransactionCreationException.from(
-                    new IllegalArgumentException("Size of data cannot exceed " + BYTES + " bytes"));
-        }
         return new Data(data);
     }
 }
