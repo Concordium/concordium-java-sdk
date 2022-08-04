@@ -12,7 +12,6 @@ import java.nio.ByteBuffer;
 import static org.junit.Assert.*;
 
 public class TransferWithRegisterDataTest {
-
     @Test
     public void testCreateTransferWithRegisterData() {
         try {
@@ -35,7 +34,6 @@ public class TransferWithRegisterDataTest {
 
             assertEquals(UInt64.from(568), transferWithRegisterData.header.getMaxEnergyCost());
             assertEquals(8, transferWithRegisterData.getBytes().length);
-
             val blockItem = transferWithRegisterData.toBlockItem();
             assertEquals(Hash.from("0ad44be061cbdfc22fdcf14e2cd48d7c34d543ea60cb9cf5298cb40d89c25d83"), blockItem.getHash());
             assertEquals(blockItem.getHash(), BlockItem.fromVersionedBytes(ByteBuffer.wrap(blockItem.getVersionedBytes())).getHash());

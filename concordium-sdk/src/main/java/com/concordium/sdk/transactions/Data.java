@@ -33,7 +33,7 @@ public class Data {
         }
     }
 
-    // returns the serialized memo with suffixed length
+    // returns the serialized data with suffixed length
     byte[] getBytes() {
         val buffer = ByteBuffer.allocate(UInt16.BYTES + value.length);
         buffer.put(UInt16.from(value.length).getBytes());
@@ -48,7 +48,7 @@ public class Data {
         return new Data(bytes);
     }
 
-    // return the length of the serialized memo
+    // return the length of the serialized data
     int getLength() {
         return UInt16.BYTES + value.length;
     }
