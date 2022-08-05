@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
 
+import java.util.Objects;
+
 @Getter
 public class RegisterDataTransaction extends AbstractTransaction {
     private final AccountAddress sender;
@@ -42,7 +44,7 @@ public class RegisterDataTransaction extends AbstractTransaction {
         @Override
         public RegisterDataTransaction build() throws TransactionCreationException {
             val transaction = super.build();
-            Transaction.verifyRegisterDataInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.getData(), transaction.signer);
+            verifyRegisterDataInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.getData(), transaction.signer);
             transaction.blockItem = createRegisterData(transaction).toBlockItem();
             return transaction;
         }
@@ -56,6 +58,30 @@ public class RegisterDataTransaction extends AbstractTransaction {
                             .expiry(transaction.expiry.getValue())
                             .build())
                     .signWith(transaction.signer);
+        }
+
+        static void verifyRegisterDataInput(
+                AccountAddress sender,
+                AccountNonce nonce,
+                Expiry expiry,
+                Data data,
+                TransactionSigner signer) throws TransactionCreationException {
+            if (Objects.isNull(sender)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
+            }
+            if (Objects.isNull(nonce)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("AccountNonce cannot be null"));
+            }
+            if (Objects.isNull(expiry)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Expiry cannot be null"));
+            }
+
+            if (Objects.isNull(data)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));
+            }
+            if (Objects.isNull(signer) || signer.isEmpty()) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
+            }
         }
     }
 }

@@ -51,23 +51,4 @@ public interface Transaction {
             throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
         }
     }
-    
-    static void verifyRegisterDataInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, Data data, TransactionSigner signer) throws TransactionCreationException {
-        if (Objects.isNull(sender)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
-        }
-        if (Objects.isNull(nonce)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("AccountNonce cannot be null"));
-        }
-        if (Objects.isNull(expiry)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Expiry cannot be null"));
-        }
-
-        if (Objects.isNull(data)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));
-        }
-        if (Objects.isNull(signer) || signer.isEmpty()) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
-        }
-    }
 }
