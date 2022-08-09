@@ -251,6 +251,10 @@ public final class Client {
         return Duration.ofMillis(res);
     }
 
+    public long totalSent() {
+        return server().peerTotalSent(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+    }
+
     /**
      * Closes the underlying grpc channel
      * 
