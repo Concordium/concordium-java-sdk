@@ -2,6 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.peerList.Peer;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
@@ -15,6 +16,7 @@ import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
+import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
@@ -24,6 +26,7 @@ import lombok.val;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -243,6 +246,26 @@ public final class Client {
             throw BlockNotFoundException.from(blockHash);
         }
         return cryptographicParameters;
+    }
+
+    /**
+     * Gets Peers list connected to the Node
+     * @param includeBootstrappers if true will include Bootstrapper nodes in the response.
+     * @return An {@link ImmutableList} of {@link Peer}
+     */
+    public ImmutableList<Peer> getPeerList(boolean includeBootstrappers) {
+        val value = server().peerList(ConcordiumP2PRpc.PeersRequest.newBuilder()
+                    .setIncludeBootstrappers(includeBootstrappers)
+                .build());
+
+        val list = value
+                .getPeersList()
+                .stream()
+                .map(p->Peer.parse(p)).collect(Collectors.toList());
+
+        return ImmutableList.<Peer>builder()
+                .addAll(list)
+                .build();
     }
 
     /**
