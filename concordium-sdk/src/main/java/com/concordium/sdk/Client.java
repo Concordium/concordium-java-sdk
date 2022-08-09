@@ -2,6 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
@@ -265,12 +266,27 @@ public final class Client {
     }
 
     /**
-     * Gets the Semantic Version of the Peer Software / Node
-     * @return {@link Semver} of the Peer / Node
+     * Gets the Semantic Version of the Peer Software / Node.
+     * @return {@link Semver} of the Peer / Node.
      */
     public Semver getVersion() {
         val value = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return new Semver(value);
+    }
+
+    /**
+     * Gets Peer Statistics.
+     * @param includeBootstrappers Should include Bootstrappers in the response.
+     * @return Peer Statistics in the format {@link PeerStatistics}
+     */
+    public PeerStatistics getPeerStatistics(final boolean includeBootstrappers) {
+        val value = server()
+                .peerStats(ConcordiumP2PRpc
+                        .PeersRequest
+                        .newBuilder()
+                        .setIncludeBootstrappers(includeBootstrappers)
+                        .build());
+        return PeerStatistics.parse(value);
     }
 
     /**
