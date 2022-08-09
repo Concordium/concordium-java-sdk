@@ -76,6 +76,11 @@
             <artifactId>com.vdurmont.semver4j</artifactId>
             <version>3.1.0_1</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.seancfoley</groupId>
+            <artifactId>ipaddress</artifactId>
+            <version>5.3.4</version>
+        </dependency>
     </dependencies>
 
     <build>
