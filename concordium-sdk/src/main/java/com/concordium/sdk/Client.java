@@ -246,7 +246,11 @@ public final class Client {
         return cryptographicParameters;
     }
 
-    public Duration uptime() {
+    /**
+     * Gets the Peer uptime.
+     * @return Peer Uptime {@link Duration}.
+     */
+    public Duration getUptime() {
         val res = server().peerUptime(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return Duration.ofMillis(res);
     }
