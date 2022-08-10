@@ -3,6 +3,7 @@
 ## Unreleased changes
 
 - Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.
+- Support for query `PeerStats`
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
