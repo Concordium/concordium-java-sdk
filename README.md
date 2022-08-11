@@ -139,6 +139,8 @@ perform an orderly shutdown of the underlying grpc connection.
 
 ## Queries
 
+### Chain Queries
+
 - `getAccountInfo`
 ```java
 AccountInfo getAccountInfo(AccountRequest request, Hash blockHash) throws AccountNotFoundException
@@ -178,6 +180,10 @@ BlocksAtHeight getBlocksAtHeight(BlocksAtHeightRequest height) throws BlockNotFo
 ```
 Retrieves the `BlocksAtHeight` at the given height if one or more was found.
 Throws a `BlockNotFoundException` if no blocks were found.
+
+### Node & P2P Queries
+
+- fill in
 
 ## Transactions
 
