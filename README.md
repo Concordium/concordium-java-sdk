@@ -183,7 +183,11 @@ Throws a `BlockNotFoundException` if no blocks were found.
 
 ### Node & P2P Queries
 
-#### fill in
+- `getUptime`
+```java
+Duration getUptime()
+```
+Retrives the uptime of node. Duration since the node was started.
 
 ## Transactions
 
@@ -316,7 +320,10 @@ try {
 
 ### Node & P2P Queries
 
-#### fill in
+#### getUptime
+```java
+val uptime = client.getUptime();
+```
 
 ## Transactions
 
