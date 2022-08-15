@@ -28,6 +28,10 @@ public final class UInt64 {
         return new UInt64(Long.parseUnsignedLong(value));
     }
 
+    public static UInt64 fromHex(String value) {
+        return UInt64.from(Long.parseLong(value, 16));
+    }
+
     public static UInt64 from(long value) {
         if (value < 0) {
             throw new NumberFormatException("Value of UInt64 can not be negative");
