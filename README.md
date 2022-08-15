@@ -183,7 +183,8 @@ Throws a `BlockNotFoundException` if no blocks were found.
 
 ### Node & P2P Queries
 
-#### fill in
+- `getVersion`
+Retrives th node software version.
 
 ## Transactions
 
@@ -316,7 +317,10 @@ try {
 
 ### Node & P2P Queries
 
-#### fill in
+#### getVersion
+```java
+Semver version = client.getVersion();
+```
 
 ## Transactions
 
