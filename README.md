@@ -183,6 +183,12 @@ Throws a `BlockNotFoundException` if no blocks were found.
 
 ### Node & P2P Queries
 
+- `getUptime`
+```java
+Duration getUptime()
+```
+Retrives the uptime of node. Duration since the node was started.
+
 - `getTotalSent`
 ```java
 long getTotalSent()
@@ -319,6 +325,11 @@ try {
 ```
 
 ### Node & P2P Queries
+
+#### getUptime
+```java
+val uptime = client.getUptime();
+```
 
 #### getTotalSent
 ```java
