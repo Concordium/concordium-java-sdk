@@ -183,8 +183,14 @@ Throws a `BlockNotFoundException` if no blocks were found.
 
 ### Node & P2P Queries
 
+- `getUptime`
+```java
+Duration getUptime()
+```
+Retrives the uptime of node. Duration since the node was started.
+
 - `getVersion`
-Retrives th node software version.
+Retrives the node software version.
 
 ## Transactions
 
@@ -317,11 +323,20 @@ try {
 
 ### Node & P2P Queries
 
+#### getUptime
+```java
+val uptime = client.getUptime();
+```
+
 #### getVersion
 ```java
 Semver version = client.getVersion();
 ```
 
+#### getVersion
+```java
+Semver version = client.getVersion();
+```
 ## Transactions
 
 The [`TransactionFactory`](./concordium-sdk/src/main/java/com/concordium/sdk/transactions/TransactionFactory.java) provides a
