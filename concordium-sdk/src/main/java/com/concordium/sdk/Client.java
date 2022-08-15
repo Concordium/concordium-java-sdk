@@ -246,8 +246,8 @@ public final class Client {
     }
 
     /**
-     * Gets the total No of sent packets.
-     * @return Total no of Sent Packets.
+     * Gets the total number of packets sent.
+     * @return Total number of packets sent.
      */
     public long getTotalSent() {
         return server().peerTotalSent(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();

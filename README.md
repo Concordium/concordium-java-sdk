@@ -183,7 +183,11 @@ Throws a `BlockNotFoundException` if no blocks were found.
 
 ### Node & P2P Queries
 
-#### fill in
+- `getTotalSent`
+```java
+long getTotalSent()
+```
+Retrives total number of packets sent from the node.
 
 ## Transactions
 
@@ -316,7 +320,10 @@ try {
 
 ### Node & P2P Queries
 
-#### fill in
+#### getTotalSent
+```java
+val sentPackets = client.getTotalSent();
+```
 
 ## Transactions
 
