@@ -23,7 +23,7 @@ public class PeerStatistics {
     private final long averageBPSOut;
 
     /**
-     * List of peers with their statistics.
+     * List of peers that the node is connected to containing their statistics.
      */
     private final ImmutableList<PeerStat> peerStats;
 

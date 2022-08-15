@@ -183,7 +183,11 @@ Throws a `BlockNotFoundException` if no blocks were found.
 
 ### Node & P2P Queries
 
-#### fill in
+- `getPeerStatistics`
+```java
+PeerStatistics getPeerStatistics(final boolean includeBootstrappers)
+```
+Retrieves the `PeerStatistics` the node is connected to.
 
 ## Transactions
 
@@ -316,7 +320,11 @@ try {
 
 ### Node & P2P Queries
 
-#### fill in
+#### 
+```java
+boolean shouldIncludeBootstrapperNodes = true;
+PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapperNodes);
+```
 
 ## Transactions
 

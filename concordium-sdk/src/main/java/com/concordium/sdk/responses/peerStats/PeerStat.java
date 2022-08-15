@@ -9,7 +9,7 @@ import lombok.Getter;
 public class PeerStat {
 
     /**
-     * Peer Node Id. Serialized has hex string.
+     * Peer Node Id. The node id is an unsigned 64 bit integer encoded as a hex string.
      */
     private final String nodeId;
 
@@ -19,12 +19,12 @@ public class PeerStat {
     private final long latency;
 
     /**
-     * Total packets received from the Peer.
+     * Total packets received from the peer.
      */
     private final long packetsReceived;
 
     /**
-     * Total packets sent to the Peer.
+     * Total packets sent to the peer.
      */
     private final long packetsSent;
 

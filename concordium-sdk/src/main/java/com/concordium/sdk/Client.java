@@ -247,7 +247,7 @@ public final class Client {
     }
 
     /**
-     * Gets Peer Statistics.
+     * Gets {@link PeerStatistics} of the node.
      * @param includeBootstrappers Should include Bootstrappers in the response.
      * @return Peer Statistics in the format {@link PeerStatistics}
      */
