@@ -205,6 +205,8 @@ Sends funds from one account to another.
 - TransferWithMemo
 Sends funds from one account to another with an associated `Memo`.
 
+- Register Data
+Sends arbitary byte data to be registered on chain. 
 
 ## Exceptions and general error handling
 
