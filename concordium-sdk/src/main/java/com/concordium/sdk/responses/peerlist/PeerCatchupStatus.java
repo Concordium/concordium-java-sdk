@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.peerList;
+package com.concordium.sdk.responses.peerlist;
 
 import concordium.ConcordiumP2PRpc;
 
@@ -20,12 +20,7 @@ public enum PeerCatchupStatus {
     /**
      * Node is downloading new updates.
      */
-    CATCHINGUP(2),
-
-    /**
-     * Unknown status.
-     */
-    UNRECOGNIZED(-1);
+    CATCHINGUP(2);
 
     private final int value;
 
@@ -40,11 +35,13 @@ public enum PeerCatchupStatus {
      */
     public static PeerCatchupStatus parse(ConcordiumP2PRpc.PeerElement.CatchupStatus catchupStatus) {
         switch (catchupStatus) {
-            case  UPTODATE: return PeerCatchupStatus.UPTODATE;
+            case UPTODATE: return PeerCatchupStatus.UPTODATE;
             case PENDING: return PeerCatchupStatus.PENDING;
             case CATCHINGUP: return PeerCatchupStatus.CATCHINGUP;
             default:
-            case UNRECOGNIZED: return PeerCatchupStatus.UNRECOGNIZED;
+            throw new IllegalArgumentException(String.format(
+                    "Invalid catchup status received : %d",
+                    catchupStatus.getNumber()));
         }
     }
 
