@@ -4,6 +4,7 @@
 
 - Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.
 - Added support for `Uptime` query.
+- Added support for query `PeerTotalSent`
 
 ## 3.0.0
 - Stronger typing for various places in the API. 

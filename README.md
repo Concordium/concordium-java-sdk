@@ -189,6 +189,12 @@ Duration getUptime()
 ```
 Retrives the uptime of node. Duration since the node was started.
 
+- `getTotalSent`
+```java
+long getTotalSent()
+```
+Retrives total number of packets sent from the node.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -323,6 +329,11 @@ try {
 #### getUptime
 ```java
 val uptime = client.getUptime();
+```
+
+#### getTotalSent
+```java
+val sentPackets = client.getTotalSent();
 ```
 
 ## Transactions
