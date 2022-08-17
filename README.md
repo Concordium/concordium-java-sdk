@@ -189,7 +189,16 @@ Duration getUptime()
 ```
 Retrives the uptime of node. Duration since the node was started.
 
+- `getTotalSent`
+```java
+long getTotalSent()
+```
+Retrives total number of packets sent from the node.
+
 - `getVersion`
+```java
+String getVersion()
+```
 Retrives the node software version.
 
 ## Transactions
@@ -328,15 +337,16 @@ try {
 val uptime = client.getUptime();
 ```
 
-#### getVersion
+#### getTotalSent
 ```java
-Semver version = client.getVersion();
+val sentPackets = client.getTotalSent();
 ```
 
 #### getVersion
 ```java
-Semver version = client.getVersion();
+String version = client.getVersion();
 ```
+
 ## Transactions
 
 The [`TransactionFactory`](./concordium-sdk/src/main/java/com/concordium/sdk/transactions/TransactionFactory.java) provides a
