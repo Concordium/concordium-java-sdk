@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.nodeInfo;
+package com.concordium.sdk.responses.nodeinfo;
 
 import lombok.RequiredArgsConstructor;
 

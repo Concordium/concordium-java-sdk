@@ -1,11 +1,11 @@
-package com.concordium.sdk.responses.nodeInfo;
+package com.concordium.sdk.responses.nodeinfo;
 
 import concordium.ConcordiumP2PRpc;
 import lombok.Getter;
 import lombok.val;
 
 /**
- * Represents PeerDetail of type {@link PeerType.Node}.
+ * Represents PeerDetail of type {@link PeerType#NODE}.
  */
 @Getter
 public class PeerDetailsNode extends PeerDetails {
@@ -13,7 +13,7 @@ public class PeerDetailsNode extends PeerDetails {
     private final ConsensusState consensusState;
 
     PeerDetailsNode(ConsensusState consensusState) {
-        super(PeerType.Node);
+        super(PeerType.NODE);
         this.consensusState = consensusState;
     }
 

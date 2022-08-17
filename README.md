@@ -195,6 +195,11 @@ long getTotalSent()
 ```
 Retrives total number of packets sent from the node.
 
+- `getNodeInfo()`
+```java
+NodeInfo getNodeInfo()
+```
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -334,6 +339,11 @@ val uptime = client.getUptime();
 #### getTotalSent
 ```java
 val sentPackets = client.getTotalSent();
+```
+
+#### getNodeInfo
+```java
+NodeInfo = client.getNodeInfo();
 ```
 
 ## Transactions

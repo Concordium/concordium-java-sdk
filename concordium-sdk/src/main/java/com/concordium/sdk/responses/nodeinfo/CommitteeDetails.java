@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.nodeInfo;
+package com.concordium.sdk.responses.nodeinfo;
 
 import com.concordium.sdk.types.UInt64;
 import concordium.ConcordiumP2PRpc;

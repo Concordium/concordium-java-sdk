@@ -1,8 +1,9 @@
-package com.concordium.sdk.responses.nodeInfo;
+package com.concordium.sdk.responses.nodeinfo;
 
 import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -13,6 +14,7 @@ import java.time.ZonedDateTime;
  */
 @Builder
 @Getter
+@ToString
 public class NodeInfo {
 
     private static final ZoneId UTC_ZONE = ZoneId.of("UTC");
@@ -37,7 +39,7 @@ public class NodeInfo {
      * @param value {@link concordium.ConcordiumP2PRpc.NodeInfoResponse}.
      * @return Parsed {@link NodeInfo}.
      */
-    public static NodeInfo parse(ConcordiumP2PRpc.NodeInfoResponse value) throws Exception {
+    public static NodeInfo parse(ConcordiumP2PRpc.NodeInfoResponse value) {
         return NodeInfo.builder()
                 .nodeId(value.getNodeId().getValue())
                 .localTime(parseTime(value.getCurrentLocaltime()))
@@ -49,13 +51,13 @@ public class NodeInfo {
      * Parses {@link concordium.ConcordiumP2PRpc.NodeInfoResponse} into {@link PeerDetails}.
      * @param value {@link concordium.ConcordiumP2PRpc.NodeInfoResponse}.
      * @return Parsed {@link PeerDetails}.
-     * @throws Exception
      */
-    private static PeerDetails parsePeerDetails(ConcordiumP2PRpc.NodeInfoResponse value) throws Exception {
+    private static PeerDetails parsePeerDetails(ConcordiumP2PRpc.NodeInfoResponse value) {
         switch (value.getPeerType()) {
-            case "Bootstrapper" : return new PeerDetails(PeerType.Bootstrapper);
+            case "Bootstrapper" : return new PeerDetails(PeerType.BOOTSTRAPPER);
             case "Node" : return PeerDetailsNode.parse(value);
-            default: throw new Exception("Invalid Peer Type");
+            default: throw new IllegalArgumentException(
+                    String.format("Invalid Peer Type : %s", value.getPeerType()));
         }
     }
 

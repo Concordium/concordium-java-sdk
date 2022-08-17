@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.nodeInfo;
+package com.concordium.sdk.responses.nodeinfo;
 
 import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.util.Optional;
 
 /**
- * Represents {@link PeerDetailsNode} of type {@link ConsensusState.Active}.
+ * Represents {@link PeerDetailsNode} of type {@link ConsensusState#Active}.
  */
 public class PeerDetailsNodeActive extends PeerDetailsNode {
 
@@ -38,29 +38,28 @@ public class PeerDetailsNodeActive extends PeerDetailsNode {
             case ACTIVE_IN_COMMITTEE:
                 return PeerDetailsNodeActive.builder()
                         .committeeDetails(Optional.of(CommitteeDetails.parse(value)))
-                        .activeStateType(NodeActiveStateType.ActiveInCommittee)
+                        .activeStateType(NodeActiveStateType.ACTIVE_IN_COMMITTEE)
                         .build();
             case NOT_IN_COMMITTEE:
                 return PeerDetailsNodeActive.builder()
                         .committeeDetails(Optional.empty())
-                        .activeStateType(NodeActiveStateType.NotInCommittee)
+                        .activeStateType(NodeActiveStateType.NOT_IN_COMMITTEE)
                         .build();
             case ADDED_BUT_NOT_ACTIVE_IN_COMMITTEE:
                 return PeerDetailsNodeActive.builder()
                         .committeeDetails(Optional.empty())
-                        .activeStateType(NodeActiveStateType.AddedButNotActiveInCommittee)
+                        .activeStateType(NodeActiveStateType.ADDED_BUT_NOT_ACTIVE_IN_COMMITTEE)
                         .build();
             case ADDED_BUT_WRONG_KEYS:
                 return PeerDetailsNodeActive.builder()
                         .committeeDetails(Optional.empty())
-                        .activeStateType(NodeActiveStateType.AddedButWrongKeys)
+                        .activeStateType(NodeActiveStateType.ADDED_BUT_WRONG_KEYS)
                         .build();
             default:
             case UNRECOGNIZED:
-                return PeerDetailsNodeActive.builder()
-                        .committeeDetails(Optional.empty())
-                        .activeStateType(NodeActiveStateType.Unrecognized)
-                        .build();
+                throw new IllegalArgumentException(String.format(
+                        "Invalid value of Consensus Baker Committee : %d",
+                        value.getConsensusBakerCommittee().getNumber()));
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.nodeInfo;
+package com.concordium.sdk.responses.nodeinfo;
 
 /**
  * Represents type of Node.
@@ -7,10 +7,10 @@ public enum PeerType {
     /**
      * Node of type Bootstrapper.
      */
-    Bootstrapper,
+    BOOTSTRAPPER,
 
     /**
      * Node of type Node.
      */
-    Node,
+    NODE,
 }
