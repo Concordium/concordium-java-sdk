@@ -256,6 +256,14 @@ public final class Client {
     }
 
     /**
+     * Gets the total number of packets sent.
+     * @return Total number of packets sent.
+     */
+    public long getTotalSent() {
+        return server().peerTotalSent(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+    }
+
+    /**
      * Closes the underlying grpc channel
      * 
      * This should only be done when the {@link Client}
