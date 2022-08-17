@@ -139,6 +139,8 @@ perform an orderly shutdown of the underlying grpc connection.
 
 ## Queries
 
+### Chain Queries
+
 - `getAccountInfo`
 ```java
 AccountInfo getAccountInfo(AccountRequest request, Hash blockHash) throws AccountNotFoundException
@@ -178,6 +180,20 @@ BlocksAtHeight getBlocksAtHeight(BlocksAtHeightRequest height) throws BlockNotFo
 ```
 Retrieves the `BlocksAtHeight` at the given height if one or more was found.
 Throws a `BlockNotFoundException` if no blocks were found.
+
+### Node & P2P Queries
+
+- `getUptime`
+```java
+Duration getUptime()
+```
+Retrives the uptime of node. Duration since the node was started.
+
+- `getTotalSent`
+```java
+long getTotalSent()
+```
+Retrives total number of packets sent from the node.
 
 ## Transactions
 
@@ -250,7 +266,9 @@ Client client = Client.from(connection);
 
 ## Queries
 
-### getAccountInfo
+### Chain Queries
+
+#### getAccountInfo
 
 ```java
 Hash blockHash = Hash.from("3d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1");
@@ -262,14 +280,14 @@ try {
 }
 ```
 
-### getNextAccountNonce
+#### getNextAccountNonce
 
 ```java
 AccountAddress accountAddress = AccountAddress.from("3uyRpq2NPSY4VJn8Qd1uWGcUQTGpCAarHTtqpneiSGqv36Uhna");
 AccountNonce accountNonce = client.getNextAccountNonce(accountAddress);
 ```
 
-### getTransactionStatus
+#### getTransactionStatus
 
 ```java
 try {
@@ -280,13 +298,13 @@ try {
 }
 ```
 
-### getConsensusStatus
+#### getConsensusStatus
 
 ```java
 ConsensusStatus consensusStatus = client.getConsensusStatus();
 ```
 
-### getBlockInfo
+#### getBlockInfo
 ```java
 Hash blockHash = Hash.from("3d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1");
 try {
@@ -296,7 +314,7 @@ try {
 }
 ```
 
-### getBlockSummary
+#### getBlockSummary
 ```java
 Hash blockHash = Hash.from("3d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1");
 try {
@@ -304,6 +322,18 @@ try {
 } catch(BlockNotFoundException e) {
     Log.Err(e.getMessage());
 }
+```
+
+### Node & P2P Queries
+
+#### getUptime
+```java
+val uptime = client.getUptime();
+```
+
+#### getTotalSent
+```java
+val sentPackets = client.getTotalSent();
 ```
 
 ## Transactions
