@@ -3,9 +3,11 @@ package com.concordium.sdk.responses.peerStats;
 import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Builder
 @Getter
+@ToString
 public class PeerStat {
 
     /**

@@ -4,12 +4,14 @@ import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.val;
 
 import java.util.stream.Collectors;
 
 @Builder
 @Getter
+@ToString
 public class PeerStatistics {
 
     /**
