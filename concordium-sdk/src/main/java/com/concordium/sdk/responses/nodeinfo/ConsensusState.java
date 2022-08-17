@@ -7,15 +7,15 @@ public enum ConsensusState {
     /**
      * The node is not running consensus.
      */
-    NotRunning,
+    NOT_RUNNING,
 
     /**
      * The node is running consensus but it is not baking.
      */
-    Passive,
+    PASSIVE,
 
     /**
      * The node is a baker.
      */
-    Active
+    ACTIVE
 }

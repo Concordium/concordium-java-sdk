@@ -2,12 +2,14 @@ package com.concordium.sdk.responses.nodeinfo;
 
 import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Optional;
 
 /**
- * Represents {@link PeerDetailsNode} of type {@link ConsensusState#Active}.
+ * Represents {@link PeerDetailsNode} of type {@link ConsensusState#ACTIVE}.
  */
+@Getter
 public class PeerDetailsNodeActive extends PeerDetailsNode {
 
     /**
@@ -23,7 +25,7 @@ public class PeerDetailsNodeActive extends PeerDetailsNode {
     @Builder
     private PeerDetailsNodeActive(NodeActiveStateType activeStateType, Optional<CommitteeDetails> committeeDetails)
     {
-        super(ConsensusState.Active);
+        super(ConsensusState.ACTIVE);
         this.activeStateType = activeStateType;
         this.committeeDetails = committeeDetails;
     }

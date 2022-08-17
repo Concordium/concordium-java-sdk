@@ -25,7 +25,7 @@ public class PeerDetailsNode extends PeerDetails {
     public static PeerDetails parse(ConcordiumP2PRpc.NodeInfoResponse value) {
         val consensusState = parseConsensusState(value);
 
-        if(consensusState == ConsensusState.Active) {
+        if(consensusState == ConsensusState.ACTIVE) {
             return PeerDetailsNodeActive.parse(value);
         }
 
@@ -39,13 +39,13 @@ public class PeerDetailsNode extends PeerDetails {
      */
     private static ConsensusState parseConsensusState(ConcordiumP2PRpc.NodeInfoResponse value) {
         if(!value.getConsensusRunning()) {
-            return ConsensusState.NotRunning;
+            return ConsensusState.NOT_RUNNING;
         }
 
         if(!value.getConsensusBakerRunning()) {
-            return ConsensusState.Passive;
+            return ConsensusState.PASSIVE;
         }
 
-        return ConsensusState.Active;
+        return ConsensusState.ACTIVE;
     }
 }
