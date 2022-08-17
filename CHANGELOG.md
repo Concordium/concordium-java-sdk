@@ -3,6 +3,8 @@
 ## Unreleased changes
 
 - Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.
+- Added support for `Uptime` query.
+- Added support for query `PeerTotalSent`
 - Support for query `PeerStats`
 
 ## 3.0.0

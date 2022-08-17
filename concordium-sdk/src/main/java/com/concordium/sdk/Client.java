@@ -23,6 +23,7 @@ import io.grpc.ManagedChannel;
 import lombok.val;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -244,6 +245,23 @@ public final class Client {
             throw BlockNotFoundException.from(blockHash);
         }
         return cryptographicParameters;
+    }
+
+    /**
+     * Gets the Peer uptime.
+     * @return Peer Uptime {@link Duration}.
+     */
+    public Duration getUptime() {
+        val res = server().peerUptime(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+        return Duration.ofMillis(res);
+    }
+
+    /**
+     * Gets the total number of packets sent.
+     * @return Total number of packets sent.
+     */
+    public long getTotalSent() {
+        return server().peerTotalSent(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
     }
 
     /**

@@ -183,6 +183,18 @@ Throws a `BlockNotFoundException` if no blocks were found.
 
 ### Node & P2P Queries
 
+- `getUptime`
+```java
+Duration getUptime()
+```
+Retrives the uptime of node. Duration since the node was started.
+
+- `getTotalSent`
+```java
+long getTotalSent()
+```
+Retrives total number of packets sent from the node.
+
 - `getPeerStatistics`
 ```java
 PeerStatistics getPeerStatistics(final boolean includeBootstrappers)
@@ -320,12 +332,20 @@ try {
 
 ### Node & P2P Queries
 
+#### getUptime
+```java
+val uptime = client.getUptime();
+```
+
+#### getTotalSent
+```java
+val sentPackets = client.getTotalSent();
+```
 #### 
 ```java
 boolean shouldIncludeBootstrapperNodes = true;
 PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapperNodes);
 ```
-
 ## Transactions
 
 The [`TransactionFactory`](./concordium-sdk/src/main/java/com/concordium/sdk/transactions/TransactionFactory.java) provides a
