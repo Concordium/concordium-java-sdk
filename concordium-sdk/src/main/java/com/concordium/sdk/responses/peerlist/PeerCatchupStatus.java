@@ -40,7 +40,7 @@ public enum PeerCatchupStatus {
             case CATCHINGUP: return PeerCatchupStatus.CATCHINGUP;
             default:
             throw new IllegalArgumentException(String.format(
-                    "Invalid catchup status received : %d",
+                    "Invalid catchup status received: %d",
                     catchupStatus.getNumber()));
         }
     }
