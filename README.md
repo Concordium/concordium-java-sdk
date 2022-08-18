@@ -195,6 +195,14 @@ long getTotalSent()
 ```
 Retrives total number of packets sent from the node.
 
+- `getPeerList`
+```java
+ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException
+```
+Retrieves the peers that the node is connected to.
+The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
+should be included in the response.
+
 - `getVersion`
 ```java
 SemVer getVersion()
@@ -340,6 +348,11 @@ val uptime = client.getUptime();
 #### getTotalSent
 ```java
 val sentPackets = client.getTotalSent();
+```
+
+#### getPeerList
+```java
+val peers = client.getPeerList(true);
 ```
 
 #### getVersion

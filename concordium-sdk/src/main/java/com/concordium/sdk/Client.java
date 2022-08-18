@@ -2,6 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
@@ -15,6 +16,7 @@ import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
+import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
@@ -23,9 +25,12 @@ import io.grpc.ManagedChannel;
 import lombok.val;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -262,6 +267,25 @@ public final class Client {
      */
     public long getTotalSent() {
         return server().peerTotalSent(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+    }
+
+    /**
+     * Gets Peers list connected to the Node
+     * @param includeBootstrappers if true will include Bootstrapper nodes in the response.
+     * @return An {@link ImmutableList} of {@link Peer}
+     * @throws UnknownHostException When the returned IP address of Peer is Invalid.
+     */
+    public ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException {
+        val value = server().peerList(ConcordiumP2PRpc.PeersRequest.newBuilder()
+                    .setIncludeBootstrappers(includeBootstrappers)
+                .build());
+        val list = new ImmutableList.Builder<Peer>();
+
+        for (ConcordiumP2PRpc.PeerElement p : value.getPeersList()) {
+            list.add(Peer.parse(p));
+        }
+
+        return list.build();
     }
 
     /**

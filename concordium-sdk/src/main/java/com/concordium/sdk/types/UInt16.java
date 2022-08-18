@@ -2,12 +2,14 @@ package com.concordium.sdk.types;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
 @Getter
+@ToString
 public final class UInt16 {
     public static final int BYTES = 2;
 
