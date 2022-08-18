@@ -199,7 +199,9 @@ Retrives total number of packets sent from the node.
 ```java
 ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException
 ```
-
+Retrieves the peers that the node is connected to.
+The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
+should be included in the response.
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
