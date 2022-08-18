@@ -195,6 +195,12 @@ long getTotalSent()
 ```
 Retrives total number of packets sent from the node.
 
+- `getAncestors`
+```java
+BlockAncestors getAncestors(Hash blockHash, long num) throws BlockNotFoundException
+```
+Gets Ancestor Blocks for the provided input Block Hash.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -334,6 +340,11 @@ val uptime = client.getUptime();
 #### getTotalSent
 ```java
 val sentPackets = client.getTotalSent();
+```
+
+#### getAncestors
+```java
+BlockAncestors ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
 ```
 
 ## Transactions

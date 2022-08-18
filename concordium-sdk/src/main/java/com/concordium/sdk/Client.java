@@ -13,6 +13,7 @@ import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.getancestors.BlockAncestors;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
 import com.google.protobuf.ByteString;
@@ -261,6 +262,29 @@ public final class Client {
      */
     public long getTotalSent() {
         return server().peerTotalSent(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+    }
+
+    /**
+     * Gets Block Ancestor Blocks.
+     * @param blockHash {@link Hash} of the block.
+     * @param num Total no of Ancestor blocks to get.
+     * @return {@link BlockAncestors}
+     * @throws BlockNotFoundException When the returned response from Node is invalid or null.
+     */
+    public BlockAncestors getAncestors(Hash blockHash, long num) throws BlockNotFoundException {
+        val jsonResponse = server().getAncestors(
+                ConcordiumP2PRpc.BlockHashAndAmount
+                        .newBuilder()
+                        .setBlockHash(blockHash.asHex())
+                        .setAmount(num)
+                .build());
+
+        val res = BlockAncestors.fromJson(jsonResponse);
+        if (Objects.isNull(res)) {
+            throw BlockNotFoundException.from(blockHash);
+        }
+
+        return res;
     }
 
     /**
