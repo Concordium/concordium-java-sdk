@@ -199,7 +199,7 @@ Retrives total number of packets sent from the node.
 ```java
 PeerStatistics getPeerStatistics(final boolean includeBootstrappers)
 ```
-Retrieves the `PeerStatistics` the node is connected to.
+Retrieves the statistics of the peers that the node is connected to.
 
 ## Transactions
 
