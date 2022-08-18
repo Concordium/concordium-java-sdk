@@ -1,6 +1,6 @@
 package com.concordium.sdk.responses.nodeinfo;
 
-import com.concordium.sdk.types.UInt64;
+import com.concordium.sdk.responses.AccountIndex;
 import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,12 +10,12 @@ import lombok.Getter;
  */
 @Builder
 @Getter
-public class CommitteeDetails {
+public class BakingCommitteeDetails {
 
     /**
      * Baker ID of the Node.
      */
-    private final UInt64 bakerId;
+    private final AccountIndex bakerId;
 
     /**
      * Is part of the Finalizing Committee.
@@ -23,13 +23,13 @@ public class CommitteeDetails {
     private final boolean isFinalizer;
 
     /**
-     * Parses {@link concordium.ConcordiumP2PRpc.NodeInfoResponse} to {@link CommitteeDetails}.
+     * Parses {@link concordium.ConcordiumP2PRpc.NodeInfoResponse} to {@link BakingCommitteeDetails}.
      * @param value {@link concordium.ConcordiumP2PRpc.NodeInfoResponse} returned from the Grpc API.
-     * @return Parsed {@link CommitteeDetails}.
+     * @return Parsed {@link BakingCommitteeDetails}.
      */
-    public static CommitteeDetails parse(ConcordiumP2PRpc.NodeInfoResponse value) {
-        return CommitteeDetails.builder()
-                .bakerId(UInt64.from(value.getConsensusBakerId().getValue()))
+    public static BakingCommitteeDetails parse(ConcordiumP2PRpc.NodeInfoResponse value) {
+        return BakingCommitteeDetails.builder()
+                .bakerId(AccountIndex.from(value.getConsensusBakerId().getValue()))
                 .isFinalizer(value.getConsensusFinalizerCommittee())
                 .build();
     }

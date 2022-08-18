@@ -3,7 +3,7 @@ package com.concordium.sdk.responses.nodeinfo;
 /**
  * Represents the baking status of a node.
  */
-public enum NodeActiveStateType {
+public enum BakingStatus {
     /**
      * The node is not part of the baking committee.
      */
