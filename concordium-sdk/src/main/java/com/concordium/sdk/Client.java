@@ -16,7 +16,7 @@ import com.concordium.sdk.responses.cryptographicparameters.CryptographicParamet
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
 import com.google.protobuf.ByteString;
-import com.vdurmont.semver4j.Semver;
+import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
