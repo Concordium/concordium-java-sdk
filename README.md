@@ -197,7 +197,7 @@ Retrives total number of packets sent from the node.
 
 - `getVersion`
 ```java
-String getVersion()
+SemVer getVersion()
 ```
 Retrives the node software version.
 
@@ -344,7 +344,7 @@ val sentPackets = client.getTotalSent();
 
 #### getVersion
 ```java
-String version = client.getVersion();
+SemVer version = client.getVersion();
 ```
 
 ## Transactions
