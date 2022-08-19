@@ -304,6 +304,23 @@ public final class Client {
     }
 
     /**
+     * Get the list of accounts in the given block.
+     *
+     * @param blockHash Hash of the block at which to retrieve the accounts.
+     * @return An {@link ImmutableList} of {@link AccountAddress}.
+     */
+    public ImmutableList<AccountAddress> getAccountList(Hash blockHash) {
+        val res = server()
+                .getAccountList(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
+
+        try {
+            return ImmutableList.copyOf(JsonMapper.INSTANCE.readValue(res.getValue(), AccountAddress[].class));
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Cannot parse AccountInfo JSON", e);
+        }
+    }
+
+    /**
      * Closes the underlying grpc channel
      * 
      * This should only be done when the {@link Client}

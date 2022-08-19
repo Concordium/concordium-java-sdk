@@ -209,6 +209,12 @@ Retrieves the peers that the node is connected to.
 The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
 should be included in the response.
 
+- `getAccountList`
+```java
+ImmutableList<AccountAddress> getAccountList(Hash blockHash)
+```
+Get the list of accounts in the given block.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -358,6 +364,12 @@ PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapp
 #### getPeerList
 ```java
 val peers = client.getPeerList(true);
+```
+
+#### getAccountList
+```java
+val accounts = client
+                .getAccountList(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
 ```
 
 ## Transactions
