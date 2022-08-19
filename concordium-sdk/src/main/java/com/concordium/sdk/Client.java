@@ -288,8 +288,24 @@ public final class Client {
     }
 
     /**
+     * Get the list of ips that the node will currently not connect to, not accept connections for.
+     * @return An {@link ImmutableList} of {@link Peer}
+     * @throws UnknownHostException When the returned IP address of Peer is Invalid.
+     */
+    public ImmutableList<Peer> getBannedIps() throws UnknownHostException {
+        val value = server().getBannedPeers(ConcordiumP2PRpc.Empty.newBuilder().build());
+        val list = new ImmutableList.Builder<Peer>();
+
+        for (ConcordiumP2PRpc.PeerElement p : value.getPeersList()) {
+            list.add(Peer.parse(p));
+        }
+
+        return list.build();
+    }
+
+    /**
      * Closes the underlying grpc channel
-     * 
+     *
      * This should only be done when the {@link Client}
      * is of no more use as creating a new {@link Client} (and the associated)
      * channel is rather expensive.

@@ -202,6 +202,13 @@ ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHost
 Retrieves the peers that the node is connected to.
 The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
 should be included in the response.
+
+- `getBannedIps`
+```java
+ImmutableList<Peer> getBannedIps() throws UnknownHostException
+```
+Get the list of ips that the node will currently not connect to, not accept connections for.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -346,6 +353,11 @@ val sentPackets = client.getTotalSent();
 #### getPeerList
 ```java
 val peers = client.getPeerList(true);
+```
+
+#### getBannedIps
+```java
+val bannedIps = client.getBannedIps();
 ```
 
 ## Transactions
