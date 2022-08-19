@@ -202,6 +202,16 @@ ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHost
 Retrieves the peers that the node is connected to.
 The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
 should be included in the response.
+
+- `getBranches`
+```java
+Branch getBranches()
+```
+Get the branches of the node's tree. Branches are all live blocks that
+are successors of the last finalized block. In particular this means
+that blocks which do not have a parent are not included in this
+response.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -346,6 +356,11 @@ val sentPackets = client.getTotalSent();
 #### getPeerList
 ```java
 val peers = client.getPeerList(true);
+```
+
+#### getBranches
+```java
+val branch = client.getBranches();
 ```
 
 ## Transactions

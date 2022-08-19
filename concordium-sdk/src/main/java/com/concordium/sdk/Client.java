@@ -2,6 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.exceptions.AccountNotFoundException;
@@ -26,10 +27,8 @@ import lombok.val;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -285,6 +284,17 @@ public final class Client {
         }
 
         return list.build();
+    }
+
+    /**
+     * Get the branches of the node's tree. Branches are all live blocks that
+     * are successors of the last finalized block. In particular this means
+     * that blocks which do not have a parent are not included in this
+     * response
+     * @return {@link Branch}
+     */
+    public Branch getBranches() {
+        return Branch.fromJson(server().getBranches(ConcordiumP2PRpc.Empty.newBuilder().build()));
     }
 
     /**
