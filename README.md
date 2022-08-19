@@ -209,6 +209,12 @@ Retrieves the peers that the node is connected to.
 The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
 should be included in the response.
 
+- `getInstances`
+```java
+ImmutableList<ContractAddress> getInstances(Hash blockHash)
+```
+Get the list of smart contract instances in a given block.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -358,6 +364,12 @@ PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapp
 #### getPeerList
 ```java
 val peers = client.getPeerList(true);
+```
+
+#### getInstances
+```java
+val contractInstances = client
+                .getInstances(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
 ```
 
 ## Transactions
