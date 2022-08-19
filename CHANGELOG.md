@@ -6,6 +6,7 @@
 - Added support for `Uptime` query.
 - Added support for query `PeerTotalSent`
 - Added support for query `PeerList`
+- Added support for query `PeerStats`
 - Added support for query `NodeInfo`.
 
 ## 3.0.0
