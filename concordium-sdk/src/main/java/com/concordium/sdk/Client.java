@@ -3,6 +3,7 @@ package com.concordium.sdk;
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
@@ -286,6 +287,21 @@ public final class Client {
         }
 
         return list.build();
+    }
+
+    /**
+     * Gets {@link PeerStatistics} of the node.
+     * @param includeBootstrappers Whether bootstrappers should be included in the response.
+     * @return Peer Statistics in the format {@link PeerStatistics}
+     */
+    public PeerStatistics getPeerStatistics(final boolean includeBootstrappers) {
+        val value = server()
+                .peerStats(ConcordiumP2PRpc
+                        .PeersRequest
+                        .newBuilder()
+                        .setIncludeBootstrappers(includeBootstrappers)
+                        .build());
+        return PeerStatistics.parse(value);
     }
 
     /**
