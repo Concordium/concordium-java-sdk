@@ -195,6 +195,12 @@ long getTotalSent()
 ```
 Retrives total number of packets sent from the node.
 
+- `getPeerStatistics`
+```java
+PeerStatistics getPeerStatistics(final boolean includeBootstrappers)
+```
+Retrieves the statistics of the peers that the node is connected to.
+
 - `getPeerList`
 ```java
 ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException
@@ -202,6 +208,7 @@ ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHost
 Retrieves the peers that the node is connected to.
 The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
 should be included in the response.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -341,6 +348,11 @@ val uptime = client.getUptime();
 #### getTotalSent
 ```java
 val sentPackets = client.getTotalSent();
+```
+#### getPeerStatistics
+```java
+boolean shouldIncludeBootstrapperNodes = true;
+PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapperNodes);
 ```
 
 #### getPeerList

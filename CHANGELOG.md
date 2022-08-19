@@ -6,6 +6,7 @@
 - Added support for `Uptime` query.
 - Added support for query `PeerTotalSent`
 - Added support for query `PeerList`
+- Added support for query `PeerStats`
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
