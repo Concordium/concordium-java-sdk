@@ -2,6 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.modulesource.ModuleSource;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -301,6 +302,29 @@ public final class Client {
                         .setIncludeBootstrappers(includeBootstrappers)
                         .build());
         return PeerStatistics.parse(value);
+    }
+
+    /**
+     * Get the source of a smart contract module.
+     * @param moduleRef {@link Hash} of module to retrieve.
+     * @param blockHash {@link Hash} of the Block at which the module source is to be retrieved.
+     * @return Parsed {@link ModuleSource}.
+     * @throws Exception When module cannot be found.
+     */
+    public ModuleSource getModuleSource(Hash moduleRef, Hash blockHash) throws Exception {
+        val res = server()
+                .getModuleSource(ConcordiumP2PRpc.GetModuleSourceRequest.newBuilder()
+                        .setBlockHash(blockHash.asHex())
+                        .setModuleRef(moduleRef.asHex())
+                        .build());
+        val bytes = res.getValue().toByteArray();
+
+        if(bytes.length == 0) {
+            throw new Exception(
+                    String.format("Module %s not found at block %s", moduleRef.asHex(), blockHash.asHex()));
+        }
+
+        return ModuleSource.builder().bytes(res.getValue().toByteArray()).build();
     }
 
     /**
