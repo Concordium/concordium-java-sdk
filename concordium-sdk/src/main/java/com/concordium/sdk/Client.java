@@ -2,6 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -301,6 +302,25 @@ public final class Client {
                         .setIncludeBootstrappers(includeBootstrappers)
                         .build());
         return PeerStatistics.parse(value);
+    }
+
+    /**
+     * Get the list of smart contract modules in the given block.
+     * @param blockHash {@link Hash} of block at which the modules list is being retrieved.
+     * @return Parsed {@link ImmutableList} of {@link Hash}
+     * @throws Exception When the returned JSON is null.
+     */
+    public ImmutableList<Hash> getModuleList(final Hash blockHash) throws Exception {
+        val res = server().getModuleList(ConcordiumP2PRpc.BlockHash.newBuilder()
+                        .setBlockHash(blockHash.asHex())
+                .build());
+
+        List<Hash> modules = ModuleRef.fromJsonArray(res);
+        if (Objects.isNull(modules)) {
+            throw new Exception(String.format("Modules could not be retrieved at block %s", blockHash.asHex()));
+        }
+
+        return ImmutableList.<Hash>builder().addAll(modules).build();
     }
 
     /**
