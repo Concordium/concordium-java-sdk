@@ -1,7 +1,10 @@
 package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
+import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
+import com.concordium.sdk.requests.getinstanceinfo.GetInstanceInfoRequest;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -17,6 +20,7 @@ import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import concordium.ConcordiumP2PRpc;
@@ -27,10 +31,8 @@ import lombok.val;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -301,6 +303,25 @@ public final class Client {
                         .setIncludeBootstrappers(includeBootstrappers)
                         .build());
         return PeerStatistics.parse(value);
+    }
+
+    /**
+     * Get the information for the given smart contract instance in the given block.
+     * @param req {@link GetInstanceInfoRequest}
+     * @return {@link InstanceInfo}
+     * @throws JsonProcessingException When the returned JSON is not in the specified standard.
+     * @throws InstanceNotFoundException When the response from node is NULL.
+     */
+    public InstanceInfo getInstanceInfo(final GetInstanceInfoRequest req)
+            throws JsonProcessingException, InstanceNotFoundException {
+        val grpcReq = ConcordiumP2PRpc.GetAddressInfoRequest
+                .newBuilder()
+                .setAddress(req.getAddress().toJson())
+                .setBlockHash(req.getBlockHash().asHex())
+                .build();
+        val res = server().getInstanceInfo(grpcReq);
+
+        return InstanceInfo.fromJson(res, req);
     }
 
     /**
