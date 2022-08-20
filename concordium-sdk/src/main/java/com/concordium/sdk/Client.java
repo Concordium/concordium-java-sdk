@@ -2,6 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -27,10 +28,8 @@ import lombok.val;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -301,6 +300,25 @@ public final class Client {
                         .setIncludeBootstrappers(includeBootstrappers)
                         .build());
         return PeerStatistics.parse(value);
+    }
+
+    /**
+     * Get the information about total amount of CCD and the state of various administrative accounts.
+     * @param blockHash Block at which the reward status is to be retrieved.
+     * @return Parsed {@link RewardsOverview}.
+     * @throws Exception When the returned response is null.
+     */
+    public RewardsOverview getRewardStatus(final Hash blockHash) throws Exception {
+        val res = server()
+                .getRewardStatus(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
+
+        val parsedRes = RewardsOverview.fromJson(res);
+
+        if(parsedRes == null) {
+            throw new Exception("Reward status not found in block " + blockHash.asHex());
+        }
+
+        return parsedRes;
     }
 
     /**
