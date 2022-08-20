@@ -2,6 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.birkparamsters.BirkParameters;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -301,6 +302,25 @@ public final class Client {
                         .setIncludeBootstrappers(includeBootstrappers)
                         .build());
         return PeerStatistics.parse(value);
+    }
+
+    /**
+     * Get consensus-relevant information for the specified block.
+     * @param blockHash {@link Hash} of the block at which the parameters need to be retrived.
+     * @return Parsed {@link BirkParameters}
+     * @throws Exception When the returned response is null.
+     */
+    public BirkParameters getBirkParameters(Hash blockHash) throws Exception {
+        val res = server()
+                .getBirkParameters(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
+
+        val parsedRes = BirkParameters.fromJson(res);
+
+        if (Objects.isNull(parsedRes)) {
+            throw new Exception(String.format("Birk Parameters not found at block %s", blockHash.asHex()));
+        }
+
+        return parsedRes;
     }
 
     /**
