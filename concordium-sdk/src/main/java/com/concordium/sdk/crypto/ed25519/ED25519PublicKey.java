@@ -1,6 +1,7 @@
 package com.concordium.sdk.crypto.ed25519;
 
 import com.concordium.sdk.exceptions.ED25519Exception;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.codec.DecoderException;
@@ -15,6 +16,7 @@ public final class ED25519PublicKey {
         this.bytes = bytes;
     }
 
+    @JsonCreator
     public static ED25519PublicKey from(String hexKey) {
         try {
             return new ED25519PublicKey(Hex.decodeHex(hexKey));

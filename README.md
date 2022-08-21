@@ -209,6 +209,12 @@ Retrieves the peers that the node is connected to.
 The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
 should be included in the response.
 
+- `getIdentityProviders`
+```java
+ImmutableList<IpInfo> getIdentityProviders(Hash blockHash)
+```
+Get the list of identity providers in the given block.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -358,6 +364,12 @@ PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapp
 #### getPeerList
 ```java
 val peers = client.getPeerList(true);
+```
+
+#### getIdentityProviders
+```java
+val identityProviders = client.getIdentityProviders(
+        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
 ```
 
 ## Transactions
