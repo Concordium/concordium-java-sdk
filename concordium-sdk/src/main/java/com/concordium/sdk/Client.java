@@ -2,6 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.bakerlist.BakerId;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -301,6 +302,28 @@ public final class Client {
                         .setIncludeBootstrappers(includeBootstrappers)
                         .build());
         return PeerStatistics.parse(value);
+    }
+
+    /**
+     * Get the IDs of the bakers registered in the given block.
+     * Note that this list is in general different from the bakers that are
+     * returned as part of [get_birk_parameters](Client::get_birk_parameters).
+     * The latter are the bakers that are eligible for baking at the time of
+     * the block.
+     * @param blockHash {@link Hash} of the block bakers are to be retrieved.
+     * @return Parsed {@link ImmutableList} of {@link BakerId}
+     * @throws Exception When the returned JSON is null.
+     */
+    public ImmutableList<BakerId> getBakerList(Hash blockHash) throws Exception {
+        val res = server()
+                .getBakerList(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
+
+        BakerId[] bakerIdArray = BakerId.fromJsonArray(res);
+        if (Objects.isNull(bakerIdArray)) {
+            throw new Exception(String.format("Could not retrieve Baker Ids at block %s", blockHash.asHex()));
+        }
+
+        return ImmutableList.copyOf(bakerIdArray);
     }
 
     /**
