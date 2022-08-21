@@ -37,7 +37,7 @@ public class IpInfo {
         try {
             return JsonMapper.INSTANCE.readValue(res.getValue(), IpInfo[].class);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse AccountInfo JSON", e);
+            throw new IllegalArgumentException("Cannot parse Identity Provider JSON", e);
         }
     }
 }
