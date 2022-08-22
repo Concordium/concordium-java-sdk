@@ -225,6 +225,8 @@ Sends funds from one account to another.
 - TransferWithMemo
 Sends funds from one account to another with an associated `Memo`.
 
+- Register Data
+Registers a maximum of 256 bytes on the chain.
 
 ## Exceptions and general error handling
 
