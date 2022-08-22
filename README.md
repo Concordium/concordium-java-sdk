@@ -209,6 +209,12 @@ Retrieves the peers that the node is connected to.
 The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
 should be included in the response.
 
+- `getVersion`
+```java
+SemVer getVersion()
+```
+Retrives the node software version.
+
 - `getBakerList`
 ```java
 ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException
@@ -231,6 +237,8 @@ Sends funds from one account to another.
 - TransferWithMemo
 Sends funds from one account to another with an associated `Memo`.
 
+- Register Data
+Registers a maximum of 256 bytes on the chain.
 
 ## Exceptions and general error handling
 
@@ -364,6 +372,11 @@ PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapp
 #### getPeerList
 ```java
 val peers = client.getPeerList(true);
+```
+
+#### getVersion
+```java
+SemVer version = client.getVersion();
 ```
 
 #### getBakerList
