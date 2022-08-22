@@ -25,4 +25,14 @@ public class TransactionFactory {
     public static TransferWithMemoTransaction.TransferWithMemoTransactionBuilder newTransferWithMemo() {
         return TransferWithMemoTransaction.builder();
     }
+    
+    /**
+     * Creates a new {@link RegisterDataTransaction.RegisterDataTransactionBuilder} for
+     * creating a {@link RegisterDataTransaction}
+     *
+     * @return the builder for a {@link RegisterDataTransaction}
+     */
+    public static RegisterDataTransaction.RegisterDataTransactionBuilder newRegisterData() {
+        return RegisterDataTransaction.builder();
+    }
 }
