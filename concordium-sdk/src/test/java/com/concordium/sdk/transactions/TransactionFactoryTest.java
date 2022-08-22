@@ -18,4 +18,10 @@ public class TransactionFactoryTest {
         val builder = TransactionFactory.newTransferWithMemo();
         assertNotNull(builder);
     }
+
+    @Test
+    public void testCanCreateRegisterDataFactory() {
+        val builder = TransactionFactory.newRegisterData();
+        assertNotNull(builder);
+    }
 }
