@@ -2,22 +2,21 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.bakerlist.BakerId;
-import com.concordium.sdk.responses.peerlist.Peer;
-import com.concordium.sdk.responses.peerStats.PeerStatistics;
-import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
-import com.concordium.sdk.exceptions.AccountNotFoundException;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
-import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.bakerlist.BakerId;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
+import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.transactions.Transaction;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import concordium.ConcordiumP2PRpc;
@@ -28,10 +27,8 @@ import lombok.val;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -306,21 +303,18 @@ public final class Client {
 
     /**
      * Get the IDs of the bakers registered in the given block.
-     * Note that this list is in general different from the bakers that are
-     * returned as part of [get_birk_parameters](Client::get_birk_parameters).
-     * The latter are the bakers that are eligible for baking at the time of
-     * the block.
+     *
      * @param blockHash {@link Hash} of the block bakers are to be retrieved.
      * @return Parsed {@link ImmutableList} of {@link BakerId}
-     * @throws Exception When the returned JSON is null.
+     * @throws BlockNotFoundException When the returned JSON is null.
      */
-    public ImmutableList<BakerId> getBakerList(Hash blockHash) throws Exception {
+    public ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException {
         val res = server()
                 .getBakerList(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
 
         BakerId[] bakerIdArray = BakerId.fromJsonArray(res);
         if (Objects.isNull(bakerIdArray)) {
-            throw new Exception(String.format("Could not retrieve Baker Ids at block %s", blockHash.asHex()));
+            throw BlockNotFoundException.from(blockHash);
         }
 
         return ImmutableList.copyOf(bakerIdArray);

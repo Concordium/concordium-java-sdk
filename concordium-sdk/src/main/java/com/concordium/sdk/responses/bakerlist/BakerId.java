@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * Short id of the baker.
+ * Account Index of Baking Account.
  */
 @Data
 @ToString

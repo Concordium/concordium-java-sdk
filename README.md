@@ -211,7 +211,7 @@ should be included in the response.
 
 - `getBakerList`
 ```java
-ImmutableList<BakerId> getBakerList(Hash blockHash) throws Exception
+ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException
 ```
 Get the IDs of the bakers registered in the given block.
 
