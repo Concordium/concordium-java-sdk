@@ -1,6 +1,5 @@
-package com.concordium.sdk.responses.bakerlist;
+package com.concordium.sdk.responses;
 
-import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,6 +21,10 @@ public class BakerId {
     @JsonCreator
     BakerId(long index) {
         this.id = AccountIndex.from(index);
+    }
+
+    public static BakerId from(long id) {
+        return new BakerId(id);
     }
 
     @Override

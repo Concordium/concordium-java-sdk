@@ -215,6 +215,11 @@ ImmutableList<BakerId> getBakerList(Hash blockHash) throws Exception
 ```
 Get the IDs of the bakers registered in the given block.
 
+- `getPoolStatus`
+```java
+
+```
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -370,6 +375,18 @@ val peers = client.getPeerList(true);
 ```java
 val bakerList = client
                 .getBakerList(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
+
+#### getPoolStatus
+```
+val poolStatusPassiveDeletation = client
+        .getPoolStatus(
+                Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"),
+                Optional.empty());
+
+val bakerPoolStatus = client.getPoolStatus(
+        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"),
+        Optional.of(BakerId.from(1)));
 ```
 
 ## Transactions

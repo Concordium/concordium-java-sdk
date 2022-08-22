@@ -2,22 +2,22 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.bakerlist.BakerId;
-import com.concordium.sdk.responses.peerlist.Peer;
-import com.concordium.sdk.responses.peerStats.PeerStatistics;
-import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
-import com.concordium.sdk.exceptions.AccountNotFoundException;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
-import com.concordium.sdk.exceptions.TransactionRejectionException;
+import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
+import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.poolstatus.PoolStatus;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.transactions.Transaction;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import concordium.ConcordiumP2PRpc;
@@ -28,10 +28,9 @@ import lombok.val;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -324,6 +323,23 @@ public final class Client {
         }
 
         return ImmutableList.copyOf(bakerIdArray);
+    }
+
+    /**
+     * Get the status of a given baker pool or passive delegation at the given block.
+     *
+     * @param blockHash {@link Hash} of the block Pool Status is to be retrieved at.
+     * @param bakerId   {@link Optional<BakerId>} of the Baker of which pool is to be retrieved.
+     * @return Parsed {@link PoolStatus}.
+     */
+    public PoolStatus getPoolStatus(final Hash blockHash, final Optional<BakerId> bakerId) {
+        val res = server().getPoolStatus(ConcordiumP2PRpc.GetPoolStatusRequest.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .setPassiveDelegation(!bakerId.isPresent())
+                .setBakerId(bakerId.orElse(BakerId.from(0)).getId().getIndex().getValue())
+                .build());
+
+        return PoolStatus.fromJson(res);
     }
 
     /**
