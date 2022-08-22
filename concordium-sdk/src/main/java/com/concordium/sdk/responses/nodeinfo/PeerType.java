@@ -1,11 +1,11 @@
 package com.concordium.sdk.responses.nodeinfo;
 
 /**
- * Represents type of Node.
+ * Represents the node type.
  */
 public enum PeerType {
     /**
-     * Node of type Bootstrapper.
+     * Node is a bootstrapper and it does not participate in consensus.
      */
     BOOTSTRAPPER,
 

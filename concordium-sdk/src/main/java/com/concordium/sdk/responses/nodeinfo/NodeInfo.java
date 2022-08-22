@@ -76,7 +76,7 @@ public class NodeInfo {
             case "Node" :
                 return PeerType.NODE;
             default: throw new IllegalArgumentException(
-                    String.format("Invalid Peer Type : %s", value.getPeerType()));
+                    String.format("Invalid 'PeerType': %s", value.getPeerType()));
         }
     }
 
