@@ -209,6 +209,12 @@ Retrieves the peers that the node is connected to.
 The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
 should be included in the response.
 
+- `getVersion`
+```java
+SemVer getVersion()
+```
+Retrives the node software version.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -360,6 +366,11 @@ PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapp
 #### getPeerList
 ```java
 val peers = client.getPeerList(true);
+```
+
+#### getVersion
+```java
+SemVer version = client.getVersion();
 ```
 
 ## Transactions

@@ -19,6 +19,7 @@ import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
+import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
@@ -301,6 +302,15 @@ public final class Client {
                         .setIncludeBootstrappers(includeBootstrappers)
                         .build());
         return PeerStatistics.parse(value);
+    }
+
+    /**
+     * Gets the Semantic Version of the Peer Software / Node
+     * @return Version of the Peer / Node
+     */
+    public Semver getVersion() {
+        val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+        return new Semver(versionString);
     }
 
     /**
