@@ -20,11 +20,11 @@ import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
-import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
 import lombok.val;
+import org.semver4j.Semver;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -306,6 +306,7 @@ public final class Client {
 
     /**
      * Gets the Semantic Version of the Peer Software / Node
+     *
      * @return Version of the Peer / Node
      */
     public Semver getVersion() {
@@ -315,21 +316,18 @@ public final class Client {
 
     /**
      * Get the IDs of the bakers registered in the given block.
-     * Note that this list is in general different from the bakers that are
-     * returned as part of [get_birk_parameters](Client::get_birk_parameters).
-     * The latter are the bakers that are eligible for baking at the time of
-     * the block.
+     *
      * @param blockHash {@link Hash} of the block bakers are to be retrieved.
      * @return Parsed {@link ImmutableList} of {@link BakerId}
-     * @throws Exception When the returned JSON is null.
+     * @throws BlockNotFoundException When the returned JSON is null.
      */
-    public ImmutableList<BakerId> getBakerList(Hash blockHash) throws Exception {
+    public ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException {
         val res = server()
                 .getBakerList(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
 
         BakerId[] bakerIdArray = BakerId.fromJsonArray(res);
         if (Objects.isNull(bakerIdArray)) {
-            throw new Exception(String.format("Could not retrieve Baker Ids at block %s", blockHash.asHex()));
+            throw BlockNotFoundException.from(blockHash);
         }
 
         return ImmutableList.copyOf(bakerIdArray);

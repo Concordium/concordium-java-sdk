@@ -217,7 +217,7 @@ Retrives the node software version.
 
 - `getBakerList`
 ```java
-ImmutableList<BakerId> getBakerList(Hash blockHash) throws Exception
+ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException
 ```
 Get the IDs of the bakers registered in the given block.
 
@@ -392,7 +392,7 @@ val bakerList = client
 ```
 
 #### getPoolStatus
-```
+```java
 val poolStatusPassiveDeletation = client
         .getPoolStatus(
                 Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"),
