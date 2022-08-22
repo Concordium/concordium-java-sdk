@@ -195,6 +195,12 @@ long getTotalSent()
 ```
 Retrives total number of packets sent from the node.
 
+- `getPeerStatistics`
+```java
+PeerStatistics getPeerStatistics(final boolean includeBootstrappers)
+```
+Retrieves the statistics of the peers that the node is connected to.
+
 - `getPeerList`
 ```java
 ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException
@@ -202,6 +208,13 @@ ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHost
 Retrieves the peers that the node is connected to.
 The boolean flag `includeBootstrappers` indicates whether bootstrapper nodes 
 should be included in the response.
+
+- `getVersion`
+```java
+SemVer getVersion()
+```
+Retrives the node software version.
+
 
 - `getBannedIps`
 ```java
@@ -225,6 +238,8 @@ Sends funds from one account to another.
 - TransferWithMemo
 Sends funds from one account to another with an associated `Memo`.
 
+- Register Data
+Registers a maximum of 256 bytes on the chain.
 
 ## Exceptions and general error handling
 
@@ -349,10 +364,20 @@ val uptime = client.getUptime();
 ```java
 val sentPackets = client.getTotalSent();
 ```
+#### getPeerStatistics
+```java
+boolean shouldIncludeBootstrapperNodes = true;
+PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapperNodes);
+```
 
 #### getPeerList
 ```java
 val peers = client.getPeerList(true);
+```
+
+#### getVersion
+```java
+SemVer version = client.getVersion();
 ```
 
 #### getBannedIps

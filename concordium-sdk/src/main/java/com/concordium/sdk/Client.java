@@ -3,6 +3,7 @@ package com.concordium.sdk;
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
@@ -18,6 +19,7 @@ import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
+import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
@@ -285,6 +287,30 @@ public final class Client {
         }
 
         return list.build();
+    }
+
+    /**
+     * Gets {@link PeerStatistics} of the node.
+     * @param includeBootstrappers Whether bootstrappers should be included in the response.
+     * @return Peer Statistics in the format {@link PeerStatistics}
+     */
+    public PeerStatistics getPeerStatistics(final boolean includeBootstrappers) {
+        val value = server()
+                .peerStats(ConcordiumP2PRpc
+                        .PeersRequest
+                        .newBuilder()
+                        .setIncludeBootstrappers(includeBootstrappers)
+                        .build());
+        return PeerStatistics.parse(value);
+    }
+
+    /**
+     * Gets the Semantic Version of the Peer Software / Node
+     * @return Version of the Peer / Node
+     */
+    public Semver getVersion() {
+        val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+        return new Semver(versionString);
     }
 
     /**

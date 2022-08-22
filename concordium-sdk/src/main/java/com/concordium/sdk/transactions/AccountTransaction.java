@@ -54,6 +54,9 @@ public final class AccountTransaction {
             case 3:
                 payload = Transfer.fromBytes(source);
                 break;
+            case 21:
+                payload = RegisterData.fromBytes(source);
+                break;
             case 22:
                 payload = TransferWithMemo.fromBytes(source);
                 break;
