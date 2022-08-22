@@ -4,8 +4,11 @@
 
 - Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.
 - Added support for `Uptime` query.
+- Added support for Account Transaction Register Data.
 - Added support for query `PeerTotalSent`
 - Added support for query `PeerList`
+- Added support for query `PeerStats`
+- Added support for query `PeerVersion`
 - Added support for query `GetAncestors`
 
 ## 3.0.0
