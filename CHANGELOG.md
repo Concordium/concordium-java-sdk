@@ -9,6 +9,7 @@
 - Added support for query `PeerList`
 - Added support for query `PeerStats`
 - Added support for query `PeerVersion`
+- Added support for query `NodeInfo`.
 
 ## 3.0.0
 - Stronger typing for various places in the API. 

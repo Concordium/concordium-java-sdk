@@ -215,6 +215,11 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
+- `getNodeInfo()`
+```java
+NodeInfo getNodeInfo()
+```
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -371,6 +376,11 @@ val peers = client.getPeerList(true);
 #### getVersion
 ```java
 SemVer version = client.getVersion();
+```
+
+#### getNodeInfo
+```java
+NodeInfo = client.getNodeInfo();
 ```
 
 ## Transactions

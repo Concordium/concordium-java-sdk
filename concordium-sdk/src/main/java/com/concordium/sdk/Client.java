@@ -4,6 +4,7 @@ import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
+import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
@@ -251,6 +252,17 @@ public final class Client {
             throw BlockNotFoundException.from(blockHash);
         }
         return cryptographicParameters;
+    }
+
+
+    /**
+     * Gets the Node information.
+     * @return Parsed {@link NodeInfo}
+     */
+    public NodeInfo getNodeInfo() {
+        val value = server().nodeInfo(ConcordiumP2PRpc.Empty.newBuilder().build());
+
+        return NodeInfo.parse(value);
     }
 
     /**
