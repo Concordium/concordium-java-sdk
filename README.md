@@ -215,6 +215,10 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
+- `getNodeInfo()`
+```java
+NodeInfo getNodeInfo()
+```
 
 - `getAncestors`
 ```java
@@ -378,6 +382,11 @@ val peers = client.getPeerList(true);
 #### getVersion
 ```java
 SemVer version = client.getVersion();
+```
+
+#### getNodeInfo
+```java
+NodeInfo = client.getNodeInfo();
 ```
 
 #### getAncestors
