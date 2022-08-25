@@ -215,9 +215,14 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
-- `getNodeInfo()`
+- `getNodeInfo`
 ```java
 NodeInfo getNodeInfo()
+```
+
+- `banNode`
+```java
+boolean banNode(BanNodeRequest request) throws Exception
 ```
 
 ## Transactions
@@ -381,6 +386,15 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### banNode
+```java
+client.banNode(BanNodeRequest.from("NodeId"))
+```
+
+```java
+client.banNode(BanNodeRequest.from("127.0.0.1"))
 ```
 
 ## Transactions
