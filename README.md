@@ -225,6 +225,11 @@ NodeInfo getNodeInfo()
 boolean startBaker()
 ```
 
+- `stopBaker`
+```java
+boolean stopBaker()
+```
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -391,6 +396,11 @@ NodeInfo = client.getNodeInfo();
 #### startBaker
 ```java
 client.startBaker();
+```
+
+#### stopBaker
+```java
+client.stopBaker();
 ```
 
 ## Transactions

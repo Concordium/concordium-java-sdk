@@ -332,6 +332,15 @@ public final class Client {
     }
 
     /**
+     * Stop the baker in the consensus module.
+     *
+     * @return true if baker could be stopped. false otherwise.
+     */
+    public boolean stopBaker() {
+        return server().stopBaker(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+    }
+
+    /**
      * Closes the underlying grpc channel
      * 
      * This should only be done when the {@link Client}
