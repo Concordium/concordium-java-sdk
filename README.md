@@ -220,6 +220,11 @@ Retrives the node software version.
 NodeInfo getNodeInfo()
 ```
 
+- `getTransactionStatusInBlock`
+```java
+TransactionStatusInBlock getTransactionStatusInBlock(Hash transactionHash, Hash blockHash) throws TransactionNotFoundException
+```
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -381,6 +386,14 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### getTransactionStatusInBlock
+```java
+val ret = client.getTransactionStatusInBlock(
+                Hash.from("ea88c209c40f5828aeedf3326f314f66b7adf49e754a94f29b72e9d334d82eb7"),
+                Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb")
+        );
 ```
 
 ## Transactions

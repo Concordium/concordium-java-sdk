@@ -17,6 +17,7 @@ import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
+import com.concordium.sdk.responses.transactionstatusinblock.TransactionStatusInBlock;
 import com.concordium.sdk.transactions.*;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
@@ -135,6 +136,30 @@ public final class Client {
         if (Objects.isNull(status)) {
             throw TransactionNotFoundException.from(transactionHash);
         }
+        return status;
+    }
+
+    /**
+     * Get the status of a transaction in a given block.
+     *
+     * @param transactionHash Transaction {@link Hash}
+     * @param blockHash Block {@link Hash}
+     * @return Parsed {@link TransactionStatusInBlock}
+     */
+    public TransactionStatusInBlock getTransactionStatusInBlock(
+            Hash transactionHash,
+            Hash blockHash) throws TransactionNotFoundException {
+        val transactionStatus = server()
+                .getTransactionStatusInBlock(ConcordiumP2PRpc.GetTransactionStatusInBlockRequest.newBuilder()
+                        .setBlockHash(blockHash.asHex())
+                        .setTransactionHash(transactionHash.asHex())
+                        .build());
+        val status = TransactionStatusInBlock.fromJson(transactionStatus);
+
+        if (Objects.isNull(status)) {
+            throw TransactionNotFoundException.from(transactionHash);
+        }
+
         return status;
     }
 
