@@ -222,7 +222,12 @@ NodeInfo getNodeInfo()
 
 - `banNode`
 ```java
-boolean banNode(BanNodeRequest request) throws Exception
+boolean banNode(final BanNodeRequest request) throws Exception 
+```
+
+- `unBanNode`
+```java
+boolean unBanNode(final InetAddress ip)
 ```
 
 ## Transactions
@@ -394,7 +399,12 @@ client.banNode(BanNodeRequest.from("NodeId"))
 ```
 
 ```java
-client.banNode(BanNodeRequest.from("127.0.0.1"))
+client.banNode(BanNodeRequest.from(InetAddress.getByName("127.0.0.1")))
+```
+
+#### unBanNode
+```java
+client.unBanNode(InetAddress.getByName("127.0.0.1"));
 ```
 
 ## Transactions

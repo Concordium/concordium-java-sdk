@@ -334,7 +334,7 @@ public final class Client {
      * @return {@link Boolean} depending on whether the request was successful or not.
      * @throws Exception When Neither ID nor Ip was specified.
      */
-    public boolean banNode(BanNodeRequest request) throws Exception {
+    public boolean banNode(final BanNodeRequest request) throws Exception {
         ConcordiumP2PRpc.PeerElement peerElement;
 
         if (request.hasIp()) {
@@ -352,6 +352,20 @@ public final class Client {
         }
 
         return server().banNode(peerElement).getValue();
+    }
+
+    /**
+     * Un Ban a specific node.
+     *
+     * @param ip {@link InetAddress}.
+     * @return {@link Boolean} depending on whether the request was successful or not.
+     */
+    public boolean unBanNode(final InetAddress ip) {
+        ConcordiumP2PRpc.PeerElement peerElement = ConcordiumP2PRpc.PeerElement.newBuilder()
+                .setIp(StringValue.of(ip.getHostAddress()))
+                .build();
+
+        return server().unbanNode(peerElement).getValue();
     }
 
     /**
