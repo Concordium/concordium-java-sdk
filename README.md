@@ -224,11 +224,13 @@ NodeInfo getNodeInfo()
 ```java
 Boolean joinNetwork(final UInt16 networkId)
 ```
+Ask the node to join the specified network.
 
 - `leaveNetwork`
 ```java
 boolean leaveNetwork(final UInt16 networkId)
 ```
+Ask the node to leave the specified network.
 
 ## Transactions
 
