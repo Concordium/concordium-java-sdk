@@ -215,9 +215,14 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
-- `getNodeInfo()`
+- `getNodeInfo`
 ```java
 NodeInfo getNodeInfo()
+```
+
+- `getTotalReceived`
+```java
+long getTotalReceived()
 ```
 
 ## Transactions
@@ -381,6 +386,11 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### getTotalReceived
+```java
+client.getTotalReceived();
 ```
 
 ## Transactions
