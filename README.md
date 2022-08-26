@@ -224,11 +224,13 @@ NodeInfo getNodeInfo()
 ```java
 boolean startBaker()
 ```
+Start the baker in the consensus module.
 
 - `stopBaker`
 ```java
 boolean stopBaker()
 ```
+Stop the baker in the consensus module.
 
 ## Transactions
 
