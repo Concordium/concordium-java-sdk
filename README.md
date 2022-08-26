@@ -395,6 +395,7 @@ val ret = client.getTransactionStatusInBlock(
                 Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb")
         );
 ```
+Get the status of a transaction in a given block.
 
 ## Transactions
 
