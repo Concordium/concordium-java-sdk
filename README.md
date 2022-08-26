@@ -224,6 +224,7 @@ NodeInfo getNodeInfo()
 ```java
 long getTotalReceived()
 ```
+Query for the total number of packets that the node has received thus far.
 
 ## Transactions
 
