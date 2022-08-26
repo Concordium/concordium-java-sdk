@@ -220,6 +220,12 @@ Retrives the node software version.
 NodeInfo getNodeInfo()
 ```
 
+- `shutdown`
+```java
+boolean shutdown()
+```
+Shut down the node network layer.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -381,6 +387,10 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+#### shutdown
+```java
+client.shutdown();
 ```
 
 ## Transactions
