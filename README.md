@@ -220,6 +220,11 @@ Retrives the node software version.
 NodeInfo getNodeInfo()
 ```
 
+- `startBaker`
+```java
+boolean startBaker()
+```
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -381,6 +386,11 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### startBaker
+```java
+client.startBaker();
 ```
 
 ## Transactions
