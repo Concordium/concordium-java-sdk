@@ -330,8 +330,20 @@ public final class Client {
      * @param networkId {@link UInt16} Network ID.
      * @return true if network has been joined successfully. False otherwise.
      */
-    public Boolean joinNetwork(final UInt16 networkId) {
+    public boolean joinNetwork(final UInt16 networkId) {
         return server().joinNetwork(ConcordiumP2PRpc.NetworkChangeRequest.newBuilder()
+                .setNetworkId(Int32Value.newBuilder().setValue(networkId.getValue()).build())
+                .build()).getValue();
+    }
+
+    /**
+     * Ask the node to leave the specified network.
+     *
+     * @param networkId {@link UInt16} Network ID.
+     * @return true if network has been left successfully. False otherwise.
+     */
+    public boolean leaveNetwork(final UInt16 networkId) {
+        return server().leaveNetwork(ConcordiumP2PRpc.NetworkChangeRequest.newBuilder()
                 .setNetworkId(Int32Value.newBuilder().setValue(networkId.getValue()).build())
                 .build()).getValue();
     }

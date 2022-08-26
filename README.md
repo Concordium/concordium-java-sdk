@@ -225,6 +225,11 @@ NodeInfo getNodeInfo()
 Boolean joinNetwork(final UInt16 networkId)
 ```
 
+- `leaveNetwork`
+```java
+boolean leaveNetwork(final UInt16 networkId)
+```
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -391,6 +396,11 @@ NodeInfo = client.getNodeInfo();
 #### joinNetwork
 ```java
 client.joinNetwork(UInt16.from(200));
+```
+
+#### leaveNetwork
+```java
+client.leaveNetwork(UInt16.from(200));
 ```
 
 ## Transactions
