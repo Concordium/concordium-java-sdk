@@ -18,8 +18,11 @@ import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.Int32Value;
+import com.google.protobuf.StringValue;
 import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
@@ -27,6 +30,7 @@ import io.grpc.ManagedChannel;
 import lombok.val;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.List;
@@ -323,6 +327,22 @@ public final class Client {
     public Semver getVersion() {
         val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return new Semver(versionString);
+    }
+
+    /**
+     * Instruct the node to try to connect to the given peer.
+     * This also adds the address to the list of trusted addresses.
+     * These are addresses to which the node will try to keep connected to at all times.
+     *
+     * @param ip   Ip Address of the Node.
+     * @param port Port of the Node.
+     * @return true if Peer Connect was successful.
+     */
+    public boolean peerConnect(InetAddress ip, UInt16 port) {
+        return server().peerConnect(ConcordiumP2PRpc.PeerConnectRequest.newBuilder()
+                .setIp(StringValue.of(ip.getHostAddress()))
+                .setPort(Int32Value.newBuilder().setValue(port.getValue()).build())
+                .build()).getValue();
     }
 
     /**

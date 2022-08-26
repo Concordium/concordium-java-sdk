@@ -220,6 +220,12 @@ Retrives the node software version.
 NodeInfo getNodeInfo()
 ```
 
+- `peerConnect`
+```java
+boolean peerConnect(InetAddress ip, UInt16 port)
+```
+Instruct the node to try to connect to the given peer. This also adds the address to the list of trusted addresses. These are addresses to which the node will try to keep connected to at all times.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -381,6 +387,14 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### peerConnect
+```
+val ret = client.peerConnect(
+                InetAddress.getByName("127.0.0.1"),
+                UInt16.from(8080)
+        );
 ```
 
 ## Transactions
