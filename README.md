@@ -215,9 +215,14 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
-- `getNodeInfo()`
+- `getNodeInfo`
 ```java
 NodeInfo getNodeInfo()
+```
+
+- `joinNetwork`
+```java
+Boolean joinNetwork(final UInt16 networkId)
 ```
 
 ## Transactions
@@ -381,6 +386,11 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### joinNetwork
+```java
+client.joinNetwork(UInt16.from(200));
 ```
 
 ## Transactions
