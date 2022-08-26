@@ -2,37 +2,36 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.peerlist.Peer;
-import com.concordium.sdk.responses.peerStats.PeerStatistics;
-import com.concordium.sdk.responses.nodeinfo.NodeInfo;
-import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
-import com.concordium.sdk.exceptions.AccountNotFoundException;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
-import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.nodeinfo.NodeInfo;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
+import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.serializing.JsonMapper;
+import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.transactions.Transaction;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
-import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
 import lombok.val;
+import org.semver4j.Semver;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -323,6 +322,26 @@ public final class Client {
     public Semver getVersion() {
         val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return new Semver(versionString);
+    }
+
+    /**
+     * Get the list of transactions hashes for transactions that claim to be from the given account,
+     * but which are not yet finalized. They are either committed to a block or still pending.
+     * If the account does not exist an empty list will be returned.
+     *
+     * @param address {@link AccountAddress}
+     * @return {@link ImmutableList} of Transaction {@link Hash}
+     */
+    public ImmutableList<Hash> getAccountNonFinalizedTransactions(AccountAddress address) {
+        val res = server()
+                .getAccountNonFinalizedTransactions(
+                        ConcordiumP2PRpc.AccountAddress.newBuilder().setAccountAddress(address.encoded()).build());
+
+        try {
+            return ImmutableList.copyOf(JsonMapper.INSTANCE.readValue(res.getValue(), Hash[].class));
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Cannot parse GetAccountNonFinalizedTransactions JSON", e);
+        }
     }
 
     /**

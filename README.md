@@ -220,6 +220,13 @@ Retrives the node software version.
 NodeInfo getNodeInfo()
 ```
 
+- `getAccountNonFinalizedTransactions`
+```java
+ImmutableList<Hash> getAccountNonFinalizedTransactions(AccountAddress address)
+```
+Get the list of transactions hashes for transactions that claim to be from the given account, 
+but which are not yet finalized. They are either committed to a block or still pending.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -381,6 +388,12 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### getAccountNonFinalizedTransactions
+```java
+val ret = client
+                .getAccountNonFinalizedTransactions(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"));
 ```
 
 ## Transactions
