@@ -417,7 +417,7 @@ client.leaveNetwork(UInt16.from(200));
 
 #### getBranches
 ```java
-val branch = client.getBranches();
+Branch branch = client.getBranches();
 ```
 
 ## Transactions
