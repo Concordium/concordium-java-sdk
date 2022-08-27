@@ -90,7 +90,8 @@ public abstract class Payload {
 
     public enum PayloadType {
         TRANSFER,
-        TRANSFER_WITH_MEMO
+        TRANSFER_WITH_MEMO,
+        INITIALIZE_SMART_CONTRACT_INSTANCE,
     }
 
 }
