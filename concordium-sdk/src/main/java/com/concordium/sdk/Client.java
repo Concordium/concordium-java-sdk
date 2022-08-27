@@ -2,6 +2,9 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
+import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
@@ -15,15 +18,21 @@ import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.*;
+import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
+import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
 import lombok.val;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -243,6 +252,77 @@ public final class Client {
             throw BlockNotFoundException.from(blockHash);
         }
         return cryptographicParameters;
+    }
+
+
+    /**
+     * Gets the Node information.
+     * @return Parsed {@link NodeInfo}
+     */
+    public NodeInfo getNodeInfo() {
+        val value = server().nodeInfo(ConcordiumP2PRpc.Empty.newBuilder().build());
+
+        return NodeInfo.parse(value);
+    }
+
+    /**
+     * Gets the Peer uptime.
+     * @return Peer Uptime {@link Duration}.
+     */
+    public Duration getUptime() {
+        val res = server().peerUptime(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+        return Duration.ofMillis(res);
+    }
+
+    /**
+     * Gets the total number of packets sent.
+     * @return Total number of packets sent.
+     */
+    public long getTotalSent() {
+        return server().peerTotalSent(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+    }
+
+    /**
+     * Gets Peers list connected to the Node
+     * @param includeBootstrappers if true will include Bootstrapper nodes in the response.
+     * @return An {@link ImmutableList} of {@link Peer}
+     * @throws UnknownHostException When the returned IP address of Peer is Invalid.
+     */
+    public ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException {
+        val value = server().peerList(ConcordiumP2PRpc.PeersRequest.newBuilder()
+                    .setIncludeBootstrappers(includeBootstrappers)
+                .build());
+        val list = new ImmutableList.Builder<Peer>();
+
+        for (ConcordiumP2PRpc.PeerElement p : value.getPeersList()) {
+            list.add(Peer.parse(p));
+        }
+
+        return list.build();
+    }
+
+    /**
+     * Gets {@link PeerStatistics} of the node.
+     * @param includeBootstrappers Whether bootstrappers should be included in the response.
+     * @return Peer Statistics in the format {@link PeerStatistics}
+     */
+    public PeerStatistics getPeerStatistics(final boolean includeBootstrappers) {
+        val value = server()
+                .peerStats(ConcordiumP2PRpc
+                        .PeersRequest
+                        .newBuilder()
+                        .setIncludeBootstrappers(includeBootstrappers)
+                        .build());
+        return PeerStatistics.parse(value);
+    }
+
+    /**
+     * Gets the Semantic Version of the Peer Software / Node
+     * @return Version of the Peer / Node
+     */
+    public Semver getVersion() {
+        val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+        return new Semver(versionString);
     }
 
     /**
