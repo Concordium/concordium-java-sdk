@@ -9,16 +9,17 @@ import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
-import com.concordium.sdk.responses.getancestors.BlockAncestors;
 import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
+import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.types.UInt16;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Int32Value;
@@ -31,8 +32,10 @@ import org.semver4j.Semver;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -354,10 +357,10 @@ public final class Client {
      *
      * @param blockHash {@link Hash} of the block.
      * @param num       Total no of Ancestor blocks to get.
-     * @return {@link BlockAncestors}
+     * @return {@link ImmutableList} of {@link Hash}
      * @throws BlockNotFoundException When the returned response from Node is invalid or null.
      */
-    public BlockAncestors getAncestors(Hash blockHash, long num) throws BlockNotFoundException {
+    public ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException {
         val jsonResponse = server().getAncestors(
                 ConcordiumP2PRpc.BlockHashAndAmount
                         .newBuilder()
@@ -365,12 +368,21 @@ public final class Client {
                         .setAmount(num)
                         .build());
 
-        val res = BlockAncestors.fromJson(jsonResponse);
-        if (Objects.isNull(res)) {
+        String[] ret;
+
+        try {
+            ret = JsonMapper.INSTANCE.readValue(jsonResponse.getValue(), String[].class);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Cannot parse BlockAncestors JSON", e);
+        }
+
+        if (Objects.isNull(ret)) {
             throw BlockNotFoundException.from(blockHash);
         }
 
-        return res;
+        val items = Arrays.stream(ret).map(h -> Hash.from(h)).collect(Collectors.toList());
+
+        return ImmutableList.<Hash>builder().addAll(items).build();
     }
 
     /**

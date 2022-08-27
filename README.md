@@ -234,9 +234,9 @@ Ask the node to leave the specified network.
 
 - `getAncestors`
 ```java
-BlockAncestors getAncestors(Hash blockHash, long num) throws BlockNotFoundException
+ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
 ```
-Gets Ancestor Blocks for the provided input Block Hash.
+Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
 
 ## Transactions
 
@@ -413,7 +413,7 @@ client.leaveNetwork(UInt16.from(200));
 
 #### getAncestors
 ```java
-BlockAncestors ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
+ImmutableList<Hash> ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
 ```
 
 ## Transactions
