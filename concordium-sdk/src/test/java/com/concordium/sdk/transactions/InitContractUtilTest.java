@@ -23,7 +23,7 @@ public class InitContractUtilTest {
         try {
             Connection connection = Connection.builder()
                     .credentials(Credentials.from("rpcadmin"))
-                    .host("localhost")
+                    .host("0.0.0.0")
                     .port(10001)
                     .build();
             Client client = Client.from(connection);
@@ -34,7 +34,6 @@ public class InitContractUtilTest {
             AccountInfo accountInfo;
             try {
                 accountInfo = client.getAccountInfo(accountRequest, blockHash);
-                System.out.println(accountInfo);
             } catch (AccountNotFoundException e) {
                 throw new RuntimeException(e);
             }
