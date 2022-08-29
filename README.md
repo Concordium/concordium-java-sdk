@@ -233,9 +233,9 @@ boolean leaveNetwork(final UInt16 networkId)
 Ask the node to leave the specified network.
 
 
-- `getBannedIps`
+- `getBannedPeers`
 ```java
-ImmutableList<Peer> getBannedIps() throws UnknownHostException
+ImmutableList<Peer> getBannedPeers() throws UnknownHostException
 ```
 Get a list of the banned peers.
 
@@ -412,9 +412,9 @@ client.joinNetwork(UInt16.from(200));
 client.leaveNetwork(UInt16.from(200));
 ```
 
-#### getBannedIps
+#### getBannedPeers
 ```java
-ImmutableList<Peer> bannedIps = client.getBannedIps();
+ImmutableList<Peer> bannedPeers = client.getBannedPeers();
 ```
 
 ## Transactions
