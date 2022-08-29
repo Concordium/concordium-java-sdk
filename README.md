@@ -215,12 +215,29 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
+- `getNodeInfo`
+```java
+NodeInfo getNodeInfo()
+```
+
+- `joinNetwork`
+```java
+Boolean joinNetwork(final UInt16 networkId)
+```
+Ask the node to join the specified network.
+
+- `leaveNetwork`
+```java
+boolean leaveNetwork(final UInt16 networkId)
+```
+Ask the node to leave the specified network.
+
 
 - `getBannedIps`
 ```java
 ImmutableList<Peer> getBannedIps() throws UnknownHostException
 ```
-Get the list of ips that the node will currently not connect to, not accept connections for.
+Get a list of the banned peers.
 
 ## Transactions
 
@@ -380,9 +397,24 @@ val peers = client.getPeerList(true);
 SemVer version = client.getVersion();
 ```
 
+#### getNodeInfo
+```java
+NodeInfo = client.getNodeInfo();
+```
+
+#### joinNetwork
+```java
+client.joinNetwork(UInt16.from(200));
+```
+
+#### leaveNetwork
+```java
+client.leaveNetwork(UInt16.from(200));
+```
+
 #### getBannedIps
 ```java
-val bannedIps = client.getBannedIps();
+ImmutableList<Peer> bannedIps = client.getBannedIps();
 ```
 
 ## Transactions
