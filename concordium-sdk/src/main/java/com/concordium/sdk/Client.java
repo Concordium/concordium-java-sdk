@@ -13,13 +13,11 @@ import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.types.UInt16;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Int32Value;
@@ -356,15 +354,14 @@ public final class Client {
      * @param blockHash Hash of the block at which to retrieve the accounts.
      * @return An {@link ImmutableList} of {@link AccountAddress}.
      */
-    public ImmutableList<AccountAddress> getAccountList(Hash blockHash) {
-        val res = server()
-                .getAccountList(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
+    public ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .build();
+        val res = server().getAccountList(req);
 
-        try {
-            return ImmutableList.copyOf(JsonMapper.INSTANCE.readValue(res.getValue(), AccountAddress[].class));
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse AccountInfo JSON", e);
-        }
+        return AccountAddress.toList(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**
