@@ -14,13 +14,11 @@ import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.transactionstatus.ContractAddress;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.types.UInt16;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Int32Value;
@@ -353,18 +351,17 @@ public final class Client {
 
     /**
      * Get the list of smart contract instances in a given block.
+     *
      * @param blockHash {@link Hash} at which the instances need to be fetched.
      * @return {@link ImmutableList} of {@link ContractAddress}.
      */
-    public ImmutableList<ContractAddress> getInstances(Hash blockHash) {
-        val res = server()
-                .getInstances(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
+    public ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder()
+                .setBlockHash(blockHash.asHex()).build();
+        val res = server().getInstances(req);
 
-        try {
-            return ImmutableList.copyOf(JsonMapper.INSTANCE.readValue(res.getValue(), ContractAddress[].class));
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse ContractAddresses JSON", e);
-        }
+        return ContractAddress.toList(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**

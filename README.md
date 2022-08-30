@@ -236,7 +236,7 @@ Ask the node to leave the specified network.
 ```java
 ImmutableList<ContractAddress> getInstances(Hash blockHash)
 ```
-Get the list of smart contract instances in a given block.
+Get the list of smart contract instances in a given block at block commitment.
 
 ## Transactions
 
@@ -413,7 +413,7 @@ client.leaveNetwork(UInt16.from(200));
 
 #### getInstances
 ```java
-val contractInstances = client
+ImmutableList<ContractAddress> contractInstances = client
                 .getInstances(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
 ```
 
