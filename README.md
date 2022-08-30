@@ -215,6 +215,23 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
+- `getNodeInfo`
+```java
+NodeInfo getNodeInfo()
+```
+
+- `joinNetwork`
+```java
+Boolean joinNetwork(final UInt16 networkId)
+```
+Ask the node to join the specified network.
+
+- `leaveNetwork`
+```java
+boolean leaveNetwork(final UInt16 networkId)
+```
+Ask the node to leave the specified network.
+
 - `getInstanceInfo`
 ```java
 public InstanceInfo getInstanceInfo(final GetInstanceInfoRequest req)
@@ -379,9 +396,24 @@ val peers = client.getPeerList(true);
 SemVer version = client.getVersion();
 ```
 
+#### getNodeInfo
+```java
+NodeInfo = client.getNodeInfo();
+```
+
+#### joinNetwork
+```java
+client.joinNetwork(UInt16.from(200));
+```
+
+#### leaveNetwork
+```java
+client.leaveNetwork(UInt16.from(200));
+```
+
 #### getInstanceInfo
 ```java
-val instanceInfo = client.getInstanceInfo(GetInstanceInfoRequest.builder()
+InstanceInfo instanceInfo = client.getInstanceInfo(GetInstanceInfoRequest.builder()
                 .address(ContractAddress.builder()
                         .index(789)
                         .subindex(0)

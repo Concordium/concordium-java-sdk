@@ -5,29 +5,31 @@ import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.requests.getinstanceinfo.GetInstanceInfoRequest;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
-import com.concordium.sdk.responses.peerlist.Peer;
-import com.concordium.sdk.responses.peerStats.PeerStatistics;
-import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
-import com.concordium.sdk.exceptions.AccountNotFoundException;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
-import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.nodeinfo.NodeInfo;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
+import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.transactions.Transaction;
+import com.concordium.sdk.types.UInt16;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
-import org.semver4j.Semver;
+import com.google.protobuf.Int32Value;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
 import lombok.val;
+import org.semver4j.Semver;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -255,6 +257,17 @@ public final class Client {
         return cryptographicParameters;
     }
 
+
+    /**
+     * Gets the Node information.
+     * @return Parsed {@link NodeInfo}
+     */
+    public NodeInfo getNodeInfo() {
+        val value = server().nodeInfo(ConcordiumP2PRpc.Empty.newBuilder().build());
+
+        return NodeInfo.parse(value);
+    }
+
     /**
      * Gets the Peer uptime.
      * @return Peer Uptime {@link Duration}.
@@ -313,6 +326,30 @@ public final class Client {
     public Semver getVersion() {
         val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return new Semver(versionString);
+    }
+
+    /**
+     * Ask the node to join the specified network.
+     *
+     * @param networkId {@link UInt16} Network ID.
+     * @return true if network has been joined successfully. False otherwise.
+     */
+    public boolean joinNetwork(final UInt16 networkId) {
+        return server().joinNetwork(ConcordiumP2PRpc.NetworkChangeRequest.newBuilder()
+                .setNetworkId(Int32Value.newBuilder().setValue(networkId.getValue()).build())
+                .build()).getValue();
+    }
+
+    /**
+     * Ask the node to leave the specified network.
+     *
+     * @param networkId {@link UInt16} Network ID.
+     * @return true if network has been left successfully. False otherwise.
+     */
+    public boolean leaveNetwork(final UInt16 networkId) {
+        return server().leaveNetwork(ConcordiumP2PRpc.NetworkChangeRequest.newBuilder()
+                .setNetworkId(Int32Value.newBuilder().setValue(networkId.getValue()).build())
+                .build()).getValue();
     }
 
     /**
