@@ -2,9 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
-import com.concordium.sdk.requests.getinstanceinfo.GetInstanceInfoRequest;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -12,16 +10,17 @@ import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
 import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.transactionstatus.ContractAddress;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.types.UInt16;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Int32Value;
@@ -353,27 +352,29 @@ public final class Client {
     }
 
     /**
-     * Get the information for the given smart contract instance in the given block.
-     * @param req {@link GetInstanceInfoRequest}
+     * Get the information for the given smart contract instance in the given block at commitment.
+     *
+     * @param contractAddress {@link ContractAddress}
+     * @param blockHash       {@link Hash} of the block
      * @return {@link InstanceInfo}
-     * @throws JsonProcessingException When the returned JSON is not in the specified standard.
-     * @throws InstanceNotFoundException When the response from node is NULL.
+     * @throws ContractInstanceNotFoundException When the response from node is NULL.
      */
-    public InstanceInfo getInstanceInfo(final GetInstanceInfoRequest req)
-            throws JsonProcessingException, InstanceNotFoundException {
+    public InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash)
+            throws ContractInstanceNotFoundException {
         val grpcReq = ConcordiumP2PRpc.GetAddressInfoRequest
                 .newBuilder()
-                .setAddress(req.getAddress().toJson())
-                .setBlockHash(req.getBlockHash().asHex())
+                .setAddress(contractAddress.toJson())
+                .setBlockHash(blockHash.asHex())
                 .build();
         val res = server().getInstanceInfo(grpcReq);
 
-        return InstanceInfo.fromJson(res, req);
+        return InstanceInfo.fromJson(res)
+                .orElseThrow(() -> ContractInstanceNotFoundException.from(contractAddress, blockHash));
     }
 
     /**
      * Closes the underlying grpc channel
-     * 
+     *
      * This should only be done when the {@link Client}
      * is of no more use as creating a new {@link Client} (and the associated)
      * channel is rather expensive.

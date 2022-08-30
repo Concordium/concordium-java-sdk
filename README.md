@@ -234,9 +234,9 @@ Ask the node to leave the specified network.
 
 - `getInstanceInfo`
 ```java
-public InstanceInfo getInstanceInfo(final GetInstanceInfoRequest req)
-            throws JsonProcessingException, InstanceNotFoundException 
+InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash)
 ```
+Get the information for the given smart contract instance in the given block at commitment.
 
 ## Transactions
 
@@ -413,13 +413,9 @@ client.leaveNetwork(UInt16.from(200));
 
 #### getInstanceInfo
 ```java
-InstanceInfo instanceInfo = client.getInstanceInfo(GetInstanceInfoRequest.builder()
-                .address(ContractAddress.builder()
-                        .index(789)
-                        .subindex(0)
-                        .build())
-                .blockHash(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"))
-        .build());
+InstanceInfo instanceInfo = client.getInstanceInfo(
+                new ContractAddress(0, 0),
+                Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
 ```
 
 ## Transactions

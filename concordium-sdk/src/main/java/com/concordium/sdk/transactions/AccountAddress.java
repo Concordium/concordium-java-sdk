@@ -4,7 +4,6 @@ import com.concordium.sdk.crypto.SHA256;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
@@ -12,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
 
-@ToString
 @EqualsAndHashCode
 public final class AccountAddress {
     public static final int BYTES = 32;
@@ -109,5 +107,10 @@ public final class AccountAddress {
     @JsonCreator
     AccountAddress(String encodedAddress) {
         this.bytes = AccountAddress.from(encodedAddress).getBytes();
+    }
+
+    @Override
+    public String toString() {
+        return encoded();
     }
 }
