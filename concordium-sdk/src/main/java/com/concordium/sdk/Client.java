@@ -350,7 +350,7 @@ public final class Client {
     }
 
     /**
-     * Get the list of smart contract instances in a given block.
+     * Get the list of smart contract instances in a given block at the time of commitment.
      *
      * @param blockHash {@link Hash} at which the instances need to be fetched.
      * @return {@link ImmutableList} of {@link ContractAddress}.
