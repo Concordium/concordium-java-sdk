@@ -3,6 +3,7 @@ package com.concordium.sdk;
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.ancestors.Ancestors;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
@@ -346,6 +347,27 @@ public final class Client {
         return server().leaveNetwork(ConcordiumP2PRpc.NetworkChangeRequest.newBuilder()
                 .setNetworkId(Int32Value.newBuilder().setValue(networkId.getValue()).build())
                 .build()).getValue();
+    }
+
+    /**
+     * Gets Block Ancestor Blocks.
+     *
+     * @param blockHash {@link Hash} of the block.
+     * @param num       Total no of Ancestor blocks to get.
+     * @return {@link ImmutableList} of {@link Hash}
+     * @throws BlockNotFoundException When the returned response from Node is invalid or null.
+     */
+    public ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException {
+        val jsonResponse = server().getAncestors(
+                ConcordiumP2PRpc.BlockHashAndAmount
+                        .newBuilder()
+                        .setBlockHash(blockHash.asHex())
+                        .setAmount(num)
+                        .build());
+
+        return Ancestors
+                .fromJson(jsonResponse)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**
