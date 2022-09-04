@@ -3,6 +3,8 @@ package com.concordium.sdk.responses.rewardstatus;
 import com.concordium.sdk.responses.ProtocolVersion;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.CCDAmount;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import concordium.ConcordiumP2PRpc;
 import lombok.Data;
@@ -67,6 +69,33 @@ public class RewardsOverview {
      * The total capital put up as stake by bakers and delegators
      */
     private CCDAmount totalStakedCapital;
+
+
+
+    @JsonCreator
+    public RewardsOverview(
+            @JsonProperty("bakingRewardAccount") CCDAmount bakingRewardAccount,
+            @JsonProperty("finalizationRewardAccount") CCDAmount finalizationRewardAccount,
+            @JsonProperty("foundationTransactionRewards") CCDAmount foundationTransactionRewards,
+            @JsonProperty("gasAccount") CCDAmount gasAccount,
+            @JsonProperty("nextPaydayMintRate") double nextPaydayMintRate,
+            @JsonProperty("nextPaydayTime") Date nextPaydayTime,
+            @JsonProperty("protocolVersion") ProtocolVersion protocolVersion,
+            @JsonProperty("totalAmount") CCDAmount totalAmount,
+            @JsonProperty("totalEncryptedAmount") CCDAmount totalEncryptedAmount,
+            @JsonProperty("totalStakedCapital") CCDAmount totalStakedCapital
+    ) {
+        this.bakingRewardAccount = bakingRewardAccount;
+        this.finalizationRewardAccount = finalizationRewardAccount;
+        this.foundationTransactionRewards = foundationTransactionRewards;
+        this.gasAccount = gasAccount;
+        this.nextPaydayMintRate = nextPaydayMintRate;
+        this.nextPaydayTime = nextPaydayTime;
+        this.protocolVersion = protocolVersion;
+        this.totalAmount = totalAmount;
+        this.totalEncryptedAmount = totalEncryptedAmount;
+        this.totalStakedCapital = totalStakedCapital;
+    }
 
     public static RewardsOverview fromJson(ConcordiumP2PRpc.JsonResponse res) {
         try {
