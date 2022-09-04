@@ -13,9 +13,14 @@ public class ModuleRef {
     public static List<Hash> fromJsonArray(ConcordiumP2PRpc.JsonResponse res) {
         try {
             String[] parsed = JsonMapper.INSTANCE.readValue(res.getValue(), String[].class);
-            return Arrays.stream(parsed).map(i -> Hash.from(i)).collect(Collectors.toList());
+            if (parsed != null){
+                return Arrays.stream(parsed).map(i -> Hash.from(i)).collect(Collectors.toList());
+            }
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse Module Ref Array JSON", e);
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("Cannot parse null Array JSON", e);
         }
+        return null;
     }
 }
