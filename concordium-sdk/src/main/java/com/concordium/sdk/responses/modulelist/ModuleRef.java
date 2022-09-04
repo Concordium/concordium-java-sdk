@@ -18,8 +18,6 @@ public class ModuleRef {
             }
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse Module Ref Array JSON", e);
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Cannot parse null Array JSON", e);
         }
         return null;
     }
