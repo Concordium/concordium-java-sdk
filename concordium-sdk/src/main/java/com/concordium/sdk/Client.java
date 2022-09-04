@@ -2,7 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.birkparamsters.BirkParameters;
+import com.concordium.sdk.responses.birkparameters.BirkParameters;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;

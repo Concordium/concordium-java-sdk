@@ -1,10 +1,13 @@
-package com.concordium.sdk.responses.birkparamsters;
+package com.concordium.sdk.responses.birkparameters;
 
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.types.UInt64;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
+
 
 /**
  * State of an individual baker.
@@ -28,4 +31,16 @@ public class Baker {
      * Address of the account this baker is associated with.
      */
     public AccountAddress bakerAccount;
+
+
+    @JsonCreator
+    public Baker(
+            @JsonProperty("bakerId") UInt64 bakerId,
+            @JsonProperty("bakerLotteryPower") double bakerLotteryPower,
+            @JsonProperty("bakerAccount") AccountAddress bakerAccount
+    ) {
+        this.bakerId = bakerId;
+        this.bakerLotteryPower = bakerLotteryPower;
+        this.bakerAccount = bakerAccount;
+    }
 }
