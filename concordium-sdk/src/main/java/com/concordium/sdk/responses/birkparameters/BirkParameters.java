@@ -51,7 +51,6 @@ public class BirkParameters {
         try {
             return JsonMapper.INSTANCE.readValue(jsonResponse.getValue(), BirkParameters.class);
         } catch (JsonProcessingException e) {
-            System.out.println(e.getMessage());
             throw new IllegalArgumentException("Cannot parse BirkParameters JSON", e);
         }
     }
