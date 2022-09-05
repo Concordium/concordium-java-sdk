@@ -232,6 +232,12 @@ boolean leaveNetwork(final UInt16 networkId)
 ```
 Ask the node to leave the specified network.
 
+- `getAncestors`
+```java
+ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
+```
+Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
+
 - `getRewardStatus`
 ```java
 RewardsOverview getRewardStatus(final Hash blockHash) throws Exception
@@ -411,12 +417,16 @@ client.joinNetwork(UInt16.from(200));
 client.leaveNetwork(UInt16.from(200));
 ```
 
+#### getAncestors
+```java
+ImmutableList<Hash> ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
+```
+
 #### getRewardStatus
 ```java
 RewardsOverview rewardsStatus = client
         .getRewardStatus(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
 ```
-
 ## Transactions
 
 The [`TransactionFactory`](./concordium-sdk/src/main/java/com/concordium/sdk/transactions/TransactionFactory.java) provides a
