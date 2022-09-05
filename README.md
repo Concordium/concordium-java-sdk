@@ -215,6 +215,29 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
+- `getNodeInfo`
+```java
+NodeInfo getNodeInfo()
+```
+
+- `joinNetwork`
+```java
+Boolean joinNetwork(final UInt16 networkId)
+```
+Ask the node to join the specified network.
+
+- `leaveNetwork`
+```java
+boolean leaveNetwork(final UInt16 networkId)
+```
+Ask the node to leave the specified network.
+
+- `getAncestors`
+```java
+ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
+```
+Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
+
 - `getIdentityProviders`
 ```java
 ImmutableList<IpInfo> getIdentityProviders(Hash blockHash)
@@ -377,6 +400,26 @@ val peers = client.getPeerList(true);
 #### getVersion
 ```java
 SemVer version = client.getVersion();
+```
+
+#### getNodeInfo
+```java
+NodeInfo = client.getNodeInfo();
+```
+
+#### joinNetwork
+```java
+client.joinNetwork(UInt16.from(200));
+```
+
+#### leaveNetwork
+```java
+client.leaveNetwork(UInt16.from(200));
+```
+
+#### getAncestors
+```java
+ImmutableList<Hash> ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
 ```
 
 #### getIdentityProviders

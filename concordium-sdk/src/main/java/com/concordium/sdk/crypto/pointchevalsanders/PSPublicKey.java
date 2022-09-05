@@ -1,6 +1,7 @@
 package com.concordium.sdk.crypto.pointchevalsanders;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.DecoderException;
@@ -11,6 +12,7 @@ import org.apache.commons.codec.binary.Hex;
  */
 @RequiredArgsConstructor
 @Getter
+@EqualsAndHashCode
 public class PSPublicKey {
 
     /**

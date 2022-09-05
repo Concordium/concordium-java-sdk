@@ -1,12 +1,18 @@
 package com.concordium.sdk.responses.blocksummary.updates.queues;
 
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
+import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
+import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.types.UInt32;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import concordium.ConcordiumP2PRpc;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.Optional;
 
 /**
  * Identity provider info
@@ -18,19 +24,25 @@ public final class IdentityProviderInfo {
 
     private final UInt32 ipIdentity;
     private final Description description;
-    private final byte[] ipCdiVerifyKey;
-    private final String ipVerifyKey;
+    private final ED25519PublicKey ipCdiVerifyKey;
+    private final PSPublicKey ipVerifyKey;
 
     @JsonCreator
-    IdentityProviderInfo(@JsonProperty("ipIdentity") int ipIdentity,
-                         @JsonProperty("ipDescription") Description description,
-                         @JsonProperty("ipCdiVerifyKey") String ipCdiVerifyKey,
-                         @JsonProperty("ipVerifyKey") String ipVerifyKey) {
+    public IdentityProviderInfo(@JsonProperty("ipIdentity") int ipIdentity,
+                                @JsonProperty("ipDescription") Description description,
+                                @JsonProperty("ipCdiVerifyKey") ED25519PublicKey ipCdiVerifyKey,
+                                @JsonProperty("ipVerifyKey") PSPublicKey ipVerifyKey) {
         this.ipIdentity = UInt32.from(ipIdentity);
         this.description = description;
-        this.ipCdiVerifyKey = ED25519PublicKey.from(ipCdiVerifyKey).getBytes();
+        this.ipCdiVerifyKey = ipCdiVerifyKey;
         this.ipVerifyKey = ipVerifyKey;
     }
 
-
+    public static Optional<IdentityProviderInfo[]> fromJsonArray(ConcordiumP2PRpc.JsonResponse res) {
+        try {
+            return Optional.ofNullable(JsonMapper.INSTANCE.readValue(res.getValue(), IdentityProviderInfo[].class));
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Cannot parse Identity Provider Array JSON", e);
+        }
+    }
 }

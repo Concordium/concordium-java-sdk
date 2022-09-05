@@ -18,7 +18,7 @@ public class Description {
     private final String description;
 
     @JsonCreator
-    Description(@JsonProperty("name") String name, @JsonProperty("url") String url, @JsonProperty("description") String description) {
+    public Description(@JsonProperty("name") String name, @JsonProperty("url") String url, @JsonProperty("description") String description) {
         this.name = name;
         this.url = url;
         this.description = description;
