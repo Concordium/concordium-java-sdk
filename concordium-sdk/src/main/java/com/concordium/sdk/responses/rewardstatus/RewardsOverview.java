@@ -5,72 +5,76 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import concordium.ConcordiumP2PRpc;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
+import lombok.val;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
- * Parsed Rewards Overview from response of
- * {@link concordium.P2PGrpc.P2PBlockingStub#getRewardStatus(ConcordiumP2PRpc.BlockHash)}
+ * Information about total amount of CCD and the state of various administrative accounts.
  */
 @Data
-@Getter
+@Jacksonized
+@Builder
 public class RewardsOverview {
 
     /**
      * The amount in the baking reward account.
      */
-    private CCDAmount bakingRewardAccount;
+    private final CCDAmount bakingRewardAccount;
 
     /**
      * The amount in the finalization reward account.
      */
-    private CCDAmount finalizationRewardAccount;
+    private final CCDAmount finalizationRewardAccount;
 
     /**
      * The transaction reward fraction accruing to the foundation (to be paid at next payday).
      */
-    private CCDAmount foundationTransactionRewards;
+    private final CCDAmount foundationTransactionRewards;
 
     /**
      * The amount in the GAS account.
      */
-    private CCDAmount gasAccount;
+    private final CCDAmount gasAccount;
 
     /**
      * he rate at which CCD will be minted (as a proportion of the total supply) at the next payday
      */
-    private double nextPaydayMintRate;
+    private final double nextPaydayMintRate;
 
     /**
      * The time of the next payday.
      */
-    private Date nextPaydayTime;
+    private final Date nextPaydayTime;
 
     /**
      * Protocol version that applies to these rewards. V0 variant only exists for protocol versions 1, 2, and 3.
      */
-    private ProtocolVersion protocolVersion;
+    private final ProtocolVersion protocolVersion;
 
     /**
      * The total CCD in existence.
      */
-    private CCDAmount totalAmount;
+    private final CCDAmount totalAmount;
 
     /**
      * The total CCD in encrypted balances.
      */
-    private CCDAmount totalEncryptedAmount;
+    private final CCDAmount totalEncryptedAmount;
 
     /**
      * The total capital put up as stake by bakers and delegators
      */
-    private CCDAmount totalStakedCapital;
+    private final CCDAmount totalStakedCapital;
 
-    public static RewardsOverview fromJson(ConcordiumP2PRpc.JsonResponse res) {
+    public static Optional<RewardsOverview> fromJson(ConcordiumP2PRpc.JsonResponse res) {
         try {
-            return JsonMapper.INSTANCE.readValue(res.getValue(), RewardsOverview.class);
+            val ret = JsonMapper.INSTANCE.readValue(res.getValue(), RewardsOverview.class);
+            return Optional.ofNullable(ret);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse RewardsOverview JSON", e);
         }

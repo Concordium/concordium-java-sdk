@@ -215,6 +215,23 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
+- `getNodeInfo`
+```java
+NodeInfo getNodeInfo()
+```
+
+- `joinNetwork`
+```java
+Boolean joinNetwork(final UInt16 networkId)
+```
+Ask the node to join the specified network.
+
+- `leaveNetwork`
+```java
+boolean leaveNetwork(final UInt16 networkId)
+```
+Ask the node to leave the specified network.
+
 - `getRewardStatus`
 ```java
 RewardsOverview getRewardStatus(final Hash blockHash) throws Exception
@@ -379,9 +396,24 @@ val peers = client.getPeerList(true);
 SemVer version = client.getVersion();
 ```
 
+#### getNodeInfo
+```java
+NodeInfo = client.getNodeInfo();
+```
+
+#### joinNetwork
+```java
+client.joinNetwork(UInt16.from(200));
+```
+
+#### leaveNetwork
+```java
+client.leaveNetwork(UInt16.from(200));
+```
+
 #### getRewardStatus
 ```java
-val rewardsStatus = client
+RewardsOverview rewardsStatus = client
         .getRewardStatus(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
 ```
 
