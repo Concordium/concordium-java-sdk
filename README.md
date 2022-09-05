@@ -240,7 +240,7 @@ Get a list of block hashes that preceding the provided block hash and with a max
 
 - `getIdentityProviders`
 ```java
-ImmutableList<IpInfo> getIdentityProviders(Hash blockHash)
+ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash)
 ```
 Get the list of identity providers in the given block.
 
@@ -424,7 +424,7 @@ ImmutableList<Hash> ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a1
 
 #### getIdentityProviders
 ```java
-val identityProviders = client.getIdentityProviders(
+ImmutableList<IdentityProviderInfo> identityProviders = client.getIdentityProviders(
         Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
 ```
 
