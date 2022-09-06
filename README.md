@@ -232,12 +232,26 @@ boolean leaveNetwork(final UInt16 networkId)
 ```
 Ask the node to leave the specified network.
 
-
 - `getBannedPeers`
 ```java
 ImmutableList<Peer> getBannedPeers() throws UnknownHostException
 ```
 Get a list of the banned peers.
+
+- `getAncestors`
+```java
+ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
+```
+Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
+
+- `getBranches`
+```java
+Branch getBranches()
+```
+Get the branches of the node's tree. Branches are all live blocks that
+are successors of the last finalized block. In particular this means
+that blocks which do not have a parent are not included in this
+response.
 
 ## Transactions
 
@@ -415,6 +429,16 @@ client.leaveNetwork(UInt16.from(200));
 #### getBannedPeers
 ```java
 ImmutableList<Peer> bannedPeers = client.getBannedPeers();
+```
+
+#### getAncestors
+```java
+ImmutableList<Hash> ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
+```
+
+#### getBranches
+```java
+Branch branch = client.getBranches();
 ```
 
 ## Transactions
