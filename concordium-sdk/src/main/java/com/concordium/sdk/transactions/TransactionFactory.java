@@ -35,4 +35,9 @@ public class TransactionFactory {
     public static RegisterDataTransaction.RegisterDataTransactionBuilder newRegisterData() {
         return RegisterDataTransaction.builder();
     }
+
+    public static DeployModuleTransaction.DeployModuleTransactionBuilder newDeployModule() {
+        return DeployModuleTransaction.builder();
+    }
+
 }
