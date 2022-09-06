@@ -33,6 +33,7 @@ import org.semver4j.Semver;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -286,21 +287,18 @@ public final class Client {
 
     /**
      * Gets Peers list connected to the Node
+     *
      * @param includeBootstrappers if true will include Bootstrapper nodes in the response.
      * @return An {@link ImmutableList} of {@link Peer}
      * @throws UnknownHostException When the returned IP address of Peer is Invalid.
      */
     public ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException {
-        val value = server().peerList(ConcordiumP2PRpc.PeersRequest.newBuilder()
-                    .setIncludeBootstrappers(includeBootstrappers)
-                .build());
-        val list = new ImmutableList.Builder<Peer>();
+        val req = ConcordiumP2PRpc.PeersRequest.newBuilder()
+                .setIncludeBootstrappers(includeBootstrappers)
+                .build();
+        val value = server().peerList(req).getPeersList();
 
-        for (ConcordiumP2PRpc.PeerElement p : value.getPeersList()) {
-            list.add(Peer.parse(p));
-        }
-
-        return list.build();
+        return Peer.toList(value);
     }
 
     /**
@@ -367,6 +365,35 @@ public final class Client {
     }
 
     /**
+     * Get the list of accounts in the given block.
+     *
+     * @param blockHash Hash of the block at which to retrieve the accounts.
+     * @return An {@link ImmutableList} of {@link AccountAddress}.
+     */
+    public ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .build();
+        val res = server().getAccountList(req);
+
+        return AccountAddress.toList(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
+     * Get a list of banned peers.
+     *
+     * @return An {@link ImmutableList} of {@link Peer}
+     * @throws UnknownHostException When the returned IP address of Peer is Invalid.
+     */
+    public ImmutableList<Peer> getBannedPeers() throws UnknownHostException {
+        val req = ConcordiumP2PRpc.Empty.newBuilder().build();
+        final List<ConcordiumP2PRpc.PeerElement> value = server().getBannedPeers(req).getPeersList();
+
+        return Peer.toList(value);
+    }
+
+    /**
      * Gets Block Ancestor Blocks.
      *
      * @param blockHash {@link Hash} of the block.
@@ -401,7 +428,7 @@ public final class Client {
 
     /**
      * Closes the underlying grpc channel
-     * 
+     *
      * This should only be done when the {@link Client}
      * is of no more use as creating a new {@link Client} (and the associated)
      * channel is rather expensive.

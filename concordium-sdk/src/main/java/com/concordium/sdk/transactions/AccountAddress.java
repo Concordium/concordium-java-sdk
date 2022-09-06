@@ -1,7 +1,11 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.SHA256;
+import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.collect.ImmutableList;
+import concordium.ConcordiumP2PRpc;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,6 +15,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 
 @ToString
 @EqualsAndHashCode
@@ -104,6 +109,19 @@ public final class AccountAddress {
         byte[] addressBytes = new byte[BYTES];
         source.get(addressBytes);
         return AccountAddress.from(addressBytes);
+    }
+
+    public static Optional<ImmutableList<AccountAddress>> toList(ConcordiumP2PRpc.JsonResponse res) {
+        try {
+            val array = JsonMapper.INSTANCE.readValue(res.getValue(), AccountAddress[].class);
+            if (Objects.isNull(array)) {
+                return Optional.empty();
+            }
+
+            return Optional.of(ImmutableList.copyOf(array));
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Cannot parse AccountInfo Array JSON", e);
+        }
     }
 
     @JsonCreator

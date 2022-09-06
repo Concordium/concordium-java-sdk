@@ -238,6 +238,18 @@ ImmutableList<ContractAddress> getInstances(Hash blockHash)
 ```
 Get the list of smart contract instances in a given block at block commitment.
 
+- `getAccountList`
+```java
+ImmutableList<AccountAddress> getAccountList(Hash blockHash)
+```
+Get the list of accounts in the given block.
+
+- `getBannedPeers`
+```java
+ImmutableList<Peer> getBannedPeers() throws UnknownHostException
+```
+Get a list of the banned peers.
+
 - `getAncestors`
 ```java
 ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
@@ -430,6 +442,17 @@ client.leaveNetwork(UInt16.from(200));
 ```java
 ImmutableList<ContractAddress> contractInstances = client
                 .getInstances(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
+```
+
+#### getAccountList
+```java
+ImmutableList<AccountAddress> accounts = client
+                .getAccountList(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
+```
+
+#### getBannedPeers
+```java
+ImmutableList<Peer> bannedPeers = client.getBannedPeers();
 ```
 
 #### getAncestors
