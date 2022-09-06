@@ -3,10 +3,12 @@ package com.concordium.sdk;
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.ancestors.Ancestors;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
+import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.nodeinfo.NodeInfo;
@@ -362,6 +364,39 @@ public final class Client {
 
         return ContractAddress.toList(res)
                 .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
+     * Gets Block Ancestor Blocks.
+     *
+     * @param blockHash {@link Hash} of the block.
+     * @param num       Total no of Ancestor blocks to get.
+     * @return {@link ImmutableList} of {@link Hash}
+     * @throws BlockNotFoundException When the returned response from Node is invalid or null.
+     */
+    public ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException {
+        val jsonResponse = server().getAncestors(
+                ConcordiumP2PRpc.BlockHashAndAmount
+                        .newBuilder()
+                        .setBlockHash(blockHash.asHex())
+                        .setAmount(num)
+                        .build());
+
+        return Ancestors
+                .fromJson(jsonResponse)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
+     * Get the branches of the node's tree. Branches are all live blocks that
+     * are successors of the last finalized block. In particular this means
+     * that blocks which do not have a parent are not included in this
+     * response
+     *
+     * @return {@link Branch}
+     */
+    public Branch getBranches() {
+        return Branch.fromJson(server().getBranches(ConcordiumP2PRpc.Empty.newBuilder().build()));
     }
 
     /**
