@@ -14,6 +14,7 @@
 - Added support for query `JoinNetwork`
 - Added support for query `LeaveNetwork`
 - Added support for query `GetAccountList`
+- Added support for query `GetBannedPeers`
 - Added support for query `GetBranches`
 
 ## 3.0.0
