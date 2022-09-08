@@ -51,4 +51,32 @@ public interface Transaction {
             throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
         }
     }
+
+    static void verifyTransferScheduleInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer) throws TransactionCreationException {
+        if (Objects.isNull(sender)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
+        }
+        if (Objects.isNull(nonce)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("AccountNonce cannot be null"));
+        }
+        if (Objects.isNull(expiry)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Expiry cannot be null"));
+        }
+        if (Objects.isNull(to)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Receiver cannot be null"));
+        }
+        if (Objects.isNull(schedule)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Amount cannot be null"));
+        }
+        if (Objects.isNull(signer) || signer.isEmpty()) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
+        }
+    }
+
+    static void verifyTransferScheduleWithMemoInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer, Memo memo) throws TransactionCreationException {
+        verifyTransferScheduleInput(sender, nonce, expiry, to, schedule, signer);
+        if (Objects.isNull(memo)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Memo cannot be null"));
+        }
+    }
 }

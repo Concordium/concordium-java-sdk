@@ -35,4 +35,11 @@ public class TransactionFactory {
     public static RegisterDataTransaction.RegisterDataTransactionBuilder newRegisterData() {
         return RegisterDataTransaction.builder();
     }
+
+    public static TransferScheduleTransaction.TransferScheduleTransactionBuilder newScheduleData() {
+        return TransferScheduleTransaction.builder();
+    }
+    public static TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder newScheduleDataWithMemo() {
+        return TransferScheduleWithMemoTransaction.builder();
+    }
 }
