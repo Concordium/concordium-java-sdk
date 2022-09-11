@@ -15,7 +15,7 @@ public class InitContractTransactionTest {
     Hash mod_ref = Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07");
 
     @Test
-    public void testCreateTransfer() {
+    public void testInitContract() {
         try {
             InitContractTransaction
                     .builder()
@@ -33,7 +33,7 @@ public class InitContractTransactionTest {
     }
 
     @Test
-    public void testCreateTransferTransactionWithoutSenderFails() {
+    public void testCreateInitContractTransactionWithoutSenderFails() {
         try {
             InitContractTransaction
                     .builder()
@@ -42,7 +42,7 @@ public class InitContractTransactionTest {
                     .signer(TransactionTestHelper.getValidSigner())
                     .payload(InitContractPayload.from(0, mod_ref.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
-            fail("Expected TransferTransaction to fail");
+            fail("Expected InitContractTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. Sender cannot be null")) {
                 fail("Unexpected error: " + e);
@@ -52,17 +52,16 @@ public class InitContractTransactionTest {
 
 
     @Test
-    public void testCreateTransferTransactionWithoutAmountFails() {
+    public void testCreateInitContractTransactionWithoutAmountFails() {
         try {
-            TransferTransaction
+            InitContractTransaction
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                    .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
                     .build();
-            fail("Expected TransferTransaction to fail");
+            fail("Expected InitContractTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. Amount cannot be null")) {
                 fail("Unexpected error: " + e);
@@ -71,7 +70,7 @@ public class InitContractTransactionTest {
     }
 
     @Test
-    public void testCreateTransferTransactionWithoutNonceFails() {
+    public void testCreateInitContractTransactionWithoutNonceFails() {
         try {
             InitContractTransaction
                     .builder()
@@ -80,7 +79,7 @@ public class InitContractTransactionTest {
                     .signer(TransactionTestHelper.getValidSigner())
                     .payload(InitContractPayload.from(0, mod_ref.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
-            fail("Expected TransferTransaction to fail");
+            fail("Expected InitContractTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. AccountNonce cannot be null")) {
                 fail("Unexpected error: " + e);
@@ -89,7 +88,7 @@ public class InitContractTransactionTest {
     }
 
     @Test
-    public void testCreateTransferTransactionWithoutExpiryFails() {
+    public void testCreateInitContractTransactionWithoutExpiryFails() {
         try {
             InitContractTransaction
                     .builder()
@@ -98,7 +97,7 @@ public class InitContractTransactionTest {
                     .signer(TransactionTestHelper.getValidSigner())
                     .payload(InitContractPayload.from(0, mod_ref.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
-            fail("Expected TransferTransaction to fail");
+            fail("Expected InitContractTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. Expiry cannot be null")) {
                 fail("Unexpected error: " + e);
@@ -107,7 +106,7 @@ public class InitContractTransactionTest {
     }
 
     @Test
-    public void testCreateTransferTransactionWithoutSignerShouldFail() {
+    public void testCreateInitContractTransactionWithoutSignerShouldFail() {
         try {
             InitContractTransaction
                     .builder()
@@ -116,7 +115,7 @@ public class InitContractTransactionTest {
                     .expiry(Expiry.from(123456))
                     .payload(InitContractPayload.from(0, mod_ref.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
-            fail("Expected TransferTransaction to fail");
+            fail("Expected InitContractTransaction to fail");
         } catch (TransactionCreationException e) {
             if (!e.getMessage().equals("The creation of the Transaction failed. Signer cannot be null or empty")) {
                 fail("Unexpected error: " + e);
@@ -125,7 +124,7 @@ public class InitContractTransactionTest {
     }
 
     @Test
-    public void testCreateTransferTransactionWithInvalidSignerFails() {
+    public void testCreateInitContractTransactionWithInvalidSignerFails() {
         try {
             InitContractTransaction
                     .builder()

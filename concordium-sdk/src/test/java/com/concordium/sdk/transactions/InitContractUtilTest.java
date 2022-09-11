@@ -43,7 +43,7 @@ public class InitContractUtilTest {
             byte[] emptyArray = new byte[0];
             Hash mod_ref = Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07");
 
-            val transaction = InitContractUtil.newInitContract()
+            val transaction = TransactionFactory.newInitContract()
                     .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
                     .nonce(AccountNonce.from(nonceValue))
                     .expiry(Expiry.from(expiry))

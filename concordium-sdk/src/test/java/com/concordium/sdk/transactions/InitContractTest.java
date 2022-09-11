@@ -9,7 +9,7 @@ import org.junit.Test;
 public class InitContractTest {
     @SneakyThrows
     @Test
-    public void testCreateTransfer() {
+    public void testInitContract() {
         Hash mod_ref = Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07");
         InitContract.createNew(
                         InitContractPayload.from(0, mod_ref.getBytes(), "CIS2-NFT",  new byte[0]), UInt64.from(3000))
