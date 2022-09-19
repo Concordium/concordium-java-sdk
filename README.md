@@ -232,12 +232,17 @@ boolean leaveNetwork(final UInt16 networkId)
 ```
 Ask the node to leave the specified network.
 
+- `getBannedPeers`
+```java
+ImmutableList<Peer> getBannedPeers() throws UnknownHostException
+```
+Get a list of the banned peers.
+
 - `getAncestors`
 ```java
 ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
 ```
 Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
-
 
 - `getBranches`
 ```java
@@ -419,6 +424,11 @@ client.joinNetwork(UInt16.from(200));
 #### leaveNetwork
 ```java
 client.leaveNetwork(UInt16.from(200));
+```
+
+#### getBannedPeers
+```java
+ImmutableList<Peer> bannedPeers = client.getBannedPeers();
 ```
 
 #### getAncestors
