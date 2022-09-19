@@ -20,9 +20,9 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
-import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
+import com.concordium.sdk.types.UInt16;
 import com.google.protobuf.Int32Value;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
@@ -323,6 +323,15 @@ public final class Client {
     public Semver getVersion() {
         val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return new Semver(versionString);
+    }
+
+    /**
+     * Shut down the node.
+     *
+     * @return whether it was shutdown or not.
+     */
+    public boolean shutdown() {
+        return server().shutdown(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
     }
 
     /**

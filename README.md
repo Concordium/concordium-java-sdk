@@ -219,6 +219,13 @@ Retrives the node software version.
 ```java
 NodeInfo getNodeInfo()
 ```
+Retrieve meta information about the node e.g. if it's baking or not, the local time of the node etc.
+
+- `shutdown`
+```java
+boolean shutdown()
+```
+Shut down the node.
 
 - `joinNetwork`
 ```java
@@ -428,6 +435,10 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+#### shutdown
+```java
+client.shutdown();
 ```
 
 #### joinNetwork
