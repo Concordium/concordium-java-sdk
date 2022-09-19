@@ -224,7 +224,7 @@ NodeInfo getNodeInfo()
 ```java
 boolean shutdown()
 ```
-Shut down the node network layer.
+Shut down the node.
 
 ## Transactions
 
