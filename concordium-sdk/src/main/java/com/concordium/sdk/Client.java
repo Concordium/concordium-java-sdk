@@ -14,6 +14,7 @@ import com.concordium.sdk.responses.cryptographicparameters.CryptographicParamet
 import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.transactionstatus.ContractAddress;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
@@ -346,6 +347,21 @@ public final class Client {
         return server().leaveNetwork(ConcordiumP2PRpc.NetworkChangeRequest.newBuilder()
                 .setNetworkId(Int32Value.newBuilder().setValue(networkId.getValue()).build())
                 .build()).getValue();
+    }
+
+    /**
+     * Get the list of smart contract instances in a given block at the time of commitment.
+     *
+     * @param blockHash {@link Hash} at which the instances need to be fetched.
+     * @return {@link ImmutableList} of {@link ContractAddress}.
+     */
+    public ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder()
+                .setBlockHash(blockHash.asHex()).build();
+        val res = server().getInstances(req);
+
+        return ContractAddress.toList(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**
