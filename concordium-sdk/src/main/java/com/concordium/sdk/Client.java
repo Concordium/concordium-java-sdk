@@ -369,6 +369,7 @@ public final class Client {
      *
      * @param blockHash Hash of the block at which to retrieve the accounts.
      * @return An {@link ImmutableList} of {@link AccountAddress}.
+     * @throws BlockNotFoundException if an invalid block hash was provided.
      */
     public ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException {
         val req = ConcordiumP2PRpc.BlockHash.newBuilder()

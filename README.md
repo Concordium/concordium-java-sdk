@@ -234,15 +234,17 @@ Ask the node to leave the specified network.
 
 - `getInstances`
 ```java
-ImmutableList<ContractAddress> getInstances(Hash blockHash)
+ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException
 ```
 Get the list of smart contract instances in a given block at block commitment.
+Throws a `BlockNotFoundException` if an invalid block hash was given.
 
 - `getAccountList`
 ```java
-ImmutableList<AccountAddress> getAccountList(Hash blockHash)
+ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException
 ```
 Get the list of accounts in the given block.
+Throws a `BlockNotFoundException` if an invalid block hash was given.
 
 - `getBannedPeers`
 ```java
