@@ -232,6 +232,13 @@ boolean leaveNetwork(final UInt16 networkId)
 ```
 Ask the node to leave the specified network.
 
+- `getAccountList`
+```java
+ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of accounts in the given block.
+Throws a `BlockNotFoundException` if an invalid block hash was given.
+
 - `getBannedPeers`
 ```java
 ImmutableList<Peer> getBannedPeers() throws UnknownHostException
@@ -424,6 +431,12 @@ client.joinNetwork(UInt16.from(200));
 #### leaveNetwork
 ```java
 client.leaveNetwork(UInt16.from(200));
+```
+
+#### getAccountList
+```java
+ImmutableList<AccountAddress> accounts = client
+                .getAccountList(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
 ```
 
 #### getBannedPeers

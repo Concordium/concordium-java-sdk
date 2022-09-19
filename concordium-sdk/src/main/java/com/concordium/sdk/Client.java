@@ -349,6 +349,23 @@ public final class Client {
     }
 
     /**
+     * Get the list of accounts in the given block.
+     *
+     * @param blockHash Hash of the block at which to retrieve the accounts.
+     * @return An {@link ImmutableList} of {@link AccountAddress}.
+     * @throws BlockNotFoundException if an invalid block hash was provided.
+     */
+    public ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .build();
+        val res = server().getAccountList(req);
+
+        return AccountAddress.toList(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
      * Get a list of banned peers.
      *
      * @return An {@link ImmutableList} of {@link Peer}
