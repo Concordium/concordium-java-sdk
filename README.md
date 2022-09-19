@@ -225,7 +225,7 @@ Retrieve meta information about the node e.g. if it's baking or not, the local t
 ```java
 boolean shutdown()
 ```
-Shutdown the node.
+Shut down the node.
 
 - `joinNetwork`
 ```java
