@@ -341,7 +341,7 @@ public final class Client {
     /**
      * Get the list of anonymity revokers in the given block.
      *
-     * @param blockHash {@link Hash} of the Block at which the Anonymity Revokers need to be fetched.
+     * @param blockHash {@link Hash} of the block at which the anonymity revokers need to be fetched.
      * @return Parsed {@link ImmutableList} of {@link AnonymityRevokerInfo}
      * @throws BlockNotFoundException When the returned Json is NULL.
      */
