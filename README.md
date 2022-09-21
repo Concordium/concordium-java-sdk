@@ -217,7 +217,7 @@ Retrives the node software version.
 
 - `getModuleSource`
 ```java
-ModuleSource getModuleSource(Hash moduleRef, Hash blockHash) throws Exception
+ModuleSource getModuleSource(Hash moduleRef, Hash blockHash) throws ModuleNotFoundException
 ```
 Get the source of a smart contract module.
 
@@ -381,7 +381,7 @@ SemVer version = client.getVersion();
 
 #### getModuleSource
 ```java
-val moduleSource = client.getModuleSource(
+ModuleSource moduleSource = client.getModuleSource(
         Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c08"),
         Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
 ```

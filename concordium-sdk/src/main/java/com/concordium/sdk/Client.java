@@ -2,37 +2,35 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.modulesource.ModuleSource;
-import com.concordium.sdk.responses.peerlist.Peer;
-import com.concordium.sdk.responses.peerStats.PeerStatistics;
-import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
-import com.concordium.sdk.exceptions.AccountNotFoundException;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
-import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.modulesource.ModuleSource;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
+import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.transactions.Transaction;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
-import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
 import lombok.val;
+import org.semver4j.Semver;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -83,7 +81,7 @@ public final class Client {
      * @param accountRequest The {@link AccountRequest}
      *                       See {@link AccountRequest#from(AccountAddress)},
      *                       {@link AccountRequest#from(AccountIndex)}
-     * @param blockHash the block hash
+     * @param blockHash      the block hash
      * @return The {@link AccountInfo}
      * @throws AccountNotFoundException if the account was not found.
      */
@@ -237,6 +235,7 @@ public final class Client {
 
     /**
      * Get the {@link CryptographicParameters} at a given block.
+     *
      * @param blockHash the hash of the block
      * @return the cryptographic parameters at the given block.
      * @throws BlockNotFoundException if the block was not found.
@@ -256,6 +255,7 @@ public final class Client {
 
     /**
      * Gets the Peer uptime.
+     *
      * @return Peer Uptime {@link Duration}.
      */
     public Duration getUptime() {
@@ -265,6 +265,7 @@ public final class Client {
 
     /**
      * Gets the total number of packets sent.
+     *
      * @return Total number of packets sent.
      */
     public long getTotalSent() {
@@ -273,13 +274,14 @@ public final class Client {
 
     /**
      * Gets Peers list connected to the Node
+     *
      * @param includeBootstrappers if true will include Bootstrapper nodes in the response.
      * @return An {@link ImmutableList} of {@link Peer}
      * @throws UnknownHostException When the returned IP address of Peer is Invalid.
      */
     public ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException {
         val value = server().peerList(ConcordiumP2PRpc.PeersRequest.newBuilder()
-                    .setIncludeBootstrappers(includeBootstrappers)
+                .setIncludeBootstrappers(includeBootstrappers)
                 .build());
         val list = new ImmutableList.Builder<Peer>();
 
@@ -292,6 +294,7 @@ public final class Client {
 
     /**
      * Gets {@link PeerStatistics} of the node.
+     *
      * @param includeBootstrappers Whether bootstrappers should be included in the response.
      * @return Peer Statistics in the format {@link PeerStatistics}
      */
@@ -307,6 +310,7 @@ public final class Client {
 
     /**
      * Gets the Semantic Version of the Peer Software / Node
+     *
      * @return Version of the Peer / Node
      */
     public Semver getVersion() {
@@ -316,34 +320,33 @@ public final class Client {
 
     /**
      * Get the source of a smart contract module.
+     *
      * @param moduleRef {@link Hash} of module to retrieve.
      * @param blockHash {@link Hash} of the Block at which the module source is to be retrieved.
      * @return Parsed {@link ModuleSource}.
-     * @throws Exception When module cannot be found.
+     * @throws ModuleNotFoundException When module cannot be found.
      */
-    public ModuleSource getModuleSource(Hash moduleRef, Hash blockHash) throws Exception {
+    public ModuleSource getModuleSource(Hash moduleRef, Hash blockHash) throws ModuleNotFoundException {
         val res = server()
                 .getModuleSource(ConcordiumP2PRpc.GetModuleSourceRequest.newBuilder()
                         .setBlockHash(blockHash.asHex())
                         .setModuleRef(moduleRef.asHex())
                         .build());
-        val bytes = res.getValue().toByteArray();
 
-        if(bytes.length == 0) {
-            throw new Exception(
-                    String.format("Module %s not found at block %s", moduleRef.asHex(), blockHash.asHex()));
-        }
+        Optional<ModuleSource> moduleSource = res.getValue().isEmpty()
+                ? Optional.empty()
+                : Optional.of(ModuleSource.from(res.getValue().toByteArray()));
 
-        return ModuleSource.builder().bytes(res.getValue().toByteArray()).build();
+        return moduleSource.orElseThrow(() -> ModuleNotFoundException.from(blockHash, moduleRef));
     }
 
     /**
      * Closes the underlying grpc channel
-     * 
+     * <p>
      * This should only be done when the {@link Client}
      * is of no more use as creating a new {@link Client} (and the associated)
      * channel is rather expensive.
-     *
+     * <p>
      * Subsequent calls following a closed channel will throw a {@link io.grpc.StatusRuntimeException}
      */
     public void close() {

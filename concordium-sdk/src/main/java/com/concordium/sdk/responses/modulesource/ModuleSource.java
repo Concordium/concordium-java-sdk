@@ -1,14 +1,10 @@
 package com.concordium.sdk.responses.modulesource;
 
-import concordium.ConcordiumP2PRpc;
-import lombok.Builder;
 import lombok.Getter;
 
 /**
- * Parsed response of
- * {@link concordium.P2PGrpc.P2PBlockingStub#getModuleSource(ConcordiumP2PRpc.GetModuleSourceRequest)}
+ * Compiled Source of the deployed Module in bytes.
  */
-@Builder
 @Getter
 public class ModuleSource {
 
@@ -16,4 +12,12 @@ public class ModuleSource {
      * Module source bytes.
      */
     private final byte[] bytes;
+
+    private ModuleSource(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    public static ModuleSource from(final byte[] bytes) {
+        return new ModuleSource(bytes);
+    }
 }
