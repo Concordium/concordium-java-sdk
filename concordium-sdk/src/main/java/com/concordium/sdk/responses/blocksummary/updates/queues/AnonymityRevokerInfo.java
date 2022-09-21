@@ -8,10 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.util.Optional;
 
@@ -38,7 +35,7 @@ public final class AnonymityRevokerInfo {
     private final ElgamalPublicKey anonymityRevokerPublicKey;
 
     @JsonCreator
-    AnonymityRevokerInfo(
+    public AnonymityRevokerInfo(
             @JsonProperty("arIdentity") int arIdentity,
             @JsonProperty("arDescription") Description description,
             @JsonProperty("arPublicKey") String arPublicKey) {
