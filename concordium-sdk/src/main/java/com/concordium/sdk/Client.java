@@ -362,12 +362,12 @@ public final class Client {
     }
 
     /**
-     * Get the information for the given smart contract instance in the given block at commitment.
+     * Get the smart contract instance information given the {@link ContractAddress} for the provided block {@link Hash}.
      *
      * @param contractAddress {@link ContractAddress}
      * @param blockHash       {@link Hash} of the block
-     * @return {@link InstanceInfo}
-     * @throws ContractInstanceNotFoundException When the response from node is NULL.
+     * @return The {@link InstanceInfo}.
+     * @throws ContractInstanceNotFoundException When the contract instance could not be found for the provided block hash.
      */
     public InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash)
             throws ContractInstanceNotFoundException {
@@ -387,6 +387,7 @@ public final class Client {
      *
      * @param blockHash {@link Hash} at which the instances need to be fetched.
      * @return {@link ImmutableList} of {@link ContractAddress}.
+     * @throws BlockNotFoundException when no block could be found with the provided block {@link Hash}.
      */
     public ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException {
         val req = ConcordiumP2PRpc.BlockHash.newBuilder()
