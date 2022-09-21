@@ -253,9 +253,10 @@ Ask the node to leave the specified network.
 
 - `getInstanceInfo`
 ```java
-InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash)
+InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash) throws ContractInstanceNotFoundException
 ```
-Get the information for the given smart contract instance in the given block at commitment.
+Get the smart contract instance information given the `ContractAddress` for the provided block.
+Throws `ContractInstanceNotFoundexception` if the instance could not be found for the given block.
 
 - `getInstances`
 ```java
