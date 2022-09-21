@@ -378,7 +378,7 @@ public final class Client {
      * @return Parsed {@link RewardsOverview}.
      * @throws Exception When the returned response is null.
      */
-    public RewardsOverview getRewardStatus(final Hash blockHash) throws Exception {
+    public RewardsOverview getRewardStatus(final Hash blockHash) throws BlockNotFoundException {
         val req = ConcordiumP2PRpc.BlockHash.newBuilder()
                 .setBlockHash(blockHash.asHex()).build();
         val res = server().getRewardStatus(req);
