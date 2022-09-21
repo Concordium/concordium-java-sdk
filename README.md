@@ -219,6 +219,13 @@ Retrives the node software version.
 ```java
 NodeInfo getNodeInfo()
 ```
+Retrieve meta information about the node e.g. if it's baking or not, the local time of the node etc.
+
+- `shutdown`
+```java
+boolean shutdown()
+```
+Shut down the node.
 
 - `joinNetwork`
 ```java
@@ -237,6 +244,41 @@ Ask the node to leave the specified network.
 InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash)
 ```
 Get the information for the given smart contract instance in the given block at commitment.
+
+- `getInstances`
+```java
+ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of smart contract instances in a given block at block commitment.
+Throws a `BlockNotFoundException` if an invalid block hash was given.
+
+- `getAccountList`
+```java
+ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of accounts in the given block.
+Throws a `BlockNotFoundException` if an invalid block hash was given.
+
+- `getBannedPeers`
+```java
+ImmutableList<Peer> getBannedPeers() throws UnknownHostException
+```
+Get a list of the banned peers.
+
+- `getAncestors`
+```java
+ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
+```
+Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
+
+- `getBranches`
+```java
+Branch getBranches()
+```
+Get the branches of the node's tree. Branches are all live blocks that
+are successors of the last finalized block. In particular this means
+that blocks which do not have a parent are not included in this
+response.
 
 ## Transactions
 
@@ -400,6 +442,10 @@ SemVer version = client.getVersion();
 ```java
 NodeInfo = client.getNodeInfo();
 ```
+#### shutdown
+```java
+client.shutdown();
+```
 
 #### joinNetwork
 ```java
@@ -416,6 +462,33 @@ client.leaveNetwork(UInt16.from(200));
 InstanceInfo instanceInfo = client.getInstanceInfo(
                 new ContractAddress(0, 0),
                 Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
+```
+
+#### getInstances
+```java
+ImmutableList<ContractAddress> contractInstances = client
+                .getInstances(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
+```
+
+#### getAccountList
+```java
+ImmutableList<AccountAddress> accounts = client
+                .getAccountList(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
+```
+
+#### getBannedPeers
+```java
+ImmutableList<Peer> bannedPeers = client.getBannedPeers();
+```
+
+#### getAncestors
+```java
+ImmutableList<Hash> ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
+```
+
+#### getBranches
+```java
+Branch branch = client.getBranches();
 ```
 
 ## Transactions

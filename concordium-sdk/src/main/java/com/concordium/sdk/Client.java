@@ -4,10 +4,12 @@ import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.ancestors.Ancestors;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
+import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
@@ -33,6 +35,7 @@ import org.semver4j.Semver;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -286,21 +289,18 @@ public final class Client {
 
     /**
      * Gets Peers list connected to the Node
+     *
      * @param includeBootstrappers if true will include Bootstrapper nodes in the response.
      * @return An {@link ImmutableList} of {@link Peer}
      * @throws UnknownHostException When the returned IP address of Peer is Invalid.
      */
     public ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException {
-        val value = server().peerList(ConcordiumP2PRpc.PeersRequest.newBuilder()
-                    .setIncludeBootstrappers(includeBootstrappers)
-                .build());
-        val list = new ImmutableList.Builder<Peer>();
+        val req = ConcordiumP2PRpc.PeersRequest.newBuilder()
+                .setIncludeBootstrappers(includeBootstrappers)
+                .build();
+        val value = server().peerList(req).getPeersList();
 
-        for (ConcordiumP2PRpc.PeerElement p : value.getPeersList()) {
-            list.add(Peer.parse(p));
-        }
-
-        return list.build();
+        return Peer.toList(value);
     }
 
     /**
@@ -325,6 +325,15 @@ public final class Client {
     public Semver getVersion() {
         val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return new Semver(versionString);
+    }
+
+    /**
+     * Shut down the node.
+     *
+     * @return whether it was shutdown or not.
+     */
+    public boolean shutdown() {
+        return server().shutdown(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
     }
 
     /**
@@ -370,6 +379,84 @@ public final class Client {
 
         return InstanceInfo.fromJson(res)
                 .orElseThrow(() -> ContractInstanceNotFoundException.from(contractAddress, blockHash));
+    }
+
+    /**
+     * Get the list of smart contract instances in a given block at the time of commitment.
+     *
+     * @param blockHash {@link Hash} at which the instances need to be fetched.
+     * @return {@link ImmutableList} of {@link ContractAddress}.
+     */
+    public ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder()
+                .setBlockHash(blockHash.asHex()).build();
+        val res = server().getInstances(req);
+
+        return ContractAddress.toList(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
+     * Get the list of accounts in the given block.
+     *
+     * @param blockHash Hash of the block at which to retrieve the accounts.
+     * @return An {@link ImmutableList} of {@link AccountAddress}.
+     * @throws BlockNotFoundException if an invalid block hash was provided.
+     */
+    public ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .build();
+        val res = server().getAccountList(req);
+
+        return AccountAddress.toList(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
+     * Get a list of banned peers.
+     *
+     * @return An {@link ImmutableList} of {@link Peer}
+     * @throws UnknownHostException When the returned IP address of Peer is Invalid.
+     */
+    public ImmutableList<Peer> getBannedPeers() throws UnknownHostException {
+        val req = ConcordiumP2PRpc.Empty.newBuilder().build();
+        final List<ConcordiumP2PRpc.PeerElement> value = server().getBannedPeers(req).getPeersList();
+
+        return Peer.toList(value);
+    }
+
+    /**
+     * Gets Block Ancestor Blocks.
+     *
+     * @param blockHash {@link Hash} of the block.
+     * @param num       Total no of Ancestor blocks to get.
+     * @return {@link ImmutableList} of {@link Hash}
+     * @throws BlockNotFoundException When the returned response from Node is invalid or null.
+     */
+    public ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException {
+        val jsonResponse = server().getAncestors(
+                ConcordiumP2PRpc.BlockHashAndAmount
+                        .newBuilder()
+                        .setBlockHash(blockHash.asHex())
+                        .setAmount(num)
+                        .build());
+
+        return Ancestors
+                .fromJson(jsonResponse)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
+     * Get the branches of the node's tree. Branches are all live blocks that
+     * are successors of the last finalized block. In particular this means
+     * that blocks which do not have a parent are not included in this
+     * response
+     *
+     * @return {@link Branch}
+     */
+    public Branch getBranches() {
+        return Branch.fromJson(server().getBranches(ConcordiumP2PRpc.Empty.newBuilder().build()));
     }
 
     /**
