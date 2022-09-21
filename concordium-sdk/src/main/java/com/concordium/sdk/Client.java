@@ -296,6 +296,15 @@ public final class Client {
     }
 
     /**
+     * Query for the total number of packets that the node has received thus far.
+     *
+     * @return Total number of received packets.
+     */
+    public long getTotalReceived() {
+        return server().peerTotalReceived(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+    }
+
+    /**
      * Gets Peers list connected to the Node
      *
      * @param includeBootstrappers if true will include Bootstrapper nodes in the response.

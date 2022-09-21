@@ -307,6 +307,12 @@ ImmutableList<Peer> getBannedPeers() throws UnknownHostException
 ```
 Get a list of the banned peers.
 
+- `getTotalReceived`
+```java
+long getTotalReceived()
+```
+Query for the total number of packets that the node has received thus far.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -523,6 +529,11 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### getTotalReceived
+```java
+long totalReceived = client.getTotalReceived();
 ```
 
 #### shutdown
