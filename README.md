@@ -496,12 +496,12 @@ Branch branch = client.getBranches();
 
 #### getUptime
 ```java
-val uptime = client.getUptime();
+Duration uptime = client.getUptime();
 ```
 
 #### getTotalSent
 ```java
-val sentPackets = client.getTotalSent();
+long sentPackets = client.getTotalSent();
 ```
 #### getPeerStatistics
 ```java
@@ -511,7 +511,7 @@ PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapp
 
 #### getPeerList
 ```java
-val peers = client.getPeerList(true);
+ImmutableList<Peer> peers = client.getPeerList(true);
 ```
 
 #### getVersion
