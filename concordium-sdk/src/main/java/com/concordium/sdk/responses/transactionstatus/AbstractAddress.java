@@ -26,8 +26,7 @@ public abstract class AbstractAddress {
                 val contract = (Map<String, Integer>) o.get("address");
                 return new ContractAddress(
                         contract.get("subindex"),
-                        contract.get("index"),
-                        AccountType.from(((String) o.get("type"))));
+                        contract.get("index"));
             } else {
                 return new Account(
                         AccountType.from(
