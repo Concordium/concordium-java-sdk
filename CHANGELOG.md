@@ -9,7 +9,6 @@
 - Added support for query `PeerList`
 - Added support for query `PeerStats`
 - Added support for query `PeerVersion`
-- Added support for query `GetAnonymityRevokers`
 - Added support for query `GetModuleSource`
 - Added support for query `GetModuleList`
 - Added support for query `GetBirkParameters`
@@ -19,6 +18,7 @@
 - Added support for query `JoinNetwork`
 - Added support for query `LeaveNetwork`
 - Added support for query `GetIdentityProviders`
+- Added support for query `GetAnonymityRevokers`
 - Added support for query `GetRewardStatus`
 - Added support for query `GetInstanceInfo`
 - Added support for query `GetInstances`
