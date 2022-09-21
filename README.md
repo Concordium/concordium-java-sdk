@@ -217,9 +217,9 @@ Retrives the node software version.
 
 - `getBirkParameters`
 ```java
-BirkParameters getBirkParameters(Hash blockHash) throws Exception
+BirkParameters getBirkParameters(Hash blockHash) throws BlockNotFoundException
 ```
-Get consensus-relevant information for the specified block.
+Get an overview of the parameters used for baking for a given block.
 
 ## Transactions
 
@@ -381,7 +381,7 @@ SemVer version = client.getVersion();
 
 #### getBirkParameters
 ```java
-val birkParams = client
+BirkParameters birkParams = client
         .getBirkParameters(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
 ```
 

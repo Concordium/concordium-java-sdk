@@ -315,22 +315,17 @@ public final class Client {
     }
 
     /**
-     * Get consensus-relevant information for the specified block.
+     * Get an overview of the parameters used for baking for the specified block.
      * @param blockHash {@link Hash} of the block at which the parameters need to be retrived.
      * @return Parsed {@link BirkParameters}
      * @throws Exception When the returned response is null.
      */
-    public BirkParameters getBirkParameters(Hash blockHash) throws Exception {
+    public BirkParameters getBirkParameters(Hash blockHash) throws BlockNotFoundException {
         val res = server()
                 .getBirkParameters(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
 
-        val parsedRes = BirkParameters.fromJson(res);
-
-        if (Objects.isNull(parsedRes)) {
-            throw new Exception(String.format("Birk Parameters not found at block %s", blockHash.asHex()));
-        }
-
-        return parsedRes;
+        return BirkParameters.fromJson(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**

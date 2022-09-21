@@ -7,15 +7,15 @@ import concordium.ConcordiumP2PRpc;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.val;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The state of consensus parameters, and allowed participants (i.e., bakers).
  */
 @Data
-@Getter
-@ToString
 public class BirkParameters {
 
     /**
@@ -33,9 +33,11 @@ public class BirkParameters {
      */
     private List<Baker> bakers;
 
-    public static BirkParameters fromJson(ConcordiumP2PRpc.JsonResponse jsonResponse) {
+    public static Optional<BirkParameters> fromJson(ConcordiumP2PRpc.JsonResponse jsonResponse) {
         try {
-            return JsonMapper.INSTANCE.readValue(jsonResponse.getValue(), BirkParameters.class);
+            val ret = JsonMapper.INSTANCE.readValue(jsonResponse.getValue(), BirkParameters.class);
+
+            return Optional.ofNullable(ret);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse BirkParameters JSON", e);
         }
