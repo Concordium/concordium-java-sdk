@@ -282,7 +282,7 @@ public final class Client {
     /**
      * Query for the total number of packets that the node has received thus far.
      *
-     * @return Total number of Received packets.
+     * @return Total number of received packets.
      */
     public long getTotalReceived() {
         return server().peerTotalReceived(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
