@@ -10,6 +10,18 @@
 - Added support for query `PeerStats`
 - Added support for query `PeerVersion`
 - Added support for query `GetModuleList`
+- Added support for query `GetBirkParameters`
+- Added support for query `NodeInfo`
+- Added support for query `Shutdown`
+- Added support for query `GetAncestors`
+- Added support for query `JoinNetwork`
+- Added support for query `LeaveNetwork`
+- Added support for query `GetRewardStatus`
+- Added support for query `GetInstanceInfo`
+- Added support for query `GetInstances`
+- Added support for query `GetAccountList`
+- Added support for query `GetBannedPeers`
+- Added support for query `GetBranches`
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
