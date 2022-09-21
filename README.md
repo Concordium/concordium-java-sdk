@@ -181,6 +181,68 @@ BlocksAtHeight getBlocksAtHeight(BlocksAtHeightRequest height) throws BlockNotFo
 Retrieves the `BlocksAtHeight` at the given height if one or more was found.
 Throws a `BlockNotFoundException` if no blocks were found.
 
+- `getModuleSource`
+```java
+ModuleSource getModuleSource(ModuleRef moduleRef, Hash blockHash) throws ModuleNotFoundException
+```
+Get the source of a smart contract module.
+Throws `ModuleNotFoundException` if the module could not be found for the given block.
+
+- `getModuleList`
+```java
+ImmutableList<ModuleRef> getModuleList(final Hash blockHash) throws BlockNotFoundException
+```
+Get a list of smart contract modules that exist in the state after the given block.
+
+- `getBirkParameters`
+```java
+BirkParameters getBirkParameters(Hash blockHash) throws BlockNotFoundException
+```
+Get an overview of the parameters used for baking for a given block.
+
+- `getInstanceInfo`
+```java
+InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash) throws ContractInstanceNotFoundException
+```
+Get the smart contract instance information given the `ContractAddress` for the provided block.
+Throws `ContractInstanceNotFoundexception` if the instance could not be found for the given block.
+
+- `getInstances`
+```java
+ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of smart contract instances in a given block at block commitment.
+Throws a `BlockNotFoundException` if an invalid block hash was given.
+
+- `getAccountList`
+```java
+ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of accounts in the given block.
+Throws a `BlockNotFoundException` if an invalid block hash was given.
+
+- `getAncestors`
+```java
+ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
+```
+Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
+
+- `getRewardStatus`
+```java
+RewardsOverview getRewardStatus(final Hash blockHash) throws BlockNotFoundException
+```
+
+Get the information about total amount of CCD and the state of various administrative accounts.
+
+- `getBranches`
+```java
+Branch getBranches()
+```
+Get the branches of the node's tree. Branches are all live blocks that
+are successors of the last finalized block. In particular this means
+that blocks which do not have a parent are not included in this
+response.
+
 ### Node & P2P Queries
 
 - `getUptime`
@@ -239,47 +301,11 @@ boolean leaveNetwork(final UInt16 networkId)
 ```
 Ask the node to leave the specified network.
 
-- `getInstanceInfo`
-```java
-InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash) throws ContractInstanceNotFoundException
-```
-Get the smart contract instance information given the `ContractAddress` for the provided block.
-Throws `ContractInstanceNotFoundexception` if the instance could not be found for the given block.
-
-- `getInstances`
-```java
-ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException
-```
-Get the list of smart contract instances in a given block at block commitment.
-Throws a `BlockNotFoundException` if an invalid block hash was given.
-
-- `getAccountList`
-```java
-ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException
-```
-Get the list of accounts in the given block.
-Throws a `BlockNotFoundException` if an invalid block hash was given.
-
 - `getBannedPeers`
 ```java
 ImmutableList<Peer> getBannedPeers() throws UnknownHostException
 ```
 Get a list of the banned peers.
-
-- `getAncestors`
-```java
-ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
-```
-Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
-
-- `getBranches`
-```java
-Branch getBranches()
-```
-Get the branches of the node's tree. Branches are all live blocks that
-are successors of the last finalized block. In particular this means
-that blocks which do not have a parent are not included in this
-response.
 
 ## Transactions
 
@@ -412,50 +438,23 @@ try {
 }
 ```
 
-### Node & P2P Queries
-
-#### getUptime
+#### getModuleSource
 ```java
-val uptime = client.getUptime();
+ModuleSource moduleSource = client.getModuleSource(
+        Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c08"),
+        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
 ```
 
-#### getTotalSent
+#### getModuleList
 ```java
-val sentPackets = client.getTotalSent();
-```
-#### getPeerStatistics
-```java
-boolean shouldIncludeBootstrapperNodes = true;
-PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapperNodes);
+ImmutableList<ModuleRef> list = client
+        .getModuleList(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
 ```
 
-#### getPeerList
+#### getBirkParameters
 ```java
-val peers = client.getPeerList(true);
-```
-
-#### getVersion
-```java
-SemVer version = client.getVersion();
-```
-
-#### getNodeInfo
-```java
-NodeInfo = client.getNodeInfo();
-```
-#### shutdown
-```java
-client.shutdown();
-```
-
-#### joinNetwork
-```java
-client.joinNetwork(UInt16.from(200));
-```
-
-#### leaveNetwork
-```java
-client.leaveNetwork(UInt16.from(200));
+BirkParameters birkParams = client
+        .getBirkParameters(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
 ```
 
 #### getInstanceInfo
@@ -477,19 +476,73 @@ ImmutableList<AccountAddress> accounts = client
                 .getAccountList(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
 ```
 
-#### getBannedPeers
-```java
-ImmutableList<Peer> bannedPeers = client.getBannedPeers();
-```
-
 #### getAncestors
 ```java
 ImmutableList<Hash> ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
 ```
 
+#### getRewardStatus
+```java
+RewardsOverview rewardsStatus = client
+        .getRewardStatus(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
+```
+
 #### getBranches
 ```java
 Branch branch = client.getBranches();
+```
+
+### Node & P2P Queries
+
+#### getUptime
+```java
+Duration uptime = client.getUptime();
+```
+
+#### getTotalSent
+```java
+long sentPackets = client.getTotalSent();
+```
+#### getPeerStatistics
+```java
+boolean shouldIncludeBootstrapperNodes = true;
+PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapperNodes);
+```
+
+#### getPeerList
+```java
+ImmutableList<Peer> peers = client.getPeerList(true);
+```
+
+#### getVersion
+```java
+SemVer version = client.getVersion();
+```
+
+
+#### getNodeInfo
+```java
+NodeInfo = client.getNodeInfo();
+```
+
+#### shutdown
+```java
+client.shutdown();
+```
+
+#### joinNetwork
+```java
+client.joinNetwork(UInt16.from(200));
+```
+
+#### leaveNetwork
+```java
+client.leaveNetwork(UInt16.from(200));
+```
+
+#### getBannedPeers
+```java
+ImmutableList<Peer> bannedPeers = client.getBannedPeers();
 ```
 
 ## Transactions

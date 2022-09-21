@@ -5,6 +5,7 @@ import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.ancestors.Ancestors;
+import com.concordium.sdk.responses.birkparamsters.BirkParameters;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
@@ -13,9 +14,12 @@ import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
+import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.responses.modulesource.ModuleSource;
 import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.ContractAddress;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
@@ -37,6 +41,7 @@ import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -88,7 +93,7 @@ public final class Client {
      * @param accountRequest The {@link AccountRequest}
      *                       See {@link AccountRequest#from(AccountAddress)},
      *                       {@link AccountRequest#from(AccountIndex)}
-     * @param blockHash the block hash
+     * @param blockHash      the block hash
      * @return The {@link AccountInfo}
      * @throws AccountNotFoundException if the account was not found.
      */
@@ -242,6 +247,7 @@ public final class Client {
 
     /**
      * Get the {@link CryptographicParameters} at a given block.
+     *
      * @param blockHash the hash of the block
      * @return the cryptographic parameters at the given block.
      * @throws BlockNotFoundException if the block was not found.
@@ -272,6 +278,7 @@ public final class Client {
 
     /**
      * Gets the Peer uptime.
+     *
      * @return Peer Uptime {@link Duration}.
      */
     public Duration getUptime() {
@@ -281,6 +288,7 @@ public final class Client {
 
     /**
      * Gets the total number of packets sent.
+     *
      * @return Total number of packets sent.
      */
     public long getTotalSent() {
@@ -305,6 +313,7 @@ public final class Client {
 
     /**
      * Gets {@link PeerStatistics} of the node.
+     *
      * @param includeBootstrappers Whether bootstrappers should be included in the response.
      * @return Peer Statistics in the format {@link PeerStatistics}
      */
@@ -320,11 +329,65 @@ public final class Client {
 
     /**
      * Gets the Semantic Version of the Peer Software / Node
+     *
      * @return Version of the Peer / Node
      */
     public Semver getVersion() {
         val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return new Semver(versionString);
+    }
+
+    /**
+     * Get the source of a smart contract module.
+     *
+     * @param moduleRef {@link ModuleRef} of module to retrieve.
+     * @param blockHash {@link Hash} of the Block at which the module source is to be retrieved.
+     * @return Parsed {@link ModuleSource}.
+     * @throws ModuleNotFoundException When module cannot be found.
+     */
+    public ModuleSource getModuleSource(ModuleRef moduleRef, Hash blockHash) throws ModuleNotFoundException {
+        val res = server()
+                .getModuleSource(ConcordiumP2PRpc.GetModuleSourceRequest.newBuilder()
+                        .setBlockHash(blockHash.asHex())
+                        .setModuleRef(moduleRef.asHex())
+                        .build());
+
+        Optional<ModuleSource> moduleSource = res.getValue().isEmpty()
+                ? Optional.empty()
+                : Optional.of(ModuleSource.from(res.getValue().toByteArray()));
+
+        return moduleSource.orElseThrow(() -> ModuleNotFoundException.from(blockHash, moduleRef));
+    }
+
+    /**
+     * Get the list of smart contract modules in the given block.
+     *
+     * @param blockHash {@link Hash} of block at which the modules list is being retrieved.
+     * @return Parsed {@link ImmutableList} of {@link Hash}
+     * @throws Exception When the returned JSON is null.
+     */
+    public ImmutableList<ModuleRef> getModuleList(final Hash blockHash) throws BlockNotFoundException {
+        val res = server().getModuleList(ConcordiumP2PRpc.BlockHash.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .build());
+
+        return ModuleRef.fromJsonArray(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
+     * Get an overview of the parameters used for baking for the specified block.
+     *
+     * @param blockHash {@link Hash} of the block at which the parameters need to be retrived.
+     * @return Parsed {@link BirkParameters}
+     * @throws Exception When the returned response is null.
+     */
+    public BirkParameters getBirkParameters(Hash blockHash) throws BlockNotFoundException {
+        val res = server()
+                .getBirkParameters(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
+
+        return BirkParameters.fromJson(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**
@@ -449,6 +512,22 @@ public final class Client {
     }
 
     /**
+     * Get the information about total amount of CCD and the state of various special accounts in the provided block.
+     *
+     * @param blockHash Block at which the reward status is to be retrieved.
+     * @return Parsed {@link RewardsOverview}.
+     * @throws Exception When the returned response is null.
+     */
+    public RewardsOverview getRewardStatus(final Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder()
+                .setBlockHash(blockHash.asHex()).build();
+        val res = server().getRewardStatus(req);
+
+        return RewardsOverview.fromJson(res)
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
      * Get the branches of the node's tree. Branches are all live blocks that
      * are successors of the last finalized block. In particular this means
      * that blocks which do not have a parent are not included in this
@@ -466,7 +545,7 @@ public final class Client {
      * This should only be done when the {@link Client}
      * is of no more use as creating a new {@link Client} (and the associated)
      * channel is rather expensive.
-     *
+     * <p>
      * Subsequent calls following a closed channel will throw a {@link io.grpc.StatusRuntimeException}
      */
     public void close() {
