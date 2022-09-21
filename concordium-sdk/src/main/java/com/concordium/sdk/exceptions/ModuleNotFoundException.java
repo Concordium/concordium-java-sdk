@@ -3,6 +3,9 @@ package com.concordium.sdk.exceptions;
 import com.concordium.sdk.transactions.Hash;
 import lombok.Getter;
 
+/**
+ * An exception thrown when a module was not found for a given block {@link Hash}
+ */
 public class ModuleNotFoundException extends Exception {
     @Getter
     private final Hash blockHash;
