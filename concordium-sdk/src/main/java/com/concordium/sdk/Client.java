@@ -3,16 +3,9 @@ package com.concordium.sdk;
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.birkparamsters.BirkParameters;
-import com.concordium.sdk.responses.peerlist.Peer;
-import com.concordium.sdk.responses.peerStats.PeerStatistics;
-import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
-import com.concordium.sdk.exceptions.AccountNotFoundException;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
-import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.ancestors.Ancestors;
+import com.concordium.sdk.responses.birkparamsters.BirkParameters;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
@@ -338,6 +331,7 @@ public final class Client {
 
     /**
      * Get an overview of the parameters used for baking for the specified block.
+     *
      * @param blockHash {@link Hash} of the block at which the parameters need to be retrived.
      * @return Parsed {@link BirkParameters}
      * @throws Exception When the returned response is null.
@@ -347,7 +341,7 @@ public final class Client {
                 .getBirkParameters(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
 
         return BirkParameters.fromJson(res)
-            .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**

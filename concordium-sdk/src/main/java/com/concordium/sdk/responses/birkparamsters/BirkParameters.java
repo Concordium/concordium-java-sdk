@@ -4,10 +4,8 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import concordium.ConcordiumP2PRpc;
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,22 +14,25 @@ import java.util.Optional;
  * The state of consensus parameters, and allowed participants (i.e., bakers).
  */
 @Data
+@Jacksonized
+@Builder
 public class BirkParameters {
 
     /**
      * Current election difficulty.
      */
-    private double electionDifficulty;
+    private final double electionDifficulty;
 
     /**
      * Leadership election nonce for the current epoch.
      */
-    private Hash electionNonce;
+    private final Hash electionNonce;
 
     /**
      * The list of active bakers.
      */
-    private List<Baker> bakers;
+    @Singular
+    private final List<Baker> bakers;
 
     public static Optional<BirkParameters> fromJson(ConcordiumP2PRpc.JsonResponse jsonResponse) {
         try {
