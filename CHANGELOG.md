@@ -24,6 +24,8 @@
 - Added support for query `GetAccountList`
 - Added support for query `GetBannedPeers`
 - Added support for query `GetBranches`
+- Added support for query `GetIdentityProviders`
+- Added support for query `GetAnonymityRevokers`
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
