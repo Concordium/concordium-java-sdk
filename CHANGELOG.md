@@ -18,6 +18,7 @@
 - Added support for query `JoinNetwork`
 - Added support for query `LeaveNetwork`
 - Added support for query `GetIdentityProviders`
+- Added support for query `GetAnonymityRevokers`
 - Added support for query `GetRewardStatus`
 - Added support for query `GetInstanceInfo`
 - Added support for query `GetInstances`

@@ -242,6 +242,20 @@ are successors of the last finalized block. In particular this means
 that blocks which do not have a parent are not included in this
 response.
 
+- `getAnonymityRevokers`
+```java
+ImmutableList<AnonymityRevokerInfo> getAnonymityRevokers(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of anonymity revokers in the given block.
+
+- `getIdentityProviders`
+```java
+ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of identity providers in the given block.
+
+
+
 ### Node & P2P Queries
 
 - `getUptime`
@@ -276,7 +290,6 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
-
 - `getNodeInfo`
 ```java
 NodeInfo getNodeInfo()
@@ -301,59 +314,11 @@ boolean leaveNetwork(final UInt16 networkId)
 ```
 Ask the node to leave the specified network.
 
-- `getInstanceInfo`
-```java
-InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash) throws ContractInstanceNotFoundException
-```
-Get the smart contract instance information given the `ContractAddress` for the provided block.
-Throws `ContractInstanceNotFoundexception` if the instance could not be found for the given block.
-
-- `getInstances`
-```java
-ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException
-```
-Get the list of smart contract instances in a given block at block commitment.
-Throws a `BlockNotFoundException` if an invalid block hash was given.
-
-- `getAccountList`
-```java
-ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException
-```
-Get the list of accounts in the given block.
-Throws a `BlockNotFoundException` if an invalid block hash was given.
-
 - `getBannedPeers`
 ```java
 ImmutableList<Peer> getBannedPeers() throws UnknownHostException
 ```
 Get a list of the banned peers.
-
-- `getAncestors`
-```java
-ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
-```
-Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
-
-- `getIdentityProviders`
-```java
-ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash) throws BlockNotFoundException
-```
-Get the list of identity providers in the given block.
-
-- `getRewardStatus`
-```java
-RewardsOverview getRewardStatus(final Hash blockHash) throws BlockNotFoundException
-```
-
-Get the information about total amount of CCD and the state of various administrative accounts.
-- `getBranches`
-```java
-Branch getBranches()
-```
-Get the branches of the node's tree. Branches are all live blocks that
-are successors of the last finalized block. In particular this means
-that blocks which do not have a parent are not included in this
-response.
 
 ## Transactions
 
@@ -540,6 +505,18 @@ RewardsOverview rewardsStatus = client
 Branch branch = client.getBranches();
 ```
 
+#### getIdentityProviders
+```java
+ImmutableList<IdentityProviderInfo> identityProviders = client.getIdentityProviders(
+        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
+
+#### getAnonymityRevokers
+```java
+ImmutableList<AnonymityRevokerInfo> revokers = client
+                .getAnonymityRevokers(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
+
 ### Node & P2P Queries
 
 #### getUptime
@@ -567,7 +544,6 @@ val peers = client.getPeerList(true);
 SemVer version = client.getVersion();
 ```
 
-
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
@@ -591,28 +567,6 @@ client.leaveNetwork(UInt16.from(200));
 #### getBannedPeers
 ```java
 ImmutableList<Peer> bannedPeers = client.getBannedPeers();
-```
-
-#### getAncestors
-```java
-ImmutableList<Hash> ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
-```
-
-#### getIdentityProviders
-```java
-ImmutableList<IdentityProviderInfo> identityProviders = client.getIdentityProviders(
-        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
-```
-
-#### getRewardStatus
-```java
-RewardsOverview rewardsStatus = client
-        .getRewardStatus(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
-```
-
-#### getBranches
-```java
-Branch branch = client.getBranches();
 ```
 
 ## Transactions

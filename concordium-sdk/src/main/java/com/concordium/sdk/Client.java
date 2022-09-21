@@ -10,6 +10,7 @@ import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
+import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
@@ -336,6 +337,20 @@ public final class Client {
     public Semver getVersion() {
         val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return new Semver(versionString);
+    }
+
+    /**
+     * Get the list of anonymity revokers in the given block.
+     *
+     * @param blockHash {@link Hash} of the block at which the anonymity revokers need to be fetched.
+     * @return Parsed {@link ImmutableList} of {@link AnonymityRevokerInfo}
+     * @throws BlockNotFoundException When the returned Json is NULL.
+     */
+    public ImmutableList<AnonymityRevokerInfo> getAnonymityRevokers(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
+        val res = server().getAnonymityRevokers(req);
+
+        return AnonymityRevokerInfo.fromJsonArray(res).orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**
