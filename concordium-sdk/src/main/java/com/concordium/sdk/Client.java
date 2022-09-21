@@ -3,11 +3,11 @@ package com.concordium.sdk;
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
-import com.concordium.sdk.responses.anonymityrevokers.ArInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
+import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
@@ -19,11 +19,11 @@ import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
-import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
 import lombok.val;
+import org.semver4j.Semver;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -80,7 +80,7 @@ public final class Client {
      * @param accountRequest The {@link AccountRequest}
      *                       See {@link AccountRequest#from(AccountAddress)},
      *                       {@link AccountRequest#from(AccountIndex)}
-     * @param blockHash the block hash
+     * @param blockHash      the block hash
      * @return The {@link AccountInfo}
      * @throws AccountNotFoundException if the account was not found.
      */
@@ -234,6 +234,7 @@ public final class Client {
 
     /**
      * Get the {@link CryptographicParameters} at a given block.
+     *
      * @param blockHash the hash of the block
      * @return the cryptographic parameters at the given block.
      * @throws BlockNotFoundException if the block was not found.
@@ -253,6 +254,7 @@ public final class Client {
 
     /**
      * Gets the Peer uptime.
+     *
      * @return Peer Uptime {@link Duration}.
      */
     public Duration getUptime() {
@@ -262,6 +264,7 @@ public final class Client {
 
     /**
      * Gets the total number of packets sent.
+     *
      * @return Total number of packets sent.
      */
     public long getTotalSent() {
@@ -270,13 +273,14 @@ public final class Client {
 
     /**
      * Gets Peers list connected to the Node
+     *
      * @param includeBootstrappers if true will include Bootstrapper nodes in the response.
      * @return An {@link ImmutableList} of {@link Peer}
      * @throws UnknownHostException When the returned IP address of Peer is Invalid.
      */
     public ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException {
         val value = server().peerList(ConcordiumP2PRpc.PeersRequest.newBuilder()
-                    .setIncludeBootstrappers(includeBootstrappers)
+                .setIncludeBootstrappers(includeBootstrappers)
                 .build());
         val list = new ImmutableList.Builder<Peer>();
 
@@ -289,6 +293,7 @@ public final class Client {
 
     /**
      * Gets {@link PeerStatistics} of the node.
+     *
      * @param includeBootstrappers Whether bootstrappers should be included in the response.
      * @return Peer Statistics in the format {@link PeerStatistics}
      */
@@ -304,6 +309,7 @@ public final class Client {
 
     /**
      * Gets the Semantic Version of the Peer Software / Node
+     *
      * @return Version of the Peer / Node
      */
     public Semver getVersion() {
@@ -315,29 +321,23 @@ public final class Client {
      * Get the list of anonymity revokers in the given block.
      *
      * @param blockHash {@link Hash} of the Block at which the Anonymity Revokers need to be fetched.
-     * @return Parsed {@link ImmutableList} of {@link ArInfo}
+     * @return Parsed {@link ImmutableList} of {@link AnonymityRevokerInfo}
      * @throws Exception When the returned Json is NULL.
      */
-    public ImmutableList<ArInfo> getAnonymityRevokers(Hash blockHash) throws Exception {
-        val res = server()
-                .getAnonymityRevokers(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
+    public ImmutableList<AnonymityRevokerInfo> getAnonymityRevokers(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
+        val res = server().getAnonymityRevokers(req);
 
-        ArInfo[] array = ArInfo.fromJsonArray(res);
-
-        if (Objects.isNull(array)) {
-            throw new Exception(String.format("Could not get Anonymity Revoker at block %s", blockHash.asHex()));
-        }
-
-        return ImmutableList.copyOf(array);
+        return AnonymityRevokerInfo.fromJsonArray(res).orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**
      * Closes the underlying grpc channel
-     * 
+     * <p>
      * This should only be done when the {@link Client}
      * is of no more use as creating a new {@link Client} (and the associated)
      * channel is rather expensive.
-     *
+     * <p>
      * Subsequent calls following a closed channel will throw a {@link io.grpc.StatusRuntimeException}
      */
     public void close() {
