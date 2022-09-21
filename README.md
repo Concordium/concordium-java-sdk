@@ -215,13 +215,12 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
- Get the source of a smart contract module.
 - `getModuleSource`
 ```java
 ModuleSource getModuleSource(ModuleRef moduleRef, Hash blockHash) throws ModuleNotFoundException
 ```
-
 Get the source of a smart contract module.
+
 - `getModuleList`
 ```java
 ImmutableList<ModuleRef> getModuleList(final Hash blockHash) throws BlockNotFoundException
