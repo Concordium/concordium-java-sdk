@@ -217,7 +217,7 @@ Retrives the node software version.
 
 - `getModuleList`
 ```java
-ImmutableList<Hash> getModuleList(final Hash blockHash) throws Exception
+ImmutableList<ModuleRef> getModuleList(final Hash blockHash) throws BlockNotFoundException
 ```
 Get a list of smart contract modules that exist in the state after the given block.
 
@@ -381,7 +381,7 @@ SemVer version = client.getVersion();
 
 #### getModuleList
 ```java
-val list = client
+ImmutableList<ModuleRef> list = client
         .getModuleList(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
 ```
 
