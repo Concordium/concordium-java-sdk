@@ -242,17 +242,17 @@ are successors of the last finalized block. In particular this means
 that blocks which do not have a parent are not included in this
 response.
 
-- `getAnonymityRevokers`
-```java
-ImmutableList<AnonymityRevokerInfo> getAnonymityRevokers(Hash blockHash) throws BlockNotFoundException
-```
-Get the list of anonymity revokers in the given block.
-
 - `getIdentityProviders`
 ```java
 ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash) throws BlockNotFoundException
 ```
 Get the list of identity providers in the given block.
+
+- `getAnonymityRevokers`
+```java
+ImmutableList<AnonymityRevokerInfo> getAnonymityRevokers(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of anonymity revokers in the given block.
 
 
 ### Node & P2P Queries
