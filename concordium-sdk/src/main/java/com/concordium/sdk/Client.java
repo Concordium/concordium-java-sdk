@@ -340,12 +340,12 @@ public final class Client {
     /**
      * Get the source of a smart contract module.
      *
-     * @param moduleRef {@link Hash} of module to retrieve.
+     * @param moduleRef {@link ModuleRef} of module to retrieve.
      * @param blockHash {@link Hash} of the Block at which the module source is to be retrieved.
      * @return Parsed {@link ModuleSource}.
      * @throws ModuleNotFoundException When module cannot be found.
      */
-    public ModuleSource getModuleSource(Hash moduleRef, Hash blockHash) throws ModuleNotFoundException {
+    public ModuleSource getModuleSource(ModuleRef moduleRef, Hash blockHash) throws ModuleNotFoundException {
         val res = server()
                 .getModuleSource(ConcordiumP2PRpc.GetModuleSourceRequest.newBuilder()
                         .setBlockHash(blockHash.asHex())
