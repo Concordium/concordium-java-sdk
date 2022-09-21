@@ -130,8 +130,8 @@ public class GetIdentityProvidersTest {
         val ips = IdentityProviderInfo.fromJsonArray(jsonVal);
 
         Assert.assertTrue(ips.isPresent());
-        Assert.assertEquals(Arrays.stream(ips.get()).count(), 1);
-        Assert.assertEquals(Arrays.stream(ips.get()).findFirst().get(), new IdentityProviderInfo(
+        Assert.assertEquals(ips.get().stream().count(), 1);
+        Assert.assertEquals(ips.get().stream().findFirst().get(), new IdentityProviderInfo(
                 0,
                 new Description("Concordium testnet IP", "", "Concordium testnet identity provider"),
                 ED25519PublicKey.from("2e1cff3988174c379432c1fad7ccfc385c897c4477c06617262cec7193226eca"),

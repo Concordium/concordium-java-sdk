@@ -376,13 +376,13 @@ public final class Client {
      *
      * @param blockHash Block {@link Hash}.
      * @return {@link ImmutableList} of {@link IdentityProviderInfo}.
+     * @throws BlockNotFoundException When the returned list of Identity Providers is null.
      */
-    public ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash) throws Exception {
-        val res = server()
-                .getIdentityProviders(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
+    public ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
+        val res = server().getIdentityProviders(req);
 
         return IdentityProviderInfo.fromJsonArray(res)
-                .map(a -> ImmutableList.copyOf(a))
                 .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 

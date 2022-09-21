@@ -240,7 +240,7 @@ Get a list of block hashes that preceding the provided block hash and with a max
 
 - `getIdentityProviders`
 ```java
-ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash)
+ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash) throws BlockNotFoundException
 ```
 Get the list of identity providers in the given block.
 

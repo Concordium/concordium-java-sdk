@@ -7,6 +7,7 @@ import com.concordium.sdk.types.UInt32;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -38,9 +39,10 @@ public final class IdentityProviderInfo {
         this.ipVerifyKey = ipVerifyKey;
     }
 
-    public static Optional<IdentityProviderInfo[]> fromJsonArray(ConcordiumP2PRpc.JsonResponse res) {
+    public static Optional<ImmutableList<IdentityProviderInfo>> fromJsonArray(ConcordiumP2PRpc.JsonResponse res) {
         try {
-            return Optional.ofNullable(JsonMapper.INSTANCE.readValue(res.getValue(), IdentityProviderInfo[].class));
+            return Optional.ofNullable(JsonMapper.INSTANCE.readValue(res.getValue(), IdentityProviderInfo[].class))
+                    .map(array -> ImmutableList.copyOf(array));
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse Identity Provider Array JSON", e);
         }
