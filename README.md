@@ -231,7 +231,6 @@ Get a list of block hashes that preceding the provided block hash and with a max
 ```java
 RewardsOverview getRewardStatus(final Hash blockHash) throws BlockNotFoundException
 ```
-
 Get the information about total amount of CCD and the state of various administrative accounts.
 
 - `getBranches`
@@ -242,6 +241,19 @@ Get the branches of the node's tree. Branches are all live blocks that
 are successors of the last finalized block. In particular this means
 that blocks which do not have a parent are not included in this
 response.
+
+- `getAnonymityRevokers`
+```java
+ImmutableList<AnonymityRevokerInfo> getAnonymityRevokers(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of anonymity revokers in the given block.
+
+- `getIdentityProviders`
+```java
+ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of identity providers in the given block.
+
 
 ### Node & P2P Queries
 
@@ -496,6 +508,18 @@ RewardsOverview rewardsStatus = client
 #### getBranches
 ```java
 Branch branch = client.getBranches();
+```
+
+#### getIdentityProviders
+```java
+ImmutableList<IdentityProviderInfo> identityProviders = client.getIdentityProviders(
+        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
+
+#### getAnonymityRevokers
+```java
+ImmutableList<AnonymityRevokerInfo> anonymityRevokers = client
+                .getAnonymityRevokers(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
 ```
 
 ### Node & P2P Queries

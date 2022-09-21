@@ -10,6 +10,8 @@ import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
+import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
+import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
@@ -525,7 +527,7 @@ public final class Client {
      *
      * @param blockHash Block at which the reward status is to be retrieved.
      * @return Parsed {@link RewardsOverview}.
-     * @throws Exception When the returned response is null.
+     * @throws BlockNotFoundException When the returned response is null.
      */
     public RewardsOverview getRewardStatus(final Hash blockHash) throws BlockNotFoundException {
         val req = ConcordiumP2PRpc.BlockHash.newBuilder()
@@ -546,6 +548,36 @@ public final class Client {
      */
     public Branch getBranches() {
         return Branch.fromJson(server().getBranches(ConcordiumP2PRpc.Empty.newBuilder().build()));
+    }
+
+    /**
+     * Get the list of identity providers in the given block.
+     *
+     * @param blockHash Block {@link Hash}.
+     * @return {@link ImmutableList} of {@link IdentityProviderInfo}.
+     * @throws BlockNotFoundException When an invalid block hash was provided
+     */
+    public ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
+        val res = server().getIdentityProviders(req);
+
+        return IdentityProviderInfo.fromJsonArray(res.getValue())
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
+     * Get the list of anonymity revokers in the given block.
+     *
+     * @param blockHash Block {@link Hash}.
+     * @return {@link ImmutableList} of {@link AnonymityRevokerInfo}.
+     * @throws BlockNotFoundException When an invalid block hash was provided
+     */
+    public ImmutableList<AnonymityRevokerInfo> getAnonymityRevokers(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
+        val res = server().getAnonymityRevokers(req);
+
+        return AnonymityRevokerInfo.fromJsonArray(res.getValue())
+                .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**
