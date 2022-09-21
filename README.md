@@ -391,7 +391,7 @@ NodeInfo = client.getNodeInfo();
 
 #### getTotalReceived
 ```java
-client.getTotalReceived();
+long totalReceived = client.getTotalReceived();
 ```
 
 ## Transactions
