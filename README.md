@@ -202,9 +202,10 @@ Get an overview of the parameters used for baking for a given block.
 
 - `getInstanceInfo`
 ```java
-InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash)
+InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash) throws ContractInstanceNotFoundException
 ```
-Get the information for the given smart contract instance in the given block at commitment.
+Get the smart contract instance information given the `ContractAddress` for the provided block.
+Throws `ContractInstanceNotFoundexception` if the instance could not be found for the given block.
 
 - `getInstances`
 ```java
@@ -276,7 +277,6 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
-
 - `getNodeInfo`
 ```java
 NodeInfo getNodeInfo()
@@ -300,27 +300,6 @@ Ask the node to join the specified network.
 boolean leaveNetwork(final UInt16 networkId)
 ```
 Ask the node to leave the specified network.
-
-- `getInstanceInfo`
-```java
-InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash) throws ContractInstanceNotFoundException
-```
-Get the smart contract instance information given the `ContractAddress` for the provided block.
-Throws `ContractInstanceNotFoundexception` if the instance could not be found for the given block.
-
-- `getInstances`
-```java
-ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException
-```
-Get the list of smart contract instances in a given block at block commitment.
-Throws a `BlockNotFoundException` if an invalid block hash was given.
-
-- `getAccountList`
-```java
-ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException
-```
-Get the list of accounts in the given block.
-Throws a `BlockNotFoundException` if an invalid block hash was given.
 
 - `getBannedPeers`
 ```java
