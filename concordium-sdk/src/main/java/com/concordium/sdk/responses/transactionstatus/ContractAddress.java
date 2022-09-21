@@ -19,7 +19,11 @@ import java.util.Optional;
 @ToString
 @EqualsAndHashCode
 public final class ContractAddress extends AbstractAddress {
+
+    @JsonProperty("subindex")
     private final int subIndex;
+
+    @JsonProperty("index")
     private final int index;
 
     @JsonCreator
@@ -28,6 +32,14 @@ public final class ContractAddress extends AbstractAddress {
         super(AccountType.ADDRESS_CONTRACT);
         this.subIndex = subIndex;
         this.index = index;
+    }
+
+    public String toJson() {
+        try {
+            return JsonMapper.INSTANCE.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Could not serialize Contract Address");
+        }
     }
 
     public static Optional<ImmutableList<ContractAddress>> toList(ConcordiumP2PRpc.JsonResponse res) {

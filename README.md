@@ -239,6 +239,13 @@ boolean leaveNetwork(final UInt16 networkId)
 ```
 Ask the node to leave the specified network.
 
+- `getInstanceInfo`
+```java
+InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash) throws ContractInstanceNotFoundException
+```
+Get the smart contract instance information given the `ContractAddress` for the provided block.
+Throws `ContractInstanceNotFoundexception` if the instance could not be found for the given block.
+
 - `getInstances`
 ```java
 ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException
@@ -449,6 +456,13 @@ client.joinNetwork(UInt16.from(200));
 #### leaveNetwork
 ```java
 client.leaveNetwork(UInt16.from(200));
+```
+
+#### getInstanceInfo
+```java
+InstanceInfo instanceInfo = client.getInstanceInfo(
+                new ContractAddress(0, 0),
+                Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
 ```
 
 #### getInstances

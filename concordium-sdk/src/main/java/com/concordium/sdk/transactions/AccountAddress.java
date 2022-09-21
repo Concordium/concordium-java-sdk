@@ -8,7 +8,6 @@ import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
@@ -17,7 +16,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-@ToString
 @EqualsAndHashCode
 public final class AccountAddress {
     public static final int BYTES = 32;
@@ -127,5 +125,10 @@ public final class AccountAddress {
     @JsonCreator
     AccountAddress(String encodedAddress) {
         this.bytes = AccountAddress.from(encodedAddress).getBytes();
+    }
+
+    @Override
+    public String toString() {
+        return encoded();
     }
 }

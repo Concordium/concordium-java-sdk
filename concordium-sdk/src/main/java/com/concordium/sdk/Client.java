@@ -1,6 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
+import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.ancestors.Ancestors;
@@ -11,6 +12,7 @@ import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
 import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
@@ -20,9 +22,9 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
+import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
-import com.concordium.sdk.types.UInt16;
 import com.google.protobuf.Int32Value;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
@@ -359,10 +361,32 @@ public final class Client {
     }
 
     /**
+     * Get the smart contract instance information given the {@link ContractAddress} for the provided block {@link Hash}.
+     *
+     * @param contractAddress {@link ContractAddress}
+     * @param blockHash       {@link Hash} of the block
+     * @return The {@link InstanceInfo}.
+     * @throws ContractInstanceNotFoundException When the contract instance could not be found for the provided block hash.
+     */
+    public InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash)
+            throws ContractInstanceNotFoundException {
+        val grpcReq = ConcordiumP2PRpc.GetAddressInfoRequest
+                .newBuilder()
+                .setAddress(contractAddress.toJson())
+                .setBlockHash(blockHash.asHex())
+                .build();
+        val res = server().getInstanceInfo(grpcReq);
+
+        return InstanceInfo.fromJson(res)
+                .orElseThrow(() -> ContractInstanceNotFoundException.from(contractAddress, blockHash));
+    }
+
+    /**
      * Get the list of smart contract instances in a given block at the time of commitment.
      *
      * @param blockHash {@link Hash} at which the instances need to be fetched.
      * @return {@link ImmutableList} of {@link ContractAddress}.
+     * @throws BlockNotFoundException when no block could be found with the provided block {@link Hash}.
      */
     public ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException {
         val req = ConcordiumP2PRpc.BlockHash.newBuilder()
