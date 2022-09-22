@@ -1,11 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
 
 // Used for tagging the underlying RejectReasonContent
-@Getter
-@ToString
+@Data
 public abstract class RejectReason {
     public abstract RejectReasonType getType();
 }
