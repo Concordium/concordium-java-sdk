@@ -19,14 +19,18 @@ public class BakerId {
 
     private AccountIndex id;
 
-    @JsonCreator
-    BakerId(long index) {
+    private BakerId(long index) {
         this.id = AccountIndex.from(index);
     }
 
     @Override
     public String toString() {
         return this.id.toString();
+    }
+
+    @JsonCreator
+    public static BakerId from(long index) {
+        return new BakerId(index);
     }
 
     public static Optional<ImmutableList<BakerId>> fromJsonArray(ConcordiumP2PRpc.JsonResponse res) {
