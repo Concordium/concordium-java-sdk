@@ -19,7 +19,7 @@ public class Hash {
     private final byte[] bytes;
 
     @JsonCreator
-    Hash(String encoded) {
+    protected Hash(String encoded) {
         try {
             this.bytes = Hex.decodeHex(encoded);
         } catch (DecoderException e) {
@@ -27,7 +27,7 @@ public class Hash {
         }
     }
 
-    private Hash(byte[] hash) {
+    protected Hash(byte[] hash) {
         this.bytes = hash;
     }
 
