@@ -2,38 +2,35 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.peerlist.Peer;
-import com.concordium.sdk.responses.peerStats.PeerStatistics;
-import com.concordium.sdk.responses.nodeinfo.NodeInfo;
-import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
-import com.concordium.sdk.exceptions.AccountNotFoundException;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
-import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.nodeinfo.NodeInfo;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
+import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.responses.transactionstatusinblock.TransactionStatusInBlock;
-import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.transactions.Transaction;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
-import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
 import lombok.val;
+import org.semver4j.Semver;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -143,24 +140,20 @@ public final class Client {
      * Get the status of a transaction in a given block.
      *
      * @param transactionHash Transaction {@link Hash}
-     * @param blockHash Block {@link Hash}
+     * @param blockHash       Block {@link Hash}
      * @return Parsed {@link TransactionStatusInBlock}
      */
     public TransactionStatusInBlock getTransactionStatusInBlock(
             Hash transactionHash,
-            Hash blockHash) throws TransactionNotFoundException {
-        val transactionStatus = server()
-                .getTransactionStatusInBlock(ConcordiumP2PRpc.GetTransactionStatusInBlockRequest.newBuilder()
-                        .setBlockHash(blockHash.asHex())
-                        .setTransactionHash(transactionHash.asHex())
-                        .build());
-        val status = TransactionStatusInBlock.fromJson(transactionStatus);
+            Hash blockHash) throws TransactionNotFoundInBlockException {
+        val req = ConcordiumP2PRpc.GetTransactionStatusInBlockRequest.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .setTransactionHash(transactionHash.asHex())
+                .build();
+        val res = server().getTransactionStatusInBlock(req);
 
-        if (Objects.isNull(status)) {
-            throw TransactionNotFoundException.from(transactionHash);
-        }
-
-        return status;
+        return TransactionStatusInBlock.fromJson(res)
+                .orElseThrow(() -> TransactionNotFoundInBlockException.from(transactionHash, blockHash));
     }
 
     /**

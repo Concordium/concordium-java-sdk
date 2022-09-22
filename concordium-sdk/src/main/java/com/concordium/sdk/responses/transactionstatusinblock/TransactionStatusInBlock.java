@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import concordium.ConcordiumP2PRpc;
 import lombok.Getter;
+import lombok.val;
 
 import java.util.Optional;
 
@@ -39,9 +40,13 @@ public class TransactionStatusInBlock {
         this.result = Optional.of(result);
     }
 
-    public static TransactionStatusInBlock fromJson(ConcordiumP2PRpc.JsonResponse transactionStatus) {
+    public static Optional<TransactionStatusInBlock> fromJson(ConcordiumP2PRpc.JsonResponse res) {
         try {
-            return JsonMapper.INSTANCE.readValue(transactionStatus.getValue(), TransactionStatusInBlock.class);
+            val jsonRes = JsonMapper.INSTANCE.readValue(
+                    res.getValue(),
+                    TransactionStatusInBlock.class);
+
+            return Optional.ofNullable(jsonRes);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse TransactionStatusInBlock JSON", e);
         }
