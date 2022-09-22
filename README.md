@@ -222,15 +222,15 @@ NodeInfo getNodeInfo()
 
 - `banNode`
 ```java
-boolean banNode(final BanNodeRequest request) throws Exception 
+boolean banNode(final BanNodeRequest request)
 ```
-Ban a specific node.
+Ban a specific node by Id or Ip address. Returns true if specified node was banned false otherwise.
 
 - `unBanNode`
 ```java
 boolean unBanNode(final InetAddress ip)
 ```
-Unban a specific node.
+Unban a specific node by Ip address. Returns true if specified node was unbanned false otherwise.
 
 ## Transactions
 

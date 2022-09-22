@@ -24,7 +24,6 @@ import com.google.protobuf.StringValue;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
-import lombok.SneakyThrows;
 import lombok.val;
 import org.semver4j.Semver;
 
@@ -331,34 +330,25 @@ public final class Client {
      * Note that this will also cause the node to drop any connections to a matching node.
      *
      * @param request {@link BanNodeRequest}
-     * @return {@link Boolean} depending on whether the request was successful or not.
-     * @throws Exception When Neither ID nor Ip was specified.
+     * @return {@link Boolean} This is True if Specified node was banned. False otherwise.
      */
-    public boolean banNode(final BanNodeRequest request) throws Exception {
-        ConcordiumP2PRpc.PeerElement peerElement;
+    public boolean banNode(final BanNodeRequest request) {
+        val builder = ConcordiumP2PRpc.PeerElement.newBuilder();
 
-        if (request.hasIp()) {
-            peerElement = ConcordiumP2PRpc.PeerElement.newBuilder()
-                    .setIp(StringValue.of(request.getIp().getHostAddress()))
-                    .build();
-
-        } else if (request.hasId()) {
-            peerElement = ConcordiumP2PRpc.PeerElement
-                    .newBuilder()
-                    .setNodeId(StringValue.of(request.getId()))
-                    .build();
+        if (request.getIp().isPresent()) {
+            builder.setIp(StringValue.of(request.getIp().get().getHostAddress()));
         } else {
-            throw new Exception("Invalid Request. Should mention either Ip or Id");
+            builder.setNodeId(StringValue.of(request.getId().get()));
         }
 
-        return server().banNode(peerElement).getValue();
+        return server().banNode(builder.build()).getValue();
     }
 
     /**
-     * Un Ban a specific node.
+     * Unban a specific node.
      *
      * @param ip {@link InetAddress}.
-     * @return {@link Boolean} depending on whether the request was successful or not.
+     * @return {@link Boolean} This is True If Specified node was unbanned. False otherwise.
      */
     public boolean unBanNode(final InetAddress ip) {
         ConcordiumP2PRpc.PeerElement peerElement = ConcordiumP2PRpc.PeerElement.newBuilder()
