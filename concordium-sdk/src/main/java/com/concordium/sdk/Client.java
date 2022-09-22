@@ -319,15 +319,10 @@ public final class Client {
      * @throws BlockNotFoundException When the returned JSON is null.
      */
     public ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException {
-        val res = server()
-                .getBakerList(ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build());
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
+        val res = server().getBakerList(req);
 
-        BakerId[] bakerIdArray = BakerId.fromJsonArray(res);
-        if (Objects.isNull(bakerIdArray)) {
-            throw BlockNotFoundException.from(blockHash);
-        }
-
-        return ImmutableList.copyOf(bakerIdArray);
+        return BakerId.fromJsonArray(res).orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**
