@@ -297,7 +297,9 @@ Get the IDs of the bakers registered in the given block.
 
 - `getPoolStatus`
 ```java
-PoolStatus getPoolStatus(final Hash blockHash, final Optional<BakerId> bakerId)
+public PoolStatus getPoolStatus(
+            final Hash blockHash,
+            final Optional<BakerId> bakerId) throws PoolNotFoundException
 ```
 Get the status of a given baker pool or passive delegation at the given block.
 
@@ -569,12 +571,12 @@ ImmutableList<BakerId> bakerList = client
 
 #### getPoolStatus
 ```java
-val poolStatusPassiveDeletation = client
+PoolStatus poolStatusPassiveDeletation = client
         .getPoolStatus(
                 Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"),
                 Optional.empty());
 
-val bakerPoolStatus = client.getPoolStatus(
+PoolStatus bakerPoolStatus = client.getPoolStatus(
         Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"),
         Optional.of(BakerId.from(1)));
 ```

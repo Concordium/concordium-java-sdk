@@ -9,7 +9,6 @@ import lombok.*;
 
 import java.util.Optional;
 
-@Data
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "poolType")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = BakerPoolStatus.class, name = "BakerPool"),

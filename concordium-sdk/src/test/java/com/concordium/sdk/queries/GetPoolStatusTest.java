@@ -3,6 +3,7 @@ package com.concordium.sdk.queries;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.poolstatus.*;
+import com.concordium.sdk.responses.transactionstatus.OpenStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.UInt64;
@@ -58,7 +59,7 @@ public class GetPoolStatusTest {
                 .delegatedCapital(CCDAmount.fromMicro(0))
                 .delegatedCapitalCap(CCDAmount.fromMicro(790_946_966_340_087L))
                 .poolInfo(PoolInfo.builder()
-                        .openStatus(BakerPoolOpenStatus.CLOSED_FOR_ALL)
+                        .openStatus(OpenStatus.CLOSED_FOR_ALL)
                         .metadataUrl("")
                         .commissionRates(CommissionRates.builder()
                                 .bakingCommission(0.1)
