@@ -392,7 +392,7 @@ NodeInfo = client.getNodeInfo();
 
 #### getAccountNonFinalizedTransactions
 ```java
-val ret = client
+ImmutableList<Hash> ret = client
                 .getAccountNonFinalizedTransactions(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"));
 ```
 

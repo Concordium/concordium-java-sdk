@@ -13,12 +13,10 @@ import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import concordium.ConcordiumP2PRpc;
@@ -82,7 +80,7 @@ public final class Client {
      * @param accountRequest The {@link AccountRequest}
      *                       See {@link AccountRequest#from(AccountAddress)},
      *                       {@link AccountRequest#from(AccountIndex)}
-     * @param blockHash the block hash
+     * @param blockHash      the block hash
      * @return The {@link AccountInfo}
      * @throws AccountNotFoundException if the account was not found.
      */
@@ -236,6 +234,7 @@ public final class Client {
 
     /**
      * Get the {@link CryptographicParameters} at a given block.
+     *
      * @param blockHash the hash of the block
      * @return the cryptographic parameters at the given block.
      * @throws BlockNotFoundException if the block was not found.
@@ -256,6 +255,7 @@ public final class Client {
 
     /**
      * Gets the Node information.
+     *
      * @return Parsed {@link NodeInfo}
      */
     public NodeInfo getNodeInfo() {
@@ -266,6 +266,7 @@ public final class Client {
 
     /**
      * Gets the Peer uptime.
+     *
      * @return Peer Uptime {@link Duration}.
      */
     public Duration getUptime() {
@@ -275,6 +276,7 @@ public final class Client {
 
     /**
      * Gets the total number of packets sent.
+     *
      * @return Total number of packets sent.
      */
     public long getTotalSent() {
@@ -283,13 +285,14 @@ public final class Client {
 
     /**
      * Gets Peers list connected to the Node
+     *
      * @param includeBootstrappers if true will include Bootstrapper nodes in the response.
      * @return An {@link ImmutableList} of {@link Peer}
      * @throws UnknownHostException When the returned IP address of Peer is Invalid.
      */
     public ImmutableList<Peer> getPeerList(boolean includeBootstrappers) throws UnknownHostException {
         val value = server().peerList(ConcordiumP2PRpc.PeersRequest.newBuilder()
-                    .setIncludeBootstrappers(includeBootstrappers)
+                .setIncludeBootstrappers(includeBootstrappers)
                 .build());
         val list = new ImmutableList.Builder<Peer>();
 
@@ -302,6 +305,7 @@ public final class Client {
 
     /**
      * Gets {@link PeerStatistics} of the node.
+     *
      * @param includeBootstrappers Whether bootstrappers should be included in the response.
      * @return Peer Statistics in the format {@link PeerStatistics}
      */
@@ -317,6 +321,7 @@ public final class Client {
 
     /**
      * Gets the Semantic Version of the Peer Software / Node
+     *
      * @return Version of the Peer / Node
      */
     public Semver getVersion() {
@@ -333,24 +338,20 @@ public final class Client {
      * @return {@link ImmutableList} of Transaction {@link Hash}
      */
     public ImmutableList<Hash> getAccountNonFinalizedTransactions(AccountAddress address) {
-        val res = server()
-                .getAccountNonFinalizedTransactions(
-                        ConcordiumP2PRpc.AccountAddress.newBuilder().setAccountAddress(address.encoded()).build());
+        val req =
+                ConcordiumP2PRpc.AccountAddress.newBuilder().setAccountAddress(address.encoded()).build();
+        val res = server().getAccountNonFinalizedTransactions(req);
 
-        try {
-            return ImmutableList.copyOf(JsonMapper.INSTANCE.readValue(res.getValue(), Hash[].class));
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse GetAccountNonFinalizedTransactions JSON", e);
-        }
+        return Hash.fromJsonArray(res).orElse(ImmutableList.<Hash>builder().build());
     }
 
     /**
      * Closes the underlying grpc channel
-     * 
+     * <p>
      * This should only be done when the {@link Client}
      * is of no more use as creating a new {@link Client} (and the associated)
      * channel is rather expensive.
-     *
+     * <p>
      * Subsequent calls following a closed channel will throw a {@link io.grpc.StatusRuntimeException}
      */
     public void close() {

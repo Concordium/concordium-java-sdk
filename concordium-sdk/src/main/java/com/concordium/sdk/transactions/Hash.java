@@ -1,10 +1,17 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.collect.ImmutableList;
+import concordium.ConcordiumP2PRpc;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.val;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+
+import java.util.Optional;
 
 @EqualsAndHashCode
 public class Hash {
@@ -34,6 +41,15 @@ public class Hash {
 
     public static Hash from(byte[] hash) {
         return new Hash(hash);
+    }
+
+    public static Optional<ImmutableList<Hash>> fromJsonArray(ConcordiumP2PRpc.JsonResponse res) {
+        try {
+            val arr = JsonMapper.INSTANCE.readValue(res.getValue(), Hash[].class);
+            return Optional.ofNullable(arr).map(a -> ImmutableList.copyOf(a));
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Cannot parse Hash Array JSON", e);
+        }
     }
 
     @Override
