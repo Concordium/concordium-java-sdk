@@ -323,7 +323,7 @@ public final class Client {
     }
 
     /**
-     * Start the baker in the consensus module.
+     * Start the baker.
      *
      * @return true if baker could be started. false otherwise.
      */
@@ -332,7 +332,7 @@ public final class Client {
     }
 
     /**
-     * Stop the baker in the consensus module.
+     * Stop the baker.
      *
      * @return true if baker could be stopped. false otherwise.
      */
