@@ -1,18 +1,18 @@
 package com.concordium.sdk.responses.poolstatus;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.Date;
 
-@Getter
-@ToString
 @Data
+@Jacksonized
+@Builder
 public class PendingChangeRemovePool extends PendingChange {
 
     /**
      * Effective time of the change.
      */
-    private Date effectiveTime;
+    private final Date effectiveTime;
 }

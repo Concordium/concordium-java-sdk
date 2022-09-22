@@ -22,13 +22,13 @@ public class BakerId {
         this.id = AccountIndex.from(index);
     }
 
-    public static BakerId from(long id) {
-        return new BakerId(id);
-    }
-
     @Override
     public String toString() {
         return this.id.toString();
+    }
+
+    public long toLong() {
+        return this.id.getIndex().getValue();
     }
 
     @JsonCreator

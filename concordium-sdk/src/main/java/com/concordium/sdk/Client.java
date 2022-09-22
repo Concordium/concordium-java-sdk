@@ -6,7 +6,6 @@ import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.ancestors.Ancestors;
-import com.concordium.sdk.responses.bakerlist.BakerId;
 import com.concordium.sdk.responses.birkparamsters.BirkParameters;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -378,7 +377,7 @@ public final class Client {
         val req = ConcordiumP2PRpc.GetPoolStatusRequest.newBuilder()
                 .setBlockHash(blockHash.asHex())
                 .setPassiveDelegation(!bakerId.isPresent())
-                .setBakerId(parsedBakerId.getId().getIndex().getValue())
+                .setBakerId(parsedBakerId.toLong())
                 .build();
         val res = server().getPoolStatus(req);
 

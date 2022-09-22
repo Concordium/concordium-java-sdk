@@ -1,24 +1,24 @@
 package com.concordium.sdk.responses.poolstatus;
 
 import com.concordium.sdk.transactions.CCDAmount;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.Date;
 
-@Getter
-@ToString
 @Data
+@Jacksonized
+@Builder
 public class PendingChangeReduceBakerCapital extends PendingChange {
 
     /**
      * New baker equity capital.
      */
-    private CCDAmount bakerEquityCapital;
+    private final CCDAmount bakerEquityCapital;
 
     /**
      * Effective time of the change.
      */
-    private Date effectiveTime;
+    private final Date effectiveTime;
 }

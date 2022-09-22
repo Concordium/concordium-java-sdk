@@ -6,9 +6,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 
-@Getter
-@Data
-@ToString
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "pendingChangeType")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = PendingChangeNoChange.class, name = "NoChange"),
