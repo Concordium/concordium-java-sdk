@@ -1,5 +1,6 @@
-package com.concordium.sdk;
+package com.concordium.sdk.requests.getaccountinfo;
 
+import com.concordium.sdk.Client;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
@@ -26,7 +27,7 @@ public final class AccountRequest {
         this.registrationId = credentialRegistrationId;
     }
 
-    ByteString getByteString() {
+    public ByteString getByteString() {
         switch (type) {
             case ADDRESS:
                 return ByteString.copyFrom(address.getEncodedBytes());
