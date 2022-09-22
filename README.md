@@ -563,7 +563,7 @@ SemVer version = client.getVersion();
 
 #### getBakerList
 ```java
-val bakerList = client
+ImmutableList<BakerId> bakerList = client
                 .getBakerList(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
 ```
 
