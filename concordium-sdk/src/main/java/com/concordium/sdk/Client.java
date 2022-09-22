@@ -340,14 +340,18 @@ public final class Client {
      * @param bakerId   {@link Optional<BakerId>} of the Baker of which pool is to be retrieved.
      * @return Parsed {@link PoolStatus}.
      */
-    public PoolStatus getPoolStatus(final Hash blockHash, final Optional<BakerId> bakerId) {
-        val res = server().getPoolStatus(ConcordiumP2PRpc.GetPoolStatusRequest.newBuilder()
+    public PoolStatus getPoolStatus(
+            final Hash blockHash,
+            final Optional<BakerId> bakerId) throws PoolNotFoundException {
+        final BakerId parsedBakerId = bakerId.orElse(BakerId.from(0));
+        val req = ConcordiumP2PRpc.GetPoolStatusRequest.newBuilder()
                 .setBlockHash(blockHash.asHex())
                 .setPassiveDelegation(!bakerId.isPresent())
-                .setBakerId(bakerId.orElse(BakerId.from(0)).getId().getIndex().getValue())
-                .build());
+                .setBakerId(parsedBakerId.getId().getIndex().getValue())
+                .build();
+        val res = server().getPoolStatus(req);
 
-        return PoolStatus.fromJson(res);
+        return PoolStatus.fromJson(res).orElseThrow(() -> PoolNotFoundException.from(parsedBakerId, blockHash));
     }
 
     /**
