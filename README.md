@@ -222,7 +222,7 @@ NodeInfo getNodeInfo()
 
 - `peerConnect`
 ```java
-boolean peerConnect(InetAddress ip, UInt16 port)
+boolean peerConnect(InetSocketAddress address)
 ```
 Instruct the node to try to connect to the given peer. This also adds the address to the list of trusted addresses. These are addresses to which the node will try to keep connected to at all times.
 
@@ -391,10 +391,7 @@ NodeInfo = client.getNodeInfo();
 
 #### peerConnect
 ```
-val ret = client.peerConnect(
-                InetAddress.getByName("127.0.0.1"),
-                UInt16.from(8080)
-        );
+boolean ret = client.peerConnect(InetSocketAddress.createUnresolved("127.0.0.1", 8080));
 ```
 
 ## Transactions

@@ -2,41 +2,37 @@ package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.peerlist.Peer;
-import com.concordium.sdk.responses.peerStats.PeerStatistics;
-import com.concordium.sdk.responses.nodeinfo.NodeInfo;
-import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
-import com.concordium.sdk.exceptions.AccountNotFoundException;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
-import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.BlockSummary;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.nodeinfo.NodeInfo;
+import com.concordium.sdk.responses.peerStats.PeerStatistics;
+import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.transactions.*;
-import com.concordium.sdk.types.UInt16;
+import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.transactions.Transaction;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Int32Value;
 import com.google.protobuf.StringValue;
-import org.semver4j.Semver;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
 import lombok.val;
+import org.semver4j.Semver;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -334,14 +330,13 @@ public final class Client {
      * This also adds the address to the list of trusted addresses.
      * These are addresses to which the node will try to keep connected to at all times.
      *
-     * @param ip   Ip Address of the Node.
-     * @param port Port of the Node.
-     * @return true if Peer Connect was successful.
+     * @param address Socket address of the node. Its a combination of Node's IP address and port
+     * @return true if Peer Connect was successful. false Otherwise
      */
-    public boolean peerConnect(InetAddress ip, UInt16 port) {
+    public boolean peerConnect(InetSocketAddress address) {
         return server().peerConnect(ConcordiumP2PRpc.PeerConnectRequest.newBuilder()
-                .setIp(StringValue.of(ip.getHostAddress()))
-                .setPort(Int32Value.newBuilder().setValue(port.getValue()).build())
+                .setIp(StringValue.of(address.getHostName()))
+                .setPort(Int32Value.newBuilder().setValue(address.getPort()).build())
                 .build()).getValue();
     }
 
