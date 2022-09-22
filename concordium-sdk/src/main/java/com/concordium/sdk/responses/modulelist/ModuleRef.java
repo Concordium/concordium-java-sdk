@@ -21,7 +21,7 @@ public class ModuleRef extends Hash {
         return new ModuleRef(hexHash);
     }
 
-    public static Optional<ImmutableList<ModuleRef>> fromJsonArray(ConcordiumP2PRpc.JsonResponse res) {
+    public static Optional<ImmutableList<ModuleRef>> fromHashJsonArray(ConcordiumP2PRpc.JsonResponse res) {
         try {
             String[] parsed = JsonMapper.INSTANCE.readValue(res.getValue(), String[].class);
 

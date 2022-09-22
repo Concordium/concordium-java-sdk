@@ -399,7 +399,7 @@ public final class Client {
                 .setBlockHash(blockHash.asHex())
                 .build());
 
-        return ModuleRef.fromJsonArray(res)
+        return ModuleRef.fromHashJsonArray(res)
                 .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 

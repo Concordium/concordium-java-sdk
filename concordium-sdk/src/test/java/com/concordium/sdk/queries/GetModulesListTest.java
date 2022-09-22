@@ -18,7 +18,7 @@ public class GetModulesListTest {
                 "\"016fdecf92e687f829a47cb0eba9d595af4a96fe61e5d0a5eeb34e2b819583e4\"" +
                 "]";
         val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = ModuleRef.fromJsonArray(req);
+        val res = ModuleRef.fromHashJsonArray(req);
 
         Assert.assertTrue(res.isPresent());
         Assert.assertEquals(res.get(), ImmutableList.<ModuleRef>builder()
@@ -31,7 +31,7 @@ public class GetModulesListTest {
     public void shouldHandleNullJsonTest() {
         val json = "null";
         val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = ModuleRef.fromJsonArray(req);
+        val res = ModuleRef.fromHashJsonArray(req);
 
         Assert.assertFalse(res.isPresent());
     }
@@ -40,6 +40,6 @@ public class GetModulesListTest {
     public void shouldHandleInvalidJson() {
         val json = "{";
         val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = ModuleRef.fromJsonArray(req);
+        val res = ModuleRef.fromHashJsonArray(req);
     }
 }
