@@ -343,6 +343,18 @@ long getTotalReceived()
 ```
 Query for the total number of packets that the node has received thus far.
 
+- `banNode`
+```java
+boolean banNode(final BanNodeRequest request)
+```
+Ban a specific node by Id or Ip address. Returns true if specified node was banned false otherwise.
+
+- `unBanNode`
+```java
+boolean unBanNode(final InetAddress ip)
+```
+Unban a specific node by Ip address. Returns true if specified node was unbanned false otherwise.
+
 ## Transactions
 
 - `Hash sendTransaction(Transaction transaction) throws TransactionRejectionException`
@@ -587,6 +599,20 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### banNode
+```java
+client.banNode(BanNodeRequest.from("NodeId"))
+```
+
+```java
+client.banNode(BanNodeRequest.from(InetAddress.getByName("127.0.0.1")))
+```
+
+#### unBanNode
+```java
+client.unBanNode(InetAddress.getByName("127.0.0.1"));
 ```
 
 #### getTotalReceived

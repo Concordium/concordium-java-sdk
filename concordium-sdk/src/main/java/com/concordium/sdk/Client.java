@@ -6,6 +6,7 @@ import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.ancestors.Ancestors;
+import com.concordium.sdk.responses.bannode.BanNodeRequest;
 import com.concordium.sdk.responses.birkparamsters.BirkParameters;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -36,6 +37,7 @@ import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Int32Value;
+import com.google.protobuf.StringValue;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
@@ -43,6 +45,7 @@ import lombok.val;
 import org.semver4j.Semver;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.List;
@@ -402,6 +405,41 @@ public final class Client {
                 .build();
         val res = server().getPoolStatus(req);
         return (PassiveDelegationStatus) PoolStatus.fromJson(res.getValue()).orElseThrow(() -> PoolNotFoundException.from(Optional.empty(), blockHash));
+    }
+
+    /**
+     * Ban a specific node.
+     * Note that this will also cause the node to drop any connections to a matching node.
+     *
+     * @param request {@link BanNodeRequest}
+     * @return {@link Boolean} This is True if Specified node was banned. False otherwise.
+     */
+    public boolean banNode(final BanNodeRequest request) {
+        val builder = ConcordiumP2PRpc.PeerElement.newBuilder();
+
+        if (request.getIp().isPresent()) {
+            builder.setIp(StringValue.of(request.getIp().get().getHostAddress()));
+        } else if (request.getId().isPresent()) {
+            builder.setNodeId(StringValue.of(request.getId().get()));
+        } else {
+            throw new IllegalArgumentException("Either node IP or node ID must be present.");
+        }
+
+        return server().banNode(builder.build()).getValue();
+    }
+
+    /**
+     * Unban a specific node.
+     *
+     * @param ip {@link InetAddress}.
+     * @return {@link Boolean} This is True If Specified node was unbanned. False otherwise.
+     */
+    public boolean unBanNode(final InetAddress ip) {
+        ConcordiumP2PRpc.PeerElement peerElement = ConcordiumP2PRpc.PeerElement.newBuilder()
+                .setIp(StringValue.of(ip.getHostAddress()))
+                .build();
+
+        return server().unbanNode(peerElement).getValue();
     }
 
     /**

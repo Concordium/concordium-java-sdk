@@ -28,6 +28,8 @@
 - Added support for query `GetBranches`
 - Added support for query `GetIdentityProviders`
 - Added support for query `GetAnonymityRevokers`
+- Added support for query `BanNode`
+- Added support for query `UnBanNode`
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
