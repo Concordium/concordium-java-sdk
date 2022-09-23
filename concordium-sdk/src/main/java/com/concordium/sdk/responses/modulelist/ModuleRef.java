@@ -24,7 +24,7 @@ public class ModuleRef extends Hash {
         return new ModuleRef(hexHash);
     }
 
-    public static Optional<ImmutableList<ModuleRef>> fromJsonArray(String jsonValue) {
+    public static Optional<ImmutableList<ModuleRef>> moduleRefsFromJsonArray(String jsonValue) {
         try {
             String[] parsed = JsonMapper.INSTANCE.readValue(jsonValue, String[].class);
 

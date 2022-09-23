@@ -491,8 +491,10 @@ public final class Client {
         val req =
                 ConcordiumP2PRpc.AccountAddress.newBuilder().setAccountAddress(address.encoded()).build();
         val res = server().getAccountNonFinalizedTransactions(req);
-
-        return Hash.fromJsonArray(res).orElse(ImmutableList.<Hash>builder().build());
+        if (Objects.isNull(res)) {
+            return ImmutableList.of();
+        }
+        return Hash.fromJsonArray(res.getValue()).orElse(ImmutableList.<Hash>builder().build());
     }
 
     /**
@@ -533,7 +535,7 @@ public final class Client {
             throw BlockNotFoundException.from(blockHash);
         }
 
-        return ModuleRef.fromJsonArray(res.getValue())
+        return ModuleRef.moduleRefsFromJsonArray(res.getValue())
                 .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
