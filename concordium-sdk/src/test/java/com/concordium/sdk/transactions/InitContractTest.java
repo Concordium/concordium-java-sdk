@@ -10,9 +10,14 @@ public class InitContractTest {
     @SneakyThrows
     @Test
     public void testInitContract() {
-        Hash mod_ref = Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07");
+        Hash moduleRef = Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07");
         InitContract.createNew(
-                        InitContractPayload.from(0, mod_ref.getBytes(), "CIS2-NFT",  new byte[0]), UInt64.from(3000))
+                        InitContractPayload.from(
+                                0,
+                                moduleRef.getBytes(),
+                                "CIS2-NFT",
+                                new byte[0]),
+                        UInt64.from(3000))
                 .withHeader(TransactionHeader
                         .builder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))

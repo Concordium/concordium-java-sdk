@@ -47,8 +47,15 @@ public class InitContractTransaction extends AbstractTransaction {
         @Override
         public InitContractTransaction build() throws TransactionCreationException {
             val transaction = super.build();
-            Transaction.verifyInitContractInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.signer, transaction.payload);
+            Transaction.verifyInitContractInput(
+                    transaction.sender,
+                    transaction.nonce,
+                    transaction.expiry,
+                    transaction.signer,
+                    transaction.payload
+            );
             transaction.blockItem = initializeSmartContractInstance(transaction).toBlockItem();
+
             return transaction;
         }
 

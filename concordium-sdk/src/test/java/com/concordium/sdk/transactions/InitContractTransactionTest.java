@@ -12,7 +12,7 @@ import static org.junit.Assert.fail;
 public class InitContractTransactionTest {
     byte[] emptyArray = new byte[0];
 
-    Hash mod_ref = Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07");
+    Hash moduleRef = Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07");
 
     @Test
     public void testInitContract() {
@@ -24,7 +24,7 @@ public class InitContractTransactionTest {
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
                     .maxEnergyCost(UInt64.from(3000))
-                    .payload(InitContractPayload.from(0, mod_ref.getBytes(), "init_CIS2-NFT", emptyArray))
+                    .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
         } catch (TransactionCreationException e) {
             fail("Unexpected error: " + e.getMessage());
@@ -40,7 +40,7 @@ public class InitContractTransactionTest {
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
-                    .payload(InitContractPayload.from(0, mod_ref.getBytes(), "init_CIS2-NFT", emptyArray))
+                    .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
             fail("Expected InitContractTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -77,7 +77,7 @@ public class InitContractTransactionTest {
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
-                    .payload(InitContractPayload.from(0, mod_ref.getBytes(), "init_CIS2-NFT", emptyArray))
+                    .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
             fail("Expected InitContractTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -95,7 +95,7 @@ public class InitContractTransactionTest {
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .nonce(AccountNonce.from(78910))
                     .signer(TransactionTestHelper.getValidSigner())
-                    .payload(InitContractPayload.from(0, mod_ref.getBytes(), "init_CIS2-NFT", emptyArray))
+                    .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
             fail("Expected InitContractTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -113,7 +113,7 @@ public class InitContractTransactionTest {
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
-                    .payload(InitContractPayload.from(0, mod_ref.getBytes(), "init_CIS2-NFT", emptyArray))
+                    .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
             fail("Expected InitContractTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -133,7 +133,7 @@ public class InitContractTransactionTest {
                     .expiry(Expiry.from(123456))
                     .signer(getSignerWithMalformedSecretKey())
                     .maxEnergyCost(UInt64.from(3000))
-                    .payload(InitContractPayload.from(0, mod_ref.getBytes(), "init_CIS2-NFT", emptyArray))
+                    .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
 
         } catch (TransactionCreationException e) {
