@@ -29,6 +29,7 @@ import com.concordium.sdk.responses.poolstatus.PoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.ContractAddress;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
+import com.concordium.sdk.responses.transactionstatusinblock.TransactionStatusInBlock;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Hash;
@@ -156,6 +157,26 @@ public final class Client {
             throw TransactionNotFoundException.from(transactionHash);
         }
         return status;
+    }
+
+    /**
+     * Get the status of a transaction in a given block.
+     *
+     * @param transactionHash Transaction {@link Hash}
+     * @param blockHash       Block {@link Hash}
+     * @return Parsed {@link TransactionStatusInBlock}
+     */
+    public TransactionStatusInBlock getTransactionStatusInBlock(
+            Hash transactionHash,
+            Hash blockHash) throws TransactionNotFoundInBlockException {
+        val req = ConcordiumP2PRpc.GetTransactionStatusInBlockRequest.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .setTransactionHash(transactionHash.asHex())
+                .build();
+        val res = server().getTransactionStatusInBlock(req);
+
+        return TransactionStatusInBlock.fromJson(res)
+                .orElseThrow(() -> TransactionNotFoundInBlockException.from(transactionHash, blockHash));
     }
 
     /**
