@@ -12,6 +12,9 @@ import lombok.val;
 
 import java.util.Optional;
 
+/**
+ * The transaction status for a specific transaction in a specific block.
+ */
 @Data
 @Jacksonized
 @Builder
