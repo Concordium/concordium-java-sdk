@@ -3,6 +3,7 @@ package com.concordium.sdk;
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.ancestors.Ancestors;
 import com.concordium.sdk.responses.bannode.BanNodeRequest;
@@ -22,6 +23,9 @@ import com.concordium.sdk.responses.modulesource.ModuleSource;
 import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
+import com.concordium.sdk.responses.poolstatus.PassiveDelegationStatus;
+import com.concordium.sdk.responses.poolstatus.PoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.ContractAddress;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
@@ -343,12 +347,64 @@ public final class Client {
 
     /**
      * Gets the Semantic Version of the Peer Software / Node
-     *
      * @return Version of the Peer / Node
      */
     public Semver getVersion() {
         val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return new Semver(versionString);
+    }
+
+    /**
+     * Get the IDs of the bakers registered in the given block.
+     *
+     * @param blockHash {@link Hash} of the block bakers are to be retrieved.
+     * @return Parsed {@link ImmutableList} of {@link BakerId}
+     * @throws BlockNotFoundException When the returned JSON is null.
+     */
+    public ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
+        val res = server().getBakerList(req);
+        return BakerId.fromJsonArray(res.getValue()).orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
+     * Get the status of a given baker pool or passive delegation at the given block.
+     * <p>
+     * Note. Delegation was added to the chain as part of {@link com.concordium.sdk.responses.ProtocolVersion#V4}
+     * </p>
+     * @param blockHash {@link Hash} of the block.
+     * @param bakerId   {@link BakerId} The baker id.
+     * @return The {@link BakerPoolStatus} at the block specified.
+     * @throws PoolNotFoundException when the pool could not be found for the given block.
+     */
+    public BakerPoolStatus getPoolStatus(
+            final Hash blockHash,
+            final BakerId bakerId) throws PoolNotFoundException {
+        val req = ConcordiumP2PRpc.GetPoolStatusRequest.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .setPassiveDelegation(false)
+                .setBakerId(bakerId.toLong())
+                .build();
+        val res = server().getPoolStatus(req);
+        return (BakerPoolStatus) PoolStatus.fromJson(res.getValue()).orElseThrow(() -> PoolNotFoundException.from(Optional.of(bakerId), blockHash));
+    }
+
+    /**
+     * Get the status of the passive delegation pool at the given block.
+     * <p>
+     * Note. Delegation was added to the chain as part of {@link com.concordium.sdk.responses.ProtocolVersion#V4}
+     * </p>
+     * @param blockHash {@link Hash} of the block.
+     * @return The {@link PassiveDelegationStatus} at the block specified.
+     * @throws PoolNotFoundException when the pool could not be found for the given block.
+     */
+    public PassiveDelegationStatus getPassiveDelegationStatus(final Hash blockHash) throws PoolNotFoundException {
+        val req = ConcordiumP2PRpc.GetPoolStatusRequest.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .setPassiveDelegation(true)
+                .build();
+        val res = server().getPoolStatus(req);
+        return (PassiveDelegationStatus) PoolStatus.fromJson(res.getValue()).orElseThrow(() -> PoolNotFoundException.from(Optional.empty(), blockHash));
     }
 
     /**
@@ -363,8 +419,10 @@ public final class Client {
 
         if (request.getIp().isPresent()) {
             builder.setIp(StringValue.of(request.getIp().get().getHostAddress()));
-        } else {
+        } else if (request.getId().isPresent()) {
             builder.setNodeId(StringValue.of(request.getId().get()));
+        } else {
+            throw new IllegalArgumentException("Either node IP or node ID must be present.");
         }
 
         return server().banNode(builder.build()).getValue();

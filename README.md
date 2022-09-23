@@ -254,6 +254,24 @@ ImmutableList<AnonymityRevokerInfo> getAnonymityRevokers(Hash blockHash) throws 
 ```
 Get the list of anonymity revokers in the given block.
 
+- `getBakerList`
+```java
+ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException
+```
+Get the IDs of the bakers registered in the given block.
+
+- `getPoolStatus`
+```java
+PoolStatus getPoolStatus(Hash blockHash, BakerId bakerId) throws PoolNotFoundException
+```
+Get the status of a given baker pool.
+Throws `PoolNotFoundException` if the pool was not found.
+
+- `getPassivePoolStatus`
+```java
+PoolStatus getPassivePoolStatus(Hash blockHash) throws PoolNotFoundException
+```
+Get the status of passive delegation at the given block.
 
 ### Node & P2P Queries
 
@@ -534,6 +552,23 @@ ImmutableList<AnonymityRevokerInfo> anonymityRevokers = client
                 .getAnonymityRevokers(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
 ```
 
+#### getBakerList
+```java
+ImmutableList<BakerId> bakerList = client
+                .getBakerList(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
+
+#### getPoolStatus
+```java
+PoolStatus poolStatusPassiveDeletation = client
+        .getPassivePoolStatus(
+                Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+
+PoolStatus bakerPoolStatus = client.getPoolStatus(
+        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"), 
+                BakerId.from(1));
+```
+
 ### Node & P2P Queries
 
 #### getUptime
@@ -560,7 +595,6 @@ ImmutableList<Peer> peers = client.getPeerList(true);
 ```java
 SemVer version = client.getVersion();
 ```
-
 
 #### getNodeInfo
 ```java

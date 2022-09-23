@@ -9,9 +9,8 @@
 - Added support for query `PeerList`
 - Added support for query `PeerStats`
 - Added support for query `PeerVersion`
-- Added support for query `NodeInfo`
-- Added support for query `BanNode`
-- Added support for query `UnBanNode`
+- Added support for query `GetBakerList`
+- Added support for query `GetPoolStatus`
 - Added support for query `PeerTotalReceived`
 - Added support for query `GetModuleSource`
 - Added support for query `GetModuleList`
@@ -29,6 +28,8 @@
 - Added support for query `GetBranches`
 - Added support for query `GetIdentityProviders`
 - Added support for query `GetAnonymityRevokers`
+- Added support for query `BanNode`
+- Added support for query `UnBanNode`
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
