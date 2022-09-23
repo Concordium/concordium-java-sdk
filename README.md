@@ -343,6 +343,13 @@ long getTotalReceived()
 ```
 Query for the total number of packets that the node has received thus far.
 
+- `peerConnect`
+```java
+boolean peerConnect(InetSocketAddress address)
+```
+Instruct the node to try to connect to the given peer. This also adds the address to the list of trusted addresses. 
+These are addresses to which the node will try to keep connected to at all times.
+
 - `startBaker`
 ```java
 boolean startBaker()
@@ -366,7 +373,6 @@ Ban a specific node by Id or Ip address. Returns true if specified node was bann
 boolean unBanNode(final InetAddress ip)
 ```
 Unban a specific node by Ip address. Returns true if specified node was unbanned false otherwise.
-
 
 ## Transactions
 
@@ -612,6 +618,11 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### peerConnect
+```java
+boolean ret = client.peerConnect(InetSocketAddress.createUnresolved("127.0.0.1", 8080));
 ```
 
 #### startBaker

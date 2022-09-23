@@ -9,6 +9,7 @@
 - Added support for query `PeerList`
 - Added support for query `PeerStats`
 - Added support for query `PeerVersion`
+- Added support for query `PeerConnect`
 - Added support for query `GetBakerList`
 - Added support for query `GetPoolStatus`
 - Added support for query `PeerTotalReceived`

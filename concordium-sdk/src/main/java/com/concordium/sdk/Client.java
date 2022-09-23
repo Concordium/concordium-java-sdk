@@ -45,6 +45,7 @@ import lombok.val;
 import org.semver4j.Semver;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.Duration;
@@ -459,6 +460,22 @@ public final class Client {
      */
     public boolean stopBaker() {
         return server().stopBaker(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+    }
+
+    /**
+     * Instruct the node to try to connect to the given peer.
+     * This also adds the address to the list of trusted addresses.
+     * These are addresses to which the node will try to keep connected to at all times.
+     *
+     * @param address The {@link InetSocketAddress} of the node to connect to.
+     * @return true if Peer Connect was successful. false Otherwise
+     */
+    public boolean peerConnect(InetSocketAddress address) {
+        val req = ConcordiumP2PRpc.PeerConnectRequest.newBuilder()
+                .setIp(StringValue.of(address.getHostName()))
+                .setPort(Int32Value.newBuilder().setValue(address.getPort()).build()).build();
+
+        return server().peerConnect(req).getValue();
     }
 
     /**
