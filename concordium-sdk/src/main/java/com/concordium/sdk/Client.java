@@ -347,6 +347,7 @@ public final class Client {
 
     /**
      * Gets the Semantic Version of the Peer Software / Node
+     *
      * @return Version of the Peer / Node
      */
     public Semver getVersion() {
@@ -440,6 +441,24 @@ public final class Client {
                 .build();
 
         return server().unbanNode(peerElement).getValue();
+    }
+
+    /**
+     * Start the baker.
+     *
+     * @return true if baker could be started. false otherwise.
+     */
+    public boolean startBaker() {
+        return server().startBaker(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
+    }
+
+    /**
+     * Stop the baker.
+     *
+     * @return true if baker could be stopped. false otherwise.
+     */
+    public boolean stopBaker() {
+        return server().stopBaker(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
     }
 
     /**

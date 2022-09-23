@@ -343,6 +343,18 @@ long getTotalReceived()
 ```
 Query for the total number of packets that the node has received thus far.
 
+- `startBaker`
+```java
+boolean startBaker()
+```
+Start the baker.
+
+- `stopBaker`
+```java
+boolean stopBaker()
+```
+Stop the baker.
+
 - `banNode`
 ```java
 boolean banNode(final BanNodeRequest request)
@@ -354,6 +366,7 @@ Ban a specific node by Id or Ip address. Returns true if specified node was bann
 boolean unBanNode(final InetAddress ip)
 ```
 Unban a specific node by Ip address. Returns true if specified node was unbanned false otherwise.
+
 
 ## Transactions
 
@@ -599,6 +612,16 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### startBaker
+```java
+client.startBaker();
+```
+
+#### stopBaker
+```java
+client.stopBaker();
 ```
 
 #### banNode

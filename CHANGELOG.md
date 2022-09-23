@@ -30,6 +30,8 @@
 - Added support for query `GetAnonymityRevokers`
 - Added support for query `BanNode`
 - Added support for query `UnBanNode`
+- Added support for query `StartBaker`
+- Added support for query `StopBaker`
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
