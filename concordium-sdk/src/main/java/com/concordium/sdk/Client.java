@@ -278,6 +278,7 @@ public final class Client {
 
     /**
      * Gets the Node information.
+     *
      * @return Parsed {@link NodeInfo}
      */
     public NodeInfo getNodeInfo() {
@@ -479,6 +480,24 @@ public final class Client {
     }
 
     /**
+     * Get the list of transactions hashes for transactions that claim to be from the given account,
+     * but which are not yet finalized. They are either committed to a block or still pending.
+     * If the account does not exist an empty list will be returned.
+     *
+     * @param address {@link AccountAddress}
+     * @return {@link ImmutableList} of Transaction {@link Hash}
+     */
+    public ImmutableList<Hash> getAccountNonFinalizedTransactions(AccountAddress address) {
+        val req =
+                ConcordiumP2PRpc.AccountAddress.newBuilder().setAccountAddress(address.encoded()).build();
+        val res = server().getAccountNonFinalizedTransactions(req);
+        if (Objects.isNull(res)) {
+            return ImmutableList.of();
+        }
+        return Hash.fromJsonArray(res.getValue()).orElse(ImmutableList.<Hash>builder().build());
+    }
+
+    /**
      * Get the source of a smart contract module.
      *
      * @param moduleRef {@link ModuleRef} of module to retrieve.
@@ -505,14 +524,18 @@ public final class Client {
      *
      * @param blockHash {@link Hash} of block at which the modules list is being retrieved.
      * @return Parsed {@link ImmutableList} of {@link Hash}
-     * @throws Exception When the returned JSON is null.
+     * @throws BlockNotFoundException When no modules could be found for the specified block {@link Hash}.
      */
     public ImmutableList<ModuleRef> getModuleList(final Hash blockHash) throws BlockNotFoundException {
         val res = server().getModuleList(ConcordiumP2PRpc.BlockHash.newBuilder()
                 .setBlockHash(blockHash.asHex())
                 .build());
 
-        return ModuleRef.fromJsonArray(res)
+        if (Objects.isNull(res)) {
+            throw BlockNotFoundException.from(blockHash);
+        }
+
+        return ModuleRef.moduleRefsFromJsonArray(res.getValue())
                 .orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 

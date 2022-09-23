@@ -343,6 +343,13 @@ long getTotalReceived()
 ```
 Query for the total number of packets that the node has received thus far.
 
+- `getAccountNonFinalizedTransactions`
+```java
+ImmutableList<Hash> getAccountNonFinalizedTransactions(AccountAddress address)
+```
+Get the list of transactions hashes for transactions that claim to be from the given account, 
+but which are not yet finalized. They are either committed to a block or still pending.
+
 - `peerConnect`
 ```java
 boolean peerConnect(InetSocketAddress address)
@@ -618,6 +625,12 @@ SemVer version = client.getVersion();
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
+```
+
+#### getAccountNonFinalizedTransactions
+```java
+ImmutableList<Hash> ret = client
+                .getAccountNonFinalizedTransactions(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"));
 ```
 
 #### peerConnect
