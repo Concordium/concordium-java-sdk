@@ -254,6 +254,39 @@ ImmutableList<AnonymityRevokerInfo> getAnonymityRevokers(Hash blockHash) throws 
 ```
 Get the list of anonymity revokers in the given block.
 
+- `getBakerList`
+```java
+ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException
+```
+Get the IDs of the bakers registered in the given block.
+
+- `getTransactionStatusInBlock`
+```java
+    TransactionStatusInBlock getTransactionStatusInBlock(
+            Hash transactionHash,
+            Hash blockHash) throws TransactionNotFoundInBlockException
+```
+
+- `getAccountNonFinalizedTransactions`
+```java
+ImmutableList<Hash> getAccountNonFinalizedTransactions(AccountAddress address)
+```
+Get the list of transactions hashes for transactions that claim to be from the given account, 
+but which are not yet finalized. They are either committed to a block or still pending.
+
+
+- `getPoolStatus`
+```java
+PoolStatus getPoolStatus(Hash blockHash, BakerId bakerId) throws PoolNotFoundException
+```
+Get the status of a given baker pool.
+Throws `PoolNotFoundException` if the pool was not found.
+
+- `getPassivePoolStatus`
+```java
+PoolStatus getPassivePoolStatus(Hash blockHash) throws PoolNotFoundException
+```
+Get the status of passive delegation at the given block.
 
 ### Node & P2P Queries
 
@@ -325,12 +358,36 @@ long getTotalReceived()
 ```
 Query for the total number of packets that the node has received thus far.
 
-- `getTransactionStatusInBlock`
+- `peerConnect`
 ```java
-    public TransactionStatusInBlock getTransactionStatusInBlock(
-            Hash transactionHash,
-            Hash blockHash) throws TransactionNotFoundInBlockException
+boolean peerConnect(InetSocketAddress address)
 ```
+Instruct the node to try to connect to the given peer. This also adds the address to the list of trusted addresses. 
+These are addresses to which the node will try to keep connected to at all times.
+
+- `startBaker`
+```java
+boolean startBaker()
+```
+Start the baker.
+
+- `stopBaker`
+```java
+boolean stopBaker()
+```
+Stop the baker.
+
+- `banNode`
+```java
+boolean banNode(final BanNodeRequest request)
+```
+Ban a specific node by Id or Ip address. Returns true if specified node was banned false otherwise.
+
+- `unBanNode`
+```java
+boolean unBanNode(final InetAddress ip)
+```
+Unban a specific node by Ip address. Returns true if specified node was unbanned false otherwise.
 
 ## Transactions
 
@@ -529,6 +586,38 @@ ImmutableList<AnonymityRevokerInfo> anonymityRevokers = client
                 .getAnonymityRevokers(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
 ```
 
+#### getBakerList
+```java
+ImmutableList<BakerId> bakerList = client
+                .getBakerList(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
+
+#### getPoolStatus
+```java
+PoolStatus poolStatusPassiveDeletation = client
+        .getPassivePoolStatus(
+                Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+
+PoolStatus bakerPoolStatus = client.getPoolStatus(
+        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"), 
+                BakerId.from(1));
+```
+
+#### getTransactionStatusInBlock
+```java
+TransactionStatusInBlock ret = client.getTransactionStatusInBlock(
+                Hash.from("ea88c209c40f5828aeedf3326f314f66b7adf49e754a94f29b72e9d334d82eb7"),
+                Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb")
+        );
+```
+Get the status of a transaction in a given block.
+
+#### getAccountNonFinalizedTransactions
+```java
+ImmutableList<Hash> ret = client
+                .getAccountNonFinalizedTransactions(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"));
+```
+
 ### Node & P2P Queries
 
 #### getUptime
@@ -556,20 +645,39 @@ ImmutableList<Peer> peers = client.getPeerList(true);
 SemVer version = client.getVersion();
 ```
 
-
 #### getNodeInfo
 ```java
 NodeInfo = client.getNodeInfo();
 ```
 
-#### getTransactionStatusInBlock
+#### peerConnect
 ```java
-TransactionStatusInBlock ret = client.getTransactionStatusInBlock(
-                Hash.from("ea88c209c40f5828aeedf3326f314f66b7adf49e754a94f29b72e9d334d82eb7"),
-                Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb")
-        );
+boolean ret = client.peerConnect(InetSocketAddress.createUnresolved("127.0.0.1", 8080));
 ```
-Get the status of a transaction in a given block.
+
+#### startBaker
+```java
+client.startBaker();
+```
+
+#### stopBaker
+```java
+client.stopBaker();
+```
+
+#### banNode
+```java
+client.banNode(BanNodeRequest.from("NodeId"))
+```
+
+```java
+client.banNode(BanNodeRequest.from(InetAddress.getByName("127.0.0.1")))
+```
+
+#### unBanNode
+```java
+client.unBanNode(InetAddress.getByName("127.0.0.1"));
+```
 
 #### getTotalReceived
 ```java
