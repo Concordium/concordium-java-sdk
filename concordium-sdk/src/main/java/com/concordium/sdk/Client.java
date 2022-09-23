@@ -5,6 +5,7 @@ import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.ancestors.Ancestors;
+import com.concordium.sdk.responses.bakerlist.BakerId;
 import com.concordium.sdk.responses.birkparamsters.BirkParameters;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -340,12 +341,24 @@ public final class Client {
 
     /**
      * Gets the Semantic Version of the Peer Software / Node
-     *
      * @return Version of the Peer / Node
      */
     public Semver getVersion() {
         val versionString = server().peerVersion(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
         return new Semver(versionString);
+    }
+
+    /**
+     * Get the IDs of the bakers registered in the given block.
+     *
+     * @param blockHash {@link Hash} of the block bakers are to be retrieved.
+     * @return Parsed {@link ImmutableList} of {@link BakerId}
+     * @throws BlockNotFoundException When the returned JSON is null.
+     */
+    public ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
+        val res = server().getBakerList(req);
+        return BakerId.fromJsonArray(res.getValue()).orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**

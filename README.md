@@ -289,6 +289,12 @@ SemVer getVersion()
 ```
 Retrives the node software version.
 
+- `getBakerList`
+```java
+ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException
+```
+Get the IDs of the bakers registered in the given block.
+
 - `getNodeInfo`
 ```java
 NodeInfo getNodeInfo()
@@ -549,6 +555,11 @@ ImmutableList<Peer> peers = client.getPeerList(true);
 SemVer version = client.getVersion();
 ```
 
+#### getBakerList
+```java
+ImmutableList<BakerId> bakerList = client
+                .getBakerList(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
 
 #### getNodeInfo
 ```java
