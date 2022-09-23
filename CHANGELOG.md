@@ -2,6 +2,8 @@
 
 ## Unreleased changes
 
+## 3.1.0
+
 - Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.
 - Added support for `Uptime` query.
 - Added support for Account Transaction Register Data.
