@@ -48,8 +48,7 @@ public class GetPoolStatusTest {
                 "}," +
                 "\"allPoolTotalCapital\": \"78276465710911895\"" +
                 "}";
-        val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = PoolStatus.fromJson(req);
+        val res = PoolStatus.fromJson(json);
 
         Assert.assertTrue(res.isPresent());
         Assert.assertEquals(res.get(), BakerPoolStatus.builder()
@@ -96,8 +95,7 @@ public class GetPoolStatusTest {
                 "\"currentPaydayDelegatedCapital\": \"675226245293\"," +
                 "\"allPoolTotalCapital\": \"78276465710911895\"" +
                 "}";
-        val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = PoolStatus.fromJson(req);
+        val res = PoolStatus.fromJson(json);
 
         Assert.assertTrue(res.isPresent());
         Assert.assertEquals(res.get(), PassiveDelegationStatus.builder()
@@ -116,16 +114,13 @@ public class GetPoolStatusTest {
     @Test
     public void shouldHandleNullJsonTest() {
         val json = "null";
-        val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = PoolStatus.fromJson(req);
-
+        val res = PoolStatus.fromJson(json);
         Assert.assertFalse(res.isPresent());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldHandleInvalidJson() {
         val json = "{";
-        val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = PoolStatus.fromJson(req);
+        val res = PoolStatus.fromJson(json);
     }
 }

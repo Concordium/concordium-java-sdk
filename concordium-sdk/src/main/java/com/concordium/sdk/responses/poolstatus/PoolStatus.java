@@ -15,9 +15,9 @@ import java.util.Optional;
         @JsonSubTypes.Type(value = PassiveDelegationStatus.class, name = "PassiveDelegation")
 })
 public abstract class PoolStatus {
-    public static Optional<PoolStatus> fromJson(ConcordiumP2PRpc.JsonResponse res) {
+    public static Optional<PoolStatus> fromJson(String jsonValue) {
         try {
-            val poolStatus = JsonMapper.INSTANCE.readValue(res.getValue(), PoolStatus.class);
+            val poolStatus = JsonMapper.INSTANCE.readValue(jsonValue, PoolStatus.class);
             return Optional.ofNullable(poolStatus);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse PoolStatus JSON", e);

@@ -22,6 +22,8 @@ import com.concordium.sdk.responses.modulesource.ModuleSource;
 import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
+import com.concordium.sdk.responses.poolstatus.PassiveDelegationStatus;
 import com.concordium.sdk.responses.poolstatus.PoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.ContractAddress;
@@ -359,31 +361,49 @@ public final class Client {
     public ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException {
         val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
         val res = server().getBakerList(req);
-
-        return BakerId.fromJsonArray(res).orElseThrow(() -> BlockNotFoundException.from(blockHash));
+        return BakerId.fromJsonArray(res.getValue()).orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**
      * Get the status of a given baker pool or passive delegation at the given block.
-     *
-     * @param blockHash {@link Hash} of the block Pool Status is to be retrieved at.
-     * @param bakerId   {@link Optional<BakerId>} of the Baker of which pool is to be retrieved.
-     * @return Parsed {@link PoolStatus}.
+     * <p>
+     * Note. Delegation was added to the chain as part of {@link com.concordium.sdk.responses.ProtocolVersion#V4}
+     * </p>
+     * @param blockHash {@link Hash} of the block.
+     * @param bakerId   {@link BakerId} The baker id.
+     * @return The {@link BakerPoolStatus} at the block specified.
+     * @throws PoolNotFoundException when the pool could not be found for the given block.
      */
-    public PoolStatus getPoolStatus(
+    public BakerPoolStatus getPoolStatus(
             final Hash blockHash,
-            final Optional<BakerId> bakerId) throws PoolNotFoundException {
-        final BakerId parsedBakerId = bakerId.orElse(BakerId.from(0));
+            final BakerId bakerId) throws PoolNotFoundException {
         val req = ConcordiumP2PRpc.GetPoolStatusRequest.newBuilder()
                 .setBlockHash(blockHash.asHex())
-                .setPassiveDelegation(!bakerId.isPresent())
-                .setBakerId(parsedBakerId.toLong())
+                .setPassiveDelegation(false)
+                .setBakerId(bakerId.toLong())
                 .build();
         val res = server().getPoolStatus(req);
-
-        return PoolStatus.fromJson(res).orElseThrow(() -> PoolNotFoundException.from(parsedBakerId, blockHash));
+        return (BakerPoolStatus) PoolStatus.fromJson(res.getValue()).orElseThrow(() -> PoolNotFoundException.from(Optional.of(bakerId), blockHash));
     }
-    
+
+    /**
+     * Get the status of the passive delegation pool at the given block.
+     * <p>
+     * Note. Delegation was added to the chain as part of {@link com.concordium.sdk.responses.ProtocolVersion#V4}
+     * </p>
+     * @param blockHash {@link Hash} of the block.
+     * @return The {@link PassiveDelegationStatus} at the block specified.
+     * @throws PoolNotFoundException when the pool could not be found for the given block.
+     */
+    public PassiveDelegationStatus getPassiveDelegationStatus(final Hash blockHash) throws PoolNotFoundException {
+        val req = ConcordiumP2PRpc.GetPoolStatusRequest.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .setPassiveDelegation(true)
+                .build();
+        val res = server().getPoolStatus(req);
+        return (PassiveDelegationStatus) PoolStatus.fromJson(res.getValue()).orElseThrow(() -> PoolNotFoundException.from(Optional.empty(), blockHash));
+    }
+
     /**
      * Get the source of a smart contract module.
      *

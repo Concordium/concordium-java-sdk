@@ -8,18 +8,26 @@ import concordium.ConcordiumP2PRpc;
 import lombok.Data;
 import lombok.val;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Account Index of Baking Account.
+ * Account index of the baking account.
  */
 @Data
 public class BakerId {
 
-    private AccountIndex id;
+    /**
+     * The account index of the baker.
+     */
+    private final AccountIndex id;
 
     private BakerId(long index) {
         this.id = AccountIndex.from(index);
+    }
+
+    private BakerId(AccountIndex accountIndex) {
+        this.id = accountIndex;
     }
 
     @Override
@@ -31,14 +39,21 @@ public class BakerId {
         return this.id.getIndex().getValue();
     }
 
+    public static BakerId from(AccountIndex accountIndex) {
+        return new BakerId(accountIndex);
+    }
+
     @JsonCreator
     public static BakerId from(long index) {
         return new BakerId(index);
     }
 
-    public static Optional<ImmutableList<BakerId>> fromJsonArray(ConcordiumP2PRpc.JsonResponse res) {
+    public static Optional<ImmutableList<BakerId>> fromJsonArray(String jsonValue) {
         try {
-            val array = JsonMapper.INSTANCE.readValue(res.getValue(), BakerId[].class);
+            if (Objects.isNull(jsonValue)) {
+                return Optional.empty();
+            }
+            val array = JsonMapper.INSTANCE.readValue(jsonValue, BakerId[].class);
 
             return Optional.ofNullable(array).map(arr -> ImmutableList.copyOf(arr));
         } catch (JsonProcessingException e) {

@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.blocksatheight;
 
 import com.concordium.sdk.Client;
+import com.concordium.sdk.responses.ProtocolVersion;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -43,6 +44,10 @@ public class BlocksAtHeightRequest {
 
     /**
      * Request blocks at a relative height wrt. a specified genesis index.
+     * <p>
+     * Note. This function does not make sure that the supplied genesis index is valid.
+     * Use {@link BlocksAtHeightRequest#newRelative(long, ProtocolVersion, boolean)} to perform the request by the protocol version.
+     * </p>
      * @param height the height counting from the last protocol update, 
      * @param genesisIndex the genesis index.
      * @param restrictedToGenesisIndex if true then only blocks at the specified genesis index will be returned.
@@ -50,6 +55,17 @@ public class BlocksAtHeightRequest {
      */
     public static BlocksAtHeightRequest newRelative(long height, int genesisIndex, boolean restrictedToGenesisIndex) {
         return new BlocksAtHeightRequest(Type.RELATIVE, height, genesisIndex, restrictedToGenesisIndex);
+    }
+
+    /**
+     * Request blocks at a relative height wrt. a specified {@link ProtocolVersion}.
+     * @param height the height counting from the last protocol update,
+     * @param protocolVersion the protocol version.
+     * @param restrictedToGenesisIndex if true then only blocks at the specified genesis index will be returned.
+     * @return the request.
+     */
+    public static BlocksAtHeightRequest newRelative(long height, ProtocolVersion protocolVersion, boolean restrictedToGenesisIndex) {
+        return new BlocksAtHeightRequest(Type.RELATIVE, height, protocolVersion.getGenesisIndex(), restrictedToGenesisIndex);
     }
 
     public String toPrettyExceptionMessage() {
