@@ -1,8 +1,6 @@
 package com.concordium.sdk.queries;
-
-import com.concordium.sdk.responses.bakerlist.BakerId;
+import com.concordium.sdk.responses.BakerId;
 import com.google.common.collect.ImmutableList;
-import concordium.ConcordiumP2PRpc;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Assert;
