@@ -14,8 +14,7 @@ public class GetBakerListTest {
     @Test
     public void shouldDeserializeJsonTest() {
         val json = "[0,1,2,3]";
-        val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = BakerId.fromJsonArray(req);
+        val res = BakerId.fromJsonArray(json);
 
         Assert.assertTrue(res.isPresent());
         Assert.assertEquals(res.get(), ImmutableList.builder()
@@ -29,16 +28,19 @@ public class GetBakerListTest {
     @Test
     public void shouldHandleNullJsonTest() {
         val json = "null";
-        val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = BakerId.fromJsonArray(req);
+        val res = BakerId.fromJsonArray(json);
+        Assert.assertFalse(res.isPresent());
+    }
 
+    @Test
+    public void shouldFailProperlyOnNull() {
+        val res = BakerId.fromJsonArray(null);
         Assert.assertFalse(res.isPresent());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldHandleInvalidJson() {
         val json = "{";
-        val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = BakerId.fromJsonArray(req);
+        val res = BakerId.fromJsonArray(json);
     }
 }

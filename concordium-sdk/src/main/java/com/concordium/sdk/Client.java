@@ -358,8 +358,7 @@ public final class Client {
     public ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException {
         val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
         val res = server().getBakerList(req);
-
-        return BakerId.fromJsonArray(res).orElseThrow(() -> BlockNotFoundException.from(blockHash));
+        return BakerId.fromJsonArray(res.getValue()).orElseThrow(() -> BlockNotFoundException.from(blockHash));
     }
 
     /**

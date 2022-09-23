@@ -5,27 +5,25 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
-import concordium.ConcordiumP2PRpc;
 import lombok.Data;
 import lombok.val;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Account Index of Baking Account.
+ * Account index of a baker.
  */
 @Data
 public class BakerId {
 
-    private AccountIndex id;
+    /**
+     * The account index of the baker.
+     */
+    private final AccountIndex id;
 
     private BakerId(long index) {
         this.id = AccountIndex.from(index);
-    }
-
-    @Override
-    public String toString() {
-        return this.id.toString();
     }
 
     @JsonCreator
@@ -33,10 +31,12 @@ public class BakerId {
         return new BakerId(index);
     }
 
-    public static Optional<ImmutableList<BakerId>> fromJsonArray(ConcordiumP2PRpc.JsonResponse res) {
+    public static Optional<ImmutableList<BakerId>> fromJsonArray(String jsonValue) {
         try {
-            val array = JsonMapper.INSTANCE.readValue(res.getValue(), BakerId[].class);
-
+            if (Objects.isNull(jsonValue)) {
+                return Optional.empty();
+            }
+            val array = JsonMapper.INSTANCE.readValue(jsonValue, BakerId[].class);
             return Optional.ofNullable(array).map(arr -> ImmutableList.copyOf(arr));
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse Baker Ids Array JSON", e);
