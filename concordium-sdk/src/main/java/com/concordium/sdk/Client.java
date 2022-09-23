@@ -3,8 +3,10 @@ package com.concordium.sdk;
 import com.concordium.sdk.exceptions.*;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.ancestors.Ancestors;
+import com.concordium.sdk.responses.bannode.BanNodeRequest;
 import com.concordium.sdk.responses.birkparamsters.BirkParameters;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeight;
@@ -21,6 +23,9 @@ import com.concordium.sdk.responses.modulesource.ModuleSource;
 import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerStats.PeerStatistics;
 import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
+import com.concordium.sdk.responses.poolstatus.PassiveDelegationStatus;
+import com.concordium.sdk.responses.poolstatus.PoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.ContractAddress;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
@@ -32,6 +37,7 @@ import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Int32Value;
+import com.google.protobuf.StringValue;
 import concordium.ConcordiumP2PRpc;
 import concordium.P2PGrpc;
 import io.grpc.ManagedChannel;
@@ -39,6 +45,7 @@ import lombok.val;
 import org.semver4j.Semver;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.List;
@@ -349,6 +356,94 @@ public final class Client {
     }
 
     /**
+     * Get the IDs of the bakers registered in the given block.
+     *
+     * @param blockHash {@link Hash} of the block bakers are to be retrieved.
+     * @return Parsed {@link ImmutableList} of {@link BakerId}
+     * @throws BlockNotFoundException When the returned JSON is null.
+     */
+    public ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException {
+        val req = ConcordiumP2PRpc.BlockHash.newBuilder().setBlockHash(blockHash.asHex()).build();
+        val res = server().getBakerList(req);
+        return BakerId.fromJsonArray(res.getValue()).orElseThrow(() -> BlockNotFoundException.from(blockHash));
+    }
+
+    /**
+     * Get the status of a given baker pool or passive delegation at the given block.
+     * <p>
+     * Note. Delegation was added to the chain as part of {@link com.concordium.sdk.responses.ProtocolVersion#V4}
+     * </p>
+     * @param blockHash {@link Hash} of the block.
+     * @param bakerId   {@link BakerId} The baker id.
+     * @return The {@link BakerPoolStatus} at the block specified.
+     * @throws PoolNotFoundException when the pool could not be found for the given block.
+     */
+    public BakerPoolStatus getPoolStatus(
+            final Hash blockHash,
+            final BakerId bakerId) throws PoolNotFoundException {
+        val req = ConcordiumP2PRpc.GetPoolStatusRequest.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .setPassiveDelegation(false)
+                .setBakerId(bakerId.toLong())
+                .build();
+        val res = server().getPoolStatus(req);
+        return (BakerPoolStatus) PoolStatus.fromJson(res.getValue()).orElseThrow(() -> PoolNotFoundException.from(Optional.of(bakerId), blockHash));
+    }
+
+    /**
+     * Get the status of the passive delegation pool at the given block.
+     * <p>
+     * Note. Delegation was added to the chain as part of {@link com.concordium.sdk.responses.ProtocolVersion#V4}
+     * </p>
+     * @param blockHash {@link Hash} of the block.
+     * @return The {@link PassiveDelegationStatus} at the block specified.
+     * @throws PoolNotFoundException when the pool could not be found for the given block.
+     */
+    public PassiveDelegationStatus getPassiveDelegationStatus(final Hash blockHash) throws PoolNotFoundException {
+        val req = ConcordiumP2PRpc.GetPoolStatusRequest.newBuilder()
+                .setBlockHash(blockHash.asHex())
+                .setPassiveDelegation(true)
+                .build();
+        val res = server().getPoolStatus(req);
+        return (PassiveDelegationStatus) PoolStatus.fromJson(res.getValue()).orElseThrow(() -> PoolNotFoundException.from(Optional.empty(), blockHash));
+    }
+
+    /**
+     * Ban a specific node.
+     * Note that this will also cause the node to drop any connections to a matching node.
+     *
+     * @param request {@link BanNodeRequest}
+     * @return {@link Boolean} This is True if Specified node was banned. False otherwise.
+     */
+    public boolean banNode(final BanNodeRequest request) {
+        val builder = ConcordiumP2PRpc.PeerElement.newBuilder();
+
+        if (request.getIp().isPresent()) {
+            builder.setIp(StringValue.of(request.getIp().get().getHostAddress()));
+        } else if (request.getId().isPresent()) {
+            builder.setNodeId(StringValue.of(request.getId().get()));
+        } else {
+            throw new IllegalArgumentException("Either node IP or node ID must be present.");
+        }
+
+        return server().banNode(builder.build()).getValue();
+    }
+
+    /**
+     * Unban a specific node.
+     *
+     * @param ip {@link InetAddress}.
+     * @return {@link Boolean} This is True If Specified node was unbanned. False otherwise.
+     */
+    public boolean unBanNode(final InetAddress ip) {
+        ConcordiumP2PRpc.PeerElement peerElement = ConcordiumP2PRpc.PeerElement.newBuilder()
+                .setIp(StringValue.of(ip.getHostAddress()))
+                .build();
+
+        return server().unbanNode(peerElement).getValue();
+    }
+
+    /**
      * Start the baker.
      *
      * @return true if baker could be started. false otherwise.
@@ -365,7 +460,7 @@ public final class Client {
     public boolean stopBaker() {
         return server().stopBaker(ConcordiumP2PRpc.Empty.newBuilder().build()).getValue();
     }
-    
+
     /**
      * Get the source of a smart contract module.
      *
