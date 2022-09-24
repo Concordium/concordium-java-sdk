@@ -36,6 +36,12 @@ public class TransactionFactory {
         return RegisterDataTransaction.builder();
     }
 
+    /**
+     * Creates a new {@link InitContractTransaction.InitContractTransactionBuilder} for
+     * creating a {@link InitContractTransaction}
+     *
+     * @return the builder for a {@link InitContractTransaction}
+     */
     public static InitContractTransaction.InitContractTransactionBuilder newInitContract() {
         return InitContractTransaction.builder();
     }

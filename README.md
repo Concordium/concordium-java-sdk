@@ -755,17 +755,47 @@ try {
 ```
 
 #### Sending a raw transaction
-It is also possible to send a `raw` transaction via the client. 
-Use `RawTransaction.from(rawTransactionBytes)` in order to retrieve a `Transaction` object which 
+It is also possible to send a `raw` transaction via the client.
+Use `RawTransaction.from(rawTransactionBytes)` in order to retrieve a `Transaction` object which
 can then be passed to the `Client.sendTransaction`.
 
 ```java
 try{
-    RawTransaction rawTransaction = RawTransaction.from(transfer.getBytes());
-    Hash transactionHash  = client.sendTransaction(transaction);
-    // Do something with the succesfully sent transaction hash.
-    // Here we simply log it.
-    Log.Info("Transaction "+ transactionHash.asHex() +" was sent to node.");
+        RawTransaction rawTransaction = RawTransaction.from(transfer.getBytes());
+        Hash transactionHash  = client.sendTransaction(transaction);
+        // Do something with the succesfully sent transaction hash.
+        // Here we simply log it.
+        Log.Info("Transaction "+ transactionHash.asHex() +" was sent to node.");
+        } catch (TransactionRejectionException e) {
+        // Handle the rejected transaction, here we simply log it.
+        Transaction rejectedTransaction =  e.getTransaction();
+        Hash rejectedTransactionHash = rejectedTransaction.getHash();
+        String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+        Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+        }
+
+```
+
+
+#### Initialising a smart contract transaction
+The following example demonstrates how to initialize a smart contract from a module, which has already been deployed.
+The name of the contract "CIS2-NFT".
+In this example, the contract does not take any parameters, so we can leave parameters as an empty buffer.
+
+```java
+try{
+     byte[] paramBytes = new byte[0];
+     Hash moduleRef = Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07");
+     InitContractTransaction transaction = TransactionFactory.newInitContract()
+        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(TransactionTestHelper.getValidSigner())
+        .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", paramBytes))
+        .maxEnergyCost(UInt64.from(3000))
+        .build();
+    client.sendTransaction(transaction);
+
 } catch (TransactionRejectionException e) {
     // Handle the rejected transaction, here we simply log it.
     Transaction rejectedTransaction =  e.getTransaction();

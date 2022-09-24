@@ -7,7 +7,9 @@ import com.concordium.sdk.types.UInt64;
 import lombok.val;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import java.util.Arrays;
+
+import static org.junit.Assert.*;
 
 public class InitContractTransactionTest {
     byte[] emptyArray = new byte[0];
@@ -17,7 +19,7 @@ public class InitContractTransactionTest {
     @Test
     public void testInitContract() {
         try {
-            InitContractTransaction
+            val transaction = InitContractTransaction
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .nonce(AccountNonce.from(78910))
@@ -26,6 +28,8 @@ public class InitContractTransactionTest {
                     .maxEnergyCost(UInt64.from(3000))
                     .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", emptyArray))
                     .build();
+            assertEquals("fe69d75d93b63bdc3651b5b420b6a1b2950b7e7c8c4336bc15db9f00c210fd80", transaction.getHash().asHex());
+            assertArrayEquals(TestUtils.EXPECTED_INIT_CONTRACT_TRANSACTION_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
         } catch (TransactionCreationException e) {
             fail("Unexpected error: " + e.getMessage());
         }

@@ -27,10 +27,10 @@ public final class Parameter {
     }
 
     public byte[] getBytes() {
-        val param_buffer = this.bytes;
-        val buffer = ByteBuffer.allocate(UInt16.BYTES + param_buffer.length);
-        buffer.put(UInt16.from(param_buffer.length).getBytes());
-        buffer.put(param_buffer);
+        val paramBuffer = this.bytes;
+        val buffer = ByteBuffer.allocate(UInt16.BYTES + paramBuffer.length);
+        buffer.put(UInt16.from(paramBuffer.length).getBytes());
+        buffer.put(paramBuffer);
         return buffer.array();
     }
 }
