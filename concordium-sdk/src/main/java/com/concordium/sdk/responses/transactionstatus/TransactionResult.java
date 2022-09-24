@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Builder;
+import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
-@Getter
-@ToString
+@Data
+@Jacksonized
+@Builder
 public final class TransactionResult {
 
     // Emitted events from transactions
@@ -46,7 +48,7 @@ public final class TransactionResult {
             @JsonSubTypes.Type(value = BakerSetMetadataURL.class, name = "BakerSetMetadataURL"),
             @JsonSubTypes.Type(value = BakerSetTransactionFeeCommission.class, name = "BakerSetTransactionFeeCommission"),
             @JsonSubTypes.Type(value = BakerSetBakingRewardCommission.class, name = "BakerSetBakingRewardCommission"),
-            @JsonSubTypes.Type(value = BakerSetFinalizationRewardCommission.class, name ="BakerSetFinalizationRewardCommission"),
+            @JsonSubTypes.Type(value = BakerSetFinalizationRewardCommission.class, name = "BakerSetFinalizationRewardCommission"),
             @JsonSubTypes.Type(value = DelegationStakeIncreased.class, name = "DelegationStakeIncreased"),
             @JsonSubTypes.Type(value = DelegationStakeDecreased.class, name = "DelegationStakeDecreased"),
             @JsonSubTypes.Type(value = DelegationSetRestakeEarnings.class, name = "DelegationSetRestakeEarnings"),
@@ -118,13 +120,4 @@ public final class TransactionResult {
             @JsonSubTypes.Type(value = RejectReasonPoolClosed.class, name = "PoolClosed"),
     })
     private final RejectReason rejectReason;
-
-    @JsonCreator
-    TransactionResult(@JsonProperty("events") List<TransactionResultEvent> events,
-                      @JsonProperty("outcome") Outcome outcome,
-                      @JsonProperty("rejectReason") RejectReason rejectReason) {
-        this.events = events;
-        this.outcome = outcome;
-        this.rejectReason = rejectReason;
-    }
 }

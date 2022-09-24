@@ -11,7 +11,7 @@ public final class ModuleCreatedResult extends TransactionResultEvent {
     private final String contents;
 
     @JsonCreator
-    ModuleCreatedResult(@JsonProperty("contents") String contents) {
+    public ModuleCreatedResult(@JsonProperty("contents") String contents) {
         this.contents = contents;
     }
 
