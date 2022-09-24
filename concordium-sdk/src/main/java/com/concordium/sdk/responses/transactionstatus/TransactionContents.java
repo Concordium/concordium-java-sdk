@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = JsonFormat.Shape.STRING)
-enum TransactionContents {
+public enum TransactionContents {
     @JsonProperty("transferWithMemo")
     TRANSFER_WITH_MEMO,
     @JsonProperty("transferWithScheduleAndMemo")

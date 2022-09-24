@@ -1,18 +1,27 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.collect.ImmutableList;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.val;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
+import java.util.Optional;
+
+/**
+ * A common hash (SHA256) used on the chain.
+ */
 @EqualsAndHashCode
 public class Hash {
     @Getter
     private final byte[] bytes;
 
     @JsonCreator
-    Hash(String encoded) {
+    protected Hash(String encoded) {
         try {
             this.bytes = Hex.decodeHex(encoded);
         } catch (DecoderException e) {
@@ -20,7 +29,7 @@ public class Hash {
         }
     }
 
-    private Hash(byte[] hash) {
+    protected Hash(byte[] hash) {
         this.bytes = hash;
     }
 
@@ -34,6 +43,15 @@ public class Hash {
 
     public static Hash from(byte[] hash) {
         return new Hash(hash);
+    }
+
+    public static Optional<ImmutableList<Hash>> fromJsonArray(String jsonValue) {
+        try {
+            val arr = JsonMapper.INSTANCE.readValue(jsonValue, Hash[].class);
+            return Optional.ofNullable(arr).map(ImmutableList::copyOf);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Cannot parse Hash Array JSON", e);
+        }
     }
 
     @Override

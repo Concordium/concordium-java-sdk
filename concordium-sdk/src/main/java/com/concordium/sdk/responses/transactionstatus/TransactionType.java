@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = JsonFormat.Shape.STRING)
-enum TransactionType {
+public enum TransactionType {
     @JsonProperty("accountTransaction")
     ACCOUNT_TRANSACTION,
     @JsonProperty("credentialDeploymentTransaction")
