@@ -12,21 +12,21 @@ import java.nio.ByteBuffer;
 @Getter
 @ToString
 public final class ReceiveName {
-    private final String contract_name;
+    private final String contractName;
     private final String method;
 
     @JsonCreator
-    ReceiveName(String contract_name, String method) {
-        this.contract_name = contract_name;
+    ReceiveName(String contractName, String method) {
+        this.contractName = contractName;
         this.method = method;
     }
 
-    public static ReceiveName from(String contract_name, String method) {
-        return new ReceiveName(contract_name, method);
+    public static ReceiveName from(String contractName, String method) {
+        return new ReceiveName(contractName, method);
     }
 
     public byte[] getBytes() {
-        val receiveNameBuffer = (contract_name + "." + method).getBytes();
+        val receiveNameBuffer = (contractName + "." + method).getBytes();
         val buffer = ByteBuffer.allocate(UInt16.BYTES + receiveNameBuffer.length);
         buffer.put(UInt16.from(receiveNameBuffer.length).getBytes());
         buffer.put(receiveNameBuffer);
