@@ -1,6 +1,5 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.AccountRequest;
 import com.concordium.sdk.Client;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
@@ -8,6 +7,7 @@ import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.exceptions.TransactionRejectionException;
+import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
@@ -45,7 +45,7 @@ public class DeployModuleUtilTest {
             long nonceValue = accountInfo.getAccountNonce().getValue().getValue();
             long expiry = System.currentTimeMillis()/1000 + 500;
 
-            byte[] array = Files.readAllBytes(Paths.get("/Users/eklavaya/Desktop/ccd/concordium-java-sdk/concordium-sdk/src/test/java/com/concordium/sdk/transactions/module.wasm"));
+            byte[] array = Files.readAllBytes(Paths.get("path_to_wasm_file"));
 
             val transaction = TransactionFactory.newDeployModule()
                     .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
@@ -55,7 +55,6 @@ public class DeployModuleUtilTest {
                     .module(WasmModule.from(array, 1))
                     .maxEnergyCost(UInt64.from(10000))
                     .build();
-            System.out.println(transaction.getMaxEnergyCost());
             client.sendTransaction(transaction);
 
         } catch (TransactionCreationException e) {

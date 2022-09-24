@@ -4,10 +4,11 @@ import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
+import com.concordium.sdk.types.UInt64;
 import lombok.val;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class DeployModuleTransactionTest {
 
@@ -16,14 +17,17 @@ public class DeployModuleTransactionTest {
     @Test
     public void testDeployModuleTransaction() {
         try {
-            DeployModuleTransaction
+            val transaction = DeployModuleTransaction
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
                     .module(WasmModule.from(mod_ref, 1))
+                    .maxEnergyCost(UInt64.from(10000))
                     .build();
+            assertEquals("6176f748f54ed9f9f6d51d5b3aecafec619dd5d707bbd2b33e1a383cf6c399e8", transaction.getHash().asHex());
+            assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
         } catch (TransactionCreationException e) {
             fail("Unexpected error: " + e.getMessage());
         }
@@ -39,6 +43,7 @@ public class DeployModuleTransactionTest {
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
                     .module(WasmModule.from(mod_ref, 1))
+                    .maxEnergyCost(UInt64.from(10000))
                     .build();
             fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -58,6 +63,7 @@ public class DeployModuleTransactionTest {
                     .expiry(Expiry.from(123456))
                     .signer(TransactionTestHelper.getValidSigner())
                     .module(WasmModule.from(mod_ref, 1))
+                    .maxEnergyCost(UInt64.from(10000))
                     .build();
             fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -78,6 +84,7 @@ public class DeployModuleTransactionTest {
                     .nonce(AccountNonce.from(78910))
                     .signer(TransactionTestHelper.getValidSigner())
                     .module(WasmModule.from(mod_ref, 1))
+                    .maxEnergyCost(UInt64.from(10000))
                     .build();
             fail("Expected DeployTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -98,6 +105,7 @@ public class DeployModuleTransactionTest {
                     .nonce(AccountNonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .module(WasmModule.from(mod_ref, 1))
+                    .maxEnergyCost(UInt64.from(10000))
                     .build();
             fail("Expected TransferTransaction to fail");
         } catch (TransactionCreationException e) {
@@ -117,6 +125,7 @@ public class DeployModuleTransactionTest {
                     .expiry(Expiry.from(123456))
                     .signer(getSignerWithMalformedSecretKey())
                     .module(WasmModule.from(mod_ref, 1))
+                    .maxEnergyCost(UInt64.from(10000))
                     .build();
 
 

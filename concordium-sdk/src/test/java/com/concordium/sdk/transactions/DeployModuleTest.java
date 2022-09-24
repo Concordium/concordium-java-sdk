@@ -5,14 +5,19 @@ import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import lombok.SneakyThrows;
+import lombok.val;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class DeployModuleTest {
     @SneakyThrows
     @Test
     public void testDeployModule() {
         Hash mod_ref = Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07");
-        DeployModule.createNew(
+        val transfer = DeployModule.createNew(
                         WasmModule.from(mod_ref.getBytes(), 1), UInt64.from(6000))
                 .withHeader(TransactionHeader
                         .builder()
@@ -28,5 +33,13 @@ public class DeployModuleTest {
                                         ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
                         )
                 );
+        assertEquals(33, transfer.getBytes().length);
+        assertEquals("90d700d331090fc406b199cc8964c581d490c25a54ab9f8e203cad343d6f2461", Hex.encodeHexString(transfer.getDataToSign()));
+        val blockItem = transfer.toAccountTransaction().toBlockItem();
+
+        val blockItemHash = blockItem.getHash();
+        assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getBytes()));
+        assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_VERSIONED_DATA_BYTES_2, TestUtils.signedByteArrayToUnsigned(blockItem.getVersionedBytes()));
+        assertEquals("3d3b737524e6ea34bfb8c8dd35c446cdabead721d62fc8f0f26ae02e442f5daa", blockItemHash.asHex());
     }
 }
