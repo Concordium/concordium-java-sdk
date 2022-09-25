@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
 
+import java.util.Objects;
+
 @Getter
 public class UpdateContractTransaction extends AbstractTransaction {
 
@@ -26,7 +28,7 @@ public class UpdateContractTransaction extends AbstractTransaction {
                                      Expiry expiry,
                                      TransactionSigner signer,
                                      BlockItem blockItem,
-                                     UInt64 maxEnergyCost) {
+                                     UInt64 maxEnergyCost) throws TransactionCreationException  {
         this.payload = payload;
         this.sender = sender;
         this.nonce = nonce;
@@ -47,18 +49,10 @@ public class UpdateContractTransaction extends AbstractTransaction {
 
     private static class CustomBuilder extends UpdateContractTransactionBuilder {
         @Override
-        public UpdateContractTransaction build() {
+        public UpdateContractTransaction build() throws TransactionCreationException {
             val transaction = super.build();
-            try {
-                Transaction.verifyUpdateContractInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.signer, transaction.payload);
-            } catch (TransactionCreationException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                transaction.blockItem = updateSmartContractInstance(transaction).toBlockItem();
-            } catch (TransactionCreationException e) {
-                throw new RuntimeException(e);
-            }
+            verifyUpdateContractInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.signer, transaction.payload);
+            transaction.blockItem = updateSmartContractInstance(transaction).toBlockItem();
             return transaction;
         }
 
@@ -73,6 +67,13 @@ public class UpdateContractTransaction extends AbstractTransaction {
                             .expiry(transaction.expiry.getValue())
                             .build())
                     .signWith(transaction.signer);
+        }
+
+        static void verifyUpdateContractInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, UpdateContractPayload payload) throws TransactionCreationException {
+            Transaction.verifyCommonInput(sender, nonce, expiry, signer);
+            if (Objects.isNull(payload)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
+            }
         }
     }
 }

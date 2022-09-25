@@ -12,6 +12,8 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class UpdateContractTest {
+    final static int[] EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_DATA_BYTES = new int[]{0, 1, 0, 2, 0, 0, 64, 111, 156, 134, 10, 219, 204, 40, 139, 1, 251, 94, 232, 85, 181, 230, 118, 68, 206, 242, 170, 45, 219, 56, 0, 36, 62, 200, 159, 219, 117, 236, 187, 214, 104, 143, 127, 50, 71, 109, 148, 117, 61, 38, 43, 158, 45, 202, 47, 234, 2, 238, 139, 203, 134, 13, 162, 44, 229, 89, 7, 51, 84, 149, 7, 1, 0, 64, 240, 217, 99, 135, 34, 235, 106, 185, 4, 183, 52, 116, 244, 114, 218, 166, 53, 198, 20, 254, 75, 196, 81, 42, 49, 47, 111, 47, 176, 241, 167, 204, 20, 127, 126, 57, 232, 100, 187, 63, 96, 58, 98, 207, 102, 169, 240, 111, 195, 20, 93, 33, 90, 158, 203, 50, 10, 19, 201, 8, 120, 254, 229, 8, 48, 29, 107, 23, 16, 181, 115, 90, 252, 36, 88, 152, 1, 33, 61, 19, 170, 107, 68, 120, 137, 15, 223, 232, 25, 91, 202, 14, 175, 34, 97, 78, 0, 0, 0, 0, 0, 1, 52, 62, 0, 0, 0, 0, 0, 0, 12, 230, 0, 0, 0, 42, 0, 0, 0, 0, 0, 1, 226, 64, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 67, 73, 83, 50, 45, 78, 70, 84, 46, 109, 105, 110, 116, 0, 0};
+    final static int[] EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_VERSIONED_DATA_BYTES = new int[]{0, 1, 0, 2, 0, 0, 64, 111, 156, 134, 10, 219, 204, 40, 139, 1, 251, 94, 232, 85, 181, 230, 118, 68, 206, 242, 170, 45, 219, 56, 0, 36, 62, 200, 159, 219, 117, 236, 187, 214, 104, 143, 127, 50, 71, 109, 148, 117, 61, 38, 43, 158, 45, 202, 47, 234, 2, 238, 139, 203, 134, 13, 162, 44, 229, 89, 7, 51, 84, 149, 7, 1, 0, 64, 240, 217, 99, 135, 34, 235, 106, 185, 4, 183, 52, 116, 244, 114, 218, 166, 53, 198, 20, 254, 75, 196, 81, 42, 49, 47, 111, 47, 176, 241, 167, 204, 20, 127, 126, 57, 232, 100, 187, 63, 96, 58, 98, 207, 102, 169, 240, 111, 195, 20, 93, 33, 90, 158, 203, 50, 10, 19, 201, 8, 120, 254, 229, 8, 48, 29, 107, 23, 16, 181, 115, 90, 252, 36, 88, 152, 1, 33, 61, 19, 170, 107, 68, 120, 137, 15, 223, 232, 25, 91, 202, 14, 175, 34, 97, 78, 0, 0, 0, 0, 0, 1, 52, 62, 0, 0, 0, 0, 0, 0, 12, 230, 0, 0, 0, 42, 0, 0, 0, 0, 0, 1, 226, 64, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 67, 73, 83, 50, 45, 78, 70, 84, 46, 109, 105, 110, 116, 0, 0};
     @SneakyThrows
     @Test
     public void updateContractTest() {
@@ -32,13 +34,20 @@ public class UpdateContractTest {
                                         ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
                         )
                 );
-        assertEquals(42, transfer.getBytes().length);
-        assertEquals("02b15fc092aa1e63035a18cb1b4f62a9d2a6186bdb6147f85525bcb8771ab5b7", Hex.encodeHexString(transfer.getDataToSign()));
+        val transferBytesLength = transfer.getBytes().length;
+        assertEquals(42, transferBytesLength);
+
+        val transferDataToSign = transfer.getDataToSign();
+        assertEquals("02b15fc092aa1e63035a18cb1b4f62a9d2a6186bdb6147f85525bcb8771ab5b7", Hex.encodeHexString(transferDataToSign));
         val blockItem = transfer.toAccountTransaction().toBlockItem();
 
+        val blockItemBytes = blockItem.getBytes();
+        assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));
+
+        val blockItemVersionedBytes = blockItem.getBytes();
+        assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_VERSIONED_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemVersionedBytes));
+
         val blockItemHash = blockItem.getHash();
-        assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getBytes()));
-        assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_VERSIONED_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getVersionedBytes()));
         assertEquals("0a869928f2491d0652a708eac0231582e24c0cc036481f209862147856531d20", blockItemHash.asHex());
     }
 }
