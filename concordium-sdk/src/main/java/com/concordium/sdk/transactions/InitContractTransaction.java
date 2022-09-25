@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
 
+import java.util.Objects;
+
 @Getter
 public class InitContractTransaction extends AbstractTransaction {
 
@@ -47,7 +49,7 @@ public class InitContractTransaction extends AbstractTransaction {
         @Override
         public InitContractTransaction build() throws TransactionCreationException {
             val transaction = super.build();
-            Transaction.verifyInitContractInput(
+            verifyInitContractInput(
                     transaction.sender,
                     transaction.nonce,
                     transaction.expiry,
@@ -71,5 +73,13 @@ public class InitContractTransaction extends AbstractTransaction {
                             .build())
                     .signWith(transaction.signer);
         }
+
+        static void verifyInitContractInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, InitContractPayload payload) throws TransactionCreationException {
+            Transaction.verifyCommonInput(sender, nonce, expiry, signer);
+            if (Objects.isNull(payload)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
+            }
+        }
+
     }
 }
