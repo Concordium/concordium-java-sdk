@@ -6,6 +6,7 @@ import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.AccountNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
+import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.exceptions.TransactionRejectionException;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
@@ -49,7 +50,7 @@ public class TransferToEncryptedUtilTest {
 
             client.sendTransaction(transaction);
 
-        } catch (TransactionRejectionException | ClientInitializationException e) {
+        } catch (TransactionRejectionException | ClientInitializationException | TransactionCreationException e) {
             throw new RuntimeException(e);
         }
     }

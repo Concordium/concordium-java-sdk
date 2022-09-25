@@ -52,7 +52,7 @@ public interface Transaction {
         }
     }
 
-    static void verifyTransferToEncryptedInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, TransferToEncryptedPayload payload) throws TransactionCreationException {
+    static void verifyCommonInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer) throws TransactionCreationException {
         if (Objects.isNull(sender)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
         }
@@ -65,9 +65,7 @@ public interface Transaction {
         if (Objects.isNull(signer) || signer.isEmpty()) {
             throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
         }
-        if (Objects.isNull(payload)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
-        }
+
     }
 
 }

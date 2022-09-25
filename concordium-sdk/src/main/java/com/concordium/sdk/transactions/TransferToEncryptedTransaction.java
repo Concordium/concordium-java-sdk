@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
 
+import java.util.Objects;
+
 @Getter
 public class TransferToEncryptedTransaction extends AbstractTransaction {
 
@@ -20,7 +22,7 @@ public class TransferToEncryptedTransaction extends AbstractTransaction {
     private final UInt64 maxEnergyCost;
 
     @Builder
-    public TransferToEncryptedTransaction(TransferToEncryptedPayload payload, AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, BlockItem blockItem, UInt64 maxEnergyCost) {
+    public TransferToEncryptedTransaction(TransferToEncryptedPayload payload, AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, BlockItem blockItem, UInt64 maxEnergyCost) throws TransactionCreationException {
         this.payload = payload;
         this.sender = sender;
         this.nonce = nonce;
@@ -41,18 +43,10 @@ public class TransferToEncryptedTransaction extends AbstractTransaction {
 
     private static class CustomBuilder extends TransferToEncryptedTransactionBuilder {
         @Override
-        public TransferToEncryptedTransaction build() {
+        public TransferToEncryptedTransaction build() throws TransactionCreationException {
             val transaction = super.build();
-            try {
-                Transaction.verifyTransferToEncryptedInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.signer, transaction.payload);
-            } catch (TransactionCreationException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                transaction.blockItem = transferToEncryptedInstance(transaction).toBlockItem();
-            } catch (TransactionCreationException e) {
-                throw new RuntimeException(e);
-            }
+            verifyTransferToEncryptedInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.signer, transaction.payload);
+            transaction.blockItem = transferToEncryptedInstance(transaction).toBlockItem();
             return transaction;
         }
 
@@ -67,6 +61,15 @@ public class TransferToEncryptedTransaction extends AbstractTransaction {
                             .expiry(transaction.expiry.getValue())
                             .build())
                     .signWith(transaction.signer);
+        }
+
+        static void
+        verifyTransferToEncryptedInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, TransferToEncryptedPayload payload) throws TransactionCreationException {
+            Transaction.verifyCommonInput(sender, nonce, expiry, signer);
+
+            if (Objects.isNull(payload)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
+            }
         }
     }
 }
