@@ -40,6 +40,7 @@ public interface Transaction {
         if (Objects.isNull(expiry)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Expiry cannot be null"));
         }
+
         if (Objects.isNull(receiver)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Receiver cannot be null"));
         }
