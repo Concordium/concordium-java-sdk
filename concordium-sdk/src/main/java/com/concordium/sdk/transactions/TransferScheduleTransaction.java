@@ -20,7 +20,7 @@ public class TransferScheduleTransaction extends AbstractTransaction {
     private BlockItem blockItem;
 
     @Builder
-    public TransferScheduleTransaction(AccountAddress sender, AccountAddress to, Schedule[] schedule, AccountNonce nonce, Expiry expiry, TransactionSigner signer, BlockItem blockItem, UInt64 maxEnergyCost) {
+    public TransferScheduleTransaction(AccountAddress sender, AccountAddress to, Schedule[] schedule, AccountNonce nonce, Expiry expiry, TransactionSigner signer, BlockItem blockItem, UInt64 maxEnergyCost) throws TransactionCreationException {
         this.sender = sender;
         this.to = to;
         this.schedule = schedule;
@@ -42,18 +42,10 @@ public class TransferScheduleTransaction extends AbstractTransaction {
 
     private static class CustomBuilder extends TransferScheduleTransaction.TransferScheduleTransactionBuilder {
         @Override
-        public TransferScheduleTransaction build() {
+        public TransferScheduleTransaction build() throws TransactionCreationException {
             val transaction = super.build();
-            try {
-                Transaction.verifyTransferScheduleInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer);
-            } catch (TransactionCreationException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
-            } catch (TransactionCreationException e) {
-                throw new RuntimeException(e);
-            }
+            Transaction.verifyTransferScheduleInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer);
+            transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
             return transaction;
         }
 

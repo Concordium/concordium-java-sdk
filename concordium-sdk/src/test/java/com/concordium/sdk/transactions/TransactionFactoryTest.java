@@ -24,4 +24,16 @@ public class TransactionFactoryTest {
         val builder = TransactionFactory.newRegisterData();
         assertNotNull(builder);
     }
+
+    @Test
+    public  void testCanTransferScheduleFactory() {
+        val builder = TransactionFactory.newScheduleData();
+        assertNotNull(builder);
+    }
+
+    @Test
+    public  void testCanTransferSchedulWithMemoFactory() {
+        val builder = TransactionFactory.newScheduleDataWithMemo();
+        assertNotNull(builder);
+    }
 }

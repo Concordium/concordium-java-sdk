@@ -22,7 +22,7 @@ public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
     private BlockItem blockItem;
 
     @Builder
-    public TransferScheduleWithMemoTransaction(AccountAddress sender, AccountAddress to, Schedule[] schedule, Memo memo, AccountNonce nonce, Expiry expiry, TransactionSigner signer, UInt64 maxEnergyCost) {
+    public TransferScheduleWithMemoTransaction(AccountAddress sender, AccountAddress to, Schedule[] schedule, Memo memo, AccountNonce nonce, Expiry expiry, TransactionSigner signer, UInt64 maxEnergyCost) throws TransactionCreationException {
         this.sender = sender;
         this.to = to;
         this.schedule = schedule;
@@ -44,18 +44,10 @@ public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
 
     private static class CustomBuilder extends TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder {
         @Override
-        public TransferScheduleWithMemoTransaction build() {
+        public TransferScheduleWithMemoTransaction build() throws TransactionCreationException {
             val transaction = super.build();
-            try {
-                Transaction.verifyTransferScheduleWithMemoInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer, transaction.memo);
-            } catch (TransactionCreationException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
-            } catch (TransactionCreationException e) {
-                throw new RuntimeException(e);
-            }
+            Transaction.verifyTransferScheduleWithMemoInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer, transaction.memo);
+            transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
             return transaction;
         }
 

@@ -47,8 +47,6 @@ public class TransferSchedule extends Payload {
             val schedule_buffer = amount[i].getBytes();
             buffer.put(schedule_buffer);
         }
-        System.out.println(this.getTransactionType());
-
         return buffer.array();
     }
 
