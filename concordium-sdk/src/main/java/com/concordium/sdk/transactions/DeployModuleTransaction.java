@@ -43,7 +43,7 @@ public class DeployModuleTransaction extends AbstractTransaction {
         @Override
         public DeployModuleTransaction build() throws TransactionCreationException {
             val transaction = super.build();
-            Transaction.verifyDeployModuleInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.module, transaction.signer);
+            verifyDeployModuleInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.module, transaction.signer);
             if (Objects.isNull(transaction.module)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("WasmModule cannot be null"));
             }
@@ -60,5 +60,13 @@ public class DeployModuleTransaction extends AbstractTransaction {
                             .build())
                     .signWith(transaction.getSigner());
         }
+
+        static void verifyDeployModuleInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, WasmModule module, TransactionSigner signer) throws TransactionCreationException {
+            Transaction.verifyCommonInput(sender, nonce, expiry, signer);
+            if (Objects.isNull(module)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Receiver cannot be null"));
+            }
+        }
+
     }
 }
