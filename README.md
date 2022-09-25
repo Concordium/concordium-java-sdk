@@ -181,6 +181,113 @@ BlocksAtHeight getBlocksAtHeight(BlocksAtHeightRequest height) throws BlockNotFo
 Retrieves the `BlocksAtHeight` at the given height if one or more was found.
 Throws a `BlockNotFoundException` if no blocks were found.
 
+- `getModuleSource`
+```java
+ModuleSource getModuleSource(ModuleRef moduleRef, Hash blockHash) throws ModuleNotFoundException
+```
+Get the source of a smart contract module.
+Throws `ModuleNotFoundException` if the module could not be found for the given block.
+
+- `getModuleList`
+```java
+ImmutableList<ModuleRef> getModuleList(final Hash blockHash) throws BlockNotFoundException
+```
+Get a list of smart contract modules that exist in the state after the given block.
+
+- `getBirkParameters`
+```java
+BirkParameters getBirkParameters(Hash blockHash) throws BlockNotFoundException
+```
+Get an overview of the parameters used for baking for a given block.
+
+- `getInstanceInfo`
+```java
+InstanceInfo getInstanceInfo(final ContractAddress contractAddress, final Hash blockHash) throws ContractInstanceNotFoundException
+```
+Get the smart contract instance information given the `ContractAddress` for the provided block.
+Throws `ContractInstanceNotFoundexception` if the instance could not be found for the given block.
+
+- `getInstances`
+```java
+ImmutableList<ContractAddress> getInstances(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of smart contract instances in a given block at block commitment.
+Throws a `BlockNotFoundException` if an invalid block hash was given.
+
+- `getAccountList`
+```java
+ImmutableList<AccountAddress> getAccountList(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of accounts in the given block.
+Throws a `BlockNotFoundException` if an invalid block hash was given.
+
+- `getAncestors`
+```java
+ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
+```
+Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
+
+- `getRewardStatus`
+```java
+RewardsOverview getRewardStatus(final Hash blockHash) throws BlockNotFoundException
+```
+Get the information about total amount of CCD and the state of various administrative accounts.
+
+- `getBranches`
+```java
+Branch getBranches()
+```
+Get the branches of the node's tree. Branches are all live blocks that
+are successors of the last finalized block. In particular this means
+that blocks which do not have a parent are not included in this
+response.
+
+- `getIdentityProviders`
+```java
+ImmutableList<IdentityProviderInfo> getIdentityProviders(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of identity providers in the given block.
+
+- `getAnonymityRevokers`
+```java
+ImmutableList<AnonymityRevokerInfo> getAnonymityRevokers(Hash blockHash) throws BlockNotFoundException
+```
+Get the list of anonymity revokers in the given block.
+
+- `getBakerList`
+```java
+ImmutableList<BakerId> getBakerList(Hash blockHash) throws BlockNotFoundException
+```
+Get the IDs of the bakers registered in the given block.
+
+- `getTransactionStatusInBlock`
+```java
+    TransactionStatusInBlock getTransactionStatusInBlock(
+            Hash transactionHash,
+            Hash blockHash) throws TransactionNotFoundInBlockException
+```
+
+- `getAccountNonFinalizedTransactions`
+```java
+ImmutableList<Hash> getAccountNonFinalizedTransactions(AccountAddress address)
+```
+Get the list of transactions hashes for transactions that claim to be from the given account, 
+but which are not yet finalized. They are either committed to a block or still pending.
+
+
+- `getPoolStatus`
+```java
+PoolStatus getPoolStatus(Hash blockHash, BakerId bakerId) throws PoolNotFoundException
+```
+Get the status of a given baker pool.
+Throws `PoolNotFoundException` if the pool was not found.
+
+- `getPassivePoolStatus`
+```java
+PoolStatus getPassivePoolStatus(Hash blockHash) throws PoolNotFoundException
+```
+Get the status of passive delegation at the given block.
+
 ### Node & P2P Queries
 
 - `getUptime`
@@ -219,6 +326,13 @@ Retrives the node software version.
 ```java
 NodeInfo getNodeInfo()
 ```
+Retrieve meta information about the node e.g. if it's baking or not, the local time of the node etc.
+
+- `shutdown`
+```java
+boolean shutdown()
+```
+Shut down the node.
 
 - `joinNetwork`
 ```java
@@ -232,21 +346,48 @@ boolean leaveNetwork(final UInt16 networkId)
 ```
 Ask the node to leave the specified network.
 
-- `getAncestors`
+- `getBannedPeers`
 ```java
-ImmutableList<Hash> getAncestors(Hash blockHash, long num) throws BlockNotFoundException
+ImmutableList<Peer> getBannedPeers() throws UnknownHostException
 ```
-Get a list of block hashes that preceding the provided block hash and with a maximum size of the provided number.
+Get a list of the banned peers.
 
-
-- `getBranches`
+- `getTotalReceived`
 ```java
-Branch getBranches()
+long getTotalReceived()
 ```
-Get the branches of the node's tree. Branches are all live blocks that
-are successors of the last finalized block. In particular this means
-that blocks which do not have a parent are not included in this
-response.
+Query for the total number of packets that the node has received thus far.
+
+- `peerConnect`
+```java
+boolean peerConnect(InetSocketAddress address)
+```
+Instruct the node to try to connect to the given peer. This also adds the address to the list of trusted addresses. 
+These are addresses to which the node will try to keep connected to at all times.
+
+- `startBaker`
+```java
+boolean startBaker()
+```
+Start the baker.
+
+- `stopBaker`
+```java
+boolean stopBaker()
+```
+Stop the baker.
+
+- `banNode`
+```java
+boolean banNode(final BanNodeRequest request)
+```
+Ban a specific node by Id or Ip address. Returns true if specified node was banned false otherwise.
+
+- `unBanNode`
+```java
+boolean unBanNode(final InetAddress ip)
+```
+Unban a specific node by Ip address. Returns true if specified node was unbanned false otherwise.
 
 ## Transactions
 
@@ -379,16 +520,114 @@ try {
 }
 ```
 
+#### getModuleSource
+```java
+ModuleSource moduleSource = client.getModuleSource(
+        Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c08"),
+        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
+
+#### getModuleList
+```java
+ImmutableList<ModuleRef> list = client
+        .getModuleList(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
+```
+
+#### getBirkParameters
+```java
+BirkParameters birkParams = client
+        .getBirkParameters(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
+```
+
+#### getInstanceInfo
+```java
+InstanceInfo instanceInfo = client.getInstanceInfo(
+                new ContractAddress(0, 0),
+                Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
+```
+
+#### getInstances
+```java
+ImmutableList<ContractAddress> contractInstances = client
+                .getInstances(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
+```
+
+#### getAccountList
+```java
+ImmutableList<AccountAddress> accounts = client
+                .getAccountList(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"));
+```
+
+#### getAncestors
+```java
+ImmutableList<Hash> ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
+```
+
+#### getRewardStatus
+```java
+RewardsOverview rewardsStatus = client
+        .getRewardStatus(Hash.from("a7ddcc750d6e2a5d72c8d3eedee1453269b1712f8dd36f1d94d5e606df92e7fe"));
+```
+
+#### getBranches
+```java
+Branch branch = client.getBranches();
+```
+
+#### getIdentityProviders
+```java
+ImmutableList<IdentityProviderInfo> identityProviders = client.getIdentityProviders(
+        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
+
+#### getAnonymityRevokers
+```java
+ImmutableList<AnonymityRevokerInfo> anonymityRevokers = client
+                .getAnonymityRevokers(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
+
+#### getBakerList
+```java
+ImmutableList<BakerId> bakerList = client
+                .getBakerList(Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+```
+
+#### getPoolStatus
+```java
+PoolStatus poolStatusPassiveDeletation = client
+        .getPassivePoolStatus(
+                Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"));
+
+PoolStatus bakerPoolStatus = client.getPoolStatus(
+        Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb"), 
+                BakerId.from(1));
+```
+
+#### getTransactionStatusInBlock
+```java
+TransactionStatusInBlock ret = client.getTransactionStatusInBlock(
+                Hash.from("ea88c209c40f5828aeedf3326f314f66b7adf49e754a94f29b72e9d334d82eb7"),
+                Hash.from("2f15e174a42ec63d68abd8597e69573cf83199aacbfb9dae03c255d35b84aafb")
+        );
+```
+Get the status of a transaction in a given block.
+
+#### getAccountNonFinalizedTransactions
+```java
+ImmutableList<Hash> ret = client
+                .getAccountNonFinalizedTransactions(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"));
+```
+
 ### Node & P2P Queries
 
 #### getUptime
 ```java
-val uptime = client.getUptime();
+Duration uptime = client.getUptime();
 ```
 
 #### getTotalSent
 ```java
-val sentPackets = client.getTotalSent();
+long sentPackets = client.getTotalSent();
 ```
 #### getPeerStatistics
 ```java
@@ -398,7 +637,7 @@ PeerStatistics peerStatistics = client.getPeerStatistics(shouldIncludeBootstrapp
 
 #### getPeerList
 ```java
-val peers = client.getPeerList(true);
+ImmutableList<Peer> peers = client.getPeerList(true);
 ```
 
 #### getVersion
@@ -411,6 +650,45 @@ SemVer version = client.getVersion();
 NodeInfo = client.getNodeInfo();
 ```
 
+#### peerConnect
+```java
+boolean ret = client.peerConnect(InetSocketAddress.createUnresolved("127.0.0.1", 8080));
+```
+
+#### startBaker
+```java
+client.startBaker();
+```
+
+#### stopBaker
+```java
+client.stopBaker();
+```
+
+#### banNode
+```java
+client.banNode(BanNodeRequest.from("NodeId"))
+```
+
+```java
+client.banNode(BanNodeRequest.from(InetAddress.getByName("127.0.0.1")))
+```
+
+#### unBanNode
+```java
+client.unBanNode(InetAddress.getByName("127.0.0.1"));
+```
+
+#### getTotalReceived
+```java
+long totalReceived = client.getTotalReceived();
+```
+
+#### shutdown
+```java
+client.shutdown();
+```
+
 #### joinNetwork
 ```java
 client.joinNetwork(UInt16.from(200));
@@ -421,14 +699,9 @@ client.joinNetwork(UInt16.from(200));
 client.leaveNetwork(UInt16.from(200));
 ```
 
-#### getAncestors
+#### getBannedPeers
 ```java
-ImmutableList<Hash> ancestors = client.getAncestors(Hash.from("9741d166fdc9b70a183d6c22f79e6f87c236f56c545c9b5f1114847fecc7ba39"), 10);
-```
-
-#### getBranches
-```java
-Branch branch = client.getBranches();
+ImmutableList<Peer> bannedPeers = client.getBannedPeers();
 ```
 
 ## Transactions
