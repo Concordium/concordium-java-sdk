@@ -2,6 +2,8 @@
 
 ## Unreleased changes
 
+## 3.1.0
+
 - Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.
 - Added support for `Uptime` query.
 - Added support for Account Transaction Register Data.
@@ -9,11 +11,32 @@
 - Added support for query `PeerList`
 - Added support for query `PeerStats`
 - Added support for query `PeerVersion`
-- Added support for query `GetAncestors`
+- Added support for query `GetTransactionStatusInBlock`
+- Added support for query `GetAccountNonFinalizedTransactions`
+- Added support for query `PeerConnect`
+- Added support for query `GetBakerList`
+- Added support for query `GetPoolStatus`
+- Added support for query `PeerTotalReceived`
+- Added support for query `GetModuleSource`
+- Added support for query `GetModuleList`
+- Added support for query `GetBirkParameters`
 - Added support for query `NodeInfo`
+- Added support for query `Shutdown`
+- Added support for query `GetAncestors`
 - Added support for query `JoinNetwork`
 - Added support for query `LeaveNetwork`
+- Added support for query `GetRewardStatus`
+- Added support for query `GetInstanceInfo`
+- Added support for query `GetInstances`
+- Added support for query `GetAccountList`
+- Added support for query `GetBannedPeers`
 - Added support for query `GetBranches`
+- Added support for query `GetIdentityProviders`
+- Added support for query `GetAnonymityRevokers`
+- Added support for query `BanNode`
+- Added support for query `UnBanNode`
+- Added support for query `StartBaker`
+- Added support for query `StopBaker`
 
 ## 3.0.0
 - Stronger typing for various places in the API. 

@@ -21,7 +21,7 @@ public final class ModuleDeployedResult extends TransactionResultEvent {
 
     @SneakyThrows
     @JsonCreator
-    ModuleDeployedResult(@JsonProperty("contents") String reference) {
+    public ModuleDeployedResult(@JsonProperty("contents") String reference) {
         this.reference = Hex.decodeHex(reference);
     }
 
