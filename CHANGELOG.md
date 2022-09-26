@@ -37,6 +37,8 @@
 - Added support for query `UnBanNode`
 - Added support for query `StartBaker`
 - Added support for query `StopBaker`
+- Added support for Transfer With Schedule.
+- Added support for Transfer With Schedule With Memo.
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
