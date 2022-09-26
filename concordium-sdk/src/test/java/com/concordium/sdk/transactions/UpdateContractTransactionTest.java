@@ -17,7 +17,7 @@ public class UpdateContractTransactionTest {
 
     @Test
     @SneakyThrows
-    public void testDeployModuleTransaction() {
+    public void testUpdateContractTransaction() {
         UpdateContractTransaction transaction = UpdateContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -33,7 +33,7 @@ public class UpdateContractTransactionTest {
 
     @Test(expected = TransactionCreationException.class)
     @SneakyThrows
-    public void testDeployModuleTransactionWithoutSenderFails() {
+    public void testUpdateContractTransactionWithoutSenderFails() {
         UpdateContractTransaction
                 .builder()
                 .nonce(AccountNonce.from(78910))
@@ -48,7 +48,7 @@ public class UpdateContractTransactionTest {
 
     @Test(expected = TransactionCreationException.class)
     @SneakyThrows
-    public void testDeployModuleTransactionWithoutNonceFails() {
+    public void testUpdateContractTransactionWithoutNonceFails() {
         UpdateContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -63,7 +63,7 @@ public class UpdateContractTransactionTest {
 
     @Test(expected = TransactionCreationException.class)
     @SneakyThrows
-    public void testDeployModuleTransactionWithoutExpiryFails() {
+    public void testUpdateContractTransactionWithoutExpiryFails() {
         UpdateContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -78,7 +78,7 @@ public class UpdateContractTransactionTest {
 
     @Test(expected = TransactionCreationException.class)
     @SneakyThrows
-    public void testDeployModuleTransactionWithoutSignerShouldFail() {
+    public void testUpdateContractTransactionWithoutSignerShouldFail() {
         UpdateContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -92,7 +92,7 @@ public class UpdateContractTransactionTest {
 
     @Test(expected = TransactionCreationException.class)
     @SneakyThrows
-    public void testDeployModuleTransactionWithInvalidSignerFails() {
+    public void testUpdateContractTransactionWithInvalidSignerFails() {
         UpdateContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
