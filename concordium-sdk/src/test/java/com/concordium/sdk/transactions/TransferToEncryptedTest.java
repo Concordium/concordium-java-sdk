@@ -17,7 +17,7 @@ public class TransferToEncryptedTest {
 
     @SneakyThrows
     @Test
-    public void testDeployModule() {
+    public void testTransferToEncrypted() {
         val transfer = TransferToEncrypted.createNew(
                         TransferToEncryptedPayload.from(1), UInt64.from(6000))
                 .withHeader(TransactionHeader
