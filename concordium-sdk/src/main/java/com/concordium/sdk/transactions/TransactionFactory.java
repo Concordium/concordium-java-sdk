@@ -1,5 +1,12 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
+import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
+import com.concordium.sdk.crypto.encryptedtransfers.TransferToPublicJniOutput;
+import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
+import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import lombok.val;
+
 /**
  * TransactionFactory provides convenient functions for building a
  * {@link Transaction}
@@ -25,7 +32,7 @@ public class TransactionFactory {
     public static TransferWithMemoTransaction.TransferWithMemoTransactionBuilder newTransferWithMemo() {
         return TransferWithMemoTransaction.builder();
     }
-    
+
     /**
      * Creates a new {@link RegisterDataTransaction.RegisterDataTransactionBuilder} for
      * creating a {@link RegisterDataTransaction}
@@ -34,5 +41,30 @@ public class TransactionFactory {
      */
     public static RegisterDataTransaction.RegisterDataTransactionBuilder newRegisterData() {
         return RegisterDataTransaction.builder();
+    }
+
+    public static TransferToPublicTransaction.TransferToPublicTransactionBuilder newTransferToPublic() {
+        return TransferToPublicTransaction.builder();
+    }
+
+    public static TransferToPublicTransaction.TransferToPublicTransactionBuilder newTransferToPublic(
+            CryptographicParameters cryptographicParameters,
+            AccountEncryptedAmount accountEncryptedAmount,
+            ElgamalSecretKey accountSecretKey,
+            CCDAmount amountToMakePublic) {
+
+        val jniOutput = EncryptedTransfers.createSecToPubTransferPayload(
+                cryptographicParameters,
+                accountEncryptedAmount,
+                accountSecretKey,
+                amountToMakePublic
+        );
+
+        return TransferToPublicTransaction
+                .builder()
+                .transferAmount(jniOutput.getTransferAmount())
+                .index(jniOutput.getIndex())
+                .proof(jniOutput.getProof())
+                .remainingAmount(jniOutput.getRemainingAmount());
     }
 }

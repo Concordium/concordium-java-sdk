@@ -91,7 +91,8 @@ public abstract class Payload {
     public enum PayloadType {
         TRANSFER,
         TRANSFER_WITH_MEMO,
-        REGISTER_DATA
+        REGISTER_DATA,
+        TRANSFER_TO_PUBLIC
     }
 
 }

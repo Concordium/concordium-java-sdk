@@ -39,6 +39,10 @@ public final class AccountNonce {
     }
 
     public static AccountNonce from(long value) {
-        return new AccountNonce(Nonce.from(value), true);
+        return from(Nonce.from(value));
+    }
+
+    public static AccountNonce from(Nonce nonce) {
+        return new AccountNonce(nonce, true);
     }
 }

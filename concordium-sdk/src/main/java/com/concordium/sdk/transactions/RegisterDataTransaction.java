@@ -66,15 +66,7 @@ public class RegisterDataTransaction extends AbstractTransaction {
                 Expiry expiry,
                 Data data,
                 TransactionSigner signer) throws TransactionCreationException {
-            if (Objects.isNull(sender)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
-            }
-            if (Objects.isNull(nonce)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("AccountNonce cannot be null"));
-            }
-            if (Objects.isNull(expiry)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Expiry cannot be null"));
-            }
+            Transaction.verifyTransactionInput(sender, nonce, expiry, signer);
 
             if (Objects.isNull(data)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));

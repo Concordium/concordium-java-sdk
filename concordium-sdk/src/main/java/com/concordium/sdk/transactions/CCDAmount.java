@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -13,6 +14,7 @@ import java.nio.ByteBuffer;
 @Getter
 @EqualsAndHashCode
 public class CCDAmount {
+    public static final int BYTES = UInt64.BYTES;
     private final UInt64 value;
 
     private CCDAmount(UInt64 value) {
@@ -40,8 +42,14 @@ public class CCDAmount {
         UInt64 value = UInt64.fromBytes(source);
         return new CCDAmount(value);
     }
+
     @Override
     public String toString() {
         return value.toString();
+    }
+
+    @JsonValue
+    public String toJsonString() {
+        return String.valueOf(this.value.getValue());
     }
 }
