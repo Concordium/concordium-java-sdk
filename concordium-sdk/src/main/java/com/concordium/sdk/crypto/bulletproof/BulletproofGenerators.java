@@ -17,8 +17,13 @@ public class BulletproofGenerators {
     }
 
     @JsonCreator
-    public static BulletproofGenerators from(final String hex) throws DecoderException {
-        return new BulletproofGenerators(Hex.decodeHex(hex));
+    public static BulletproofGenerators from(final String hex) {
+        try {
+            return new BulletproofGenerators(Hex.decodeHex(hex));
+        } catch (DecoderException e) {
+            throw new RuntimeException(
+                    String.format("Could not construct Bulletproof Generators from HEX encoded input"));
+        }
     }
 
     @JsonValue

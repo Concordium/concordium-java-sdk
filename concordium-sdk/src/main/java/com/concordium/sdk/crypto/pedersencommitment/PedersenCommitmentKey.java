@@ -17,8 +17,13 @@ public class PedersenCommitmentKey {
     }
 
     @JsonCreator
-    public static PedersenCommitmentKey from(final String hex) throws DecoderException {
-        return new PedersenCommitmentKey(Hex.decodeHex(hex));
+    public static PedersenCommitmentKey from(final String hex) {
+        try {
+            return new PedersenCommitmentKey(Hex.decodeHex(hex));
+        } catch (DecoderException e) {
+            throw new RuntimeException(
+                    String.format("Could not construct Commitment Key from HEX encoded input"));
+        }
     }
 
     @JsonValue

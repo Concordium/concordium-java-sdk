@@ -3,7 +3,6 @@ use core::slice;
 use crypto_common::derive::Serialize;
 pub use crypto_common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
 use crypto_common::*;
-// use crypto_common_derive::*;
 use ed25519_dalek::*;
 use encrypted_transfers::types::{
     AggregatedDecryptedAmount, EncryptedAmount, IndexedEncryptedAmount, SecToPubAmountTransferData,

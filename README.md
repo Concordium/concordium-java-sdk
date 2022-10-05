@@ -777,6 +777,36 @@ try{
 ```
 
 
+### Transfer to public
+Transfer to Public transaction is used to convert a part or whole of shielded (Private) balance to unsheilded (Public) balance
+
+```java
+final CCDAmount amountToMakePublic = CCDAmount.fromMicro(10);
+final AccountAddress accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+final ElgamalSecretKey accountSecretKey = ElgamalSecretKey.from("<ACCOUNT DECRYPTION KEY HEX>");
+final ConsensusStatus consensus = client.getConsensusStatus();
+final AccountInfo accountInfo = client.getAccountInfo(
+        AccountRequest.from(accountAddress),
+        consensus.getBestBlock());
+final CryptographicParameters cryptographicParameters = client.getCryptographicParameters(consensus.getBestBlock());
+final TransferToPublicTransaction transaction = TransactionFactory.newTransferToPublic(
+                cryptographicParameters,
+                accountInfo.getAccountEncryptedAmount(),
+                accountSecretKey,
+                amountToMakePublic)
+        .sender(accountInfo.getAccountAddress())
+        .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+        .expiry(Expiry.from(System.currentTimeMillis() / 1000 + 60))
+        .signer(TransactionSigner.from(
+                SignerEntry.from(
+                        Index.from(0),
+                        Index.from(0),
+                        ED25519SecretKey.from("<ACCOUNT SIGN KEY HEX>"))))
+        .maxEnergyCost(UInt64.from(20000))
+        .build();
+final Hash txnHash = client.sendTransaction(transaction);
+```
+
 # Custom Signing
 By default the java library supports ED25519 signing via the native binding [ED25519SecretKey](./concordium-sdk/src/main/java/com/concordium/sdk/crypto/ed25519/ED25519SecretKey.java).
 
