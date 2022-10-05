@@ -3,4 +3,4 @@
 	url = git@github.com:Concordium/concordium-grpc-api.git
 [submodule "concordium-base"]
 	path = concordium-base
-	url = https://github.com/Concordium/concordium-base.git
+	url = git@github.com:Concordium/concordium-base.git
