@@ -2,50 +2,25 @@ package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.types.UInt32;
 import lombok.val;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 
 import java.nio.ByteBuffer;
-import java.util.Objects;
 
-public abstract class WasmModuleSource {
+/**
+ * Compiled source in of the WASM Module.
+ */
+class WasmModuleSource {
 
     /**
      * The raw bytes of the WasmModule.
      */
-    private final byte[] rawSource;
+    private final byte[] bytes;
 
-    protected WasmModuleSource(byte[] rawModuleSource) {
-        this.rawSource = rawModuleSource;
+    WasmModuleSource(final byte[] bytes) {
+        this.bytes = bytes;
     }
 
-    public static WasmModuleSource createNew(WasmModuleVersion version, String hexRawModuleSource) {
-        if (Objects.isNull(hexRawModuleSource)) {
-            throw new IllegalArgumentException("Raw WasmModuleSource cannot be null");
-        }
-        try {
-            val rawSource = Hex.decodeHex(hexRawModuleSource);
-            switch (version) {
-                case V0:
-                    return new WasmModuleSourceV0(rawSource);
-                case V1:
-                    return new WasmModuleSourceV1(rawSource);
-                default:
-                    throw new IllegalArgumentException("Unknown WasmModuleVersion " + version);
-            }
-        } catch (DecoderException e) {
-            throw new IllegalArgumentException("Invalid HEX encoding of RawModuleSource", e);
-        }
-
-    }
-
-    /**
-     * Get the length of the module.
-     *
-     * @return the length of the module.
-     */
-    public int getSize() {
-        return rawSource.length;
+    public static WasmModuleSource from(final byte[] bytes) {
+        return new WasmModuleSource(bytes);
     }
 
     /**
@@ -54,18 +29,10 @@ public abstract class WasmModuleSource {
      * @return the module source bytes.
      */
     public byte[] getBytes() {
-        val rawSourceLengthBytes = UInt32.from(rawSource.length).getBytes();
+        val buffer = ByteBuffer.allocate(UInt32.BYTES + bytes.length);
+        buffer.put(UInt32.from(bytes.length).getBytes());
+        buffer.put(bytes);
 
-        val buffer = ByteBuffer.allocate(rawSourceLengthBytes.length + rawSource.length);
-        buffer.put(rawSourceLengthBytes);
-        buffer.put(rawSource);
         return buffer.array();
     }
-
-    /**
-     * Get the {@link WasmModuleVersion}
-     *
-     * @return the version of the module.
-     */
-    abstract WasmModuleVersion getVersion();
 }

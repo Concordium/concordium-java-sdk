@@ -2,24 +2,49 @@ package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.types.UInt32;
 import lombok.Getter;
+import lombok.val;
+
+import java.nio.ByteBuffer;
 
 public enum WasmModuleVersion {
+
+    /**
+     * Wasm Module version 0. This is the default version.
+     */
     V0((byte) 0),
+
+    /**
+     * Wasm Module Version 1. V1 contracts were added as part of protocol 4.
+     */
     V1((byte) 1);
 
-    @Getter
-    private final byte tag;
+    static final int BYTES = UInt32.BYTES;
 
-    WasmModuleVersion(byte tag) {
-        this.tag = tag;
+    @Getter
+    private final byte value;
+
+    WasmModuleVersion(byte value) {
+        this.value = value;
     }
 
-    public byte getValue() {
-        return this.tag;
+    public static WasmModuleVersion from(ByteBuffer bytes) {
+        val intValue = UInt32.fromBytes(bytes).getValue();
+
+        return from(intValue);
+    }
+
+    private static WasmModuleVersion from(int intValue) {
+        switch (intValue) {
+            case 0:
+                return WasmModuleVersion.V0;
+            case 1:
+                return WasmModuleVersion.V1;
+            default:
+                throw new IllegalArgumentException("Could not create WasmModuleVersion from input bytes");
+        }
     }
 
     byte[] getBytes() {
-        return UInt32.from(this.tag).getBytes();
+        return UInt32.from(this.value).getBytes();
     }
-
 }
