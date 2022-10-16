@@ -9,6 +9,10 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Initialize a new smart contract instance.
+*/
+
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString
@@ -37,6 +41,7 @@ public final class InitContract extends Payload {
         buffer.put(payload_bytes);
         return buffer.array();
     }
+
     @Override
     UInt64 getTransactionTypeCost() {
         return this.maxEnergyCost;

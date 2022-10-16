@@ -6,13 +6,29 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
+
+/**
+ * Data needed to initialize a smart contract.
+*/
 @ToString
 @Getter
 public final class InitContractPayload {
 
+    /**
+     * The amount to be deposited
+     */
     private final CCDAmount amount;
+    /**
+     * Reference to the module to initialize the instance.
+     */
     private final Hash moduleRef;
+    /**
+     * Name of the contract in the module.
+     */
     private final InitName initName;
+    /**
+     * Message to invoke the initialization method with.
+     */
     private final Parameter param;
 
     private InitContractPayload(CCDAmount amount, Hash moduleRef, InitName initName, Parameter param) {

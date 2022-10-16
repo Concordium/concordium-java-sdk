@@ -9,6 +9,10 @@ import lombok.val;
 
 import java.util.Objects;
 
+
+/**
+ * Construct a transaction to initialise a smart contract.
+*/
 @Getter
 public class InitContractTransaction extends AbstractTransaction {
 
