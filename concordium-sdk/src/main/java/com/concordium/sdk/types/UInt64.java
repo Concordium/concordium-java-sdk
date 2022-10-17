@@ -1,22 +1,18 @@
 package com.concordium.sdk.types;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
 @Getter
 @EqualsAndHashCode
 @ToString
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UInt64 {
     public static final int BYTES = Long.BYTES;
     private final long value;
-
-    private UInt64(long value) {
-        this.value = value;
-    }
 
     public byte[] getBytes() {
         val buffer = ByteBuffer.allocate(Long.BYTES);
@@ -24,6 +20,13 @@ public final class UInt64 {
         return buffer.array();
     }
 
+    @JsonValue
+    @Override
+    public String toString() {
+        return String.valueOf(getValue());
+    }
+
+    @JsonCreator
     public static UInt64 from(String value) {
         return new UInt64(Long.parseUnsignedLong(value));
     }

@@ -1,7 +1,10 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.transactions.schema.ContractSchemaType;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -27,6 +30,10 @@ public class CCDAmount {
         return new CCDAmount(UInt64.from(val));
     }
 
+    public static CCDAmount fromMicro(UInt64 val) {
+        return new CCDAmount(val);
+    }
+
     @JsonCreator
     CCDAmount(String amount) {
         this.value = UInt64.from(amount);
@@ -41,6 +48,7 @@ public class CCDAmount {
         return new CCDAmount(value);
     }
     @Override
+    @JsonValue
     public String toString() {
         return value.toString();
     }

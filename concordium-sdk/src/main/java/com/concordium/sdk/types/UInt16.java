@@ -1,23 +1,19 @@
 package com.concordium.sdk.types;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
 @Getter
-@ToString
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UInt16 {
     public static final int BYTES = 2;
+    public static final int MAX_VALUE = 65535;
 
     private final int value;
-
-    private UInt16(int value) {
-        this.value = value;
-    }
 
     //Big endian
     public byte[] getBytes() {
@@ -27,6 +23,13 @@ public final class UInt16 {
         return bytes;
     }
 
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(this.value);
+    }
+
+    @JsonCreator
     public static UInt16 from(String value) {
         return UInt16.from(Integer.parseUnsignedInt(value));
     }
@@ -35,7 +38,7 @@ public final class UInt16 {
         if (value < 0) {
             throw new NumberFormatException("Value of UInt16 cannot be negative");
         }
-        if (value > 65535) {
+        if (value > MAX_VALUE) {
             throw new NumberFormatException("Value of UInt16 cannot exceed 2^16");
         }
         return new UInt16(value);

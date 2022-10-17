@@ -1,20 +1,18 @@
 package com.concordium.sdk.types;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.val;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
 @Getter
+@ToString
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UInt32 {
     public static final int BYTES = Integer.BYTES;
-    final int value;
-
-    private UInt32(int value) {
-        this.value = value;
-    }
+    private final int value;
 
     public byte[] getBytes() {
         val buffer = ByteBuffer.allocate(Integer.BYTES);
@@ -22,11 +20,18 @@ public final class UInt32 {
         return buffer.array();
     }
 
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(this.value);
+    }
+
+    @JsonCreator
     public static UInt32 from(String value) {
         return new UInt32(Integer.parseUnsignedInt(value));
     }
 
-    public static UInt32 from(int value)  {
+    public static UInt32 from(int value) {
         if (value < 0) {
             throw new NumberFormatException("Value of UInt32 can not be negative");
         }
