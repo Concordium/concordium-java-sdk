@@ -22,7 +22,7 @@ public class TransferToEncryptedTransactionTest {
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
-                .payload(TransferToEncryptedPayload.from(1))
+                .amount(CCDAmount.fromMicro(1))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         assertEquals("d8561cbb58b3ed6b316ae4377f2f38b70ac22300c7e2a08769bddb6cd0f3e031", transaction.getHash().asHex());
@@ -37,7 +37,7 @@ public class TransferToEncryptedTransactionTest {
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
-                .payload(TransferToEncryptedPayload.from(1))
+                .amount(CCDAmount.fromMicro(1))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
@@ -52,7 +52,7 @@ public class TransferToEncryptedTransactionTest {
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
-                .payload(TransferToEncryptedPayload.from(1))
+                .amount(CCDAmount.fromMicro(1))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
@@ -68,7 +68,7 @@ public class TransferToEncryptedTransactionTest {
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(AccountNonce.from(78910))
                 .signer(TransactionTestHelper.getValidSigner())
-                .payload(TransferToEncryptedPayload.from(1))
+                .amount(CCDAmount.fromMicro(1))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected DeployTransaction to fail");
@@ -83,7 +83,7 @@ public class TransferToEncryptedTransactionTest {
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .payload(TransferToEncryptedPayload.from(1))
+                .amount(CCDAmount.fromMicro(1))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
@@ -98,7 +98,7 @@ public class TransferToEncryptedTransactionTest {
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(getSignerWithMalformedSecretKey())
-                .payload(TransferToEncryptedPayload.from(1))
+                .amount(CCDAmount.fromMicro(1))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");

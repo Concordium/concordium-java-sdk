@@ -9,6 +9,9 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Transfer from public to encrypted balance of the sender account.
+ */
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString
@@ -16,12 +19,12 @@ public final class TransferToEncrypted extends Payload {
 
     private final static TransactionType TYPE = TransactionType.TRANSFER_TO_ENCRYPTED;
 
-    private final TransferToEncryptedPayload payload;
+    private final CCDAmount amount;
 
     private final UInt64 maxEnergyCost;
 
-    public TransferToEncrypted(TransferToEncryptedPayload payload, UInt64 maxEnergyCost) {
-        this.payload = payload;
+    public TransferToEncrypted(CCDAmount amount, UInt64 maxEnergyCost) {
+        this.amount = amount;
         this.maxEnergyCost = maxEnergyCost;
     }
 
@@ -32,9 +35,10 @@ public final class TransferToEncrypted extends Payload {
 
     @Override
     byte[] getBytes() {
-        val payload_bytes = payload.getBytes();
-        val buffer = ByteBuffer.allocate(payload_bytes.length);
-        buffer.put(payload_bytes);
+        val amount_bytes = amount.getBytes();
+        val buffer = ByteBuffer.allocate(TransactionType.BYTES + amount_bytes.length);
+        buffer.put(TransactionType.TRANSFER_TO_ENCRYPTED.getValue());
+        buffer.put(amount_bytes);
         return buffer.array();
     }
 
@@ -43,7 +47,7 @@ public final class TransferToEncrypted extends Payload {
         return this.maxEnergyCost;
     }
 
-    static TransferToEncrypted createNew(TransferToEncryptedPayload payload, UInt64 maxEnergyCost) {
-        return new TransferToEncrypted(payload, maxEnergyCost);
+    static TransferToEncrypted createNew(CCDAmount amount, UInt64 maxEnergyCost) {
+        return new TransferToEncrypted(amount, maxEnergyCost);
     }
 }

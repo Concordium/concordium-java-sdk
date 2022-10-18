@@ -19,7 +19,7 @@ public class TransferToEncryptedTest {
     @Test
     public void testTransferToEncrypted() {
         val transfer = TransferToEncrypted.createNew(
-                        TransferToEncryptedPayload.from(1), UInt64.from(6000))
+                        CCDAmount.fromMicro(1), UInt64.from(6000))
                 .withHeader(TransactionHeader
                         .builder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
