@@ -6,13 +6,27 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Data needed to update a smart contract.
+ */
 @ToString
 @Getter
 public final class UpdateContractPayload {
-
+    /**
+     * Send the given amount of CCD.
+     */
     private final CCDAmount amount;
+    /**
+     * Address of the contract instance to invoke.
+     */
     private final ContractAddress contract_address;
+    /**
+     * Name of the method to invoke on the contract.
+     */
     private final ReceiveName receive_name;
+    /**
+     * Message to send to the contract instance
+     */
     private final Parameter param;
 
     public UpdateContractPayload(CCDAmount amount, ContractAddress contract_address, ReceiveName receive_name, Parameter param) {

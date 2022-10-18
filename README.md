@@ -781,28 +781,32 @@ try{
 The following example demonstrates how to construct a "updateContract" transaction, which is used to update a smart contract module.
 
  ```java
- try{
-        byte[] emptyArray = new byte[0];
+try{
+    byte[] paramBytes = new byte[0];
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
 
-        val transaction = TransactionFactory.newUpdateContract()
+    val transaction = TransactionFactory.newUpdateContract()
         .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
         .nonce(AccountNonce.from(nonceValue))
         .expiry(Expiry.from(expiry))
         .signer(TransactionTestHelper.getValidSigner())
         .payload(UpdateContractPayload.from(
-        10,
-        ContractAddress.from(789, 0),
-        "CIS2NFT",
-        "mint",
-        emptyArray)
+            10,
+            ContractAddress.from(789, 0),
+            "CIS2NFT",
+            "mint",
+            paramBytes)
         )
         .maxEnergyCost(UInt64.from(3000))
         .build();
-
-        client.sendTransaction(transaction);
+    client.sendTransaction(transaction);
  } catch (TransactionRejectionException e) {
-     // Handle the rejected transaction, here we simply log it.
-     Transaction rejectedTransaction =  e.getTransaction();
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
     Hash rejectedTransactionHash = rejectedTransaction.getHash();
     String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
     Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");

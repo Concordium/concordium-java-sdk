@@ -9,6 +9,11 @@ import lombok.val;
 import java.nio.ByteBuffer;
 
 
+/**
+ * A receive name (owned version). Expected format:
+ * "<contract_name>.<method_name>".
+ */
+
 @Getter
 @ToString
 public final class ReceiveName {

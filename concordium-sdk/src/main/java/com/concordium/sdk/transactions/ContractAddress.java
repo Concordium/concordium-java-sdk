@@ -5,6 +5,9 @@ import com.concordium.sdk.types.UInt64;
 import lombok.val;
 import java.nio.ByteBuffer;
 
+/**
+ * Address of a contract.
+ */
 public class ContractAddress {
     public final UInt64 index;
     public final UInt64 subindex;

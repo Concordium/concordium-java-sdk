@@ -8,6 +8,9 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Update a new smart contract instance.
+ */
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString

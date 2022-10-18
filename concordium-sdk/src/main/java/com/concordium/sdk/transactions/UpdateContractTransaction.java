@@ -9,6 +9,9 @@ import lombok.val;
 
 import java.util.Objects;
 
+/**
+ * Construct a transaction to update a smart contract instance.
+ */
 @Getter
 public class UpdateContractTransaction extends AbstractTransaction {
 
@@ -70,7 +73,7 @@ public class UpdateContractTransaction extends AbstractTransaction {
         }
 
         static void verifyUpdateContractInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, UpdateContractPayload payload) throws TransactionCreationException {
-            Transaction.verifyCommonInput(sender, nonce, expiry, signer);
+            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
             if (Objects.isNull(payload)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
             }
