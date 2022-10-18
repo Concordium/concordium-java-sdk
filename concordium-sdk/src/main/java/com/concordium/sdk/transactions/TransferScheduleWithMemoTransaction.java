@@ -7,12 +7,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
 
+/**
+ * Transfer an amount with schedule and memo.
+ */
 @Getter
 public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
     private final AccountAddress sender;
     private final AccountAddress to;
+    /**
+     * The release schedule. This can be at most 255 elements.
+     */
     private final Schedule[] schedule;
-
     private final Memo memo;
     private final AccountNonce nonce;
     private final Expiry expiry;

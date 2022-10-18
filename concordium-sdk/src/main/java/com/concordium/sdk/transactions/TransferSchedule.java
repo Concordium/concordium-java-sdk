@@ -8,6 +8,10 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Transfer an amount with schedule.
+ */
+
 @ToString
 @Getter
 @EqualsAndHashCode(callSuper = true)

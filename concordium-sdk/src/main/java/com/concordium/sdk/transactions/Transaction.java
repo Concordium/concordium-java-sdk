@@ -52,7 +52,13 @@ public interface Transaction {
         }
     }
 
-    static void verifyTransferScheduleInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer) throws TransactionCreationException {
+
+    //FIXME: Figure out a better naming scheme.
+    static void verifyAccountTransactionHeaders(
+            AccountAddress sender,
+            AccountNonce nonce,
+            Expiry expiry,
+            TransactionSigner signer) throws TransactionCreationException {
         if (Objects.isNull(sender)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
         }
@@ -62,14 +68,21 @@ public interface Transaction {
         if (Objects.isNull(expiry)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Expiry cannot be null"));
         }
-        if (Objects.isNull(to)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Receiver cannot be null"));
-        }
-        if (Objects.isNull(schedule)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Amount cannot be null"));
-        }
         if (Objects.isNull(signer) || signer.isEmpty()) {
             throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
+        }
+    }
+
+    static void verifyTransferScheduleInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer) throws TransactionCreationException {
+        verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
+        if (Objects.isNull(to)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("To cannot be null"));
+        }
+        if (Objects.isNull(schedule)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Schedule cannot be null"));
+        }
+        if (schedule.length > 255) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Schedule size can be maximum 255"));
         }
     }
 

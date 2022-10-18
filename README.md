@@ -779,24 +779,28 @@ try{
 The following example demonstrates how to construct a "transferSchedule" transaction, which is used to transfer CCD with schedule.
 
  ```java
- try{
-        Schedule[] schedule = new Schedule[1];
-        schedule[0] = Schedule.from(1662869154000L, 10);
-
-        val transaction = TransactionFactory.newScheduleData()
-        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-        .nonce(AccountNonce.from(nonceValue))
-        .expiry(Expiry.from(expiry))
-        .signer(TransactionTestHelper.getValidSigner())
+try{
+    Schedule[] schedule = new Schedule[1];
+    schedule[0] = Schedule.from(1662869154000L, 10);
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+    val transaction = TransferScheduleWithTransaction
+        .builder()
+        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
+        .nonce(AccountNonce.from(78910))
+        .expiry(Expiry.from(123456))
+        .signer(signer)
         .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
         .schedule(schedule)
-        .maxEnergyCost(UInt64.from(1000))
+        .maxEnergyCost(UInt64.from(10000))
         .build();
-
-        client.sendTransaction(transaction);
- } catch (TransactionRejectionException e) {
-     // Handle the rejected transaction, here we simply log it.
-     Transaction rejectedTransaction =  e.getTransaction();
+    client.sendTransaction(transaction);
+} catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
     Hash rejectedTransactionHash = rejectedTransaction.getHash();
     String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
     Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
@@ -806,22 +810,26 @@ The following example demonstrates how to construct a "transferSchedule" transac
 The following example demonstrates how to construct a "transferScheduleWithMemo" transaction, which is used to transfer CCD with schedule and memo.
 
  ```java
- try{
-        Schedule[] schedule = new Schedule[1];
-        schedule[0] = Schedule.from(1662869154000L, 10);
-        val transaction = TransferScheduleWithMemoTransaction
+try{
+    Schedule[] schedule = new Schedule[1];
+    schedule[0] = Schedule.from(1662869154000L, 10);
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+    val transaction = TransferScheduleWithMemoTransaction
         .builder()
         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
         .nonce(AccountNonce.from(78910))
         .expiry(Expiry.from(123456))
-        .signer(TransactionTestHelper.getValidSigner())
+        .signer(signer)
         .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
         .schedule(schedule)
         .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
         .maxEnergyCost(UInt64.from(10000))
         .build();
-
-        client.sendTransaction(transaction);
+    client.sendTransaction(transaction);
  } catch (TransactionRejectionException e) {
      // Handle the rejected transaction, here we simply log it.
      Transaction rejectedTransaction =  e.getTransaction();

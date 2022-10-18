@@ -6,6 +6,9 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
+/**
+ * The release schedule.
+ */
 public class Schedule {
 
     private final Timestamp time;
