@@ -1,4 +1,4 @@
-PATH_ED25519 := ed25519-jni/
+PATH_ED25519 := crypto-jni/
 PATH_ED25519_TARGET = $(PATH_ED25519)target/
 
 PATH_JAVA_SDK := concordium-sdk/

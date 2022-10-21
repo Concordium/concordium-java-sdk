@@ -57,7 +57,7 @@ The `fat` jar can then be used from another project by adding it to the `pom.xml
 ## JNI
 When doing changes wrt. the JNI two things have to be taken care of.
 1. The Java native calls
-1. The rust [implementation](./ed25519-jni) of which the Java native binds to.
+1. The rust [implementation](./crypto-jni) of which the Java native binds to.
 
 ## The Java part
 The SDK uses JNI to perform EDDSA_ED25519 signatures.
@@ -66,7 +66,7 @@ One can create a new header file by using the command: `javac -h . ED25519.java`
 
 ## The Rust part
 
-The output will be a header file, the contents hereof must be matched appropriately as described in the [documentation](https://docs.rs/jni/0.19.0/jni/) into the [lib.rs](./ed25519-jni/src/lib.rs) rust source file.
+The output will be a header file, the contents hereof must be matched appropriately as described in the [documentation](https://docs.rs/jni/0.19.0/jni/) into the [lib.rs](crypto-jni/src/lib.rs) rust source file.
 
 
 # Usage

@@ -1,4 +1,4 @@
-package com.concordium.sdk.crypto.ed25519;
+package com.concordium.sdk.crypto;
 
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
@@ -10,13 +10,13 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
-class NativeResolver {
+public class NativeResolver {
 
     private static final String BASE_LIB_NAME = "ed25519_jni";
     private static boolean LOADED;
     private static final Random random = new Random();
 
-    static void loadLib() {
+    public static void loadLib() {
         if (!LOADED) {
             try {
                 val os = NativeResolver.OS.from(System.getProperty("os.name"));

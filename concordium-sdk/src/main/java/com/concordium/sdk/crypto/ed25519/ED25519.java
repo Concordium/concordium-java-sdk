@@ -1,5 +1,6 @@
 package com.concordium.sdk.crypto.ed25519;
 
+import com.concordium.sdk.crypto.NativeResolver;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import lombok.val;
 

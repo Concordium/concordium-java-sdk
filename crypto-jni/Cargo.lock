@@ -267,6 +267,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "crypto-jni"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "concordium-contracts-common",
+ "crypto_common",
+ "curve25519-dalek",
+ "ed25519-dalek",
+ "elgamal",
+ "encrypted_transfers",
+ "id",
+ "jni",
+ "rand",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "crypto_common"
 version = "0.1.0"
 dependencies = [
@@ -394,24 +412,6 @@ dependencies = [
  "serde",
  "sha2 0.9.9",
  "zeroize",
-]
-
-[[package]]
-name = "ed25519-jni"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "concordium-contracts-common",
- "crypto_common",
- "curve25519-dalek",
- "ed25519-dalek",
- "elgamal",
- "encrypted_transfers",
- "id",
- "jni",
- "rand",
- "serde",
- "serde_json",
 ]
 
 [[package]]
