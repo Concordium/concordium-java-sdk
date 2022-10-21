@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class NativeResolver {
 
-    private static final String BASE_LIB_NAME = "ed25519_jni";
+    private static final String BASE_LIB_NAME = "crypto_jni";
     private static boolean LOADED;
     private static final Random random = new Random();
 
