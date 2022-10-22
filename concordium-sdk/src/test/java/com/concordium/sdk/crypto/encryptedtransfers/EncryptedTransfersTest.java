@@ -1,15 +1,17 @@
 package com.concordium.sdk.crypto.encryptedtransfers;
 
+import com.concordium.sdk.Client;
+import com.concordium.sdk.Connection;
+import com.concordium.sdk.Credentials;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
+import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
-import com.concordium.sdk.transactions.AccountAddress;
-import com.concordium.sdk.transactions.CCDAmount;
-import com.concordium.sdk.transactions.EncryptedAmount;
-import com.concordium.sdk.transactions.EncryptedAmountIndex;
+import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.Nonce;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -20,9 +22,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class EncryptedTransfersTest {
 
-    @SneakyThrows
-    @Test
-    public void shouldCreatePayloadTest() {
+    public static CryptographicParameters getTestCryptographicParameters() {
         val bulletproofGenerators = BulletproofGenerators.from(
                 "0000010098855a650637f2086157d32536f646b758a3c45a2f299a4dad7ea3dbd1c4cfb4ba42aca5461f8e45aab911" +
                         "2984572cdf8ba9381c58d98d196b1c03e149ec0c8de86098f25d23d32288c695dc7ae015f6506b1c74c218f080aaad" +
@@ -551,6 +551,17 @@ public class EncryptedTransfersTest {
                 "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94" +
                         "c5a8d45e64b6f917c540eee16c970c3d4b7f3caf48a7746284878e2ace21c82ea44bf84609834625be1f309988ac52" +
                         "3fac");
+
+        return CryptographicParameters.builder()
+            .onChainCommitmentKey(onChainCommitmentKey)
+            .bulletproofGenerators(bulletproofGenerators)
+            .genesisString("Concordium Testnet Version 5")
+            .build();
+    }
+
+    @SneakyThrows
+    @Test
+    public void shouldCreateTransferToPublicPayloadTest() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
         val accountSecretKey = ElgamalSecretKey.from("b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c573c28a63523116b128d7d33037cdbdf5bf6a30048fa27a121b4d950d1f5caecc");
         val amountToMakePublic = CCDAmount.fromMicro(10);
@@ -568,11 +579,7 @@ public class EncryptedTransfersTest {
                         .build())
                 .accountNonce(nonce)
                 .build();
-        val cryptographicParameters = CryptographicParameters.builder()
-                .onChainCommitmentKey(onChainCommitmentKey)
-                .bulletproofGenerators(bulletproofGenerators)
-                .genesisString("Concordium Testnet Version 5")
-                .build();
+        val cryptographicParameters = getTestCryptographicParameters();
 
         val transferToPublicJniOutput = EncryptedTransfers.createSecToPubTransferPayload(
                 cryptographicParameters,
@@ -586,4 +593,40 @@ public class EncryptedTransfersTest {
         assertNotNull(transferToPublicJniOutput.getProof());
         assertNotNull(transferToPublicJniOutput.getIndex());
     }
+
+    @SneakyThrows
+    @Test
+    public void shouldCreateEncryptedTransferPayloadTest() {
+        val cryptographicParameters = getTestCryptographicParameters();
+        val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+        val nonce = Nonce.from(1);
+        val accountInfo = AccountInfo.builder()
+                .accountAddress(accountAddress)
+                .accountEncryptedAmount(AccountEncryptedAmount.builder()
+                        .selfAmount(EncryptedAmount.from(
+                                "b23d92613d32576c98826addaf3bd1a5015d37fc3609743c089386e8fca091d6b1659cb7567d2d63c3e1aa1edd9955" +
+                                        "1e92b6996f6cbc497619083b42fb2210813d8cd4ead15771111edaf79b73a1b072735592b9ec72711f2c6a7360936c" +
+                                        "788caa76a9a74de720b4917c4c71d2b41232a24102d119579ee549b80a0da2e197462e0ad069b41832e3a6e66d3b69" +
+                                        "7e2a36b29ac6106a98986affe140693bed84548adc88f5f74ef867461f02370385b0ddf2923ef50589a7509a4f9074" +
+                                        "ab6e980b"))
+                        .startIndex(EncryptedAmountIndex.from(0))
+                        .build())
+                .accountNonce(nonce)
+                .build();
+
+        val encryptedTransferjniOutput = EncryptedTransfers.createEncryptedTransferPayload(
+                cryptographicParameters,
+                accountInfo.getAccountEncryptedAmount(),
+                "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c5b85e593e6d90fce067c8a3bba55028cb8dd4421c7a7acd339fa546312af70d1c38a6036d6fe1f58a1eb7943cd605b3a0",
+                "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c573c28a63523116b128d7d33037cdbdf5bf6a30048fa27a121b4d950d1f5caecc",
+                "1"
+        );
+
+        assertNotNull(encryptedTransferjniOutput.getTransferAmount());
+        assertNotNull(encryptedTransferjniOutput.getRemainingAmount());
+        assertNotNull(encryptedTransferjniOutput.getProof());
+        assertNotNull(encryptedTransferjniOutput.getIndex());
+
+    }
+
 }

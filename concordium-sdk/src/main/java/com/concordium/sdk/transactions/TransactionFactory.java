@@ -2,7 +2,6 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
-import com.concordium.sdk.crypto.encryptedtransfers.TransferToPublicJniOutput;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import lombok.val;
@@ -67,4 +66,39 @@ public class TransactionFactory {
                 .proof(jniOutput.getProof())
                 .remainingAmount(jniOutput.getRemainingAmount());
     }
+
+
+    /**
+     * Creates a new {@link EncryptedTransferTransaction.EncryptedTransferTransactionBuilder} for
+     * creating a {@link EncryptedTransferTransaction}
+     *
+     * @return the builder for a {@link EncryptedTransferTransaction}
+     */
+    public static EncryptedTransferTransaction.EncryptedTransferTransactionBuilder newEncryptedTransfer(
+            CryptographicParameters cryptographicParameters,
+            AccountEncryptedAmount accountEncryptedAmount,
+            String receiverPublicKey,
+            String senderSecretKey,
+            String amountToSend) {
+        val jniOutput = EncryptedTransfers.createEncryptedTransferPayload(
+                cryptographicParameters,
+                accountEncryptedAmount,
+                receiverPublicKey,
+                senderSecretKey,
+                amountToSend
+        );
+
+        val amountTransferData = EncryptedAmountTransferData.builder()
+                .remainingAmount(jniOutput.getRemainingAmount())
+                .transferAmount(jniOutput.getTransferAmount())
+                .index(jniOutput.getIndex())
+                .proof(jniOutput.getProof()).build();
+
+        return EncryptedTransferTransaction
+                .builder()
+                .data(amountTransferData);
+
+    }
+
+
 }
