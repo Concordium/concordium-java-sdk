@@ -1,15 +1,10 @@
 package com.concordium.sdk.crypto.encryptedtransfers;
 
-import com.concordium.sdk.Client;
-import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
-import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
-import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.Nonce;

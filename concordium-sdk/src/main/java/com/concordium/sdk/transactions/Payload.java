@@ -94,6 +94,7 @@ public abstract class Payload {
         REGISTER_DATA,
         TRANSFER_TO_PUBLIC,
         ENCRYPTED_TRANSFER,
+        ENCRYPTED_TRANSFER_WITH_MEMO,
     }
 
 }
