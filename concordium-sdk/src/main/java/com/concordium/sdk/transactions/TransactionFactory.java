@@ -36,6 +36,13 @@ public class TransactionFactory {
         return RegisterDataTransaction.builder();
     }
 
+    /**
+     * Creates a new {@link UpdateCredentialKeysTransaction.UpdateCredentialKeysTransactionBuilder} for
+     * creating a {@link UpdateCredentialKeysTransaction}
+     *
+     * @return the builder for a {@link UpdateCredentialKeysTransaction}
+     */
+
     public static UpdateCredentialKeysTransaction.UpdateCredentialKeysTransactionBuilder newUpdateCredentialKeys() {
         return UpdateCredentialKeysTransaction.builder();
     }
