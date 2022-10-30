@@ -1,17 +1,15 @@
 package com.concordium.sdk.crypto.bakertransactions;
 
+import com.concordium.sdk.crypto.CryptoJniResultCode;
 import com.concordium.sdk.crypto.NativeResolver;
+import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.val;
 
-public class BakerKeys {
+public final class BakerKeys {
     static {
         loadNatives();
-    }
-
-    public static void main(String[] args) {
-        createBakeKeys();
     }
 
     static void loadNatives() {
@@ -19,27 +17,26 @@ public class BakerKeys {
     }
 
 
-    public static BakerKeysJniOutput createBakeKeys() {
+    public static BakerKeysJniOutput createBakerKeys() {
 
-        BakerKeysJniOutput result = null;
+        BakerKeysResult result = null;
         try {
-            val buff = new byte[128];
-            val resultCode = generateBakerKeys(buff);
-            if (resultCode > 0) {
-                val errString = new String(buff);
-                throw new Exception("Error: " + errString + ", ErrorCode: " + resultCode);
-            }
-            val jsonStr = new String(buff);
-            result = JsonMapper.INSTANCE.readValue(jsonStr, BakerKeysJniOutput.class);
+            val jsonStr = generateBakerKeys();
+            result = JsonMapper.INSTANCE.readValue(jsonStr, BakerKeysResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
-        return result;
+        if (!result.isok()) {
+            throw CryptoJniException.from(
+                    result.getErr().orElse(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+        }
+
+        return result.getOk().orElseThrow(
+                () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+
     }
 
-    private static native int generateBakerKeys(byte[] buffer);
+    private static native String generateBakerKeys();
 
 }
 

@@ -67,4 +67,15 @@ public class TransactionFactory {
                 .proof(jniOutput.getProof())
                 .remainingAmount(jniOutput.getRemainingAmount());
     }
+
+    /**
+     * Creates a new {@link AddBakerTransaction.AddBakerTransactionBuilder} for
+     * creating a {@link AddBakerTransaction}
+     *
+     * @return the builder for a {@link AddBakerTransaction}
+     */
+    public static AddBakerTransaction.AddBakerTransactionBuilder newAddBaker() {
+        return AddBakerTransaction.builder();
+    }
+
 }

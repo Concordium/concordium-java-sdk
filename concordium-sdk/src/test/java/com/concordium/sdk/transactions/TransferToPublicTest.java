@@ -3,7 +3,7 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
-import com.concordium.sdk.exceptions.EncryptedTransfersException;
+import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
@@ -645,7 +645,7 @@ public class TransferToPublicTest {
                         .signer(TransactionTestHelper.getValidSigner())
                         .maxEnergyCost(UInt64.from(20000))
                         .build();
-            } catch (EncryptedTransfersException ex) {
+            } catch (CryptoJniException ex) {
                 Assert.assertNotNull(ex.getCode().getErrorMessage());
                 continue;
             }

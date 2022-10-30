@@ -1,11 +1,8 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
-import com.concordium.sdk.crypto.bakertransactions.BakerKeysJniOutput;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
-import org.apache.commons.codec.binary.Hex;
+import com.concordium.sdk.crypto.bakertransactions.*;
+import com.concordium.sdk.types.UInt64;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
@@ -14,14 +11,16 @@ import java.nio.ByteBuffer;
  * Payload of the `AddBaker` transaction. This transaction registers the
  * account as a baker.
  */
-@ToString
 @Getter
-public final class AddBakerPayload {
+@EqualsAndHashCode(callSuper = true)
+@RequiredArgsConstructor
+@ToString
+public final class AddBaker extends Payload {
 
     /**
      * The keys with which the baker registered.
      */
-    private final AddBakerKeysPayload keys;
+    private final AddBakerKeysPayload payload;
     /**
      * Initial baking stake.
      */
@@ -31,38 +30,51 @@ public final class AddBakerPayload {
      */
     private final boolean restakeEarnings;
 
-    private AddBakerPayload(AddBakerKeysPayload keys, CCDAmount bakingState, boolean restakeEarnings) {
-        this.keys = keys;
-        this.bakingState = bakingState;
-        this.restakeEarnings = restakeEarnings;
+    private final UInt64 maxEnergyCost;
+
+    @Override
+    public PayloadType getType() {
+        return PayloadType.ADD_BAKER;
     }
 
-    public static AddBakerPayload from(int amount, boolean restakeEarnings) {
-        BakerKeysJniOutput output = BakerKeys.createBakerKeys();
-        AddBakerKeysPayload keys = AddBakerKeysPayload.from(String.valueOf(output));
-
-        return new AddBakerPayload(
-                keys,
-                CCDAmount.fromMicro(amount),
-                restakeEarnings
-        );
+    @Override
+    UInt64 getTransactionTypeCost() {
+        return this.header.getMaxEnergyCost();
     }
 
     public byte[] getBytes() {
-        val amountBytes = bakingState.getBytes();
-        val keysBytes = keys.getBytes();
+        val payloadBytes = payload.getBytes();
         val bufferLength = TransactionType.BYTES +
                 CCDAmount.BYTES +
-                keysBytes.length +
+                payloadBytes.length +
                 TransactionType.BYTES;
 
         val buffer = ByteBuffer.allocate(bufferLength);
 
         buffer.put(TransactionType.ADD_BAKER.getValue());
-        buffer.put(keysBytes);
-        buffer.put(amountBytes);
+        buffer.put(payloadBytes);
+        buffer.put(bakingState.getBytes());
         buffer.put((byte)(restakeEarnings?1:0));
 
         return buffer.array();
     }
+
+    static AddBaker createNew(AccountAddress sender, CCDAmount bakingState, boolean restakeEarnings, UInt64 maxEnergyCost) {
+        BakerKeysJniOutput bakerKeys = BakerKeys.createBakerKeys();
+        AddBakerKeysJniInput input = AddBakerKeysJniInput.builder()
+                .keys(bakerKeys)
+                .sender(sender)
+                .build();
+
+        AddBakerKeysJniOutput output = AddBakerKeys.generateAddBakerKeysPayload(input);
+        AddBakerKeysPayload addBakerPayload = AddBakerKeysPayload.from(output);
+
+        return new AddBaker(
+                addBakerPayload,
+                bakingState,
+                restakeEarnings,
+                maxEnergyCost
+        );
+    }
+
 }

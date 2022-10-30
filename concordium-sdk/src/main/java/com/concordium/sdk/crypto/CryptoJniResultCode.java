@@ -1,8 +1,8 @@
-package com.concordium.sdk.crypto.encryptedtransfers;
+package com.concordium.sdk.crypto;
 
 import lombok.Getter;
 
-public enum EncryptedTransfersResultCode {
+public enum CryptoJniResultCode {
     SUCCESS(0),
     JSON_DESERIALIZATION_ERROR(1, "Json Deserialization error."),
     UTF8_ERROR(2, "Incorrect Input String."),
@@ -15,12 +15,12 @@ public enum EncryptedTransfersResultCode {
     @Getter
     private final String errorMessage;
 
-    EncryptedTransfersResultCode(int code) {
+    CryptoJniResultCode(int code) {
         this.code = code;
         this.errorMessage = "";
     }
 
-    EncryptedTransfersResultCode(int code, String err) {
+    CryptoJniResultCode(int code, String err) {
         this.code = code;
         this.errorMessage = err;
     }

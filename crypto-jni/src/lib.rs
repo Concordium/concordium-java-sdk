@@ -7,6 +7,8 @@ use ed25519_dalek::*;
 use encrypted_transfers::types::{
     AggregatedDecryptedAmount, EncryptedAmount, IndexedEncryptedAmount, SecToPubAmountTransferData,
 };
+use concordium_base::base;
+use concordium_base::transactions::{AddBakerKeysMarker, BakerAddKeysPayload, BakerKeysPayload};
 use id::curve_arithmetic::Curve;
 use id::{constants::ArCurve, types::GlobalContext};
 use jni::sys::jstring;
@@ -171,35 +173,35 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_ed25519_ED25519_generatePu
 }
 
 #[derive(SerdeSerialize, SerdeDeserialize)]
-enum EncryptedTranfersResult<T> {
+enum CryptoJniResult<T> {
     Ok(T),
     Err(jint),
 }
 
-type Result = EncryptedTranfersResult<SecToPubAmountTransferData<ArCurve>>;
+type Result = CryptoJniResult<SecToPubAmountTransferData<ArCurve>>;
 
-impl<T> From<serde_json::Error> for EncryptedTranfersResult<T> {
+impl<T> From<serde_json::Error> for CryptoJniResult<T> {
     fn from(_: serde_json::Error) -> Self {
-        EncryptedTranfersResult::Err(1)
+        CryptoJniResult::Err(1)
     }
 }
 
-impl<T> From<Utf8Error> for EncryptedTranfersResult<T> {
+impl<T> From<Utf8Error> for CryptoJniResult<T> {
     fn from(_: Utf8Error) -> Self {
-        EncryptedTranfersResult::Err(2)
+        CryptoJniResult::Err(2)
     }
 }
 
-impl<T> From<jni::errors::Error> for EncryptedTranfersResult<T> {
+impl<T> From<jni::errors::Error> for CryptoJniResult<T> {
     fn from(_: jni::errors::Error) -> Self {
-        EncryptedTranfersResult::Err(3)
+        CryptoJniResult::Err(3)
     }
 }
 
 const AMOUNT_DECRYPTION_ERROR: i32 = 4;
 const PAYLOAD_CREATION_ERROR: i32 = 5;
 
-impl<T: serde::Serialize> EncryptedTranfersResult<T> {
+impl<T: serde::Serialize> CryptoJniResult<T> {
     fn to_jstring(&self, env: &JNIEnv) -> jstring {
         let json_str = to_string(self).unwrap();
         let out = env.new_string(json_str).unwrap();
@@ -244,8 +246,8 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_encryptedtransfers_Encrypt
         input.input_encrypted_amount.encrypted_chunks.clone(),
         input.sender_secret_key.clone(),
     ) {
-        EncryptedTranfersResult::Ok(amount) => amount,
-        EncryptedTranfersResult::Err(err) => return Result::Err(err).to_jstring(&env),
+        CryptoJniResult::Ok(amount) => amount,
+        CryptoJniResult::Err(err) => return Result::Err(err).to_jstring(&env),
     };
 
     let input_amount: AggregatedDecryptedAmount<ArCurve> = AggregatedDecryptedAmount {
@@ -267,7 +269,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_encryptedtransfers_Encrypt
     );
 
     match payload {
-        Some(payload) => EncryptedTranfersResult::Ok(payload).to_jstring(&env),
+        Some(payload) => CryptoJniResult::Ok(payload).to_jstring(&env),
         None => Result::Err(PAYLOAD_CREATION_ERROR).to_jstring(&env),
     }
 }
@@ -277,12 +279,58 @@ static TABLE_BYTES: &[u8] = include_bytes!("table_bytes.bin");
 fn decrypt_encrypted_amount(
     encrypted_amount: EncryptedAmount<ArCurve>,
     secret: elgamal::SecretKey<ArCurve>,
-) -> EncryptedTranfersResult<Amount> {
+) -> CryptoJniResult<Amount> {
     let table = (&mut Cursor::new(TABLE_BYTES)).get();
     match table {
-        Ok(table) => EncryptedTranfersResult::Ok(encrypted_transfers::decrypt_amount::<
+        Ok(table) => CryptoJniResult::Ok(encrypted_transfers::decrypt_amount::<
             id::constants::ArCurve,
         >(&table, &secret, &encrypted_amount)),
-        Err(_) => EncryptedTranfersResult::Err(AMOUNT_DECRYPTION_ERROR),
+        Err(_) => CryptoJniResult::Err(AMOUNT_DECRYPTION_ERROR),
     }
+}
+
+#[no_mangle]
+/// The JNI wrapper for the `generate_baker_keys` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_bakertransactions_BakerKeys_generateBakerKeys(
+    env: JNIEnv,
+    _: JClass,
+) -> jstring {
+    let mut csprng = thread_rng();
+    let payload = base::BakerKeyPairs::generate(&mut csprng);
+    return CryptoJniResult::Ok(payload).to_jstring(&env);
+}
+
+#[derive(Serialize, SerdeSerialize, SerdeDeserialize)]
+#[serde(rename_all = "camelCase")]
+struct AddBakerPayloadInput {
+    pub sender:   AccountAddress,
+    pub keys:     base::BakerKeyPairs,
+}
+
+type AddBakerResult = CryptoJniResult<BakerKeysPayload<AddBakerKeysMarker>>;
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `generate_baker_keys` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_bakertransactions_AddBakerKeys_generateAddBakerKeysPayload(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input: AddBakerPayloadInput = match env.get_string(input) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => match from_str(rust_str) {
+                Ok(input) => input,
+                Err(err) => return AddBakerResult::from(err).to_jstring(&env),
+            },
+            Err(err) => return AddBakerResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return AddBakerResult::from(err).to_jstring(&env),
+    };
+
+    let mut csprng = thread_rng();
+
+    let payload = BakerAddKeysPayload::new(&input.keys, input.sender, &mut csprng);
+
+    return CryptoJniResult::Ok(payload).to_jstring(&env);
 }

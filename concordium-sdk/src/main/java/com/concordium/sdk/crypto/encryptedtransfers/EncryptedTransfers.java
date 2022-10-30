@@ -1,8 +1,9 @@
 package com.concordium.sdk.crypto.encryptedtransfers;
 
+import com.concordium.sdk.crypto.CryptoJniResultCode;
 import com.concordium.sdk.crypto.NativeResolver;
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
-import com.concordium.sdk.exceptions.EncryptedTransfersException;
+import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.serializing.JsonMapper;
@@ -44,12 +45,12 @@ public final class EncryptedTransfers {
         }
 
         if (!result.isok()) {
-            throw EncryptedTransfersException.from(
-                    result.getErr().orElse(EncryptedTransfersResultCode.ERROR_UNKNOWN_RESULT_CODE));
+            throw CryptoJniException.from(
+                    result.getErr().orElse(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
         }
 
         return result.getOk().orElseThrow(
-                () -> EncryptedTransfersException.from(EncryptedTransfersResultCode.ERROR_UNKNOWN_RESULT_CODE));
+                () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
     }
 
     private static native String createSecToPubTransfer(String input);
