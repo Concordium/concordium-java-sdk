@@ -23,7 +23,11 @@ public enum ProtocolVersion {
     /**
      * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P4.txt
      */
-    V4(3);
+    V4(3),
+    /**
+     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P5.txt
+     */
+    V5(4);
 
     private static final List<ProtocolVersion> protocolVersions = new ArrayList<>();
 
