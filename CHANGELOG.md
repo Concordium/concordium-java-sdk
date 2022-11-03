@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased changes
-- Added support for Initialising smart contract
+- Added support for initializing smart contracts.
 
 
 ## 3.1.0

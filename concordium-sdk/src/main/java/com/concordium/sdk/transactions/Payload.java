@@ -92,7 +92,7 @@ public abstract class Payload {
         TRANSFER,
         TRANSFER_WITH_MEMO,
         REGISTER_DATA,
-        INITIALIZE_SMART_CONTRACT_INSTANCE,
+        INIT_CONTRACT,
     }
 
 }

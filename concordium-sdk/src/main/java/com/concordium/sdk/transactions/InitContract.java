@@ -31,7 +31,7 @@ public final class InitContract extends Payload {
 
     @Override
     public PayloadType getType() {
-        return PayloadType.INITIALIZE_SMART_CONTRACT_INSTANCE;
+        return PayloadType.INIT_CONTRACT;
     }
 
     @Override

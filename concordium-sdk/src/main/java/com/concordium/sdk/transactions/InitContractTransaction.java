@@ -79,7 +79,7 @@ public class InitContractTransaction extends AbstractTransaction {
         }
 
         static void verifyInitContractInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, InitContractPayload payload) throws TransactionCreationException {
-            Transaction.verifyCommonInput(sender, nonce, expiry, signer);
+            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
             if (Objects.isNull(payload)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
             }
