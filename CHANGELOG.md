@@ -17,7 +17,7 @@
 - Added support for query `PeerConnect`
 - Added support for query `GetBakerList`
 - Added support for query `GetPoolStatus`
-- Added support for query `PeerTotalReceived`
+- Added support for query `PeerTotalReceived`- Added support for Update Contract.
 - Added support for query `GetModuleSource`
 - Added support for query `GetModuleList`
 - Added support for query `GetBirkParameters`

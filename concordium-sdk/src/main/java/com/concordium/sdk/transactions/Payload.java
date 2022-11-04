@@ -92,7 +92,7 @@ public abstract class Payload {
         TRANSFER,
         TRANSFER_WITH_MEMO,
         REGISTER_DATA,
-        UPDATE_SMART_CONTRACT_INSTANCE,
+        UPDATE,
 
     }
 

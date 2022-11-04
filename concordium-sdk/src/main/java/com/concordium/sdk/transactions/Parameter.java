@@ -8,6 +8,10 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
+
+/**
+ * Buffer of the Parameters.
+ */
 @Getter
 @ToString
 public final class Parameter {

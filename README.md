@@ -789,7 +789,7 @@ try{
         SignerEntry.from(Index.from(0), Index.from(1),
             secondSecretKey));
 
-    val transaction = TransactionFactory.newUpdateContract()
+    UpdateContractTransaction transaction = TransactionFactory.newUpdateContract()
         .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
         .nonce(AccountNonce.from(nonceValue))
         .expiry(Expiry.from(expiry))

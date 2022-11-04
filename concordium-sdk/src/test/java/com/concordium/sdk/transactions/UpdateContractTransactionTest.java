@@ -3,6 +3,7 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.responses.transactionstatus.ContractAddress;
 import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import org.junit.Test;
@@ -11,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class UpdateContractTransactionTest {
-    final static int[] EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES = {0, 0, 1, 0, 2, 0, 0, 64, 250, 95, 135, 36, 130, 4, 204, 124, 57, 135, 200, 157, 44, 145, 227, 25, 103, 20, 130, 217, 85, 57, 216, 195, 159, 224, 29, 108, 49, 21, 62, 95, 216, 149, 119, 142, 95, 201, 64, 40, 121, 210, 64, 250, 59, 162, 224, 150, 162, 113, 203, 64, 220, 151, 244, 125, 143, 75, 167, 75, 156, 103, 215, 9, 1, 0, 64, 57, 165, 169, 169, 201, 134, 38, 158, 134, 199, 166, 227, 213, 235, 194, 173, 4, 213, 239, 171, 126, 167, 62, 228, 206, 228, 216, 99, 179, 73, 13, 210, 204, 155, 4, 203, 223, 123, 179, 190, 5, 227, 96, 54, 197, 89, 8, 185, 69, 206, 177, 102, 194, 249, 96, 243, 169, 41, 218, 94, 70, 74, 151, 12, 48, 29, 107, 23, 16, 181, 115, 90, 252, 36, 88, 152, 1, 33, 61, 19, 170, 107, 68, 120, 137, 15, 223, 232, 25, 91, 202, 14, 175, 34, 97, 78, 0, 0, 0, 0, 0, 1, 52, 62, 0, 0, 0, 0, 0, 0, 40, 62, 0, 0, 0, 42, 0, 0, 0, 0, 0, 1, 226, 64, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 67, 73, 83, 50, 45, 78, 70, 84, 46, 109, 105, 110, 116, 0, 0};
+    final static int[] EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES = {0, 0, 1, 0, 1, 0, 0, 64, 171, 120, 141, 90, 114, 116, 192, 90, 63, 4, 240, 13, 44, 227, 153, 49, 71, 86, 147, 112, 214, 228, 77, 243, 254, 248, 79, 251, 206, 64, 87, 106, 54, 80, 165, 61, 136, 245, 3, 11, 107, 206, 209, 56, 98, 211, 217, 125, 48, 78, 115, 130, 226, 189, 52, 47, 112, 226, 110, 44, 61, 12, 187, 8, 48, 29, 107, 23, 16, 181, 115, 90, 252, 36, 88, 152, 1, 33, 61, 19, 170, 107, 68, 120, 137, 15, 223, 232, 25, 91, 202, 14, 175, 34, 97, 78, 0, 0, 0, 0, 0, 1, 52, 62, 0, 0, 0, 0, 0, 0, 39, 218, 0, 0, 0, 42, 0, 0, 0, 0, 0, 1, 226, 64, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 13, 67, 73, 83, 50, 45, 78, 70, 84, 46, 109, 105, 110, 116, 0, 0};
     byte[] emptyArray = new byte[0];
 
 
@@ -27,7 +28,7 @@ public class UpdateContractTransactionTest {
                 .payload(UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
-        assertEquals("ac20e2a4be17d4e85bfbbbdc430b249517cfc634eaa57baa7df6cd42d711d94c", transaction.getHash().asHex());
+        assertEquals("727d4b0413d0306c607d45d8265ad9c21271ab52147492a882a151ef11b7dfa8", transaction.getHash().asHex());
         assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 

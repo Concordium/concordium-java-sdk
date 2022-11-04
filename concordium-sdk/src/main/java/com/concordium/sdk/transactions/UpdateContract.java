@@ -29,7 +29,7 @@ public final class UpdateContract extends Payload {
 
     @Override
     public PayloadType getType() {
-        return PayloadType.UPDATE_SMART_CONTRACT_INSTANCE;
+        return PayloadType.UPDATE;
     }
 
     @Override

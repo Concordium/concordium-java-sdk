@@ -17,7 +17,14 @@ import java.nio.ByteBuffer;
 @Getter
 @ToString
 public final class ReceiveName {
+    /**
+     * The name of the contract.
+     */
     private final String contractName;
+    /**
+     * The entrypoint name of the contract. The name of the function consists solely of ASCII
+     * alphanumeric or punctuation characters.
+     */
     private final String method;
 
     @JsonCreator
