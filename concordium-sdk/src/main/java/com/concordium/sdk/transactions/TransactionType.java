@@ -23,7 +23,7 @@ public enum TransactionType {
     TRANSFER_WITH_MEMO((byte) 22);
 
     /**
-     * No of Bytes used for Serializing {@link TransactionType}.
+     * Number of Bytes used for Serializing {@link TransactionType}.
      */
     public static final int BYTES = 1;
 
