@@ -1,5 +1,6 @@
 package com.concordium.sdk.crypto.encryptedtransfers;
 
+import com.concordium.sdk.crypto.NativeResolver;
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.exceptions.EncryptedTransfersException;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
@@ -10,7 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.val;
 
 public final class EncryptedTransfers {
-
     static {
         loadNatives();
     }
