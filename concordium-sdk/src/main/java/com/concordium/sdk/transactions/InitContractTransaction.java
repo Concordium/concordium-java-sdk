@@ -28,7 +28,9 @@ public class InitContractTransaction extends AbstractTransaction {
     private final UInt64 maxEnergyCost;
     private BlockItem blockItem;
 
-    // A constructor.
+    /**
+     * A constructor of {@link InitContractTransaction} class.
+     */
     @Builder
     public InitContractTransaction(InitContractPayload payload,
                                    AccountAddress sender,
@@ -45,7 +47,7 @@ public class InitContractTransaction extends AbstractTransaction {
     }
 
     /**
-     * @return A new instance of the InitContractTransaction class.
+     * @return A new instance of the {@link InitContractTransaction}  class.
      */
     public static InitContractTransactionBuilder builder() {
         return new CustomBuilder();
