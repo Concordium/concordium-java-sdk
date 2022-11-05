@@ -19,12 +19,27 @@ public class UpdateContractTransaction extends AbstractTransaction {
      */
     private final UpdateContractPayload payload;
 
+    /**
+     * Account Address of the sender
+     */
     private final AccountAddress sender;
+    /**
+     * The nonce value/
+     */
     private final AccountNonce nonce;
+    /**
+     * Indicates when the transaction should expire.
+     */
     private final Expiry expiry;
+    /**
+     * A signer object that is used to sign the transaction.
+     */
     private final TransactionSigner signer;
-    private BlockItem blockItem;
+    /**
+     * Maximum energy required for the transaction.
+     */
     private final UInt64 maxEnergyCost;
+    private BlockItem blockItem;
 
     @Builder
     public UpdateContractTransaction(UpdateContractPayload payload,
