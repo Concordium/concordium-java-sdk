@@ -14,12 +14,15 @@ import java.util.Objects;
  */
 @Getter
 class DeployModuleTransaction extends AbstractTransaction {
+    /**
+     * A compiled Smart Contract Module in WASM with source and version.
+     */
+    private final WasmModule module;
 
     private final AccountAddress sender;
     private final AccountNonce nonce;
     private final Expiry expiry;
     private final TransactionSigner signer;
-    private final WasmModule module;
     private final UInt64 maxEnergyCost;
     private BlockItem blockItem;
 
@@ -39,16 +42,35 @@ class DeployModuleTransaction extends AbstractTransaction {
         this.maxEnergyCost = maxEnergyCost;
     }
 
+    /**
+     * This function returns a new instance of the DeployModuleTransaction class.
+     */
+    public static DeployModuleTransaction.DeployModuleTransactionBuilder builder() {
+        return new DeployModuleTransaction.CustomBuilder();
+    }
+
+    /**
+     * This function returns the block item associated with this block.
+     */
     @Override
     public BlockItem getBlockItem() {
         return blockItem;
     }
 
-    public static DeployModuleTransaction.DeployModuleTransactionBuilder builder() {
-        return new DeployModuleTransaction.CustomBuilder();
-    }
-
     private static class CustomBuilder extends DeployModuleTransaction.DeployModuleTransactionBuilder {
+        static void verifyDeployModuleInput(
+                AccountAddress sender,
+                AccountNonce nonce,
+                Expiry expiry,
+                WasmModule module,
+                TransactionSigner signer) throws TransactionCreationException {
+            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
+
+            if (Objects.isNull(module)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Module cannot be null"));
+            }
+        }
+
         @Override
         public DeployModuleTransaction build() throws TransactionCreationException {
             val transaction = super.build();
@@ -71,19 +93,6 @@ class DeployModuleTransaction extends AbstractTransaction {
                             .expiry(transaction.getExpiry().getValue())
                             .build())
                     .signWith(transaction.getSigner());
-        }
-
-        static void verifyDeployModuleInput(
-                AccountAddress sender,
-                AccountNonce nonce,
-                Expiry expiry,
-                WasmModule module,
-                TransactionSigner signer) throws TransactionCreationException {
-            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
-
-            if (Objects.isNull(module)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Module cannot be null"));
-            }
         }
     }
 }

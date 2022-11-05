@@ -36,6 +36,12 @@ public class TransactionFactory {
         return RegisterDataTransaction.builder();
     }
 
+    /**
+     * Creates a new {@link DeployModuleTransaction.DeployModuleTransactionBuilder} for
+     * creating a {@link DeployModuleTransaction}
+     *
+     * @return the builder for a {@link DeployModuleTransaction}
+     */
     public static DeployModuleTransaction.DeployModuleTransactionBuilder newDeployModule() {
         return DeployModuleTransaction.builder();
     }
