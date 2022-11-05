@@ -7,18 +7,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
 
+import java.util.Objects;
+
 
 /**
  * Construct a transaction to transfer an amount with schedule.
  */
 @Getter
 public class TransferScheduleTransaction extends AbstractTransaction {
-    private final AccountAddress sender;
+    /**
+     * The account address of the recepient.
+     */
     private final AccountAddress to;
     /**
      * The release schedule. This can be at most 255 elements.
      */
     private final Schedule[] schedule;
+
+    private final AccountAddress sender;
     private final AccountNonce nonce;
     private final Expiry expiry;
     private final TransactionSigner signer;
@@ -26,6 +32,7 @@ public class TransferScheduleTransaction extends AbstractTransaction {
 
     private BlockItem blockItem;
 
+    // A constructor.
     @Builder
     public TransferScheduleTransaction(AccountAddress sender, AccountAddress to, Schedule[] schedule, AccountNonce nonce, Expiry expiry, TransactionSigner signer, BlockItem blockItem, UInt64 maxEnergyCost) throws TransactionCreationException {
         this.sender = sender;
@@ -42,6 +49,22 @@ public class TransferScheduleTransaction extends AbstractTransaction {
         return new CustomBuilder();
     }
 
+    static void verifyTransferScheduleInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer) throws TransactionCreationException {
+        Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
+        if (Objects.isNull(to)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("To cannot be null"));
+        }
+        if (Objects.isNull(schedule)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Schedule cannot be null"));
+        }
+        if (schedule.length > 255) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Schedule size can be maximum 255"));
+        }
+    }
+
+    /**
+     * This function returns the block item associated with this block.
+     */
     @Override
     public BlockItem getBlockItem() {
         return blockItem;
@@ -51,7 +74,7 @@ public class TransferScheduleTransaction extends AbstractTransaction {
         @Override
         public TransferScheduleTransaction build() throws TransactionCreationException {
             val transaction = super.build();
-            Transaction.verifyTransferScheduleInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer);
+            verifyTransferScheduleInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer);
             transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
             return transaction;
         }
@@ -69,4 +92,5 @@ public class TransferScheduleTransaction extends AbstractTransaction {
                     .signWith(transaction.signer);
         }
     }
+
 }

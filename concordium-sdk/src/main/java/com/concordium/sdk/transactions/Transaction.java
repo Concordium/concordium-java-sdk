@@ -31,15 +31,7 @@ public interface Transaction {
     int DEFAULT_NETWORK_ID = 100;
 
     static void verifyTransferInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress receiver, CCDAmount amount, TransactionSigner signer) throws TransactionCreationException {
-        if (Objects.isNull(sender)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
-        }
-        if (Objects.isNull(nonce)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("AccountNonce cannot be null"));
-        }
-        if (Objects.isNull(expiry)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Expiry cannot be null"));
-        }
+        verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 
         if (Objects.isNull(receiver)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Receiver cannot be null"));
@@ -47,13 +39,8 @@ public interface Transaction {
         if (Objects.isNull(amount)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Amount cannot be null"));
         }
-        if (Objects.isNull(signer) || signer.isEmpty()) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
-        }
     }
 
-
-    //FIXME: Figure out a better naming scheme.
     static void verifyAccountTransactionHeaders(
             AccountAddress sender,
             AccountNonce nonce,
@@ -70,26 +57,6 @@ public interface Transaction {
         }
         if (Objects.isNull(signer) || signer.isEmpty()) {
             throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
-        }
-    }
-
-    static void verifyTransferScheduleInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer) throws TransactionCreationException {
-        verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
-        if (Objects.isNull(to)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("To cannot be null"));
-        }
-        if (Objects.isNull(schedule)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Schedule cannot be null"));
-        }
-        if (schedule.length > 255) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Schedule size can be maximum 255"));
-        }
-    }
-
-    static void verifyTransferScheduleWithMemoInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer, Memo memo) throws TransactionCreationException {
-        verifyTransferScheduleInput(sender, nonce, expiry, to, schedule, signer);
-        if (Objects.isNull(memo)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Memo cannot be null"));
         }
     }
 }

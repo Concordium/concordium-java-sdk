@@ -7,17 +7,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
 
+import java.util.Objects;
+
 /**
- * Transfer an amount with schedule and memo.
+ * Construct a transaction to transfer an amount with schedule and memo.
  */
 @Getter
 public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
-    private final AccountAddress sender;
+    /**
+     * The account address of the recepient.
+     */
     private final AccountAddress to;
     /**
      * The release schedule. This can be at most 255 elements.
      */
     private final Schedule[] schedule;
+    private final AccountAddress sender;
     private final Memo memo;
     private final AccountNonce nonce;
     private final Expiry expiry;
@@ -42,6 +47,16 @@ public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
         return new CustomBuilder();
     }
 
+    static void verifyTransferScheduleWithMemoInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer, Memo memo) throws TransactionCreationException {
+        TransferScheduleTransaction.verifyTransferScheduleInput(sender, nonce, expiry, to, schedule, signer);
+        if (Objects.isNull(memo)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Memo cannot be null"));
+        }
+    }
+
+    /**
+     * This function returns the block item associated with this block.
+     */
     @Override
     public BlockItem getBlockItem() {
         return blockItem;
@@ -51,7 +66,7 @@ public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
         @Override
         public TransferScheduleWithMemoTransaction build() throws TransactionCreationException {
             val transaction = super.build();
-            Transaction.verifyTransferScheduleWithMemoInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer, transaction.memo);
+            verifyTransferScheduleWithMemoInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer, transaction.memo);
             transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
             return transaction;
         }
@@ -70,4 +85,5 @@ public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
                     .signWith(transaction.signer);
         }
     }
+
 }

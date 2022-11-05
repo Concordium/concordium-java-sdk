@@ -787,7 +787,7 @@ try{
             firstSecretKey),
         SignerEntry.from(Index.from(0), Index.from(1),
             secondSecretKey));
-    val transaction = TransferScheduleWithTransaction
+    TransactionScheduleWithTransaction transaction = TransferScheduleWithTransaction
         .builder()
         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
         .nonce(AccountNonce.from(78910))
@@ -818,7 +818,7 @@ try{
             firstSecretKey),
         SignerEntry.from(Index.from(0), Index.from(1),
             secondSecretKey));
-    val transaction = TransferScheduleWithMemoTransaction
+    TransactionScheduleWithMemoTransaction transaction = TransferScheduleWithMemoTransaction
         .builder()
         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
         .nonce(AccountNonce.from(78910))
