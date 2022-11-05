@@ -11,8 +11,7 @@ import java.nio.ByteBuffer;
 
 /**
  * Initialize a new smart contract instance.
-*/
-
+ */
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString
@@ -20,20 +19,35 @@ public final class InitContract extends Payload {
 
     private final static TransactionType TYPE = TransactionType.INITIALIZE_SMART_CONTRACT_INSTANCE;
 
+    /**
+     * Payload to initialize a smart contract.
+     */
     private final InitContractPayload payload;
 
     private final UInt64 maxEnergyCost;
 
-    public InitContract(InitContractPayload payload, UInt64 maxEnergyCost) {
+    private InitContract(InitContractPayload payload, UInt64 maxEnergyCost) {
         this.payload = payload;
         this.maxEnergyCost = maxEnergyCost;
     }
 
+    static InitContract createNew(InitContractPayload payload, UInt64 maxEnergyCost) {
+        return new InitContract(payload, maxEnergyCost);
+    }
+
+    /**
+     * This function returns the type of the payload.
+     */
     @Override
     public PayloadType getType() {
         return PayloadType.INIT_CONTRACT;
     }
 
+    /**
+     * Get the bytes of the payload and put them in a buffer.
+     *
+     * @return The byte array of the payload.
+     */
     @Override
     byte[] getBytes() {
         val payload_bytes = payload.getBytes();
@@ -45,9 +59,5 @@ public final class InitContract extends Payload {
     @Override
     UInt64 getTransactionTypeCost() {
         return this.maxEnergyCost;
-    }
-
-    static InitContract createNew(InitContractPayload payload, UInt64 maxEnergyCost) {
-        return new InitContract(payload, maxEnergyCost);
     }
 }

@@ -17,6 +17,9 @@ import java.nio.ByteBuffer;
 @Getter
 @ToString
 public final class InitName {
+    /**
+     * Name of the contract
+     */
     private final String name;
 
     private final int MAX_FUNC_NAME_SIZE = 100;
@@ -29,29 +32,38 @@ public final class InitName {
         this.name = name;
     }
 
+    /**
+     * This function takes a string and returns a new InitName object.
+     *
+     * @param name The name of the contract.
+     * @return A new instance of the {@link InitName} class.
+     */
+    public static InitName from(String name) {
+        return new InitName(name);
+    }
+
     private boolean validateInitName(String name) {
-        if(name == null){
+        if (name == null) {
             return false;
         }
-        if(!name.startsWith("init_")){
+        if (!name.startsWith("init_")) {
             return false;
         }
-        if(name.length() > MAX_FUNC_NAME_SIZE){
+        if (name.length() > MAX_FUNC_NAME_SIZE) {
             return false;
         }
-        if(name.contains(".")){
+        if (name.contains(".")) {
             return false;
         }
-        if(!name.matches("^[!-/:-@\\[-`{~a-zA-Z0-9]*$")){
+        if (!name.matches("^[!-/:-@\\[-`{~a-zA-Z0-9]*$")) {
             return false;
         }
         return true;
     }
 
-    public static InitName from(String name) {
-        return new InitName(name);
-    }
-
+    /**
+     * @return buffer bytes of {@link InitName}.
+     */
     public byte[] getBytes() {
         val initNameBuffer = name.getBytes();
         val buffer = ByteBuffer.allocate(UInt16.BYTES + initNameBuffer.length);

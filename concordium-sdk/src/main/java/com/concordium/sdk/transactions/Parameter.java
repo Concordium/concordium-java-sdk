@@ -23,14 +23,17 @@ public final class Parameter {
         this.bytes = bytes;
     }
 
+    /**
+     * This function takes a byte array and returns a Parameter object.
+     */
     public static Parameter from(byte[] parameter) {
         return new Parameter(parameter);
     }
 
-    public int getSize() {
-        return bytes.length;
-    }
 
+    /**
+     * @return buffer bytes of {@link Parameter}.
+     */
     public byte[] getBytes() {
         val paramBuffer = this.bytes;
         val buffer = ByteBuffer.allocate(UInt16.BYTES + paramBuffer.length);

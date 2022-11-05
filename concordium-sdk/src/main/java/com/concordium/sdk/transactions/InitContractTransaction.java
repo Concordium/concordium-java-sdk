@@ -12,19 +12,23 @@ import java.util.Objects;
 
 /**
  * Construct a transaction to initialise a smart contract.
-*/
+ */
 @Getter
 public class InitContractTransaction extends AbstractTransaction {
 
+    /**
+     * Payload to initialize a smart contract.
+     */
     private final InitContractPayload payload;
+
     private final AccountAddress sender;
     private final AccountNonce nonce;
     private final Expiry expiry;
     private final TransactionSigner signer;
-
-    private BlockItem blockItem;
     private final UInt64 maxEnergyCost;
+    private BlockItem blockItem;
 
+    // A constructor.
     @Builder
     public InitContractTransaction(InitContractPayload payload,
                                    AccountAddress sender,
@@ -40,6 +44,9 @@ public class InitContractTransaction extends AbstractTransaction {
         this.maxEnergyCost = maxEnergyCost;
     }
 
+    /**
+     * @return A new instance of the InitContractTransaction class.
+     */
     public static InitContractTransactionBuilder builder() {
         return new CustomBuilder();
     }
@@ -50,6 +57,14 @@ public class InitContractTransaction extends AbstractTransaction {
     }
 
     private static class CustomBuilder extends InitContractTransactionBuilder {
+        static void verifyInitContractInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, InitContractPayload payload) throws TransactionCreationException {
+            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
+            if (Objects.isNull(payload)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
+            }
+        }
+
+        // Overriding the build method of the super class.
         @Override
         public InitContractTransaction build() throws TransactionCreationException {
             val transaction = super.build();
@@ -65,7 +80,6 @@ public class InitContractTransaction extends AbstractTransaction {
             return transaction;
         }
 
-
         private Payload initializeSmartContractInstance(InitContractTransaction transaction) throws TransactionCreationException {
             return InitContract.createNew(
                             transaction.payload,
@@ -76,13 +90,6 @@ public class InitContractTransaction extends AbstractTransaction {
                             .expiry(transaction.expiry.getValue())
                             .build())
                     .signWith(transaction.signer);
-        }
-
-        static void verifyInitContractInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, InitContractPayload payload) throws TransactionCreationException {
-            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
-            if (Objects.isNull(payload)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
-            }
         }
 
     }

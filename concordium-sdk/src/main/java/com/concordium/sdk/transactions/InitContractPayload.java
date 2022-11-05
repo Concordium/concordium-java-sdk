@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 
 /**
  * Data needed to initialize a smart contract.
-*/
+ */
 @ToString
 @Getter
 public final class InitContractPayload {
@@ -39,11 +39,12 @@ public final class InitContractPayload {
     }
 
     /**
-     * Create a new instance of InitContractPayload, from the given parameters
-     * @param amount CCD amount to deposit
-     * @param moduleRef Hash of smart contract module reference.
+     * Create a new instance of {@link InitContractPayload}, from the given parameters
+     *
+     * @param amount       CCD amount to deposit
+     * @param moduleRef    Hash of smart contract module reference.
      * @param contractName Name of the contract in the module. Expected format: "init_<contract_name>"
-     * @param parameter Message to invoke the initialization method with.
+     * @param parameter    Message to invoke the initialization method with.
      */
     public static InitContractPayload from(int amount, byte[] moduleRef, String contractName, byte[] parameter) {
         return new InitContractPayload(
@@ -54,6 +55,9 @@ public final class InitContractPayload {
         );
     }
 
+    /**
+     * @return buffer bytes of InitContractPayload
+     */
     public byte[] getBytes() {
         val amountBytes = amount.getBytes();
         val moduleRefBytes = moduleRef.getBytes();
