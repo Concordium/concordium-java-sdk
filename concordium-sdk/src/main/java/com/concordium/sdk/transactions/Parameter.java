@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 
 
 /**
- * Buffer of the Parameters.
+ * Buffer of the parameters message.
  */
 
 @Getter
