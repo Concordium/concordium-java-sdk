@@ -12,14 +12,14 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
 
-import java.nio.ByteBuffer;
+
 import java.util.Objects;
 import java.util.Optional;
 
 @Getter
 @ToString
 @EqualsAndHashCode
-public final class ContractAddress extends AbstractAddress {
+public class ContractAddress extends AbstractAddress {
 
     @JsonProperty("subindex")
     private final int subIndex;
@@ -55,16 +55,5 @@ public final class ContractAddress extends AbstractAddress {
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse ContractAddress Array JSON", e);
         }
-    }
-
-    public static ContractAddress from(int index, int subIndex) {
-        return new ContractAddress(index, subIndex);
-    }
-
-    public byte[] getBytes() {
-        val buffer = ByteBuffer.allocate(Long.BYTES + Long.BYTES );
-        buffer.putLong(index);
-        buffer.putLong(subIndex);
-        return buffer.array();
     }
 }

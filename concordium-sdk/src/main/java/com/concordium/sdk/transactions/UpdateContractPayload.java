@@ -1,6 +1,5 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.responses.transactionstatus.ContractAddress;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
