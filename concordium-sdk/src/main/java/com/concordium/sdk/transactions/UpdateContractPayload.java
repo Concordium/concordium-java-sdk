@@ -30,17 +30,28 @@ public final class UpdateContractPayload {
      */
     private final Parameter param;
 
-    public UpdateContractPayload(CCDAmount amount, ContractAddress contract_address, ReceiveName receive_name, Parameter param) {
+    // A constructor.
+    UpdateContractPayload(CCDAmount amount, ContractAddress contract_address, ReceiveName receive_name, Parameter param) {
         this.amount = amount;
         this.contract_address = contract_address;
         this.receive_name = receive_name;
         this.param = param;
     }
 
-    public static UpdateContractPayload from(int amount, ContractAddress account_address, String contract_name, String method, byte[] parameter) {
+    /**
+     * > This function creates a payload for updating a contract
+     *
+     * @param amount           The amount of CCD to be sent to the contract.
+     * @param contract_address Address of the contract instance to invoke.
+     * @param contract_name    Name of the contract to update.
+     * @param method           Name of the method to invoke on the contract
+     * @param parameter        The parameter of the contract method.
+     * @return A new UpdateContractPayload object.
+     */
+    public static UpdateContractPayload from(int amount, ContractAddress contract_address, String contract_name, String method, byte[] parameter) {
         return new UpdateContractPayload(
                 CCDAmount.fromMicro(amount),
-                account_address,
+                contract_address,
                 ReceiveName.from(contract_name, method),
                 Parameter.from(parameter)
         );

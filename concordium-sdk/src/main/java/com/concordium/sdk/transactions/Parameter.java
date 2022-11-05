@@ -10,8 +10,9 @@ import java.nio.ByteBuffer;
 
 
 /**
- * Buffer of the Parameters.
+ * Buffer of the parameters message.
  */
+
 @Getter
 @ToString
 public final class Parameter {
@@ -22,19 +23,21 @@ public final class Parameter {
         this.bytes = bytes;
     }
 
+    /**
+     * This function takes a byte array and returns a Parameter object.
+     */
     public static Parameter from(byte[] parameter) {
         return new Parameter(parameter);
     }
 
-    public int getSize() {
-        return bytes.length;
-    }
-
+    /**
+     * @return buffer bytes of {@link Parameter}.
+     */
     public byte[] getBytes() {
-        val param_buffer = this.bytes;
-        val buffer = ByteBuffer.allocate(UInt16.BYTES + param_buffer.length);
-        buffer.put(UInt16.from(param_buffer.length).getBytes());
-        buffer.put(param_buffer);
+        val paramBuffer = this.bytes;
+        val buffer = ByteBuffer.allocate(UInt16.BYTES + paramBuffer.length);
+        buffer.put(UInt16.from(paramBuffer.length).getBytes());
+        buffer.put(paramBuffer);
         return buffer.array();
     }
 }

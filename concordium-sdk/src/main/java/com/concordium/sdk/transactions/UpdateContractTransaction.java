@@ -14,13 +14,15 @@ import java.util.Objects;
  */
 @Getter
 public class UpdateContractTransaction extends AbstractTransaction {
-
+    /**
+     * Data needed to update a smart contract.
+     */
     private final UpdateContractPayload payload;
+
     private final AccountAddress sender;
     private final AccountNonce nonce;
     private final Expiry expiry;
     private final TransactionSigner signer;
-
     private BlockItem blockItem;
     private final UInt64 maxEnergyCost;
 
@@ -41,16 +43,28 @@ public class UpdateContractTransaction extends AbstractTransaction {
         this.maxEnergyCost = maxEnergyCost;
     }
 
+    /**
+     * This function returns a new instance of the UpdateContractTransactionBuilder class.
+     */
     public static UpdateContractTransactionBuilder builder() {
         return new CustomBuilder();
     }
 
+    /**
+     * This function returns the block item associated with this block.
+     */
     @Override
     public BlockItem getBlockItem() {
         return blockItem;
     }
 
     private static class CustomBuilder extends UpdateContractTransactionBuilder {
+        /**
+         * > The function verifies the input parameters and then calls the updateSmartContractInstance function to update
+         * the smart contract instance
+         *
+         * @return A new UpdateContractTransaction object.
+         */
         @Override
         public UpdateContractTransaction build() throws TransactionCreationException {
             val transaction = super.build();

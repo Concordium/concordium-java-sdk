@@ -33,6 +33,13 @@ public final class ReceiveName {
         this.method = method;
     }
 
+    /**
+     * This function takes a contract name and a method name and returns a ReceiveName object.
+     *
+     * @param contractName The name of the contract.
+     * @param method       The name of the method to be called.
+     * @return A new instance of the ReceiveName class.
+     */
     public static ReceiveName from(String contractName, String method) {
         return new ReceiveName(contractName, method);
     }
