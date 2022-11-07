@@ -2,6 +2,13 @@
 
 ## Unreleased changes
 
+- Support for P5
+- Fix a bug where pending changes for delegators was not visible via `getAccountInfo`.
+- Removed `BlocksAtHeightRequest.newRelative(long height, ProtocolVersion protocolVersion, boolean restrictedToGenesisIndex)`
+  as it was only a valid call on `mainnet` as all protocols exists there. However this may not be true on e.g. `testnet`.
+  Note. `BlocksAtHeightRequest.newRelative(long height, int genesisIndex, boolean restrictedToGenesisIndex)` still exists for the purpose
+  of getting blocks at a relative height.
+
 ## 3.1.0
 
 - Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.

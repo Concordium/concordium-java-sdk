@@ -8,57 +8,36 @@ import java.util.*;
 
 /**
  * Protocol versions supported by the chain.
- * Each protocol version is parameterized by its associated genesis index.
  */
 public enum ProtocolVersion {
-    V1(0),
+    V1,
     /**
      * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P2.txt
      */
-    V2(1),
+    V2,
     /**
      * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P3.txt
      */
-    V3(2),
+    V3,
     /**
      * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P4.txt
      */
-    V4(3),
+    V4,
     /**
      * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P5.txt
      */
-    V5(4);
-
-    private static final List<ProtocolVersion> protocolVersions = new ArrayList<>();
-
-    static {
-        protocolVersions.add(ProtocolVersion.V1);
-        protocolVersions.add(ProtocolVersion.V2);
-        protocolVersions.add(ProtocolVersion.V3);
-        protocolVersions.add(ProtocolVersion.V4);
-    }
-
-    /**
-     * The genesis index of the protocol.
-     */
-    @Getter
-    private final int genesisIndex;
-
-    ProtocolVersion(int genesisIndex) {
-        this.genesisIndex = genesisIndex;
-    }
-
+    V5;
 
     @JsonCreator
     public static ProtocolVersion forValue(int protocolVersion) {
-        // The protocol starts with version 1.
-        if (protocolVersion < 1) {
-            throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
+        switch (protocolVersion){
+            case 1: return ProtocolVersion.V1;
+            case 2: return ProtocolVersion.V2;
+            case 3: return ProtocolVersion.V3;
+            case 4: return ProtocolVersion.V4;
+            case 5: return ProtocolVersion.V5;
+            default:
+                throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }
-        val version = ProtocolVersion.protocolVersions.get(protocolVersion - 1);
-        if (Objects.isNull(version)) {
-            throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
-        }
-        return version;
     }
 }
