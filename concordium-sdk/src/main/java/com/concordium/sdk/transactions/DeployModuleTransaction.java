@@ -19,10 +19,26 @@ class DeployModuleTransaction extends AbstractTransaction {
      */
     private final WasmModule module;
 
+    /**
+     * Account Address of the sender.
+     */
     private final AccountAddress sender;
+    /**
+     * The senders account next available nonce.
+     */
     private final AccountNonce nonce;
+    /**
+     * Indicates when the transaction should expire.
+     */
     private final Expiry expiry;
+    /**
+     * A signer object that is used to sign the transaction.
+     */
     private final TransactionSigner signer;
+
+    /**
+     * Maximum energy **allowed** for the transaction to use.
+     */
     private final UInt64 maxEnergyCost;
     private BlockItem blockItem;
 

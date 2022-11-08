@@ -408,6 +408,15 @@ Sends funds from one account to another with an associated `Memo`.
 - Register Data
 Registers a maximum of 256 bytes on the chain.
 
+- Initialize Contract
+Initialize a smart contract from an already deployed module.
+
+- Deploy Contract
+Deploy a smart contract module.
+
+- Update Contract
+Update a smart contract.
+
 ## Exceptions and general error handling
 
 - `TransactionCreationException`

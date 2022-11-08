@@ -17,8 +17,6 @@ import java.nio.ByteBuffer;
 @ToString
 public final class InitContract extends Payload {
 
-    private final static TransactionType TYPE = TransactionType.INITIALIZE_SMART_CONTRACT_INSTANCE;
-
     /**
      * Payload to initialize a smart contract.
      */
