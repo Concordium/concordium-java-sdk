@@ -14,7 +14,8 @@
 - Fix a bug where `mintDistributionCPV1` was not correctly parsed into the enqueued chain update.
 - Fix a bug where `timeParametersCPV1` was not correctly parsed into the enqueued chain update
 - Fix a bug where `cooldownParametersCPV1` was not correctly parsed into the enqueued chain update.
-- Fix a bug where the `mintPerPayday` was not properly parsed.
+- Fix a bug where `mintPerPayday` was not properly parsed.
+- Fix a bug where `updateRootKeys` was not properly parsed.
 
 ## 3.1.0
 

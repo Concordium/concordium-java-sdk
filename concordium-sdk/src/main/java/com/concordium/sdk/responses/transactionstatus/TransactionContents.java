@@ -87,4 +87,6 @@ public enum TransactionContents {
     UPDATE_TIME_PARAMETERS,
     @JsonProperty("updateCooldownParameters")
     UPDATE_COOLDOWN_PARAMETERS,
+    @JsonProperty("updateRootKeys")
+    UPDATE_ROOT_KEYS
 }
