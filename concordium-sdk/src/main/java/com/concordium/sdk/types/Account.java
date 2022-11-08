@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.transactionstatus;
+package com.concordium.sdk.types;
 
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountType;

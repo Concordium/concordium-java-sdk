@@ -15,16 +15,16 @@ import java.util.Objects;
 @Getter
 public class UpdateContractTransaction extends AbstractTransaction {
     /**
-     * Data needed to update a smart contract.
+     * The payload for updating a smart contract.
      */
     private final UpdateContractPayload payload;
 
     /**
-     * Account Address of the sender
+     * Account Address of the sender.
      */
     private final AccountAddress sender;
     /**
-     * The nonce value/
+     * The senders account next available nonce.
      */
     private final AccountNonce nonce;
     /**
@@ -35,8 +35,9 @@ public class UpdateContractTransaction extends AbstractTransaction {
      * A signer object that is used to sign the transaction.
      */
     private final TransactionSigner signer;
+
     /**
-     * Maximum energy required for the transaction.
+     * Maximum energy **allowed** for the transaction to use.
      */
     private final UInt64 maxEnergyCost;
     private BlockItem blockItem;

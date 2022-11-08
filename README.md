@@ -778,7 +778,7 @@ try{
 
 
 #### Update contract transaction
-The following example demonstrates how to construct a "updateContract" transaction, which is used to update a smart contract module.
+The following example demonstrates how to construct a "updateContract" transaction, which is used to update a smart contract.
 
  ```java
 try{

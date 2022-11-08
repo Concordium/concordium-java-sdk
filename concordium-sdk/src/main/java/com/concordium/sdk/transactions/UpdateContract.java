@@ -16,10 +16,8 @@ import java.nio.ByteBuffer;
 @ToString
 public final class UpdateContract extends Payload {
 
-    private final static TransactionType TYPE = TransactionType.INITIALIZE_SMART_CONTRACT_INSTANCE;
-
     /**
-     * Data needed to update a smart contract.
+     * The payload for updating a smart contract.
      */
     private final UpdateContractPayload payload;
 

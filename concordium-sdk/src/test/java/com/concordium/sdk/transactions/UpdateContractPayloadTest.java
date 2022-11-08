@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.ContractAddress;
 import lombok.val;
 import org.junit.Test;
 
