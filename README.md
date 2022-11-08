@@ -783,8 +783,10 @@ try{
     Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
 }
 
+```
 
-#### Initialising a smart contract transaction
+
+### Initialising a smart contract transaction 
 The following example demonstrates how to initialize a smart contract from a module, which has already been deployed.
 The name of the contract is "CIS2-NFT".
 In this example, the contract does not take any parameters, so we can leave parameters as an empty buffer.
@@ -818,11 +820,40 @@ try{
 
 ```
 
+#### Deploy module transaction
+The following example demonstrates how to construct a "deployModule" transaction, which is used to deploy a smart contract module.
+
+ ```java
+ try{
+    byte[] array = Files.readAllBytes(Paths.get("path_to_wasm_file"));
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+
+    DeployModuleTransaction transaction = TransactionFactory.newDeployModule()
+        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(signer)
+        .module(WasmModule.from(array, 1))
+        .maxEnergyCost(UInt64.from(10000))
+        .build();
+    client.sendTransaction(transaction);
+} catch (TransactionRejectionException e) {
+     // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
 
 #### Update contract transaction
 The following example demonstrates how to construct a "updateContract" transaction, which is used to update a smart contract.
 
- ```java
+```java
 try{
     byte[] paramBytes = new byte[0];
     TransactionSigner signer = TransactionSigner.from(
@@ -835,7 +866,7 @@ try{
         .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
         .nonce(AccountNonce.from(nonceValue))
         .expiry(Expiry.from(expiry))
-        .signer(TransactionTestHelper.getValidSigner())
+        .signer(signer)
         .payload(UpdateContractPayload.from(
             10,
             ContractAddress.from(789, 0),
@@ -849,32 +880,6 @@ try{
  } catch (TransactionRejectionException e) {
     // Handle the rejected transaction, here we simply log it.
     Transaction rejectedTransaction =  e.getTransaction();
-    Hash rejectedTransactionHash = rejectedTransaction.getHash();
-    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
-    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
-}
-```
-
-
-#### Deploy module transaction
-The following example demonstrates how to construct a "deployModule" transaction, which is used to deploy a smart contract module.
-
- ```java
- try{
-        byte[] array = Files.readAllBytes(Paths.get("path_to_wasm_file"));
-
-        val transaction = TransactionFactory.newDeployModule()
-        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-        .nonce(AccountNonce.from(nonceValue))
-        .expiry(Expiry.from(expiry))
-        .signer(TransactionTestHelper.getValidSigner())
-        .module(WasmModule.from(array, 1))
-        .maxEnergyCost(UInt64.from(10000))
-        .build();
-        client.sendTransaction(transaction);
- } catch (TransactionRejectionException e) {
-     // Handle the rejected transaction, here we simply log it.
-     Transaction rejectedTransaction =  e.getTransaction();
     Hash rejectedTransactionHash = rejectedTransaction.getHash();
     String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
     Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
