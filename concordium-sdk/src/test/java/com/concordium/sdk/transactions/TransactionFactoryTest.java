@@ -31,4 +31,10 @@ public class TransactionFactoryTest {
         assertNotNull(builder);
     }
 
+
+    @Test
+    public void testCanCreateUpdatePayloadFactory() {
+        val builder = TransactionFactory.newUpdateContract();
+        assertNotNull(builder);
+    }
 }

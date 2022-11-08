@@ -46,4 +46,14 @@ public class TransactionFactory {
         return InitContractTransaction.builder();
     }
 
+
+    /**
+     * Creates a new {@link UpdateContractTransaction.UpdateContractTransactionBuilder} for
+     * creating a {@link UpdateContractTransaction}
+     *
+     * @return the builder for a {@link UpdateContractTransaction}
+     */
+    public static UpdateContractTransaction.UpdateContractTransactionBuilder newUpdateContract() {
+        return UpdateContractTransaction.builder();
+    }
 }

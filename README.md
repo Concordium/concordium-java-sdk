@@ -810,6 +810,43 @@ try{
 ```
 
 
+#### Update contract transaction
+The following example demonstrates how to construct a "updateContract" transaction, which is used to update a smart contract.
+
+ ```java
+try{
+    byte[] paramBytes = new byte[0];
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+
+    UpdateContractTransaction transaction = TransactionFactory.newUpdateContract()
+        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(TransactionTestHelper.getValidSigner())
+        .payload(UpdateContractPayload.from(
+            10,
+            ContractAddress.from(789, 0),
+            "CIS2NFT",
+            "mint",
+            paramBytes)
+        )
+        .maxEnergyCost(UInt64.from(3000))
+        .build();
+    client.sendTransaction(transaction);
+ } catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+
+
 # Custom Signing
 By default the java library supports ED25519 signing via the native binding [ED25519SecretKey](./concordium-sdk/src/main/java/com/concordium/sdk/crypto/ed25519/ED25519SecretKey.java).
 

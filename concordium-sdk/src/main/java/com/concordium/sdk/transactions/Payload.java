@@ -93,6 +93,7 @@ public abstract class Payload {
         TRANSFER_WITH_MEMO,
         REGISTER_DATA,
         INIT_CONTRACT,
+        UPDATE,
     }
 
 }
