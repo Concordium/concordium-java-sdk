@@ -11,7 +11,7 @@ import lombok.ToString;
  */
 @ToString
 @Getter
-public class RejectReasonDelegationTargetNotABaker {
+public class RejectReasonDelegationTargetNotABaker extends RejectReason {
     /**
      * The delegation target which was not a baker.
      */
@@ -20,5 +20,10 @@ public class RejectReasonDelegationTargetNotABaker {
     @JsonCreator
     RejectReasonDelegationTargetNotABaker(@JsonProperty("contents") AccountIndex bakerId) {
         this.bakerId = bakerId;
+    }
+
+    @Override
+    public RejectReasonType getType() {
+        return RejectReasonType.DELEGATION_TARGET_NOT_A_BAKER;
     }
 }

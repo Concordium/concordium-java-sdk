@@ -8,6 +8,7 @@
   as it was only a valid call on `mainnet` as all protocols exists there. However this may not be true on e.g. `testnet`.
   Note. `BlocksAtHeightRequest.newRelative(long height, int genesisIndex, boolean restrictedToGenesisIndex)` still exists for the purpose
   of getting blocks at a relative height.
+- Fix a bug where a `RejectReason` for setting delegation target to a non baker was not correctly parsed.
 
 ## 3.1.0
 
