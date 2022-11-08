@@ -34,5 +34,9 @@ enum UpdateType {
     @JsonProperty("poolParametersCPV1")
     POOL_PARAMETERS,
     @JsonProperty("mintDistributionCPV1")
-    MINT_DISTRIBUTION_CPV1;
+    MINT_DISTRIBUTION_CPV1,
+    @JsonProperty("timeParametersCPV1")
+    TIME_PARAMETERS_CPV1,
+    @JsonProperty("cooldownParametersCPV1")
+    COOLDOWN_PARAMETERS_CPV1,
 }

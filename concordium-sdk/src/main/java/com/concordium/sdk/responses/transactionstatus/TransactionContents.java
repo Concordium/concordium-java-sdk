@@ -82,5 +82,9 @@ public enum TransactionContents {
     @JsonProperty("configureBaker")
     CONFIGURE_BAKER,
     @JsonProperty("updatePoolParameters")
-    UPDATE_POOL_PARAMETERS;
+    UPDATE_POOL_PARAMETERS,
+    @JsonProperty("updateTimeParameters")
+    UPDATE_TIME_PARAMETERS,
+    @JsonProperty("updateCooldownParameters")
+    UPDATE_COOLDOWN_PARAMETERS,
 }

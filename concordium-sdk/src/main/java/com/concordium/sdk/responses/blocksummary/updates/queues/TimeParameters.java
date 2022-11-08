@@ -19,10 +19,10 @@ public final class TimeParameters {
     /**
      * Mint rate per payday (as a proportion of the extant supply).
      */
-    private final MintRate mintPerPayday;
+    private final double mintPerPayday;
 
     @JsonCreator
-    TimeParameters(@JsonProperty("rewardPeriodLength") long rewardPeriodLength, @JsonProperty("mintPerDay") MintRate mintPerPayday) {
+    TimeParameters(@JsonProperty("rewardPeriodLength") long rewardPeriodLength, @JsonProperty("mintPerDay") double mintPerPayday) {
         this.rewardPeriodLength = rewardPeriodLength;
         this.mintPerPayday = mintPerPayday;
     }

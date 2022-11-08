@@ -9,7 +9,12 @@
   Note. `BlocksAtHeightRequest.newRelative(long height, int genesisIndex, boolean restrictedToGenesisIndex)` still exists for the purpose
   of getting blocks at a relative height.
 - Fix a bug where a `RejectReason` for setting delegation target to a non baker was not correctly parsed.
-- Fix a bug where `mintDistributionCPV1` was not correctly parsed into the chain update enum.
+- Fix a bug where `updateTimeParameters` was not correctly parsed into the `TransactionContents` enum.
+- Fix a bug where `updateCooldownParameters` was not correctly parsed into the `TransactionContents` enum.
+- Fix a bug where `mintDistributionCPV1` was not correctly parsed into the enqueued chain update.
+- Fix a bug where `timeParametersCPV1` was not correctly parsed into the enqueued chain update
+- Fix a bug where `cooldownParametersCPV1` was not correctly parsed into the enqueued chain update.
+- Fix a bug where the `mintPerPayday` was not properly parsed.
 
 ## 3.1.0
 
