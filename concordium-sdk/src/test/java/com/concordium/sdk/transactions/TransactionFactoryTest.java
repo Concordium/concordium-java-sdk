@@ -37,4 +37,10 @@ public class TransactionFactoryTest {
         val builder = TransactionFactory.newUpdateContract();
         assertNotNull(builder);
     }
+
+    @Test
+    public  void testCanDeployModuleFactory() {
+        val builder = TransactionFactory.newDeployModule();
+        assertNotNull(builder);
+    }
 }

@@ -847,6 +847,31 @@ try{
 ```
 
 
+#### Deploy module transaction
+The following example demonstrates how to construct a "deployModule" transaction, which is used to deploy a smart contract module.
+
+ ```java
+ try{
+        byte[] array = Files.readAllBytes(Paths.get("path_to_wasm_file"));
+
+        val transaction = TransactionFactory.newDeployModule()
+        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(TransactionTestHelper.getValidSigner())
+        .module(WasmModule.from(array, 1))
+        .maxEnergyCost(UInt64.from(10000))
+        .build();
+        client.sendTransaction(transaction);
+ } catch (TransactionRejectionException e) {
+     // Handle the rejected transaction, here we simply log it.
+     Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+
 # Custom Signing
 By default the java library supports ED25519 signing via the native binding [ED25519SecretKey](./concordium-sdk/src/main/java/com/concordium/sdk/crypto/ed25519/ED25519SecretKey.java).
 
