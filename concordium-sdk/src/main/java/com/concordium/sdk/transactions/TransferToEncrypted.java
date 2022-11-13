@@ -17,8 +17,9 @@ import java.nio.ByteBuffer;
 @ToString
 public final class TransferToEncrypted extends Payload {
 
-    private final static TransactionType TYPE = TransactionType.TRANSFER_TO_ENCRYPTED;
-
+    /**
+     * The amount to transfer from public to encrypted balance of the sender account.
+     */
     private final CCDAmount amount;
 
     private final UInt64 maxEnergyCost;
@@ -28,11 +29,20 @@ public final class TransferToEncrypted extends Payload {
         this.maxEnergyCost = maxEnergyCost;
     }
 
+    /**
+     * This is a method that returns the type of the payload
+     */
     @Override
     public PayloadType getType() {
         return PayloadType.TRANSFER_TO_ENCRYPTED;
     }
 
+    /**
+     * The bytes of a transfer to encrypted transaction are the bytes of the transaction type followed by the bytes of the
+     * amount.
+     *
+     * @return The byte array of the transaction type and the amount.
+     */
     @Override
     byte[] getBytes() {
         val amount_bytes = amount.getBytes();

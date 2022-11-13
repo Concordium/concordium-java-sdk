@@ -408,6 +408,9 @@ Sends funds from one account to another with an associated `Memo`.
 - Register Data
 Registers a maximum of 256 bytes on the chain.
 
+- TransferToEncrypted
+Transfer funds from public to encrypted balance of the same account.
+
 ## Exceptions and general error handling
 
 - `TransactionCreationException`

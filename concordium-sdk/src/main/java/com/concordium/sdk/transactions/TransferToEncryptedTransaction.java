@@ -14,15 +14,33 @@ import java.util.Objects;
  */
 @Getter
 public class TransferToEncryptedTransaction extends AbstractTransaction {
-
+    /**
+     * The amount to transfer from public to encrypted balance of the sender account.
+     */
     private final CCDAmount amount;
+
+    /**
+     * Account Address of the sender.
+     */
     private final AccountAddress sender;
+    /**
+     * The senders account next available nonce.
+     */
     private final AccountNonce nonce;
+    /**
+     * Indicates when the transaction should expire.
+     */
     private final Expiry expiry;
+    /**
+     * A signer object that is used to sign the transaction.
+     */
     private final TransactionSigner signer;
 
-    private BlockItem blockItem;
+    /**
+     * Maximum energy **allowed** for the transaction to use.
+     */
     private final UInt64 maxEnergyCost;
+    private BlockItem blockItem;
 
     @Builder
     public TransferToEncryptedTransaction(CCDAmount amount, AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, BlockItem blockItem, UInt64 maxEnergyCost) throws TransactionCreationException {
@@ -67,7 +85,7 @@ public class TransferToEncryptedTransaction extends AbstractTransaction {
         }
 
         static void verifyTransferToEncryptedInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, CCDAmount amount) throws TransactionCreationException {
-            Transaction.verifyCommonInput(sender, nonce, expiry, signer);
+            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 
             if (Objects.isNull(amount)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
