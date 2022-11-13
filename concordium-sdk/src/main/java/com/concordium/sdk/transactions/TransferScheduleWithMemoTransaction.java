@@ -22,15 +22,33 @@ public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
      * The release schedule. This can be at most 255 elements.
      */
     private final Schedule[] schedule;
-    private final AccountAddress sender;
+    /**
+     * The data that was registered on the chain.
+     */
     private final Memo memo;
+
+    /**
+     * Account Address of the sender.
+     */
+    private final AccountAddress sender;
+    /**
+     * The senders account next available nonce.
+     */
     private final AccountNonce nonce;
+    /**
+     * Indicates when the transaction should expire.
+     */
     private final Expiry expiry;
+    /**
+     * A signer object that is used to sign the transaction.
+     */
     private final TransactionSigner signer;
+
+    /**
+     * Maximum energy **allowed** for the transaction to use.
+     */
     private final UInt64 maxEnergyCost;
-
     private BlockItem blockItem;
-
     @Builder
     public TransferScheduleWithMemoTransaction(AccountAddress sender, AccountAddress to, Schedule[] schedule, Memo memo, AccountNonce nonce, Expiry expiry, TransactionSigner signer, UInt64 maxEnergyCost) throws TransactionCreationException {
         this.sender = sender;
@@ -47,6 +65,9 @@ public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
         return new CustomBuilder();
     }
 
+    /**
+     * Verify that the input parameters are valid for a transfer schedule transaction with a memo.
+     */
     static void verifyTransferScheduleWithMemoInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer, Memo memo) throws TransactionCreationException {
         TransferScheduleTransaction.verifyTransferScheduleInput(sender, nonce, expiry, to, schedule, signer);
         if (Objects.isNull(memo)) {

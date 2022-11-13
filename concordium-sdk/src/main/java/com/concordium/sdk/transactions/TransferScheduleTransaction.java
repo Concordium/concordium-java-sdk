@@ -24,15 +24,29 @@ public class TransferScheduleTransaction extends AbstractTransaction {
      */
     private final Schedule[] schedule;
 
+    /**
+     * Account Address of the sender.
+     */
     private final AccountAddress sender;
+    /**
+     * The senders account next available nonce.
+     */
     private final AccountNonce nonce;
+    /**
+     * Indicates when the transaction should expire.
+     */
     private final Expiry expiry;
+    /**
+     * A signer object that is used to sign the transaction.
+     */
     private final TransactionSigner signer;
-    private final UInt64 maxEnergyCost;
 
+    /**
+     * Maximum energy **allowed** for the transaction to use.
+     */
+    private final UInt64 maxEnergyCost;
     private BlockItem blockItem;
 
-    // A constructor.
     @Builder
     public TransferScheduleTransaction(AccountAddress sender, AccountAddress to, Schedule[] schedule, AccountNonce nonce, Expiry expiry, TransactionSigner signer, BlockItem blockItem, UInt64 maxEnergyCost) throws TransactionCreationException {
         this.sender = sender;
@@ -49,6 +63,9 @@ public class TransferScheduleTransaction extends AbstractTransaction {
         return new CustomBuilder();
     }
 
+    /**
+     * Verify that the input parameters are valid for a transfer schedule transaction.
+     */
     static void verifyTransferScheduleInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer) throws TransactionCreationException {
         Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
         if (Objects.isNull(to)) {

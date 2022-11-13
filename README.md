@@ -408,6 +408,12 @@ Sends funds from one account to another with an associated `Memo`.
 - Register Data
 Registers a maximum of 256 bytes on the chain.
 
+- TransferScheduleTransaction
+Send funds from one account to another with an attached schedule.
+
+- TransferScheduleWithMemoTransaction
+Send funds from one account to another with an attached schedule with an associated `Memo`.
+
 ## Exceptions and general error handling
 
 - `TransactionCreationException`
