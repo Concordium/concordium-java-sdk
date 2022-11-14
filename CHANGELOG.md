@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for initializing smart contracts.
+- Added support for Update Contract.
+- Added support for Deploy Module transaction.
 
 ## 3.1.0
 

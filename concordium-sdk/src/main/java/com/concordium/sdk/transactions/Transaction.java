@@ -30,7 +30,23 @@ public interface Transaction {
 
     int DEFAULT_NETWORK_ID = 100;
 
+
     static void verifyTransferInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress receiver, CCDAmount amount, TransactionSigner signer) throws TransactionCreationException {
+        verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
+
+        if (Objects.isNull(receiver)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Receiver cannot be null"));
+        }
+        if (Objects.isNull(amount)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Amount cannot be null"));
+        }
+    }
+
+    static void verifyAccountTransactionHeaders(
+            AccountAddress sender,
+            AccountNonce nonce,
+            Expiry expiry,
+            TransactionSigner signer) throws TransactionCreationException {
         if (Objects.isNull(sender)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
         }
@@ -39,13 +55,6 @@ public interface Transaction {
         }
         if (Objects.isNull(expiry)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Expiry cannot be null"));
-        }
-
-        if (Objects.isNull(receiver)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Receiver cannot be null"));
-        }
-        if (Objects.isNull(amount)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Amount cannot be null"));
         }
         if (Objects.isNull(signer) || signer.isEmpty()) {
             throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));

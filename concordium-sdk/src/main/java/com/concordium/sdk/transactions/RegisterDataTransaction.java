@@ -20,10 +20,10 @@ public class RegisterDataTransaction extends AbstractTransaction {
 
     @Builder
     public RegisterDataTransaction(AccountAddress sender,
-                               Data data,
-                               AccountNonce nonce,
-                               Expiry expiry,
-                               TransactionSigner signer) throws TransactionCreationException {
+                                   Data data,
+                                   AccountNonce nonce,
+                                   Expiry expiry,
+                                   TransactionSigner signer) throws TransactionCreationException {
         this.sender = sender;
         this.data = data;
         this.nonce = nonce;
@@ -66,21 +66,10 @@ public class RegisterDataTransaction extends AbstractTransaction {
                 Expiry expiry,
                 Data data,
                 TransactionSigner signer) throws TransactionCreationException {
-            if (Objects.isNull(sender)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
-            }
-            if (Objects.isNull(nonce)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("AccountNonce cannot be null"));
-            }
-            if (Objects.isNull(expiry)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Expiry cannot be null"));
-            }
+            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 
             if (Objects.isNull(data)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));
-            }
-            if (Objects.isNull(signer) || signer.isEmpty()) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
             }
         }
     }
