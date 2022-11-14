@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.types.Account;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;

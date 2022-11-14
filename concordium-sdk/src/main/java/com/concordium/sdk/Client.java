@@ -27,7 +27,7 @@ import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.poolstatus.PassiveDelegationStatus;
 import com.concordium.sdk.responses.poolstatus.PoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
-import com.concordium.sdk.responses.transactionstatus.ContractAddress;
+import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.responses.transactionstatusinblock.TransactionStatusInBlock;
 import com.concordium.sdk.transactions.AccountAddress;

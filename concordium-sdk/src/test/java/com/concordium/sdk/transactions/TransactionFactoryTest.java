@@ -24,4 +24,23 @@ public class TransactionFactoryTest {
         val builder = TransactionFactory.newRegisterData();
         assertNotNull(builder);
     }
+
+    @Test
+    public void testCanInitContractFactory() {
+        val builder = TransactionFactory.newInitContract();
+        assertNotNull(builder);
+    }
+
+
+    @Test
+    public void testCanCreateUpdatePayloadFactory() {
+        val builder = TransactionFactory.newUpdateContract();
+        assertNotNull(builder);
+    }
+
+    @Test
+    public  void testCanDeployModuleFactory() {
+        val builder = TransactionFactory.newDeployModule();
+        assertNotNull(builder);
+    }
 }
