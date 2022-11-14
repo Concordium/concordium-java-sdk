@@ -18,6 +18,8 @@ public final class TimeParameters {
 
     /**
      * Mint rate per payday (as a proportion of the extant supply).
+     * Note. The Concordium node returns a floating point number with arbitrary precision so the
+     * 'mintPerPayday' might be rounded (since a 'double' has a precision of 15 decimals).
      */
     private final double mintPerPayday;
 
