@@ -4,7 +4,6 @@
 - Added support for initializing smart contracts.
 - Added support for Update Contract.
 - Added support for Deploy Module transaction.
-
 - Support for P5
 - Fix a bug where pending changes for delegators were not visible via `getAccountInfo`.
 - Removed `BlocksAtHeightRequest.newRelative(long height, ProtocolVersion protocolVersion, boolean restrictedToGenesisIndex)`
