@@ -1,10 +1,12 @@
 # Changelog
 
 ## Unreleased changes
+
+## 4.0.0
+- Support for Protocol 5.
 - Added support for initializing smart contracts.
 - Added support for Update Contract.
 - Added support for Deploy Module transaction.
-- Support for P5
 - Fix a bug where pending changes for delegators were not visible via `getAccountInfo`.
 - Removed `BlocksAtHeightRequest.newRelative(long height, ProtocolVersion protocolVersion, boolean restrictedToGenesisIndex)`
   as it was only a valid call on `mainnet` as all protocols exists there. However this may not be true on e.g. `testnet`.
