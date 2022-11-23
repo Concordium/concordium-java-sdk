@@ -5,6 +5,7 @@ import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -29,16 +30,57 @@ public class AddBakerUtilTest {
         val accountInfo = client.getAccountInfo(AccountRequest.from(accountAddress), blockHash);
         long nonceValue = accountInfo.getAccountNonce().getValue().getValue();
         long expiry = System.currentTimeMillis() / 1000 + 500;
+        val payload = ConfigureBakerPayload.builder()
+                .capital(CCDAmount.fromMicro("14000000000"))
+                .restakeEarnings(true)
+                .openForDelegation(0)
+                .keysWithProofs(ConfigureBakerKeysPayload.newBakerKeysWithPayload(accountAddress))
+                .metadataUrl("abc@xyz.com")
+                .transactionFeeCommission(UInt32.from(10000))
+                .bakingRewardCommission(UInt32.from(10000))
+                .finalizationRewardCommission(UInt32.from(100000))
+                .build();
 
-        val transaction = TransactionFactory.newAddBaker()
+        val transaction = TransactionFactory.newConfigureBaker()
                 .sender(accountAddress)
                 .nonce(AccountNonce.from(nonceValue))
                 .expiry(Expiry.from(expiry))
                 .signer(TransactionTestHelper.getValidSigner())
-                .bakingState(CCDAmount.fromMicro(1000))
-                .restakeEarnings(true)
+                .payload(payload)
                 .maxEnergyCost(UInt64.from(30000))
                 .build();
+
+//        val transaction = TransactionFactory.newRemoveBaker()
+//                .sender(accountAddress)
+//                .nonce(AccountNonce.from(nonceValue))
+//                .expiry(Expiry.from(expiry))
+//                .signer(TransactionTestHelper.getValidSigner())
+//                .maxEnergyCost(UInt64.from(30000))
+//                .build();
+
+//        val transaction = TransactionFactory.newUpdateBakerStake(10000)
+//                .sender(accountAddress)
+//                .nonce(AccountNonce.from(nonceValue))
+//                .expiry(Expiry.from(expiry))
+//                .signer(TransactionTestHelper.getValidSigner())
+//                .maxEnergyCost(UInt64.from(300000))
+//                .build();
+//
+//        val transaction = TransactionFactory.newUpdateBakerRestakeEarnings(true)
+//                .sender(accountAddress)
+//                .nonce(AccountNonce.from(nonceValue))
+//                .expiry(Expiry.from(expiry))
+//                .signer(TransactionTestHelper.getValidSigner())
+//                .maxEnergyCost(UInt64.from(300000))
+//                .build();
+
+//        val transaction = TransactionFactory.newUpdateBakerKeys(accountAddress)
+//                .sender(accountAddress)
+//                .nonce(AccountNonce.from(nonceValue))
+//                .expiry(Expiry.from(expiry))
+//                .signer(TransactionTestHelper.getValidSigner())
+//                .maxEnergyCost(UInt64.from(300000))
+//                .build();
 
         val txnHash = client.sendTransaction(transaction);
         Assert.assertEquals(Hash.from(""), txnHash);

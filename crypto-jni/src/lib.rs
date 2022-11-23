@@ -8,7 +8,7 @@ use encrypted_transfers::types::{
     AggregatedDecryptedAmount, EncryptedAmount, IndexedEncryptedAmount, SecToPubAmountTransferData,
 };
 use concordium_base::base;
-use concordium_base::transactions::{AddBakerKeysMarker, BakerAddKeysPayload, BakerKeysPayload};
+use concordium_base::transactions::{AddBakerKeysMarker, ConfigureBakerKeysPayload, BakerKeysPayload};
 use id::curve_arithmetic::Curve;
 use id::{constants::ArCurve, types::GlobalContext};
 use jni::sys::jstring;
@@ -312,7 +312,7 @@ type AddBakerResult = CryptoJniResult<BakerKeysPayload<AddBakerKeysMarker>>;
 #[no_mangle]
 #[allow(non_snake_case)]
 /// The JNI wrapper for the `generate_baker_keys` method.
-pub extern "system" fn Java_com_concordium_sdk_crypto_bakertransactions_AddBakerKeys_generateAddBakerKeysPayload(
+pub extern "system" fn Java_com_concordium_sdk_crypto_bakertransactions_ConfigureBakerKeys_generateConfigureBakerKeysPayload(
     env: JNIEnv,
     _: JClass,
     input: JString,
@@ -330,7 +330,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_bakertransactions_AddBaker
 
     let mut csprng = thread_rng();
 
-    let payload = BakerAddKeysPayload::new(&input.keys, input.sender, &mut csprng);
+    let payload = ConfigureBakerKeysPayload::new(&input.keys, input.sender, &mut csprng);
 
     return CryptoJniResult::Ok(payload).to_jstring(&env);
 }

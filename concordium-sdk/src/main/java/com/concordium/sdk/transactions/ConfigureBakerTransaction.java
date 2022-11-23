@@ -7,16 +7,11 @@ import lombok.val;
 
 import java.util.Objects;
 
-public class AddBakerTransaction extends AbstractTransaction {
-    /**
-     * Initial baking stake.
-     */
-    private final CCDAmount bakingState;
+public class ConfigureBakerTransaction extends AbstractTransaction {
     /**
      * Whether to add earnings to the stake automatically or not.
      */
-    private final boolean restakeEarnings;
-
+    private final ConfigureBakerPayload payload;
     private final AccountAddress sender;
     private final AccountNonce nonce;
     private final Expiry expiry;
@@ -25,17 +20,15 @@ public class AddBakerTransaction extends AbstractTransaction {
     private final UInt64 maxEnergyCost;
 
     @Builder
-    public AddBakerTransaction(
-            CCDAmount bakingState,
-            boolean restakeEarnings,
+    public ConfigureBakerTransaction(
+            ConfigureBakerPayload payload,
             AccountAddress sender,
             AccountNonce nonce,
             Expiry expiry,
             TransactionSigner signer,
             BlockItem blockItem,
             UInt64 maxEnergyCost) {
-        this.bakingState = bakingState;
-        this.restakeEarnings = restakeEarnings;
+        this.payload = payload;
         this.sender = sender;
         this.nonce = nonce;
         this.expiry = expiry;
@@ -44,8 +37,8 @@ public class AddBakerTransaction extends AbstractTransaction {
         this.maxEnergyCost = maxEnergyCost;
     }
 
-    public static AddBakerTransaction.AddBakerTransactionBuilder builder() {
-        return new AddBakerTransaction.CustomBuilder();
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder builder() {
+        return new ConfigureBakerTransaction.CustomBuilder();
     }
 
     @Override
@@ -53,20 +46,19 @@ public class AddBakerTransaction extends AbstractTransaction {
         return blockItem;
     }
 
-    private static class CustomBuilder extends AddBakerTransaction.AddBakerTransactionBuilder {
+    private static class CustomBuilder extends ConfigureBakerTransaction.ConfigureBakerTransactionBuilder {
         @Override
-        public AddBakerTransaction build() {
+        public ConfigureBakerTransaction build() {
             val transaction = super.build();
 
             try {
-                verifyAddBakerInput(
+                verifyConfigureBakerInput(
                         transaction.sender,
                         transaction.nonce,
                         transaction.expiry,
                         transaction.signer,
-                        transaction.bakingState,
-                        transaction.restakeEarnings);
-                transaction.blockItem = AddBakerInstance(transaction).toBlockItem();
+                        transaction.payload);
+                transaction.blockItem = ConfigureBakerInstance(transaction).toBlockItem();
             } catch (TransactionCreationException e) {
                 throw new RuntimeException(e);
             }
@@ -74,11 +66,9 @@ public class AddBakerTransaction extends AbstractTransaction {
             return transaction;
         }
 
-        private Payload AddBakerInstance(AddBakerTransaction transaction) throws TransactionCreationException {
-            return AddBaker.createNew(
-                            transaction.sender,
-                            transaction.bakingState,
-                            transaction.restakeEarnings,
+        private Payload ConfigureBakerInstance(ConfigureBakerTransaction transaction) throws TransactionCreationException {
+            return ConfigureBaker.createNew(
+                            transaction.payload,
                             transaction.maxEnergyCost).
                     withHeader(TransactionHeader.builder()
                             .sender(transaction.sender)
@@ -88,21 +78,17 @@ public class AddBakerTransaction extends AbstractTransaction {
                     .signWith(transaction.signer);
         }
 
-        static void verifyAddBakerInput(
+        static void verifyConfigureBakerInput(
                 AccountAddress sender,
                 AccountNonce nonce,
                 Expiry expiry,
                 TransactionSigner signer,
-                CCDAmount bakingState,
-                boolean restakeEarnings) throws TransactionCreationException {
+                ConfigureBakerPayload payload) throws TransactionCreationException {
 
             Transaction.verifyTransactionInput(sender, nonce, expiry, signer);
 
-            if (Objects.isNull(bakingState)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Baking State cannot be null"));
-            }
-            if (Objects.isNull(restakeEarnings)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Restake Earnings cannot be null"));
+            if (Objects.isNull(payload)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
             }
         }
     }

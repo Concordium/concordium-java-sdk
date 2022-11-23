@@ -93,7 +93,7 @@ public abstract class Payload {
         TRANSFER_WITH_MEMO,
         REGISTER_DATA,
         TRANSFER_TO_PUBLIC,
-        ADD_BAKER,
+        CONFIGURE_BAKER,
     }
 
 }

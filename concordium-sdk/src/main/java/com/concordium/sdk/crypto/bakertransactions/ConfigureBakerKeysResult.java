@@ -8,16 +8,16 @@ import lombok.Data;
 import java.util.Optional;
 
 @Data
-public class AddBakerKeysResult {
+public class ConfigureBakerKeysResult {
     @JsonProperty("Ok")
-    private final Optional<AddBakerKeysJniOutput> ok;
+    private final Optional<ConfigureBakerKeysJniOutput> ok;
 
     @JsonProperty("Err")
     private final Optional<CryptoJniResultCode> err;
 
     @JsonCreator
-    AddBakerKeysResult(
-            @JsonProperty("Ok") AddBakerKeysJniOutput ok,
+    ConfigureBakerKeysResult(
+            @JsonProperty("Ok") ConfigureBakerKeysJniOutput ok,
             @JsonProperty("Err") CryptoJniResultCode err
     ) {
         this.ok = Optional.ofNullable(ok);

@@ -2,7 +2,6 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
-import com.concordium.sdk.crypto.encryptedtransfers.TransferToPublicJniOutput;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import lombok.val;
@@ -69,13 +68,40 @@ public class TransactionFactory {
     }
 
     /**
-     * Creates a new {@link AddBakerTransaction.AddBakerTransactionBuilder} for
-     * creating a {@link AddBakerTransaction}
+     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
+     * creating a {@link ConfigureBakerTransaction}
      *
-     * @return the builder for a {@link AddBakerTransaction}
+     * @return the builder for a {@link ConfigureBakerTransaction}
      */
-    public static AddBakerTransaction.AddBakerTransactionBuilder newAddBaker() {
-        return AddBakerTransaction.builder();
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newConfigureBaker() {
+        return ConfigureBakerTransaction.builder();
     }
 
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newRemoveBaker() {
+        val payload = ConfigureBakerPayload.builder()
+                .capital(CCDAmount.fromMicro(0))
+                .build();
+        return ConfigureBakerTransaction.builder().payload(payload);
+    }
+
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerStake(long stake) {
+        val payload = ConfigureBakerPayload.builder()
+                .capital(CCDAmount.fromMicro(stake))
+                .build();
+        return ConfigureBakerTransaction.builder().payload(payload);
+    }
+
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerRestakeEarnings(boolean restakeEarnings) {
+        val payload = ConfigureBakerPayload.builder()
+                .restakeEarnings(restakeEarnings)
+                .build();
+        return ConfigureBakerTransaction.builder().payload(payload);
+    }
+
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerKeys(AccountAddress accountAddress) {
+        val payload = ConfigureBakerPayload.builder()
+                .keysWithProofs(ConfigureBakerKeysPayload.newBakerKeysWithPayload(accountAddress))
+                .build();
+        return ConfigureBakerTransaction.builder().payload(payload);
+    }
 }

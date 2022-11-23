@@ -1,17 +1,8 @@
 package com.concordium.sdk.crypto.bakertransactions;
 
-import com.concordium.sdk.transactions.AddBakerKeysPayload;
-import com.concordium.sdk.transactions.CCDAmount;
-import com.concordium.sdk.transactions.TransactionType;
-import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Data;
-import lombok.SneakyThrows;
 import lombok.extern.jackson.Jacksonized;
-import lombok.val;
-import org.apache.commons.codec.binary.Hex;
-
-import java.nio.ByteBuffer;
 
 @Jacksonized
 @Builder

@@ -7,7 +7,7 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.val;
 
-public final class AddBakerKeys {
+public final class ConfigureBakerKeys {
     static {
         loadNatives();
     }
@@ -17,13 +17,13 @@ public final class AddBakerKeys {
     }
 
 
-    public static AddBakerKeysJniOutput generateAddBakerKeysPayload(AddBakerKeysJniInput jniInput) {
+    public static ConfigureBakerKeysJniOutput generateConfigureBakerKeysPayload(ConfigureBakerKeysJniInput jniInput) {
 
-        AddBakerKeysResult result = null;
+        ConfigureBakerKeysResult result = null;
         try {
             val inputJsonString = JsonMapper.INSTANCE.writeValueAsString(jniInput);
-            val jsonStr = generateAddBakerKeysPayload(inputJsonString);
-            result = JsonMapper.INSTANCE.readValue(jsonStr, AddBakerKeysResult.class);
+            val jsonStr = generateConfigureBakerKeysPayload(inputJsonString);
+            result = JsonMapper.INSTANCE.readValue(jsonStr, ConfigureBakerKeysResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -37,7 +37,7 @@ public final class AddBakerKeys {
                 () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
     }
 
-    private static native String generateAddBakerKeysPayload(String input);
+    private static native String generateConfigureBakerKeysPayload(String input);
 
 }
 

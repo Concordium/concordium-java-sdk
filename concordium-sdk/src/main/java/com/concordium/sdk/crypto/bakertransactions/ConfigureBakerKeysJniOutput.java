@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 @Jacksonized
 @Builder
 @Data
-public class AddBakerKeysJniOutput {
+public class ConfigureBakerKeysJniOutput {
     /**
      * New public key for participating in the election lottery.
      */
@@ -56,11 +56,12 @@ public class AddBakerKeysJniOutput {
                 + proofAggregationBytes.length);
 
         buffer.put(electionVerifyKeyBytes);
-        buffer.put(signatureVerifyKeyBytes);
-        buffer.put(aggregationVerifyKeyBytes);
-
-        buffer.put(proofSigBytes);
         buffer.put(proofElectionBytes);
+
+        buffer.put(signatureVerifyKeyBytes);
+        buffer.put(proofSigBytes);
+
+        buffer.put(aggregationVerifyKeyBytes);
         buffer.put(proofAggregationBytes);
 
         return buffer.array();

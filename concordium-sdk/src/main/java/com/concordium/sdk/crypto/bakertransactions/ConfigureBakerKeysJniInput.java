@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AddBakerKeysJniInput {
+public class ConfigureBakerKeysJniInput {
     private final AccountAddress sender;
     private final BakerKeysJniOutput keys;
 }
