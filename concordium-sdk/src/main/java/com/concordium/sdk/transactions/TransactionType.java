@@ -23,7 +23,10 @@ public enum TransactionType {
     TRANSFER_WITH_MEMO((byte) 22),
     CONFIGURE_BAKER((byte) 25);
 
-    static final int BYTES = 1;
+    /**
+     * Number of Bytes used for Serializing {@link TransactionType}.
+     */
+    public static final int BYTES = 1;
 
     @Getter
     private final byte value;

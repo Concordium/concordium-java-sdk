@@ -408,6 +408,15 @@ Sends funds from one account to another with an associated `Memo`.
 - Register Data
 Registers a maximum of 256 bytes on the chain.
 
+- Initialize Contract
+Initialize a smart contract from an already deployed module.
+
+- Deploy Contract
+Deploy a smart contract module.
+
+- Update Contract
+Update a smart contract.
+
 ## Exceptions and general error handling
 
 - `TransactionCreationException`
@@ -755,8 +764,8 @@ try {
 ```
 
 #### Sending a raw transaction
-It is also possible to send a `raw` transaction via the client. 
-Use `RawTransaction.from(rawTransactionBytes)` in order to retrieve a `Transaction` object which 
+It is also possible to send a `raw` transaction via the client.
+Use `RawTransaction.from(rawTransactionBytes)` in order to retrieve a `Transaction` object which
 can then be passed to the `Client.sendTransaction`.
 
 ```java
@@ -776,6 +785,106 @@ try{
 
 ```
 
+
+### Initialising a smart contract transaction 
+The following example demonstrates how to initialize a smart contract from a module, which has already been deployed.
+The name of the contract is "CIS2-NFT".
+In this example, the contract does not take any parameters, so we can leave parameters as an empty buffer.
+
+```java
+try{
+    byte[] paramBytes = new byte[0];
+    Hash moduleRef = Hash.from("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07");
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+    InitContractTransaction transaction = TransactionFactory.newInitContract()
+        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(signer)
+        .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", paramBytes))
+        .maxEnergyCost(UInt64.from(3000))
+        .build();
+    client.sendTransaction(transaction);
+
+} catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+
+```
+
+#### Deploy module transaction
+The following example demonstrates how to construct a "deployModule" transaction, which is used to deploy a smart contract module.
+
+ ```java
+ try{
+    byte[] array = Files.readAllBytes(Paths.get("path_to_wasm_file"));
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+
+    DeployModuleTransaction transaction = TransactionFactory.newDeployModule()
+        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(signer)
+        .module(WasmModule.from(array, 1))
+        .maxEnergyCost(UInt64.from(10000))
+        .build();
+    client.sendTransaction(transaction);
+} catch (TransactionRejectionException e) {
+     // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+
+#### Update contract transaction
+The following example demonstrates how to construct a "updateContract" transaction, which is used to update a smart contract.
+
+```java
+try{
+    byte[] paramBytes = new byte[0];
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+
+    UpdateContractTransaction transaction = TransactionFactory.newUpdateContract()
+        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(signer)
+        .payload(UpdateContractPayload.from(
+            10,
+            ContractAddress.from(789, 0),
+            "CIS2NFT",
+            "mint",
+            paramBytes)
+        )
+        .maxEnergyCost(UInt64.from(3000))
+        .build();
+    client.sendTransaction(transaction);
+ } catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
 
 ### Transfer to public
 Transfer to Public transaction is used to convert a part or whole of shielded (Private) balance to unsheilded (Public) balance
