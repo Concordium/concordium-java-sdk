@@ -1,16 +1,16 @@
 package com.concordium.sdk.crypto.encryptedtransfers;
 
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
-import com.concordium.sdk.transactions.EncryptedAmount;
-import com.concordium.sdk.transactions.EncryptedAmountIndex;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Jacksonized
 @Builder
-class IndexedEncryptedAmount {
-    private final EncryptedAmount encryptedChunks;
-    private final EncryptedAmountIndex index;
+@Data
+public class AggregatedDecryptedAmount {
+    private final String encryptedChunks;
+    private final long index;
 
     public static IndexedEncryptedAmount from(AccountEncryptedAmount encryptedAmount) {
         return new IndexedEncryptedAmount(
@@ -18,4 +18,5 @@ class IndexedEncryptedAmount {
                 encryptedAmount.getStartIndex()
         );
     }
+
 }

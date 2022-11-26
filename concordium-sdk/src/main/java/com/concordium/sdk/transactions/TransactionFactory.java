@@ -120,4 +120,82 @@ public class TransactionFactory {
     public static TransferToEncryptedTransaction.TransferToEncryptedTransactionBuilder newTransferToEncrypted() {
         return TransferToEncryptedTransaction.builder();
     }
+
+
+    /**
+     * Creates a new {@link EncryptedTransferTransaction.EncryptedTransferTransactionBuilder} for
+     * creating a {@link EncryptedTransferTransaction}
+     *
+     * @return the builder for a {@link EncryptedTransferTransaction}
+     */
+
+    public static EncryptedTransferTransaction.EncryptedTransferTransactionBuilder newEncryptedTransfer() {
+        return EncryptedTransferTransaction.builder();
+    }
+
+
+    public static EncryptedTransferTransaction.EncryptedTransferTransactionBuilder newEncryptedTransfer(
+            CryptographicParameters cryptographicParameters,
+            AccountEncryptedAmount accountEncryptedAmount,
+            String receiverPublicKey,
+            String senderSecretKey,
+            String amountToSend) {
+        val jniOutput = EncryptedTransfers.createEncryptedTransferPayload(
+                cryptographicParameters,
+                accountEncryptedAmount,
+                receiverPublicKey,
+                senderSecretKey,
+                amountToSend
+        );
+
+        val amountTransferData = EncryptedAmountTransferData.builder()
+                .remainingAmount(jniOutput.getRemainingAmount())
+                .transferAmount(jniOutput.getTransferAmount())
+                .index(jniOutput.getIndex())
+                .proof(jniOutput.getProof()).build();
+
+        return EncryptedTransferTransaction
+                .builder()
+                .data(amountTransferData);
+
+    }
+
+    /**
+     * Creates a new {@link EncryptedTransferWithMemoTransaction.EncryptedTransferWithMemoTransactionBuilder} for
+     * creating a {@link EncryptedTransferWithMemoTransaction}
+     *
+     * @return the builder for a {@link EncryptedTransferWithMemoTransaction}
+     */
+
+    public static EncryptedTransferWithMemoTransaction.EncryptedTransferWithMemoTransactionBuilder newEncryptedTransferWithMemo() {
+        return EncryptedTransferWithMemoTransaction.builder();
+    }
+
+    public static EncryptedTransferWithMemoTransaction.EncryptedTransferWithMemoTransactionBuilder newEncryptedTransferWithMemo(
+            CryptographicParameters cryptographicParameters,
+            AccountEncryptedAmount accountEncryptedAmount,
+            String receiverPublicKey,
+            String senderSecretKey,
+            String amountToSend) {
+        val jniOutput = EncryptedTransfers.createEncryptedTransferPayload(
+                cryptographicParameters,
+                accountEncryptedAmount,
+                receiverPublicKey,
+                senderSecretKey,
+                amountToSend
+        );
+
+        val amountTransferData = EncryptedAmountTransferData.builder()
+                .remainingAmount(jniOutput.getRemainingAmount())
+                .transferAmount(jniOutput.getTransferAmount())
+                .index(jniOutput.getIndex())
+                .proof(jniOutput.getProof()).build();
+
+        return EncryptedTransferWithMemoTransaction
+                .builder()
+                .data(amountTransferData);
+
+    }
+
+
 }

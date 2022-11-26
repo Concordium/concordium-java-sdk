@@ -97,6 +97,8 @@ public abstract class Payload {
         UPDATE,
         TRANSFER_TO_PUBLIC,
         TRANSFER_TO_ENCRYPTED,
+        ENCRYPTED_TRANSFER,
+        ENCRYPTED_TRANSFER_WITH_MEMO,
     }
 
 }

@@ -1,3 +1,4 @@
+use anyhow::bail;
 use concordium_contracts_common::Amount;
 use core::slice;
 use crypto_common::derive::Serialize;
@@ -11,7 +12,7 @@ use id::curve_arithmetic::Curve;
 use id::{constants::ArCurve, types::GlobalContext};
 use jni::sys::jstring;
 use rand::thread_rng;
-use serde_json::{from_str, to_string};
+use serde_json::{from_str, to_string, Value, from_value};
 use std::convert::{From, TryFrom};
 use std::i8;
 use std::io::Cursor;
@@ -286,3 +287,149 @@ fn decrypt_encrypted_amount(
         Err(_) => EncryptedTranfersResult::Err(AMOUNT_DECRYPTION_ERROR),
     }
 }
+
+fn decrypt_encrypted_amount2(
+    encrypted_amount: EncryptedAmount<ArCurve>,
+    secret: elgamal::SecretKey<ArCurve>,
+) -> anyhow::Result<Amount> {
+    let table = (&mut Cursor::new(TABLE_BYTES)).get()?;
+    Ok(
+        encrypted_transfers::decrypt_amount::<id::constants::ArCurve>(
+            &table,
+            &secret,
+            &encrypted_amount,
+        ),
+    )
+}
+
+
+/// Try to extract a field with a given name from the JSON value.
+fn try_get<A: serde::de::DeserializeOwned>(v: &Value, fname: &str) -> anyhow::Result<A> {
+    match v.get(fname) {
+        Some(v) => Ok(from_value(v.clone())?),
+        None => bail!(format!("Field {} not present, but should be.", fname)),
+    }
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `create_sec_to_pub_transfer` method.
+/// The `input` parameter must be a properly initalized `java.lang.String` that
+/// is non-null. The input must be valid JSON according to specified format
+pub extern "system" fn Java_com_concordium_sdk_crypto_encryptedtransfers_EncryptedTransfers_generateEncryptedTransfer(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+    out: jbyteArray,
+) -> jint {
+    let v: Value = match env.get_string(input) {
+        Ok(s) => match s.to_str() {
+            Ok(js) => match from_str(js) {
+                Ok(v) => v,
+                // Err(_) => return NATIVE_CONVERSION_ERROR,
+                Err(_) => return 1,
+            },
+            // Err(_) => return NATIVE_CONVERSION_ERROR,
+            Err(_) => return 2,
+        },
+        // Err(_) => return NATIVE_CONVERSION_ERROR,
+        Err(_) => return 3,
+    };
+
+    // context with parameters
+    let global_context: GlobalContext<ArCurve> = match try_get(&v, "global") {
+        Ok(v) => v,
+        // Err(_) => return NATIVE_CONVERSION_ERROR,
+        Err(_) => return 4,
+    };
+
+    let receiver_pk: elgamal::PublicKey<ArCurve> = match try_get(&v, "receiverPublicKey") {
+        Ok(receiver_pk) => receiver_pk,
+        // Err(_) => return NATIVE_CONVERSION_ERROR,
+        Err(_) => return 5,
+    };
+
+    let sender_sk: elgamal::SecretKey<ArCurve> = match try_get(&v, "senderSecretKey") {
+        Ok(sender_sk) => sender_sk,
+        // Err(_) => return NATIVE_CONVERSION_ERROR,
+        Err(_) => return 6,
+    };
+
+    let input_amount: AggregatedDecryptedAmount<ArCurve> =
+        match try_get::<IndexedEncryptedAmount<ArCurve>>(&v, "inputEncryptedAmount") {
+            Ok(a) => AggregatedDecryptedAmount {
+                agg_encrypted_amount: a.encrypted_chunks.clone(),
+                agg_index: encrypted_transfers::types::EncryptedAmountAggIndex {
+                    index: a.index.index,
+                },
+                agg_amount: match decrypt_encrypted_amount2(a.encrypted_chunks, sender_sk.clone()) {
+                    Ok(amount) => amount,
+                    Err(err) => {
+                        to_ret(err.to_string(), env, out);
+                        return 8;
+                    }
+                },
+            },
+            // Err(_) => return NATIVE_CONVERSION_ERROR,
+            Err(err) => {
+                to_ret(err.to_string(), env, out);
+                return 7;
+            }
+        };
+
+
+
+    // plaintext amount to transfer
+    let amount_to_send: Amount = match try_get(&v, "amountToSend") {
+        Ok(amount_to_send) => amount_to_send,
+        // Err(_) => return NATIVE_CONVERSION_ERROR,
+        Err(_) => return 8,
+    };
+
+    // Should be safe on iOS and Android, by calling SecRandomCopyBytes/getrandom,
+    // respectively.
+    let mut csprng = thread_rng();
+
+    let payload = encrypted_transfers::make_transfer_data(
+        &global_context,
+        &receiver_pk,
+        &sender_sk,
+        &input_amount,
+        amount_to_send,
+        &mut csprng,
+    );
+    let payload = match payload {
+        Some(p) => p,
+        None => {
+            // return NATIVE_CONVERSION_ERROR;
+            return 9;
+        }
+    };
+
+    let json_str = match to_string(&payload) {
+        Ok(s) => s,
+        // Err(_) => return NATIVE_CONVERSION_ERROR,
+        Err(_) => return 10,
+    };
+
+    to_ret(json_str, env, out)
+}
+
+fn to_ret(json_str: String, env: JNIEnv, out: *mut jni::sys::_jobject) -> i32 {
+    let json_str_bytes = json_str.as_bytes();
+    let json_str_bytes_i8 = to_i8_slice(json_str_bytes);
+    match env.set_byte_array_region(out, 0, json_str_bytes_i8) {
+        Ok(_) => SUCCESS,
+        // _ => NATIVE_CONVERSION_ERROR,
+        _ => 10,
+    }
+}
+
+fn to_i8_slice(json_str_bytes: &[u8]) -> &[i8] {
+    let json_str_bytes_i8: &[i8] = unsafe {
+        slice::from_raw_parts(json_str_bytes.as_ptr() as *const i8, json_str_bytes.len())
+    };
+
+    json_str_bytes_i8
+}
+
