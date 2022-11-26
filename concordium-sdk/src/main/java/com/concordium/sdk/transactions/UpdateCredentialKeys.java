@@ -8,6 +8,10 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
+
+/**
+ * Update signing keys of a specific credential.
+ */
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString

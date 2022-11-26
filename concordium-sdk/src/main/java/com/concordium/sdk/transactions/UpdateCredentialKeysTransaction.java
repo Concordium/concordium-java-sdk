@@ -110,7 +110,7 @@ public class UpdateCredentialKeysTransaction extends AbstractTransaction {
         }
 
         static void verifyUpdateCredentialKeysInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, CredentialRegistrationId credentialRegistrationID, CredentialPublicKeys keys) throws TransactionCreationException {
-            Transaction.verifyCommonInput(sender, nonce, expiry, signer);
+            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
             if (Objects.isNull(credentialRegistrationID)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("credentialRegistrationID cannot be null"));
             }
