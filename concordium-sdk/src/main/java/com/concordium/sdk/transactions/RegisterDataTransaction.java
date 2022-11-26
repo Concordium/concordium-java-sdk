@@ -71,7 +71,6 @@ public class RegisterDataTransaction extends AbstractTransaction {
             if (Objects.isNull(data)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));
             }
-
         }
     }
 }

@@ -14,10 +14,16 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public final class EncryptedTransfer extends Payload {
-
-    private final static TransactionType TYPE = TransactionType.ENCRYPTED_TRANSFER;
+    /**
+     *  Data that will go onto an encrypted amount transfer.
+     */
     private final EncryptedAmountTransferData data;
+
+    /**
+     * Account Address of the sender.
+     */
     private final AccountAddress to;
+
 
     private final UInt64 maxEnergyCost;
 
