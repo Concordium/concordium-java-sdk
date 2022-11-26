@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.transactionstatus;
+package com.concordium.sdk.types;
 
 import com.concordium.sdk.transactions.AccountType;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public abstract class AbstractAddress {
     }
 
     //not pretty - find a better way of handling this.
-    static AbstractAddress parseAccount(Map<String, Object> o) {
+    public static AbstractAddress parseAccount(Map<String, Object> o) {
         try {
             if (isContractAddress(o)) {
                 val contract = (Map<String, Integer>) o.get("address");

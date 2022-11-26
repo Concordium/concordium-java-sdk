@@ -76,7 +76,9 @@ public enum TransactionResultEventType {
     @JsonProperty("DelegationAdded")
     DELEGATION_ADDED,
     @JsonProperty("DelegationRemoved")
-    DELEGATION_REMOVED;
+    DELEGATION_REMOVED,
+    @JsonProperty("Upgraded")
+    UPGRADED;
 
     // Convenience methods for doing 'safe' casting.
     public <T> T convert(TransactionResultEvent event) {

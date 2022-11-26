@@ -1,6 +1,6 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.responses.transactionstatus.AbstractAddress;
+import com.concordium.sdk.types.AbstractAddress;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
