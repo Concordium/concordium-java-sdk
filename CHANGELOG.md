@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for Transfer To Encrypted wallet.
 
 ## 4.0.0
 - Support for Protocol 5.

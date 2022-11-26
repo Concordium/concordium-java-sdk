@@ -110,4 +110,14 @@ public class TransactionFactory {
                 .proof(jniOutput.getProof())
                 .remainingAmount(jniOutput.getRemainingAmount());
     }
+
+    /**
+     * Creates a new {@link TransferToEncryptedTransaction.TransferToEncryptedTransactionBuilder} for
+     * creating a {@link TransferToEncryptedTransaction}
+     *
+     * @return the builder for a {@link TransferToEncryptedTransaction}
+     */
+    public static TransferToEncryptedTransaction.TransferToEncryptedTransactionBuilder newTransferToEncrypted() {
+        return TransferToEncryptedTransaction.builder();
+    }
 }

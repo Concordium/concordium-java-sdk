@@ -418,7 +418,10 @@ Deploy a smart contract module.
 Update a smart contract.
 
 - Transfer to public
-Transfer CCDAmount from encrypted wallet to public wallet.
+Transfer CCDAmount from encrypted to public balance of the same account.
+
+- TransferToEncrypted
+Transfer CCDAmount from public to encrypted balance of the same account.
 
 ## Exceptions and general error handling
 
@@ -788,7 +791,6 @@ try{
 
 ```
 
-
 ### Initialising a smart contract transaction 
 The following example demonstrates how to initialize a smart contract from a module, which has already been deployed.
 The name of the contract is "CIS2-NFT".
@@ -918,6 +920,42 @@ final TransferToPublicTransaction transaction = TransactionFactory.newTransferTo
         .build();
 final Hash txnHash = client.sendTransaction(transaction);
 ```
+
+
+
+#### Transfer to encrypted transaction
+The following example demonstrates how to transfer CCD to encrypted from public.
+
+
+
+ ```java
+
+try{
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+    TransferToEncryptedTransaction transaction = TransactionFactory.newTransferToEncrypted()
+        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(signer)
+        .payload(TransferToEncryptedPayload.from(1))
+        .maxEnergyCost(UInt64.from(3000))
+        .build();
+
+    client.sendTransaction(transaction);
+ } catch (TransactionRejectionException e) {
+     // Handle the rejected transaction, here we simply log it.
+     Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+
+
 
 # Custom Signing
 By default the java library supports ED25519 signing via the native binding [ED25519SecretKey](./concordium-sdk/src/main/java/com/concordium/sdk/crypto/ed25519/ED25519SecretKey.java).
