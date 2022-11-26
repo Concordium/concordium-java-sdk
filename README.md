@@ -399,29 +399,35 @@ If the transaction was rejected by the node, then `sendTransaction` will throw a
 
 ### Supported Transactions
 
-- TransferTransaction 
+- TransferTransaction: 
 Sends funds from one account to another.
 
-- TransferWithMemo
+- TransferWithMemo:
 Sends funds from one account to another with an associated `Memo`.
 
-- Register Data
+- Register Data:
 Registers a maximum of 256 bytes on the chain.
 
-- Initialize Contract
+- Initialize Contract:
 Initialize a smart contract from an already deployed module.
 
-- Deploy Contract
+- Deploy Contract:
 Deploy a smart contract module.
 
-- Update Contract
+- Update Contract:
 Update a smart contract.
 
-- Transfer to public
+- Transfer to public:
 Transfer CCDAmount from encrypted to public balance of the same account.
 
-- TransferToEncrypted
+- Transfer to encrypted:
 Transfer CCDAmount from public to encrypted balance of the same account.
+
+- Encrypted Transfer:
+Make an encrypted transfer.
+
+- Encrypted Transfer with memo:
+Make an encrypted transfer with memo.
 
 ## Exceptions and general error handling
 

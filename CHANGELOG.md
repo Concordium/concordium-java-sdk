@@ -1,7 +1,10 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for Transfer to public wallet.
 - Added support for Transfer To Encrypted wallet.
+- Added support for Encrypted Transfer.
+- Added support for Encrypted Transfer with Memo.
 
 ## 4.0.0
 - Support for Protocol 5.
@@ -57,7 +60,6 @@
 - Added support for query `UnBanNode`
 - Added support for query `StartBaker`
 - Added support for query `StopBaker`
-- Added support for Transaction `Transfer To Public`
 
 ## 3.0.0
 - Stronger typing for various places in the API. 
