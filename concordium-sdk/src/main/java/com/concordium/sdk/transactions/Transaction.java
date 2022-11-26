@@ -30,6 +30,7 @@ public interface Transaction {
 
     int DEFAULT_NETWORK_ID = 100;
 
+
     static void verifyTransferInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress receiver, CCDAmount amount, TransactionSigner signer) throws TransactionCreationException {
         verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 

@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.transactionstatus;
+package com.concordium.sdk.types;
 
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.AccountType;
@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
 
+
+import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -54,5 +56,16 @@ public final class ContractAddress extends AbstractAddress {
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse ContractAddress Array JSON", e);
         }
+    }
+
+    public static ContractAddress from(int index, int subIndex) {
+        return new ContractAddress(index, subIndex);
+    }
+
+    public byte[] getBytes() {
+        val buffer = ByteBuffer.allocate(Long.BYTES + Long.BYTES );
+        buffer.putLong(this.getIndex());
+        buffer.putLong(this.getSubIndex());
+        return buffer.array();
     }
 }

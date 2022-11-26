@@ -20,8 +20,16 @@ public class ModuleRef extends Hash {
         super(encoded);
     }
 
+    ModuleRef(final byte[] bytes) {
+        super(bytes);
+    }
+
     public static ModuleRef from(String hexHash) {
         return new ModuleRef(hexHash);
+    }
+
+    public static ModuleRef from(final byte[] bytes) {
+        return new ModuleRef(bytes);
     }
 
     public static Optional<ImmutableList<ModuleRef>> moduleRefsFromJsonArray(String jsonValue) {
