@@ -18,7 +18,7 @@ public final class Key {
     private final String schemeId;
 
     @JsonCreator
-    Key(@JsonProperty("verifyKey") String verifyKey,
+    public Key(@JsonProperty("verifyKey") String verifyKey,
         @JsonProperty("schemeId") String schemeId) {
         this.verifyKey = ED25519PublicKey.from(verifyKey);
         this.schemeId = schemeId;

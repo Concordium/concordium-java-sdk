@@ -12,11 +12,14 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public final class UpdateCredentialKeys extends Payload {
-
-    private final static TransactionType TYPE = TransactionType.UPDATE_CREDENTIAL_KEYS;
-
+    /**
+     * Id of the credential whose keys are to be updated.
+     */
     private final CredentialRegistrationId credentialRegistrationID;
 
+    /**
+     *  The new public keys
+     */
     private final CredentialPublicKeys keys;
 
     private final UInt64 maxEnergyCost;
@@ -27,6 +30,9 @@ public final class UpdateCredentialKeys extends Payload {
         this.maxEnergyCost = maxEnergyCost;
     }
 
+    /**
+     * This function returns the type of the payload.
+     */
     @Override
     public PayloadType getType() {
         return PayloadType.UPDATE_CREDENTIAL_KEYS;
