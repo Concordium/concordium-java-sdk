@@ -2,6 +2,25 @@
 
 ## Unreleased changes
 
+## 4.0.0
+- Support for Protocol 5.
+- Added support for initializing smart contracts.
+- Added support for Update Contract.
+- Added support for Deploy Module transaction.
+- Fix a bug where pending changes for delegators were not visible via `getAccountInfo`.
+- Removed `BlocksAtHeightRequest.newRelative(long height, ProtocolVersion protocolVersion, boolean restrictedToGenesisIndex)`
+  as it was only a valid call on `mainnet` as all protocols exists there. However this may not be true on e.g. `testnet`.
+  Note. `BlocksAtHeightRequest.newRelative(long height, int genesisIndex, boolean restrictedToGenesisIndex)` still exists for the purpose
+  of getting blocks at a relative height.
+- Fix a bug where a `RejectReason` for setting delegation target to a non baker was not correctly parsed.
+- Fix a bug where `updateTimeParameters` was not correctly parsed into the `TransactionContents` enum.
+- Fix a bug where `updateCooldownParameters` was not correctly parsed into the `TransactionContents` enum.
+- Fix a bug where `mintDistributionCPV1` was not correctly parsed into the enqueued chain update.
+- Fix a bug where `timeParametersCPV1` was not correctly parsed into the enqueued chain update
+- Fix a bug where `cooldownParametersCPV1` was not correctly parsed into the enqueued chain update.
+- Fix a bug where `mintPerPayday` was not properly parsed.
+- Fix a bug where `updateRootKeys` was not properly parsed.
+
 ## 3.1.0
 
 - Fixed bug in `UpdateEnqueuedResult` which parsed `effectiveTime` in wrong.

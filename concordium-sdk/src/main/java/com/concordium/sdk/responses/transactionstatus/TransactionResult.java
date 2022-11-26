@@ -55,6 +55,7 @@ public final class TransactionResult {
             @JsonSubTypes.Type(value = DelegationSetDelegationTarget.class, name = "DelegationSetDelegationTarget"),
             @JsonSubTypes.Type(value = DelegationAdded.class, name = "DelegationAdded"),
             @JsonSubTypes.Type(value = DelegationRemoved.class, name = "DelegationRemoved"),
+            @JsonSubTypes.Type(value = UpgradedResult.class, name = "Upgraded")
     })
     private final List<TransactionResultEvent> events;
     private final Outcome outcome;

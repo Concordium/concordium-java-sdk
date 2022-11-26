@@ -2,7 +2,6 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
-import com.concordium.sdk.crypto.encryptedtransfers.TransferToPublicJniOutput;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import lombok.val;
@@ -42,6 +41,38 @@ public class TransactionFactory {
     public static RegisterDataTransaction.RegisterDataTransactionBuilder newRegisterData() {
         return RegisterDataTransaction.builder();
     }
+
+    /**
+     * Creates a new {@link InitContractTransaction.InitContractTransactionBuilder} for
+     * creating a {@link InitContractTransaction}
+     *
+     * @return the builder for a {@link InitContractTransaction}
+     */
+    public static InitContractTransaction.InitContractTransactionBuilder newInitContract() {
+        return InitContractTransaction.builder();
+    }
+
+
+    /**
+     * Creates a new {@link UpdateContractTransaction.UpdateContractTransactionBuilder} for
+     * creating a {@link UpdateContractTransaction}
+     *
+     * @return the builder for a {@link UpdateContractTransaction}
+     */
+    public static UpdateContractTransaction.UpdateContractTransactionBuilder newUpdateContract() {
+        return UpdateContractTransaction.builder();
+    }
+
+    /**
+     * Creates a new {@link DeployModuleTransaction.DeployModuleTransactionBuilder} for
+     * creating a {@link DeployModuleTransaction}
+     *
+     * @return the builder for a {@link DeployModuleTransaction}
+     */
+    public static DeployModuleTransaction.DeployModuleTransactionBuilder newDeployModule() {
+        return DeployModuleTransaction.builder();
+    }
+
 
     public static TransferToPublicTransaction.TransferToPublicTransactionBuilder newTransferToPublic() {
         return TransferToPublicTransaction.builder();

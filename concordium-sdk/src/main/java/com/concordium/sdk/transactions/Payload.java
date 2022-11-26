@@ -92,6 +92,9 @@ public abstract class Payload {
         TRANSFER,
         TRANSFER_WITH_MEMO,
         REGISTER_DATA,
+        INIT_CONTRACT,
+        DEPLOY_MODULE,
+        UPDATE,
         TRANSFER_TO_PUBLIC
     }
 

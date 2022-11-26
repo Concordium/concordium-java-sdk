@@ -18,11 +18,13 @@ public final class TimeParameters {
 
     /**
      * Mint rate per payday (as a proportion of the extant supply).
+     * Note. The Concordium node returns a floating point number with arbitrary precision so the
+     * 'mintPerPayday' might be rounded (since a 'double' has a precision of 15 decimals).
      */
-    private final MintRate mintPerPayday;
+    private final double mintPerPayday;
 
     @JsonCreator
-    TimeParameters(@JsonProperty("rewardPeriodLength") long rewardPeriodLength, @JsonProperty("mintPerDay") MintRate mintPerPayday) {
+    TimeParameters(@JsonProperty("rewardPeriodLength") long rewardPeriodLength, @JsonProperty("mintPerDay") double mintPerPayday) {
         this.rewardPeriodLength = rewardPeriodLength;
         this.mintPerPayday = mintPerPayday;
     }

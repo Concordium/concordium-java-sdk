@@ -589,9 +589,9 @@ public class TransferToPublicTest {
                 .maxEnergyCost(UInt64.from(20000))
                 .build();
 
-        assertEquals(1537, transaction.getBytes().length);
+        assertEquals(1604, transaction.getBytes().length);
         assertEquals(
-                UInt64.from(21565),
+                UInt64.from(21665),
                 transaction.getBlockItem().getAccountTransaction().getHeader().getMaxEnergyCost());
     }
 
