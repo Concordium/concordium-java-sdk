@@ -74,10 +74,22 @@ public class TransactionFactory {
     }
 
 
+    /**
+     * Creates a new {@link TransferToPublicTransaction.TransferToPublicTransactionBuilder} for
+     * creating a {@link TransferToPublicTransaction}
+     *
+     * @return the builder for a {@link TransferToPublicTransaction}
+     */
     public static TransferToPublicTransaction.TransferToPublicTransactionBuilder newTransferToPublic() {
         return TransferToPublicTransaction.builder();
     }
 
+    /**
+     * Creates a new {@link TransferToPublicTransaction.TransferToPublicTransactionBuilder} for
+     * creating a {@link TransferToPublicTransaction}
+     *
+     * @return the builder for a {@link TransferToPublicTransaction}
+     */
     public static TransferToPublicTransaction.TransferToPublicTransactionBuilder newTransferToPublic(
             CryptographicParameters cryptographicParameters,
             AccountEncryptedAmount accountEncryptedAmount,

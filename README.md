@@ -417,6 +417,9 @@ Deploy a smart contract module.
 - Update Contract
 Update a smart contract.
 
+- Transfer to public
+Transfer CCDAmount from encrypted wallet to public wallet.
+
 ## Exceptions and general error handling
 
 - `TransactionCreationException`

@@ -19,6 +19,16 @@ public final class EncryptedTransfers {
         NativeResolver.loadLib();
     }
 
+    /**
+     * It takes a secret key, an encrypted amount, and an amount, and returns a payload that can be used to transfer the
+     * amount from the encrypted amount to a public account
+     *
+     * @param cryptographicParameters global context with parameters for generating proofs, and generators for encryted amounts.
+     * @param accountEncryptedAmount The encrypted amount of the account that is being transferred from.
+     * @param secretKey The secret key of the sender (who is also the receiver).
+     * @param amount The amount of money to transfer.
+     * @return A payload of a secret to public amount transaction..
+     */
     public static TransferToPublicJniOutput createSecToPubTransferPayload(
             CryptographicParameters cryptographicParameters,
             AccountEncryptedAmount accountEncryptedAmount,
