@@ -7,11 +7,11 @@ import lombok.val;
 
 import java.util.Objects;
 
-public class ConfigureBakerTransaction extends AbstractTransaction {
+public class ConfigureDelegationTransaction extends AbstractTransaction {
     /**
      * Whether to add earnings to the stake automatically or not.
      */
-    private final ConfigureBakerPayload payload;
+    private final ConfigureDelegationPayload payload;
     private final AccountAddress sender;
     private final AccountNonce nonce;
     private final Expiry expiry;
@@ -20,8 +20,8 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
     private final UInt64 maxEnergyCost;
 
     @Builder
-    public ConfigureBakerTransaction(
-            ConfigureBakerPayload payload,
+    public ConfigureDelegationTransaction(
+            ConfigureDelegationPayload payload,
             AccountAddress sender,
             AccountNonce nonce,
             Expiry expiry,
@@ -37,8 +37,8 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
         this.maxEnergyCost = maxEnergyCost;
     }
 
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder builder() {
-        return new ConfigureBakerTransaction.CustomBuilder();
+    public static ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder builder() {
+        return new ConfigureDelegationTransaction.CustomBuilder();
     }
 
     @Override
@@ -46,19 +46,19 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
         return blockItem;
     }
 
-    private static class CustomBuilder extends ConfigureBakerTransaction.ConfigureBakerTransactionBuilder {
+    private static class CustomBuilder extends ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder {
         @Override
-        public ConfigureBakerTransaction build() {
+        public ConfigureDelegationTransaction build() {
             val transaction = super.build();
 
             try {
-                verifyConfigureBakerInput(
+                verifyConfigureDelegationInput(
                         transaction.sender,
                         transaction.nonce,
                         transaction.expiry,
                         transaction.signer,
                         transaction.payload);
-                transaction.blockItem = ConfigureBakerInstance(transaction).toBlockItem();
+                transaction.blockItem = ConfigureDelegationInstance(transaction).toBlockItem();
             } catch (TransactionCreationException e) {
                 throw new RuntimeException(e);
             }
@@ -66,8 +66,8 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
             return transaction;
         }
 
-        private Payload ConfigureBakerInstance(ConfigureBakerTransaction transaction) throws TransactionCreationException {
-            return ConfigureBaker.createNew(
+        private Payload ConfigureDelegationInstance(ConfigureDelegationTransaction transaction) throws TransactionCreationException {
+            return ConfigureDelegation.createNew(
                             transaction.payload,
                             transaction.maxEnergyCost).
                     withHeader(TransactionHeader.builder()
@@ -78,12 +78,12 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
                     .signWith(transaction.signer);
         }
 
-        static void verifyConfigureBakerInput(
+        static void verifyConfigureDelegationInput(
                 AccountAddress sender,
                 AccountNonce nonce,
                 Expiry expiry,
                 TransactionSigner signer,
-                ConfigureBakerPayload payload) throws TransactionCreationException {
+                ConfigureDelegationPayload payload) throws TransactionCreationException {
 
             Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 

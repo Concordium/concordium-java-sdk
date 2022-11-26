@@ -136,4 +136,8 @@ public class TransactionFactory {
                 .build();
         return ConfigureBakerTransaction.builder().payload(payload);
     }
+
+    public static ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder newConfigureDelegation() {
+        return ConfigureDelegationTransaction.builder();
+    }
 }

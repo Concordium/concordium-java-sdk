@@ -21,7 +21,9 @@ public enum TransactionType {
     UPDATE_CREDENTIALS((byte) 20),
     REGISTER_DATA((byte) 21),
     TRANSFER_WITH_MEMO((byte) 22),
-    CONFIGURE_BAKER((byte) 25);
+    CONFIGURE_BAKER((byte) 25),
+    CONFIGURE_DELEGATION((byte) 26);
+
 
     /**
      * Number of Bytes used for Serializing {@link TransactionType}.

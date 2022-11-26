@@ -12,11 +12,11 @@ import lombok.val;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class AddBakerUtilTest {
+public class ConfigureDelegationUtilTest {
 
     @SneakyThrows
     @Test
-    public void testAddBakerUtil() {
+    public void testConfigureBakerUtil() {
         Connection connection = Connection.builder()
                 .credentials(Credentials.from("rpcadmin"))
                 .host("127.0.0.1")
@@ -39,8 +39,6 @@ public class AddBakerUtilTest {
                         .build())
                 .build();
 
-
-
         val transaction = TransactionFactory.newConfigureDelegation()
                 .sender(accountAddress)
                 .nonce(AccountNonce.from(nonceValue))
@@ -49,38 +47,6 @@ public class AddBakerUtilTest {
                 .payload(payload)
                 .maxEnergyCost(UInt64.from(30000))
                 .build();
-
-//        val transaction = TransactionFactory.newRemoveBaker()
-//                .sender(accountAddress)
-//                .nonce(AccountNonce.from(nonceValue))
-//                .expiry(Expiry.from(expiry))
-//                .signer(TransactionTestHelper.getValidSigner())
-//                .maxEnergyCost(UInt64.from(30000))
-//                .build();
-
-//        val transaction = TransactionFactory.newUpdateBakerStake(10000)
-//                .sender(accountAddress)
-//                .nonce(AccountNonce.from(nonceValue))
-//                .expiry(Expiry.from(expiry))
-//                .signer(TransactionTestHelper.getValidSigner())
-//                .maxEnergyCost(UInt64.from(300000))
-//                .build();
-//
-//        val transaction = TransactionFactory.newUpdateBakerRestakeEarnings(true)
-//                .sender(accountAddress)
-//                .nonce(AccountNonce.from(nonceValue))
-//                .expiry(Expiry.from(expiry))
-//                .signer(TransactionTestHelper.getValidSigner())
-//                .maxEnergyCost(UInt64.from(300000))
-//                .build();
-
-//        val transaction = TransactionFactory.newUpdateBakerKeys(accountAddress)
-//                .sender(accountAddress)
-//                .nonce(AccountNonce.from(nonceValue))
-//                .expiry(Expiry.from(expiry))
-//                .signer(TransactionTestHelper.getValidSigner())
-//                .maxEnergyCost(UInt64.from(300000))
-//                .build();
 
         val txnHash = client.sendTransaction(transaction);
         Assert.assertEquals("", "");

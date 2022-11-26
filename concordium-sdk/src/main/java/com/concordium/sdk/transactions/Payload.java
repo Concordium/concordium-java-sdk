@@ -97,6 +97,7 @@ public abstract class Payload {
         UPDATE,
         TRANSFER_TO_PUBLIC,
         CONFIGURE_BAKER,
+        CONFIGURE_DELEGATION,
     }
 
 }
