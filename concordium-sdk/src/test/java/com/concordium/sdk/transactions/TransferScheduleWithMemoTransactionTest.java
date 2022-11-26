@@ -3,7 +3,7 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import com.concordium.sdk.types.UInt64;
+import com.concordium.sdk.types.Timestamp;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;
@@ -11,13 +11,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class TransferScheduleWithMemoTransactionTest {
-    final static int[] EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES = {0, 0, 1, 0, 2, 0, 0, 64, 210, 240, 8, 86, 234, 249, 114, 69, 127, 163, 71, 65, 53, 232, 35, 87, 40, 254, 81, 15, 135, 205, 137, 77, 195, 147, 219, 174, 72, 30, 232, 111, 124, 13, 235, 229, 240, 25, 132, 67, 232, 161, 1, 57, 4, 255, 242, 134, 132, 251, 123, 27, 137, 220, 40, 29, 171, 61, 149, 24, 170, 197, 134, 15, 1, 0, 64, 170, 6, 143, 159, 241, 70, 205, 149, 109, 179, 89, 135, 91, 119, 208, 129, 202, 160, 224, 86, 87, 239, 153, 2, 182, 189, 254, 232, 69, 178, 163, 19, 36, 89, 168, 100, 57, 89, 31, 183, 134, 199, 169, 169, 19, 88, 147, 147, 32, 218, 59, 96, 173, 164, 246, 112, 47, 156, 161, 161, 24, 222, 75, 9, 48, 29, 107, 23, 16, 181, 115, 90, 252, 36, 88, 152, 1, 33, 61, 19, 170, 107, 68, 120, 137, 15, 223, 232, 25, 91, 202, 14, 175, 34, 97, 78, 0, 0, 0, 0, 0, 1, 52, 62, 0, 0, 0, 0, 0, 0, 40, 77, 0, 0, 0, 57, 0, 0, 0, 0, 0, 1, 226, 64, 24, 86, 218, 213, 202, 227, 118, 122, 189, 60, 41, 95, 79, 16, 12, 128, 53, 126, 218, 213, 46, 65, 151, 20, 245, 216, 43, 188, 125, 208, 225, 4, 133, 0, 5, 1, 2, 3, 4, 5, 1, 0, 0, 1, 131, 42, 185, 168, 208, 0, 0, 0, 0, 0, 0, 0, 10};
+    final static int[] EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES = {0, 0, 1, 0, 2, 0, 0, 64, 227, 101, 142, 211, 119, 229, 153, 4, 50, 157, 74, 129, 135, 10, 85, 230, 194, 4, 193, 49, 226, 178, 183, 193, 198, 53, 205, 237, 131, 139, 121, 97, 27, 247, 48, 91, 117, 101, 133, 242, 8, 250, 152, 51, 248, 86, 42, 127, 155, 139, 8, 198, 95, 212, 32, 247, 253, 203, 120, 46, 2, 74, 228, 11, 1, 0, 64, 155, 84, 226, 5, 111, 249, 21, 62, 126, 83, 130, 221, 192, 186, 97, 101, 167, 17, 168, 83, 58, 62, 185, 71, 24, 42, 101, 193, 210, 112, 145, 25, 189, 196, 181, 158, 62, 23, 42, 50, 96, 9, 182, 56, 45, 228, 4, 225, 76, 141, 104, 81, 202, 166, 176, 236, 212, 170, 177, 226, 204, 103, 39, 13, 48, 29, 107, 23, 16, 181, 115, 90, 252, 36, 88, 152, 1, 33, 61, 19, 170, 107, 68, 120, 137, 15, 223, 232, 25, 91, 202, 14, 175, 34, 97, 78, 0, 0, 0, 0, 0, 1, 52, 62, 0, 0, 0, 0, 0, 0, 2, 169, 0, 0, 0, 57, 0, 0, 0, 0, 0, 1, 226, 64, 24, 86, 218, 213, 202, 227, 118, 122, 189, 60, 41, 95, 79, 16, 12, 128, 53, 126, 218, 213, 46, 65, 151, 20, 245, 216, 43, 188, 125, 208, 225, 4, 133, 0, 5, 1, 2, 3, 4, 5, 1, 0, 0, 1, 131, 42, 185, 168, 208, 0, 0, 0, 0, 0, 0, 0, 10};
 
     @Test
     @SneakyThrows
     public void testTransferScheduleWithMemoTransaction() {
         Schedule[] schedule = new Schedule[1];
-        schedule[0] = Schedule.from(1662869154000L, 10);
+        schedule[0] = Schedule.from(Timestamp.newMillis(1662869154000L), 10);
         val transaction = TransferScheduleWithMemoTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -27,9 +27,8 @@ public class TransferScheduleWithMemoTransactionTest {
                 .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
                 .schedule(schedule)
                 .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
-        assertEquals("a5ca526705bc34f8bf9c15476002becebff113a3265ab3813a4188356273da82", transaction.getHash().asHex());
+        assertEquals("9fe5011512b33f45095b95cf731765648f6047b1c7c87da9be2ed41e4292bef5", transaction.getHash().asHex());
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 
@@ -37,7 +36,7 @@ public class TransferScheduleWithMemoTransactionTest {
     @SneakyThrows
     public void testTransferScheduleWithMemoTransactionWithoutSenderFails() {
         Schedule[] schedule = new Schedule[1];
-        schedule[0] = Schedule.from(1662869154000L, 10);
+        schedule[0] = Schedule.from(Timestamp.newMillis(1662869154000L), 10);
         TransferScheduleWithMemoTransaction
                 .builder()
                 .nonce(AccountNonce.from(78910))
@@ -45,7 +44,6 @@ public class TransferScheduleWithMemoTransactionTest {
                 .signer(TransactionTestHelper.getValidSigner())
                 .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
                 .schedule(schedule)
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
     }
@@ -55,7 +53,7 @@ public class TransferScheduleWithMemoTransactionTest {
     @SneakyThrows
     public void testTransferScheduleWithMemoTransactionWithoutNonceFails() {
         Schedule[] schedule = new Schedule[1];
-        schedule[0] = Schedule.from(1662869154000L, 10);
+        schedule[0] = Schedule.from(Timestamp.newMillis(1662869154000L), 10);
         TransferScheduleWithMemoTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -63,18 +61,16 @@ public class TransferScheduleWithMemoTransactionTest {
                 .signer(TransactionTestHelper.getValidSigner())
                 .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
                 .schedule(schedule)
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
 
     }
 
-
     @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testTransferScheduleWithMemoTransactionWithoutExpiryFails() {
         Schedule[] schedule = new Schedule[1];
-        schedule[0] = Schedule.from(1662869154000L, 10);
+        schedule[0] = Schedule.from(Timestamp.newMillis(1662869154000L), 10);
         TransferScheduleWithMemoTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -82,7 +78,6 @@ public class TransferScheduleWithMemoTransactionTest {
                 .signer(TransactionTestHelper.getValidSigner())
                 .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
                 .schedule(schedule)
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected DeployTransaction to fail");
     }
@@ -92,7 +87,7 @@ public class TransferScheduleWithMemoTransactionTest {
     @SneakyThrows
     public void testTransferScheduleWithMemoTransactionWithoutSignerShouldFail() {
         Schedule[] schedule = new Schedule[1];
-        schedule[0] = Schedule.from(1662869154000L, 10);
+        schedule[0] = Schedule.from(Timestamp.newMillis(1662869154000L), 10);
         TransferScheduleWithMemoTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -100,7 +95,6 @@ public class TransferScheduleWithMemoTransactionTest {
                 .expiry(Expiry.from(123456))
                 .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
                 .schedule(schedule)
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
     }
@@ -109,7 +103,7 @@ public class TransferScheduleWithMemoTransactionTest {
     @SneakyThrows
     public void testTransferScheduleWithMemoTransactionWithInvalidSignerFails() {
         Schedule[] schedule = new Schedule[1];
-        schedule[0] = Schedule.from(1662869154000L, 10);
+        schedule[0] = Schedule.from(Timestamp.newMillis(1662869154000L), 10);
         TransferScheduleWithMemoTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -118,7 +112,6 @@ public class TransferScheduleWithMemoTransactionTest {
                 .signer(getSignerWithMalformedSecretKey())
                 .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
                 .schedule(schedule)
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
 

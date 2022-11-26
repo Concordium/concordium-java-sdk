@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,17 +26,14 @@ public final class TransferScheduleWithMemo extends Payload {
     private final Schedule[] amount;
     private final Memo memo;
 
-    private final UInt64 maxEnergyCost;
-
-    public TransferScheduleWithMemo(AccountAddress to, Schedule[] amount, Memo memo, UInt64 maxEnergyCost) {
+    public TransferScheduleWithMemo(AccountAddress to, Schedule[] amount, Memo memo) {
         this.to = to;
         this.amount = amount;
         this.memo = memo;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
-    static TransferScheduleWithMemo createNew(AccountAddress to, Schedule[] amount, Memo memo, UInt64 maxEnergyCost) {
-        return new TransferScheduleWithMemo(to, amount, memo, maxEnergyCost);
+    static TransferScheduleWithMemo createNew(AccountAddress to, Schedule[] amount, Memo memo) {
+        return new TransferScheduleWithMemo(to, amount, memo);
     }
 
     /**
@@ -77,6 +75,8 @@ public final class TransferScheduleWithMemo extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+        UInt16 scheduleLen = UInt16.from(amount.length);
+        val maxEnergyCost = UInt64.from(scheduleLen.getValue()).getValue() * (300 + 64);
+        return UInt64.from(maxEnergyCost);
     }
 }

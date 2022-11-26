@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,16 +25,14 @@ public class TransferSchedule extends Payload {
      * The release schedule. This can be at most 255 elements.
      */
     private final Schedule[] amount;
-    private final UInt64 maxEnergyCost;
 
-    public TransferSchedule(AccountAddress to, Schedule[] amount, UInt64 maxEnergyCost) {
+    public TransferSchedule(AccountAddress to, Schedule[] amount) {
         this.to = to;
         this.amount = amount;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
-    static TransferSchedule createNew(AccountAddress to, Schedule[] amount, UInt64 maxEnergyCost) {
-        return new TransferSchedule(to, amount, maxEnergyCost);
+    static TransferSchedule createNew(AccountAddress to, Schedule[] amount) {
+        return new TransferSchedule(to, amount);
     }
 
     /**
@@ -56,16 +55,16 @@ public class TransferSchedule extends Payload {
      */
     @Override
     byte[] getBytes() {
-        val schedule_len = amount.length;
-        val schedule_buffer_size = UInt64.BYTES * schedule_len * 2;
+        val scheduleLen = amount.length;
+        val scheduleBufferSize = UInt64.BYTES * scheduleLen * 2;
 
-        val buffer = ByteBuffer.allocate(TransactionType.BYTES + TransactionType.BYTES + AccountAddress.BYTES + schedule_buffer_size);
+        val buffer = ByteBuffer.allocate(TransactionType.BYTES + TransactionType.BYTES + AccountAddress.BYTES + scheduleBufferSize);
         buffer.put(this.getTransactionType());
 
         buffer.put(to.getBytes());
 
-        buffer.put((byte) schedule_len);
-        for (int i = 0; i < schedule_len; i++) {
+        buffer.put((byte) scheduleLen);
+        for (int i = 0; i < scheduleLen; i++) {
             val schedule_buffer = amount[i].getBytes();
             buffer.put(schedule_buffer);
         }
@@ -74,6 +73,8 @@ public class TransferSchedule extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+        UInt16 scheduleLen = UInt16.from(amount.length);
+        val maxEnergyCost = UInt64.from(scheduleLen.getValue()).getValue() * (300 + 64);
+        return UInt64.from(maxEnergyCost);
     }
 }

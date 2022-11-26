@@ -2,7 +2,6 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
@@ -44,11 +43,10 @@ public class TransferScheduleTransaction extends AbstractTransaction {
     /**
      * Maximum energy **allowed** for the transaction to use.
      */
-    private final UInt64 maxEnergyCost;
     private BlockItem blockItem;
 
     @Builder
-    public TransferScheduleTransaction(AccountAddress sender, AccountAddress to, Schedule[] schedule, AccountNonce nonce, Expiry expiry, TransactionSigner signer, BlockItem blockItem, UInt64 maxEnergyCost) throws TransactionCreationException {
+    public TransferScheduleTransaction(AccountAddress sender, AccountAddress to, Schedule[] schedule, AccountNonce nonce, Expiry expiry, TransactionSigner signer, BlockItem blockItem) throws TransactionCreationException {
         this.sender = sender;
         this.to = to;
         this.schedule = schedule;
@@ -56,7 +54,6 @@ public class TransferScheduleTransaction extends AbstractTransaction {
         this.expiry = expiry;
         this.signer = signer;
         this.blockItem = blockItem;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
     public static TransferScheduleTransactionBuilder builder() {
@@ -99,8 +96,7 @@ public class TransferScheduleTransaction extends AbstractTransaction {
         private Payload createSimpleTransfer(TransferScheduleTransaction transaction) throws TransactionCreationException {
             return TransferSchedule.createNew(
                             transaction.to,
-                            transaction.schedule,
-                            transaction.maxEnergyCost).
+                            transaction.schedule).
                     withHeader(TransactionHeader.builder()
                             .sender(transaction.sender)
                             .accountNonce(transaction.nonce.getNonce())

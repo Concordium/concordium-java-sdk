@@ -33,12 +33,12 @@ public class Schedule {
     /**
      * Create a new Schedule object from a long time and an amount.
      *
-     * @param time   The time in milliseconds since the epoch.
+     * @param time   The Timestamp object.
      * @param amount The amount of CCD to be sent.
      * @return A new Schedule object with the given time and amount.
      */
-    public static Schedule from(long time, int amount) {
-        return new Schedule(Timestamp.newMillis(time), CCDAmount.fromMicro(amount));
+    public static Schedule from(Timestamp time, int amount) {
+        return new Schedule(time, CCDAmount.fromMicro(amount));
     }
 
     /**
