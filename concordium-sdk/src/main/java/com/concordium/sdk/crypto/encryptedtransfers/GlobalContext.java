@@ -9,8 +9,18 @@ import lombok.Data;
 @Data
 @Builder
 class GlobalContext {
+    /**
+     * A shared commitment key known to the chain and the account holder (and therefore it is public).
+     * The account holder uses this commitment key to generate commitments to values in the attribute list.
+     */
     private final PedersenCommitmentKey onChainCommitmentKey;
+    /**
+     * Generators for the bulletproofs.
+     */
     private final BulletproofGenerators bulletproofGenerators;
+    /**
+     * A free-form string used to distinguish between different chains even if they share other parameters.
+     */
     private final String genesisString;
 
     public static GlobalContext from(CryptographicParameters cryptographicParameters) {

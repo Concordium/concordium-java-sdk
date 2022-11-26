@@ -1,8 +1,10 @@
 package com.concordium.sdk.crypto.encryptedtransfers;
 
+import com.concordium.sdk.crypto.CryptoJniResultCode;
 import com.concordium.sdk.crypto.NativeResolver;
+import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
-import com.concordium.sdk.exceptions.EncryptedTransfersException;
+import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.serializing.JsonMapper;
@@ -10,7 +12,6 @@ import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.val;
 
-import java.io.IOException;
 
 public final class EncryptedTransfers {
     static {
@@ -46,32 +47,32 @@ public final class EncryptedTransfers {
 
     static TransferToPublicJniOutput createSecToPubTransferPayload(TransferToPublicJniInput jniInput) {
 
-        EncryptedTransfersResult result = null;
+        TransferToPublicJniResult result = null;
         try {
             val inputJsonString = JsonMapper.INSTANCE.writeValueAsString(jniInput);
             val jsonStr = createSecToPubTransfer(inputJsonString);
-            result = JsonMapper.INSTANCE.readValue(jsonStr, EncryptedTransfersResult.class);
+            result = JsonMapper.INSTANCE.readValue(jsonStr, TransferToPublicJniResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
         if (!result.isok()) {
-            throw EncryptedTransfersException.from(
-                    result.getErr().orElse(EncryptedTransfersResultCode.ERROR_UNKNOWN_RESULT_CODE));
+            throw CryptoJniException.from(
+                    result.getErr().orElse(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
         }
 
         return result.getOk().orElseThrow(
-                () -> EncryptedTransfersException.from(EncryptedTransfersResultCode.ERROR_UNKNOWN_RESULT_CODE));
+                () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
     }
 
 
-    public static EncryptedTransferJniOutput createEncryptedTransferPayload(
+    public static EncryptedAmountTransferJniOutput createEncryptedTransferPayload(
             CryptographicParameters cryptographicParameters,
             AccountEncryptedAmount inputAmount,
-            String receiverPublicKey,
-            String senderSecretKey,
-            String amountToSend) {
-        return createEncryptedTransferPayload(EncryptedAmountTransferDataJniInput.builder()
+            ElgamalPublicKey receiverPublicKey,
+            ElgamalSecretKey senderSecretKey,
+            CCDAmount amountToSend) {
+        return createEncryptedTransferPayload(EncryptedAmountTransferJniInput.builder()
                 .global(GlobalContext.from(cryptographicParameters))
                 .receiverPublicKey(receiverPublicKey)
                 .senderSecretKey(senderSecretKey)
@@ -80,28 +81,28 @@ public final class EncryptedTransfers {
                 .build());
     }
 
-    static EncryptedTransferJniOutput createEncryptedTransferPayload(EncryptedAmountTransferDataJniInput jniInput) {
+    static EncryptedAmountTransferJniOutput createEncryptedTransferPayload(EncryptedAmountTransferJniInput jniInput) {
 
-        EncryptedTransferJniOutput result = null;
+        EncryptedAmountTransferJniResult result = null;
         try {
             val inputJsonString = JsonMapper.INSTANCE.writeValueAsString(jniInput);
-            val buff = new byte[10000];
-            val resultCode = generateEncryptedTransfer(inputJsonString, buff);
-            if (resultCode > 0) {
-                val errString = new java.lang.String(buff);
-                throw new Exception("Error: " + errString + ", ErrorCode: " + resultCode);
-            }
-            val jsonStr = new java.lang.String(buff);
-            result = JsonMapper.INSTANCE.readValue(jsonStr, EncryptedTransferJniOutput.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
+            val jsonStr = generateEncryptedTransfer(inputJsonString);
+            result = JsonMapper.INSTANCE.readValue(jsonStr, EncryptedAmountTransferJniResult.class);
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return result;
+
+        if (!result.isok()) {
+            throw CryptoJniException.from(
+                    result.getErr().orElse(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+        }
+
+        return result.getOk().orElseThrow(
+                () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+
     }
 
     private static native String createSecToPubTransfer(String input);
 
-    private static native int generateEncryptedTransfer(String input, byte[] buffer);
+    private static native String generateEncryptedTransfer(String input);
 }

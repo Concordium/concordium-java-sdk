@@ -1,6 +1,7 @@
 package com.concordium.sdk.crypto.encryptedtransfers;
 
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
+import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
@@ -612,9 +613,9 @@ public class EncryptedTransfersTest {
         val encryptedTransferjniOutput = EncryptedTransfers.createEncryptedTransferPayload(
                 cryptographicParameters,
                 accountInfo.getAccountEncryptedAmount(),
-                "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c5b85e593e6d90fce067c8a3bba55028cb8dd4421c7a7acd339fa546312af70d1c38a6036d6fe1f58a1eb7943cd605b3a0",
-                "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c573c28a63523116b128d7d33037cdbdf5bf6a30048fa27a121b4d950d1f5caecc",
-                "1"
+                ElgamalPublicKey.from("b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c5b85e593e6d90fce067c8a3bba55028cb8dd4421c7a7acd339fa546312af70d1c38a6036d6fe1f58a1eb7943cd605b3a0"),
+                ElgamalSecretKey.from("b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c573c28a63523116b128d7d33037cdbdf5bf6a30048fa27a121b4d950d1f5caecc"),
+                CCDAmount.fromMicro(1)
         );
 
         assertNotNull(encryptedTransferjniOutput.getTransferAmount());

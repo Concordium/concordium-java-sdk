@@ -9,7 +9,13 @@ import lombok.Data;
 @Data
 @Builder
 class IndexedEncryptedAmount {
+    /**
+     * The actual encrypted amount.
+     */
     private final EncryptedAmount encryptedChunks;
+    /**
+     * Index of the amount on the account.
+     */
     private final EncryptedAmountIndex index;
 
     public static IndexedEncryptedAmount from(AccountEncryptedAmount encryptedAmount) {

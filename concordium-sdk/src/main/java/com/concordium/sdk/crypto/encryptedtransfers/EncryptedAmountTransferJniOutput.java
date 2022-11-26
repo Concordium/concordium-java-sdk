@@ -12,7 +12,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @Builder
 @Data
-public class EncryptedTransferJniOutput {
+public class EncryptedAmountTransferJniOutput {
 
     /**
      * Encryption of the remaining amount.
@@ -36,9 +36,9 @@ public class EncryptedTransferJniOutput {
      */
     private final SecToPubAmountTransferProof proof;
 
-    public static EncryptedTransferJniOutput fromJson(String encryptedTransferOutputJniString) {
+    public static EncryptedAmountTransferJniOutput fromJson(String encryptedTransferOutputJniString) {
         try {
-            return JsonMapper.INSTANCE.readValue(encryptedTransferOutputJniString, EncryptedTransferJniOutput.class);
+            return JsonMapper.INSTANCE.readValue(encryptedTransferOutputJniString, EncryptedAmountTransferJniOutput.class);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse BlockInfo JSON", e);
         }

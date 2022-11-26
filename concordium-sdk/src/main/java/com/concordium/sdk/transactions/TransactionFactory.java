@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
@@ -143,9 +144,9 @@ public class TransactionFactory {
     public static EncryptedTransferTransaction.EncryptedTransferTransactionBuilder newEncryptedTransfer(
             CryptographicParameters cryptographicParameters,
             AccountEncryptedAmount accountEncryptedAmount,
-            String receiverPublicKey,
-            String senderSecretKey,
-            String amountToSend) {
+            ElgamalPublicKey receiverPublicKey,
+            ElgamalSecretKey senderSecretKey,
+            CCDAmount amountToSend) {
         val jniOutput = EncryptedTransfers.createEncryptedTransferPayload(
                 cryptographicParameters,
                 accountEncryptedAmount,
@@ -186,9 +187,9 @@ public class TransactionFactory {
     public static EncryptedTransferWithMemoTransaction.EncryptedTransferWithMemoTransactionBuilder newEncryptedTransferWithMemo(
             CryptographicParameters cryptographicParameters,
             AccountEncryptedAmount accountEncryptedAmount,
-            String receiverPublicKey,
-            String senderSecretKey,
-            String amountToSend) {
+            ElgamalPublicKey receiverPublicKey,
+            ElgamalSecretKey senderSecretKey,
+            CCDAmount amountToSend) {
         val jniOutput = EncryptedTransfers.createEncryptedTransferPayload(
                 cryptographicParameters,
                 accountEncryptedAmount,
