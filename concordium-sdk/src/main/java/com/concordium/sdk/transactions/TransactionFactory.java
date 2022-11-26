@@ -134,6 +134,12 @@ public class TransactionFactory {
     }
 
 
+    /**
+     * Creates a new {@link EncryptedTransferTransaction.EncryptedTransferTransactionBuilder} for
+     * creating a {@link EncryptedTransferTransaction}
+     *
+     * @return the builder for a {@link EncryptedTransferTransaction}
+     */
     public static EncryptedTransferTransaction.EncryptedTransferTransactionBuilder newEncryptedTransfer(
             CryptographicParameters cryptographicParameters,
             AccountEncryptedAmount accountEncryptedAmount,
@@ -171,6 +177,12 @@ public class TransactionFactory {
         return EncryptedTransferWithMemoTransaction.builder();
     }
 
+    /**
+     * Creates a new {@link EncryptedTransferWithMemoTransaction.EncryptedTransferWithMemoTransactionBuilder} for
+     * creating a {@link EncryptedTransferWithMemoTransaction}
+     *
+     * @return the builder for a {@link EncryptedTransferWithMemoTransaction}
+     */
     public static EncryptedTransferWithMemoTransaction.EncryptedTransferWithMemoTransactionBuilder newEncryptedTransferWithMemo(
             CryptographicParameters cryptographicParameters,
             AccountEncryptedAmount accountEncryptedAmount,

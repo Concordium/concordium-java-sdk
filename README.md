@@ -926,35 +926,100 @@ final Hash txnHash = client.sendTransaction(transaction);
 #### Transfer to encrypted transaction
 The following example demonstrates how to transfer CCD to encrypted from public.
 
-
-
  ```java
 
 try{
-    TransactionSigner signer = TransactionSigner.from(
-        SignerEntry.from(Index.from(0), Index.from(0),
-            firstSecretKey),
-        SignerEntry.from(Index.from(0), Index.from(1),
-            secondSecretKey));
-    TransferToEncryptedTransaction transaction = TransactionFactory.newTransferToEncrypted()
-        .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-        .nonce(AccountNonce.from(nonceValue))
-        .expiry(Expiry.from(expiry))
-        .signer(signer)
-        .payload(TransferToEncryptedPayload.from(1))
-        .maxEnergyCost(UInt64.from(3000))
-        .build();
+        TransactionSigner signer = TransactionSigner.from(
+            SignerEntry.from(Index.from(0), Index.from(0),
+                firstSecretKey),
+            SignerEntry.from(Index.from(0), Index.from(1),
+                secondSecretKey));
+        TransferToEncryptedTransaction transaction = TransactionFactory.newTransferToEncrypted()
+            .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
+            .nonce(AccountNonce.from(nonceValue))
+            .expiry(Expiry.from(expiry))
+            .signer(signer)
+            .payload(TransferToEncryptedPayload.from(1))
+            .maxEnergyCost(UInt64.from(3000))
+            .build();
 
-    client.sendTransaction(transaction);
- } catch (TransactionRejectionException e) {
-     // Handle the rejected transaction, here we simply log it.
-     Transaction rejectedTransaction =  e.getTransaction();
-    Hash rejectedTransactionHash = rejectedTransaction.getHash();
-    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
-    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
-}
+            client.sendTransaction(transaction);
+        } catch (TransactionRejectionException e) {
+            // Handle the rejected transaction, here we simply log it.
+            Transaction rejectedTransaction =  e.getTransaction();
+            Hash rejectedTransactionHash = rejectedTransaction.getHash();
+            String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+            Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+        }
 ```
 
+#### Encrypted transfer transaction
+The following example demonstrates how to make an encrypted transfer.
+
+
+ ```java
+     final AccountAddress accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+    final AccountAddress toAccountAddress = AccountAddress.from("3aYdMM4CFQSH7P16sCN51p3J6TYhACgV9EYBeVJoLTfZxRFwp4");
+    final ConsensusStatus consensus = client.getConsensusStatus();
+    final AccountInfo accountInfo = client.getAccountInfo(
+            AccountRequest.from(accountAddress),
+            consensus.getBestBlock());
+    final CryptographicParameters cryptographicParameters = client.getCryptographicParameters(consensus.getBestBlock());
+    final EncryptedTransferTransaction transaction = TransactionFactory.newEncryptedTransfer(
+                    cryptographicParameters,
+                    accountInfo.getAccountEncryptedAmount(),
+                    "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c5b85e593e6d90fce067c8a3bba55028cb8dd4421c7a7acd339fa546312af70d1c38a6036d6fe1f58a1eb7943cd605b3a0",
+                    "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c573c28a63523116b128d7d33037cdbdf5bf6a30048fa27a121b4d950d1f5caecc",
+                    "1"
+                )
+                .sender(accountInfo.getAccountAddress())
+                .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                .expiry(Expiry.from(System.currentTimeMillis() / 1000 + 60))
+                .signer(TransactionSigner.from(
+                    SignerEntry.from(
+                        Index.from(0),
+                        Index.from(0),
+                        ED25519SecretKey.from("<ACCOUNT SIGN KEY HEX>"))))
+                .to(toAccountAddress)
+                .maxEnergyCost(UInt64.from(20000))
+                .build();
+    final Hash txnHash = client.sendTransaction(transaction);
+```
+
+
+#### Encrypted transfer with memo transaction
+The following example demonstrates how to make an encrypted transfer with memo.
+
+
+ ```java 
+    final AccountAddress accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+    final AccountAddress toAccountAddress = AccountAddress.from("3aYdMM4CFQSH7P16sCN51p3J6TYhACgV9EYBeVJoLTfZxRFwp4");
+    final ConsensusStatus consensus = client.getConsensusStatus();
+    final AccountInfo accountInfo = client.getAccountInfo(
+            AccountRequest.from(accountAddress),
+            consensus.getBestBlock());
+    final CryptographicParameters cryptographicParameters = client.getCryptographicParameters(consensus.getBestBlock());
+    final EncryptedTransferTransaction transaction = TransactionFactory.newEncryptedTransferWithMemo(
+                    cryptographicParameters,
+                    accountInfo.getAccountEncryptedAmount(),
+                    "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c5b85e593e6d90fce067c8a3bba55028cb8dd4421c7a7acd339fa546312af70d1c38a6036d6fe1f58a1eb7943cd605b3a0",
+                    "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c573c28a63523116b128d7d33037cdbdf5bf6a30048fa27a121b4d950d1f5caecc",
+                    "1"
+                )
+                .sender(accountInfo.getAccountAddress())
+                .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                .expiry(Expiry.from(System.currentTimeMillis() / 1000 + 60))
+                .signer(TransactionSigner.from(
+                    SignerEntry.from(
+                        Index.from(0),
+                        Index.from(0),
+                        ED25519SecretKey.from("<ACCOUNT SIGN KEY HEX>"))))
+                .to(toAccountAddress)
+                .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
+                .maxEnergyCost(UInt64.from(20000))
+                .build();
+    final Hash txnHash = client.sendTransaction(transaction);
+```
 
 
 # Custom Signing

@@ -12,18 +12,43 @@ import java.util.Objects;
 @Getter
 public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
 
+    /**
+     *  Data that will go onto an encrypted amount transfer.
+     */
     private final EncryptedAmountTransferData data;
+
+    /**
+     * Account Address of the sender.
+     */
     private final AccountAddress to;
     private final Memo memo;
 
+    /**
+     * Account Address of the sender.
+     */
     private final AccountAddress sender;
+    /**
+     * The senders account next available nonce.
+     */
     private final AccountNonce nonce;
+    /**
+     * Indicates when the transaction should expire.
+     */
     private final Expiry expiry;
+    /**
+     * A signer object that is used to sign the transaction.
+     */
     private final TransactionSigner signer;
 
-    private BlockItem blockItem;
+    /**
+     * Maximum energy **allowed** for the transaction to use.
+     */
     private final UInt64 maxEnergyCost;
+    private BlockItem blockItem;
 
+    /**
+     * A constructor of {@link EncryptedTransferWithMemoTransaction} class.
+     */
     @Builder
     public EncryptedTransferWithMemoTransaction(
             EncryptedAmountTransferData data,
@@ -44,6 +69,9 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
         this.maxEnergyCost = maxEnergyCost;
     }
 
+    /**
+     * @return A new instance of the {@link EncryptedTransferWithMemoTransaction}  class.
+     */
     public static EncryptedTransferWithMemoTransactionBuilder builder() {
         return new CustomBuilder();
     }
@@ -94,7 +122,7 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
                 EncryptedAmountTransferData data,
                 Memo memo) throws TransactionCreationException {
 
-            Transaction.verifyTransactionInput(sender, nonce, expiry, signer);
+            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 
             if (Objects.isNull(to)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("To address cannot be null"));

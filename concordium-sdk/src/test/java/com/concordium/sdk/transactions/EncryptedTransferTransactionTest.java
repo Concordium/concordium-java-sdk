@@ -1,10 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
-import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
-import com.concordium.sdk.exceptions.EncryptedTransfersException;
-import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
@@ -12,7 +9,6 @@ import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -555,10 +551,6 @@ public class EncryptedTransferTransactionTest {
     @Test
     public void testShouldCreateTransaction() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
-        val accountSecretKey = ElgamalSecretKey.from(
-                "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94" +
-                        "c573c28a63523116b128d7d33037cdbdf5bf6a30048fa27a121b4d950d1f5caecc");
-        val amountToMakePublic = CCDAmount.fromMicro(10);
         val nonce = Nonce.from(1);
         val accountInfo = AccountInfo.builder()
                 .accountAddress(accountAddress)
@@ -597,9 +589,9 @@ public class EncryptedTransferTransactionTest {
                 .maxEnergyCost(UInt64.from(20000))
                 .build();
 
-        assertEquals(2749, transaction.getBytes().length);
+        assertEquals(2816, transaction.getBytes().length);
         assertEquals(
-                UInt64.from(22777),
+                UInt64.from(22877),
                 transaction.getBlockItem().getAccountTransaction().getHeader().getMaxEnergyCost());
     }
 
@@ -607,10 +599,6 @@ public class EncryptedTransferTransactionTest {
     @SneakyThrows
     public void shouldThrowCreateExceptionWhenInvalidCryptographicParams() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
-        val accountSecretKey = ElgamalSecretKey.from(
-                "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94" +
-                        "c573c28a63523116b128d7d33037cdbdf5bf6a30048fa27a121b4d950d1f5caecc");
-        val amountToMakePublic = CCDAmount.fromMicro(10);
         val nonce = Nonce.from(1);
         val accountInfo = AccountInfo.builder()
                 .accountAddress(accountAddress)

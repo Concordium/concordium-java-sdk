@@ -574,7 +574,7 @@ public class EncryptedTransferWithMemoTransactionTest {
                 .genesisString("Concordium Testnet Version 5")
                 .build();
 
-        val transaction = TransactionFactory.newEncryptedTransfer(
+        val transaction = TransactionFactory.newEncryptedTransferWithMemo(
                         cryptographicParameters,
                         accountInfo.getAccountEncryptedAmount(),
                         "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c5b85e593e6d90fce067c8a3bba55028cb8dd4421c7a7acd339fa546312af70d1c38a6036d6fe1f58a1eb7943cd605b3a0",
@@ -585,13 +585,14 @@ public class EncryptedTransferWithMemoTransactionTest {
                 .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
                 .expiry(Expiry.from(123456))
                 .to(toAccountAddress)
+                .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
                 .signer(TransactionTestHelper.getValidSigner())
                 .maxEnergyCost(UInt64.from(20000))
                 .build();
 
-        assertEquals(2749, transaction.getBytes().length);
+        assertEquals(2823, transaction.getBytes().length);
         assertEquals(
-                UInt64.from(22777),
+                UInt64.from(22884),
                 transaction.getBlockItem().getAccountTransaction().getHeader().getMaxEnergyCost());
     }
 
