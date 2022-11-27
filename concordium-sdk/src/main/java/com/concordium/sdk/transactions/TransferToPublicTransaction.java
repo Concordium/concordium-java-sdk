@@ -122,7 +122,7 @@ public class TransferToPublicTransaction extends AbstractTransaction {
                 UInt64 index,
                 SecToPubAmountTransferProof proof) throws TransactionCreationException {
 
-            Transaction.verifyTransactionInput(sender, nonce, expiry, signer);
+            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 
             if (Objects.isNull(remainingAmount)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Remaining Amount cannot be null"));

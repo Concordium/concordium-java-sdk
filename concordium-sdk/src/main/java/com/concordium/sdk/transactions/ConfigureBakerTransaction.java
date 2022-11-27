@@ -1,7 +1,6 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.val;
 
@@ -12,13 +11,29 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
      * Whether to add earnings to the stake automatically or not.
      */
     private final ConfigureBakerPayload payload;
-    private final AccountAddress sender;
-    private final AccountNonce nonce;
-    private final Expiry expiry;
-    private final TransactionSigner signer;
-    private BlockItem blockItem;
-    private final UInt64 maxEnergyCost;
 
+    /**
+     * Account Address of the sender.
+     */
+    private final AccountAddress sender;
+    /**
+     * The senders account next available nonce.
+     */
+    private final AccountNonce nonce;
+    /**
+     * Indicates when the transaction should expire.
+     */
+    private final Expiry expiry;
+    /**
+     * A signer object that is used to sign the transaction.
+     */
+    private final TransactionSigner signer;
+
+    private BlockItem blockItem;
+
+    /**
+     * A constructor of {@link ConfigureBakerTransaction} class.
+     */
     @Builder
     public ConfigureBakerTransaction(
             ConfigureBakerPayload payload,
@@ -26,17 +41,18 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
             AccountNonce nonce,
             Expiry expiry,
             TransactionSigner signer,
-            BlockItem blockItem,
-            UInt64 maxEnergyCost) {
+            BlockItem blockItem) {
         this.payload = payload;
         this.sender = sender;
         this.nonce = nonce;
         this.expiry = expiry;
         this.signer = signer;
         this.blockItem = blockItem;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
+    /**
+     * @return A new instance of the {@link ConfigureBakerTransaction}  class.
+     */
     public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder builder() {
         return new ConfigureBakerTransaction.CustomBuilder();
     }
@@ -67,9 +83,7 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
         }
 
         private Payload ConfigureBakerInstance(ConfigureBakerTransaction transaction) throws TransactionCreationException {
-            return ConfigureBaker.createNew(
-                            transaction.payload,
-                            transaction.maxEnergyCost).
+            return ConfigureBaker.createNew(transaction.payload).
                     withHeader(TransactionHeader.builder()
                             .sender(transaction.sender)
                             .accountNonce(transaction.nonce.getNonce())
@@ -85,7 +99,7 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
                 TransactionSigner signer,
                 ConfigureBakerPayload payload) throws TransactionCreationException {
 
-            Transaction.verifyTransactionInput(sender, nonce, expiry, signer);
+            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 
             if (Objects.isNull(payload)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));

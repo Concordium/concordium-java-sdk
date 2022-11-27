@@ -21,8 +21,6 @@ public final class ConfigureBaker extends Payload {
      */
     private final ConfigureBakerPayload payload;
 
-    private final UInt64 maxEnergyCost;
-
     @Override
     public PayloadType getType() {
         return PayloadType.CONFIGURE_BAKER;
@@ -30,7 +28,10 @@ public final class ConfigureBaker extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+        if (this.payload.getKeysWithProofs() != null)
+            return UInt64.from(4050);
+        else
+            return UInt64.from(300);
     }
 
     public byte[] getBytes() {
@@ -45,11 +46,7 @@ public final class ConfigureBaker extends Payload {
         return buffer.array();
     }
 
-    static ConfigureBaker createNew(ConfigureBakerPayload payload, UInt64 maxEnergyCost) {
-        return new ConfigureBaker(
-                payload,
-                maxEnergyCost
-        );
+    static ConfigureBaker createNew(ConfigureBakerPayload payload) {
+        return new ConfigureBaker(payload);
     }
-
 }

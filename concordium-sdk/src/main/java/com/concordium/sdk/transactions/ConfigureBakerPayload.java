@@ -7,6 +7,11 @@ import lombok.*;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
+/**
+ * Payload for configuring a baker.
+ * The [Default] implementation produces an empty configure that will have no
+ * effects.
+ */
 @Getter
 @Builder
 @EqualsAndHashCode

@@ -19,7 +19,7 @@ public class ConfigureBakerKeysPayload {
         return new ConfigureBakerKeysPayload(jniOutput.getBytes());
     }
 
-    public static ConfigureBakerKeysPayload newBakerKeysWithPayload(AccountAddress sender) {
+    public static ConfigureBakerKeysPayload getNewConfigureBakerKeysPayload(AccountAddress sender) {
         BakerKeysJniOutput bakerKeys = BakerKeys.createBakerKeys();
         ConfigureBakerKeysJniInput input = ConfigureBakerKeysJniInput.builder()
                 .keys(bakerKeys)

@@ -6,7 +6,6 @@ import com.concordium.sdk.Credentials;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.types.UInt32;
-import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Assert;
@@ -34,7 +33,7 @@ public class AddBakerUtilTest {
                 .capital(CCDAmount.fromMicro("14000000000"))
                 .restakeEarnings(true)
                 .openForDelegation(0)
-                .keysWithProofs(ConfigureBakerKeysPayload.newBakerKeysWithPayload(accountAddress))
+                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress))
                 .metadataUrl("abc@xyz.com")
                 .transactionFeeCommission(UInt32.from(10000))
                 .bakingRewardCommission(UInt32.from(10000))
@@ -47,7 +46,6 @@ public class AddBakerUtilTest {
                 .expiry(Expiry.from(expiry))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)
-                .maxEnergyCost(UInt64.from(30000))
                 .build();
 
 //        val transaction = TransactionFactory.newRemoveBaker()
