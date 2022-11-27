@@ -49,4 +49,30 @@ public class TransactionFactoryTest {
         val builder = TransactionFactory.newRemoveBaker();
         assertNotNull(builder);
     }
+
+    @Test
+    public void testCanConfigureBakerFactory() {
+        val builder = TransactionFactory.newConfigureBaker();
+        assertNotNull(builder);
+    }
+
+    @Test
+    public void testCanUpdateBakerStakeFactory() {
+        val stake = CCDAmount.fromMicro("10000000");
+        val builder = TransactionFactory.newUpdateBakerStake(stake);
+        assertNotNull(builder);
+    }
+
+    @Test
+    public void testCanUpdateBakerRestakeEarningsFactory() {
+        val builder = TransactionFactory.newUpdateBakerRestakeEarnings(true);
+        assertNotNull(builder);
+    }
+
+    @Test
+    public void testCanUpdateBakerKeysFactory() {
+        AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc");
+        val builder = TransactionFactory.newUpdateBakerKeys(sender);
+        assertNotNull(builder);
+    }
 }

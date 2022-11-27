@@ -417,6 +417,9 @@ Deploy a smart contract module.
 - Update Contract
 Update a smart contract.
 
+- Configure Baker
+Configures an account as a baker.
+
 ## Exceptions and general error handling
 
 - `TransactionCreationException`
@@ -914,6 +917,74 @@ final TransferToPublicTransaction transaction = TransactionFactory.newTransferTo
         .maxEnergyCost(UInt64.from(20000))
         .build();
 final Hash txnHash = client.sendTransaction(transaction);
+```
+
+### Configure Baker
+The following example demonstrates how to construct a "configureBake" transaction, which is used to add, remove or update a baker.
+
+#### Configure baker
+```java
+try{
+    val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+    
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+    
+    val configureBakerPayload = ConfigureBakerPayload.builder()
+        .capital(CCDAmount.fromMicro("14000000000"))
+        .restakeEarnings(true)
+        .openForDelegation(0)
+        .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress))
+        .transactionFeeCommission(UInt32.from(10000))
+        .bakingRewardCommission(UInt32.from(10000))
+        .finalizationRewardCommission(UInt32.from(100000))
+        .build();
+    
+    
+    val transaction = TransactionFactory.newConfigureBaker()
+        .sender(accountAddress)
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(signer)
+        .payload(configureBakerPayload)
+        .build();
+    client.sendTransaction(transaction);
+} catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+#### Remove baker
+```java
+try{
+    val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+
+    val transaction = TransactionFactory.newRemoveBaker()
+        .sender(accountAddress)
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(signer)
+        .build();
+    client.sendTransaction(transaction);
+ } catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
 ```
 
 # Custom Signing

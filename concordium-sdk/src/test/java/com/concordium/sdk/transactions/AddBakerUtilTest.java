@@ -5,8 +5,7 @@ import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
-import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
-import com.concordium.sdk.types.UInt64;
+import com.concordium.sdk.types.UInt32;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Assert;
@@ -30,24 +29,23 @@ public class AddBakerUtilTest {
         val accountInfo = client.getAccountInfo(AccountRequest.from(accountAddress), blockHash);
         long nonceValue = accountInfo.getAccountNonce().getValue().getValue();
         long expiry = System.currentTimeMillis() / 1000 + 500;
-
-        val payload = ConfigureDelegationPayload.builder()
-                .capital(CCDAmount.fromMicro("500000"))
+        val payload = ConfigureBakerPayload.builder()
+                .capital(CCDAmount.fromMicro("14000000000"))
                 .restakeEarnings(true)
-                .delegationTarget(DelegationTarget.builder()
-                        .type(DelegationTarget.DelegationType.PASSIVE)
-                        .build())
+                .openForDelegation(0)
+                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress))
+                .metadataUrl("abc@xyz.com")
+                .transactionFeeCommission(UInt32.from(10000))
+                .bakingRewardCommission(UInt32.from(10000))
+                .finalizationRewardCommission(UInt32.from(100000))
                 .build();
 
-
-
-        val transaction = TransactionFactory.newConfigureDelegation()
+        val transaction = TransactionFactory.newConfigureBaker()
                 .sender(accountAddress)
                 .nonce(AccountNonce.from(nonceValue))
                 .expiry(Expiry.from(expiry))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)
-                .maxEnergyCost(UInt64.from(30000))
                 .build();
 
 //        val transaction = TransactionFactory.newRemoveBaker()
@@ -83,6 +81,6 @@ public class AddBakerUtilTest {
 //                .build();
 
         val txnHash = client.sendTransaction(transaction);
-        Assert.assertEquals("", "");
+        Assert.assertEquals(Hash.from(""), txnHash);
     }
 }
