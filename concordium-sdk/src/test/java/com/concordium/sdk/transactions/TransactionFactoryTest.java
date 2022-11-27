@@ -75,4 +75,10 @@ public class TransactionFactoryTest {
         val builder = TransactionFactory.newUpdateBakerKeys(sender);
         assertNotNull(builder);
     }
+
+    @Test
+    public void testConfigureDelegationFactory() {
+        val builder = TransactionFactory.newConfigureDelegation();
+        assertNotNull(builder);
+    }
 }

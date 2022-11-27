@@ -2,6 +2,7 @@
 
 ## Unreleased changes
 - Added support for Configuring a baker.
+- Added support for Configuring the account as a Delegator.
 
 ## 4.0.0
 - Support for Protocol 5.

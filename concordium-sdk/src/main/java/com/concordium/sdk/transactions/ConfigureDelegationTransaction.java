@@ -1,7 +1,6 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.val;
 
@@ -12,12 +11,24 @@ public class ConfigureDelegationTransaction extends AbstractTransaction {
      * Whether to add earnings to the stake automatically or not.
      */
     private final ConfigureDelegationPayload payload;
+    /**
+     * Account Address of the sender.
+     */
     private final AccountAddress sender;
+    /**
+     * The senders account next available nonce.
+     */
     private final AccountNonce nonce;
+    /**
+     * Indicates when the transaction should expire.
+     */
     private final Expiry expiry;
+    /**
+     * A signer object that is used to sign the transaction.
+     */
     private final TransactionSigner signer;
+
     private BlockItem blockItem;
-    private final UInt64 maxEnergyCost;
 
     @Builder
     public ConfigureDelegationTransaction(
@@ -26,15 +37,13 @@ public class ConfigureDelegationTransaction extends AbstractTransaction {
             AccountNonce nonce,
             Expiry expiry,
             TransactionSigner signer,
-            BlockItem blockItem,
-            UInt64 maxEnergyCost) {
+            BlockItem blockItem) {
         this.payload = payload;
         this.sender = sender;
         this.nonce = nonce;
         this.expiry = expiry;
         this.signer = signer;
         this.blockItem = blockItem;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
     public static ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder builder() {
@@ -67,9 +76,7 @@ public class ConfigureDelegationTransaction extends AbstractTransaction {
         }
 
         private Payload ConfigureDelegationInstance(ConfigureDelegationTransaction transaction) throws TransactionCreationException {
-            return ConfigureDelegation.createNew(
-                            transaction.payload,
-                            transaction.maxEnergyCost).
+            return ConfigureDelegation.createNew(transaction.payload).
                     withHeader(TransactionHeader.builder()
                             .sender(transaction.sender)
                             .accountNonce(transaction.nonce.getNonce())

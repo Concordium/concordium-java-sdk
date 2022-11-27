@@ -21,8 +21,6 @@ public final class ConfigureDelegation extends Payload {
      */
     private final ConfigureDelegationPayload payload;
 
-    private final UInt64 maxEnergyCost;
-
     @Override
     public PayloadType getType() {
         return PayloadType.CONFIGURE_DELEGATION;
@@ -30,7 +28,7 @@ public final class ConfigureDelegation extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+        return UInt64.from(300);
     }
 
     public byte[] getBytes() {
@@ -45,11 +43,8 @@ public final class ConfigureDelegation extends Payload {
         return buffer.array();
     }
 
-    static ConfigureDelegation createNew(ConfigureDelegationPayload payload, UInt64 maxEnergyCost) {
-        return new ConfigureDelegation(
-                payload,
-                maxEnergyCost
-        );
+    static ConfigureDelegation createNew(ConfigureDelegationPayload payload) {
+        return new ConfigureDelegation(payload);
     }
 
 }

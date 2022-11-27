@@ -161,6 +161,12 @@ public class TransactionFactory {
         return ConfigureBakerTransaction.builder().payload(payload);
     }
 
+    /**
+     * Creates a new {@link ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder} for
+     * creating a {@link ConfigureDelegationTransaction} to update baker keys
+     *
+     * @return the builder for a {@link ConfigureDelegationTransaction}
+     */
     public static ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder newConfigureDelegation() {
         return ConfigureDelegationTransaction.builder();
     }
