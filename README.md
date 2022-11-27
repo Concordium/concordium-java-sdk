@@ -903,7 +903,7 @@ try{
             firstSecretKey),
         SignerEntry.from(Index.from(0), Index.from(1),
             secondSecretKey));
-    TransactionScheduleWithTransaction transaction = TransferScheduleWithTransaction
+    TransactionScheduleTransaction transaction = TransferScheduleTransaction
         .builder()
         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
         .nonce(AccountNonce.from(78910))
@@ -911,7 +911,6 @@ try{
         .signer(signer)
         .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
         .schedule(schedule)
-        .maxEnergyCost(UInt64.from(10000))
         .build();
     client.sendTransaction(transaction);
 } catch (TransactionRejectionException e) {
@@ -943,7 +942,6 @@ try{
         .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
         .schedule(schedule)
         .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
-        .maxEnergyCost(UInt64.from(10000))
         .build();
     client.sendTransaction(transaction);
  } catch (TransactionRejectionException e) {
