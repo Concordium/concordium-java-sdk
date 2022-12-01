@@ -21,6 +21,7 @@ public enum TransactionType {
     UPDATE_CREDENTIALS((byte) 20),
     REGISTER_DATA((byte) 21),
     TRANSFER_WITH_MEMO((byte) 22),
+    ENCRYPTED_TRANSFER_WITH_MEMO((byte) 23),
     CONFIGURE_BAKER((byte) 25),
     CONFIGURE_DELEGATION((byte) 26);
 

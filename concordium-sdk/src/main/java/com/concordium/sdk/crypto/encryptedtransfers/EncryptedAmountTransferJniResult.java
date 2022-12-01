@@ -8,16 +8,16 @@ import lombok.Data;
 import java.util.Optional;
 
 @Data
-public class EncryptedTransfersResult {
+public class EncryptedAmountTransferJniResult {
     @JsonProperty("Ok")
-    private final Optional<TransferToPublicJniOutput> ok;
+    private final Optional<EncryptedAmountTransferJniOutput> ok;
 
     @JsonProperty("Err")
     private final Optional<CryptoJniResultCode> err;
 
     @JsonCreator
-    EncryptedTransfersResult(
-            @JsonProperty("Ok") TransferToPublicJniOutput ok,
+    EncryptedAmountTransferJniResult(
+            @JsonProperty("Ok") EncryptedAmountTransferJniOutput ok,
             @JsonProperty("Err") CryptoJniResultCode err
     ) {
         this.ok = Optional.ofNullable(ok);

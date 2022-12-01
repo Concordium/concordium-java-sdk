@@ -5,7 +5,7 @@ pub use crypto_common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
 use crypto_common::*;
 use ed25519_dalek::*;
 use encrypted_transfers::types::{
-    AggregatedDecryptedAmount, EncryptedAmount, IndexedEncryptedAmount, SecToPubAmountTransferData,
+    AggregatedDecryptedAmount, EncryptedAmount, IndexedEncryptedAmount, SecToPubAmountTransferData, EncryptedAmountTransferData
 };
 use concordium_base::base;
 use concordium_base::transactions::{AddBakerKeysMarker, ConfigureBakerKeysPayload, BakerKeysPayload};
@@ -178,8 +178,6 @@ enum CryptoJniResult<T> {
     Err(jint),
 }
 
-type Result = CryptoJniResult<SecToPubAmountTransferData<ArCurve>>;
-
 impl<T> From<serde_json::Error> for CryptoJniResult<T> {
     fn from(_: serde_json::Error) -> Self {
         CryptoJniResult::Err(1)
@@ -209,6 +207,21 @@ impl<T: serde::Serialize> CryptoJniResult<T> {
     }
 }
 
+static TABLE_BYTES: &[u8] = include_bytes!("table_bytes.bin");
+
+fn decrypt_encrypted_amount(
+    encrypted_amount: EncryptedAmount<ArCurve>,
+    secret: elgamal::SecretKey<ArCurve>,
+) -> CryptoJniResult<Amount> {
+    let table = (&mut Cursor::new(TABLE_BYTES)).get();
+    match table {
+        Ok(table) => CryptoJniResult::Ok(encrypted_transfers::decrypt_amount::<
+            id::constants::ArCurve,
+        >(&table, &secret, &encrypted_amount)),
+        Err(_) => CryptoJniResult::Err(AMOUNT_DECRYPTION_ERROR),
+    }
+}
+
 #[derive(Serialize, SerdeSerialize, SerdeDeserialize)]
 #[serde(bound(serialize = "C: Curve", deserialize = "C: Curve"))]
 #[serde(rename_all = "camelCase")]
@@ -220,6 +233,7 @@ struct JniInput<C: Curve> {
 }
 
 type EncryptedTranfersInput = JniInput<ArCurve>;
+type Result = CryptoJniResult<SecToPubAmountTransferData<ArCurve>>;
 
 #[no_mangle]
 #[allow(non_snake_case)]
@@ -274,18 +288,72 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_encryptedtransfers_Encrypt
     }
 }
 
-static TABLE_BYTES: &[u8] = include_bytes!("table_bytes.bin");
+#[derive(Serialize, SerdeSerialize, SerdeDeserialize)]
+#[serde(bound(serialize = "C: Curve", deserialize = "C: Curve"))]
+#[serde(rename_all = "camelCase")]
+struct TransferJniInput<C: Curve> {
+    global: GlobalContext<C>,
+    receiver_public_key: elgamal::PublicKey<C>,
+    sender_secret_key: elgamal::SecretKey<C>,
+    amount_to_send: Amount,
+    input_encrypted_amount: IndexedEncryptedAmount<C>,
+}
 
-fn decrypt_encrypted_amount(
-    encrypted_amount: EncryptedAmount<ArCurve>,
-    secret: elgamal::SecretKey<ArCurve>,
-) -> CryptoJniResult<Amount> {
-    let table = (&mut Cursor::new(TABLE_BYTES)).get();
-    match table {
-        Ok(table) => CryptoJniResult::Ok(encrypted_transfers::decrypt_amount::<
-            id::constants::ArCurve,
-        >(&table, &secret, &encrypted_amount)),
-        Err(_) => CryptoJniResult::Err(AMOUNT_DECRYPTION_ERROR),
+type EncryptedAmountTranfersInput = TransferJniInput<ArCurve>;
+type EncryptedAmountTransferResult = CryptoJniResult<EncryptedAmountTransferData<ArCurve>>;
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `create_sec_to_pub_transfer` method.
+/// The `input` parameter must be a properly initalized `java.lang.String` that
+/// is non-null. The input must be valid JSON according to specified format
+pub extern "system" fn Java_com_concordium_sdk_crypto_encryptedtransfers_EncryptedTransfers_generateEncryptedTransfer(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input: EncryptedAmountTranfersInput = match env.get_string(input) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => match from_str(rust_str) {
+                Ok(input) => input,
+                Err(err) => return EncryptedAmountTransferResult::from(err).to_jstring(&env),
+            },
+            Err(err) => return EncryptedAmountTransferResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return EncryptedAmountTransferResult::from(err).to_jstring(&env),
+    };
+
+    let decrypted_amount = match decrypt_encrypted_amount(
+        input.input_encrypted_amount.encrypted_chunks.clone(),
+        input.sender_secret_key.clone(),
+    ) {
+        CryptoJniResult::Ok(amount) => amount,
+        CryptoJniResult::Err(err) => return Result::Err(err).to_jstring(&env),
+    };
+
+
+    let input_amount: AggregatedDecryptedAmount<ArCurve> = AggregatedDecryptedAmount {
+        agg_encrypted_amount: input.input_encrypted_amount.encrypted_chunks,
+        agg_index: encrypted_transfers::types::EncryptedAmountAggIndex {
+            index: input.input_encrypted_amount.index.index,
+        },
+        agg_amount: decrypted_amount,
+    };
+
+    let mut csprng = thread_rng();
+
+    let payload = encrypted_transfers::make_transfer_data(
+        &input.global,
+        &input.receiver_public_key,
+        &input.sender_secret_key,
+        &input_amount,
+        input.amount_to_send,
+        &mut csprng,
+    );
+
+    match payload {
+        Some(payload) => CryptoJniResult::Ok(payload).to_jstring(&env),
+        None => EncryptedAmountTransferResult::Err(PAYLOAD_CREATION_ERROR).to_jstring(&env),
     }
 }
 

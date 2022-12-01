@@ -45,6 +45,12 @@ public class TransactionFactoryTest {
     }
 
     @Test
+    public void testCanTransferToEncryptedFactory() {
+        val builder = TransactionFactory.newTransferToEncrypted();
+        assertNotNull(builder);
+    }
+
+    @Test
     public void testCanRemoveBakerFactory() {
         val builder = TransactionFactory.newRemoveBaker();
         assertNotNull(builder);

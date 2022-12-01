@@ -96,6 +96,9 @@ public abstract class Payload {
         DEPLOY_MODULE,
         UPDATE,
         TRANSFER_TO_PUBLIC,
+        TRANSFER_TO_ENCRYPTED,
+        ENCRYPTED_TRANSFER,
+        ENCRYPTED_TRANSFER_WITH_MEMO,
         CONFIGURE_BAKER,
         CONFIGURE_DELEGATION,
     }

@@ -6,13 +6,14 @@ import lombok.*;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Transfer CCDAmount from encrypted wallet to public wallet.
+ */
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor
 @ToString
 public final class TransferToPublic extends Payload {
-
-    private final static TransactionType TYPE = TransactionType.TRANSFER_TO_PUBLIC;
 
     /**
      * Encryption of the remaining amount.
@@ -38,10 +39,14 @@ public final class TransferToPublic extends Payload {
 
     private final UInt64 maxEnergyCost;
 
+    /**
+     * This function returns the type of the payload.
+     */
     @Override
     public PayloadType getType() {
         return PayloadType.TRANSFER_TO_PUBLIC;
     }
+
 
     @Override
     byte[] getBytes() {

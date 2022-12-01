@@ -9,6 +9,10 @@ import lombok.val;
 
 import java.util.Objects;
 
+/**
+ * Construct a transaction transfer the given amount from encrypted
+ * to public balance of the given account.
+ */
 @Getter
 public class TransferToPublicTransaction extends AbstractTransaction {
 
@@ -34,13 +38,34 @@ public class TransferToPublicTransaction extends AbstractTransaction {
      */
     private final SecToPubAmountTransferProof proof;
 
-    private final AccountAddress sender;
-    private final AccountNonce nonce;
-    private final Expiry expiry;
-    private final TransactionSigner signer;
-    private BlockItem blockItem;
-    private final UInt64 maxEnergyCost;
 
+    /**
+     * Account Address of the sender.
+     */
+    private final AccountAddress sender;
+    /**
+     * The senders account next available nonce.
+     */
+    private final AccountNonce nonce;
+    /**
+     * Indicates when the transaction should expire.
+     */
+    private final Expiry expiry;
+    /**
+     * A signer object that is used to sign the transaction.
+     */
+    private final TransactionSigner signer;
+
+    /**
+     * Maximum energy **allowed** for the transaction to use.
+     */
+    private final UInt64 maxEnergyCost;
+    private BlockItem blockItem;
+
+
+    /**
+     * A constructor of {@link TransferToPublicTransaction} class.
+     */
     @Builder
     public TransferToPublicTransaction(
             EncryptedAmount remainingAmount,
@@ -65,6 +90,9 @@ public class TransferToPublicTransaction extends AbstractTransaction {
         this.maxEnergyCost = maxEnergyCost;
     }
 
+    /**
+     * @return A new instance of the {@link TransferToPublicTransactionBuilder}  class.
+     */
     public static TransferToPublicTransactionBuilder builder() {
         return new CustomBuilder();
     }
@@ -75,6 +103,8 @@ public class TransferToPublicTransaction extends AbstractTransaction {
     }
 
     private static class CustomBuilder extends TransferToPublicTransactionBuilder {
+
+        // Overriding the build method of the super class.
         @Override
         public TransferToPublicTransaction build() {
             val transaction = super.build();
