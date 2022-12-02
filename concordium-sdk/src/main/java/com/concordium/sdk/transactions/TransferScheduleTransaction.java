@@ -89,11 +89,11 @@ public class TransferScheduleTransaction extends AbstractTransaction {
         public TransferScheduleTransaction build() throws TransactionCreationException {
             val transaction = super.build();
             verifyTransferScheduleInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer);
-            transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
+            transaction.blockItem = createTransferSchedule(transaction).toBlockItem();
             return transaction;
         }
 
-        private Payload createSimpleTransfer(TransferScheduleTransaction transaction) throws TransactionCreationException {
+        private Payload createTransferSchedule(TransferScheduleTransaction transaction) throws TransactionCreationException {
             return TransferSchedule.createNew(
                             transaction.to,
                             transaction.schedule).

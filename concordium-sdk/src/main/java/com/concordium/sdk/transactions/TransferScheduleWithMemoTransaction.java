@@ -82,11 +82,11 @@ public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
         public TransferScheduleWithMemoTransaction build() throws TransactionCreationException {
             val transaction = super.build();
             verifyTransferScheduleWithMemoInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer, transaction.memo);
-            transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
+            transaction.blockItem = createTransferScheduleWithMemo(transaction).toBlockItem();
             return transaction;
         }
 
-        private Payload createSimpleTransfer(TransferScheduleWithMemoTransaction transaction) throws TransactionCreationException {
+        private Payload createTransferScheduleWithMemo(TransferScheduleWithMemoTransaction transaction) throws TransactionCreationException {
             return TransferScheduleWithMemo.createNew(
                             transaction.to,
                             transaction.schedule,
