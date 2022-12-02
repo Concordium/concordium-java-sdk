@@ -56,10 +56,6 @@ public class TransferToPublicTransaction extends AbstractTransaction {
      */
     private final TransactionSigner signer;
 
-    /**
-     * Maximum energy **allowed** for the transaction to use.
-     */
-    private final UInt64 maxEnergyCost;
     private BlockItem blockItem;
 
 
@@ -76,8 +72,7 @@ public class TransferToPublicTransaction extends AbstractTransaction {
             AccountNonce nonce,
             Expiry expiry,
             TransactionSigner signer,
-            BlockItem blockItem,
-            UInt64 maxEnergyCost) {
+            BlockItem blockItem) {
         this.remainingAmount = remainingAmount;
         this.transferAmount = transferAmount;
         this.index = index;
@@ -87,7 +82,6 @@ public class TransferToPublicTransaction extends AbstractTransaction {
         this.expiry = expiry;
         this.signer = signer;
         this.blockItem = blockItem;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
     /**
@@ -132,8 +126,7 @@ public class TransferToPublicTransaction extends AbstractTransaction {
                             transaction.remainingAmount,
                             transaction.transferAmount,
                             transaction.index,
-                            transaction.proof,
-                            transaction.maxEnergyCost).
+                            transaction.proof).
                     withHeader(TransactionHeader.builder()
                             .sender(transaction.sender)
                             .accountNonce(transaction.nonce.getNonce())

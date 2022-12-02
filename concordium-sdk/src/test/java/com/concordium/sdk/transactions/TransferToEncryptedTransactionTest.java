@@ -3,7 +3,6 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;
@@ -11,7 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class TransferToEncryptedTransactionTest {
-    final static int[] EXPECTED_BLOCK_ITEM_TRANSFER_TO_ENCRYPTED_TRANSACTION_DATA_BYTES = {0, 0, 1, 0, 2, 0, 0, 64, 70, 134, 69, 38, 96, 89, 66, 159, 210, 143, 4, 38, 107, 188, 183, 231, 208, 87, 85, 143, 16, 124, 185, 89, 194, 145, 252, 243, 227, 245, 253, 106, 176, 221, 6, 151, 241, 63, 89, 162, 131, 115, 114, 200, 85, 253, 200, 31, 28, 135, 20, 89, 8, 128, 192, 38, 0, 191, 114, 167, 8, 0, 61, 13, 1, 0, 64, 165, 27, 236, 148, 204, 45, 155, 232, 162, 164, 96, 64, 160, 6, 25, 28, 98, 1, 96, 220, 135, 41, 64, 253, 145, 193, 100, 236, 36, 65, 74, 205, 247, 30, 136, 202, 28, 52, 67, 103, 202, 176, 217, 157, 41, 255, 63, 224, 114, 186, 239, 56, 53, 61, 107, 117, 170, 233, 172, 50, 128, 219, 244, 11, 48, 29, 107, 23, 16, 181, 115, 90, 252, 36, 88, 152, 1, 33, 61, 19, 170, 107, 68, 120, 137, 15, 223, 232, 25, 91, 202, 14, 175, 34, 97, 78, 0, 0, 0, 0, 0, 1, 52, 62, 0, 0, 0, 0, 0, 0, 40, 29, 0, 0, 0, 9, 0, 0, 0, 0, 0, 1, 226, 64, 17, 0, 0, 0, 0, 0, 0, 0, 1};
+    final static int[] EXPECTED_BLOCK_ITEM_TRANSFER_TO_ENCRYPTED_TRANSACTION_DATA_BYTES = {0, 0, 1, 0, 2, 0, 0, 64, 211, 2, 167, 82, 142, 176, 115, 94, 113, 95, 191, 154, 75, 170, 201, 213, 243, 148, 198, 153, 199, 92, 20, 215, 193, 37, 176, 213, 196, 146, 108, 58, 131, 14, 107, 60, 252, 126, 253, 177, 238, 119, 246, 219, 136, 3, 152, 113, 96, 21, 66, 195, 115, 129, 53, 57, 89, 209, 39, 120, 204, 84, 80, 0, 1, 0, 64, 153, 204, 108, 39, 70, 219, 155, 177, 31, 8, 67, 109, 30, 168, 25, 247, 160, 151, 114, 193, 132, 142, 153, 182, 131, 111, 81, 177, 250, 189, 98, 190, 179, 202, 139, 225, 233, 81, 147, 240, 7, 59, 48, 3, 231, 231, 228, 182, 159, 5, 169, 101, 123, 166, 154, 31, 44, 102, 109, 183, 27, 142, 114, 4, 48, 29, 107, 23, 16, 181, 115, 90, 252, 36, 88, 152, 1, 33, 61, 19, 170, 107, 68, 120, 137, 15, 223, 232, 25, 91, 202, 14, 175, 34, 97, 78, 0, 0, 0, 0, 0, 1, 52, 62, 0, 0, 0, 0, 0, 0, 3, 101, 0, 0, 0, 9, 0, 0, 0, 0, 0, 1, 226, 64, 17, 0, 0, 0, 0, 0, 0, 0, 1};
 
     @Test
     @SneakyThrows
@@ -23,9 +22,8 @@ public class TransferToEncryptedTransactionTest {
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .amount(CCDAmount.fromMicro(1))
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
-        assertEquals("d8561cbb58b3ed6b316ae4377f2f38b70ac22300c7e2a08769bddb6cd0f3e031", transaction.getHash().asHex());
+        assertEquals("e777705bb7d8ecd020f1a261049b3f0020d4032026ba6fdbf311f2871a26688e", transaction.getHash().asHex());
         assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_TO_ENCRYPTED_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 
@@ -38,7 +36,6 @@ public class TransferToEncryptedTransactionTest {
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .amount(CCDAmount.fromMicro(1))
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
     }
@@ -53,7 +50,6 @@ public class TransferToEncryptedTransactionTest {
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .amount(CCDAmount.fromMicro(1))
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
 
@@ -69,7 +65,6 @@ public class TransferToEncryptedTransactionTest {
                 .nonce(AccountNonce.from(78910))
                 .signer(TransactionTestHelper.getValidSigner())
                 .amount(CCDAmount.fromMicro(1))
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected DeployTransaction to fail");
     }
@@ -84,7 +79,6 @@ public class TransferToEncryptedTransactionTest {
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .amount(CCDAmount.fromMicro(1))
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
     }
@@ -99,7 +93,6 @@ public class TransferToEncryptedTransactionTest {
                 .expiry(Expiry.from(123456))
                 .signer(getSignerWithMalformedSecretKey())
                 .amount(CCDAmount.fromMicro(1))
-                .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
 

@@ -26,13 +26,10 @@ public final class EncryptedTransferWithMemo extends Payload {
 
     private final Memo memo;
 
-    private final UInt64 maxEnergyCost;
-
-    public EncryptedTransferWithMemo(EncryptedAmountTransferData data, AccountAddress to, Memo memo, UInt64 maxEnergyCost) {
+    public EncryptedTransferWithMemo(EncryptedAmountTransferData data, AccountAddress to, Memo memo) {
         this.data = data;
         this.to = to;
         this.memo = memo;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
     @Override
@@ -65,10 +62,10 @@ public final class EncryptedTransferWithMemo extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+        return UInt64.from(27000);
     }
 
-    static EncryptedTransferWithMemo createNew(EncryptedAmountTransferData data, AccountAddress to, Memo memo, UInt64 maxEnergyCost) {
-        return new EncryptedTransferWithMemo(data, to, memo, maxEnergyCost);
+    static EncryptedTransferWithMemo createNew(EncryptedAmountTransferData data, AccountAddress to, Memo memo) {
+        return new EncryptedTransferWithMemo(data, to, memo);
     }
 }

@@ -586,12 +586,11 @@ public class TransferToPublicTest {
                 .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
-                .maxEnergyCost(UInt64.from(20000))
                 .build();
 
         assertEquals(1604, transaction.getBytes().length);
         assertEquals(
-                UInt64.from(21665),
+                UInt64.from(16515),
                 transaction.getBlockItem().getAccountTransaction().getHeader().getMaxEnergyCost());
     }
 
@@ -643,7 +642,6 @@ public class TransferToPublicTest {
                         .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
                         .expiry(Expiry.from(123456))
                         .signer(TransactionTestHelper.getValidSigner())
-                        .maxEnergyCost(UInt64.from(20000))
                         .build();
             } catch (CryptoJniException ex) {
                 Assert.assertNotNull(ex.getCode().getErrorMessage());

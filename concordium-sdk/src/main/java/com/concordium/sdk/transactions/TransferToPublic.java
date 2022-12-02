@@ -37,7 +37,6 @@ public final class TransferToPublic extends Payload {
      */
     private final SecToPubAmountTransferProof proof;
 
-    private final UInt64 maxEnergyCost;
 
     /**
      * This function returns the type of the payload.
@@ -68,15 +67,14 @@ public final class TransferToPublic extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+        return UInt64.from(14850);
     }
 
     static TransferToPublic createNew(
             EncryptedAmount remainingAmount,
             CCDAmount transferAmount,
             UInt64 index,
-            SecToPubAmountTransferProof proof,
-            UInt64 maxEnergyCost) {
-        return new TransferToPublic(remainingAmount, transferAmount, index, proof, maxEnergyCost);
+            SecToPubAmountTransferProof proof) {
+        return new TransferToPublic(remainingAmount, transferAmount, index, proof);
     }
 }

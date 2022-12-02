@@ -588,12 +588,11 @@ public class EncryptedTransferTransactionTest {
                 .expiry(Expiry.from(123456))
                 .to(toAccountAddress)
                 .signer(TransactionTestHelper.getValidSigner())
-                .maxEnergyCost(UInt64.from(20000))
                 .build();
 
         assertEquals(2816, transaction.getBytes().length);
         assertEquals(
-                UInt64.from(22877),
+                UInt64.from(29877),
                 transaction.getBlockItem().getAccountTransaction().getHeader().getMaxEnergyCost());
     }
 
@@ -645,7 +644,6 @@ public class EncryptedTransferTransactionTest {
                     .expiry(Expiry.from(123456))
                     .to(toAccountAddress)
                     .signer(TransactionTestHelper.getValidSigner())
-                    .maxEnergyCost(UInt64.from(20000))
                     .build();
             fail("Exception should be thrown");
         }

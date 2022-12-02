@@ -22,11 +22,8 @@ public final class TransferToEncrypted extends Payload {
      */
     private final CCDAmount amount;
 
-    private final UInt64 maxEnergyCost;
-
-    public TransferToEncrypted(CCDAmount amount, UInt64 maxEnergyCost) {
+    public TransferToEncrypted(CCDAmount amount) {
         this.amount = amount;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
     /**
@@ -54,10 +51,10 @@ public final class TransferToEncrypted extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+        return UInt64.from(600);
     }
 
-    static TransferToEncrypted createNew(CCDAmount amount, UInt64 maxEnergyCost) {
-        return new TransferToEncrypted(amount, maxEnergyCost);
+    static TransferToEncrypted createNew(CCDAmount amount) {
+        return new TransferToEncrypted(amount);
     }
 }

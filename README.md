@@ -946,7 +946,6 @@ try{
             .expiry(Expiry.from(expiry))
             .signer(signer)
             .payload(TransferToEncryptedPayload.from(1))
-            .maxEnergyCost(UInt64.from(3000))
             .build();
 
             client.sendTransaction(transaction);
@@ -987,7 +986,6 @@ The following example demonstrates how to make an encrypted transfer.
                         Index.from(0),
                         ED25519SecretKey.from("<ACCOUNT SIGN KEY HEX>"))))
                 .to(toAccountAddress)
-                .maxEnergyCost(UInt64.from(20000))
                 .build();
     final Hash txnHash = client.sendTransaction(transaction);
 ```
@@ -1022,7 +1020,6 @@ The following example demonstrates how to make an encrypted transfer with memo.
                         ED25519SecretKey.from("<ACCOUNT SIGN KEY HEX>"))))
                 .to(toAccountAddress)
                 .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
-                .maxEnergyCost(UInt64.from(20000))
                 .build();
     final Hash txnHash = client.sendTransaction(transaction);
 ```
