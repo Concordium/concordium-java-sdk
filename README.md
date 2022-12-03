@@ -903,8 +903,7 @@ try{
             firstSecretKey),
         SignerEntry.from(Index.from(0), Index.from(1),
             secondSecretKey));
-    TransactionScheduleTransaction transaction = TransferScheduleTransaction
-        .builder()
+    TransactionScheduleTransaction transaction = TransactionFactory.newScheduledTransfer()
         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
         .nonce(AccountNonce.from(78910))
         .expiry(Expiry.from(123456))
@@ -933,8 +932,7 @@ try{
             firstSecretKey),
         SignerEntry.from(Index.from(0), Index.from(1),
             secondSecretKey));
-    TransactionScheduleWithMemoTransaction transaction = TransferScheduleWithMemoTransaction
-        .builder()
+    TransactionScheduleWithMemoTransaction transaction = TransactionFactory.newScheduledTransferWithMemo()
         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
         .nonce(AccountNonce.from(78910))
         .expiry(Expiry.from(123456))

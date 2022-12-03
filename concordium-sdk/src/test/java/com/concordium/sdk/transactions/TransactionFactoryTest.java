@@ -46,13 +46,13 @@ public class TransactionFactoryTest {
 
     @Test
     public  void testCanTransferScheduleFactory() {
-        val builder = TransactionFactory.newScheduleData();
+        val builder = TransactionFactory.newScheduledTransfer();
         assertNotNull(builder);
     }
 
     @Test
     public  void testCanTransferSchedulWithMemoFactory() {
-        val builder = TransactionFactory.newScheduleDataWithMemo();
+        val builder = TransactionFactory.newScheduledTransferWithMemo();
         assertNotNull(builder);
     }
 }

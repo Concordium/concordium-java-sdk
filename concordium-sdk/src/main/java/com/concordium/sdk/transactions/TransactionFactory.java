@@ -74,7 +74,7 @@ public class TransactionFactory {
      *
      * @return the builder for a {@link TransferScheduleTransaction}
      */
-    public static TransferScheduleTransaction.TransferScheduleTransactionBuilder newScheduleData() {
+    public static TransferScheduleTransaction.TransferScheduleTransactionBuilder newScheduledTransfer() {
         return TransferScheduleTransaction.builder();
     }
 
@@ -84,7 +84,7 @@ public class TransactionFactory {
      *
      * @return the builder for a {@link TransferScheduleWithMemoTransaction}
      */
-    public static TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder newScheduleDataWithMemo() {
+    public static TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder newScheduledTransferWithMemo() {
         return TransferScheduleWithMemoTransaction.builder();
     }
 }
