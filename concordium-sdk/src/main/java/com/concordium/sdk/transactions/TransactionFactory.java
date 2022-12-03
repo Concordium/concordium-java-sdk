@@ -67,4 +67,24 @@ public class TransactionFactory {
         return DeployModuleTransaction.builder();
     }
 
+
+    /**
+     * Creates a new {@link TransferScheduleTransaction.TransferScheduleTransactionBuilder} for
+     * creating a {@link TransferScheduleTransaction}
+     *
+     * @return the builder for a {@link TransferScheduleTransaction}
+     */
+    public static TransferScheduleTransaction.TransferScheduleTransactionBuilder newScheduledTransfer() {
+        return TransferScheduleTransaction.builder();
+    }
+
+    /**
+     * Creates a new {@link TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder} for
+     * creating a {@link TransferScheduleWithMemoTransaction}
+     *
+     * @return the builder for a {@link TransferScheduleWithMemoTransaction}
+     */
+    public static TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder newScheduledTransferWithMemo() {
+        return TransferScheduleWithMemoTransaction.builder();
+    }
 }

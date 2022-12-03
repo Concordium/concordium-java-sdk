@@ -20,7 +20,8 @@ public enum TransactionType {
     TRANSFER_WITH_SCHEDULE((byte) 19),
     UPDATE_CREDENTIALS((byte) 20),
     REGISTER_DATA((byte) 21),
-    TRANSFER_WITH_MEMO((byte) 22);
+    TRANSFER_WITH_MEMO((byte) 22),
+    TRANSFER_WITH_SCHEDULE_AND_MEMO((byte) 24);
 
     /**
      * Number of Bytes used for Serializing {@link TransactionType}.
