@@ -417,6 +417,12 @@ Deploy a smart contract module.
 - Update Contract
 Update a smart contract.
 
+- TransferScheduleTransaction
+Send funds from one account to another with an attached schedule.
+
+- TransferScheduleWithMemoTransaction
+Send funds from one account to another with an attached schedule with an associated `Memo`.
+
 ## Exceptions and general error handling
 
 - `TransactionCreationException`
@@ -880,6 +886,65 @@ try{
  } catch (TransactionRejectionException e) {
     // Handle the rejected transaction, here we simply log it.
     Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+#### Transfer schedule transaction
+The following example demonstrates how to construct a "transferSchedule" transaction, which is used to transfer CCD with schedule.
+
+ ```java
+try{
+    Schedule[] schedule = new Schedule[1];
+    schedule[0] = Schedule.from(1662869154000L, 10);
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+    TransactionScheduleTransaction transaction = TransactionFactory.newScheduledTransfer()
+        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
+        .nonce(AccountNonce.from(78910))
+        .expiry(Expiry.from(123456))
+        .signer(signer)
+        .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
+        .schedule(schedule)
+        .build();
+    client.sendTransaction(transaction);
+} catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+#### Transfer schedule with memo transaction
+The following example demonstrates how to construct a "transferScheduleWithMemo" transaction, which is used to transfer CCD with schedule and memo.
+
+ ```java
+try{
+    Schedule[] schedule = new Schedule[1];
+    schedule[0] = Schedule.from(1662869154000L, 10);
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+    TransactionScheduleWithMemoTransaction transaction = TransactionFactory.newScheduledTransferWithMemo()
+        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
+        .nonce(AccountNonce.from(78910))
+        .expiry(Expiry.from(123456))
+        .signer(signer)
+        .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
+        .schedule(schedule)
+        .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
+        .build();
+    client.sendTransaction(transaction);
+ } catch (TransactionRejectionException e) {
+     // Handle the rejected transaction, here we simply log it.
+     Transaction rejectedTransaction =  e.getTransaction();
     Hash rejectedTransactionHash = rejectedTransaction.getHash();
     String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
     Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
