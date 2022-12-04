@@ -65,7 +65,6 @@ public final class EncryptedTransfers {
                 () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
     }
 
-
     public static EncryptedAmountTransferJniOutput createEncryptedTransferPayload(
             CryptographicParameters cryptographicParameters,
             AccountEncryptedAmount inputAmount,

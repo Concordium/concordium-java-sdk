@@ -28,7 +28,7 @@ public final class ConfigureDelegation extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return UInt64.from(300);
+        return TransactionTypeCost.CONFIGURE_DELEGATION.getValue();
     }
 
     public byte[] getBytes() {

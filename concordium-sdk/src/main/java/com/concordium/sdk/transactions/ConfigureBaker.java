@@ -29,9 +29,9 @@ public final class ConfigureBaker extends Payload {
     @Override
     UInt64 getTransactionTypeCost() {
         if (this.payload.getKeysWithProofs() != null)
-            return UInt64.from(4050);
+            return TransactionTypeCost.CONFIGURE_BAKER_WITH_PROOFS.getValue();
         else
-            return UInt64.from(300);
+            return TransactionTypeCost.CONFIGURE_BAKER.getValue();
     }
 
     public byte[] getBytes() {

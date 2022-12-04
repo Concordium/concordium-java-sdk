@@ -35,6 +35,7 @@ public final class ConfigureBakerKeys {
 
         return result.getOk().orElseThrow(
                 () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+
     }
 
     private static native String generateConfigureBakerKeysPayload(String input);

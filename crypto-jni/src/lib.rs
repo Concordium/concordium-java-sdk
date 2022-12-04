@@ -379,7 +379,8 @@ type AddBakerResult = CryptoJniResult<BakerKeysPayload<AddBakerKeysMarker>>;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-/// The JNI wrapper for the `generate_baker_keys` method.
+/// The JNI wrapper to create new configure baker keys payload.
+/// Construct a BakerKeysPayload with proofs for updating baker keys.
 pub extern "system" fn Java_com_concordium_sdk_crypto_bakertransactions_ConfigureBakerKeys_generateConfigureBakerKeysPayload(
     env: JNIEnv,
     _: JClass,

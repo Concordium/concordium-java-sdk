@@ -30,18 +30,21 @@ public class ConfigureDelegationPayload {
         return buffer;
     }
 
-    public byte[] getBitMapBytes() throws IllegalAccessException {
+    public byte[] getBitMapBytes() {
         int bitValue = 0;
         int it = 1;
-        for (Field f : getClass().getDeclaredFields()) {
-            if (f.get(this) != null)
-                bitValue |= it;
-            it *= 2;
+        try {
+            for (Field f : getClass().getDeclaredFields()) {
+                if (f.get(this) != null)
+                    bitValue |= it;
+                it *= 2;
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
         return UInt16.from(bitValue).getBytes();
     }
 
-    @SneakyThrows
     public byte[] getBytes() {
         int bufferLength = 0;
         ByteBuffer capitalBuffer = ByteBuffer.allocate(bufferLength);
