@@ -2,7 +2,6 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
@@ -40,10 +39,6 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
      */
     private final TransactionSigner signer;
 
-    /**
-     * Maximum energy **allowed** for the transaction to use.
-     */
-    private final UInt64 maxEnergyCost;
     private BlockItem blockItem;
 
     /**
@@ -56,8 +51,7 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
             AccountNonce nonce,
             Expiry expiry,
             TransactionSigner signer,
-            BlockItem blockItem,
-            UInt64 maxEnergyCost) throws TransactionCreationException {
+            BlockItem blockItem) throws TransactionCreationException {
         this.data = data;
         this.to = to;
         this.memo = memo;
@@ -66,7 +60,6 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
         this.expiry = expiry;
         this.signer = signer;
         this.blockItem = blockItem;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
     /**
@@ -102,8 +95,7 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
             return EncryptedTransferWithMemo.createNew(
                             transaction.data,
                             transaction.to,
-                            transaction.memo,
-                            transaction.maxEnergyCost).
+                            transaction.memo).
                     withHeader(TransactionHeader.builder()
                             .sender(transaction.sender)
                             .accountNonce(transaction.nonce.getNonce())

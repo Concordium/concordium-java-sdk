@@ -25,12 +25,9 @@ public final class EncryptedTransfer extends Payload {
     private final AccountAddress to;
 
 
-    private final UInt64 maxEnergyCost;
-
-    public EncryptedTransfer(EncryptedAmountTransferData data, AccountAddress to, UInt64 maxEnergyCost) {
+    public EncryptedTransfer(EncryptedAmountTransferData data, AccountAddress to) {
         this.data = data;
         this.to = to;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
     @Override
@@ -61,10 +58,10 @@ public final class EncryptedTransfer extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+        return UInt64.from(27000);
     }
 
-    static EncryptedTransfer createNew(EncryptedAmountTransferData data, AccountAddress to, UInt64 maxEnergyCost) {
-        return new EncryptedTransfer(data, to, maxEnergyCost);
+    static EncryptedTransfer createNew(EncryptedAmountTransferData data, AccountAddress to) {
+        return new EncryptedTransfer(data, to);
     }
 }

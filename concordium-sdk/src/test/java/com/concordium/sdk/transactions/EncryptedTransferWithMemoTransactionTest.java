@@ -589,12 +589,11 @@ public class EncryptedTransferWithMemoTransactionTest {
                 .to(toAccountAddress)
                 .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
                 .signer(TransactionTestHelper.getValidSigner())
-                .maxEnergyCost(UInt64.from(20000))
                 .build();
 
         assertEquals(2823, transaction.getBytes().length);
         assertEquals(
-                UInt64.from(22884),
+                UInt64.from(29884),
                 transaction.getBlockItem().getAccountTransaction().getHeader().getMaxEnergyCost());
     }
 
@@ -647,7 +646,6 @@ public class EncryptedTransferWithMemoTransactionTest {
                     .to(toAccountAddress)
                     .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
                     .signer(TransactionTestHelper.getValidSigner())
-                    .maxEnergyCost(UInt64.from(20000))
                     .build();
             fail("Exception should be thrown");
         }
