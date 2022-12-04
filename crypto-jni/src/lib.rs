@@ -14,7 +14,6 @@ use rand::thread_rng;
 use serde_json::{from_str, to_string};
 use std::convert::{From, TryFrom};
 use std::i8;
-use std::io::Cursor;
 use std::str::Utf8Error;
 
 use jni::{
@@ -194,7 +193,6 @@ impl<T> From<jni::errors::Error> for CryptoJniResult<T> {
     }
 }
 
-const AMOUNT_DECRYPTION_ERROR: i32 = 4;
 const PAYLOAD_CREATION_ERROR: i32 = 5;
 
 impl<T: serde::Serialize> CryptoJniResult<T> {
@@ -205,19 +203,18 @@ impl<T: serde::Serialize> CryptoJniResult<T> {
     }
 }
 
-static TABLE_BYTES: &[u8] = include_bytes!("table_bytes.bin");
-
 fn decrypt_encrypted_amount(
     encrypted_amount: EncryptedAmount<ArCurve>,
     secret: elgamal::SecretKey<ArCurve>,
 ) -> CryptoJniResult<Amount> {
-    let table = (&mut Cursor::new(TABLE_BYTES)).get();
-    match table {
-        Ok(table) => CryptoJniResult::Ok(encrypted_transfers::decrypt_amount::<
-            id::constants::ArCurve,
-        >(&table, &secret, &encrypted_amount)),
-        Err(_) => CryptoJniResult::Err(AMOUNT_DECRYPTION_ERROR),
-    }
+    let global = id::types::GlobalContext::<id::constants::ArCurve>::generate(String::from(
+        "genesis_string",
+    ));
+    let m = 1 << 16;
+    let table = elgamal::BabyStepGiantStep::new(global.encryption_in_exponent_generator(), m);
+    CryptoJniResult::Ok(encrypted_transfers::decrypt_amount::<
+        id::constants::ArCurve,
+    >(&table, &secret, &encrypted_amount))
 }
 
 #[derive(Serialize, SerdeSerialize, SerdeDeserialize)]
