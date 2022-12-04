@@ -95,6 +95,8 @@ public abstract class Payload {
         INIT_CONTRACT,
         DEPLOY_MODULE,
         UPDATE,
+        TRANSFER_WITH_SCHEDULE,
+        TRANSFER_WITH_SCHEDULE_AND_MEMO,
         TRANSFER_TO_PUBLIC,
         TRANSFER_TO_ENCRYPTED,
         ENCRYPTED_TRANSFER,
