@@ -74,7 +74,6 @@ public class TransactionFactory {
      *
      * @return the builder for a {@link UpdateCredentialKeysTransaction}
      */
-
     public static UpdateCredentialKeysTransaction.UpdateCredentialKeysTransactionBuilder newUpdateCredentialKeys() {
         return UpdateCredentialKeysTransaction.builder();
     }

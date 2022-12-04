@@ -8,6 +8,9 @@ import lombok.ToString;
 
 import java.util.Map;
 
+/**
+ * Credential keys (i.e. account holder keys).
+ */
 @Getter
 @ToString
 public final class CredentialPublicKeys {
