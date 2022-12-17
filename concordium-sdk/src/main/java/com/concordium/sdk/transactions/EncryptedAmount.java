@@ -7,8 +7,6 @@ import lombok.Getter;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
-import java.nio.ByteBuffer;
-
 @Getter
 @EqualsAndHashCode
 public class EncryptedAmount {
@@ -27,7 +25,7 @@ public class EncryptedAmount {
         try {
             return new EncryptedAmount(Hex.decodeHex(hexKey));
         } catch (DecoderException e) {
-            throw new IllegalArgumentException("Cannot create AccountEncryptedAmount", e);
+            throw new IllegalArgumentException("Cannot create EncryptedAmount", e);
         }
     }
 

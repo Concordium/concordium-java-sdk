@@ -6,6 +6,9 @@ import com.concordium.sdk.transactions.EncryptedAmountIndex;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * An encrypted amount that we know the index of.
+ */
 @Data
 @Builder
 class IndexedEncryptedAmount {

@@ -81,7 +81,7 @@ public class TransferToEncryptedTransaction extends AbstractTransaction {
             Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 
             if (Objects.isNull(amount)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
+                throw TransactionCreationException.from(new IllegalArgumentException("Amount cannot be null"));
             }
         }
     }

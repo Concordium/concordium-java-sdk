@@ -14,7 +14,7 @@ import org.apache.commons.codec.binary.Hex;
 public class ElgamalSecretKey {
 
     /**
-     * The bytes of the public key.
+     * The bytes of the secret key.
      */
     private final byte[] bytes;
 
@@ -23,7 +23,7 @@ public class ElgamalSecretKey {
         try {
             return new ElgamalSecretKey(Hex.decodeHex(hexKey));
         } catch (DecoderException e) {
-            throw new IllegalArgumentException("Cannot create ElgamalPublicKey", e);
+            throw new IllegalArgumentException("Cannot create ElgamalSecretKey", e);
         }
     }
 
