@@ -14,7 +14,14 @@ import java.util.Map;
 @Getter
 @ToString
 public class CredentialPublicKeys {
+
+    /**
+     * Credential keys (i.e. account holder keys).
+     */
     private final Map<Index, ED25519PublicKey> keys;
+    /**
+     * The account threshold.
+     */
     private final int threshold;
 
     CredentialPublicKeys(Map<Index, ED25519PublicKey> keys,
