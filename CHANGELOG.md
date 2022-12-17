@@ -3,6 +3,7 @@
 ## Unreleased changes
 - Added support for Transfer With Schedule.
 - Added support for Transfer With Schedule With Memo.
+- Added support for Update Credentials Keys.
 
 ## 4.0.0
 - Support for Protocol 5.

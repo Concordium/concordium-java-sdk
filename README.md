@@ -423,6 +423,9 @@ Send funds from one account to another with an attached schedule.
 - TransferScheduleWithMemoTransaction
 Send funds from one account to another with an attached schedule with an associated `Memo`.
 
+- UpdateCredentialKeysTransaction
+Updates signing keys of a specific credential.
+
 ## Exceptions and general error handling
 
 - `TransactionCreationException`

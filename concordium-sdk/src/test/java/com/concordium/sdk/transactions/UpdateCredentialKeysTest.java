@@ -1,7 +1,7 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
-import com.concordium.sdk.responses.accountinfo.credential.Key;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
@@ -22,8 +22,8 @@ public class UpdateCredentialKeysTest {
     @SneakyThrows
     @Test
     public void testUpdateCredentialKeys() {
-        Map<Index, Key> keys =  new HashMap<>();
-        Key newKey = new Key("ad6591a2deb03c32357615d73e144e01a49abad49671428d46db58cf2d4e4d87", "Ed25519");
+        Map<Index, ED25519PublicKey> keys =  new HashMap<>();
+        ED25519PublicKey newKey = ED25519PublicKey.from("ad6591a2deb03c32357615d73e144e01a49abad49671428d46db58cf2d4e4d87");
         keys.put(Index.from(0), newKey);
 
         CredentialRegistrationId regId = CredentialRegistrationId.fromBytes(new byte[]{-90, 67, -42, 8, 42, -113, -128, 70, 15, -1, 39, -13, -1, 39, -2, -37, -3, -58, 0, 57, 82, 116, 2, -72, 24, -113, -56, 69, -88, 73, 66, -117, 84, -124, -56, 42, 21, -119, -54, -73, 96, 76, 26, 43, -23, 120, -61, -100});
