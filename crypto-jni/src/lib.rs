@@ -32,7 +32,7 @@ const PUBLIC_KEY_GENERATION_FAILURE: i32 = 6;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub extern "system" fn Java_com_concordium_sdk_crypto_ed25519_ED25519_sign(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_sign(
     env: JNIEnv,
     _class: JClass,
     secretKeyBytes: jbyteArray,
@@ -75,7 +75,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_ed25519_ED25519_sign(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub extern "system" fn Java_com_concordium_sdk_crypto_ed25519_ED25519_verify(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_verify(
     env: JNIEnv,
     _class: JClass,
     pub_key_bytes: jbyteArray,
@@ -113,7 +113,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_ed25519_ED25519_verify(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_concordium_sdk_crypto_ed25519_ED25519_generateSecretKey(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateSecretKey(
     env: JNIEnv,
     _class: JClass,
     out: jbyteArray,
@@ -137,7 +137,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_ed25519_ED25519_generateSe
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub extern "system" fn Java_com_concordium_sdk_crypto_ed25519_ED25519_generatePublicKey(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generatePublicKey(
     env: JNIEnv,
     _class: JClass,
     secretKeyBytes: jbyteArray,
@@ -235,7 +235,7 @@ type Result = CryptoJniResult<SecToPubAmountTransferData<ArCurve>>;
 /// The JNI wrapper for the `create_sec_to_pub_transfer` method.
 /// The `input` parameter must be a properly initalized `java.lang.String` that
 /// is non-null. The input must be valid JSON according to specified format
-pub extern "system" fn Java_com_concordium_sdk_crypto_encryptedtransfers_EncryptedTransfers_createSecToPubTransfer(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createSecToPubTransfer(
     env: JNIEnv,
     _: JClass,
     input: JString,
@@ -302,7 +302,7 @@ type EncryptedAmountTransferResult = CryptoJniResult<EncryptedAmountTransferData
 /// The JNI wrapper for the `create_sec_to_pub_transfer` method.
 /// The `input` parameter must be a properly initalized `java.lang.String` that
 /// is non-null. The input must be valid JSON according to specified format
-pub extern "system" fn Java_com_concordium_sdk_crypto_encryptedtransfers_EncryptedTransfers_generateEncryptedTransfer(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateEncryptedTransfer(
     env: JNIEnv,
     _: JClass,
     input: JString,
