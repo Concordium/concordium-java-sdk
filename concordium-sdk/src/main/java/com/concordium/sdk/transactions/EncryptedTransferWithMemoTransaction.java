@@ -19,7 +19,11 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
     /**
      * Account Address of the sender.
      */
-    private final AccountAddress to;
+    private final AccountAddress receiver;
+
+    /**
+     * The memo message associated with the transfer.
+     */
     private final Memo memo;
 
     /**
@@ -47,13 +51,13 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
     @Builder
     public EncryptedTransferWithMemoTransaction(
             EncryptedAmountTransferData data,
-            AccountAddress to, Memo memo, AccountAddress sender,
+            AccountAddress receiver, Memo memo, AccountAddress sender,
             AccountNonce nonce,
             Expiry expiry,
             TransactionSigner signer,
             BlockItem blockItem) throws TransactionCreationException {
         this.data = data;
-        this.to = to;
+        this.receiver = receiver;
         this.memo = memo;
         this.sender = sender;
         this.nonce = nonce;
@@ -84,7 +88,7 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
                     transaction.nonce,
                     transaction.expiry,
                     transaction.signer,
-                    transaction.to,
+                    transaction.receiver,
                     transaction.data,
                     transaction.memo);
             transaction.blockItem = EncryptedTransferWithMemoInstance(transaction).toBlockItem();
@@ -94,7 +98,7 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
         private Payload EncryptedTransferWithMemoInstance(EncryptedTransferWithMemoTransaction transaction) throws TransactionCreationException {
             return EncryptedTransferWithMemo.createNew(
                             transaction.data,
-                            transaction.to,
+                            transaction.receiver,
                             transaction.memo).
                     withHeader(TransactionHeader.builder()
                             .sender(transaction.sender)
@@ -110,17 +114,17 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
                 AccountNonce nonce,
                 Expiry expiry,
                 TransactionSigner signer,
-                AccountAddress to,
+                AccountAddress receiver,
                 EncryptedAmountTransferData data,
                 Memo memo) throws TransactionCreationException {
 
             Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 
-            if (Objects.isNull(to)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("To address cannot be null"));
+            if (Objects.isNull(receiver)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Receiver address cannot be null"));
             }
             if (Objects.isNull(memo)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("To address cannot be null"));
+                throw TransactionCreationException.from(new IllegalArgumentException("Memo cannot be null"));
             }
             if (Objects.isNull(data)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));

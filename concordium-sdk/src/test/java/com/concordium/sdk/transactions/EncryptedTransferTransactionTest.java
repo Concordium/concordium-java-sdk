@@ -586,7 +586,7 @@ public class EncryptedTransferTransactionTest {
                 .sender(accountInfo.getAccountAddress())
                 .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
                 .expiry(Expiry.from(123456))
-                .to(toAccountAddress)
+                .receiver(toAccountAddress)
                 .signer(TransactionTestHelper.getValidSigner())
                 .build();
 
@@ -642,7 +642,7 @@ public class EncryptedTransferTransactionTest {
                     .sender(accountInfo.getAccountAddress())
                     .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
                     .expiry(Expiry.from(123456))
-                    .to(toAccountAddress)
+                    .receiver(toAccountAddress)
                     .signer(TransactionTestHelper.getValidSigner())
                     .build();
             fail("Exception should be thrown");
