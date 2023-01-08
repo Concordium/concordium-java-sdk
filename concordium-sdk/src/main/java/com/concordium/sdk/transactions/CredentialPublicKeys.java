@@ -30,13 +30,20 @@ public class CredentialPublicKeys {
         this.threshold = threshold;
     }
 
+    /**
+     * Creates a new `CredentialPublicKeys` object with the given keys and threshold.
+     *
+     * @param keys the credential keys (i.e. account holder keys).
+     * @param threshold the account threshold.
+     * @return a new `CredentialPublicKeys` object with the given keys and threshold.
+     */
     public static CredentialPublicKeys from(Map<Index, ED25519PublicKey> keys, int threshold) {
         return new CredentialPublicKeys(keys, threshold);
     }
 
     byte[] getSchemeIdBytes() {
-        val buffer = ByteBuffer.allocate(PublicKey.BYTES);
-        buffer.put(PublicKey.ED25519.getValue());
+        val buffer = ByteBuffer.allocate(TransactionType.BYTES);
+        buffer.put((byte)0);
         return buffer.array();
     }
 
@@ -48,7 +55,7 @@ public class CredentialPublicKeys {
         for (Index key : keys.keySet())
         {
             ED25519PublicKey value = keys.get(key);
-            keyBufferSize += TransactionType.BYTES + value.getBytes().length + PublicKey.BYTES;
+            keyBufferSize += TransactionType.BYTES + value.getBytes().length + TransactionType.BYTES;
         }
         val buffer = ByteBuffer.allocate(
                         keyBufferSize +

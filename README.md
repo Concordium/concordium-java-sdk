@@ -977,7 +977,7 @@ update signing keys of a specific credential.
         .nonce(AccountNonce.from(525))
         .expiry(Expiry.from(1669466666))
         .signer(TransactionTestHelper.getValidSigner())
-        .maxEnergyCost(UInt64.from(3000))
+        .numExistingCredentials(UInt16.from(5))
         .keys(credentialPublicKeys)
         .credentialRegistrationID(regId)
         .build();

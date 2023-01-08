@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,13 @@ public class UpdateCredentialKeysTransaction extends AbstractTransaction {
     private final CredentialPublicKeys keys;
 
     /**
+     * the number of existing credentials on the account.
+     * This will affect the estimated transaction cost.
+     * It is safe to over-approximate this.
+     */
+    private final UInt16 numExistingCredentials;
+
+    /**
      * Account Address of the sender.
      */
     private final AccountAddress sender;
@@ -40,16 +48,13 @@ public class UpdateCredentialKeysTransaction extends AbstractTransaction {
      */
     private final TransactionSigner signer;
 
-    /**
-     * Maximum energy **allowed** for the transaction to use.
-     */
-    private final UInt64 maxEnergyCost;
     private BlockItem blockItem;
 
 
     @Builder
     public UpdateCredentialKeysTransaction(CredentialRegistrationId credentialRegistrationID,
                                            CredentialPublicKeys keys,
+                                           UInt16 numExistingCredentials,
                                            AccountAddress sender,
                                            AccountNonce nonce,
                                            Expiry expiry,
@@ -58,12 +63,12 @@ public class UpdateCredentialKeysTransaction extends AbstractTransaction {
                                            UInt64 maxEnergyCost) throws TransactionCreationException {
         this.credentialRegistrationID = credentialRegistrationID;
         this.keys = keys;
+        this.numExistingCredentials = numExistingCredentials;
         this.sender = sender;
         this.nonce = nonce;
         this.expiry = expiry;
         this.signer = signer;
         this.blockItem = blockItem;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
     /**
@@ -88,7 +93,8 @@ public class UpdateCredentialKeysTransaction extends AbstractTransaction {
                     transaction.expiry,
                     transaction.signer,
                     transaction.credentialRegistrationID,
-                    transaction.keys
+                    transaction.keys,
+                    transaction.numExistingCredentials
             );
             transaction.blockItem = updateCredentialKeysInstance(transaction).toBlockItem();
 
@@ -100,7 +106,7 @@ public class UpdateCredentialKeysTransaction extends AbstractTransaction {
             return UpdateCredentialKeys.createNew(
                             transaction.credentialRegistrationID,
                             transaction.keys,
-                            transaction.maxEnergyCost)
+                            transaction.numExistingCredentials)
                     .withHeader(TransactionHeader.builder()
                             .sender(transaction.sender)
                             .accountNonce(transaction.nonce.getNonce())
@@ -109,13 +115,16 @@ public class UpdateCredentialKeysTransaction extends AbstractTransaction {
                     .signWith(transaction.signer);
         }
 
-        static void verifyUpdateCredentialKeysInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, CredentialRegistrationId credentialRegistrationID, CredentialPublicKeys keys) throws TransactionCreationException {
+        static void verifyUpdateCredentialKeysInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, CredentialRegistrationId credentialRegistrationID, CredentialPublicKeys keys, UInt16 numExistingCredentials) throws TransactionCreationException {
             Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
             if (Objects.isNull(credentialRegistrationID)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("credentialRegistrationID cannot be null"));
             }
             if (Objects.isNull(keys)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("keys cannot be null"));
+            }
+            if (Objects.isNull(numExistingCredentials)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Existing number of credentials cannot be null"));
             }
         }
 

@@ -3,6 +3,7 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.types.Nonce;
+import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -32,7 +33,7 @@ public class UpdateCredentialKeysTest {
         val transfer = UpdateCredentialKeys.createNew(
                         regId,
                         credentialPublicKeys,
-                        UInt64.from(3000))
+                        UInt16.from(5))
                 .withHeader(TransactionHeader
                         .builder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))

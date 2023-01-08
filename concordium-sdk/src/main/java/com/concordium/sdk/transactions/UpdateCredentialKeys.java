@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,12 +27,17 @@ public final class UpdateCredentialKeys extends Payload {
      */
     private final CredentialPublicKeys keys;
 
-    private final UInt64 maxEnergyCost;
+    /**
+     * the number of existing credentials on the account.
+     * This will affect the estimated transaction cost.
+     * It is safe to over-approximate this.
+     */
+    private final UInt16 numExistingCredentials;
 
-    public UpdateCredentialKeys(CredentialRegistrationId credentialRegistrationID, CredentialPublicKeys keys, UInt64 maxEnergyCost) {
+    public UpdateCredentialKeys(CredentialRegistrationId credentialRegistrationID, CredentialPublicKeys keys, UInt16 numExistingCredentials) {
         this.credentialRegistrationID = credentialRegistrationID;
         this.keys = keys;
-        this.maxEnergyCost = maxEnergyCost;
+        this.numExistingCredentials = numExistingCredentials;
     }
 
     /**
@@ -54,10 +60,12 @@ public final class UpdateCredentialKeys extends Payload {
     }
     @Override
     UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+        val numCredKeys = keys.getKeys().size();
+        val maxEnergyCost = UInt64.from(500 * numExistingCredentials.getValue() + 100 * numCredKeys);
+        return maxEnergyCost;
     }
 
-    static UpdateCredentialKeys createNew(CredentialRegistrationId credentialRegistrationID, CredentialPublicKeys keys, UInt64 maxEnergyCost) {
-        return new UpdateCredentialKeys(credentialRegistrationID, keys, maxEnergyCost);
+    static UpdateCredentialKeys createNew(CredentialRegistrationId credentialRegistrationID, CredentialPublicKeys keys, UInt16 numExistingCredentials) {
+        return new UpdateCredentialKeys(credentialRegistrationID, keys, numExistingCredentials);
     }
 }
