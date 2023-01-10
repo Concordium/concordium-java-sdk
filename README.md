@@ -423,6 +423,9 @@ Send funds from one account to another with an attached schedule.
 - TransferScheduleWithMemoTransaction
 Send funds from one account to another with an attached schedule with an associated `Memo`.
 
+- UpdateCredentialKeysTransaction
+Updates signing keys of a specific credential.
+
 ## Exceptions and general error handling
 
 - `TransactionCreationException`
@@ -950,6 +953,44 @@ try{
     Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
 }
 ```
+
+#### Update Credential Keys transaction
+The following example demonstrates how to construct a "UpdateCredentialKeys" transaction, which is used to 
+update signing keys of a specific credential.
+
+ ```java
+ try{
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+
+    Map<Index, Key> keys =  new HashMap<>();
+    Key newKey = new Key("ad6591a2deb03c32357615d73e144e01a49abad49671428d46db58cf2d4e4d87", "Ed25519");
+    keys.put(Index.from(0), newKey);
+
+    CredentialRegistrationId regId = CredentialRegistrationId.fromBytes(new byte[]{-90, 67, -42, 8, 42, -113, -128, 70, 15, -1, 39, -13, -1, 39, -2, -37, -3, -58, 0, 57, 82, 116, 2, -72, 24, -113, -56, 69, -88, 73, 66, -117, 84, -124, -56, 42, 21, -119, -54, -73, 96, 76, 26, 43, -23, 120, -61, -100});
+    CredentialPublicKeys credentialPublicKeys = CredentialPublicKeys.from(keys, 1);
+    
+    UpdateCredentialKeysTransaction transaction = TransactionFactory.newUpdateCredentialKeys()
+        .nonce(AccountNonce.from(525))
+        .expiry(Expiry.from(1669466666))
+        .signer(TransactionTestHelper.getValidSigner())
+        .numExistingCredentials(UInt16.from(5))
+        .keys(credentialPublicKeys)
+        .credentialRegistrationID(regId)
+        .build();
+    client.sendTransaction(transaction);
+} catch (TransactionRejectionException e) {
+     // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+
 
 # Custom Signing
 By default the java library supports ED25519 signing via the native binding [ED25519SecretKey](./concordium-sdk/src/main/java/com/concordium/sdk/crypto/ed25519/ED25519SecretKey.java).

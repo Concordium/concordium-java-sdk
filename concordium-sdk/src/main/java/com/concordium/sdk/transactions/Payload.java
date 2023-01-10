@@ -97,6 +97,7 @@ public abstract class Payload {
         UPDATE,
         TRANSFER_WITH_SCHEDULE,
         TRANSFER_WITH_SCHEDULE_AND_MEMO,
+        UPDATE_CREDENTIAL_KEYS,
     }
 
 }
