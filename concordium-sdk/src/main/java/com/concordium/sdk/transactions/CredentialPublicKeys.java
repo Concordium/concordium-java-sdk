@@ -38,6 +38,9 @@ public class CredentialPublicKeys {
      * @return a new `CredentialPublicKeys` object with the given keys and threshold.
      */
     public static CredentialPublicKeys from(Map<Index, ED25519PublicKey> keys, int threshold) {
+        if (threshold <= 0) {
+            throw new IllegalArgumentException("Threshold must be greater than 0");
+        }
         return new CredentialPublicKeys(keys, threshold);
     }
 
