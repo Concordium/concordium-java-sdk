@@ -108,7 +108,7 @@ public final class Connection {
      *
      * @return a new {@link ManagedChannel}
      */
-    ManagedChannel newChannel() throws IOException {
+    public ManagedChannel newChannel() throws IOException {
         ManagedChannel channel;
         if (enforceTLS()) {
             val tlsConfig = getTlsConfig();
