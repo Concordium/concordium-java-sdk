@@ -21,6 +21,7 @@ public enum TransactionType {
     UPDATE_CREDENTIALS((byte) 20),
     REGISTER_DATA((byte) 21),
     TRANSFER_WITH_MEMO((byte) 22),
+    ENCRYPTED_TRANSFER_WITH_MEMO((byte) 23),
     TRANSFER_WITH_SCHEDULE_AND_MEMO((byte) 24);
 
     /**

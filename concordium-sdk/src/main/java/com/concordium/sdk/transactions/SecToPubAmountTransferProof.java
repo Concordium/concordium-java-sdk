@@ -1,31 +1,34 @@
-package com.concordium.sdk.crypto.elgamal;
+package com.concordium.sdk.transactions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
-@RequiredArgsConstructor
 @Getter
-@ToString
 @EqualsAndHashCode
-public class ElgamalPublicKey {
+/**
+ * Proof that an encrypted transfer data is well-formed
+ */
+public class SecToPubAmountTransferProof {
 
     /**
-     * The bytes of the public key.
+     * The bytes of the proof.
      */
     private final byte[] bytes;
 
+    private SecToPubAmountTransferProof(final byte[] bytes) {
+        this.bytes = bytes;
+    }
+
     @JsonCreator
-    public static ElgamalPublicKey from(String hexKey) {
+    public static SecToPubAmountTransferProof from(String hexKey) {
         try {
-            return new ElgamalPublicKey(Hex.decodeHex(hexKey));
+            return new SecToPubAmountTransferProof(Hex.decodeHex(hexKey));
         } catch (DecoderException e) {
-            throw new IllegalArgumentException("Cannot create ElgamalPublicKey", e);
+            throw new IllegalArgumentException("Cannot create SecToPubAmountTransferProof", e);
         }
     }
 

@@ -61,4 +61,10 @@ public class TransactionFactoryTest {
         val builder = TransactionFactory.newUpdateCredentialKeys();
         assertNotNull(builder);
     }
+
+    @Test
+    public void testCanTransferToEncryptedFactory() {
+        val builder = TransactionFactory.newTransferToEncrypted();
+        assertNotNull(builder);
+    }
 }
