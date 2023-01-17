@@ -24,6 +24,10 @@ public final class TransferScheduleWithMemo extends Payload {
      * The release schedule. This can be at most 255 elements.
      */
     private final Schedule[] amount;
+
+    /**
+     * The memo message associated with the transfer.
+     */
     private final Memo memo;
 
     public TransferScheduleWithMemo(AccountAddress to, Schedule[] amount, Memo memo) {

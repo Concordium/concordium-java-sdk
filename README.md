@@ -57,7 +57,7 @@ The `fat` jar can then be used from another project by adding it to the `pom.xml
 ## JNI
 When doing changes wrt. the JNI two things have to be taken care of.
 1. The Java native calls
-1. The rust [implementation](./ed25519-jni) of which the Java native binds to.
+1. The rust [implementation](./crypto-jni) of which the Java native binds to.
 
 ## The Java part
 The SDK uses JNI to perform EDDSA_ED25519 signatures.
@@ -66,7 +66,7 @@ One can create a new header file by using the command: `javac -h . ED25519.java`
 
 ## The Rust part
 
-The output will be a header file, the contents hereof must be matched appropriately as described in the [documentation](https://docs.rs/jni/0.19.0/jni/) into the [lib.rs](./ed25519-jni/src/lib.rs) rust source file.
+The output will be a header file, the contents hereof must be matched appropriately as described in the [documentation](https://docs.rs/jni/0.19.0/jni/) into the [lib.rs](crypto-jni/src/lib.rs) rust source file.
 
 
 # Usage
@@ -399,29 +399,44 @@ If the transaction was rejected by the node, then `sendTransaction` will throw a
 
 ### Supported Transactions
 
-- TransferTransaction 
+- TransferTransaction: 
 Sends funds from one account to another.
 
-- TransferWithMemo
+- TransferWithMemo:
 Sends funds from one account to another with an associated `Memo`.
 
-- Register Data
+- Register Data:
 Registers a maximum of 256 bytes on the chain.
 
-- Initialize Contract
+- Initialize Contract:
 Initialize a smart contract from an already deployed module.
 
-- Deploy Contract
+- Deploy Contract:
 Deploy a smart contract module.
 
-- Update Contract
+- Update Contract:
 Update a smart contract.
 
-- TransferScheduleTransaction
+- TransferScheduleTransaction:
 Send funds from one account to another with an attached schedule.
 
-- TransferScheduleWithMemoTransaction
+- TransferScheduleWithMemoTransaction:
 Send funds from one account to another with an attached schedule with an associated `Memo`.
+
+- UpdateCredentialKeysTransaction:
+Updates signing keys of a specific credential.
+
+- Transfer to public:
+Transfer CCDAmount from encrypted to public balance of the same account.
+
+- Transfer to encrypted:
+Transfer CCDAmount from public to encrypted balance of the same account.
+
+- Encrypted Transfer:
+Make an encrypted transfer.
+
+- Encrypted Transfer with memo:
+Make an encrypted transfer with memo.
 
 ## Exceptions and general error handling
 
@@ -791,7 +806,6 @@ try{
 
 ```
 
-
 ### Initialising a smart contract transaction 
 The following example demonstrates how to initialize a smart contract from a module, which has already been deployed.
 The name of the contract is "CIS2-NFT".
@@ -950,6 +964,171 @@ try{
     Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
 }
 ```
+
+#### Update Credential Keys transaction
+The following example demonstrates how to construct a "UpdateCredentialKeys" transaction, which is used to 
+update signing keys of a specific credential.
+
+ ```java
+ try{
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+
+    Map<Index, Key> keys =  new HashMap<>();
+    Key newKey = new Key("ad6591a2deb03c32357615d73e144e01a49abad49671428d46db58cf2d4e4d87", "Ed25519");
+    keys.put(Index.from(0), newKey);
+
+    CredentialRegistrationId regId = CredentialRegistrationId.fromBytes(new byte[]{-90, 67, -42, 8, 42, -113, -128, 70, 15, -1, 39, -13, -1, 39, -2, -37, -3, -58, 0, 57, 82, 116, 2, -72, 24, -113, -56, 69, -88, 73, 66, -117, 84, -124, -56, 42, 21, -119, -54, -73, 96, 76, 26, 43, -23, 120, -61, -100});
+    CredentialPublicKeys credentialPublicKeys = CredentialPublicKeys.from(keys, 1);
+    
+    UpdateCredentialKeysTransaction transaction = TransactionFactory.newUpdateCredentialKeys()
+        .nonce(AccountNonce.from(525))
+        .expiry(Expiry.from(1669466666))
+        .signer(TransactionTestHelper.getValidSigner())
+        .numExistingCredentials(UInt16.from(5))
+        .keys(credentialPublicKeys)
+        .credentialRegistrationID(regId)
+        .build();
+    client.sendTransaction(transaction);
+} catch (TransactionRejectionException e) {
+     // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+
+
+### Transfer to public
+Transfer to Public transaction is used to convert a part or whole of shielded (Private) balance to unsheilded (Public) balance
+
+```java
+final CCDAmount amountToMakePublic = CCDAmount.fromMicro(10);
+final AccountAddress accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+final ElgamalSecretKey accountSecretKey = ElgamalSecretKey.from("<ACCOUNT DECRYPTION KEY HEX>");
+final ConsensusStatus consensus = client.getConsensusStatus();
+final AccountInfo accountInfo = client.getAccountInfo(
+        AccountRequest.from(accountAddress),
+        consensus.getBestBlock());
+final CryptographicParameters cryptographicParameters = client.getCryptographicParameters(consensus.getBestBlock());
+final TransferToPublicTransaction transaction = TransactionFactory.newTransferToPublic(
+                cryptographicParameters,
+                accountInfo.getAccountEncryptedAmount(),
+                accountSecretKey,
+                amountToMakePublic)
+        .sender(accountInfo.getAccountAddress())
+        .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+        .expiry(Expiry.from(System.currentTimeMillis() / 1000 + 60))
+        .signer(TransactionSigner.from(
+                SignerEntry.from(
+                        Index.from(0),
+                        Index.from(0),
+                        ED25519SecretKey.from("<ACCOUNT SIGN KEY HEX>"))))
+        .build();
+final Hash txnHash = client.sendTransaction(transaction);
+```
+
+
+
+#### Transfer to encrypted transaction
+The following example demonstrates how to transfer CCD to encrypted from public.
+
+ ```java
+
+try{
+        TransactionSigner signer = TransactionSigner.from(
+            SignerEntry.from(Index.from(0), Index.from(0),
+                firstSecretKey),
+            SignerEntry.from(Index.from(0), Index.from(1),
+                secondSecretKey));
+        TransferToEncryptedTransaction transaction = TransactionFactory.newTransferToEncrypted()
+            .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
+            .nonce(AccountNonce.from(nonceValue))
+            .expiry(Expiry.from(expiry))
+            .signer(signer)
+            .payload(TransferToEncryptedPayload.from(1))
+            .build();
+
+            client.sendTransaction(transaction);
+        } catch (TransactionRejectionException e) {
+            // Handle the rejected transaction, here we simply log it.
+            Transaction rejectedTransaction =  e.getTransaction();
+            Hash rejectedTransactionHash = rejectedTransaction.getHash();
+            String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+            Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+        }
+```
+
+#### Encrypted transfer transaction
+The following example demonstrates how to make an encrypted transfer.
+
+
+ ```java
+     final AccountAddress accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+    final AccountAddress toAccountAddress = AccountAddress.from("3aYdMM4CFQSH7P16sCN51p3J6TYhACgV9EYBeVJoLTfZxRFwp4");
+    final ConsensusStatus consensus = client.getConsensusStatus();
+    final AccountInfo accountInfo = client.getAccountInfo(
+            AccountRequest.from(accountAddress),
+            consensus.getBestBlock());
+    final CryptographicParameters cryptographicParameters = client.getCryptographicParameters(consensus.getBestBlock());
+    final EncryptedTransferTransaction transaction = TransactionFactory.newEncryptedTransfer(
+                    cryptographicParameters,
+                    accountInfo.getAccountEncryptedAmount(),
+                    "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c5b85e593e6d90fce067c8a3bba55028cb8dd4421c7a7acd339fa546312af70d1c38a6036d6fe1f58a1eb7943cd605b3a0",
+                    "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c573c28a63523116b128d7d33037cdbdf5bf6a30048fa27a121b4d950d1f5caecc",
+                    "1"
+                )
+                .sender(accountInfo.getAccountAddress())
+                .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                .expiry(Expiry.from(System.currentTimeMillis() / 1000 + 60))
+                .signer(TransactionSigner.from(
+                    SignerEntry.from(
+                        Index.from(0),
+                        Index.from(0),
+                        ED25519SecretKey.from("<ACCOUNT SIGN KEY HEX>"))))
+                .to(toAccountAddress)
+                .build();
+    final Hash txnHash = client.sendTransaction(transaction);
+```
+
+
+#### Encrypted transfer with memo transaction
+The following example demonstrates how to make an encrypted transfer with memo.
+
+
+ ```java 
+    final AccountAddress accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+    final AccountAddress toAccountAddress = AccountAddress.from("3aYdMM4CFQSH7P16sCN51p3J6TYhACgV9EYBeVJoLTfZxRFwp4");
+    final ConsensusStatus consensus = client.getConsensusStatus();
+    final AccountInfo accountInfo = client.getAccountInfo(
+            AccountRequest.from(accountAddress),
+            consensus.getBestBlock());
+    final CryptographicParameters cryptographicParameters = client.getCryptographicParameters(consensus.getBestBlock());
+    final EncryptedTransferTransaction transaction = TransactionFactory.newEncryptedTransferWithMemo(
+                    cryptographicParameters,
+                    accountInfo.getAccountEncryptedAmount(),
+                    "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c5b85e593e6d90fce067c8a3bba55028cb8dd4421c7a7acd339fa546312af70d1c38a6036d6fe1f58a1eb7943cd605b3a0",
+                    "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c573c28a63523116b128d7d33037cdbdf5bf6a30048fa27a121b4d950d1f5caecc",
+                    "1"
+                )
+                .sender(accountInfo.getAccountAddress())
+                .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                .expiry(Expiry.from(System.currentTimeMillis() / 1000 + 60))
+                .signer(TransactionSigner.from(
+                    SignerEntry.from(
+                        Index.from(0),
+                        Index.from(0),
+                        ED25519SecretKey.from("<ACCOUNT SIGN KEY HEX>"))))
+                .to(toAccountAddress)
+                .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
+                .build();
+    final Hash txnHash = client.sendTransaction(transaction);
+```
+
 
 # Custom Signing
 By default the java library supports ED25519 signing via the native binding [ED25519SecretKey](./concordium-sdk/src/main/java/com/concordium/sdk/crypto/ed25519/ED25519SecretKey.java).

@@ -1,25 +1,17 @@
 package com.concordium.sdk.responses.cryptographicparameters;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import org.apache.commons.codec.binary.Hex;
+import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
+import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
+import lombok.Builder;
+import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 //exists for json parsing only
-@Getter
+@Data
+@Builder
+@Jacksonized
 final class Value {
-
-    private final byte[] bulletproofGenerators;
-    private final byte[] onChainCommitmentKey;
+    private final BulletproofGenerators bulletproofGenerators;
+    private final PedersenCommitmentKey onChainCommitmentKey;
     private final String genesisString;
-
-
-    @SneakyThrows
-    Value(@JsonProperty("bulletproofGenerators") String bulletproofGenerators,
-          @JsonProperty("onChainCommitmentKey") String onChainCommitmentKey,
-          @JsonProperty("genesisString") String genesisString) {
-        this.bulletproofGenerators = Hex.decodeHex(bulletproofGenerators);
-        this.onChainCommitmentKey = Hex.decodeHex(onChainCommitmentKey);
-        this.genesisString = genesisString;
-    }
 }

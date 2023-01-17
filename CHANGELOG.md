@@ -3,6 +3,11 @@
 ## Unreleased changes
 - Added support for Transfer With Schedule.
 - Added support for Transfer With Schedule With Memo.
+- Added support for Update Credentials Keys.
+- Added support for Transfer to public wallet.
+- Added support for Transfer To Encrypted wallet.
+- Added support for Encrypted Transfer.
+- Added support for Encrypted Transfer with Memo.
 
 ## 4.0.0
 - Support for Protocol 5.
