@@ -67,7 +67,7 @@ public final class TransferToPublic extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return UInt64.from(14850);
+        return TransactionTypeCost.TRANSFER_TO_PUBLIC.getValue();
     }
 
     static TransferToPublic createNew(

@@ -9,9 +9,15 @@ import java.util.Optional;
 
 @Data
 public class ConfigureBakerKeysResult {
+    /**
+     * An optional `ConfigureBakerKeysJniOutput` object, containing the output of the configure baker keys function.
+     */
     @JsonProperty("Ok")
     private final Optional<ConfigureBakerKeysJniOutput> ok;
 
+    /**
+     * An optional `CryptoJniResultCode` object, containing an error code if the configure baker keys function failed.
+     */
     @JsonProperty("Err")
     private final Optional<CryptoJniResultCode> err;
 
@@ -24,6 +30,11 @@ public class ConfigureBakerKeysResult {
         this.err = Optional.ofNullable(err);
     }
 
+    /**
+     * Returns a boolean indicating whether the `ok` field is present (i.e. whether the configure baker keys payload was successfully generated).
+     *
+     * @return a boolean indicating whether the `ok` field is present.
+     */
     public boolean isok() {
         return ok.isPresent();
     }

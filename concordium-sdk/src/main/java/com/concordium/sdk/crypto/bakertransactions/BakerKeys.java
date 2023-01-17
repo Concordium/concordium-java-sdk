@@ -1,5 +1,6 @@
 package com.concordium.sdk.crypto.bakertransactions;
 
+import com.concordium.sdk.crypto.CryptoJniNative;
 import com.concordium.sdk.crypto.CryptoJniResultCode;
 import com.concordium.sdk.crypto.NativeResolver;
 import com.concordium.sdk.exceptions.CryptoJniException;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.val;
 
 public final class BakerKeys {
+    //static block to load native library
     static {
         loadNatives();
     }
@@ -16,12 +18,13 @@ public final class BakerKeys {
         NativeResolver.loadLib();
     }
 
-
+    //Method to create baker keys
     public static BakerKeysJniOutput createBakerKeys() {
 
         BakerKeysResult result = null;
         try {
-            val jsonStr = generateBakerKeys();
+            //Invoking native method to generate baker keys
+            val jsonStr = CryptoJniNative.generateBakerKeys();
             result = JsonMapper.INSTANCE.readValue(jsonStr, BakerKeysResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -35,8 +38,6 @@ public final class BakerKeys {
                 () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
 
     }
-
-    private static native String generateBakerKeys();
 
 }
 

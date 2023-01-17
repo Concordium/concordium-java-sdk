@@ -5,10 +5,9 @@ import lombok.*;
 
 import java.nio.ByteBuffer;
 
-
 /**
- * Payload of the `AddBaker` transaction. This transaction registers the
- * account as a baker.
+ * Payload of the `ConfigureBaker` transaction. This transaction contains the keys
+ * with which the baker registered.
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -26,6 +25,10 @@ public final class ConfigureBaker extends Payload {
         return PayloadType.CONFIGURE_BAKER;
     }
 
+    /**
+     * Get the cost of the transaction based on the keys with proofs
+     * @return UInt64
+     */
     @Override
     UInt64 getTransactionTypeCost() {
         if (this.payload.getKeysWithProofs() != null)
@@ -34,6 +37,10 @@ public final class ConfigureBaker extends Payload {
             return TransactionTypeCost.CONFIGURE_BAKER.getValue();
     }
 
+    /**
+     * Get the bytes representation of the payload
+     * @return byte[]
+     */
     public byte[] getBytes() {
         val payloadBytes = payload.getBytes();
         val bufferLength = TransactionType.BYTES +

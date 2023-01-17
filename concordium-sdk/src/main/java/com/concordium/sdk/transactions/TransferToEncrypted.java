@@ -51,7 +51,7 @@ public final class TransferToEncrypted extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return UInt64.from(600);
+        return TransactionTypeCost.TRANSFER_TO_ENCRYPTED.getValue();
     }
 
     static TransferToEncrypted createNew(CCDAmount amount) {

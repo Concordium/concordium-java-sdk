@@ -6,6 +6,10 @@ import lombok.val;
 
 import java.util.Objects;
 
+/**
+ * A class that represents a ConfigureBakerTransaction.
+ * This transaction is used to register the account as a baker.
+ */
 public class ConfigureBakerTransaction extends AbstractTransaction {
     /**
      * Whether to add earnings to the stake automatically or not.

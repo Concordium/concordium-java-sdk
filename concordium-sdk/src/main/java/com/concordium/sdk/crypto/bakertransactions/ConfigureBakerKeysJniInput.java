@@ -10,6 +10,12 @@ import lombok.Data;
 @Data
 @Builder
 public class ConfigureBakerKeysJniInput {
+    /**
+     * The address of the account that will be configured as a baker
+     */
     private final AccountAddress sender;
+    /**
+     * The baker keys that will be configured for the account
+     */
     private final BakerKeysJniOutput keys;
 }

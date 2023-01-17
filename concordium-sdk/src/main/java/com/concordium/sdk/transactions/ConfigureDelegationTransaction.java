@@ -6,6 +6,10 @@ import lombok.val;
 
 import java.util.Objects;
 
+/**
+ * A class that represents a ConfigureDelegationTransaction.
+ * This transaction is used to register the account as a delegator.
+ */
 public class ConfigureDelegationTransaction extends AbstractTransaction {
     /**
      * Whether to add earnings to the stake automatically or not.

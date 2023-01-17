@@ -7,6 +7,11 @@ import lombok.*;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
+/**
+ * The ConfigureDelegationPayload class represents the payload of the ConfigureDelegation transaction.
+ * It contains the capital delegated to the pool, whether the delegator's earnings are restaked, and the target of the delegation.
+ * The class contains methods to convert the payload to bytes, and a bitmap representation of the non-null fields in the payload.
+ */
 @Getter
 @Builder
 @EqualsAndHashCode
@@ -30,6 +35,11 @@ public class ConfigureDelegationPayload {
         return buffer;
     }
 
+    /**
+     * This method returns an array of bytes that represents the bitmap of the fields that are not null
+     * in the ConfigureDelegationPayload object
+     * @return  byte[]
+     */
     public byte[] getBitMapBytes() {
         int bitValue = 0;
         int it = 1;
@@ -45,6 +55,10 @@ public class ConfigureDelegationPayload {
         return UInt16.from(bitValue).getBytes();
     }
 
+    /**
+     * This method returns an array of bytes that represents the ConfigureDelegationPayload object
+     * @return byte[]
+     */
     public byte[] getBytes() {
         int bufferLength = 0;
         ByteBuffer capitalBuffer = ByteBuffer.allocate(bufferLength);
