@@ -2,8 +2,8 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
-import com.concordium.sdk.v2.ClientV2;
-import com.concordium.sdk.v2.types.BlockHashInput;
+import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.ClientV2;
 import com.google.common.collect.ImmutableList;
 import io.grpc.StatusRuntimeException;
 import lombok.var;
@@ -21,12 +21,6 @@ public class GetAnonymityRevokers implements Runnable {
             defaultValue = "http://localhost:10001")
     private String endpoint;
 
-    @Option(
-            names = {"--auth-token"},
-            description = "Authentication Token for the node",
-            defaultValue = "rpcadmin")
-    private String authToken;
-
     @lombok.SneakyThrows
     @Override
     public void run() {
@@ -35,7 +29,7 @@ public class GetAnonymityRevokers implements Runnable {
         Connection connection = Connection.builder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(Credentials.from(authToken))
+                .credentials(new Credentials())
                 .build();
         ClientV2 clientV2 = ClientV2.from(connection);
         var arInfos = clientV2.getAnonymityRevokers(BlockHashInput.BEST);

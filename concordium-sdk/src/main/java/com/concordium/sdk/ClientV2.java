@@ -1,21 +1,17 @@
-package com.concordium.sdk.v2;
+package com.concordium.sdk;
 
 import com.concordium.grpc.v2.QueriesGrpc;
-import com.concordium.sdk.Connection;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.v2.types.ArInfo;
-import com.concordium.sdk.v2.types.BlockHashInput;
-import com.concordium.sdk.v2.types.MapperExtensions;
-import com.google.common.collect.Iterators;
+import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import io.grpc.ManagedChannel;
-import io.grpc.stub.StreamObserver;
 import lombok.var;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
-import static com.concordium.sdk.v2.types.MapperExtensions.to;
+import static com.concordium.sdk.ClientV2MapperExtensions.to;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -27,12 +23,6 @@ public final class ClientV2 {
      * <a href="https://grpc.io/docs/languages/java/basics/#instantiating-a-stub">Read more</a>
      */
     private final QueriesGrpc.QueriesBlockingStub blockingStub;
-
-    /**
-     * The grpc non-blocking stub.
-     * <a href="https://grpc.io/docs/languages/java/basics/#instantiating-a-stub">Read more</a>
-     */
-    private final QueriesGrpc.QueriesStub stub;
 
     /**
      * The underlying grpc channel
@@ -48,33 +38,28 @@ public final class ClientV2 {
         return new ClientV2(connection);
     }
 
-    private ClientV2(Connection connection) throws ClientInitializationException {
+    private ClientV2(final Connection connection) throws ClientInitializationException {
         try {
             this.timeout = connection.getTimeout();
             this.channel = connection.newChannel();
             this.blockingStub = QueriesGrpc
                     .newBlockingStub(this.channel)
                     .withCallCredentials(connection.getCredentials());
-            this.stub = QueriesGrpc
-                    .newStub(this.channel)
-                    .withCallCredentials(connection.getCredentials());
         } catch (IOException e) {
             throw ClientInitializationException.from(e);
         }
     }
 
-    public Iterator<ArInfo> getAnonymityRevokers(BlockHashInput input) {
-        var res = this.server().getAnonymityRevokers(to(input));
+    /**
+     * Gets all the Anonymity Revokers at the end of the block pointed by {@link BlockHashInput}.
+     *
+     * @param input Pointer to the Block.
+     * @return {@link Iterator} of {@link AnonymityRevokerInfo}
+     */
+    public Iterator<AnonymityRevokerInfo> getAnonymityRevokers(final BlockHashInput input) {
+        var grpcOutput = this.server().getAnonymityRevokers(to(input));
 
-        return Iterators.transform(res, MapperExtensions::to);
-    }
-
-    public void getAnonymityRevokers(BlockHashInput input, StreamObserver<ArInfo> streamObserver) {
-        var grpcStreamObserver = Utils.<com.concordium.grpc.v2.ArInfo, ArInfo>to(
-                streamObserver,
-                MapperExtensions::to);
-
-        this.serverAsync().getAnonymityRevokers(to(input), grpcStreamObserver);
+        return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
     /**
@@ -99,16 +84,5 @@ public final class ClientV2 {
      */
     private QueriesGrpc.QueriesBlockingStub server() {
         return this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * Get a {@link QueriesGrpc.QueriesStub} with a timeout
-     * The timeout is the one specified in via the {@link Connection} object used to
-     * initialize `this`.
-     *
-     * @return A new stub with a timeout.
-     */
-    private QueriesGrpc.QueriesStub serverAsync() {
-        return this.stub.withDeadlineAfter(this.timeout, TimeUnit.MILLISECONDS);
     }
 }

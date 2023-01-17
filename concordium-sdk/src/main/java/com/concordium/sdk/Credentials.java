@@ -1,9 +1,11 @@
 package com.concordium.sdk;
 
+import com.google.common.base.Strings;
 import io.grpc.CallCredentials;
 import io.grpc.Metadata;
 import lombok.*;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
@@ -28,11 +30,16 @@ public class Credentials extends CallCredentials {
      * within the underlying gRPC connection.
      *
      * @param authenticationToken   the authentication token i.e., the header 'Authentication' is set with this value.
+     *                              If the value is not provided header will not be set.
      * @param withAdditionalHeaders an optional set of extra headers to use within the connection.
      */
     @Builder
     public Credentials(String authenticationToken, @Singular Set<Header> withAdditionalHeaders) {
         this.callCredentials = new CallCredentials(authenticationToken, withAdditionalHeaders);
+    }
+
+    public Credentials() {
+        this.callCredentials = new CallCredentials();
     }
 
     @Override
@@ -54,13 +61,18 @@ public class Credentials extends CallCredentials {
 
         private final Metadata.Key<String> AUTHENTICATION_META_DATA_KEY = Metadata.Key.of((Header.AUTHENTICATION_HEADER), Metadata.ASCII_STRING_MARSHALLER);
 
+        CallCredentials() {
+            this.authenticationToken = "";
+            this.additionalHeaders = Collections.emptySet();
+        }
+
         CallCredentials(final String authenticationToken) {
-            this.authenticationToken = authenticationToken;
+            this.authenticationToken = Strings.nullToEmpty(authenticationToken);
             this.additionalHeaders = Collections.emptySet();
         }
 
         CallCredentials(final String authenticationToken, final Set<Header> additionalHeaders) {
-            this.authenticationToken = authenticationToken;
+            this.authenticationToken = Strings.nullToEmpty(authenticationToken);
             this.additionalHeaders = additionalHeaders;
         }
 
@@ -78,7 +90,7 @@ public class Credentials extends CallCredentials {
 
         private Metadata createMetadata() {
             val metadata = new Metadata();
-            if (!Objects.isNull(authenticationToken)) {
+            if (!Strings.isNullOrEmpty(authenticationToken)) {
                 metadata.put(AUTHENTICATION_META_DATA_KEY, this.authenticationToken);
             }
             for (Header header : additionalHeaders) {

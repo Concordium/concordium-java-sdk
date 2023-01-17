@@ -8,6 +8,8 @@ import lombok.ToString;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
+import java.util.Arrays;
+
 @RequiredArgsConstructor
 @Getter
 @ToString
@@ -22,9 +24,19 @@ public class ElgamalPublicKey {
     @JsonCreator
     public static ElgamalPublicKey from(String hexKey) {
         try {
-            return new ElgamalPublicKey(Hex.decodeHex(hexKey));
+            return from(Hex.decodeHex(hexKey));
         } catch (DecoderException e) {
             throw new IllegalArgumentException("Cannot create ElgamalPublicKey", e);
         }
+    }
+
+    /**
+     * Creates an Elgamal Public Key from {@link byte} Array.
+     *
+     * @param bytes Input Byte Array
+     * @return Instance of {@link ElgamalPublicKey}
+     */
+    public static ElgamalPublicKey from(final byte[] bytes) {
+        return new ElgamalPublicKey(Arrays.copyOf(bytes, bytes.length));
     }
 }

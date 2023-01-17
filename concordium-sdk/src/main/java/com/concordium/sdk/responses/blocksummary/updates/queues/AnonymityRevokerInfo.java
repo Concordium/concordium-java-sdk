@@ -7,10 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.util.Optional;
 
@@ -34,6 +31,7 @@ public final class AnonymityRevokerInfo {
     private final ElgamalPublicKey anonymityRevokerPublicKey;
 
     @JsonCreator
+    @Builder
     public AnonymityRevokerInfo(@JsonProperty("arIdentity") int arIdentity, @JsonProperty("arDescription") Description description, @JsonProperty("arPublicKey") ElgamalPublicKey arPublicKey) {
         this.arIdentity = UInt32.from(arIdentity);
         this.description = description;
