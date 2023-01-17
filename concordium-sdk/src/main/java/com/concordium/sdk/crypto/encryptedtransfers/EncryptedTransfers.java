@@ -1,5 +1,6 @@
 package com.concordium.sdk.crypto.encryptedtransfers;
 
+import com.concordium.sdk.crypto.CryptoJniNative;
 import com.concordium.sdk.crypto.CryptoJniResultCode;
 import com.concordium.sdk.crypto.NativeResolver;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
@@ -50,7 +51,7 @@ public final class EncryptedTransfers {
         TransferToPublicJniResult result = null;
         try {
             val inputJsonString = JsonMapper.INSTANCE.writeValueAsString(jniInput);
-            val jsonStr = createSecToPubTransfer(inputJsonString);
+            val jsonStr = CryptoJniNative.createSecToPubTransfer(inputJsonString);
             result = JsonMapper.INSTANCE.readValue(jsonStr, TransferToPublicJniResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -64,6 +65,7 @@ public final class EncryptedTransfers {
         return result.getOk().orElseThrow(
                 () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
     }
+
 
     public static EncryptedAmountTransferJniOutput createEncryptedTransferPayload(
             CryptographicParameters cryptographicParameters,
@@ -85,7 +87,7 @@ public final class EncryptedTransfers {
         EncryptedAmountTransferJniResult result = null;
         try {
             val inputJsonString = JsonMapper.INSTANCE.writeValueAsString(jniInput);
-            val jsonStr = generateEncryptedTransfer(inputJsonString);
+            val jsonStr = CryptoJniNative.generateEncryptedTransfer(inputJsonString);
             result = JsonMapper.INSTANCE.readValue(jsonStr, EncryptedAmountTransferJniResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -98,9 +100,7 @@ public final class EncryptedTransfers {
 
         return result.getOk().orElseThrow(
                 () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+
     }
 
-    private static native String createSecToPubTransfer(String input);
-
-    private static native String generateEncryptedTransfer(String input);
 }

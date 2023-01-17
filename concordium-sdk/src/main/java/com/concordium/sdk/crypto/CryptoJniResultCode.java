@@ -9,7 +9,7 @@ public enum CryptoJniResultCode {
     NATIVE_CONVERSION_ERROR(3, "Native Conversion Error."),
     AMOUNT_DECRYPTION_ERROR(4, "Input Encrypted Amount could not be Decrypted."),
     PAYLOAD_CREATION_ERROR(5, "JNI Output Payload could not be created"),
-    ERROR_UNKNOWN_RESULT_CODE(100, "Unknown EncryptedTransfersResultCode");
+    ERROR_UNKNOWN_RESULT_CODE(6, "Unknown EncryptedTransfersResultCode");
 
     private final int code;
     @Getter

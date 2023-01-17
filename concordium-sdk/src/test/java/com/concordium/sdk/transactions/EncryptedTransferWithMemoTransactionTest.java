@@ -586,7 +586,7 @@ public class EncryptedTransferWithMemoTransactionTest {
                 .sender(accountInfo.getAccountAddress())
                 .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
                 .expiry(Expiry.from(123456))
-                .to(toAccountAddress)
+                .receiver(toAccountAddress)
                 .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
                 .signer(TransactionTestHelper.getValidSigner())
                 .build();
@@ -643,7 +643,7 @@ public class EncryptedTransferWithMemoTransactionTest {
                     .sender(accountInfo.getAccountAddress())
                     .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
                     .expiry(Expiry.from(123456))
-                    .to(toAccountAddress)
+                    .receiver(toAccountAddress)
                     .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
                     .signer(TransactionTestHelper.getValidSigner())
                     .build();

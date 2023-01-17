@@ -5,8 +5,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 
+/**
+ * A sequential index of an incoming encrypted amount on an account.
+ */
 @Data
 public class EncryptedAmountIndex {
+    /**
+     * An index that represents which encrypted amounts have been combined into an
+     * associated encrypted amount.
+     */
     private final UInt64 index;
 
     private EncryptedAmountIndex(UInt64 index) {

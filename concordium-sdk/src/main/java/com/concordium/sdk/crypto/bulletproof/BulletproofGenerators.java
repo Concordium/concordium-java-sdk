@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
+/**
+ * Generators for the bulletproofs used for range proofs.
+ */
 public class BulletproofGenerators {
     private final byte[] bytes;
 

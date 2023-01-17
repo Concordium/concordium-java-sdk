@@ -96,6 +96,16 @@ public class TransactionFactory {
     }
 
     /**
+     * Creates a new {@link UpdateCredentialKeysTransaction.UpdateCredentialKeysTransactionBuilder} for
+     * creating a {@link UpdateCredentialKeysTransaction}
+     *
+     * @return the builder for a {@link UpdateCredentialKeysTransaction}
+     */
+    public static UpdateCredentialKeysTransaction.UpdateCredentialKeysTransactionBuilder newUpdateCredentialKeys() {
+        return UpdateCredentialKeysTransaction.builder();
+    }
+
+    /**
      * Creates a new {@link TransferToPublicTransaction.TransferToPublicTransactionBuilder} for
      * creating a {@link TransferToPublicTransaction}
      *
@@ -229,7 +239,6 @@ public class TransactionFactory {
                 .data(amountTransferData);
 
     }
-
     /**
      * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
      * creating a {@link ConfigureBakerTransaction}

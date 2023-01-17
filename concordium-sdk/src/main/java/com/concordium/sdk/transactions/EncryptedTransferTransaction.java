@@ -18,7 +18,7 @@ public class EncryptedTransferTransaction extends AbstractTransaction {
     /**
      * The account address to which the transfer will be sent.
      */
-    private final AccountAddress to;
+    private final AccountAddress receiver;
 
     /**
      * Account Address of the sender.
@@ -45,13 +45,13 @@ public class EncryptedTransferTransaction extends AbstractTransaction {
     @Builder
     public EncryptedTransferTransaction(
             EncryptedAmountTransferData data,
-            AccountAddress to, AccountAddress sender,
+            AccountAddress receiver, AccountAddress sender,
             AccountNonce nonce,
             Expiry expiry,
             TransactionSigner signer,
             BlockItem blockItem) throws TransactionCreationException {
         this.data = data;
-        this.to = to;
+        this.receiver = receiver;
         this.sender = sender;
         this.nonce = nonce;
         this.expiry = expiry;
@@ -81,7 +81,7 @@ public class EncryptedTransferTransaction extends AbstractTransaction {
                     transaction.nonce,
                     transaction.expiry,
                     transaction.signer,
-                    transaction.to,
+                    transaction.receiver,
                     transaction.data);
             transaction.blockItem = EncryptedTransferInstance(transaction).toBlockItem();
             return transaction;
@@ -90,7 +90,7 @@ public class EncryptedTransferTransaction extends AbstractTransaction {
         private Payload EncryptedTransferInstance(EncryptedTransferTransaction transaction) throws TransactionCreationException {
             return EncryptedTransfer.createNew(
                             transaction.data,
-                            transaction.to).
+                            transaction.receiver).
                     withHeader(TransactionHeader.builder()
                             .sender(transaction.sender)
                             .accountNonce(transaction.nonce.getNonce())
@@ -105,13 +105,13 @@ public class EncryptedTransferTransaction extends AbstractTransaction {
                 AccountNonce nonce,
                 Expiry expiry,
                 TransactionSigner signer,
-                AccountAddress to,
+                AccountAddress receiver,
                 EncryptedAmountTransferData data) throws TransactionCreationException {
 
             Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
 
-            if (Objects.isNull(to)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("To address cannot be null"));
+            if (Objects.isNull(receiver)) {
+                throw TransactionCreationException.from(new IllegalArgumentException("Receiver address cannot be null"));
             }
             if (Objects.isNull(data)) {
                 throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));

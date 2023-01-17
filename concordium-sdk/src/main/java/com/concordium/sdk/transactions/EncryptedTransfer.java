@@ -22,12 +22,12 @@ public final class EncryptedTransfer extends Payload {
     /**
      * Account Address of the sender.
      */
-    private final AccountAddress to;
+    private final AccountAddress receiver;
 
 
-    public EncryptedTransfer(EncryptedAmountTransferData data, AccountAddress to) {
+    public EncryptedTransfer(EncryptedAmountTransferData data, AccountAddress receiver) {
         this.data = data;
-        this.to = to;
+        this.receiver = receiver;
     }
 
     @Override
@@ -37,7 +37,7 @@ public final class EncryptedTransfer extends Payload {
 
     @Override
     byte[] getBytes() {
-        val toAddress = to.getBytes();
+        val toAddress = receiver.getBytes();
         byte[] dataBytes = new byte[0];
         try {
             dataBytes = data.getBytes();
@@ -61,7 +61,7 @@ public final class EncryptedTransfer extends Payload {
         return UInt64.from(27000);
     }
 
-    static EncryptedTransfer createNew(EncryptedAmountTransferData data, AccountAddress to) {
-        return new EncryptedTransfer(data, to);
+    static EncryptedTransfer createNew(EncryptedAmountTransferData data, AccountAddress receiver) {
+        return new EncryptedTransfer(data, receiver);
     }
 }

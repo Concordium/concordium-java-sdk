@@ -8,19 +8,19 @@ OS := $(shell uname -s)
 
 ifeq ($(OS),Darwin)
 all:
-	cd $(PATH_CRYPTO) && cargo build
+	cd $(PATH_CRYPTO) && cargo build --release
 	mkdir -p $(PATH_JAVA_SDK)native
-	cp $(PATH_CRYPTO_TARGET)debug/libcrypto_jni.dylib $(PATH_JAVA_NATIVE_RESOURCES)
+	cp $(PATH_CRYPTO_TARGET)release/libcrypto_jni.dylib $(PATH_JAVA_NATIVE_RESOURCES)
 else ifeq ($(OS),Linux)
 all:
-	cd $(PATH_CRYPTO) && cargo build
+	cd $(PATH_CRYPTO) && cargo build --release
 	mkdir -p $(PATH_JAVA_SDK)native
-	cp $(PATH_CRYPTO_TARGET)debug/libcrypto_jni.so $(PATH_JAVA_NATIVE_RESOURCES)
+	cp $(PATH_CRYPTO_TARGET)release/libcrypto_jni.so $(PATH_JAVA_NATIVE_RESOURCES)
 else
 all:
-	cd $(PATH_CRYPTO) && cargo build
+	cd $(PATH_CRYPTO) && cargo build --release
 	mkdir -p $(PATH_JAVA_SDK)native
-	cp $(PATH_CRYPTO_TARGET)debug/crypto_jni.dll $(PATH_JAVA_NATIVE_RESOURCES)
+	cp $(PATH_CRYPTO_TARGET)release/crypto_jni.dll $(PATH_JAVA_NATIVE_RESOURCES)
 endif
 
 clean:

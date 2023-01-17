@@ -40,7 +40,7 @@ public class EncryptedAmountTransferJniOutput {
         try {
             return JsonMapper.INSTANCE.readValue(encryptedTransferOutputJniString, EncryptedAmountTransferJniOutput.class);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse BlockInfo JSON", e);
+            throw new IllegalArgumentException("Cannot parse EncryptedAmountTransferJniOutput JSON", e);
         }
     }
 }

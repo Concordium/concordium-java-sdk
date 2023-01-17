@@ -9,6 +9,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * A Set of Cryptographic parameters that are particular to the chain and
+ * shared by everybody who interacts with the chain.
+ */
 @Data
 @Builder
 public final class CryptographicParameters {
@@ -19,7 +23,7 @@ public final class CryptographicParameters {
     private final int version;
 
     /**
-     * The bullet proof generators
+     * The bulletproof generators
      */
     private final BulletproofGenerators bulletproofGenerators;
 

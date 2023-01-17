@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * An aggregated encrypted amount with a decrypted plaintext, collecting
+ * encrypted amounts with decryption.
+ */
 @Jacksonized
 @Builder
 @Data

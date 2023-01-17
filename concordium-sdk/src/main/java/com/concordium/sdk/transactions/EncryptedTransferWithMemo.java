@@ -22,13 +22,16 @@ public final class EncryptedTransferWithMemo extends Payload {
     /**
      * Account Address of the sender.
      */
-    private final AccountAddress to;
+    private final AccountAddress receiver;
 
+    /**
+     * The memo message associated with the transfer.
+     */
     private final Memo memo;
 
-    public EncryptedTransferWithMemo(EncryptedAmountTransferData data, AccountAddress to, Memo memo) {
+    public EncryptedTransferWithMemo(EncryptedAmountTransferData data, AccountAddress receiver, Memo memo) {
         this.data = data;
-        this.to = to;
+        this.receiver = receiver;
         this.memo = memo;
     }
 
@@ -39,7 +42,7 @@ public final class EncryptedTransferWithMemo extends Payload {
 
     @Override
     byte[] getBytes() {
-        val toAddress = to.getBytes();
+        val toAddress = receiver.getBytes();
         byte[] dataBytes = new byte[0];
         try {
             dataBytes = data.getBytes();
@@ -65,7 +68,7 @@ public final class EncryptedTransferWithMemo extends Payload {
         return UInt64.from(27000);
     }
 
-    static EncryptedTransferWithMemo createNew(EncryptedAmountTransferData data, AccountAddress to, Memo memo) {
-        return new EncryptedTransferWithMemo(data, to, memo);
+    static EncryptedTransferWithMemo createNew(EncryptedAmountTransferData data, AccountAddress receiver, Memo memo) {
+        return new EncryptedTransferWithMemo(data, receiver, memo);
     }
 }
