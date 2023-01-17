@@ -8,6 +8,9 @@
 - Added support for Transfer To Encrypted wallet.
 - Added support for Encrypted Transfer.
 - Added support for Encrypted Transfer with Memo.
+- Added initial support for GRPC V2
+- Added initial support for GRPC V2 query GetAnonymityRevokers
+- Added CLI example for GRPC V2 query GetAnonymityRevokers
 
 ## 4.0.0
 - Support for Protocol 5.
