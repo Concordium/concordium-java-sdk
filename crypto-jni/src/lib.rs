@@ -356,7 +356,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateEn
 
 #[no_mangle]
 /// The JNI wrapper for the `generate_baker_keys` method.
-pub extern "system" fn Java_com_concordium_sdk_crypto_bakertransactions_BakerKeys_generateBakerKeys(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateBakerKeys(
     env: JNIEnv,
     _: JClass,
 ) -> jstring {
@@ -378,7 +378,7 @@ type AddBakerResult = CryptoJniResult<BakerKeysPayload<AddBakerKeysMarker>>;
 #[allow(non_snake_case)]
 /// The JNI wrapper to create new configure baker keys payload.
 /// Construct a BakerKeysPayload with proofs for updating baker keys.
-pub extern "system" fn Java_com_concordium_sdk_crypto_bakertransactions_ConfigureBakerKeys_generateConfigureBakerKeysPayload(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateConfigureBakerKeysPayload(
     env: JNIEnv,
     _: JClass,
     input: JString,
