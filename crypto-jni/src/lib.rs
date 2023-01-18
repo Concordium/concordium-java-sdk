@@ -1,14 +1,18 @@
-use concordium_contracts_common::Amount;
-use core::slice;
-use crypto_common::derive::Serialize;
-pub use crypto_common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
-use crypto_common::*;
-use ed25519_dalek::*;
-use encrypted_transfers::types::{
-    AggregatedDecryptedAmount, EncryptedAmount, IndexedEncryptedAmount, SecToPubAmountTransferData, EncryptedAmountTransferData
+use concordium_base::common::derive::Serialize;
+pub use concordium_base::common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
+use concordium_base::common::*;
+use concordium_base::contracts_common::Amount;
+use concordium_base::encrypted_transfers;
+use concordium_base::encrypted_transfers::types::{
+    AggregatedDecryptedAmount, EncryptedAmount, EncryptedAmountTransferData,
+    IndexedEncryptedAmount, SecToPubAmountTransferData,
 };
-use id::curve_arithmetic::Curve;
-use id::{constants::ArCurve, types::GlobalContext};
+use concordium_base::id;
+use concordium_base::id::curve_arithmetic::Curve;
+use concordium_base::id::elgamal;
+use concordium_base::id::{constants::ArCurve, types::GlobalContext};
+use core::slice;
+use ed25519_dalek::*;
 use jni::sys::jstring;
 use rand::thread_rng;
 use serde_json::{from_str, to_string};
@@ -212,9 +216,13 @@ fn decrypt_encrypted_amount(
     ));
     let m = 1 << 16;
     let table = elgamal::BabyStepGiantStep::new(global.encryption_in_exponent_generator(), m);
-    CryptoJniResult::Ok(encrypted_transfers::decrypt_amount::<
-        id::constants::ArCurve,
-    >(&table, &secret, &encrypted_amount))
+    CryptoJniResult::Ok(
+        encrypted_transfers::decrypt_amount::<id::constants::ArCurve>(
+            &table,
+            &secret,
+            &encrypted_amount,
+        ),
+    )
 }
 
 #[derive(Serialize, SerdeSerialize, SerdeDeserialize)]
@@ -326,7 +334,6 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateEn
         CryptoJniResult::Err(err) => return Result::Err(err).to_jstring(&env),
     };
 
-
     let input_amount: AggregatedDecryptedAmount<ArCurve> = AggregatedDecryptedAmount {
         agg_encrypted_amount: input.input_encrypted_amount.encrypted_chunks,
         agg_index: encrypted_transfers::types::EncryptedAmountAggIndex {
@@ -345,7 +352,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateEn
         input.amount_to_send,
         &mut csprng,
     );
-    
+
     match payload {
         Some(payload) => CryptoJniResult::Ok(payload).to_jstring(&env),
         None => EncryptedAmountTransferResult::Err(PAYLOAD_CREATION_ERROR).to_jstring(&env),
