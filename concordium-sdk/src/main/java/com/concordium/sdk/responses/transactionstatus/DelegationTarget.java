@@ -28,6 +28,19 @@ public class DelegationTarget {
     @JsonProperty("bakerId")
     private final AccountIndex bakerId;
 
+    private DelegationTarget(DelegationType type, AccountIndex bakerId) {
+        this.type = type;
+        this.bakerId = bakerId;
+    }
+
+    public static DelegationTarget newPassiveDelegationTarget(){
+        return new DelegationTarget(DelegationType.PASSIVE, null);
+    }
+
+    public static DelegationTarget newBakerDelegationTarget(AccountIndex bakerId){
+        return new DelegationTarget(DelegationType.BAKER, bakerId);
+    }
+
     public byte[] getBytes() {
         ByteBuffer buffer = ByteBuffer.allocate(TransactionType.BYTES);
         if(this.type == DelegationType.PASSIVE) {

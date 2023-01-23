@@ -11,10 +11,6 @@ import lombok.val;
 public final class ConfigureBakerKeys {
     //static block to load native library
     static {
-        loadNatives();
-    }
-
-    static void loadNatives() {
         NativeResolver.loadLib();
     }
 

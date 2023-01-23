@@ -4,7 +4,6 @@ import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.types.UInt16;
 import lombok.*;
 
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
 /**
@@ -43,15 +42,13 @@ public class ConfigureDelegationPayload {
     public byte[] getBitMapBytes() {
         int bitValue = 0;
         int it = 1;
-        try {
-            for (Field f : getClass().getDeclaredFields()) {
-                if (f.get(this) != null)
-                    bitValue |= it;
-                it *= 2;
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+
+        bitValue |= ((this.capital != null) ? it: 0);
+        it *= 2;
+        bitValue |= ((this.restakeEarnings != null) ? it: 0);
+        it *= 2;
+        bitValue |= ((this.delegationTarget != null) ? it: 0);
+
         return UInt16.from(bitValue).getBytes();
     }
 

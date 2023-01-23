@@ -17,9 +17,7 @@ public class ConfigureDelegationTransactionTest {
         val payload = ConfigureDelegationPayload.builder()
                 .capital(CCDAmount.fromMicro("500000"))
                 .restakeEarnings(true)
-                .delegationTarget(DelegationTarget.builder()
-                        .type(DelegationTarget.DelegationType.PASSIVE)
-                        .build())
+                .delegationTarget(DelegationTarget.newPassiveDelegationTarget())
                 .build();
 
 

@@ -4,7 +4,6 @@ import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt32;
 import lombok.*;
 
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
 /**
@@ -58,15 +57,23 @@ public class ConfigureBakerPayload {
     public byte[] getBitMapBytes() {
         int bitValue = 0;
         int it = 1;
-        try {
-            for (Field f : getClass().getDeclaredFields()) {
-                if (f.get(this) != null)
-                    bitValue |= it;
-                it *= 2;
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+
+        bitValue |= ((this.capital != null) ? it: 0);
+        it *= 2;
+        bitValue |= ((this.restakeEarnings != null) ? it: 0);
+        it *= 2;
+        bitValue |= ((this.openForDelegation != null) ? it: 0);
+        it *= 2;
+        bitValue |= ((this.keysWithProofs != null) ? it: 0);
+        it *= 2;
+        bitValue |= ((this.metadataUrl != null) ? it: 0);
+        it *= 2;
+        bitValue |= ((this.transactionFeeCommission != null) ? it: 0);
+        it *= 2;
+        bitValue |= ((this.bakingRewardCommission != null) ? it: 0);
+        it *= 2;
+        bitValue |= ((this.finalizationRewardCommission != null) ? it: 0);
+
         return UInt16.from(bitValue).getBytes();
     }
 

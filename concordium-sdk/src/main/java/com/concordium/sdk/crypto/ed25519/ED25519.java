@@ -9,10 +9,6 @@ import lombok.val;
 final class ED25519 {
 
     static {
-        loadNatives();
-    }
-
-    public static void loadNatives() {
         NativeResolver.loadLib();
     }
 

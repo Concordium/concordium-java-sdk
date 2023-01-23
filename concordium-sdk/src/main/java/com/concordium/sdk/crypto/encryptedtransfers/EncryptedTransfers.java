@@ -16,10 +16,6 @@ import lombok.val;
 
 public final class EncryptedTransfers {
     static {
-        loadNatives();
-    }
-
-    static void loadNatives() {
         NativeResolver.loadLib();
     }
 
