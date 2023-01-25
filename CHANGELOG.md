@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+
+## 4.1.0
 - Added support for Transfer With Schedule.
 - Added support for Transfer With Schedule With Memo.
 - Added support for Update Credentials Keys.
@@ -10,6 +12,8 @@
 - Added support for Encrypted Transfer with Memo.
 - Added support for Configuring a baker.
 - Added support for Configuring the account as a Delegator.
+- A new native dependency has been introduced in order to support the new transaction types mentioned above,
+  As a result native dependencies need to be rebuilt before building the Java project.
 
 ## 4.0.0
 - Support for Protocol 5.
