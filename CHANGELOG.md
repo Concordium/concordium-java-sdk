@@ -8,6 +8,8 @@
 - Added support for Transfer To Encrypted wallet.
 - Added support for Encrypted Transfer.
 - Added support for Encrypted Transfer with Memo.
+- Added support for Configuring a baker.
+- Added support for Configuring the account as a Delegator.
 
 ## 4.0.0
 - Support for Protocol 5.

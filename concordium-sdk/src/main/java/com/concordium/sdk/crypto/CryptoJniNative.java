@@ -42,7 +42,6 @@ public class CryptoJniNative {
     /**
      * Creates a transfer from the encrypted amount to a public account payload, using the provided input string.
      *
-     *
      * @param input The input string to use for creating the transfer.
      * @return The transfer data as a JSON string.
      */
@@ -56,5 +55,20 @@ public class CryptoJniNative {
      */
     public static native String generateEncryptedTransfer(String input);
 
+    /**
+     * Generates baker keys.
+     *
+     * @return The baker keys data as a JSON string.
+     */
+
+    public static native String generateBakerKeys();
+
+    /**
+     * Generates a configure baker keys payload, using the provided input string.
+     *
+     * @param input The input string to use for generating the configure baker keys payload.
+     * @return The configure baker keys data as a JSON string.
+     */
+    public static native String generateConfigureBakerKeysPayload(String input);
 
 }

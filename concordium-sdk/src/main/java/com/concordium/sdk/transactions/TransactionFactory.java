@@ -239,6 +239,75 @@ public class TransactionFactory {
                 .data(amountTransferData);
 
     }
+    /**
+     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
+     * creating a {@link ConfigureBakerTransaction}
+     *
+     * @return the builder for a {@link ConfigureBakerTransaction}
+     */
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newConfigureBaker() {
+        return ConfigureBakerTransaction.builder();
+    }
 
+    /**
+     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
+     * creating a {@link ConfigureBakerTransaction} to remove Baker
+     *
+     * @return the builder for a {@link ConfigureBakerTransaction}
+     */
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newRemoveBaker() {
+        val payload = ConfigureBakerPayload.builder()
+                .capital(CCDAmount.fromMicro(0))
+                .build();
+        return ConfigureBakerTransaction.builder().payload(payload);
+    }
 
+    /**
+     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
+     * creating a {@link ConfigureBakerTransaction} to update Baker Stake
+     *
+     * @return the builder for a {@link ConfigureBakerTransaction}
+     */
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerStake(CCDAmount stake) {
+        val payload = ConfigureBakerPayload.builder()
+                .capital(stake)
+                .build();
+        return ConfigureBakerTransaction.builder().payload(payload);
+    }
+
+    /**
+     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
+     * creating a {@link ConfigureBakerTransaction} to update restakeEarnings
+     *
+     * @return the builder for a {@link ConfigureBakerTransaction}
+     */
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerRestakeEarnings(boolean restakeEarnings) {
+        val payload = ConfigureBakerPayload.builder()
+                .restakeEarnings(restakeEarnings)
+                .build();
+        return ConfigureBakerTransaction.builder().payload(payload);
+    }
+
+    /**
+     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
+     * creating a {@link ConfigureBakerTransaction} to update baker keys
+     *
+     * @return the builder for a {@link ConfigureBakerTransaction}
+     */
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerKeys(AccountAddress accountAddress) {
+        val payload = ConfigureBakerPayload.builder()
+                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress))
+                .build();
+        return ConfigureBakerTransaction.builder().payload(payload);
+    }
+
+    /**
+     * Creates a new {@link ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder} for
+     * creating a {@link ConfigureDelegationTransaction} to update baker keys
+     *
+     * @return the builder for a {@link ConfigureDelegationTransaction}
+     */
+    public static ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder newConfigureDelegation() {
+        return ConfigureDelegationTransaction.builder();
+    }
 }

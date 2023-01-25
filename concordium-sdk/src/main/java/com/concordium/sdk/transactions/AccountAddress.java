@@ -3,6 +3,7 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.SHA256;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
@@ -128,6 +129,7 @@ public final class AccountAddress {
     }
 
     @Override
+    @JsonValue
     public String toString() {
         return encoded();
     }
