@@ -13,7 +13,7 @@
 - Added support for Configuring a baker.
 - Added support for Configuring the account as a Delegator.
 - A new native dependency has been introduced in order to support the new transaction types mentioned above,
-  so one will need to `make` the native dependencies again before building the java project.
+  As a result native dependencies need to be rebuilt before building the Java project.
 
 ## 4.0.0
 - Support for Protocol 5.
