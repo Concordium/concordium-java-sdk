@@ -4,8 +4,8 @@ import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.responses.BlockInfoV2;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
-import com.concordium.sdk.responses.getblocks.ArrivedBlockInfo;
 import io.grpc.ManagedChannel;
 import lombok.var;
 
@@ -65,22 +65,56 @@ public final class ClientV2 {
     }
 
     /**
-     * Gets an {@link Iterator} of Blocks Arriving at the node. With Connection Timeout
+     * Gets an {@link Iterator} of Blocks Arriving at the node.
+     * With Connection Timeout.
+     * Form the time request is made and onwards.
+     * This can be used to listen for incoming blocks.
      *
-     * @return {@link Iterator<ArrivedBlockInfo>}
+     * @return {@link Iterator< BlockInfoV2 >}
      */
-    public Iterator<ArrivedBlockInfo> getBlocks() {
+    public Iterator<BlockInfoV2> getBlocks() {
         return this.getBlocks(timeout);
     }
 
     /**
      * Gets an {@link Iterator} of Blocks Arriving at the node.
+     * With Specified Timeout.
+     * Form the time request is made and onwards.
+     * This can be used to listen for incoming blocks.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator<ArrivedBlockInfo>}
+     * @return {@link Iterator< BlockInfoV2 >}
      */
-    public Iterator<ArrivedBlockInfo> getBlocks(int timeoutMillis) {
+    public Iterator<BlockInfoV2> getBlocks(int timeoutMillis) {
         var grpcOutput = this.server(timeoutMillis).getBlocks(Empty.newBuilder().build());
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Gets an {@link Iterator} of Finalized Blocks.
+     * With Connection Timeout.
+     * Form the time request is made and onwards.
+     * This can be used to listen for blocks being Finalized.
+     *
+     * @return {@link Iterator< BlockInfoV2 >}
+     */
+    public Iterator<BlockInfoV2> getFinalizedBlocks() {
+        return this.getFinalizedBlocks(timeout);
+    }
+
+    /**
+     * Gets an {@link Iterator} of Finalized Blocks.
+     * With Specified Timeout.
+     * Form the time request is made and onwards.
+     * This can be used to listen for blocks being Finalized.
+     *
+     * @param timeoutMillis Timeout for the request in Milliseconds.
+     * @return {@link Iterator< BlockInfoV2 >}
+     */
+    public Iterator<BlockInfoV2> getFinalizedBlocks(int timeoutMillis) {
+        var grpcOutput = this.server(timeoutMillis)
+                .getFinalizedBlocks(Empty.newBuilder().build());
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
     }
