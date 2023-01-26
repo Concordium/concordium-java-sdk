@@ -1,9 +1,11 @@
 package com.concordium.sdk;
 
+import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
+import com.concordium.sdk.responses.getblocks.ArrivedBlockInfo;
 import io.grpc.ManagedChannel;
 import lombok.var;
 
@@ -63,6 +65,27 @@ public final class ClientV2 {
     }
 
     /**
+     * Gets an {@link Iterator} of Blocks Arriving at the node. With Connection Timeout
+     *
+     * @return {@link Iterator<ArrivedBlockInfo>}
+     */
+    public Iterator<ArrivedBlockInfo> getBlocks() {
+        return this.getBlocks(timeout);
+    }
+
+    /**
+     * Gets an {@link Iterator} of Blocks Arriving at the node.
+     *
+     * @param timeoutMillis Timeout for the request in Milliseconds.
+     * @return {@link Iterator<ArrivedBlockInfo>}
+     */
+    public Iterator<ArrivedBlockInfo> getBlocks(int timeoutMillis) {
+        var grpcOutput = this.server(timeoutMillis).getBlocks(Empty.newBuilder().build());
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
      * Closes the underlying grpc channel
      * <p>
      * This should only be done when the {@link ClientV2}
@@ -84,5 +107,15 @@ public final class ClientV2 {
      */
     private QueriesGrpc.QueriesBlockingStub server() {
         return this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Get a {@link QueriesGrpc.QueriesBlockingStub} with a timeout
+     *
+     * @param timeoutMillis Custom Timeout in Milliseconds.
+     * @return A new stub with a timeout.
+     */
+    private QueriesGrpc.QueriesBlockingStub server(int timeoutMillis) {
+        return this.blockingStub.withDeadlineAfter(timeoutMillis, TimeUnit.MILLISECONDS);
     }
 }

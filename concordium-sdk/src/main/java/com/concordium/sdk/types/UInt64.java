@@ -9,7 +9,6 @@ import java.nio.ByteBuffer;
 
 @Getter
 @EqualsAndHashCode
-@ToString
 public final class UInt64 {
     public static final int BYTES = Long.BYTES;
     private final long value;
@@ -46,5 +45,10 @@ public final class UInt64 {
         byte[] valueBytes = new byte[8];
         source.get(valueBytes);
         return UInt64.from(valueBytes);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
     }
 }

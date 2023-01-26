@@ -1,12 +1,16 @@
 package com.concordium.sdk;
 
+import com.concordium.grpc.v2.AbsoluteBlockHeight;
 import com.concordium.grpc.v2.ArInfo;
+import com.concordium.grpc.v2.BlockHash;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
+import com.concordium.sdk.responses.getblocks.ArrivedBlockInfo;
 import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.types.UInt64;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
@@ -75,5 +79,20 @@ interface ClientV2MapperExtensions {
 
     static <T1, T2> Iterator<T2> to(final Iterator<T1> iterator, final Function<? super T1, ? extends T2> to) {
         return Iterators.transform(iterator, to);
+    }
+
+    static ArrivedBlockInfo to(com.concordium.grpc.v2.ArrivedBlockInfo arrivedBlockInfo) {
+        return ArrivedBlockInfo.builder()
+                .blockHash(to(arrivedBlockInfo.getHash()))
+                .blockHeight(to(arrivedBlockInfo.getHeight()))
+                .build();
+    }
+
+    static UInt64 to(AbsoluteBlockHeight height) {
+        return UInt64.from(height.getValue());
+    }
+
+    static Hash to(BlockHash hash) {
+        return Hash.from(hash.toByteArray());
     }
 }
