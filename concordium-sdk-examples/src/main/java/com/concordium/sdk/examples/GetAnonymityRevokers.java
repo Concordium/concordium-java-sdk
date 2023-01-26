@@ -18,7 +18,7 @@ public class GetAnonymityRevokers implements Runnable {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "http://localhost:10001")
+            defaultValue = "http://localhost:20001")
     private String endpoint;
 
     @lombok.SneakyThrows

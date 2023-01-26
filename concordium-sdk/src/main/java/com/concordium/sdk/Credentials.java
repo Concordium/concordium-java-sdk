@@ -29,6 +29,17 @@ public class Credentials extends CallCredentials {
      * Create a {@link Credentials} object with additional headers to be used
      * within the underlying gRPC connection.
      *
+     * @param additionalHeaders a set of extra headers to use within the connection.
+     */
+    public static Credentials from(Set<Header> additionalHeaders) {
+        val callCredential = new CallCredentials(additionalHeaders);
+        return new Credentials(callCredential);
+    }
+
+    /**
+     * Create a {@link Credentials} object with additional headers to be used
+     * within the underlying gRPC connection.
+     *
      * @param authenticationToken   the authentication token i.e., the header 'Authentication' is set with this value.
      *                              If the value is not provided header will not be set.
      * @param withAdditionalHeaders an optional set of extra headers to use within the connection.
@@ -73,6 +84,11 @@ public class Credentials extends CallCredentials {
 
         CallCredentials(final String authenticationToken, final Set<Header> additionalHeaders) {
             this.authenticationToken = Strings.nullToEmpty(authenticationToken);
+            this.additionalHeaders = additionalHeaders;
+        }
+
+        CallCredentials(final Set<Header> additionalHeaders) {
+            this.authenticationToken = "";
             this.additionalHeaders = additionalHeaders;
         }
 
