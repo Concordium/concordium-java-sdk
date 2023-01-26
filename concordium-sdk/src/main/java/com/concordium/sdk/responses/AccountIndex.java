@@ -1,10 +1,14 @@
 package com.concordium.sdk.responses;
 
+import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.val;
+
+import java.nio.ByteBuffer;
 
 /**
  * Account index
@@ -34,5 +38,11 @@ public final class AccountIndex {
 
     public static AccountIndex from(long index) {
         return new AccountIndex(UInt64.from(index));
+    }
+
+    public byte[] getBytes() {
+        val buffer = ByteBuffer.allocate(UInt16.BYTES);
+        buffer.put(index.getBytes());
+        return buffer.array();
     }
 }

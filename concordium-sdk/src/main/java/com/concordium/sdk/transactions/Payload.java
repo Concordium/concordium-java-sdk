@@ -102,6 +102,8 @@ public abstract class Payload {
         TRANSFER_TO_ENCRYPTED,
         ENCRYPTED_TRANSFER,
         ENCRYPTED_TRANSFER_WITH_MEMO,
+        CONFIGURE_BAKER,
+        CONFIGURE_DELEGATION,
     }
 
 }

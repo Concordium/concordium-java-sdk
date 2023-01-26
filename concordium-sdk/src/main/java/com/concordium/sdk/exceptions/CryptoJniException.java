@@ -34,4 +34,3 @@ public final class CryptoJniException extends RuntimeException {
         return new CryptoJniException(code);
     }
 }
-

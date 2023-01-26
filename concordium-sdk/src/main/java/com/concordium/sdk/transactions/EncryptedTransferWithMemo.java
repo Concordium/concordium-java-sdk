@@ -65,7 +65,7 @@ public final class EncryptedTransferWithMemo extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return UInt64.from(27000);
+        return TransactionTypeCost.ENCRYPTED_TRANSFER.getValue();
     }
 
     static EncryptedTransferWithMemo createNew(EncryptedAmountTransferData data, AccountAddress receiver, Memo memo) {

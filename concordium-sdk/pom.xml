@@ -6,7 +6,7 @@
 
     <groupId>com.concordium.sdk</groupId>
     <artifactId>concordium-sdk</artifactId>
-    <version>4.0.1-SNAPSHOT</version>
+    <version>4.1.1-SNAPSHOT</version>
 
     <name>concordium-sdk</name>
     <!-- FIXME change it to the project's website -->
@@ -101,7 +101,7 @@
                     <pluginId>grpc-java</pluginId>
                     <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.40.1:exe:${os.detected.classifier}</pluginArtifact>
                     <includeDependenciesInDescriptorSet>true</includeDependenciesInDescriptorSet>
-                    <protoSourceRoot>${project.basedir}/../concordium-grpc-api/</protoSourceRoot>
+                    <protoSourceRoot>${project.basedir}/../concordium-base/concordium-grpc-api/</protoSourceRoot>
                 </configuration>
                 <executions>
                     <execution>

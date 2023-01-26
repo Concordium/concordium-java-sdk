@@ -438,6 +438,12 @@ Make an encrypted transfer.
 - Encrypted Transfer with memo:
 Make an encrypted transfer with memo.
 
+- Configure Baker:
+  Configures an account as a baker.
+
+- Configure Delegation:
+  Configure the account as a delegator
+
 ## Exceptions and general error handling
 
 - `TransactionCreationException`
@@ -1129,6 +1135,113 @@ The following example demonstrates how to make an encrypted transfer with memo.
     final Hash txnHash = client.sendTransaction(transaction);
 ```
 
+
+### Configure Baker
+The following example demonstrates how to construct a "configureBaker" transaction, which is used to add, remove or update a baker.
+
+#### Configure baker
+```java
+try{
+        AccountAddress accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+    
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+
+    ConfigureBakerPayload configureBakerPayload = ConfigureBakerPayload.builder()
+        .capital(CCDAmount.fromMicro("14000000000"))
+        .restakeEarnings(true)
+        .openForDelegation(0)
+        .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress))
+        .transactionFeeCommission(UInt32.from(10000))
+        .bakingRewardCommission(UInt32.from(10000))
+        .finalizationRewardCommission(UInt32.from(100000))
+        .build();
+
+
+    ConfigureBakerTransaction transaction = TransactionFactory.newConfigureBaker()
+        .sender(accountAddress)
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(signer)
+        .payload(configureBakerPayload)
+        .build();
+    client.sendTransaction(transaction);
+} catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+#### Remove baker
+```java
+try{
+    AccountAddress accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+
+    ConfigureBakerTransaction transaction = TransactionFactory.newRemoveBaker()
+        .sender(accountAddress)
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(signer)
+        .build();
+    client.sendTransaction(transaction);
+ } catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
+
+### Configure Delegation
+The following example demonstrates how to construct a "configureDelegation" transaction, which is used to configure a delegator.
+
+```java
+try{
+    AccountAddress accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+    
+    TransactionSigner signer = TransactionSigner.from(
+        SignerEntry.from(Index.from(0), Index.from(0),
+            firstSecretKey),
+        SignerEntry.from(Index.from(0), Index.from(1),
+            secondSecretKey));
+
+    ConfigureDelegationPayload payload = ConfigureDelegationPayload.builder()
+        .capital(CCDAmount.fromMicro("500000"))
+        .restakeEarnings(true)
+        .delegationTarget(DelegationTarget.builder()
+            .type(DelegationTarget.DelegationType.PASSIVE)
+            .build())
+        .build();
+
+
+    ConfigureDelegationTransaction transaction = TransactionFactory.newConfigureDelegation()
+        .sender(accountAddress)
+        .nonce(AccountNonce.from(nonceValue))
+        .expiry(Expiry.from(expiry))
+        .signer(signer)
+        .payload(payload)
+        .build();
+    client.sendTransaction(transaction);
+} catch (TransactionRejectionException e) {
+    // Handle the rejected transaction, here we simply log it.
+    Transaction rejectedTransaction =  e.getTransaction();
+    Hash rejectedTransactionHash = rejectedTransaction.getHash();
+    String rejectedTransactionHashHex = rejectedTransactionHash.asHex();
+    Log.err("Transaction " + rejectedTransactionHashHex + " was rejected");
+}
+```
 
 # Custom Signing
 By default the java library supports ED25519 signing via the native binding [ED25519SecretKey](./concordium-sdk/src/main/java/com/concordium/sdk/crypto/ed25519/ED25519SecretKey.java).

@@ -58,7 +58,7 @@ public final class EncryptedTransfer extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return UInt64.from(27000);
+        return TransactionTypeCost.ENCRYPTED_TRANSFER.getValue();
     }
 
     static EncryptedTransfer createNew(EncryptedAmountTransferData data, AccountAddress receiver) {
