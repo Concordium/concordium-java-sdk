@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.concordium.sdk</groupId>
             <artifactId>concordium-sdk</artifactId>
-            <version>4.0.1-SNAPSHOT</version>
+            <version>4.1.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -41,6 +41,16 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>info.picocli</groupId>
+                            <artifactId>picocli-codegen</artifactId>
+                            <version>4.7.0</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+                    </compilerArgs>
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
