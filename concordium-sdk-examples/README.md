@@ -5,8 +5,7 @@ This project comprises for CLI applications in the [examples](./src/main/java/co
 Each cli application can be run by standard procedures to run any java application with allows for specifying parameters. Example
 
 ```bash
-cargo build --manifest-path ./crypto-jni/Cargo.toml --release
-cp crypto-jni/target/release/libcrypto_jni.so ./concordium-sdk/native/
+make
 mvn -f ./concordium-sdk/pom.xml clean install
 mvn -f ./concordium-sdk-examples/pom.xml clean install
 java -cp "./target/concordium-sdk-examples-jar-with-dependencies.jar" com.concordium.sdk.examples.<COMMAND_NAME> --endpoint=http://localhost:20001
