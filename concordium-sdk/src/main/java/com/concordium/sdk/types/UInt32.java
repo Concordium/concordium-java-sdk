@@ -45,4 +45,9 @@ public final class UInt32 {
         source.get(valueBytes);
         return UInt32.from(valueBytes);
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
 }

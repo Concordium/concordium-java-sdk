@@ -66,18 +66,6 @@ public final class ClientV2 {
 
     /**
      * Gets an {@link Iterator} of Blocks Arriving at the node.
-     * With Connection Timeout.
-     * Form the time request is made and onwards.
-     * This can be used to listen for incoming blocks.
-     *
-     * @return {@link Iterator< BlockInfoV2 >}
-     */
-    public Iterator<BlockInfoV2> getBlocks() {
-        return this.getBlocks(timeout);
-    }
-
-    /**
-     * Gets an {@link Iterator} of Blocks Arriving at the node.
      * With Specified Timeout.
      * Form the time request is made and onwards.
      * This can be used to listen for incoming blocks.
@@ -89,18 +77,6 @@ public final class ClientV2 {
         var grpcOutput = this.server(timeoutMillis).getBlocks(Empty.newBuilder().build());
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
-    }
-
-    /**
-     * Gets an {@link Iterator} of Finalized Blocks.
-     * With Connection Timeout.
-     * Form the time request is made and onwards.
-     * This can be used to listen for blocks being Finalized.
-     *
-     * @return {@link Iterator< BlockInfoV2 >}
-     */
-    public Iterator<BlockInfoV2> getFinalizedBlocks() {
-        return this.getFinalizedBlocks(timeout);
     }
 
     /**

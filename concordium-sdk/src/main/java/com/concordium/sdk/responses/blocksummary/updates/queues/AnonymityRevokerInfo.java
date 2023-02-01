@@ -28,6 +28,7 @@ public final class AnonymityRevokerInfo {
      */
     private final Description description;
 
+    @ToString.Exclude
     private final ElgamalPublicKey anonymityRevokerPublicKey;
 
     @JsonCreator
