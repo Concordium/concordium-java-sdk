@@ -91,7 +91,7 @@ interface ClientV2MapperExtensions {
     }
 
     static Hash to(BlockHash hash) {
-        return Hash.from(hash.toByteArray());
+        return Hash.from(hash.getValue().toByteArray());
     }
 
     static BlockInfoV2 to(FinalizedBlockInfo finalizedBlockInfo) {
