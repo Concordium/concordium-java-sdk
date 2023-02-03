@@ -3,9 +3,9 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.responses.BlockInfoV2;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
-import com.concordium.sdk.responses.BlockInfoV2;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.UInt64;
 import com.google.common.base.Function;
@@ -35,6 +35,7 @@ interface ClientV2MapperExtensions {
                 }
 
                 builder.setGiven(to(input.getBlockHash()));
+                break;
             default:
                 throw new IllegalArgumentException("Invalid type");
         }
