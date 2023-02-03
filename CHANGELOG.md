@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+- Added initial support for GRPC V2
+- Added initial support for GRPC V2 query GetAnonymityRevokers
+- Added CLI example for GRPC V2 query GetAnonymityRevokers
 
 ## 4.1.0
 - Added support for Transfer With Schedule.
