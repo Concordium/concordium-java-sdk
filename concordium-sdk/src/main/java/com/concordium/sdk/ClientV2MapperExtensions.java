@@ -34,6 +34,7 @@ interface ClientV2MapperExtensions {
                 }
 
                 builder.setGiven(to(input.getBlockHash()));
+                break;
             default:
                 throw new IllegalArgumentException("Invalid type");
         }
