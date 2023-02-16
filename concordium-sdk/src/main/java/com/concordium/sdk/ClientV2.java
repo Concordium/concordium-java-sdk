@@ -1,9 +1,12 @@
 package com.concordium.sdk;
 
+import com.concordium.grpc.v2.AccountInfoRequest;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockInfoV2;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import io.grpc.CallCredentials;
@@ -92,6 +95,18 @@ public final class ClientV2 {
                 .getFinalizedBlocks(Empty.newBuilder().build());
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    public AccountInfo getAccountInfo(
+            final BlockHashInput blockHash,
+            final AccountRequest accountIdentifier) {
+        var grpcOutput = this.server().getAccountInfo(
+                AccountInfoRequest.newBuilder()
+                        .setBlockHash(to(blockHash))
+                        .setAccountIdentifier(to(accountIdentifier))
+                        .build());
+
+        return to(grpcOutput);
     }
 
     /**

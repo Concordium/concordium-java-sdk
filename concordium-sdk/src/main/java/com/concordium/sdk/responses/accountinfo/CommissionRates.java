@@ -1,6 +1,9 @@
 package com.concordium.sdk.responses.accountinfo;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
 /**
@@ -9,6 +12,8 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 @Jacksonized
 @Builder
+@EqualsAndHashCode
+@ToString
 public class CommissionRates {
     /**
      * Fraction of transaction rewards charged by the pool owner.

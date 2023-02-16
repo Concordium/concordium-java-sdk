@@ -19,7 +19,7 @@ import java.util.Optional;
 @ToString
 public class NodeInfo {
 
-    private static final ZoneId UTC_ZONE = ZoneId.of("UTC");
+    public static final ZoneId UTC_ZONE = ZoneId.of("UTC");
 
     /**
      * Node Id.
