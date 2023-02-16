@@ -3,7 +3,7 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.responses.BlockInfoV2;
+import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.transactions.Hash;
@@ -79,8 +79,8 @@ interface ClientV2MapperExtensions {
         return Iterators.transform(iterator, to);
     }
 
-    static BlockInfoV2 to(com.concordium.grpc.v2.ArrivedBlockInfo arrivedBlockInfo) {
-        return BlockInfoV2.builder()
+    static BlockIdentifier to(com.concordium.grpc.v2.ArrivedBlockInfo arrivedBlockInfo) {
+        return BlockIdentifier.builder()
                 .blockHash(to(arrivedBlockInfo.getHash()))
                 .blockHeight(to(arrivedBlockInfo.getHeight()))
                 .build();
@@ -94,8 +94,8 @@ interface ClientV2MapperExtensions {
         return Hash.from(hash.getValue().toByteArray());
     }
 
-    static BlockInfoV2 to(FinalizedBlockInfo finalizedBlockInfo) {
-        return BlockInfoV2.builder()
+    static BlockIdentifier to(FinalizedBlockInfo finalizedBlockInfo) {
+        return BlockIdentifier.builder()
                 .blockHash(to(finalizedBlockInfo.getHash()))
                 .blockHeight(to(finalizedBlockInfo.getHeight()))
                 .build();

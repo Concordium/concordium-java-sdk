@@ -1,90 +1,89 @@
 package com.concordium.sdk.responses.blockinfo;
 
+import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.*;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
+
 import java.time.OffsetDateTime;
 
 @ToString
-@Data
-@RequiredArgsConstructor
 @Getter
-public class BlockInfo {
+@SuperBuilder
+@Jacksonized
+public class BlockInfo extends BlockIdentifier {
     /**
-     *  Hash of the block.
+     * The total energy consumption of transactions in the block.
      */
-    private Hash blockHash;
+    private final Integer transactionEnergyCost;
     /**
-     *  The total energy consumption of transactions in the block.
+     * Identity of the baker of the block. For non-genesis blocks the value is
+     * non-null.
      */
-    private Integer transactionEnergyCost;
+    private final Integer blockBaker;
     /**
-     *  Identity of the baker of the block. For non-genesis blocks the value is
-     *  non-null.
+     * Hash of the block state at the end of the given block.
      */
-    private Integer blockBaker;
+    private final Hash blockStateHash;
     /**
-     *  Hash of the block state at the end of the given block.
+     * Slot time of the slot the block is in. In contrast to
+     * {@link BlockInfo#blockArriveTime} this is an objective value, all nodes
+     * agree on it.
      */
-    private Hash blockStateHash;
+    private final OffsetDateTime blockSlotTime;
     /**
-     *  Slot time of the slot the block is in. In contrast to
-     *  {@link BlockInfo#blockArriveTime} this is an objective value, all nodes
-     *  agree on it.
+     * Parent block pointer.
      */
-    private OffsetDateTime blockSlotTime;
+    private final Hash blockParent;
     /**
-     *  Parent block pointer.
+     * Time when the block was first received by the node. This can be in
+     * principle quite different from the arrive time if, e.g., block execution
+     * takes a long time, or the block must wait for the arrival of its parent.
      */
-    private Hash blockParent;
+    private final OffsetDateTime blockReceiveTime;
     /**
-     *  Time when the block was first received by the node. This can be in
-     *  principle quite different from the arrive time if, e.g., block execution
-     *  takes a long time, or the block must wait for the arrival of its parent.
+     * The genesis index for this block. This counts the number of protocol
+     * updates that have preceded this block, and defines the era of the
+     * block.
      */
-    private OffsetDateTime blockReceiveTime;
+    private final Integer genesisIndex;
     /**
-     *  The genesis index for this block. This counts the number of protocol
-     *  updates that have preceded this block, and defines the era of the
-     *  block.
+     * Slot number of the slot the block is in.
      */
-    private Integer genesisIndex;
+    private final Integer blockSlot;
     /**
-     *  Slot number of the slot the block is in.
+     * Whether the block is finalized or not.
      */
-    private Integer blockSlot;
+    private final Boolean finalized;
     /**
-     *  Whether the block is finalized or not.
+     * The height of this block relative to the (re)genesis block of its era.
      */
-    private Boolean finalized;
+    private final Integer eraBlockHeight;
     /**
-     *  The height of this block relative to the (re)genesis block of its era.
+     * Pointer to the last finalized block. Each block has a pointer to a
+     * specific finalized block that existed at the time the block was
+     * produced.
      */
-    private Integer eraBlockHeight;
-    /**
-     *  Pointer to the last finalized block. Each block has a pointer to a
-     *  specific finalized block that existed at the time the block was
-     *  produced.
-     */
-    private Hash blockLastFinalized;
+    private final Hash blockLastFinalized;
     /**
      * Size of all the transactions in the block in bytes.
      */
-    private Integer transactionsSize;
+    private final Integer transactionsSize;
+
     /**
-     *  Height of the block from genesis.
+     * The number of transactions in the block.
      */
-    private Integer blockHeight;
+    private final Integer transactionCount;
     /**
-     *  The number of transactions in the block.
+     * Time when the block was added to the node's tree. This is a subjective
+     * (i.e., node specific) value.
      */
-    private Integer transactionCount;
-    /**
-     *  Time when the block was added to the node's tree. This is a subjective
-     *  (i.e., node specific) value.
-     */
-    private OffsetDateTime blockArriveTime;
+    private final OffsetDateTime blockArriveTime;
+
     public static BlockInfo fromJson(String blockInfoJsonString) {
         try {
             return JsonMapper.INSTANCE.readValue(blockInfoJsonString, BlockInfo.class);

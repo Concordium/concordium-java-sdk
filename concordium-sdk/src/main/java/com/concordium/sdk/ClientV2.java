@@ -4,7 +4,7 @@ import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.responses.BlockInfoV2;
+import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
@@ -70,9 +70,9 @@ public final class ClientV2 {
      * This can be used to listen for incoming blocks.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator< BlockInfoV2 >}
+     * @return {@link Iterator<  BlockIdentifier  >}
      */
-    public Iterator<BlockInfoV2> getBlocks(int timeoutMillis) {
+    public Iterator<BlockIdentifier> getBlocks(int timeoutMillis) {
         var grpcOutput = this.server(timeoutMillis).getBlocks(Empty.newBuilder().build());
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
@@ -85,9 +85,9 @@ public final class ClientV2 {
      * This can be used to listen for blocks being Finalized.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator< BlockInfoV2 >}
+     * @return {@link Iterator<  BlockIdentifier  >}
      */
-    public Iterator<BlockInfoV2> getFinalizedBlocks(int timeoutMillis) {
+    public Iterator<BlockIdentifier> getFinalizedBlocks(int timeoutMillis) {
         var grpcOutput = this.server(timeoutMillis)
                 .getFinalizedBlocks(Empty.newBuilder().build());
 
