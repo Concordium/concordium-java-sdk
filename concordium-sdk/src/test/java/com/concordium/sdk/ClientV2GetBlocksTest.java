@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.responses.BlockInfoV2;
+import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.UInt64;
 import com.google.protobuf.ByteString;
@@ -43,10 +43,10 @@ public class ClientV2GetBlocksTest {
             .setHash(BlockHash.newBuilder().setValue(ByteString.copyFrom(BLOCK_HASH_2)).build())
             .setHeight(AbsoluteBlockHeight.newBuilder().setValue(BLOCK_HEIGHT_2.getValue()).build())
             .build();
-    private static final BlockInfoV2 BLOCK_INFO_1 =
-            BlockInfoV2.builder().blockHash(Hash.from(BLOCK_HASH_1)).blockHeight(BLOCK_HEIGHT_1).build();
-    private static final BlockInfoV2 BLOCK_INFO_2 =
-            BlockInfoV2.builder().blockHash(Hash.from(BLOCK_HASH_2)).blockHeight(BLOCK_HEIGHT_2).build();
+    private static final BlockIdentifier BLOCK_INFO_1 =
+            BlockIdentifier.builder().blockHash(Hash.from(BLOCK_HASH_1)).blockHeight(BLOCK_HEIGHT_1).build();
+    private static final BlockIdentifier BLOCK_INFO_2 =
+            BlockIdentifier.builder().blockHash(Hash.from(BLOCK_HASH_2)).blockHeight(BLOCK_HEIGHT_2).build();
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
             new QueriesGrpc.QueriesImplBase() {
                 @Override

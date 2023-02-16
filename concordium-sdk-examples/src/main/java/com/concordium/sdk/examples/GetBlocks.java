@@ -4,7 +4,6 @@ import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.responses.BlockInfoV2;
 import lombok.var;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -12,7 +11,6 @@ import picocli.CommandLine.Option;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.concurrent.Callable;
 
 @Command(name = "GetBlocks", mixinStandardHelpOptions = true)
