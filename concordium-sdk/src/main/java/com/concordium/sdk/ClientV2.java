@@ -97,12 +97,19 @@ public final class ClientV2 {
         return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
+    /**
+     * Retrieve the information about the given account in the given block.
+     *
+     * @param input             Pointer to the Block.
+     * @param accountIdentifier Identifier of the Account.
+     * @return Account Information ({@link AccountInfo})
+     */
     public AccountInfo getAccountInfo(
-            final BlockHashInput blockHash,
+            final BlockHashInput input,
             final AccountRequest accountIdentifier) {
         var grpcOutput = this.server().getAccountInfo(
                 AccountInfoRequest.newBuilder()
-                        .setBlockHash(to(blockHash))
+                        .setBlockHash(to(input))
                         .setAccountIdentifier(to(accountIdentifier))
                         .build());
 
