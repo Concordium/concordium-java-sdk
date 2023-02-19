@@ -7,6 +7,7 @@
 - Added support for GRPC V2 GetBlocks
 - Added support for GRPC V2 GetFinalizedBlocks
 - Added support for GRPC V2 Get Account Info
+- Added support for GRPC V2 Get Account List
 
 ## 4.1.0
 - Added support for Transfer With Schedule.
