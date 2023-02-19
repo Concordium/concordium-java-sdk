@@ -9,6 +9,7 @@ import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
+import com.concordium.sdk.transactions.AccountAddress;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import lombok.var;
@@ -107,6 +108,18 @@ public final class ClientV2 {
                         .build());
 
         return to(grpcOutput);
+    }
+
+    /**
+     * Retrieve the list of accounts that exist at the end of the given block.
+     *
+     * @param input Pointer to the Block.
+     * @return {@link Iterator<  AccountAddress  >}.
+     */
+    public Iterator<AccountAddress> getAccountList(final BlockHashInput input) {
+        var grpcOutput = this.server().getAccountList(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
     /**
