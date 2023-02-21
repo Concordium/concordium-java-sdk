@@ -4,7 +4,7 @@ import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import lombok.var;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -13,17 +13,24 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
-@Command(name = "GetAnonymityRevokers", mixinStandardHelpOptions = true)
-public class GetAnonymityRevokers implements Callable<Integer> {
+@Command(name = "GetBlocks", mixinStandardHelpOptions = true)
+public class GetBlocks implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
             defaultValue = "http://localhost:20001")
     private String endpoint;
 
+    @Option(
+            names = {"--timeout"},
+            description = "GRPC request timeout in milliseconds.",
+            defaultValue = "100000")
+    private int timeout;
+
     @Override
-    public Integer call() throws ClientInitializationException, MalformedURLException {
-        URL endpointUrl = new URL(this.endpoint);
+    public Integer call() throws MalformedURLException, ClientInitializationException {
+        var endpointUrl = new URL(this.endpoint);
+
         Connection connection = Connection.builder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
@@ -32,14 +39,14 @@ public class GetAnonymityRevokers implements Callable<Integer> {
 
         ClientV2
                 .from(connection)
-                .getAnonymityRevokers(BlockHashInput.BEST)
+                .getBlocks(timeout)
                 .forEachRemaining(System.out::println);
 
         return 0;
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetAnonymityRevokers()).execute(args);
+        int exitCode = new CommandLine(new GetBlocks()).execute(args);
         System.exit(exitCode);
     }
 }

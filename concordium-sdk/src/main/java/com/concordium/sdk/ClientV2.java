@@ -1,8 +1,10 @@
 package com.concordium.sdk;
 
+import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
@@ -62,6 +64,37 @@ public final class ClientV2 {
     }
 
     /**
+     * Gets an {@link Iterator} of Blocks Arriving at the node.
+     * With Specified Timeout.
+     * Form the time request is made and onwards.
+     * This can be used to listen for incoming blocks.
+     *
+     * @param timeoutMillis Timeout for the request in Milliseconds.
+     * @return {@link Iterator<  BlockIdentifier  >}
+     */
+    public Iterator<BlockIdentifier> getBlocks(int timeoutMillis) {
+        var grpcOutput = this.server(timeoutMillis).getBlocks(Empty.newBuilder().build());
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Gets an {@link Iterator} of Finalized Blocks.
+     * With Specified Timeout.
+     * Form the time request is made and onwards.
+     * This can be used to listen for blocks being Finalized.
+     *
+     * @param timeoutMillis Timeout for the request in Milliseconds.
+     * @return {@link Iterator<  BlockIdentifier  >}
+     */
+    public Iterator<BlockIdentifier> getFinalizedBlocks(int timeoutMillis) {
+        var grpcOutput = this.server(timeoutMillis)
+                .getFinalizedBlocks(Empty.newBuilder().build());
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
      * Closes the underlying grpc channel
      * <p>
      * This should only be done when the {@link ClientV2}
@@ -83,5 +116,15 @@ public final class ClientV2 {
      */
     private QueriesGrpc.QueriesBlockingStub server() {
         return this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Get a {@link QueriesGrpc.QueriesBlockingStub} with a timeout
+     *
+     * @param timeoutMillis Custom Timeout in Milliseconds.
+     * @return A new stub with a timeout.
+     */
+    private QueriesGrpc.QueriesBlockingStub server(int timeoutMillis) {
+        return this.blockingStub.withDeadlineAfter(timeoutMillis, TimeUnit.MILLISECONDS);
     }
 }
