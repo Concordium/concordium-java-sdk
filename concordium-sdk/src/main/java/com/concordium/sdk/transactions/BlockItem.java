@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
 @ToString
-public final class BlockItem {
+final class BlockItem {
     // todo: in practice this is true, but in the future this could different as the version is variable length encoded.
     private static final int VERSION_SIZE = 1;
     private static final int VERSION = 0;

@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 
 @EqualsAndHashCode
-public abstract class Payload {
+abstract class Payload {
     TransactionHeader header;
     TransactionSignature signature;
 

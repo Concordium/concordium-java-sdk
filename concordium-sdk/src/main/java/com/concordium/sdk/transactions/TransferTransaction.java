@@ -4,62 +4,38 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.val;
+
+import java.util.Objects;
 
 @Getter
 public class TransferTransaction extends AbstractTransaction {
-    private final AccountAddress sender;
     private final AccountAddress receiver;
     private final CCDAmount amount;
-    private final AccountNonce nonce;
-    private final Expiry expiry;
-    private final TransactionSigner signer;
-
-    private BlockItem blockItem;
 
     @Builder
-    public TransferTransaction(AccountAddress sender,
-                               AccountAddress receiver,
-                               CCDAmount amount,
-                               AccountNonce nonce,
-                               Expiry expiry,
-                               TransactionSigner signer) throws TransactionCreationException {
-        this.sender = sender;
+    public TransferTransaction(
+            final AccountAddress sender,
+            final AccountAddress receiver,
+            final CCDAmount amount,
+            final AccountNonce nonce,
+            final Expiry expiry,
+            final TransactionSigner signer) {
+        super(sender, nonce, expiry, signer);
+        if (Objects.isNull(receiver)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Receiver cannot be null"));
+        }
+        if (Objects.isNull(amount)) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Amount cannot be null"));
+        }
         this.receiver = receiver;
         this.amount = amount;
-        this.nonce = nonce;
-        this.expiry = expiry;
-        this.signer = signer;
-    }
-
-    public static TransferTransactionBuilder builder() {
-        return new CustomBuilder();
     }
 
     @Override
     public BlockItem getBlockItem() {
-        return blockItem;
-    }
-
-    private static class CustomBuilder extends TransferTransaction.TransferTransactionBuilder {
-        @Override
-        public TransferTransaction build() throws TransactionCreationException {
-            val transaction = super.build();
-            Transaction.verifyTransferInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.receiver, transaction.amount, transaction.signer);
-            transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
-            return transaction;
-        }
-
-        private Payload createSimpleTransfer(TransferTransaction transaction) throws TransactionCreationException {
-            return Transfer.createNew(
-                            transaction.receiver,
-                            transaction.amount).
-                    withHeader(TransactionHeader.builder()
-                            .sender(transaction.sender)
-                            .accountNonce(transaction.nonce.getNonce())
-                            .expiry(transaction.expiry.getValue())
-                            .build())
-                    .signWith(transaction.signer);
-        }
+        return Transfer.createNew(getReceiver(), getAmount()).
+                withHeader(getHeader())
+                .signWith(getSigner())
+                .toBlockItem();
     }
 }
