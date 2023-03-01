@@ -46,11 +46,7 @@ class DeployModuleTransaction extends AbstractTransaction {
     @Override
     public BlockItem getBlockItem() {
         return DeployModule.createNew(getModule(), getMaxEnergyCost())
-                .withHeader(TransactionHeader.builder()
-                        .sender(getSender())
-                        .accountNonce(getNonce().getNonce())
-                        .expiry(getExpiry().getValue())
-                        .build())
+                .withHeader(getHeader())
                 .signWith(getSigner())
                 .toBlockItem();
     }

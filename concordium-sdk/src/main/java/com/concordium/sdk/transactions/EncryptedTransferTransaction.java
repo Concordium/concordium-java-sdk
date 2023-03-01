@@ -45,12 +45,8 @@ public class EncryptedTransferTransaction extends AbstractTransaction {
 
     @Override
     public BlockItem getBlockItem() {
-        return EncryptedTransfer.createNew(getData(), getReceiver()).
-                withHeader(TransactionHeader.builder()
-                        .sender(getSender())
-                        .accountNonce(getNonce().getNonce())
-                        .expiry(getExpiry().getValue())
-                        .build())
+        return EncryptedTransfer.createNew(getData(), getReceiver())
+                .withHeader(getHeader())
                 .signWith(getSigner())
                 .toBlockItem();
     }

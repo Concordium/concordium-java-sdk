@@ -11,7 +11,7 @@ import java.util.Objects;
 public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
 
     /**
-     *  Data that will go onto an encrypted amount transfer.
+     * Data that will go onto an encrypted amount transfer.
      */
     private final EncryptedAmountTransferData data;
 
@@ -55,12 +55,8 @@ public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
 
     @Override
     public BlockItem getBlockItem() {
-        return EncryptedTransferWithMemo.createNew(getData(), getReceiver(), getMemo()).
-                withHeader(TransactionHeader.builder()
-                        .sender(getSender())
-                        .accountNonce(getNonce().getNonce())
-                        .expiry(getExpiry().getValue())
-                        .build())
+        return EncryptedTransferWithMemo.createNew(getData(), getReceiver(), getMemo())
+                .withHeader(getHeader())
                 .signWith(getSigner())
                 .toBlockItem();
     }

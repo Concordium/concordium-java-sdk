@@ -24,7 +24,6 @@ public class InitContractTransaction extends AbstractTransaction {
      * Maximum energy **allowed** for the transaction to use.
      */
     private final UInt64 maxEnergyCost;
-    private BlockItem blockItem;
 
     /**
      * A constructor of {@link InitContractTransaction} class.
@@ -48,14 +47,8 @@ public class InitContractTransaction extends AbstractTransaction {
 
     @Override
     public BlockItem getBlockItem() {
-        return InitContract.createNew(
-                        getPayload(),
-                        getMaxEnergyCost()).
-                withHeader(TransactionHeader.builder()
-                        .sender(getSender())
-                        .accountNonce(getNonce().getNonce())
-                        .expiry(getExpiry().getValue())
-                        .build())
+        return InitContract.createNew(getPayload(), getMaxEnergyCost())
+                .withHeader(getHeader())
                 .signWith(getSigner())
                 .toBlockItem();
     }

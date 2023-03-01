@@ -60,11 +60,7 @@ public class UpdateCredentialKeysTransaction extends AbstractTransaction {
                         getCredentialRegistrationID(),
                         getKeys(),
                         getNumExistingCredentials())
-                .withHeader(TransactionHeader.builder()
-                        .sender(getSender())
-                        .accountNonce(getNonce().getNonce())
-                        .expiry(getExpiry().getValue())
-                        .build())
+                .withHeader(getHeader())
                 .signWith(getSigner())
                 .toBlockItem();
     }

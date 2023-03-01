@@ -17,8 +17,6 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
      */
     private final ConfigureBakerPayload payload;
 
-    private BlockItem blockItem;
-
     /**
      * A constructor of {@link ConfigureBakerTransaction} class.
      */
@@ -28,8 +26,7 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
             final AccountAddress sender,
             final AccountNonce nonce,
             final Expiry expiry,
-            final TransactionSigner signer,
-            final BlockItem blockItem) {
+            final TransactionSigner signer) {
         super(sender, nonce, expiry, signer);
 
         if (Objects.isNull(payload)) {
@@ -37,17 +34,12 @@ public class ConfigureBakerTransaction extends AbstractTransaction {
         }
 
         this.payload = payload;
-        this.blockItem = blockItem;
     }
 
     @Override
     public BlockItem getBlockItem() {
-        return ConfigureBaker.createNew(getPayload()).
-                withHeader(TransactionHeader.builder()
-                        .sender(getSender())
-                        .accountNonce(getNonce().getNonce())
-                        .expiry(getExpiry().getValue())
-                        .build())
+        return ConfigureBaker.createNew(getPayload())
+                .withHeader(getHeader())
                 .signWith(getSigner())
                 .toBlockItem();
     }
