@@ -39,11 +39,11 @@ final class BlockItem {
     }
 
     public byte[] getVersionedBytes() {
-        val accountTransactionBytes = accountTransaction.getBytes();
-        val buffer = ByteBuffer.allocate(VERSION_SIZE + BlockItemType.BYTES + accountTransactionBytes.length);
+        val bytes = getBytes();
+        val buffer = ByteBuffer.allocate(VERSION_SIZE + bytes.length);
         buffer.put((byte) BlockItem.VERSION);
-        buffer.put(type.getByte());
-        buffer.put(accountTransactionBytes);
+        buffer.put(bytes);
+
         return buffer.array();
     }
 
@@ -56,6 +56,7 @@ final class BlockItem {
         val buffer = ByteBuffer.allocate(BlockItemType.BYTES + accountTransactionBytes.length);
         buffer.put(type.getByte());
         buffer.put(accountTransactionBytes);
+        
         return buffer.array();
     }
 

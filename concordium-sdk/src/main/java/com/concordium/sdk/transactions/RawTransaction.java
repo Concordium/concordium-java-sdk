@@ -17,7 +17,6 @@ public class RawTransaction implements Transaction {
         this.bytes = bytes;
     }
 
-    @Override
     public byte[] getBytes() {
         return bytes;
     }
