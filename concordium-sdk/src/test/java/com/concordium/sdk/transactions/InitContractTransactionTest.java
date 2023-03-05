@@ -32,7 +32,7 @@ public class InitContractTransactionTest {
         assertArrayEquals(EXPECTED_INIT_CONTRACT_TRANSACTION_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testCreateInitContractTransactionWithoutSenderFails() {
         InitContractTransaction
@@ -47,7 +47,7 @@ public class InitContractTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testCreateInitContractTransactionWithoutAmountFails() {
         InitContractTransaction
@@ -61,7 +61,7 @@ public class InitContractTransactionTest {
         fail("Expected InitContractTransaction to fail");
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testCreateInitContractTransactionWithoutNonceFails() {
         InitContractTransaction
@@ -75,7 +75,7 @@ public class InitContractTransactionTest {
         fail("Expected InitContractTransaction to fail");
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testCreateInitContractTransactionWithoutExpiryFails() {
         InitContractTransaction
@@ -89,7 +89,7 @@ public class InitContractTransactionTest {
         fail("Expected InitContractTransaction to fail");
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testCreateInitContractTransactionWithoutSignerShouldFail() {
         InitContractTransaction

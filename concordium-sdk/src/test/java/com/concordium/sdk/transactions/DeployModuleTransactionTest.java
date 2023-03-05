@@ -39,7 +39,7 @@ public class DeployModuleTransactionTest {
         assertEquals("f38797f92f533a28635627eaf3e088b96bf00a3324d07e13360eabfa891e0cb1", transaction.getHash().asHex());
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testDeployModuleTransactionWithoutSenderFails() {
         DeployModuleTransaction
@@ -54,7 +54,7 @@ public class DeployModuleTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testDeployModuleTransactionWithoutNonceFails() {
         DeployModuleTransaction
@@ -70,7 +70,7 @@ public class DeployModuleTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testDeployModuleTransactionWithoutExpiryFails() {
         DeployModuleTransaction
@@ -85,7 +85,7 @@ public class DeployModuleTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testDeployModuleTransactionWithoutSignerShouldFail() {
         DeployModuleTransaction

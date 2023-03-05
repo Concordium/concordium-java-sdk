@@ -9,6 +9,7 @@ import java.util.Date;
  * Unix timestamp i.e. seconds since unix epoch.
  */
 public final class Expiry {
+    public static final int BYTES = UInt64.BYTES;
     private final Timestamp timestampInMillis;
 
     private Expiry(Timestamp value) {

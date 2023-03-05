@@ -2,6 +2,8 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
+import java.lang.NullPointerException;
+
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.UInt64;
@@ -32,7 +34,7 @@ public class UpdateContractTransactionTest {
         assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testUpdateContractTransactionWithoutSenderFails() {
         UpdateContractTransaction
@@ -47,7 +49,7 @@ public class UpdateContractTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testUpdateContractTransactionWithoutNonceFails() {
         UpdateContractTransaction
@@ -62,7 +64,7 @@ public class UpdateContractTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testUpdateContractTransactionWithoutExpiryFails() {
         UpdateContractTransaction
@@ -77,7 +79,7 @@ public class UpdateContractTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testUpdateContractTransactionWithoutSignerShouldFail() {
         UpdateContractTransaction
@@ -92,7 +94,6 @@ public class UpdateContractTransactionTest {
     }
 
     @Test(expected = TransactionCreationException.class)
-    @SneakyThrows
     public void testUpdateContractTransactionWithInvalidSignerFails() {
         UpdateContractTransaction
                 .builder()
@@ -103,8 +104,6 @@ public class UpdateContractTransactionTest {
                 .payload(UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
-        fail("Expected TransferTransaction to fail");
-
     }
 
 

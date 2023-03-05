@@ -3,14 +3,14 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
+import java.lang.NullPointerException;
+
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt16;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;
 
-import java.io.Console;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +43,7 @@ public class UpdateCredentialKeysTransactionTest {
         assertArrayEquals(EXPECTED_UPDATE_CREDENTIAL_KEYS_TRANSACTION_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testCreateUpdateCredentialKeysTransactionWithoutSenderFails() {
         Map<Index, ED25519PublicKey> keys =  new HashMap<>();
@@ -65,7 +65,7 @@ public class UpdateCredentialKeysTransactionTest {
         fail("Expected UpdateCredentialKeysTransaction to fail");
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testCreateUpdateCredentialKeysTransactionWithoutNonceFails() {
         Map<Index, ED25519PublicKey> keys =  new HashMap<>();
@@ -87,7 +87,7 @@ public class UpdateCredentialKeysTransactionTest {
         fail("Expected UpdateCredentialKeysTransaction to fail");
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testCreateUpdateCredentialKeysTransactionWithoutExpiryFails() {
         Map<Index, ED25519PublicKey> keys =  new HashMap<>();
@@ -110,7 +110,7 @@ public class UpdateCredentialKeysTransactionTest {
         fail("Expected UpdateCredentialKeysTransaction to fail");
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testCreateUpdateCredentialKeysTransactionWithoutSignerShouldFail() {
         Map<Index, ED25519PublicKey> keys =  new HashMap<>();
@@ -133,7 +133,6 @@ public class UpdateCredentialKeysTransactionTest {
     }
 
     @Test(expected = TransactionCreationException.class)
-    @SneakyThrows
     public void testCreateUpdateCredentialKeysTransactionWithInvalidSignerFails() {
         Map<Index, ED25519PublicKey> keys =  new HashMap<>();
         ED25519PublicKey newKey = ED25519PublicKey.from("ad6591a2deb03c32357615d73e144e01a49abad49671428d46db58cf2d4e4d87");

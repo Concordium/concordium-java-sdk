@@ -2,6 +2,8 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
+import java.lang.NullPointerException;
+
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.Timestamp;
 import lombok.SneakyThrows;
@@ -31,7 +33,7 @@ public class TransferScheduleTransactionTest {
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferScheduleTransactionWithoutSenderFails() {
         Schedule[] schedule = new Schedule[1];
@@ -48,7 +50,7 @@ public class TransferScheduleTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferScheduleTransactionWithoutNonceFails() {
         Schedule[] schedule = new Schedule[1];
@@ -66,7 +68,7 @@ public class TransferScheduleTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferScheduleTransactionWithoutExpiryFails() {
         Schedule[] schedule = new Schedule[1];
@@ -83,7 +85,7 @@ public class TransferScheduleTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferScheduleTransactionWithoutSignerShouldFail() {
         Schedule[] schedule = new Schedule[1];

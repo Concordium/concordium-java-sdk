@@ -2,7 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
-import com.concordium.sdk.exceptions.TransactionCreationException;
+import java.lang.NullPointerException;
 import com.concordium.sdk.types.Timestamp;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -32,7 +32,7 @@ public class TransferScheduleWithMemoTransactionTest {
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferScheduleWithMemoTransactionWithoutSenderFails() {
         Schedule[] schedule = new Schedule[1];
@@ -49,7 +49,7 @@ public class TransferScheduleWithMemoTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferScheduleWithMemoTransactionWithoutNonceFails() {
         Schedule[] schedule = new Schedule[1];
@@ -66,7 +66,7 @@ public class TransferScheduleWithMemoTransactionTest {
 
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferScheduleWithMemoTransactionWithoutExpiryFails() {
         Schedule[] schedule = new Schedule[1];
@@ -83,7 +83,7 @@ public class TransferScheduleWithMemoTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferScheduleWithMemoTransactionWithoutSignerShouldFail() {
         Schedule[] schedule = new Schedule[1];
@@ -99,7 +99,7 @@ public class TransferScheduleWithMemoTransactionTest {
         fail("Expected TransferTransaction to fail");
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferScheduleWithMemoTransactionWithInvalidSignerFails() {
         Schedule[] schedule = new Schedule[1];

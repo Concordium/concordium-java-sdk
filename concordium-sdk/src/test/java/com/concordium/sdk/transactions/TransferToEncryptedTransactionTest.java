@@ -2,6 +2,8 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
+import java.lang.NullPointerException;
+
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -27,7 +29,7 @@ public class TransferToEncryptedTransactionTest {
         assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_TO_ENCRYPTED_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferToEncryptedTransactionWithoutSenderFails() {
         TransferToEncryptedTransaction
@@ -41,7 +43,7 @@ public class TransferToEncryptedTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferToEncryptedTransactionWithoutNonceFails() {
         TransferToEncryptedTransaction
@@ -56,7 +58,7 @@ public class TransferToEncryptedTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferToEncryptedTransactionWithoutExpiryFails() {
         TransferToEncryptedTransaction
@@ -70,7 +72,7 @@ public class TransferToEncryptedTransactionTest {
     }
 
 
-    @Test(expected = TransactionCreationException.class)
+    @Test(expected = NullPointerException.class)
     @SneakyThrows
     public void testTransferToEncryptedTransactionWithoutSignerShouldFail() {
         TransferToEncryptedTransaction

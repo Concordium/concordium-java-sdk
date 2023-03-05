@@ -1,6 +1,8 @@
 package com.concordium.sdk.transactions;
 
 public interface Transaction {
+    int DEFAULT_NETWORK_ID = 100;
+
     /**
      * Returns serialized {@link Transaction}
      * This is the raw bytes that is sent to the node.
@@ -22,7 +24,8 @@ public interface Transaction {
      *
      * @return the network id.
      */
-    int getNetworkId();
+    default int getNetworkId() {
+        return DEFAULT_NETWORK_ID;
+    }
 
-    int DEFAULT_NETWORK_ID = 100;
 }

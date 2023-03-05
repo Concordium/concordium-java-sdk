@@ -22,7 +22,6 @@ abstract class AbstractAccountTransaction<T extends Payload> implements Transact
             @NonNull final TransactionSigner signer,
             @NonNull final T payload) {
         this.signer = signer;
-        this.payload = payload;
         this.blockItem = payload
                 .withHeader(TransactionHeader.builder()
                         .sender(sender)
@@ -31,8 +30,9 @@ abstract class AbstractAccountTransaction<T extends Payload> implements Transact
                         .build())
                 .signWith(getSigner())
                 .toBlockItem();
-        this.header = this.payload.header;
+        this.header = payload.header;
         this.signature = payload.signature;
+        this.payload = payload;
     }
 
     public AccountAddress getSender() {
@@ -58,10 +58,5 @@ abstract class AbstractAccountTransaction<T extends Payload> implements Transact
     @Override
     public Hash getHash() {
         return getBlockItem().getHash();
-    }
-
-    @Override
-    public int getNetworkId() {
-        return DEFAULT_NETWORK_ID;
     }
 }
