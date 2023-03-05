@@ -593,7 +593,7 @@ public class EncryptedTransferTransactionTest {
         assertEquals(2816, transaction.getVersionedBytes().length);
         assertEquals(
                 UInt64.from(29877),
-                transaction.getBlockItem().getAccountTransaction().getHeader().getMaxEnergyCost());
+                transaction.getHeader().getMaxEnergyCost());
     }
 
     @Test(expected= RuntimeException.class)

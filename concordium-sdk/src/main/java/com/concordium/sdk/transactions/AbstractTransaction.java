@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.val;
@@ -7,9 +8,9 @@ import lombok.val;
 import java.nio.ByteBuffer;
 
 @Getter
+@EqualsAndHashCode
 abstract class AbstractTransaction implements Transaction {
 
-    private final BlockItem blockItem;
     private final TransactionHeader header;
     private final TransactionSignature signature;
     private final TransactionType transactionType;
@@ -31,12 +32,36 @@ abstract class AbstractTransaction implements Transaction {
                 .signWith(signer)
                 .toBlockItem();
 
-        this.blockItem = blockItem;
-        this.blockItemType = blockItem.getType();
+        this.blockItemType = blockItem.getBlockItemType();
         this.header = payload.header;
         this.signature = payload.signature;
         this.payloadBytes = payload.getTransactionPayloadBytes();
         this.transactionType = payload.getTransactionType();
+    }
+
+    public AbstractTransaction(
+            @NonNull final BlockItemType blockItemType,
+            @NonNull final TransactionHeader header,
+            @NonNull final TransactionSignature signature,
+            @NonNull final Payload payload) {
+        this.blockItemType = blockItemType;
+        this.header = header;
+        this.signature = signature;
+        this.payloadBytes = payload.getTransactionPayloadBytes();
+        this.transactionType = payload.getTransactionType();
+    }
+
+    public AbstractTransaction(
+            @NonNull final BlockItemType blockItemType,
+            @NonNull final TransactionHeader header,
+            @NonNull final TransactionSignature signature,
+            @NonNull final TransactionType transactionType,
+            @NonNull final byte[] payloadBytes) {
+        this.blockItemType = blockItemType;
+        this.header = header;
+        this.signature = signature;
+        this.payloadBytes = payloadBytes;
+        this.transactionType = transactionType;
     }
 
     public AccountAddress getSender() {
@@ -54,7 +79,7 @@ abstract class AbstractTransaction implements Transaction {
         return Expiry.from(this.header.getExpiry().getValue());
     }
 
-    public byte[] getBytes() {
+    final public byte[] getBytes() {
         val blockItemBytes = getBlockItemBytes();
         val buffer = ByteBuffer.allocate(BlockItemType.BYTES + blockItemBytes.length);
         buffer.put(blockItemType.getByte());
@@ -63,7 +88,7 @@ abstract class AbstractTransaction implements Transaction {
         return buffer.array();
     }
 
-    private byte[] getBlockItemBytes() {
+    final byte[] getBlockItemBytes() {
         val signatureBytes = signature.getBytes();
         val headerBytes = header.getBytes();
         val payloadBytes = getBlockItemBodyBytes();
@@ -75,7 +100,7 @@ abstract class AbstractTransaction implements Transaction {
         return buffer.array();
     }
 
-    private byte[] getBlockItemBodyBytes() {
+    final byte[] getBlockItemBodyBytes() {
         val buffer = ByteBuffer.allocate(TransactionType.BYTES + payloadBytes.length);
         buffer.put(getTransactionType().getValue());
         buffer.put(payloadBytes);

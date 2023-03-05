@@ -594,7 +594,7 @@ public class EncryptedTransferWithMemoTransactionTest {
         assertEquals(2823, transaction.getVersionedBytes().length);
         assertEquals(
                 UInt64.from(29884),
-                transaction.getBlockItem().getAccountTransaction().getHeader().getMaxEnergyCost());
+                transaction.getHeader().getMaxEnergyCost());
     }
 
     @Test(expected= RuntimeException.class)

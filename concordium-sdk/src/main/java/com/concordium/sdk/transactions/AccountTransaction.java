@@ -7,42 +7,19 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @ToString
-public final class AccountTransaction {
-    private final TransactionSignature signature;
-    private final TransactionHeader header;
-    private final Payload payload;
-
-    AccountTransaction(TransactionSignature signature, TransactionHeader header, Payload payload) {
-        this.signature = signature;
-        this.header = header;
-        this.payload = payload;
-    }
-
-    byte[] getBytes() {
-        val signatureBytes = signature.getBytes();
-        val headerBytes = header.getBytes();
-        val payloadBytes = payload.getBytes();
-        val buffer = ByteBuffer.allocate(signatureBytes.length + headerBytes.length + payloadBytes.length);
-        buffer.put(signatureBytes);
-        buffer.put(headerBytes);
-        buffer.put(payloadBytes);
-        return buffer.array();
-    }
+public final class AccountTransaction extends AbstractTransaction {
 
     /**
-     * Returns the type of the {@link Payload} associated
-     * with this `AccountTransaction`.
-     * @return the {@link com.concordium.sdk.transactions.Payload.PayloadType}
+     * The type of the {@link Payload} associated with this {@link AccountTransaction}.
      */
-    public Payload.PayloadType getType() {
-        return this.payload.getType();
-    }
+    private final Payload.PayloadType type;
 
-    BlockItem toBlockItem() {
-        return BlockItem.from(this);
+    AccountTransaction(TransactionSignature signature, TransactionHeader header, Payload payload) {
+        super(BlockItemType.ACCOUNT_TRANSACTION, header, signature, payload);
+        this.type = payload.getType();
     }
 
     public static AccountTransaction fromBytes(ByteBuffer source) {
