@@ -35,7 +35,7 @@ public class TransferWithMemoTransactionTest {
                 transaction.getHash().asHex());
         assertArrayEquals(
                 TestUtils.EXPECTED_BLOCK_ITEM_TRANSFER_WITH_MEMO_VERSIONED_BYTES,
-                TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
+                TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
 
     }
 

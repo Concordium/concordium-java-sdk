@@ -10,7 +10,7 @@ import lombok.NonNull;
  * Construct a transaction to update signing keys of a specific credential.
  */
 @Getter
-public class UpdateCredentialKeysTransaction extends AbstractAccountTransaction {
+public class UpdateCredentialKeysTransaction extends AbstractTransaction {
     @Builder
     public UpdateCredentialKeysTransaction(
             @NonNull final CredentialRegistrationId credentialRegistrationID,

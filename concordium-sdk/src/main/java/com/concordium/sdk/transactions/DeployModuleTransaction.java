@@ -10,7 +10,7 @@ import lombok.NonNull;
  * A {@link DeployModuleTransaction} deploys compiled WASM smart contract module to chain.
  */
 @Getter
-class DeployModuleTransaction extends AbstractAccountTransaction {
+class DeployModuleTransaction extends AbstractTransaction {
     @Builder
     public DeployModuleTransaction(
             @NonNull final AccountAddress sender,

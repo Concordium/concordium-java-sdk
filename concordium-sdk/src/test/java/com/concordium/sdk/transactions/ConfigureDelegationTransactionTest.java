@@ -29,7 +29,7 @@ public class ConfigureDelegationTransactionTest {
                 .payload(payload)
                 .build();
 
-        assertEquals(212, transaction.getBytes().length);
+        assertEquals(212, transaction.getVersionedBytes().length);
     }
 
 }

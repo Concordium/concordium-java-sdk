@@ -34,19 +34,6 @@ public class TransferWithMemo extends Payload {
         return PayloadType.TRANSFER_WITH_MEMO;
     }
 
-    @Override
-    byte[] getBytes() {
-        val buffer = ByteBuffer.allocate(
-                TransactionType.BYTES +
-                        AccountAddress.BYTES +
-                        UInt64.BYTES +
-                        memo.getLength());
-        buffer.put(TransactionType.TRANSFER_WITH_MEMO.getValue());
-        buffer.put(getReceiver().getBytes());
-        buffer.put(memo.getBytes());
-        buffer.put(getAmount().getValue().getBytes());
-        return buffer.array();
-    }
     public static TransferWithMemo fromBytes(ByteBuffer source) {
         val receiver = AccountAddress.fromBytes(source);
         val memo = Memo.fromBytes(source);
@@ -57,6 +44,24 @@ public class TransferWithMemo extends Payload {
     @Override
     UInt64 getTransactionTypeCost() {
         return BASE_ENERGY_COST;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.TRANSFER_WITH_MEMO;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        val buffer = ByteBuffer.allocate(
+                AccountAddress.BYTES +
+                        UInt64.BYTES +
+                        memo.getLength());
+        buffer.put(getReceiver().getBytes());
+        buffer.put(memo.getBytes());
+        buffer.put(getAmount().getValue().getBytes());
+
+        return buffer.array();
     }
 
     private final static UInt64 BASE_ENERGY_COST = UInt64.from(300);

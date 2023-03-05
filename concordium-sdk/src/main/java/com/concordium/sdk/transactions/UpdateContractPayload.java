@@ -41,11 +41,11 @@ public final class UpdateContractPayload {
     /**
      * > This function creates a payload for updating a contract
      *
-     * @param amount           The amount of CCD to be sent to the contract.
+     * @param amount          The amount of CCD to be sent to the contract.
      * @param contractAddress Address of the contract instance to invoke.
      * @param contractName    Name of the contract to update.
-     * @param method           Name of the method to invoke on the contract
-     * @param parameter        The parameter of the contract method.
+     * @param method          Name of the method to invoke on the contract
+     * @param parameter       The parameter of the contract method.
      * @return A new UpdateContractPayload object.
      */
     public static UpdateContractPayload from(int amount, ContractAddress contractAddress, String contractName, String method, byte[] parameter) {
@@ -62,12 +62,12 @@ public final class UpdateContractPayload {
         val contract_address_bytes = contractAddress.getBytes();
         val receive_name_bytes = receiveName.getBytes();
         val param_bytes = param.getBytes();
-        val buffer = ByteBuffer.allocate(TransactionType.BYTES + contract_address_bytes.length + amount_bytes.length + receive_name_bytes.length + param_bytes.length);
-        buffer.put(TransactionType.UPDATE_SMART_CONTRACT_INSTANCE.getValue());
+        val buffer = ByteBuffer.allocate(contract_address_bytes.length + amount_bytes.length + receive_name_bytes.length + param_bytes.length);
         buffer.put(amount_bytes);
         buffer.put(contract_address_bytes);
         buffer.put(receive_name_bytes);
         buffer.put(param_bytes);
+
         return buffer.array();
     }
 }

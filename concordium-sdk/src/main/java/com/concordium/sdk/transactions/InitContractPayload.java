@@ -63,15 +63,14 @@ public final class InitContractPayload {
         val moduleRefBytes = moduleRef.getBytes();
         val initNameBytes = initName.getBytes();
         val param_bytes = param.getBytes();
-        val bufferLength = TransactionType.BYTES +
+        val bufferLength =
                 moduleRefBytes.length +
-                amountBytes.length +
-                initNameBytes.length +
-                param_bytes.length;
+                        amountBytes.length +
+                        initNameBytes.length +
+                        param_bytes.length;
 
         val buffer = ByteBuffer.allocate(bufferLength);
 
-        buffer.put(TransactionType.INITIALIZE_SMART_CONTRACT_INSTANCE.getValue());
         buffer.put(amountBytes);
         buffer.put(moduleRefBytes);
         buffer.put(initNameBytes);

@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
-import org.apache.commons.codec.DecoderException;
 
 import java.nio.ByteBuffer;
 
@@ -15,7 +14,7 @@ import java.nio.ByteBuffer;
 @ToString
 public final class EncryptedTransferWithMemo extends Payload {
     /**
-     *  Data that will go onto an encrypted amount transfer.
+     * Data that will go onto an encrypted amount transfer.
      */
     private final EncryptedAmountTransferData data;
 
@@ -41,31 +40,28 @@ public final class EncryptedTransferWithMemo extends Payload {
     }
 
     @Override
-    byte[] getBytes() {
+    UInt64 getTransactionTypeCost() {
+        return TransactionTypeCost.ENCRYPTED_TRANSFER.getValue();
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.ENCRYPTED_TRANSFER_WITH_MEMO;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
         val toAddress = receiver.getBytes();
-        byte[] dataBytes = new byte[0];
-        try {
-            dataBytes = data.getBytes();
-        } catch (DecoderException e) {
-            throw new RuntimeException(e);
-        }
+        byte[] dataBytes = data.getBytes();
         val buffer = ByteBuffer.allocate(
-                TransactionType.BYTES
-                        + toAddress.length
+                +toAddress.length
                         + dataBytes.length
                         + memo.getLength());
-        buffer.put(TransactionType.ENCRYPTED_TRANSFER_WITH_MEMO.getValue());
         buffer.put(toAddress);
         buffer.put(memo.getBytes());
         buffer.put(dataBytes);
 
         return buffer.array();
-
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
-        return TransactionTypeCost.ENCRYPTED_TRANSFER.getValue();
     }
 
     static EncryptedTransferWithMemo createNew(EncryptedAmountTransferData data, AccountAddress receiver, Memo memo) {

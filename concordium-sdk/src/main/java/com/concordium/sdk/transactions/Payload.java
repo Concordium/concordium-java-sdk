@@ -24,11 +24,23 @@ abstract class Payload {
 
     /**
      * Get the {@link PayloadType}
+     *
      * @return the type of the {@link Payload}
      */
     public abstract PayloadType getType();
 
-    abstract byte[] getBytes();
+    /**
+     * Get the bytes representation of the payload
+     * @return byte[]
+     */
+    final byte[] getBytes() {
+        val payloadBytes = getTransactionPayloadBytes();
+        val buffer = ByteBuffer.allocate(TransactionType.BYTES + payloadBytes.length);
+        buffer.put(getTransactionType().getValue());
+        buffer.put(payloadBytes);
+
+        return buffer.array();
+    }
 
     abstract UInt64 getTransactionTypeCost();
 
@@ -87,6 +99,10 @@ abstract class Payload {
                 CONSTANT_B * (TRANSACTION_HEADER_SIZE + payloadSize)
                 + transactionSpecificCost.getValue());
     }
+
+    public abstract TransactionType getTransactionType();
+
+    public abstract byte[] getTransactionPayloadBytes();
 
     public enum PayloadType {
         TRANSFER,

@@ -9,7 +9,7 @@ import lombok.NonNull;
  * This transaction is used to register the account as a baker.
  */
 @Getter
-public class ConfigureBakerTransaction extends AbstractAccountTransaction {
+public class ConfigureBakerTransaction extends AbstractTransaction {
 
     /**
      * A constructor of {@link ConfigureBakerTransaction} class.

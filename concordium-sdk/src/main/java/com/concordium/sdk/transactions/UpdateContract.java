@@ -48,19 +48,18 @@ public final class UpdateContract extends Payload {
         return PayloadType.UPDATE;
     }
 
-    /**
-     * This function returns the byte buffer array of the payload.
-     */
-    @Override
-    byte[] getBytes() {
-        val payload_bytes = payload.getBytes();
-        val buffer = ByteBuffer.allocate(payload_bytes.length);
-        buffer.put(payload_bytes);
-        return buffer.array();
-    }
-
     @Override
     UInt64 getTransactionTypeCost() {
         return this.maxEnergyCost;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.UPDATE_SMART_CONTRACT_INSTANCE;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        return payload.getBytes();
     }
 }

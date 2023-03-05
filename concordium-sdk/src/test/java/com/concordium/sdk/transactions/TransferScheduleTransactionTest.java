@@ -30,7 +30,7 @@ public class TransferScheduleTransactionTest {
                 .schedule(schedule)
                 .build();
         assertEquals("cd4a0cef4600d3f228eb91874f080e928abbd488e1d7bb16cd96ccdfafd2fee8", transaction.getHash().asHex());
-        assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
+        assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
     }
 
     @Test(expected = NullPointerException.class)

@@ -10,7 +10,7 @@ import lombok.NonNull;
  * Construct a transaction to update a smart contract instance.
  */
 @Getter
-public class UpdateContractTransaction extends AbstractAccountTransaction {
+public class UpdateContractTransaction extends AbstractTransaction {
     @Builder
     public UpdateContractTransaction(
             @NonNull final UpdateContractPayload payload,

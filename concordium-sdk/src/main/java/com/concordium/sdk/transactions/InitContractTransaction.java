@@ -11,7 +11,7 @@ import lombok.NonNull;
  * Construct a transaction to initialise a smart contract.
  */
 @Getter
-public class InitContractTransaction extends AbstractAccountTransaction {
+public class InitContractTransaction extends AbstractTransaction {
 
     /**
      * A constructor of {@link InitContractTransaction} class.

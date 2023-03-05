@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.SHA256;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
 
@@ -10,6 +11,7 @@ import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
 @ToString
+@Getter
 final class BlockItem {
     // todo: in practice this is true, but in the future this could different as the version is variable length encoded.
     private static final int VERSION_SIZE = 1;

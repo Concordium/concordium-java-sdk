@@ -1,17 +1,15 @@
 package com.concordium.sdk.transactions;
 
-import com.google.common.collect.ImmutableList;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Singular;
 
 
 /**
  * Construct a transaction to transfer an amount with schedule.
  */
 @Getter
-public class TransferScheduleTransaction extends AbstractAccountTransaction {
+public class TransferScheduleTransaction extends AbstractTransaction {
 
     @Builder
     public TransferScheduleTransaction(

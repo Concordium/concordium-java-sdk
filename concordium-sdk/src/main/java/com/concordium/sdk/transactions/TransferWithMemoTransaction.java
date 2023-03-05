@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class TransferWithMemoTransaction extends AbstractAccountTransaction {
+public class TransferWithMemoTransaction extends AbstractTransaction {
     @Builder
     public TransferWithMemoTransaction(
             @NonNull final AccountAddress sender,

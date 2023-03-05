@@ -29,7 +29,7 @@ public class InitContractTransactionTest {
                 .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", emptyArray))
                 .build();
         assertEquals("111becf05b32822cb6a10bb6dfe8bee35a03f199320acb37a6bb05a804ac0a19", transaction.getHash().asHex());
-        assertArrayEquals(EXPECTED_INIT_CONTRACT_TRANSACTION_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
+        assertArrayEquals(EXPECTED_INIT_CONTRACT_TRANSACTION_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
     }
 
     @Test(expected = NullPointerException.class)

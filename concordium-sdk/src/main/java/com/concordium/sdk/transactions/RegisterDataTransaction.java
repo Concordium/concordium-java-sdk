@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class RegisterDataTransaction extends AbstractAccountTransaction {
+public class RegisterDataTransaction extends AbstractTransaction {
     @Builder
     public RegisterDataTransaction(
             @NonNull final AccountAddress sender,

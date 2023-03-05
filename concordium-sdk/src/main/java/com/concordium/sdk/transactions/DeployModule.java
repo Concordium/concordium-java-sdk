@@ -39,18 +39,18 @@ public class DeployModule extends Payload {
         return PayloadType.DEPLOY_MODULE;
     }
 
-    /**
-     * This function returns the bytecode of the module.
-     *
-     * @return The byte array of the module.
-     */
-    @Override
-    byte[] getBytes() {
-        return module.getBytes();
-    }
-
     @Override
     UInt64 getTransactionTypeCost() {
         return this.maxEnergyCost;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.DEPLOY_MODULE;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        return module.getBytes();
     }
 }

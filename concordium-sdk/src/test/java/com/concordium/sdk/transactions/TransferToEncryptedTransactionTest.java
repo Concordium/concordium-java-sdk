@@ -26,7 +26,7 @@ public class TransferToEncryptedTransactionTest {
                 .amount(CCDAmount.fromMicro(1))
                 .build();
         assertEquals("e777705bb7d8ecd020f1a261049b3f0020d4032026ba6fdbf311f2871a26688e", transaction.getHash().asHex());
-        assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_TO_ENCRYPTED_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
+        assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_TO_ENCRYPTED_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
     }
 
     @Test(expected = NullPointerException.class)

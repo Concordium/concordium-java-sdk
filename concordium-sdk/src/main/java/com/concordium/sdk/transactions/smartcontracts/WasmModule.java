@@ -94,10 +94,7 @@ public class WasmModule {
      */
     public byte[] getBytes() {
         val moduleSourceBytes = source.getBytes();
-        val buffer = ByteBuffer.allocate(TransactionType.BYTES +
-                moduleSourceBytes.length +
-                WasmModuleVersion.BYTES);
-        buffer.put(TransactionType.DEPLOY_MODULE.getValue());
+        val buffer = ByteBuffer.allocate(moduleSourceBytes.length + WasmModuleVersion.BYTES);
         buffer.put(version.getBytes());
         buffer.put(moduleSourceBytes);
 
