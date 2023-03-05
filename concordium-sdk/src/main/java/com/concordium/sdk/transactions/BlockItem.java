@@ -1,51 +1,29 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.crypto.SHA256;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
-import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @Getter
 final class BlockItem extends AbstractTransaction {
-    // todo: in practice this is true, but in the future this could different as the version is variable length encoded.
-    private static final int VERSION_SIZE = 1;
-    private static final int VERSION = 0;
-    private final AccountTransaction accountTransaction;
+    BlockItem(
+            final @NonNull BlockItemType blockItemType,
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull TransactionType transactionType,
+            @NonNull final byte[] payloadBytes) {
+        super(blockItemType, header, signature, transactionType, payloadBytes);
+    }
 
-    private BlockItem(AccountTransaction accountTransaction) {
-        super(
+    public static BlockItem from(AccountTransaction accountTransaction) {
+        return new BlockItem(
                 accountTransaction.getBlockItemType(),
                 accountTransaction.getHeader(),
                 accountTransaction.getSignature(),
                 accountTransaction.getTransactionType(),
                 accountTransaction.getPayloadBytes());
-        this.accountTransaction = accountTransaction;
-    }
-
-    /**
-     * Retrieve the account transaction from the block item, if the block item contains it. Otherwise, returns null.
-     */
-    @Nullable
-    public AccountTransaction getAccountTransaction() {
-        if (getBlockItemType() == BlockItemType.ACCOUNT_TRANSACTION) {
-            return accountTransaction;
-        } else {
-            return null;
-        }
-    }
-
-    public static BlockItem from(AccountTransaction accountTransaction) {
-        return new BlockItem(accountTransaction);
-    }
-
-    public Hash getHash() {
-        return Hash.from(SHA256.hash(getBytes()));
     }
 
     static BlockItem fromBytes(ByteBuffer source) {
@@ -53,7 +31,7 @@ final class BlockItem extends AbstractTransaction {
         switch (kind) {
             case ACCOUNT_TRANSACTION:
                 val at = AccountTransaction.fromBytes(source);
-                return new BlockItem(at);
+                return BlockItem.from(at);
             case CREDENTIAL_DEPLOYMENT:
                 throw new UnsupportedOperationException("Only account transactions are supported in this version. Credential deployments are not.");
             case UPDATE_INSTRUCTION:
