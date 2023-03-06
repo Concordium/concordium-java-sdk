@@ -4,6 +4,7 @@ import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 
 @Getter
 public class DeployModule extends Payload {
@@ -27,7 +28,9 @@ public class DeployModule extends Payload {
      * @param maxEnergyCost The maximum amount of energy that can be consumed by the contract.
      * @return A new DeployModule object.
      */
-    static DeployModule createNew(WasmModule module, UInt64 maxEnergyCost) {
+    static DeployModule createNew(
+            @NonNull WasmModule module,
+            @NonNull UInt64 maxEnergyCost) {
         return new DeployModule(module, maxEnergyCost);
     }
 

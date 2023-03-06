@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 
+import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class TransferToPublicTransaction extends AbstractTransaction {
      * A constructor of {@link TransferToPublicTransaction} class.
      */
     @Builder
-    public TransferToPublicTransaction(
+    private TransferToPublicTransaction(
             @NonNull final EncryptedAmount remainingAmount,
             @NonNull final CCDAmount transferAmount,
             @NonNull final UInt64 index,
@@ -31,5 +32,28 @@ public class TransferToPublicTransaction extends AbstractTransaction {
                 transferAmount,
                 index,
                 proof));
+    }
+
+    public static TransferToPublicTransaction from(
+            final EncryptedAmount remainingAmount,
+            final CCDAmount transferAmount,
+            final UInt64 index,
+            final SecToPubAmountTransferProof proof,
+            final AccountAddress sender,
+            final AccountNonce nonce,
+            final Expiry expiry,
+            final TransactionSigner signer) {
+        try {
+            return new TransferToPublicTransaction(remainingAmount,
+                    transferAmount,
+                    index,
+                    proof,
+                    sender,
+                    nonce,
+                    expiry,
+                    signer);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
+        }
     }
 }

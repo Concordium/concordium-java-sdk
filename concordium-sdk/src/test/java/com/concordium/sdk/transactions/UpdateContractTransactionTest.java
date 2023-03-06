@@ -34,7 +34,7 @@ public class UpdateContractTransactionTest {
         assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testUpdateContractTransactionWithoutSenderFails() {
         UpdateContractTransaction
@@ -49,7 +49,7 @@ public class UpdateContractTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testUpdateContractTransactionWithoutNonceFails() {
         UpdateContractTransaction
@@ -64,7 +64,7 @@ public class UpdateContractTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testUpdateContractTransactionWithoutExpiryFails() {
         UpdateContractTransaction
@@ -79,7 +79,7 @@ public class UpdateContractTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testUpdateContractTransactionWithoutSignerShouldFail() {
         UpdateContractTransaction

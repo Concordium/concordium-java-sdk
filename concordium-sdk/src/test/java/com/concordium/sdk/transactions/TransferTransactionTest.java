@@ -25,7 +25,7 @@ public class TransferTransactionTest {
         assertEquals("6a209eab54720aad71370a6adb4f0661d3606fca25ac544dc0ac0e76e099feba", transfer.getHash().asHex());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutSenderFails() {
         TransferTransaction
                 .builder()
@@ -38,7 +38,7 @@ public class TransferTransactionTest {
         fail("Expected TransferTransaction to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutReceiverFails() {
         TransferTransaction
                 .builder()
@@ -51,7 +51,7 @@ public class TransferTransactionTest {
         fail("Expected TransferTransaction to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutAmountFails() {
         TransferTransaction
                 .builder()
@@ -64,7 +64,7 @@ public class TransferTransactionTest {
         fail("Expected TransferTransaction to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutNonceFails() {
         TransferTransaction
                 .builder()
@@ -77,7 +77,7 @@ public class TransferTransactionTest {
         fail("Expected TransferTransaction to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutExpiryFails() {
         AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc");
         AccountAddress receiver = AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM");
@@ -95,7 +95,7 @@ public class TransferTransactionTest {
         fail("Expected TransferTransaction to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutSignerShouldFail() {
         TransferTransaction
                 .builder()

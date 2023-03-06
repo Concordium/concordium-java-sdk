@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 
+import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt16;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +12,7 @@ import lombok.NonNull;
  */
 @Getter
 public class UpdateCredentialKeysTransaction extends AbstractTransaction {
-    @Builder
-    public UpdateCredentialKeysTransaction(
+    private UpdateCredentialKeysTransaction(
             @NonNull final CredentialRegistrationId credentialRegistrationID,
             @NonNull final CredentialPublicKeys keys,
             @NonNull final UInt16 numExistingCredentials,
@@ -24,5 +24,21 @@ public class UpdateCredentialKeysTransaction extends AbstractTransaction {
                 credentialRegistrationID,
                 keys,
                 numExistingCredentials));
+    }
+
+    @Builder
+    public static UpdateCredentialKeysTransaction from(
+            final CredentialRegistrationId credentialRegistrationID,
+            final CredentialPublicKeys keys,
+            final UInt16 numExistingCredentials,
+            final AccountAddress sender,
+            final AccountNonce nonce,
+            final Expiry expiry,
+            final TransactionSigner signer) {
+        try {
+            return new UpdateCredentialKeysTransaction(credentialRegistrationID, keys, numExistingCredentials, sender, nonce, expiry, signer);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
+        }
     }
 }

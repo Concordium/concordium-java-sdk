@@ -25,7 +25,6 @@ public class DeployModuleTransactionTest {
     }
 
     @Test
-    @SneakyThrows
     public void testDeployModuleTransaction() {
         val transaction = DeployModuleTransaction
                 .builder()
@@ -39,8 +38,7 @@ public class DeployModuleTransactionTest {
         assertEquals("f38797f92f533a28635627eaf3e088b96bf00a3324d07e13360eabfa891e0cb1", transaction.getHash().asHex());
     }
 
-    @Test(expected = NullPointerException.class)
-    @SneakyThrows
+    @Test(expected = TransactionCreationException.class)
     public void testDeployModuleTransactionWithoutSenderFails() {
         DeployModuleTransaction
                 .builder()
@@ -54,8 +52,7 @@ public class DeployModuleTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
-    @SneakyThrows
+    @Test(expected = TransactionCreationException.class)
     public void testDeployModuleTransactionWithoutNonceFails() {
         DeployModuleTransaction
                 .builder()
@@ -70,8 +67,7 @@ public class DeployModuleTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
-    @SneakyThrows
+    @Test(expected = TransactionCreationException.class)
     public void testDeployModuleTransactionWithoutExpiryFails() {
         DeployModuleTransaction
                 .builder()
@@ -85,8 +81,7 @@ public class DeployModuleTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
-    @SneakyThrows
+    @Test(expected = TransactionCreationException.class)
     public void testDeployModuleTransactionWithoutSignerShouldFail() {
         DeployModuleTransaction
                 .builder()
@@ -100,7 +95,6 @@ public class DeployModuleTransactionTest {
     }
 
     @Test(expected = TransactionCreationException.class)
-    @SneakyThrows
     public void testDeployModuleTransactionWithInvalidSignerFails() {
         DeployModuleTransaction
                 .builder()

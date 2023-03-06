@@ -29,7 +29,7 @@ public class TransferToEncryptedTransactionTest {
         assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_TO_ENCRYPTED_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testTransferToEncryptedTransactionWithoutSenderFails() {
         TransferToEncryptedTransaction
@@ -43,7 +43,7 @@ public class TransferToEncryptedTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testTransferToEncryptedTransactionWithoutNonceFails() {
         TransferToEncryptedTransaction
@@ -58,7 +58,7 @@ public class TransferToEncryptedTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testTransferToEncryptedTransactionWithoutExpiryFails() {
         TransferToEncryptedTransaction
@@ -72,7 +72,7 @@ public class TransferToEncryptedTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testTransferToEncryptedTransactionWithoutSignerShouldFail() {
         TransferToEncryptedTransaction

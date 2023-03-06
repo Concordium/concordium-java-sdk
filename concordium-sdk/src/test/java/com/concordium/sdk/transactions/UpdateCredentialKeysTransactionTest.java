@@ -43,7 +43,7 @@ public class UpdateCredentialKeysTransactionTest {
         assertArrayEquals(EXPECTED_UPDATE_CREDENTIAL_KEYS_TRANSACTION_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testCreateUpdateCredentialKeysTransactionWithoutSenderFails() {
         Map<Index, ED25519PublicKey> keys =  new HashMap<>();
@@ -65,7 +65,7 @@ public class UpdateCredentialKeysTransactionTest {
         fail("Expected UpdateCredentialKeysTransaction to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testCreateUpdateCredentialKeysTransactionWithoutNonceFails() {
         Map<Index, ED25519PublicKey> keys =  new HashMap<>();
@@ -87,7 +87,7 @@ public class UpdateCredentialKeysTransactionTest {
         fail("Expected UpdateCredentialKeysTransaction to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testCreateUpdateCredentialKeysTransactionWithoutExpiryFails() {
         Map<Index, ED25519PublicKey> keys =  new HashMap<>();
@@ -110,7 +110,7 @@ public class UpdateCredentialKeysTransactionTest {
         fail("Expected UpdateCredentialKeysTransaction to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testCreateUpdateCredentialKeysTransactionWithoutSignerShouldFail() {
         Map<Index, ED25519PublicKey> keys =  new HashMap<>();

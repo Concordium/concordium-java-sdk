@@ -11,8 +11,7 @@ import lombok.NonNull;
  */
 @Getter
 public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
-    @Builder
-    public TransferScheduleWithMemoTransaction(
+    private TransferScheduleWithMemoTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final AccountAddress to,
             @NonNull final Schedule[] schedule,
@@ -24,6 +23,22 @@ public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
 
         if (schedule.length > 255) {
             throw TransactionCreationException.from(new IllegalArgumentException("Schedule size can be maximum 255"));
+        }
+    }
+
+    @Builder
+    public static TransferScheduleWithMemoTransaction from(
+            final AccountAddress sender,
+            final AccountAddress to,
+            final Schedule[] schedule,
+            final Memo memo,
+            final AccountNonce nonce,
+            final Expiry expiry,
+            final TransactionSigner signer) {
+        try {
+            return new TransferScheduleWithMemoTransaction(sender, to, schedule, memo, nonce, expiry, signer);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
     }
 }

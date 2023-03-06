@@ -39,7 +39,7 @@ public class TransferWithMemoTransactionTest {
 
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferWithMemoTransactionWithoutMemoFails() {
         TransferWithMemoTransaction
                 .builder()
@@ -53,7 +53,7 @@ public class TransferWithMemoTransactionTest {
         fail("Expected TransferWithMemo to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferWithMemoTransactionWithoutSenderFails() {
         TransferWithMemoTransaction
                 .builder()
@@ -67,7 +67,7 @@ public class TransferWithMemoTransactionTest {
         fail("Expected TransferWithMemo to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutReceiverFails() {
         TransferWithMemoTransaction
                 .builder()
@@ -81,7 +81,7 @@ public class TransferWithMemoTransactionTest {
         fail("Expected TransferWithMemo to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutAmountFails() {
         TransferWithMemoTransaction
                 .builder()
@@ -95,7 +95,7 @@ public class TransferWithMemoTransactionTest {
         fail("Expected TransferWithMemo to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutNonceFails() {
         TransferWithMemoTransaction
                 .builder()
@@ -109,7 +109,7 @@ public class TransferWithMemoTransactionTest {
         fail("Expected TransferWithMemo to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutExpiryFails() {
         AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc");
         AccountAddress receiver = AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM");
@@ -128,7 +128,7 @@ public class TransferWithMemoTransactionTest {
         fail("Expected TransferWithMemo to fail");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     public void testCreateTransferTransactionWithoutSignerShouldFail() {
         TransferWithMemoTransaction
                 .builder()

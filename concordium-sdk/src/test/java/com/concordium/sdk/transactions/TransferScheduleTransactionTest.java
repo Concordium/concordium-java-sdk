@@ -33,7 +33,7 @@ public class TransferScheduleTransactionTest {
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testTransferScheduleTransactionWithoutSenderFails() {
         Schedule[] schedule = new Schedule[1];
@@ -50,7 +50,7 @@ public class TransferScheduleTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testTransferScheduleTransactionWithoutNonceFails() {
         Schedule[] schedule = new Schedule[1];
@@ -68,7 +68,7 @@ public class TransferScheduleTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testTransferScheduleTransactionWithoutExpiryFails() {
         Schedule[] schedule = new Schedule[1];
@@ -85,7 +85,7 @@ public class TransferScheduleTransactionTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = TransactionCreationException.class)
     @SneakyThrows
     public void testTransferScheduleTransactionWithoutSignerShouldFail() {
         Schedule[] schedule = new Schedule[1];
