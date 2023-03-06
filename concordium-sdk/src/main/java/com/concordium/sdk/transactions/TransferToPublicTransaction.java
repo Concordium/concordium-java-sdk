@@ -12,7 +12,7 @@ import lombok.NonNull;
  * to public balance of the given account.
  */
 @Getter
-public class TransferToPublicTransaction extends AbstractTransaction {
+public class TransferToPublicTransaction extends AbstractAccountTransaction {
 
     /**
      * A constructor of {@link TransferToPublicTransaction} class.

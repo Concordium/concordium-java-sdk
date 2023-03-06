@@ -53,7 +53,7 @@ public class Memo {
         return UInt16.BYTES + value.length;
     }
 
-    static Memo from(byte[] memo) throws TransactionCreationException {
+    public static Memo from(byte[] memo) throws TransactionCreationException {
         if (Objects.isNull(memo)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Memo cannot be null"));
         }

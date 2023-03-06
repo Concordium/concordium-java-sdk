@@ -10,7 +10,7 @@ import lombok.NonNull;
  * This transaction is used to register the account as a baker.
  */
 @Getter
-public class ConfigureBakerTransaction extends AbstractTransaction {
+public class ConfigureBakerTransaction extends AbstractAccountTransaction {
 
     ConfigureBakerTransaction(
             @NonNull final ConfigureBakerPayload payload,

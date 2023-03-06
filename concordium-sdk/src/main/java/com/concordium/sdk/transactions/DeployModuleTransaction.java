@@ -11,7 +11,7 @@ import lombok.NonNull;
  * A {@link DeployModuleTransaction} deploys compiled WASM smart contract module to chain.
  */
 @Getter
-public class DeployModuleTransaction extends AbstractTransaction {
+public class DeployModuleTransaction extends AbstractAccountTransaction {
     DeployModuleTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final AccountNonce nonce,
@@ -20,6 +20,16 @@ public class DeployModuleTransaction extends AbstractTransaction {
             @NonNull final WasmModule module,
             @NonNull final UInt64 maxEnergyCost) {
         super(sender, nonce, expiry, signer, DeployModule.createNew(module, maxEnergyCost));
+    }
+
+    private DeployModuleTransaction(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull WasmModule payload) {
+        super(header,
+                signature,
+                TransactionType.DEPLOY_MODULE,
+                payload.getBytes());
     }
 
     @Builder
@@ -31,6 +41,18 @@ public class DeployModuleTransaction extends AbstractTransaction {
                                                final UInt64 maxEnergyCost) {
         try {
             return new DeployModuleTransaction(sender, nonce, expiry, signer, module, maxEnergyCost);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
+        }
+    }
+
+    @Builder(builderMethodName = "builderBlockItem")
+    static DeployModuleTransaction from(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull WasmModule payload) {
+        try {
+            return new DeployModuleTransaction(header, signature, payload);
         } catch (NullPointerException nullPointerException) {
             throw TransactionCreationException.from(nullPointerException);
         }

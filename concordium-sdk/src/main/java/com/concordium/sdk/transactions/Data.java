@@ -84,7 +84,7 @@ public class Data {
      * @return Initialized {@link Data}
      * @throws TransactionCreationException
      */
-    static Data from(byte[] data) throws TransactionCreationException {
+    public static Data from(byte[] data) throws TransactionCreationException {
         if (Objects.isNull(data)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));
         }

@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class EncryptedTransferWithMemoTransaction extends AbstractTransaction {
+public class EncryptedTransferWithMemoTransaction extends AbstractAccountTransaction {
 
     /**
      * A constructor of {@link EncryptedTransferWithMemoTransaction} class.

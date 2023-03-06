@@ -10,7 +10,7 @@ import lombok.NonNull;
  * Construct a transaction to transfer from public to encrypted balance of the sender account.
  */
 @Getter
-public class TransferToEncryptedTransaction extends AbstractTransaction {
+public class TransferToEncryptedTransaction extends AbstractAccountTransaction {
     private TransferToEncryptedTransaction(
             @NonNull final CCDAmount amount,
             @NonNull final AccountAddress sender,

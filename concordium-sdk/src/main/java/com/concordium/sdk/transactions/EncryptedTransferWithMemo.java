@@ -13,25 +13,10 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public final class EncryptedTransferWithMemo extends Payload {
-    /**
-     * Data that will go onto an encrypted amount transfer.
-     */
-    private final EncryptedAmountTransferData data;
-
-    /**
-     * Account Address of the sender.
-     */
-    private final AccountAddress receiver;
-
-    /**
-     * The memo message associated with the transfer.
-     */
-    private final Memo memo;
+    private final EncryptedTransferWithMemoPayload payload;
 
     public EncryptedTransferWithMemo(EncryptedAmountTransferData data, AccountAddress receiver, Memo memo) {
-        this.data = data;
-        this.receiver = receiver;
-        this.memo = memo;
+        this.payload = EncryptedTransferWithMemoPayload.from(data, receiver, memo);
     }
 
     @Override
@@ -41,7 +26,7 @@ public final class EncryptedTransferWithMemo extends Payload {
 
     @Override
     UInt64 getTransactionTypeCost() {
-        return TransactionTypeCost.ENCRYPTED_TRANSFER.getValue();
+        return TransactionTypeCost.ENCRYPTED_TRANSFER_WITH_MEMO.getValue();
     }
 
     @Override
@@ -51,17 +36,7 @@ public final class EncryptedTransferWithMemo extends Payload {
 
     @Override
     public byte[] getTransactionPayloadBytes() {
-        val toAddress = receiver.getBytes();
-        byte[] dataBytes = data.getBytes();
-        val buffer = ByteBuffer.allocate(
-                +toAddress.length
-                        + dataBytes.length
-                        + memo.getLength());
-        buffer.put(toAddress);
-        buffer.put(memo.getBytes());
-        buffer.put(dataBytes);
-
-        return buffer.array();
+       return payload.getBytes();
     }
 
     static EncryptedTransferWithMemo createNew(EncryptedAmountTransferData data, AccountAddress receiver, Memo memo) {

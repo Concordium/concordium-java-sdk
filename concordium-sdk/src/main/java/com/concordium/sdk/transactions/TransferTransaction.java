@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class TransferTransaction extends AbstractTransaction {
+public class TransferTransaction extends AbstractAccountTransaction {
     private TransferTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final AccountAddress receiver,
@@ -16,6 +16,13 @@ public class TransferTransaction extends AbstractTransaction {
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
         super(sender, nonce, expiry, signer, Transfer.createNew(receiver, amount));
+    }
+
+    private TransferTransaction(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull TransferPayload payload) {
+        super(header, signature, TransactionType.SIMPLE_TRANSFER, payload.getBytes());
     }
 
     @Builder
@@ -28,6 +35,18 @@ public class TransferTransaction extends AbstractTransaction {
             final TransactionSigner signer) {
         try {
             return new TransferTransaction(sender, receiver, amount, nonce, expiry, signer);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
+        }
+    }
+
+    @Builder(builderMethodName = "builderBlockItem")
+    public static TransferTransaction from(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull TransferPayload payload) {
+        try {
+            return new TransferTransaction(header, signature, payload);
         } catch (NullPointerException nullPointerException) {
             throw TransactionCreationException.from(nullPointerException);
         }

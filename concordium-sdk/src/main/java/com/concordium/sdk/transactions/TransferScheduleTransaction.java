@@ -10,7 +10,7 @@ import lombok.NonNull;
  * Construct a transaction to transfer an amount with schedule.
  */
 @Getter
-public class TransferScheduleTransaction extends AbstractTransaction {
+public class TransferScheduleTransaction extends AbstractAccountTransaction {
 
     private TransferScheduleTransaction(
             @NonNull final AccountAddress sender,

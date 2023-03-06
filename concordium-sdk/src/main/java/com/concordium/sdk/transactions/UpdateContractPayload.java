@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.ContractAddress;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
@@ -12,6 +13,7 @@ import java.nio.ByteBuffer;
  */
 @ToString
 @Getter
+@EqualsAndHashCode
 public final class UpdateContractPayload {
     /**
      * Send the given amount of CCD to the smart contract.
@@ -30,8 +32,10 @@ public final class UpdateContractPayload {
      */
     private final Parameter param;
 
-    // A constructor.
-    UpdateContractPayload(CCDAmount amount, ContractAddress contractAddress, ReceiveName receiveName, Parameter param) {
+    private UpdateContractPayload(CCDAmount amount,
+                                  ContractAddress contractAddress,
+                                  ReceiveName receiveName,
+                                  Parameter param) {
         this.amount = amount;
         this.contractAddress = contractAddress;
         this.receiveName = receiveName;
@@ -48,13 +52,22 @@ public final class UpdateContractPayload {
      * @param parameter       The parameter of the contract method.
      * @return A new UpdateContractPayload object.
      */
-    public static UpdateContractPayload from(int amount, ContractAddress contractAddress, String contractName, String method, byte[] parameter) {
-        return new UpdateContractPayload(
-                CCDAmount.fromMicro(amount),
+    public static UpdateContractPayload from(int amount,
+                                             ContractAddress contractAddress,
+                                             String contractName,
+                                             String method,
+                                             byte[] parameter) {
+        return from(CCDAmount.fromMicro(amount),
                 contractAddress,
                 ReceiveName.from(contractName, method),
-                Parameter.from(parameter)
-        );
+                Parameter.from(parameter));
+    }
+
+    public static UpdateContractPayload from(CCDAmount amount,
+                                      ContractAddress contractAddress,
+                                      ReceiveName receiveName,
+                                      Parameter param) {
+        return new UpdateContractPayload(amount, contractAddress, receiveName, param);
     }
 
     public byte[] getBytes() {

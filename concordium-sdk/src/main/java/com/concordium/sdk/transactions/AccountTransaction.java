@@ -1,25 +1,23 @@
 package com.concordium.sdk.transactions;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @ToString
-public final class AccountTransaction extends AbstractTransaction {
-
-    /**
-     * The type of the {@link Payload} associated with this {@link AccountTransaction}.
-     */
-    private final Payload.PayloadType type;
+public final class AccountTransaction extends AbstractAccountTransaction {
 
     AccountTransaction(TransactionSignature signature, TransactionHeader header, Payload payload) {
-        super(BlockItemType.ACCOUNT_TRANSACTION, header, signature, payload);
-        this.type = payload.getType();
+        super(header, signature, payload);
+    }
+
+    @Builder(builderMethodName = "builderBlockItem")
+    public AccountTransaction(final @NonNull TransactionHeader header,
+                              final @NonNull TransactionSignature signature,
+                              @NonNull final byte[] payloadBytes) {
+        super(header, signature, TransactionType.UNKNOWN_ACCOUNT, payloadBytes);
     }
 
     public static AccountTransaction fromBytes(ByteBuffer source) {
@@ -40,6 +38,7 @@ public final class AccountTransaction extends AbstractTransaction {
             default:
                 throw new UnsupportedOperationException("Only transfers and transfers with memo are currently supported.");
         }
+
         return new AccountTransaction(signature, header, payload);
     }
 }

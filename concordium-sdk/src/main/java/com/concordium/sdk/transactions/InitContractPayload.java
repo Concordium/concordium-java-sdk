@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
@@ -12,6 +13,7 @@ import java.nio.ByteBuffer;
  */
 @ToString
 @Getter
+@EqualsAndHashCode
 public final class InitContractPayload {
 
     /**
@@ -46,13 +48,25 @@ public final class InitContractPayload {
      * @param contractName Name of the contract in the module. Expected format: "init_<contract_name>"
      * @param parameter    Message to invoke the initialization method with.
      */
-    public static InitContractPayload from(int amount, byte[] moduleRef, String contractName, byte[] parameter) {
-        return new InitContractPayload(
+    public static InitContractPayload from(long amount, byte[] moduleRef, String contractName, byte[] parameter) {
+        return from(
                 CCDAmount.fromMicro(amount),
                 Hash.from(moduleRef),
                 InitName.from(contractName),
                 Parameter.from(parameter)
         );
+    }
+
+    /**
+     * Create a new instance of {@link InitContractPayload}, from the given parameters
+     *
+     * @param amount    CCD amount to deposit
+     * @param moduleRef Hash of smart contract module reference.
+     * @param initName  Name of the contract in the module. Expected format: "init_<contract_name>"
+     * @param parameter Message to invoke the initialization method with.
+     */
+    public static InitContractPayload from(CCDAmount amount, Hash moduleRef, InitName initName, Parameter parameter) {
+        return new InitContractPayload(amount, moduleRef, initName, parameter);
     }
 
     /**

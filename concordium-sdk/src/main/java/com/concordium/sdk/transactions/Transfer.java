@@ -13,12 +13,9 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode(callSuper = true)
 public final class Transfer extends Payload {
 
-    private final AccountAddress receiver;
-    private final CCDAmount amount;
-
+    private final TransferPayload payload;
     private Transfer(AccountAddress receiver, CCDAmount amount) {
-        this.receiver = receiver;
-        this.amount = amount;
+        this.payload = TransferPayload.from(receiver, amount);
     }
 
     @Override
@@ -44,11 +41,7 @@ public final class Transfer extends Payload {
 
     @Override
     public byte[] getTransactionPayloadBytes() {
-        val buffer = ByteBuffer.allocate(AccountAddress.BYTES + UInt64.BYTES);
-        buffer.put(receiver.getBytes());
-        buffer.put(amount.getBytes());
-
-        return buffer.array();
+        return payload.getBytes();
     }
 
     static Transfer createNew(AccountAddress receiver, CCDAmount amount) {

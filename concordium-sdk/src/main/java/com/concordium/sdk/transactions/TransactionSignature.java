@@ -15,7 +15,7 @@ import java.util.TreeMap;
 public class TransactionSignature {
     private final Map<Index, Map<Index, byte[]>> signatures = new TreeMap<>();
 
-    void put(Index credentialIndex, Index index, byte[] signature) {
+    public void put(Index credentialIndex, Index index, byte[] signature) {
         if (Objects.isNull(signatures.get(credentialIndex))) {
             signatures.put(credentialIndex, new TreeMap<>());
         }
@@ -71,6 +71,6 @@ public class TransactionSignature {
     private static final int CREDENTIAL_INDEX = 1;
     private static final int INNER_LENGTH = 1;
     private static final int KEY_INDEX = 1;
-    private static final int SIGNATURE_LENGTH = 2;
-    private static final int SIGNATURE_SIZE = 64;
+    static final int SIGNATURE_LENGTH = 2;
+    static final int SIGNATURE_SIZE = 64;
 }

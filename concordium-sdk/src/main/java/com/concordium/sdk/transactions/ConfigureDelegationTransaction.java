@@ -10,7 +10,7 @@ import lombok.NonNull;
  * This transaction is used to register the account as a delegator.
  */
 @Getter
-public class ConfigureDelegationTransaction extends AbstractTransaction {
+public class ConfigureDelegationTransaction extends AbstractAccountTransaction {
     private ConfigureDelegationTransaction(
             @NonNull final ConfigureDelegationPayload payload,
             @NonNull final AccountAddress sender,

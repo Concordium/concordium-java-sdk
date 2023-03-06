@@ -23,7 +23,6 @@ public final class UpdateContract extends Payload {
 
     private final UInt64 maxEnergyCost;
 
-    // A constructor.
     public UpdateContract(UpdateContractPayload payload, UInt64 maxEnergyCost) {
         this.payload = payload;
         this.maxEnergyCost = maxEnergyCost;

@@ -12,7 +12,7 @@ import lombok.NonNull;
  * Construct a transaction to initialise a smart contract.
  */
 @Getter
-public class InitContractTransaction extends AbstractTransaction {
+public class InitContractTransaction extends AbstractAccountTransaction {
 
     /**
      * A constructor of {@link InitContractTransaction} class.
@@ -27,6 +27,16 @@ public class InitContractTransaction extends AbstractTransaction {
         super(sender, nonce, expiry, signer, InitContract.createNew(payload, maxEnergyCost));
     }
 
+    private InitContractTransaction(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull InitContractPayload payload) {
+        super(header,
+                signature,
+                TransactionType.INITIALIZE_SMART_CONTRACT_INSTANCE,
+                payload.getBytes());
+    }
+
     @Builder
     public static InitContractTransaction from(
             final InitContractPayload payload,
@@ -37,6 +47,18 @@ public class InitContractTransaction extends AbstractTransaction {
             final UInt64 maxEnergyCost) {
         try {
             return new InitContractTransaction(payload, sender, nonce, expiry, signer, maxEnergyCost);
+        } catch (NullPointerException ex) {
+            throw TransactionCreationException.from(ex);
+        }
+    }
+
+    @Builder(builderMethodName = "builderBlockItem")
+    public static InitContractTransaction from(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull InitContractPayload payload) {
+        try {
+            return new InitContractTransaction(header, signature, payload);
         } catch (NullPointerException ex) {
             throw TransactionCreationException.from(ex);
         }

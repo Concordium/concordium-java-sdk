@@ -4,27 +4,30 @@ import lombok.*;
 
 import java.nio.ByteBuffer;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @ToString
 @Getter
-final class BlockItem extends AbstractTransaction {
-    BlockItem(
-            final @NonNull BlockItemType blockItemType,
-            final @NonNull TransactionHeader header,
-            final @NonNull TransactionSignature signature,
-            final @NonNull TransactionType transactionType,
-            @NonNull final byte[] payloadBytes) {
-        super(blockItemType, header, signature, transactionType, payloadBytes);
+public abstract class BlockItem implements Transaction {
+    private final BlockItemType blockItemType;
+
+    BlockItem(final @NonNull BlockItemType blockItemType) {
+        this.blockItemType = blockItemType;
     }
 
     public static BlockItem from(AccountTransaction accountTransaction) {
-        return new BlockItem(
-                accountTransaction.getBlockItemType(),
-                accountTransaction.getHeader(),
-                accountTransaction.getSignature(),
-                accountTransaction.getTransactionType(),
-                accountTransaction.getPayloadBytes());
+        return accountTransaction;
     }
+
+    final public byte[] getBytes() {
+        val blockItemBytes = getBlockItemBytes();
+        val buffer = ByteBuffer.allocate(BlockItemType.BYTES + blockItemBytes.length);
+        buffer.put(blockItemType.getByte());
+        buffer.put(blockItemBytes);
+
+        return buffer.array();
+    }
+
+    abstract byte[] getBlockItemBytes();
 
     static BlockItem fromBytes(ByteBuffer source) {
         val kind = BlockItemType.fromBytes(source);

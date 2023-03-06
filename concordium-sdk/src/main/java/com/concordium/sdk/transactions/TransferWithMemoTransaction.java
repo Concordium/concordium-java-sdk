@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class TransferWithMemoTransaction extends AbstractTransaction {
+public class TransferWithMemoTransaction extends AbstractAccountTransaction {
     private TransferWithMemoTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final AccountAddress receiver,
@@ -18,17 +18,37 @@ public class TransferWithMemoTransaction extends AbstractTransaction {
         super(sender, nonce, expiry, signer, TransferWithMemo.createNew(receiver, amount, memo));
     }
 
+    private TransferWithMemoTransaction(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull TransferWithMemoPayload payload) {
+        super(header,
+                signature,
+                TransactionType.TRANSFER_WITH_MEMO,
+                payload.getBytes());
+    }
+
     @Builder
-    public static TransferWithMemoTransaction from(
-            final AccountAddress sender,
-            final AccountAddress receiver,
-            final CCDAmount amount,
-            final Memo memo,
-            final AccountNonce nonce,
-            final Expiry expiry,
-            final TransactionSigner signer) {
+    public static TransferWithMemoTransaction from(final AccountAddress sender,
+                                                   final AccountAddress receiver,
+                                                   final CCDAmount amount,
+                                                   final Memo memo,
+                                                   final AccountNonce nonce,
+                                                   final Expiry expiry,
+                                                   final TransactionSigner signer) {
         try {
             return new TransferWithMemoTransaction(sender, receiver, amount, memo, nonce, expiry, signer);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
+        }
+    }
+
+    @Builder(builderMethodName = "builderBlockItem")
+    public static TransferWithMemoTransaction from(final TransactionHeader header,
+                                                   final TransactionSignature signature,
+                                                   final TransferWithMemoPayload payload) {
+        try {
+            return new TransferWithMemoTransaction(header, signature, payload);
         } catch (NullPointerException nullPointerException) {
             throw TransactionCreationException.from(nullPointerException);
         }
