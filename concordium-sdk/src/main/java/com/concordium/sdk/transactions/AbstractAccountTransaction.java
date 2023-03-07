@@ -1,14 +1,12 @@
 package com.concordium.sdk.transactions;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.val;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public abstract class AbstractAccountTransaction extends BlockItem {
 
     private final TransactionHeader header;

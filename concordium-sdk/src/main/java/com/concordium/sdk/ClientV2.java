@@ -10,6 +10,7 @@ import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.BlockItem;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import lombok.var;
@@ -125,6 +126,12 @@ public final class ClientV2 {
      */
     public Iterator<AccountAddress> getAccountList(final BlockHashInput input) {
         var grpcOutput = this.server().getAccountList(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    public Iterator<BlockItem> getBlockItems(final BlockHashInput input) {
+        var grpcOutput = this.server().getBlockItems(to(input));
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
     }

@@ -1,8 +1,14 @@
 package com.concordium.sdk;
 
+import com.concordium.grpc.v2.AccountAddress;
 import com.concordium.grpc.v2.AccountInfo;
+import com.concordium.grpc.v2.AccountTransaction;
+import com.concordium.grpc.v2.BlockItem;
 import com.concordium.grpc.v2.Commitment;
 import com.concordium.grpc.v2.CredentialPublicKeys;
+import com.concordium.grpc.v2.CredentialRegistrationId;
+import com.concordium.grpc.v2.EncryptedAmount;
+import com.concordium.grpc.v2.Memo;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
@@ -20,10 +26,16 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
-import com.concordium.sdk.transactions.CCDAmount;
-import com.concordium.sdk.transactions.EncryptedAmountIndex;
-import com.concordium.sdk.transactions.Hash;
-import com.concordium.sdk.transactions.Index;
+import com.concordium.sdk.transactions.InitContractPayload;
+import com.concordium.sdk.transactions.InitName;
+import com.concordium.sdk.transactions.Parameter;
+import com.concordium.sdk.transactions.ReceiveName;
+import com.concordium.sdk.transactions.TransferPayload;
+import com.concordium.sdk.transactions.TransferWithMemoPayload;
+import com.concordium.sdk.transactions.UpdateContractPayload;
+import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.smartcontracts.WasmModule;
+import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt64;
@@ -31,6 +43,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
+import lombok.val;
 import lombok.var;
 
 import javax.annotation.Nullable;
@@ -170,7 +183,7 @@ interface ClientV2MapperExtensions {
                 .accountReleaseSchedule(to(account.getSchedule()))
                 .accountCredentials(ImmutableMap.copyOf(to(
                         account.getCredsMap(),
-                        k -> Index.from(k),
+                        Index::from,
                         ClientV2MapperExtensions::to)))
                 .accountThreshold(account.getThreshold().getValue())
                 .accountEncryptedAmount(to(account.getEncryptedBalance()))
@@ -267,8 +280,8 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
-    static double to(AmountFraction frac) {
-        return frac.getPartsPerHundredThousand() / HUNDRED_THOUSAND;
+    static double to(AmountFraction amountFraction) {
+        return amountFraction.getPartsPerHundredThousand() / HUNDRED_THOUSAND;
     }
 
     static OpenStatus to(com.concordium.grpc.v2.OpenStatus openStatus) {
@@ -374,7 +387,7 @@ interface ClientV2MapperExtensions {
                 .createdAt(to(policy.getCreatedAt()))
                 .validTo(to(policy.getValidTo()))
                 .revealedAttributes(
-                        ImmutableMap.copyOf(to(policy.getAttributesMap(), k -> to(k), v -> v.toStringUtf8())))
+                        ImmutableMap.copyOf(to(policy.getAttributesMap(), ClientV2MapperExtensions::to, ByteString::toStringUtf8)))
                 .build();
     }
 
@@ -455,5 +468,220 @@ interface ClientV2MapperExtensions {
 
     static Nonce to(SequenceNumber sequenceNumber) {
         return Nonce.from(sequenceNumber.getValue());
+    }
+
+    static com.concordium.sdk.transactions.BlockItem to(BlockItem blockItem) {
+        switch (blockItem.getBlockItemCase()) {
+            case ACCOUNT_TRANSACTION:
+                return to(blockItem.getAccountTransaction());
+            case CREDENTIAL_DEPLOYMENT:
+                return to(blockItem.getCredentialDeployment());
+            case UPDATE_INSTRUCTION:
+                return to(blockItem.getUpdateInstruction());
+        }
+
+        throw new IllegalArgumentException();
+    }
+
+    static com.concordium.sdk.transactions.BlockItem to(UpdateInstruction updateInstruction) {
+        return UpdateInstructionTransaction.builder()
+                .header(to(updateInstruction.getHeader()))
+                .payload(to(updateInstruction.getPayload()))
+                .signature(UpdateInstructionTransactionSignature.builder()
+                        .signatures(ImmutableMap.copyOf(to(
+                                updateInstruction.getSignatures().getSignaturesMap(),
+                                Index::from,
+                                v -> v.getValue().toByteArray())))
+                        .build())
+                .build();
+    }
+
+    static UpdateInstructionTransactionPayload to(UpdateInstructionPayload payload) {
+        switch (payload.getPayloadCase()) {
+            case RAW_PAYLOAD:
+                return UpdateInstructionTransactionPayload.from(payload.getRawPayload().toByteArray());
+            default:
+            case PAYLOAD_NOT_SET:
+                return UpdateInstructionTransactionPayload.from(new byte[0]);
+        }
+    }
+
+    static UpdateInstructionTransactionHeader to(UpdateInstructionHeader header) {
+        return UpdateInstructionTransactionHeader.builder()
+                .effectiveTime(to(header.getEffectiveTime()))
+                .timeout(to(header.getTimeout()))
+                .sequenceNumber(to(header.getSequenceNumber()))
+                .build();
+    }
+
+    static UInt64 to(UpdateSequenceNumber sequenceNumber) {
+        return UInt64.from(sequenceNumber.getValue());
+    }
+
+    static CredentialDeploymentTransaction to(CredentialDeployment transaction) {
+        switch (transaction.getPayloadCase()) {
+            case RAW_PAYLOAD:
+                return com.concordium.sdk.transactions.CredentialDeploymentTransaction
+                        .builderBlockItem()
+                        .expiry(to(transaction.getMessageExpiry()))
+                        .payloadBytes(transaction.getRawPayload().toByteArray())
+                        .build();
+            default:
+            case PAYLOAD_NOT_SET:
+                return com.concordium.sdk.transactions.CredentialDeploymentTransaction
+                        .builderBlockItem()
+                        .expiry(to(transaction.getMessageExpiry()))
+                        .payloadBytes(new byte[0])
+                        .build();
+        }
+    }
+
+    static AbstractAccountTransaction to(AccountTransaction transaction) {
+        val payload = transaction.getPayload();
+
+        switch (payload.getPayloadCase()) {
+            case DEPLOY_MODULE:
+                return DeployModuleTransaction
+                        .builderBlockItem()
+                        .header(to(transaction.getHeader()))
+                        .signature(to(transaction.getSignature()))
+                        .payload(to(payload.getDeployModule()))
+                        .build();
+            case INIT_CONTRACT:
+                return InitContractTransaction.builderBlockItem()
+                        .header(to(transaction.getHeader()))
+                        .signature(to(transaction.getSignature()))
+                        .payload(InitContractPayload.from(
+                                to(payload.getInitContract().getAmount()),
+                                to(payload.getInitContract().getModuleRef()),
+                                to(payload.getInitContract().getInitName()),
+                                payload.getInitContract().hasParameter() ?
+                                        to(payload.getInitContract().getParameter()) :
+                                        Parameter.EMPTY))
+                        .build();
+            case UPDATE_CONTRACT:
+                return UpdateContractTransaction
+                        .builderBlockItem()
+                        .header(to(transaction.getHeader()))
+                        .signature(to(transaction.getSignature()))
+                        .payload(UpdateContractPayload.from(
+                                to(payload.getUpdateContract().getAmount()),
+                                to(payload.getUpdateContract().getAddress()),
+                                ReceiveName.parse(payload.getUpdateContract().getReceiveName().getValue()),
+                                payload.getUpdateContract().hasParameter() ?
+                                        to(payload.getUpdateContract().getParameter()) :
+                                        Parameter.EMPTY
+                        ))
+                        .build();
+            case REGISTER_DATA:
+                return RegisterDataTransaction
+                        .builderBlockItem()
+                        .header(to(transaction.getHeader()))
+                        .signature(to(transaction.getSignature()))
+                        .payload(Data.from(payload
+                                .getRegisterData()
+                                .getValue()
+                                .toByteArray()))
+                        .build();
+            case TRANSFER:
+                return TransferTransaction
+                        .builderBlockItem()
+                        .header(to(transaction.getHeader()))
+                        .signature(to(transaction.getSignature()))
+                        .payload(TransferPayload.from(
+                                to(payload.getTransfer().getReceiver()),
+                                to(payload.getTransfer().getAmount())))
+                        .build();
+            case TRANSFER_WITH_MEMO:
+                return TransferWithMemoTransaction
+                        .builderBlockItem()
+                        .header(to(transaction.getHeader()))
+                        .signature(to(transaction.getSignature()))
+                        .payload(TransferWithMemoPayload.from(
+                                to(payload.getTransferWithMemo().getReceiver()),
+                                to(payload.getTransferWithMemo().getAmount()),
+                                to(payload.getTransferWithMemo().getMemo())))
+                        .build();
+            case RAW_PAYLOAD:
+                return com.concordium.sdk.transactions.AccountTransaction
+                        .builderBlockItem()
+                        .header(to(transaction.getHeader()))
+                        .signature(to(transaction.getSignature()))
+                        .payloadBytes(payload.getRawPayload().toByteArray())
+                        .build();
+            default:
+            case PAYLOAD_NOT_SET:
+                return com.concordium.sdk.transactions.AccountTransaction
+                        .builderBlockItem()
+                        .header(to(transaction.getHeader()))
+                        .signature(to(transaction.getSignature()))
+                        .payloadBytes(payload.isInitialized() ? payload.toByteArray() : new byte[0])
+                        .build();
+        }
+    }
+
+    static Parameter to(com.concordium.grpc.v2.Parameter parameter) {
+        return Parameter.from(parameter.getValue().toByteArray());
+    }
+
+    static InitName to(com.concordium.grpc.v2.InitName initName) {
+        return InitName.from(initName.getValue());
+    }
+
+    static Hash to(ModuleRef moduleRef) {
+        return Hash.from(moduleRef.getValue().toByteArray());
+    }
+
+    static com.concordium.sdk.transactions.Memo to(Memo memo) {
+        return com.concordium.sdk.transactions.Memo.from(memo.getValue().toByteArray());
+    }
+
+    static com.concordium.sdk.types.ContractAddress to(ContractAddress address) {
+        return com.concordium.sdk.types.ContractAddress.from(address.getIndex(), address.getSubindex());
+    }
+
+    static WasmModule to(VersionedModuleSource deployModule) {
+        switch (deployModule.getModuleCase()) {
+            case V1:
+                return WasmModule.from(deployModule.getV1().getValue().toByteArray(), WasmModuleVersion.V1);
+            case V0:
+                return WasmModule.from(deployModule.getV0().getValue().toByteArray(), WasmModuleVersion.V0);
+            case MODULE_NOT_SET:
+                return WasmModule.from(new byte[0]);
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    static TransactionSignature to(AccountTransactionSignature signature) {
+        var ret = new TransactionSignature();
+        signature.getSignaturesMap().forEach((credentialIndex, s) -> s.getSignaturesMap().forEach((signatureIndex, a) -> {
+            ret.put(toIndex(credentialIndex), toIndex(signatureIndex), a.getValue().toByteArray());
+        }));
+
+        return ret;
+    }
+
+    static Index toIndex(Integer is) {
+        return Index.from(is);
+    }
+
+    static TransactionHeader to(AccountTransactionHeader header) {
+        var ret = TransactionHeader.builder()
+                .sender(to(header.getSender()))
+                .expiry(to(header.getExpiry()))
+                .accountNonce(to(header.getSequenceNumber()))
+                .build();
+        ret.setMaxEnergyCost(to(header.getEnergyAmount()));
+
+        return ret;
+    }
+
+    static UInt64 to(Energy energyAmount) {
+        return UInt64.from(energyAmount.getValue());
+    }
+
+    static UInt64 to(TransactionTime expiry) {
+        return UInt64.from(expiry.getValue());
     }
 }

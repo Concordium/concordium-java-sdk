@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 
 @EqualsAndHashCode(callSuper = true)
 @Getter
-@ToString
+@ToString(callSuper = true)
 public final class AccountTransaction extends AbstractAccountTransaction {
 
     AccountTransaction(TransactionSignature signature, TransactionHeader header, Payload payload) {
