@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
@@ -24,7 +25,7 @@ public final class ED25519PublicKey {
     }
 
     @JsonCreator
-    public static ED25519PublicKey from(String hexKey) throws ED25519Exception {
+    public static ED25519PublicKey from(@NonNull String hexKey) {
         try {
             return from(Hex.decodeHex(hexKey));
         } catch (DecoderException e) {
@@ -32,6 +33,13 @@ public final class ED25519PublicKey {
         }
     }
 
+    /**
+     * Parses an input byte array into {@link ED25519PublicKey}.
+     *
+     * @param bytes bytes of {@link ED25519PublicKey}
+     * @return Parsed {@link ED25519PublicKey}
+     * @throws ED25519Exception When the length of the input byte array is not equal to {@link ED25519#KEY_SIZE}
+     */
     public static ED25519PublicKey from(byte[] bytes) {
         if (bytes.length != ED25519.KEY_SIZE) {
             throw ED25519Exception.from(ED25519ResultCode.MALFORMED_SECRET_KEY);
@@ -40,11 +48,26 @@ public final class ED25519PublicKey {
         return new ED25519PublicKey(copyOf(bytes, bytes.length));
     }
 
-    public boolean verify(byte[] message, byte[] signature) throws ED25519Exception {
+    /**
+     * Verifies that the `signature` on the `message` has been created using private key of this {@link ED25519PublicKey}
+     *
+     * @param message   Message to verify the signature on.
+     * @param signature Signature on the input `message`
+     * @return `true` or `false` depending on if the verification was successful or not.
+     * @throws ED25519Exception When the verification fails.
+     */
+    public boolean verify(byte[] message, byte[] signature) {
         return ED25519.verify(this, message, signature);
     }
 
-    public static ED25519PublicKey from(ED25519SecretKey secretKey) throws ED25519Exception {
+    /**
+     * Creates an instance of {@link ED25519PublicKey} from input {@link ED25519SecretKey}.
+     *
+     * @param secretKey Secret Key to generate the public key from.
+     * @return Instantiated {@link ED25519PublicKey}
+     * @throws ED25519Exception When the generation fails.
+     */
+    public static ED25519PublicKey from(ED25519SecretKey secretKey) {
         return ED25519.makePublicKey(secretKey);
     }
 

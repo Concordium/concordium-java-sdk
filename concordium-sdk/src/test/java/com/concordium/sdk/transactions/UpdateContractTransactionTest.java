@@ -116,7 +116,7 @@ public class UpdateContractTransactionTest {
             }
 
             @Override
-            public TransactionSignature sign(byte[] message) throws ED25519Exception {
+            public TransactionSignature sign(byte[] message) {
                 throw ED25519Exception.from(ED25519ResultCode.MALFORMED_SECRET_KEY);
             }
 
