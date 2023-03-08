@@ -39,7 +39,7 @@ import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.concordium.sdk.responses.nodeinfo.NodeInfo.UTC_ZONE;
+import static com.concordium.sdk.Constants.UTC_ZONE;
 import static com.google.common.collect.ImmutableList.copyOf;
 
 /**
@@ -170,7 +170,7 @@ interface ClientV2MapperExtensions {
                 .accountReleaseSchedule(to(account.getSchedule()))
                 .accountCredentials(ImmutableMap.copyOf(to(
                         account.getCredsMap(),
-                        k -> Index.from(k),
+                        Index::from,
                         ClientV2MapperExtensions::to)))
                 .accountThreshold(account.getThreshold().getValue())
                 .accountEncryptedAmount(to(account.getEncryptedBalance()))
@@ -179,12 +179,14 @@ interface ClientV2MapperExtensions {
                 .accountAddress(to(account.getAddress()));
 
         if (account.hasStake()) {
-            if (account.getStake().hasBaker()) {
-                builder.bakerInfo(to(account.getStake().getBaker()));
-            } else if (account.getStake().hasDelegator()) {
-                builder.delegation(to(account.getStake().getDelegator()));
-            } else {
-                throw new IllegalArgumentException();
+            switch (account.getStake().getStakingInfoCase()) {
+                case BAKER:
+                    builder.bakerInfo(to(account.getStake().getBaker()));
+                    break;
+                case DELEGATOR:
+                    builder.delegation(to(account.getStake().getDelegator()));
+                    break;
+                case STAKINGINFO_NOT_SET:
             }
         }
 
@@ -232,18 +234,20 @@ interface ClientV2MapperExtensions {
     }
 
     static PendingChange to(StakePendingChange pendingChange) {
-        if (pendingChange.hasReduce()) {
-            var reduce = pendingChange.getReduce();
-            return ReduceStakeChange.builder()
-                    .effectiveTime(to(to(reduce.getEffectiveTime())))
-                    .newStake(to(reduce.getNewStake()))
-                    .build();
-        } else if (pendingChange.hasRemove()) {
-            return RemoveStakeChange.builder()
-                    .effectiveTime(to(to(pendingChange.getRemove())))
-                    .build();
-        } else {
-            throw new IllegalArgumentException();
+        switch (pendingChange.getChangeCase()) {
+            case REDUCE:
+                var reduce = pendingChange.getReduce();
+                return ReduceStakeChange.builder()
+                        .effectiveTime(to(to(reduce.getEffectiveTime())))
+                        .newStake(to(reduce.getNewStake()))
+                        .build();
+            case REMOVE:
+                return RemoveStakeChange.builder()
+                        .effectiveTime(to(to(pendingChange.getRemove())))
+                        .build();
+            default:
+            case CHANGE_NOT_SET:
+                throw new IllegalArgumentException();
         }
     }
 

@@ -11,6 +11,7 @@ import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
+import lombok.val;
 import lombok.var;
 
 import java.io.IOException;
@@ -107,7 +108,7 @@ public final class ClientV2 {
     public AccountInfo getAccountInfo(
             final BlockHashInput input,
             final AccountRequest accountIdentifier) {
-        var grpcOutput = this.server().getAccountInfo(
+        val grpcOutput = this.server().getAccountInfo(
                 AccountInfoRequest.newBuilder()
                         .setBlockHash(to(input))
                         .setAccountIdentifier(to(accountIdentifier))
