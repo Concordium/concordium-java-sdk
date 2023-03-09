@@ -6,7 +6,7 @@
 
     <groupId>com.concordium.sdk</groupId>
     <artifactId>concordium-sdk</artifactId>
-    <version>4.1.1-SNAPSHOT</version>
+    <version>4.2.0</version>
 
     <name>concordium-sdk</name>
     <!-- FIXME change it to the project's website -->
