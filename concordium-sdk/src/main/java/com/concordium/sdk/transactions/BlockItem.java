@@ -28,7 +28,7 @@ public abstract class BlockItem implements Transaction {
      *
      * @return
      */
-    final public byte[] getBytes() {
+    final public byte[] getTransactionRequestPayloadBytes() {
         return concat(new byte[]{blockItemType.getByte()}, getBlockItemBytes());
     }
 

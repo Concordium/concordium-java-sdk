@@ -57,10 +57,10 @@ public class UpdateCredentialKeysTest {
 
         val blockItem = transfer.toAccountTransaction();
 
-        val blockItemBytes = blockItem.getBytes();
+        val blockItemBytes = blockItem.getTransactionRequestPayloadBytes();
         assertArrayEquals(EXPECTED_UPDATE_CREDENTIAL_KEYS_BLOCK_ITEM_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));
 
-        val blockItemVersionedBytes = blockItem.getVersionedBytes();
+        val blockItemVersionedBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_WITH_UPDATE_CREDENTIAL_KEYS_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemVersionedBytes));
 
         val blockItemHash = blockItem.getHash();

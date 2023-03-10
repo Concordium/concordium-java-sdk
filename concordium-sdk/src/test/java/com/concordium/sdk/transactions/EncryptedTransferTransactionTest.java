@@ -590,7 +590,7 @@ public class EncryptedTransferTransactionTest {
                 .signer(TransactionTestHelper.getValidSigner())
                 .build();
 
-        assertEquals(2816, transaction.getVersionedBytes().length);
+        assertEquals(2816, transaction.getBytes().length);
         assertEquals(
                 UInt64.from(29877),
                 transaction.getHeader().getMaxEnergyCost());

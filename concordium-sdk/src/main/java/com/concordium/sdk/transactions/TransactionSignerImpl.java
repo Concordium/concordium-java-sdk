@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.exceptions.ED25519Exception;
 import lombok.val;
 
 import java.util.HashMap;
@@ -35,12 +36,13 @@ public final class TransactionSignerImpl implements TransactionSigner {
     public TransactionSignature sign(byte[] message) throws ED25519Exception {
         val transactionSignature = TransactionSignature.builder();
         for (Index credentialIndex : signers.keySet()) {
+            val accntSigs
+                    = TransactionSignatureAccountSignatureMap.builder();
             val keys = this.signers.get(credentialIndex);
             for (Index index : keys.keySet()) {
-                transactionSignature.signature(credentialIndex, TransactionSignatureAccountSignatureMap.builder()
-                        .signature(index, Signature.from(keys.get(index).sign(message)))
-                        .build());
+                accntSigs.signature(index, Signature.from(keys.get(index).sign(message)));
             }
+            transactionSignature.signature(credentialIndex, accntSigs.build());
         }
 
         return transactionSignature.build();

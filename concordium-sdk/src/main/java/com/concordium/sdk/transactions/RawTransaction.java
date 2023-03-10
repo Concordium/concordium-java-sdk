@@ -6,22 +6,33 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
  * A raw transaction
  */
-@Getter
 @RequiredArgsConstructor
 public class RawTransaction implements Transaction {
 
+    @Getter
     private final int version;
 
     /**
      * The raw transaction bytes
      */
     private final byte[] bytes;
+
+    /**
+     * Transaction serialized as bytes.
+     * How a transaction is serialized to bytes depends on type of the transaction. See {@link BlockItemType}.
+     * <p>These bytes are not sent directly to the node. For that {@link Transaction#getBytes()} is used.</p>
+     *
+     * @return Serialized bytes of this Transaction.
+     */
+    @Override
+    public byte[] getTransactionRequestPayloadBytes() {
+        return bytes;
+    }
 
     @Override
     public Hash getHash() {
@@ -32,16 +43,6 @@ public class RawTransaction implements Transaction {
     @Override
     public int getNetworkId() {
         return Transaction.DEFAULT_NETWORK_ID;
-    }
-
-    @Override
-    public byte[] getVersionedBytes() {
-        val bytes = getBytes();
-        val buffer = ByteBuffer.allocate(VERSION_SIZE + bytes.length);
-        buffer.put((byte) getVersion());
-        buffer.put(bytes);
-
-        return buffer.array();
     }
 
     /**

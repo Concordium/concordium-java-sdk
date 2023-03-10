@@ -36,8 +36,8 @@ public class TransferWithRegisterDataTest {
             assertEquals(8, transferWithRegisterData.getBytes().length);
             val blockItem = transferWithRegisterData.toBlockItem();
             assertEquals(Hash.from("0ad44be061cbdfc22fdcf14e2cd48d7c34d543ea60cb9cf5298cb40d89c25d83"), blockItem.getHash());
-            assertEquals(blockItem.getHash(), BlockItem.fromVersionedBytes(ByteBuffer.wrap(blockItem.getVersionedBytes())).getHash());
-            assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_TRANSFER_WITH_REGISTER_DATA_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getVersionedBytes()));
+            assertEquals(blockItem.getHash(), BlockItem.fromVersionedBytes(ByteBuffer.wrap(blockItem.getBytes())).getHash());
+            assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_TRANSFER_WITH_REGISTER_DATA_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getBytes()));
         } catch (TransactionCreationException e) {
             fail("Unexpected error: " + e.getMessage());
         }

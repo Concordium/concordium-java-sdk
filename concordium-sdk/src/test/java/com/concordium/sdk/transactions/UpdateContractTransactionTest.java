@@ -2,7 +2,6 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
-import java.lang.NullPointerException;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.ContractAddress;
@@ -31,7 +30,7 @@ public class UpdateContractTransactionTest {
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         assertEquals("55c4040b1540ac4fbe52d01bd1d4795b306ce65b71f879f62f5d5ef4df504785", transaction.getHash().asHex());
-        assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
+        assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 
     @Test(expected = TransactionCreationException.class)

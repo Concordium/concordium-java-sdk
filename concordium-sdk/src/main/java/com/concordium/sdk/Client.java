@@ -267,7 +267,7 @@ public final class Client {
         val request = ConcordiumP2PRpc.SendTransactionRequest
                 .newBuilder()
                 .setNetworkId(transaction.getNetworkId())
-                .setPayload(ByteString.copyFrom(transaction.getVersionedBytes()))
+                .setPayload(ByteString.copyFrom(transaction.getBytes()))
                 .build();
         val response = server().sendTransaction(request);
         if (response.getValue()) {

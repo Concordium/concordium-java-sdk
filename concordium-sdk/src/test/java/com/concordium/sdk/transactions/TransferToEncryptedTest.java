@@ -42,10 +42,10 @@ public class TransferToEncryptedTest {
 
         val blockItem = transfer.toAccountTransaction();
 
-        val blockItemBytes = blockItem.getBytes();
+        val blockItemBytes = blockItem.getTransactionRequestPayloadBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_TO_ENCRYPTED_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));
 
-        val blockItemVersionedBytesBytes = blockItem.getVersionedBytes();
+        val blockItemVersionedBytesBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_TO_ENCRYPTED_VERSIONED_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemVersionedBytesBytes));
 
         val blockItemHash = blockItem.getHash();

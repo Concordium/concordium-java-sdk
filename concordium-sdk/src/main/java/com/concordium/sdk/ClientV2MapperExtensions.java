@@ -31,7 +31,6 @@ import com.concordium.sdk.transactions.InitName;
 import com.concordium.sdk.transactions.Parameter;
 import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.Signature;
-import com.concordium.sdk.transactions.TransactionType;
 import com.concordium.sdk.transactions.TransferPayload;
 import com.concordium.sdk.transactions.TransferWithMemoPayload;
 import com.concordium.sdk.transactions.UpdateContractPayload;
@@ -50,7 +49,6 @@ import lombok.val;
 import lombok.var;
 
 import javax.annotation.Nullable;
-import java.nio.ByteBuffer;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.util.*;
@@ -605,7 +603,12 @@ interface ClientV2MapperExtensions {
                         .build();
             default:
             case PAYLOAD_NOT_SET:
-                throw new IllegalArgumentException();
+                return com.concordium.sdk.transactions.AccountTransaction
+                        .builderBlockItem()
+                        .header(to(transaction.getHeader(), 0))
+                        .signature(to(transaction.getSignature()))
+                        .payloadBytes(new byte[0])
+                        .build();
         }
     }
 

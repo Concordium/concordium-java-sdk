@@ -3,7 +3,6 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
-import java.lang.NullPointerException;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt16;
@@ -41,7 +40,7 @@ public class UpdateCredentialKeysTransactionTest {
                 .build();
 
         assertEquals("920903215efd15190ff183746cb3380037fc851d203c3ac97876664d2c3743dd", transaction.getHash().asHex());
-        assertArrayEquals(EXPECTED_UPDATE_CREDENTIAL_KEYS_TRANSACTION_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
+        assertArrayEquals(EXPECTED_UPDATE_CREDENTIAL_KEYS_TRANSACTION_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
     }
 
     @Test(expected = TransactionCreationException.class)
