@@ -4,6 +4,7 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -12,6 +13,7 @@ import lombok.NonNull;
  * Construct a transaction to initialise a smart contract.
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class InitContractTransaction extends AbstractAccountTransaction {
 
     /**
@@ -37,7 +39,7 @@ public class InitContractTransaction extends AbstractAccountTransaction {
                 payload.getBytes());
     }
 
-    @Builder
+    @Builder(builderClassName = "InitContractTransactionBuilder")
     public static InitContractTransaction from(
             final InitContractPayload payload,
             final AccountAddress sender,
@@ -52,11 +54,20 @@ public class InitContractTransaction extends AbstractAccountTransaction {
         }
     }
 
-    @Builder(builderMethodName = "builderBlockItem")
+    /**
+     * Creates a new instance of {@link InitContractTransaction}.
+     * Using {@link TransactionHeader}, {@link TransactionSignature} and Payload {@link InitContractPayload}.
+     *
+     * @param header    {@link TransactionHeader}.
+     * @param signature {@link TransactionSignature}.
+     * @param payload   {@link InitContractPayload} Payload for this transaction.
+     * @return Instantiated {@link InitContractTransaction}.
+     */
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "InitContractBlockItemBuilder")
     public static InitContractTransaction from(
-            final @NonNull TransactionHeader header,
-            final @NonNull TransactionSignature signature,
-            final @NonNull InitContractPayload payload) {
+            final TransactionHeader header,
+            final TransactionSignature signature,
+            final InitContractPayload payload) {
         try {
             return new InitContractTransaction(header, signature, payload);
         } catch (NullPointerException ex) {

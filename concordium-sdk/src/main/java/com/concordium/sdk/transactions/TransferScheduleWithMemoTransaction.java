@@ -2,14 +2,14 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 /**
  * Construct a transaction to transfer an amount with schedule and memo.
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class TransferScheduleWithMemoTransaction extends AbstractAccountTransaction {
     private TransferScheduleWithMemoTransaction(
             @NonNull final AccountAddress sender,

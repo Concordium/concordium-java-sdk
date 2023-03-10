@@ -2,14 +2,14 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt64;
 import io.grpc.netty.shaded.io.netty.util.internal.UnstableApi;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.var;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
 @Builder
 @Getter
+@EqualsAndHashCode
+@ToString
 public class UpdateInstructionTransactionHeader {
     private final UInt64 effectiveTime;
     private final UInt64 timeout;

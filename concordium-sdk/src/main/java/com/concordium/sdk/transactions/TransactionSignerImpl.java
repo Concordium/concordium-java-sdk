@@ -30,14 +30,17 @@ public final class TransactionSignerImpl implements TransactionSigner {
 
     @Override
     public TransactionSignature sign(byte[] message) throws ED25519Exception {
-        val transactionSignature = new TransactionSignature();
+        val transactionSignature = TransactionSignature.builder();
         for (Index credentialIndex : signers.keySet()) {
             val keys = this.signers.get(credentialIndex);
             for (Index index : keys.keySet()) {
-                transactionSignature.put(credentialIndex, index, keys.get(index).sign(message));
+                transactionSignature.signature(credentialIndex, TransactionSignatureAccountSignatureMap.builder()
+                        .signature(index, Signature.from(keys.get(index).sign(message)))
+                        .build());
             }
         }
-        return transactionSignature;
+
+        return transactionSignature.build();
     }
 
     @Override

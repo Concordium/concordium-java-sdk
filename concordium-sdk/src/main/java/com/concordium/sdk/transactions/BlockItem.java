@@ -4,27 +4,32 @@ import lombok.*;
 
 import java.nio.ByteBuffer;
 
+import static com.google.common.primitives.Bytes.concat;
+
+/**
+ * Represents a single item in any Block in Concordium.
+ */
 @EqualsAndHashCode
 @ToString
 @Getter
 public abstract class BlockItem implements Transaction {
+    /**
+     * Type of Block Item. Account, Credential Deployment Or Update Instruction.
+     */
     private final BlockItemType blockItemType;
 
     BlockItem(final @NonNull BlockItemType blockItemType) {
         this.blockItemType = blockItemType;
     }
 
-    public static BlockItem from(AccountTransaction accountTransaction) {
-        return accountTransaction;
-    }
-
+    /**
+     * Get the serialized bytes for this {@link BlockItem}.
+     * Which is a concatenation of {@link BlockItemType#getByte()} + {@link BlockItem#getBlockItemBytes()}
+     *
+     * @return
+     */
     final public byte[] getBytes() {
-        val blockItemBytes = getBlockItemBytes();
-        val buffer = ByteBuffer.allocate(BlockItemType.BYTES + blockItemBytes.length);
-        buffer.put(blockItemType.getByte());
-        buffer.put(blockItemBytes);
-
-        return buffer.array();
+        return concat(new byte[]{blockItemType.getByte()}, getBlockItemBytes());
     }
 
     abstract byte[] getBlockItemBytes();
@@ -33,8 +38,7 @@ public abstract class BlockItem implements Transaction {
         val kind = BlockItemType.fromBytes(source);
         switch (kind) {
             case ACCOUNT_TRANSACTION:
-                val at = AccountTransaction.fromBytes(source);
-                return BlockItem.from(at);
+                return AccountTransaction.fromBytes(source);
             case CREDENTIAL_DEPLOYMENT:
                 throw new UnsupportedOperationException("Only account transactions are supported in this version. Credential deployments are not.");
             case UPDATE_INSTRUCTION:

@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import io.grpc.netty.shaded.io.netty.util.internal.UnstableApi;
 import lombok.*;
 
 import java.nio.ByteBuffer;
@@ -13,10 +14,21 @@ public final class AccountTransaction extends AbstractAccountTransaction {
         super(header, signature, payload);
     }
 
+    /**
+     * Creates an {@link AccountTransaction} using {@link TransactionHeader},
+     * {@link TransactionSignature} and raw payload bytes. This will be removed in the subsequent versions.
+     * Since the type of the Account Transaction in unknown
+     * todo: Complete and use {@link AccountTransaction#fromBytes(ByteBuffer)} to deserialize the raw payload.
+     *
+     * @param header       {@link TransactionHeader}
+     * @param signature    {@link TransactionSignature}
+     * @param payloadBytes Raw payload bytes.
+     */
+    @UnstableApi
     @Builder(builderMethodName = "builderBlockItem")
     public AccountTransaction(final @NonNull TransactionHeader header,
                               final @NonNull TransactionSignature signature,
-                              @NonNull final byte[] payloadBytes) {
+                              final byte @NonNull [] payloadBytes) {
         super(header, signature, TransactionType.UNKNOWN_ACCOUNT, payloadBytes);
     }
 

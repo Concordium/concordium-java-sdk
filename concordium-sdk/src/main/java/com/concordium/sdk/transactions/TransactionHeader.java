@@ -7,6 +7,9 @@ import lombok.*;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Header for an {@link AccountTransaction}.
+ */
 @Getter
 @EqualsAndHashCode
 @ToString
@@ -22,19 +25,51 @@ public class TransactionHeader {
 
     /**
      * Create a {@link TransactionHeader}
-     * @param sender the sender {@link AccountAddress}
+     *
+     * @param sender       the sender {@link AccountAddress}
      * @param accountNonce the nonce.
      *                     Note. this should be the next available account nonce.
      *                     This can e.g. be retrieved via {@link com.concordium.sdk.responses.accountinfo.AccountInfo}
-     * @param expiry A Unix timestamp indicating when the transaction should expire.
+     * @param expiry       A Unix timestamp indicating when the transaction should expire.
      */
     @Builder
-
     TransactionHeader(AccountAddress sender, Nonce accountNonce, UInt64 expiry) {
         this.sender = sender;
         this.accountNonce = accountNonce;
         this.expiry = expiry;
         this.maxEnergyCost = UInt64.from(0); // dummy value used for calculating the energy cost.
+    }
+
+    private TransactionHeader(@NonNull final AccountAddress sender,
+                              @NonNull final Nonce accountNonce,
+                              @NonNull final UInt64 expiry,
+                              @NonNull final UInt64 maxEnergyCost,
+                              @NonNull final UInt32 payloadSize) {
+        this(sender, accountNonce, expiry);
+        this.maxEnergyCost = maxEnergyCost;
+        this.payloadSize = payloadSize;
+    }
+
+    /**
+     * Creates a new Account {@link TransactionHeader}.
+     *
+     * @param sender        Sender ({@link AccountAddress}) of this Transaction.
+     * @param accountNonce  Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry        {@link Expiry} of this transaction.
+     * @param maxEnergyCost Energy allowed for this transaction.
+     * @param payloadSize   Byte size of the payload for this transaction.
+     * @return Instantiated {@link TransactionHeader}.
+     */
+    @Builder(
+            toBuilder = true,
+            builderClassName = "TransactionHeaderImmutableBuilder",
+            builderMethodName = "builderImmutable")
+    public static TransactionHeader from(final AccountAddress sender,
+                                         final Nonce accountNonce,
+                                         final UInt64 expiry,
+                                         final UInt64 maxEnergyCost,
+                                         final UInt32 payloadSize) {
+        return new TransactionHeader(sender, accountNonce, expiry, maxEnergyCost, payloadSize);
     }
 
     byte[] getBytes() {

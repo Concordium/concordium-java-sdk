@@ -3,14 +3,14 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt64;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 /**
  * Construct a transaction to update a smart contract instance.
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class UpdateContractTransaction extends AbstractAccountTransaction {
     private UpdateContractTransaction(
             @NonNull final UpdateContractPayload payload,
@@ -32,7 +32,7 @@ public class UpdateContractTransaction extends AbstractAccountTransaction {
                 payload.getBytes());
     }
 
-    @Builder
+    @Builder(builderClassName = "UpdateContractTransactionBuilder")
     public static UpdateContractTransaction from(
             final UpdateContractPayload payload,
             final AccountAddress sender,
@@ -47,7 +47,7 @@ public class UpdateContractTransaction extends AbstractAccountTransaction {
         }
     }
 
-    @Builder(builderMethodName = "builderBlockItem")
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "UpdateContractBlockItemBuilder")
     public static UpdateContractTransaction from(
             final TransactionHeader header,
             final TransactionSignature signature,

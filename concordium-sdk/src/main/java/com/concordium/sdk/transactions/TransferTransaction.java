@@ -2,11 +2,11 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class TransferTransaction extends AbstractAccountTransaction {
     private TransferTransaction(
             @NonNull final AccountAddress sender,
@@ -25,7 +25,7 @@ public class TransferTransaction extends AbstractAccountTransaction {
         super(header, signature, TransactionType.SIMPLE_TRANSFER, payload.getBytes());
     }
 
-    @Builder
+    @Builder(builderClassName = "TransferTransactionBuilder")
     public static TransferTransaction from(
             final AccountAddress sender,
             final AccountAddress receiver,
@@ -40,11 +40,10 @@ public class TransferTransaction extends AbstractAccountTransaction {
         }
     }
 
-    @Builder(builderMethodName = "builderBlockItem")
-    public static TransferTransaction from(
-            final @NonNull TransactionHeader header,
-            final @NonNull TransactionSignature signature,
-            final @NonNull TransferPayload payload) {
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "TransferBlockItemBuilder")
+    public static TransferTransaction from(final TransactionHeader header,
+                                           final TransactionSignature signature,
+                                           final TransferPayload payload) {
         try {
             return new TransferTransaction(header, signature, payload);
         } catch (NullPointerException nullPointerException) {

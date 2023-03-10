@@ -1,11 +1,11 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class TransferWithMemoTransaction extends AbstractAccountTransaction {
     private TransferWithMemoTransaction(
             @NonNull final AccountAddress sender,
@@ -22,13 +22,10 @@ public class TransferWithMemoTransaction extends AbstractAccountTransaction {
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
             final @NonNull TransferWithMemoPayload payload) {
-        super(header,
-                signature,
-                TransactionType.TRANSFER_WITH_MEMO,
-                payload.getBytes());
+        super(header, signature, TransactionType.TRANSFER_WITH_MEMO, payload.getBytes());
     }
 
-    @Builder
+    @Builder(builderClassName = "TransferWithMemoTransactionBuilder")
     public static TransferWithMemoTransaction from(final AccountAddress sender,
                                                    final AccountAddress receiver,
                                                    final CCDAmount amount,
@@ -43,7 +40,7 @@ public class TransferWithMemoTransaction extends AbstractAccountTransaction {
         }
     }
 
-    @Builder(builderMethodName = "builderBlockItem")
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "TransferWithMemoBlockItemBuilder")
     public static TransferWithMemoTransaction from(final TransactionHeader header,
                                                    final TransactionSignature signature,
                                                    final TransferWithMemoPayload payload) {

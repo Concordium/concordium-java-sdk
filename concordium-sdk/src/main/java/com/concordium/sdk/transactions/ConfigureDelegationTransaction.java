@@ -1,15 +1,15 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 /**
  * A class that represents a ConfigureDelegationTransaction.
  * This transaction is used to register the account as a delegator.
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class ConfigureDelegationTransaction extends AbstractAccountTransaction {
     private ConfigureDelegationTransaction(
             @NonNull final ConfigureDelegationPayload payload,
@@ -20,6 +20,16 @@ public class ConfigureDelegationTransaction extends AbstractAccountTransaction {
         super(sender, nonce, expiry, signer, ConfigureDelegation.createNew(payload));
     }
 
+    /**
+     * Creates new {@link ConfigureDelegationTransaction}.
+     *
+     * @param payload Payload for this Transaction.
+     * @param sender  Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce   Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry  {@link Expiry} of this transaction.
+     * @param signer  {@link Signer} of this transaction.
+     * @return
+     */
     @Builder
     public static ConfigureDelegationTransaction from(final ConfigureDelegationPayload payload,
                                                       final AccountAddress sender,

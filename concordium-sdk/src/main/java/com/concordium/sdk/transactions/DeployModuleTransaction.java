@@ -3,16 +3,16 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.types.UInt64;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 /**
  * A {@link DeployModuleTransaction} deploys compiled WASM smart contract module to chain.
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class DeployModuleTransaction extends AbstractAccountTransaction {
-    DeployModuleTransaction(
+    private DeployModuleTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
@@ -26,13 +26,10 @@ public class DeployModuleTransaction extends AbstractAccountTransaction {
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
             final @NonNull WasmModule payload) {
-        super(header,
-                signature,
-                TransactionType.DEPLOY_MODULE,
-                payload.getBytes());
+        super(header, signature, TransactionType.DEPLOY_MODULE, payload.getBytes());
     }
 
-    @Builder
+    @Builder(builderClassName = "DeployModuleTransactionBuilder")
     public static DeployModuleTransaction from(final AccountAddress sender,
                                                final AccountNonce nonce,
                                                final Expiry expiry,
@@ -46,11 +43,20 @@ public class DeployModuleTransaction extends AbstractAccountTransaction {
         }
     }
 
-    @Builder(builderMethodName = "builderBlockItem")
+    /**
+     * Creates a new instance of {@link DeployModuleTransaction}.
+     * Using {@link TransactionHeader}, {@link TransactionSignature} and Payload {@link WasmModule}.
+     *
+     * @param header    {@link TransactionHeader}.
+     * @param signature {@link TransactionSignature}.
+     * @param payload   {@link WasmModule} Payload for this transaction.
+     * @return Instantiated {@link DeployModuleTransaction}.
+     */
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "DeployModuleBlockItemBuilder")
     static DeployModuleTransaction from(
-            final @NonNull TransactionHeader header,
-            final @NonNull TransactionSignature signature,
-            final @NonNull WasmModule payload) {
+            final TransactionHeader header,
+            final TransactionSignature signature,
+            final WasmModule payload) {
         try {
             return new DeployModuleTransaction(header, signature, payload);
         } catch (NullPointerException nullPointerException) {

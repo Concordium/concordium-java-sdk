@@ -2,11 +2,11 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class RegisterDataTransaction extends AbstractAccountTransaction {
     private RegisterDataTransaction(
             @NonNull final AccountAddress sender,
@@ -27,7 +27,7 @@ public class RegisterDataTransaction extends AbstractAccountTransaction {
                 payload.getBytes());
     }
 
-    @Builder
+    @Builder(builderClassName = "RegisterDataTransactionBuilder")
     public static RegisterDataTransaction from(
             final AccountAddress sender,
             final Data data,
@@ -41,7 +41,7 @@ public class RegisterDataTransaction extends AbstractAccountTransaction {
         }
     }
 
-    @Builder(builderMethodName = "builderBlockItem")
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "RegisterDataBlockItemBuilder")
     public static RegisterDataTransaction from(
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,

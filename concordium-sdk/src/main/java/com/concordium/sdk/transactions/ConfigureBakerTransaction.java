@@ -1,15 +1,15 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 /**
  * A class that represents a ConfigureBakerTransaction.
  * This transaction is used to register the account as a baker.
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class ConfigureBakerTransaction extends AbstractAccountTransaction {
 
     ConfigureBakerTransaction(
@@ -32,11 +32,11 @@ public class ConfigureBakerTransaction extends AbstractAccountTransaction {
      * @return Instance of {@link ConfigureBakerTransaction}
      */
     @Builder
-    public static ConfigureBakerTransaction from(@NonNull final ConfigureBakerPayload payload,
-                                                 @NonNull final AccountAddress sender,
-                                                 @NonNull final AccountNonce nonce,
-                                                 @NonNull final Expiry expiry,
-                                                 @NonNull final TransactionSigner signer) {
+    public static ConfigureBakerTransaction from(final ConfigureBakerPayload payload,
+                                                 final AccountAddress sender,
+                                                 final AccountNonce nonce,
+                                                 final Expiry expiry,
+                                                 final TransactionSigner signer) {
         try {
             return new ConfigureBakerTransaction(payload, sender, nonce, expiry, signer);
         } catch (NullPointerException nullPointerException) {

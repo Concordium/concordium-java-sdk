@@ -45,7 +45,7 @@ public final class ReceiveName {
     }
 
     public static ReceiveName parse(final String value) {
-        val parts = value.split(".");
+        val parts = value.split("\\.");
         if (parts.length != 2) {
             throw new IllegalArgumentException("name should be in format <ContractName>.<MethodName>");
         }

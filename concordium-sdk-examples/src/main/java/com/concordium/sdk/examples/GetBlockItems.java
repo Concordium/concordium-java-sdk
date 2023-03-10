@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 @Command(name = "GetBlocks", mixinStandardHelpOptions = true)
-public class GetBlocksItems implements Callable<Integer> {
+public class GetBlockItems implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
@@ -50,7 +50,7 @@ public class GetBlocksItems implements Callable<Integer> {
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetBlocksItems()).execute(args);
+        int exitCode = new CommandLine(new GetBlockItems()).execute(args);
         System.exit(exitCode);
     }
 }

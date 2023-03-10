@@ -76,19 +76,14 @@ public final class InitContractPayload {
         val amountBytes = amount.getBytes();
         val moduleRefBytes = moduleRef.getBytes();
         val initNameBytes = initName.getBytes();
-        val param_bytes = param.getBytes();
-        val bufferLength =
-                moduleRefBytes.length +
-                        amountBytes.length +
-                        initNameBytes.length +
-                        param_bytes.length;
+        val paramBytes = param.getBytes();
+        val bufferLength = moduleRefBytes.length + amountBytes.length + initNameBytes.length + paramBytes.length;
 
         val buffer = ByteBuffer.allocate(bufferLength);
-
         buffer.put(amountBytes);
         buffer.put(moduleRefBytes);
         buffer.put(initNameBytes);
-        buffer.put(param_bytes);
+        buffer.put(paramBytes);
 
         return buffer.array();
     }

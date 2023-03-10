@@ -20,7 +20,7 @@ abstract class Payload {
     PayloadType type;
 
     BlockItem toBlockItem() {
-        return BlockItem.from(new AccountTransaction(signature, header, this));
+        return new AccountTransaction(signature, header, this);
     }
 
     /**

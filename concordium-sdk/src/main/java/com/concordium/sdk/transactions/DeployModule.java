@@ -15,8 +15,7 @@ public class DeployModule extends Payload {
 
     private final UInt64 maxEnergyCost;
 
-    @Builder
-    private DeployModule(WasmModule module, UInt64 maxEnergyCost) {
+    private DeployModule(@NonNull final WasmModule module, @NonNull final UInt64 maxEnergyCost) {
         this.module = module;
         this.maxEnergyCost = maxEnergyCost;
     }
@@ -28,9 +27,8 @@ public class DeployModule extends Payload {
      * @param maxEnergyCost The maximum amount of energy that can be consumed by the contract.
      * @return A new DeployModule object.
      */
-    static DeployModule createNew(
-            @NonNull WasmModule module,
-            @NonNull UInt64 maxEnergyCost) {
+    @Builder
+    static DeployModule createNew(final WasmModule module, final UInt64 maxEnergyCost) {
         return new DeployModule(module, maxEnergyCost);
     }
 

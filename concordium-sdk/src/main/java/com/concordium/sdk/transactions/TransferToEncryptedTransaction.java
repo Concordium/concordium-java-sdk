@@ -2,14 +2,14 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 /**
  * Construct a transaction to transfer from public to encrypted balance of the sender account.
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class TransferToEncryptedTransaction extends AbstractAccountTransaction {
     private TransferToEncryptedTransaction(
             @NonNull final CCDAmount amount,

@@ -1,9 +1,8 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.SHA256;
-import lombok.val;
 
-import java.nio.ByteBuffer;
+import static com.google.common.primitives.Bytes.concat;
 
 public interface Transaction {
     int DEFAULT_NETWORK_ID = 100;
@@ -14,18 +13,21 @@ public interface Transaction {
     /**
      * Returns serialized {@link Transaction}
      * This is the raw bytes that is sent to the node.
+     * It is a concatenation of the Transaction Version {@link Transaction#VERSION} + {@link Transaction#getBytes()}
      *
      * @return The serialized {@link Transaction}
      */
     default byte[] getVersionedBytes() {
-        val bytes = getBytes();
-        val buffer = ByteBuffer.allocate(VERSION_SIZE + bytes.length);
-        buffer.put((byte) VERSION);
-        buffer.put(bytes);
-
-        return buffer.array();
+        return concat(new byte[]{(byte) VERSION}, getBytes());
     }
 
+    /**
+     * Transaction serialized as bytes.
+     * How a transaction is serialized to bytes depends on type of the transaction. See {@link BlockItemType}.
+     * <p>These bytes are not sent directly to the node. For that {@link Transaction#getVersionedBytes()} is used.</p>
+     *
+     * @return Serialized bytes of this Transaction.
+     */
     byte[] getBytes();
 
     /**
