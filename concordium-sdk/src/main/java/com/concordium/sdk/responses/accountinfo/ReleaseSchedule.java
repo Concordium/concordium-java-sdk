@@ -2,22 +2,24 @@ package com.concordium.sdk.responses.accountinfo;
 
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import com.google.common.collect.ImmutableList;
+import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
 @Getter
 @ToString
 @EqualsAndHashCode
+@Jacksonized
 public final class ReleaseSchedule {
     private final CCDAmount total;
-    private final List<ScheduledRelease> schedule;
+    private final ImmutableList<ScheduledRelease> schedule;
 
+    @Builder
     ReleaseSchedule(@JsonProperty("total") CCDAmount total,
-                    @JsonProperty("schedule") List<ScheduledRelease> schedule) {
+                    @Singular(value = "scheduleRelease") @JsonProperty("schedule") List<ScheduledRelease> schedule) {
         this.total = total;
-        this.schedule = schedule;
+        this.schedule = ImmutableList.copyOf(schedule);
     }
 }

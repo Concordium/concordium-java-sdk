@@ -13,7 +13,7 @@ public class TransactionSignerTest {
     public void testTransactionSigner() {
         val signer = TransactionSigner.from(SignerEntry.from(Index.from(0), Index.from(1), new Signer() {
                     @Override
-                    public byte[] sign(byte[] message) throws ED25519Exception {
+                    public byte[] sign(byte[] message) {
                         return new byte[0];
                     }
                 }),

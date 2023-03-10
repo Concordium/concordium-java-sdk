@@ -37,16 +37,18 @@ public final class VerificationKey {
     }
 
     /**
-     * Get the ED25519 public key
+     * Gets the {@link ED25519PublicKey} wrapping {@link VerificationKey#verifyKey}.
      *
-     * @return The ED25519 public key
+     * @return Created {@link ED25519PublicKey}.
+     * @throws ED25519Exception if the {@link VerificationKey#verifyKey} is does not represent a {@link ED25519PublicKey}
      */
-    public ED25519PublicKey getPublicKey() throws ED25519Exception {
+    public ED25519PublicKey getPublicKey() {
         return ED25519PublicKey.from(verifyKey);
     }
 
     /**
      * Get the hex encoded verification key
+     *
      * @return a hex string representing the public key.
      */
     public String asHex() {

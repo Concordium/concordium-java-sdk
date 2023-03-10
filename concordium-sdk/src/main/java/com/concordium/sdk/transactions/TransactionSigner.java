@@ -7,7 +7,14 @@ public interface TransactionSigner {
 
     TransactionSigner put(Index credentialIndex, Index keyIndex, Signer signer);
 
-    TransactionSignature sign(byte[] message) throws ED25519Exception;
+    /**
+     * Signs the input `message`.
+     *
+     * @param message Input message byte array.
+     * @return {@link TransactionSignature}
+     * @throws ED25519Exception If the Signing fails.
+     */
+    TransactionSignature sign(byte[] message);
 
     int size();
 

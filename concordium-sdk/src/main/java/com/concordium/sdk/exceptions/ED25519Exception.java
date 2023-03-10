@@ -3,7 +3,7 @@ package com.concordium.sdk.exceptions;
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import lombok.Getter;
 
-public final class ED25519Exception extends Exception {
+public final class ED25519Exception extends RuntimeException {
     @Getter
     private final ED25519ResultCode code;
 

@@ -27,7 +27,14 @@ public enum ED25519ResultCode {
         this.errorMessage = err;
     }
 
-    static ED25519ResultCode from(int code) throws ED25519Exception {
+    /**
+     * Creates {@link ED25519ResultCode} from input code.
+     *
+     * @param code int value of {@link ED25519ResultCode}.
+     * @return Created {@link ED25519ResultCode}.
+     * @throws ED25519Exception If the input is out of range.
+     */
+    static ED25519ResultCode from(int code) {
         for (ED25519ResultCode value : ED25519ResultCode.values()) {
             if (value.code == code) {
                 return value;

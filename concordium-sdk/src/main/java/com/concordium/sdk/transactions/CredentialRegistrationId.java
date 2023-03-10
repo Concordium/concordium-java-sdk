@@ -3,16 +3,14 @@ package com.concordium.sdk.transactions;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
-import org.apache.commons.codec.binary.Hex;
-import lombok.*;
+import lombok.val;
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 
 
 /**
  * A credential registration id
  */
-@ToString
 @EqualsAndHashCode
 public class CredentialRegistrationId {
     //the length of `CredentialRegistrationId` bytes
@@ -38,6 +36,7 @@ public class CredentialRegistrationId {
 
     /**
      * Get the hex encoded credential registration id
+     *
      * @return the hex encoded credential registration id
      */
     public String getEncoded() {
@@ -46,11 +45,11 @@ public class CredentialRegistrationId {
 
     /**
      * Create a {@link CredentialRegistrationId} from raw bytes
-     *
+     * <p>
      * Note. This is not the most optimal check as in fact the credential registration id
      * is a group element in the G1 curve of the BLS pairing.
      * Hence, not every series of bytes (with the correct size) is a valid credential registration id.
-     *
+     * <p>
      * Maintainer note. A future implementation could make use of the above comment and
      * provide stronger verification of the credential registration id.
      *
@@ -68,5 +67,10 @@ public class CredentialRegistrationId {
     @JsonCreator
     CredentialRegistrationId(String regId) {
         this.regId = CredentialRegistrationId.from(regId).getRegId();
+    }
+
+    @Override
+    public String toString() {
+        return Hex.encodeHexString(regId);
     }
 }

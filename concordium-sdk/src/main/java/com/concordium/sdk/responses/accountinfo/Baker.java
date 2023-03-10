@@ -1,46 +1,58 @@
 package com.concordium.sdk.responses.accountinfo;
 
+import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.transactionstatus.ModuleCreatedResult;
 import com.concordium.sdk.transactions.CCDAmount;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.ToString;
-import org.apache.commons.codec.binary.Hex;
+import lombok.extern.jackson.Jacksonized;
 
 @Getter
 @ToString
 @EqualsAndHashCode
+@Jacksonized
+@Builder
 public final class Baker {
+
     /**
      * The baker id.
      */
+    @JsonProperty("bakerId")
     private final AccountIndex bakerId;
+
     /**
      * The staked amount.
      */
+    @JsonProperty("stakedAmount")
     private final CCDAmount stakedAmount;
+
     /**
      * Whether earnings should be restaked automatically or not.
      */
     private final boolean restakeEarnings;
+
     /**
      * The baker's public VRF key used to verify that the baker has won the lottery.
      */
-    private final byte[] bakerElectionVerifyKey;
+    @JsonProperty("bakerElectionVerifyKey")
+    private final ED25519PublicKey bakerElectionVerifyKey;
+
     /**
      * The baker's public key, used to verify baker's signatures on the blocks and finalization messages.
      */
-    private final byte[] bakerSignatureVerifyKey;
+    @JsonProperty("bakerSignatureVerifyKey")
+    private final ED25519PublicKey bakerSignatureVerifyKey;
+
     /**
      * The baker's public key used to verify the baker's signature on finalization records in case the baker is a finalizer.
      */
-    private final byte[] bakerAggregationVerifyKey;
+    @JsonProperty("bakerAggregationVerifyKey")
+    private final ED25519PublicKey bakerAggregationVerifyKey;
 
     /**
      * The pending changes for the baker.
@@ -50,31 +62,15 @@ public final class Baker {
             @JsonSubTypes.Type(value = ReduceStakeChange.class, name = "ReduceStake"),
             @JsonSubTypes.Type(value = RemoveStakeChange.class, name = "RemoveStake")
     })
+    @JsonProperty("pendingChange")
     private final PendingChange pendingChange;
 
 
     /**
      * The baker pool info
      */
+    @JsonProperty("bakerPoolInfo")
     private final BakerPoolInfo bakerPoolInfo;
 
-    @SneakyThrows
-    @JsonCreator
-    Baker(@JsonProperty("bakerId") AccountIndex bakerId,
-          @JsonProperty("stakedAmount") CCDAmount stakedAmount,
-          @JsonProperty("restakeEarnings") boolean restakeEarnings,
-          @JsonProperty("bakerElectionVerifyKey") String bakerElectionVerifyKey,
-          @JsonProperty("bakerSignatureVerifyKey") String bakerSignatureVerifyKey,
-          @JsonProperty("bakerAggregationVerifyKey") String bakerAggregationVerifyKey,
-          @JsonProperty("bakerPoolInfo") BakerPoolInfo bakerPoolInfo,
-          @JsonProperty("pendingChange") PendingChange pendingChange) {
-        this.bakerId = bakerId;
-        this.stakedAmount = stakedAmount;
-        this.restakeEarnings = restakeEarnings;
-        this.bakerElectionVerifyKey = Hex.decodeHex(bakerElectionVerifyKey);
-        this.bakerSignatureVerifyKey = Hex.decodeHex(bakerSignatureVerifyKey);
-        this.bakerAggregationVerifyKey = Hex.decodeHex(bakerAggregationVerifyKey);
-        this.bakerPoolInfo = bakerPoolInfo;
-        this.pendingChange = pendingChange;
-    }
+
 }

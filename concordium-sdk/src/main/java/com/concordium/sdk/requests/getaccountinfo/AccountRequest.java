@@ -6,6 +6,7 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.transactions.Hash;
 import com.google.protobuf.ByteString;
+import lombok.Getter;
 
 import java.nio.charset.StandardCharsets;
 
@@ -13,6 +14,7 @@ import java.nio.charset.StandardCharsets;
  * The account request to use when querying accounts on chain.
  * See {@link Client#getAccountInfo(AccountRequest, Hash)}
  */
+@Getter
 public final class AccountRequest {
 
     private final Type type;
@@ -84,7 +86,7 @@ public final class AccountRequest {
         }
     }
 
-    private enum Type {
+    public enum Type {
         ADDRESS, INDEX, CREDENTIAL_REGISTRATION_ID;
     }
 }

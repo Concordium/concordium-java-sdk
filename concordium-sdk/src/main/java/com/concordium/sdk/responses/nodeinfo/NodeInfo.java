@@ -7,9 +7,9 @@ import lombok.ToString;
 import lombok.val;
 
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Optional;
+
+import static com.concordium.sdk.Constants.UTC_ZONE;
 
 /**
  * Node Information.
@@ -18,9 +18,6 @@ import java.util.Optional;
 @Getter
 @ToString
 public class NodeInfo {
-
-    private static final ZoneId UTC_ZONE = ZoneId.of("UTC");
-
     /**
      * Node Id.
      */

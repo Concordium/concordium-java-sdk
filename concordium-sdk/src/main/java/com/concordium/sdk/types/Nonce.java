@@ -3,7 +3,6 @@ package com.concordium.sdk.types;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.nio.ByteBuffer;
 
@@ -12,7 +11,6 @@ import java.nio.ByteBuffer;
  */
 @Getter
 @EqualsAndHashCode
-@ToString
 public class Nonce {
     /**
      * The underlying value
@@ -38,6 +36,7 @@ public class Nonce {
 
     /**
      * Create a new nonce with an incremented underlying value.
+     *
      * @return the new `Nonce`.
      */
     public Nonce nextNonce() {
@@ -46,5 +45,10 @@ public class Nonce {
 
     public byte[] getBytes() {
         return this.value.getBytes();
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 }

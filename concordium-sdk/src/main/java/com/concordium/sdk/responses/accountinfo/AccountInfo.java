@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.accountinfo;
 
+import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.accountinfo.credential.Credential;
 import com.concordium.sdk.serializing.JsonMapper;
@@ -9,16 +10,17 @@ import com.concordium.sdk.transactions.Index;
 import com.concordium.sdk.types.Nonce;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.collect.ImmutableMap;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Singular;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.Map;
 import java.util.Objects;
 
 /**
- * AccountInfo
+ * Information of an account on chain.
  */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
@@ -58,7 +60,7 @@ public final class AccountInfo {
      * Note. This is the encryption key used for receiving encrypted amounts.
      */
     @JsonProperty("accountEncryptionKey")
-    private final String accountEncryptionKey;
+    private final ElgamalPublicKey accountEncryptionKey;
     /**
      * A positive and sequential index of the account which is increasing in the order of creation.
      * If the account is registered as a baker, then this is also
@@ -87,10 +89,11 @@ public final class AccountInfo {
      * The credentials associated with this account.
      */
     @JsonProperty("accountCredentials")
-    private final Map<Index, Credential> accountCredentials;
+    @Singular
+    private final ImmutableMap<Index, Credential> accountCredentials;
 
     /**
-     * If the account is delegating then this is non null.
+     * If the account is delegating then this is non-null.
      */
     @JsonProperty("accountDelegation")
     private final AccountDelegation delegation;

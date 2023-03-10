@@ -4,11 +4,12 @@ import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.transactions.Index;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import com.google.common.collect.ImmutableMap;
+import lombok.*;
 
 import java.util.Map;
+
+import static com.google.common.collect.ImmutableMap.copyOf;
 
 /**
  * A credential on the chain.
@@ -56,7 +57,34 @@ public final class Credential {
     /**
      * Anonymity revocation data associated with this credential.
      */
+
     private final Map<Index, ArData> arData;
+
+    public ImmutableMap<Index, ArData> getArData() {
+        return copyOf(arData);
+    }
+
+    @Builder
+    Credential(
+            final int version,
+            final CredentialType type,
+            final int ipIdentity,
+            final int revocationThreshold,
+            final CredentialRegistrationId credId,
+            final Policy policy,
+            final Commitments commitments,
+            final CredentialPublicKeys credentialPublicKeys,
+            @Singular(value = "arDataItem") final Map<Index, ArData> arData) {
+        this.version = version;
+        this.type = type;
+        this.ipIdentity = ipIdentity;
+        this.revocationThreshold = revocationThreshold;
+        this.credId = credId;
+        this.policy = policy;
+        this.commitments = commitments;
+        this.credentialPublicKeys = credentialPublicKeys;
+        this.arData = copyOf(arData);
+    }
 
     @JsonCreator
     Credential(@JsonProperty("v") int version,
@@ -69,6 +97,6 @@ public final class Credential {
         this.policy = value.getContents().getPolicy();
         this.commitments = value.getContents().getCommitments();
         this.credentialPublicKeys = value.getContents().getCredentialPublicKeys();
-        this.arData = value.getContents().getArData();
+        this.arData = copyOf(value.getContents().getArData());
     }
 }

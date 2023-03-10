@@ -3,11 +3,11 @@ package com.concordium.sdk.transactions;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
-@Getter
+import static java.util.Arrays.copyOf;
+
 @EqualsAndHashCode
 public class EncryptedAmount {
 
@@ -15,6 +15,10 @@ public class EncryptedAmount {
      * The bytes of the encrypted amount.
      */
     private final byte[] bytes;
+
+    public byte[] getBytes() {
+        return copyOf(bytes, bytes.length);
+    }
 
     private EncryptedAmount(final byte[] bytes) {
         this.bytes = bytes;
@@ -27,6 +31,10 @@ public class EncryptedAmount {
         } catch (DecoderException e) {
             throw new IllegalArgumentException("Cannot create EncryptedAmount", e);
         }
+    }
+
+    public static EncryptedAmount from(byte[] bytes) {
+        return new EncryptedAmount(copyOf(bytes, bytes.length));
     }
 
     @Override

@@ -3,19 +3,17 @@ package com.concordium.sdk.transactions;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
 
 /**
  * A non-negative index between 0 and 255.
- *
+ * <p>
  * The {@link Index} is used when setting up the {@link TransactionSigner} when signing a {@link Transaction}.
  * That is, the {@link Index} serves both as `CredentialIndex` and `KeyIndex`.
  */
 @EqualsAndHashCode
-@ToString
 public class Index implements Comparable {
     @Getter
     private final byte value;
@@ -65,5 +63,10 @@ public class Index implements Comparable {
         } else {
             return 1;
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
     }
 }

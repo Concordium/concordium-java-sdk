@@ -2,6 +2,9 @@
 
 ## Unreleased changes
 
+- Added support for GRPC V2 Get Account Info
+- Added support for GRPC V2 Get Account List
+
 ## 4.2.0
 - Added initial support for GRPC V2
 - Added initial support for GRPC V2 query GetAnonymityRevokers
