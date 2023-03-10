@@ -25,19 +25,39 @@ public final class ED25519SecretKey implements Signer {
         }
     }
 
-    public static ED25519SecretKey from(byte[] bytes) throws ED25519Exception {
+    /**
+     * Creates {@link ED25519SecretKey} from input byte array.
+     *
+     * @param bytes bytes of {@link ED25519SecretKey}.
+     * @return Created {@link ED25519SecretKey}.
+     * @throws ED25519Exception If the byte array is invalid.
+     */
+    public static ED25519SecretKey from(byte[] bytes) {
         if (bytes.length != ED25519.KEY_SIZE) {
             throw ED25519Exception.from(ED25519ResultCode.MALFORMED_SECRET_KEY);
         }
         return new ED25519SecretKey(bytes);
     }
 
+    /**
+     * Signs a message using this {@link ED25519SecretKey}
+     *
+     * @param message the data to sign
+     * @return Signature bytes on the input `message`;
+     * @throws ED25519Exception When Signing fails.
+     */
     @Override
-    public byte[] sign(byte[] message) throws ED25519Exception {
+    public byte[] sign(byte[] message) {
         return ED25519.sign(this, message);
     }
 
-    public static ED25519SecretKey createNew() throws ED25519Exception {
+    /**
+     * Creates a new instance of {@link ED25519SecretKey}.
+     *
+     * @return Created {@link ED25519SecretKey}.
+     * @throws ED25519Exception If the creation fails.
+     */
+    public static ED25519SecretKey createNew() {
         return ED25519.makeSecretKey();
     }
 }

@@ -39,10 +39,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.util.Map;
 
+import static com.concordium.sdk.Constants.UTC_ZONE;
 import static com.concordium.sdk.responses.accountinfo.credential.AttributeType.FIRST_NAME;
-import static com.concordium.sdk.responses.nodeinfo.NodeInfo.UTC_ZONE;
 import static com.concordium.sdk.transactions.CredentialRegistrationId.fromBytes;
 import static java.time.YearMonth.of;
 import static org.junit.Assert.assertEquals;
@@ -54,8 +53,6 @@ public class ClientV2GetAccountInfoTest {
 
     private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
             = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_2
-            = com.concordium.sdk.transactions.AccountAddress.from("3kjZcfbtCSxRjv6DPp1BoaPjjiSfyQSvdTwBhUwGmUy9cK5KcD");
     private static final byte[] ENCRYPTED_AMOUNT = new byte[]{0, 0, 1};
     private static final long ACCOUNT_AMOUNT = 10000;
     private static final long ACCOUNT_INDEX = 1;
@@ -99,37 +96,6 @@ public class ClientV2GetAccountInfoTest {
     private static final byte[] FIRST_NAME_VALUE
             = "policy-value-0".getBytes(StandardCharsets.UTF_8);
     private static final byte[] ENC_ID_PUB_SHARE = new byte[]{90, 90, 90};
-    private static final NormalCredentialValues.Builder NORMAL_CREDENTIAL_BUILDER = NormalCredentialValues.newBuilder()
-            .setArThreshold(ArThreshold.newBuilder().setValue(AR_THRESHOLD).build())
-            .putAllArData(ImmutableMap.of(0, ChainArData.newBuilder()
-                    .setEncIdCredPubShare(ByteString.copyFrom(ENC_ID_PUB_SHARE))
-                    .build()))
-            .setCommitments(CredentialCommitments.newBuilder()
-                    .setCredCounter(toCommitment(COMMITMENT_CRED_COUNTER))
-                    .setMaxAccounts(toCommitment(COMMITMENT_MAX_ACCOUNTS))
-                    .setPrf(toCommitment(COMMITMENT_PRF))
-                    .addIdCredSecSharingCoeff(0, toCommitment(COMMITMENT_ID_CRED_SHARING_COEFF))
-                    .putAllAttributes(ImmutableMap.of(0, toCommitment(COMMITMENT_ATTRIBUTE_0)))
-                    .build())
-            .setCredId(CredentialRegistrationId.newBuilder()
-                    .setValue(ByteString.copyFrom(CREDENTIAL_REG_ID))
-                    .build())
-            .setIpId(IdentityProviderIdentity.newBuilder()
-                    .setValue(IDP_ID)
-                    .build())
-            .setKeys(CredentialPublicKeys.newBuilder()
-                    .setThreshold(SignatureThreshold.newBuilder().setValue(SIGNATURE_THRESHOLD).build())
-                    .putAllKeys(ImmutableMap.of(0, AccountVerifyKey.newBuilder()
-                            .setEd25519Key(ByteString.copyFrom(NORMAL_CRED_SIG_0))
-                            .build()))
-                    .build())
-            .setPolicy(Policy.newBuilder()
-                    .setCreatedAt(POLICY_CREATED_AT)
-                    .setValidTo(POLICY_VALID_TO)
-                    .putAllAttributes(ImmutableMap.of(
-                            FIRST_NAME.ordinal(),
-                            ByteString.copyFrom(FIRST_NAME_VALUE)))
-                    .build());
 
     private static Commitment toCommitment(byte[] commitmentCredCounter) {
         return Commitment.newBuilder()
@@ -137,39 +103,6 @@ public class ClientV2GetAccountInfoTest {
                 .build();
     }
 
-    private static final Credential NORMAL_CREDENTIAL_CLIENT =
-            Credential.builder()
-                    .type(CredentialType.NORMAL)
-                    .revocationThreshold(AR_THRESHOLD)
-                    .arDataItem(Index.from(0), ArData.builder()
-                            .encIdCredPubShare(EncIdPubShare.from(ENC_ID_PUB_SHARE))
-                            .build())
-                    .commitments(Commitments.builder()
-                            .cmmCredCounter(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_CRED_COUNTER))
-                            .cmmIdCredSecSharingCoeffItem(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_ID_CRED_SHARING_COEFF))
-                            .cmmMaxAccounts(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_MAX_ACCOUNTS))
-                            .cmmPrf(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_PRF))
-                            .cmmAttribute(FIRST_NAME, com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_ATTRIBUTE_0))
-                            .build())
-                    .credId(fromBytes(CREDENTIAL_REG_ID))
-                    .ipIdentity(IDP_ID)
-                    .credentialPublicKeys(com.concordium.sdk.responses.accountinfo.credential.CredentialPublicKeys.builder()
-                            .threshold(SIGNATURE_THRESHOLD)
-                            .key(Index.from(0), Key.builder()
-                                    .verifyKey(NORMAL_CRED_SIG_0)
-                                    .schemeId(VerificationScheme.Ed25519).build())
-                            .build())
-                    .policy(com.concordium.sdk.responses.accountinfo.credential.Policy.builder()
-                            .createdAt(of(POLICY_CREATED_AT.getYear(), POLICY_CREATED_AT.getMonth()))
-                            .validTo(of(POLICY_VALID_TO.getYear(), POLICY_VALID_TO.getMonth()))
-                            .revealedAttributes(ImmutableMap.of(FIRST_NAME, new String(FIRST_NAME_VALUE, StandardCharsets.UTF_8)))
-                            .build())
-                    .build();
-
-    private static final Map<Integer, AccountCredential> CREDENTIALS
-            = ImmutableMap.of(0, AccountCredential.newBuilder()
-            .setNormal(NORMAL_CREDENTIAL_BUILDER.build())
-            .build());
     private static final long ENCRYPTED_AMOUNT_START_INDEX = 1;
     private static final byte[] ENCRYPTED_AMOUNT_INCOMING_AMOUNT_1 = new byte[]{0, 0, 7};
     private static final byte[] ENCRYPTED_AMOUNT_SELF_AMOUNT_1 = new byte[]{0, 0, 8};
@@ -210,7 +143,40 @@ public class ClientV2GetAccountInfoTest {
             .setSequenceNumber(SequenceNumber.newBuilder()
                     .setValue(SEQUENCE_NUMBER)
                     .build())
-            .putAllCreds(CREDENTIALS)
+            .putAllCreds(ImmutableMap.of(0, AccountCredential.newBuilder()
+                    .setNormal(NormalCredentialValues.newBuilder()
+                            .setArThreshold(ArThreshold.newBuilder().setValue(AR_THRESHOLD).build())
+                            .putAllArData(ImmutableMap.of(0, ChainArData.newBuilder()
+                                    .setEncIdCredPubShare(ByteString.copyFrom(ENC_ID_PUB_SHARE))
+                                    .build()))
+                            .setCommitments(CredentialCommitments.newBuilder()
+                                    .setCredCounter(toCommitment(COMMITMENT_CRED_COUNTER))
+                                    .setMaxAccounts(toCommitment(COMMITMENT_MAX_ACCOUNTS))
+                                    .setPrf(toCommitment(COMMITMENT_PRF))
+                                    .addIdCredSecSharingCoeff(0, toCommitment(COMMITMENT_ID_CRED_SHARING_COEFF))
+                                    .putAllAttributes(ImmutableMap.of(0, toCommitment(COMMITMENT_ATTRIBUTE_0)))
+                                    .build())
+                            .setCredId(CredentialRegistrationId.newBuilder()
+                                    .setValue(ByteString.copyFrom(CREDENTIAL_REG_ID))
+                                    .build())
+                            .setIpId(IdentityProviderIdentity.newBuilder()
+                                    .setValue(IDP_ID)
+                                    .build())
+                            .setKeys(CredentialPublicKeys.newBuilder()
+                                    .setThreshold(SignatureThreshold.newBuilder().setValue(SIGNATURE_THRESHOLD).build())
+                                    .putAllKeys(ImmutableMap.of(0, AccountVerifyKey.newBuilder()
+                                            .setEd25519Key(ByteString.copyFrom(NORMAL_CRED_SIG_0))
+                                            .build()))
+                                    .build())
+                            .setPolicy(Policy.newBuilder()
+                                    .setCreatedAt(POLICY_CREATED_AT)
+                                    .setValidTo(POLICY_VALID_TO)
+                                    .putAllAttributes(ImmutableMap.of(
+                                            FIRST_NAME.ordinal(),
+                                            ByteString.copyFrom(FIRST_NAME_VALUE)))
+                                    .build())
+                            .build())
+                    .build()))
             .setStake(AccountStakingInfo.newBuilder()
                     .setBaker(AccountStakingInfo.Baker.newBuilder()
                             .setStakedAmount(Amount.newBuilder().setValue(STAKED_AMOUNT).build())
@@ -245,7 +211,7 @@ public class ClientV2GetAccountInfoTest {
             .newStake(CCDAmount.fromMicro(BAKER_REDUCE_STAKE_AMOUNT))
             .effectiveTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(BAKER_REDUCE_STAKE_TIME), UTC_ZONE))
             .build();
-    private static final com.concordium.sdk.responses.accountinfo.AccountInfo ACCOUNT_INFO_RES_1
+    private static final com.concordium.sdk.responses.accountinfo.AccountInfo ACCOUNT_INFO_RES_EXPECTED_1
             = com.concordium.sdk.responses.accountinfo.AccountInfo.builder()
             .accountAddress(ACCOUNT_ADDRESS_1)
             .accountAmount(CCDAmount.fromMicro(ACCOUNT_AMOUNT))
@@ -266,7 +232,34 @@ public class ClientV2GetAccountInfoTest {
                             .build()))
                     .build())
             .accountNonce(Nonce.from(SEQUENCE_NUMBER))
-            .accountCredential(Index.from(0), NORMAL_CREDENTIAL_CLIENT)
+            .accountCredential(Index.from(0), Credential
+                    .builder()
+                    .type(CredentialType.NORMAL)
+                    .revocationThreshold(AR_THRESHOLD)
+                    .arDataItem(Index.from(0), ArData.builder()
+                            .encIdCredPubShare(EncIdPubShare.from(ENC_ID_PUB_SHARE))
+                            .build())
+                    .commitments(Commitments.builder()
+                            .cmmCredCounter(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_CRED_COUNTER))
+                            .cmmIdCredSecSharingCoeffItem(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_ID_CRED_SHARING_COEFF))
+                            .cmmMaxAccounts(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_MAX_ACCOUNTS))
+                            .cmmPrf(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_PRF))
+                            .cmmAttribute(FIRST_NAME, com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_ATTRIBUTE_0))
+                            .build())
+                    .credId(fromBytes(CREDENTIAL_REG_ID))
+                    .ipIdentity(IDP_ID)
+                    .credentialPublicKeys(com.concordium.sdk.responses.accountinfo.credential.CredentialPublicKeys.builder()
+                            .threshold(SIGNATURE_THRESHOLD)
+                            .key(Index.from(0), Key.builder()
+                                    .verifyKey(NORMAL_CRED_SIG_0)
+                                    .schemeId(VerificationScheme.Ed25519).build())
+                            .build())
+                    .policy(com.concordium.sdk.responses.accountinfo.credential.Policy.builder()
+                            .createdAt(of(POLICY_CREATED_AT.getYear(), POLICY_CREATED_AT.getMonth()))
+                            .validTo(of(POLICY_VALID_TO.getYear(), POLICY_VALID_TO.getMonth()))
+                            .revealedAttributes(ImmutableMap.of(FIRST_NAME, new String(FIRST_NAME_VALUE, StandardCharsets.UTF_8)))
+                            .build())
+                    .build())
             .bakerInfo(Baker
                     .builder()
                     .stakedAmount(CCDAmount.fromMicro(STAKED_AMOUNT))
@@ -280,9 +273,9 @@ public class ClientV2GetAccountInfoTest {
                             .metadataUrl(BAKER_POOL_URL)
                             .openStatus(com.concordium.sdk.responses.transactionstatus.OpenStatus.OPEN_FOR_ALL)
                             .commissionRates(com.concordium.sdk.responses.accountinfo.CommissionRates.builder()
-                                    .bakingCommission(Double.valueOf(COMMISSION_BAKING_PPHT) / 100_000D)
-                                    .finalizationCommission(Double.valueOf(COMMISSION_FINALIZATION_PPHT) / 100_000D)
-                                    .transactionCommission(Double.valueOf(COMMISSION_TRANSACTION_PPHT) / 100_000D)
+                                    .bakingCommission((double) COMMISSION_BAKING_PPHT / 100_000D)
+                                    .finalizationCommission((double) COMMISSION_FINALIZATION_PPHT / 100_000D)
+                                    .transactionCommission((double) COMMISSION_TRANSACTION_PPHT / 100_000D)
                                     .build())
                             .build())
                     .build())
@@ -332,7 +325,7 @@ public class ClientV2GetAccountInfoTest {
         var res = client.getAccountInfo(BlockHashInput.BEST, AccountRequest.from(ACCOUNT_ADDRESS_1));
 
         verify(serviceImpl).getAccountInfo(any(AccountInfoRequest.class), any(StreamObserver.class));
-        assertEquals(ACCOUNT_INFO_RES_1, res);
+        assertEquals(ACCOUNT_INFO_RES_EXPECTED_1, res);
     }
 
     @Test

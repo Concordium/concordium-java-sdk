@@ -16,7 +16,15 @@ final class ED25519 {
 
     static final int SIGNATURE_SIZE = 64;
 
-    static byte[] sign(ED25519SecretKey secretKey, byte[] message) throws ED25519Exception {
+    /**
+     * Signs an input `message` using input {@link ED25519SecretKey} `secretKey`.
+     *
+     * @param secretKey {@link ED25519SecretKey} to sign the input `message` with.
+     * @param message   Message to sign
+     * @return Signature
+     * @throws ED25519Exception When the Signing Fails.
+     */
+    static byte[] sign(ED25519SecretKey secretKey, byte[] message) {
         val buff = new byte[SIGNATURE_SIZE];
         val resultCode = ED25519ResultCode.from(CryptoJniNative.sign(secretKey.getBytes(), message, buff));
         if (resultCode.failed()) {
@@ -25,7 +33,17 @@ final class ED25519 {
         return buff;
     }
 
-    static boolean verify(ED25519PublicKey publicKey, byte[] message, byte[] signature) throws ED25519Exception {
+    /**
+     * Verifies that input `signature` on input message
+     * is signed using secret key of input {@link ED25519PublicKey} `publicKey`
+     *
+     * @param publicKey {@link ED25519PublicKey}.
+     * @param message   Message which is signed.
+     * @param signature Signature
+     * @return `true` Or `false` depending on the verification.
+     * @throws ED25519Exception If the Verification fails.
+     */
+    static boolean verify(ED25519PublicKey publicKey, byte[] message, byte[] signature) {
         val resultCode = ED25519ResultCode.from(CryptoJniNative.verify(publicKey.getBytes(), message, signature));
         if (resultCode.failed()) {
             throw ED25519Exception.from(resultCode);
@@ -33,7 +51,13 @@ final class ED25519 {
         return true;
     }
 
-    static ED25519SecretKey makeSecretKey() throws ED25519Exception {
+    /**
+     * Creates a new Instance of {@link ED25519SecretKey}.
+     *
+     * @return Instance of {@link ED25519SecretKey}.
+     * @throws ED25519Exception If the creation fails.
+     */
+    static ED25519SecretKey makeSecretKey() {
         val buff = new byte[KEY_SIZE];
         val resultCode = ED25519ResultCode.from(CryptoJniNative.generateSecretKey(buff));
         if (resultCode.failed()) {
@@ -42,7 +66,14 @@ final class ED25519 {
         return ED25519SecretKey.from(buff);
     }
 
-    static ED25519PublicKey makePublicKey(ED25519SecretKey secretKey) throws ED25519Exception {
+    /**
+     * Creates a new public Key from the input {@link ED25519SecretKey} secret key.
+     *
+     * @param secretKey {@link ED25519SecretKey}.
+     * @return {@link ED25519PublicKey}.
+     * @throws ED25519Exception If the Creation fails.
+     */
+    static ED25519PublicKey makePublicKey(ED25519SecretKey secretKey) {
         val secretKeyBytes = secretKey.getBytes();
         val buff = new byte[KEY_SIZE];
         val resultCode = ED25519ResultCode.from(CryptoJniNative.generatePublicKey(secretKeyBytes, buff));
