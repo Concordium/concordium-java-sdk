@@ -3,9 +3,10 @@ package com.concordium.sdk.responses.accountinfo.credential;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Identity Attributes which an Account can have.
- * Same are the attributes which an identity provider can provide.
- * Commitments generated over these attributes are the public information sent to the chain as account deployment information.
+ * Identity attributes of which a {@link Commitment} is generated for by the identity provider.
+ * The {@link Commitment} for an attribute type is in turn part of the deployed {@link Credential} on chain.
+ * Hence, the commitments that generated over these attributes are the public information sent to the chain as part of the {@link Credential},
+ * which in turn is tied to an {@link com.concordium.sdk.responses.accountinfo.AccountInfo}.
  */
 public enum AttributeType {
     @JsonProperty("firstName")

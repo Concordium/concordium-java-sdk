@@ -20,7 +20,7 @@ import lombok.extern.jackson.Jacksonized;
 import java.util.Objects;
 
 /**
- * AccountInfo
+ * Information of an account on chain.
  */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
@@ -93,7 +93,7 @@ public final class AccountInfo {
     private final ImmutableMap<Index, Credential> accountCredentials;
 
     /**
-     * If the account is delegating then this is non null.
+     * If the account is delegating then this is non-null.
      */
     @JsonProperty("accountDelegation")
     private final AccountDelegation delegation;
