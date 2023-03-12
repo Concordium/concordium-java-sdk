@@ -9,6 +9,7 @@ import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
+import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
@@ -128,6 +129,19 @@ public final class ClientV2 {
         var grpcOutput = this.server().getAccountList(to(input));
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Retrieve the Consensus Info  thatcontains the summary of the current state
+     * of the chain from the perspective of the node.
+     *
+     * @param timeoutMillis Timeout for the request in Milliseconds.
+     * @return Concensus Status ({@link ConsensusStatus})
+     */
+    public ConsensusStatus getConsensusInfo(int timeoutMillis) {
+        var grpcOutput = this.server(timeoutMillis)
+                .getConsensusInfo(Empty.newBuilder().build());
+        return to(grpcOutput);
     }
 
     /**
