@@ -12,8 +12,6 @@
 - Added CLI example for GRPC V2 query GetAnonymityRevokers
 - Added support for GRPC V2 GetBlocks
 - Added support for GRPC V2 GetFinalizedBlocks
-- Added support for GRPC V2 Get Account Info
-- Added support for GRPC V2 Get Account List
 - Added support for M1/M2 Mac
 
 ## 4.1.0
