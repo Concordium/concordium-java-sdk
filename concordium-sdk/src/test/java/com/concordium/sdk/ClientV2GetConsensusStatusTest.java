@@ -197,7 +197,7 @@ public class ClientV2GetConsensusStatusTest {
 
     @Test
     public void getConsensusStatus() {
-        var res = client.getConsensusInfo(1000);
+        var res = client.getConsensusInfo();
 
         verify(serviceImpl).getConsensusInfo(any(Empty.class), any(StreamObserver.class));
         assertEquals(CONSENSUS_INFO_RES_EXPECTED.toString(), res.toString());

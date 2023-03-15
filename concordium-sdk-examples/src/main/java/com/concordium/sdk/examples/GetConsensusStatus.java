@@ -32,7 +32,7 @@ public class GetConsensusStatus implements Callable<Integer> {
 
         ConsensusStatus consensusStatus = ClientV2
                 .from(connection)
-                .getConsensusInfo(1000);
+                .getConsensusInfo();
 
         System.out.println(consensusStatus);
 

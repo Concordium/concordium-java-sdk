@@ -132,14 +132,13 @@ public final class ClientV2 {
     }
 
     /**
-     * Retrieve the Consensus Info  thatcontains the summary of the current state
+     * Retrieve the Consensus Info that contains the summary of the current state
      * of the chain from the perspective of the node.
      *
-     * @param timeoutMillis Timeout for the request in Milliseconds.
      * @return Concensus Status ({@link ConsensusStatus})
      */
-    public ConsensusStatus getConsensusInfo(int timeoutMillis) {
-        var grpcOutput = this.server(timeoutMillis)
+    public ConsensusStatus getConsensusInfo() {
+        var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
         return to(grpcOutput);
     }
