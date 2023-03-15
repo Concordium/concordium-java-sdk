@@ -121,7 +121,7 @@ public final class ClientV2 {
     }
 
     /**
-     * Retrieve the list of accounts that exist at the end of the given block.c
+     * Retrieve the list of accounts that exist at the end of the given block.
      *
      * @param input Pointer to the Block.
      * @return {@link Iterator<  AccountAddress  >}.

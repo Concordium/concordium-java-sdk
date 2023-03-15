@@ -1,11 +1,8 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.AccountAddress;
 import com.concordium.grpc.v2.AccountInfo;
 import com.concordium.grpc.v2.Commitment;
 import com.concordium.grpc.v2.CredentialPublicKeys;
-import com.concordium.grpc.v2.CredentialRegistrationId;
-import com.concordium.grpc.v2.EncryptedAmount;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
@@ -23,7 +20,11 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
-import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.transactions.EncryptedAmountIndex;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.transactions.Index;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt64;
