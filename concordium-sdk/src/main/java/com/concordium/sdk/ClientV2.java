@@ -10,6 +10,8 @@ import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.Transaction;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import lombok.val;
@@ -119,7 +121,7 @@ public final class ClientV2 {
     }
 
     /**
-     * Retrieve the list of accounts that exist at the end of the given block.
+     * Retrieve the list of accounts that exist at the end of the given block.c
      *
      * @param input Pointer to the Block.
      * @return {@link Iterator<  AccountAddress  >}.
@@ -128,6 +130,20 @@ public final class ClientV2 {
         var grpcOutput = this.server().getAccountList(to(input));
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Retrieves the next {@link AccountNonce} for an account.
+     * This is the {@link AccountNonce} to use for future transactions
+     * E.g. when using {@link Client#sendTransaction(Transaction)}
+     *
+     * @param address The {@link AccountAddress}
+     * @return The next {@link AccountNonce}
+     */
+    public AccountNonce getNextAccountSequenceNumber(AccountAddress address) {
+        var grpcOutput = this.server()
+                .getNextAccountSequenceNumber(to(address));
+        return to(grpcOutput);
     }
 
     /**
