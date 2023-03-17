@@ -24,6 +24,7 @@ import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
+import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
 import com.concordium.sdk.transactions.InitContractPayload;
@@ -714,5 +715,52 @@ interface ClientV2MapperExtensions {
 
     static UInt64 to(TransactionTime expiry) {
         return UInt64.from(expiry.getValue());
+    }
+    
+    // Convert a Duration object to a long value
+    static long to(Duration slotDuration) {
+        return slotDuration.getValue();
+    }
+
+    // Convert a ProtocolVersion object to the corresponding com.concordium.sdk.responses.ProtocolVersion object
+    static com.concordium.sdk.responses.ProtocolVersion to(ProtocolVersion protocolVersion) {
+        return com.concordium.sdk.responses.ProtocolVersion.forValue(protocolVersion.getNumber() + 1);
+    }
+
+    // Convert a ConsensusInfo object to a ConsensusStatus object
+    static ConsensusStatus to(ConsensusInfo concensusInfo) {
+        var builder = ConsensusStatus.builder()
+                .bestBlock(to(concensusInfo.getBestBlock()))
+                .genesisBlock(to(concensusInfo.getGenesisBlock()))
+                .genesisTime(to(concensusInfo.getGenesisTime()).getDate())
+                .slotDuration(to(concensusInfo.getSlotDuration()))
+                .epochDuration(to(concensusInfo.getEpochDuration()))
+                .lastFinalizedBlock(to(concensusInfo.getLastFinalizedBlock()))
+                .bestBlockHeight(to(concensusInfo.getBestBlockHeight()).getValue())
+                .lastFinalizedBlockHeight(to(concensusInfo.getLastFinalizedBlockHeight()).getValue())
+                .blocksReceivedCount(concensusInfo.getBlocksReceivedCount())
+                .blockLastReceivedTime(to(concensusInfo.getBlockLastReceivedTime()).toString())
+                .blockReceiveLatencyEMA(concensusInfo.getBlockReceiveLatencyEma())
+                .blockReceiveLatencyEMSD(concensusInfo.getBlockReceiveLatencyEmsd())
+                .blockReceivePeriodEMA(concensusInfo.getBlockReceivePeriodEma())
+                .blockReceivePeriodEMSD(concensusInfo.getBlockReceivePeriodEmsd())
+                .blocksVerifiedCount(concensusInfo.getBlocksVerifiedCount())
+                .blockLastArrivedTime(to(concensusInfo.getBlockLastArrivedTime()).toString())
+                .blockArriveLatencyEMA(concensusInfo.getBlockArriveLatencyEma())
+                .blockArriveLatencyEMSD(concensusInfo.getBlockArriveLatencyEmsd())
+                .blockArrivePeriodEMA(concensusInfo.getBlockArrivePeriodEma())
+                .blockArrivePeriodEMSD(concensusInfo.getBlockArrivePeriodEmsd())
+                .transactionsPerBlockEMA(concensusInfo.getTransactionsPerBlockEma())
+                .transactionsPerBlockEMSD(concensusInfo.getTransactionsPerBlockEmsd())
+                .finalizationCount(concensusInfo.getFinalizationCount())
+                .lastFinalizedTime(to(concensusInfo.getLastFinalizedTime()).toString())
+                .finalizationPeriodEMA(concensusInfo.getFinalizationPeriodEma())
+                .finalizationPeriodEMSD(concensusInfo.getFinalizationPeriodEmsd())
+                .protocolVersion(to(concensusInfo.getProtocolVersion()))
+                .genesisIndex(concensusInfo.getGenesisIndex().getValue())
+                .currentEraGenesisBlock(to(concensusInfo.getCurrentEraGenesisBlock()).toString())
+                .currentEraGenesisTime(to(concensusInfo.getCurrentEraGenesisTime()).getDate());
+
+        return builder.build();
     }
 }
