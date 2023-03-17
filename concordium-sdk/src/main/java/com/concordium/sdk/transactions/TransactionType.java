@@ -2,8 +2,6 @@ package com.concordium.sdk.transactions;
 
 import lombok.Getter;
 
-import java.nio.ByteBuffer;
-
 /**
  * Type of Account Transaction.
  */
@@ -36,7 +34,7 @@ public enum TransactionType {
      * Will be removed in future versions.
      * todo: Deserialize payload using raw byte array.
      */
-    UNKNOWN_ACCOUNT((byte) 255);
+    RAW_PAYLOAD((byte) 255);
 
     /**
      * Number of Bytes used for Serializing {@link TransactionType}.

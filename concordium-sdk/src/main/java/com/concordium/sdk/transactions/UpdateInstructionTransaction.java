@@ -25,6 +25,17 @@ public class UpdateInstructionTransaction extends BlockItem {
         this.signature = signature;
     }
 
+    /**
+     * Creates a new instance of {@link UpdateInstructionTransaction}.
+     * Using {@link UpdateInstructionTransactionHeader}, {@link UpdateInstructionTransactionSignature}
+     * and Payload {@link UpdateInstructionTransactionPayload}.
+     *
+     * @param header    {@link UpdateInstructionTransactionHeader}.
+     * @param signature {@link UpdateInstructionTransactionSignature}.
+     * @param payload   {@link UpdateInstructionTransactionPayload} Payload for this transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder(builderMethodName = "builderBlockItem")
     static UpdateInstructionTransaction from(
             final UpdateInstructionTransactionHeader header,

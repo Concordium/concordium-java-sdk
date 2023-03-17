@@ -32,6 +32,18 @@ public class UpdateContractTransaction extends AbstractAccountTransaction {
                 payload.getBytes());
     }
 
+    /**
+     * Creates a new instance of {@link UpdateContractTransaction}.
+     *
+     * @param payload       {@link UpdateContractPayload} of the transaction.
+     * @param sender        Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce         Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry        {@link Expiry} of this transaction.
+     * @param signer        {@link Signer} of this transaction.
+     * @param maxEnergyCost Allowed energy of the transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder(builderClassName = "UpdateContractTransactionBuilder")
     public static UpdateContractTransaction from(
             final UpdateContractPayload payload,
@@ -47,6 +59,16 @@ public class UpdateContractTransaction extends AbstractAccountTransaction {
         }
     }
 
+    /**
+     * Creates a new instance of {@link UpdateContractTransaction}.
+     * Using {@link TransactionHeader}, {@link TransactionSignature} and Payload {@link UpdateContractPayload}.
+     *
+     * @param header    {@link TransactionHeader}.
+     * @param signature {@link TransactionSignature}.
+     * @param payload   {@link UpdateContractPayload} Payload for this transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder(builderMethodName = "builderBlockItem", builderClassName = "UpdateContractBlockItemBuilder")
     public static UpdateContractTransaction from(
             final TransactionHeader header,

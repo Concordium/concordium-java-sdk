@@ -20,6 +20,18 @@ public class TransferToEncryptedTransaction extends AbstractAccountTransaction {
         super(sender, nonce, expiry, signer, TransferToEncrypted.createNew(amount));
     }
 
+    /**
+     * Creates {@link TransferToEncryptedTransaction}.
+     *
+     * @param amount {@link CCDAmount} to Encrypt.
+     * @param sender Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce  Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry {@link Expiry} of this transaction.
+     * @param signer {@link Signer} of this transaction.
+     * @return Initialized {@link TransferToEncryptedTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder
     public static TransferToEncryptedTransaction from(
             final CCDAmount amount,

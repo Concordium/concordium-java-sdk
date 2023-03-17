@@ -29,6 +29,17 @@ public class DeployModuleTransaction extends AbstractAccountTransaction {
         super(header, signature, TransactionType.DEPLOY_MODULE, payload.getBytes());
     }
 
+    /**
+     * @param sender        Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce         Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry        {@link Expiry} of this transaction.
+     * @param signer        {@link Signer} of this transaction.
+     * @param module        {@link WasmModule} Compiled Source code of the Smart Contract Module.
+     * @param maxEnergyCost Energy allowed for this transaction.
+     * @return Initialized {@link DeployModuleTransaction}
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder(builderClassName = "DeployModuleTransactionBuilder")
     public static DeployModuleTransaction from(final AccountAddress sender,
                                                final AccountNonce nonce,
@@ -51,6 +62,8 @@ public class DeployModuleTransaction extends AbstractAccountTransaction {
      * @param signature {@link TransactionSignature}.
      * @param payload   {@link WasmModule} Payload for this transaction.
      * @return Instantiated {@link DeployModuleTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
      */
     @Builder(builderMethodName = "builderBlockItem", builderClassName = "DeployModuleBlockItemBuilder")
     static DeployModuleTransaction from(

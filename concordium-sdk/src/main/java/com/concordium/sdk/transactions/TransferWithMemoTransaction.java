@@ -25,6 +25,17 @@ public class TransferWithMemoTransaction extends AbstractAccountTransaction {
         super(header, signature, TransactionType.TRANSFER_WITH_MEMO, payload.getBytes());
     }
 
+    /**
+     * @param amount   {@link CCDAmount} being transferred.
+     * @param receiver Receiver {@link AccountAddress} of the Encrypted Amount
+     * @param memo     {@link Memo}.
+     * @param sender   Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce    Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry   {@link Expiry} of this transaction.
+     * @param signer   {@link Signer} of this transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder(builderClassName = "TransferWithMemoTransactionBuilder")
     public static TransferWithMemoTransaction from(final AccountAddress sender,
                                                    final AccountAddress receiver,
@@ -40,6 +51,16 @@ public class TransferWithMemoTransaction extends AbstractAccountTransaction {
         }
     }
 
+    /**
+     * Creates a new instance of {@link TransferWithMemoTransaction}.
+     * Using {@link TransactionHeader}, {@link TransactionSignature} and Payload {@link TransferWithMemoPayload}.
+     *
+     * @param header    {@link TransactionHeader}.
+     * @param signature {@link TransactionSignature}.
+     * @param payload   {@link TransferWithMemoPayload} Payload for this transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder(builderMethodName = "builderBlockItem", builderClassName = "TransferWithMemoBlockItemBuilder")
     public static TransferWithMemoTransaction from(final TransactionHeader header,
                                                    final TransactionSignature signature,

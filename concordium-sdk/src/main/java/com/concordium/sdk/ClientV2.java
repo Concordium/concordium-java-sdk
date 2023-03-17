@@ -131,6 +131,17 @@ public final class ClientV2 {
         return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
+    /**
+     * Gets the Block Items for a Particular Input Block.
+     * Block Item represents transactions which are part of a block.
+     * Type of Block Items currently supported are
+     * <br/> {@link com.concordium.sdk.transactions.BlockItemType#ACCOUNT_TRANSACTION}
+     * <br/> {@link com.concordium.sdk.transactions.BlockItemType#CREDENTIAL_DEPLOYMENT}
+     * <br/> {@link com.concordium.sdk.transactions.BlockItemType#UPDATE_INSTRUCTION}
+     *
+     * @param input Pointer to the Block.
+     * @return
+     */
     public Iterator<BlockItem> getBlockItems(final BlockHashInput input) {
         var grpcOutput = this.server().getBlockItems(to(input));
 

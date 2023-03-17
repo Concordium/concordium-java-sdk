@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * Enum class representing the cost of different types of transactions
+ * This is in accordance with <a href="https://github.com/Concordium/concordium-base/blob/main/haskell-src/Concordium/Cost.hs">Cost.hs</a>
  */
 public enum TransactionTypeCost {
     /**

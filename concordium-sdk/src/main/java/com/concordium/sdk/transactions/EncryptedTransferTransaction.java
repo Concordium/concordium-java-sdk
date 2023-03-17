@@ -22,6 +22,17 @@ public class EncryptedTransferTransaction extends AbstractAccountTransaction {
         super(sender, nonce, expiry, signer, EncryptedTransfer.createNew(data, receiver));
     }
 
+    /**
+     * @param data     Parameters needed for Encrypted Transfer in {@link EncryptedAmountTransferData} format.
+     * @param receiver Receiver {@link AccountAddress} of the Encrypted Amount
+     * @param sender   Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce    Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry   {@link Expiry} of this transaction.
+     * @param signer   {@link Signer} of this transaction.
+     * @return Initialized {@link EncryptedTransferTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder
     public static EncryptedTransferTransaction from(final EncryptedAmountTransferData data,
                                                     final AccountAddress receiver,

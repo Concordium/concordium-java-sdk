@@ -20,19 +20,8 @@ public class RawTransaction implements Transaction {
     /**
      * The raw transaction bytes
      */
+    @Getter
     private final byte[] bytes;
-
-    /**
-     * Transaction serialized as bytes.
-     * How a transaction is serialized to bytes depends on type of the transaction. See {@link BlockItemType}.
-     * <p>These bytes are not sent directly to the node. For that {@link Transaction#getBytes()} is used.</p>
-     *
-     * @return Serialized bytes of this Transaction.
-     */
-    @Override
-    public byte[] getTransactionRequestPayloadBytes() {
-        return bytes;
-    }
 
     @Override
     public Hash getHash() {

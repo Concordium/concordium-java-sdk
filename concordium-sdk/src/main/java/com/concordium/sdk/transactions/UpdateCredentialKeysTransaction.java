@@ -26,6 +26,19 @@ public class UpdateCredentialKeysTransaction extends AbstractAccountTransaction 
                 numExistingCredentials));
     }
 
+    /**
+     * Creates a new instance of {@link UpdateCredentialKeysTransaction}.
+     *
+     * @param credentialRegistrationID {@link CredentialRegistrationId}.
+     * @param keys                     Public keys of the credentials.
+     * @param numExistingCredentials   No of existing Credentials.
+     * @param sender                   Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce                    Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry                   {@link Expiry} of this transaction.
+     * @param signer                   {@link Signer} of this transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder
     public static UpdateCredentialKeysTransaction from(
             final CredentialRegistrationId credentialRegistrationID,

@@ -26,6 +26,18 @@ public class TransferScheduleWithMemoTransaction extends AbstractAccountTransact
         }
     }
 
+    /**
+     * @param to       Reciever {@link AccountAddress} of the Scheduled Transfer.
+     * @param schedule {@link Schedule} of the Transfer.
+     * @param memo     {@link Memo}.
+     * @param sender   Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce    Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry   {@link Expiry} of this transaction.
+     * @param signer   {@link Signer} of this transaction.
+     * @return Initialized {@link TransferScheduleWithMemoTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder
     public static TransferScheduleWithMemoTransaction from(
             final AccountAddress sender,

@@ -45,10 +45,10 @@ public class TransferScheduleWithMemoTest {
 
         val blockItem = transfer.toAccountTransaction();
 
-        val blockItemBytes = blockItem.getTransactionRequestPayloadBytes();
+        val blockItemBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));
 
-        val blockItemVersionedBytesBytes = blockItem.getBytes();
+        val blockItemVersionedBytesBytes = blockItem.getVersionedBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_VERSIONED_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemVersionedBytesBytes));
 
         val blockItemHash = blockItem.getHash();

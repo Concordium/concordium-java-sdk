@@ -34,6 +34,20 @@ public class TransferToPublicTransaction extends AbstractAccountTransaction {
                 proof));
     }
 
+    /**
+     * @param remainingAmount {@link EncryptedAmount} which remains after input amount is made public / decrypted.
+     * @param transferAmount  {@link CCDAmount} which is being made public / decrypted,
+     * @param index           The index such that the encrypted amount used in the transfer represents
+     *                        the aggregate of all encrypted amounts with indices < `index` existing
+     *                        on the account at the time. New encrypted amounts can only add new indices.
+     * @param proof           A collection of all the proofs.
+     * @param sender          Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce           Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry          {@link Expiry} of this transaction.
+     * @param signer          {@link Signer} of this transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     public static TransferToPublicTransaction from(
             final EncryptedAmount remainingAmount,
             final CCDAmount transferAmount,

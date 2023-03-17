@@ -13,22 +13,22 @@ public interface Transaction {
     /**
      * Returns serialized {@link Transaction}
      * This is the raw bytes that is sent to the node.
-     * It is a concatenation of the Transaction Version {@link Transaction#VERSION} + {@link Transaction#getTransactionRequestPayloadBytes()}
+     * It is a concatenation of the Transaction Version {@link Transaction#VERSION} + {@link Transaction#getBytes()}
      *
      * @return The serialized {@link Transaction}
      */
-    default byte[] getBytes() {
-        return concat(new byte[]{(byte) VERSION}, getTransactionRequestPayloadBytes());
+    default byte[] getVersionedBytes() {
+        return concat(new byte[]{(byte) VERSION}, getBytes());
     }
 
     /**
      * Transaction serialized as bytes.
      * How a transaction is serialized to bytes depends on type of the transaction. See {@link BlockItemType}.
-     * <p>These bytes are not sent directly to the node. For that {@link Transaction#getBytes()} is used.</p>
+     * <p>These bytes are not sent directly to the node. For that {@link Transaction#getVersionedBytes()} is used.</p>
      *
      * @return Serialized bytes of this Transaction.
      */
-    byte[] getTransactionRequestPayloadBytes();
+    byte[] getBytes();
 
     /**
      * Get the {@link Hash} of the {@link Transaction}
@@ -36,7 +36,7 @@ public interface Transaction {
      * @return the hash
      */
     default Hash getHash() {
-        return Hash.from(SHA256.hash(getTransactionRequestPayloadBytes()));
+        return Hash.from(SHA256.hash(getBytes()));
     }
 
     /**

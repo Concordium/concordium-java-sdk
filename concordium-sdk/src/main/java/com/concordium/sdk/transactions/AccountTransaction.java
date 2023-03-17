@@ -29,7 +29,7 @@ public final class AccountTransaction extends AbstractAccountTransaction {
     public AccountTransaction(final @NonNull TransactionHeader header,
                               final @NonNull TransactionSignature signature,
                               final byte @NonNull [] payloadBytes) {
-        super(header, signature, TransactionType.UNKNOWN_ACCOUNT, payloadBytes);
+        super(header, signature, TransactionType.RAW_PAYLOAD, payloadBytes);
     }
 
     public static AccountTransaction fromBytes(ByteBuffer source) {

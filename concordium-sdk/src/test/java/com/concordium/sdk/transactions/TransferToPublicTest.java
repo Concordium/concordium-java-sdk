@@ -588,7 +588,7 @@ public class TransferToPublicTest {
                 .signer(TransactionTestHelper.getValidSigner())
                 .build();
 
-        assertEquals(1604, transaction.getBytes().length);
+        assertEquals(1604, transaction.getVersionedBytes().length);
         assertEquals(
                 UInt64.from(16515),
                 transaction.getHeader().getMaxEnergyCost());

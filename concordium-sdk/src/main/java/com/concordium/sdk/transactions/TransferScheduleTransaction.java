@@ -22,6 +22,17 @@ public class TransferScheduleTransaction extends AbstractAccountTransaction {
         super(sender, nonce, expiry, signer, TransferSchedule.createNew(to, schedule));
     }
 
+    /**
+     * @param to       Reciever {@link AccountAddress} of the Scheduled Transfer.
+     * @param schedule {@link Schedule} of the Transfer.
+     * @param sender   Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce    Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry   {@link Expiry} of this transaction.
+     * @param signer   {@link Signer} of this transaction.
+     * @return Initialized {@link TransferScheduleTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder
     public static TransferScheduleTransaction from(
             final AccountAddress sender,

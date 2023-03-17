@@ -591,7 +591,7 @@ public class EncryptedTransferWithMemoTransactionTest {
                 .signer(TransactionTestHelper.getValidSigner())
                 .build();
 
-        assertEquals(2823, transaction.getBytes().length);
+        assertEquals(2823, transaction.getVersionedBytes().length);
         assertEquals(
                 UInt64.from(29884),
                 transaction.getHeader().getMaxEnergyCost());

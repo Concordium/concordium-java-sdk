@@ -39,6 +39,17 @@ public class InitContractTransaction extends AbstractAccountTransaction {
                 payload.getBytes());
     }
 
+    /**
+     * @param payload       {@link InitContractPayload} for the transaction
+     * @param sender        Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce         Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry        {@link Expiry} of this transaction.
+     * @param signer        {@link Signer} of this transaction.
+     * @param maxEnergyCost Allowed energy for the transaction.
+     * @return Initialized {@link InitContractTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
     @Builder(builderClassName = "InitContractTransactionBuilder")
     public static InitContractTransaction from(
             final InitContractPayload payload,
@@ -62,6 +73,8 @@ public class InitContractTransaction extends AbstractAccountTransaction {
      * @param signature {@link TransactionSignature}.
      * @param payload   {@link InitContractPayload} Payload for this transaction.
      * @return Instantiated {@link InitContractTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
      */
     @Builder(builderMethodName = "builderBlockItem", builderClassName = "InitContractBlockItemBuilder")
     public static InitContractTransaction from(

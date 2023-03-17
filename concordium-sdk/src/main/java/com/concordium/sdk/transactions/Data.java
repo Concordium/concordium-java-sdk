@@ -84,9 +84,9 @@ public class Data {
      *
      * @param data Data in Byte Array format
      * @return Initialized {@link Data}
-     * @throws TransactionCreationException
+     * @throws TransactionCreationException: When the data is null Or the length does not match {@link Data#BYTES}.
      */
-    public static Data from(byte[] data) throws TransactionCreationException {
+    public static Data from(byte[] data) {
         if (Objects.isNull(data)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));
         }
@@ -95,7 +95,7 @@ public class Data {
             throw TransactionCreationException.from(
                     new IllegalArgumentException("Size of Data cannot exceed " + BYTES + " bytes"));
         }
-        
+
         return new Data(data);
     }
 }

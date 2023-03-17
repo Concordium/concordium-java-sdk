@@ -5,7 +5,6 @@ import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.val;
 
@@ -32,6 +31,7 @@ abstract class Payload {
 
     /**
      * Get the bytes representation of the payload
+     *
      * @return byte[]
      */
     final byte[] getBytes() {
@@ -55,7 +55,14 @@ abstract class Payload {
         return this;
     }
 
-    final Payload signWith(TransactionSigner signer) throws TransactionCreationException {
+    /**
+     * Sets the signature and energy cost. Uses provided {@link TransactionSignature}.
+     *
+     * @param signer {@link TransactionSigner}
+     * @return {@link Payload} with {@link Payload#signature} and {@link Payload#header} energy cost set.
+     * @throws TransactionCreationException When there is a {@link ED25519Exception} while signing.
+     */
+    final Payload signWith(TransactionSigner signer) {
         if (Objects.isNull(this.header)) {
             throw TransactionCreationException.from(new IllegalStateException("TransactionHeader must be set before signing"));
         }
