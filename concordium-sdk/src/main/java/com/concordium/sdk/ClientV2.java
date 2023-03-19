@@ -8,6 +8,7 @@ import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.transactions.AccountAddress;
@@ -140,6 +141,18 @@ public final class ClientV2 {
     public ConsensusStatus getConsensusInfo() {
         var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
+        return to(grpcOutput);
+    }
+
+    /**
+     * Retrieves a {@link BlockInfo}
+     *
+     * @param blockHashInput the block {@link BlockHashInput} to query.
+     * @return A {@link BlockInfo} for the block
+     */
+    public BlockInfo getBlockInfo(BlockHashInput blockHashInput) {
+        var grpcOutput = this.server()
+                .getBlockInfo(to(blockHashInput));
         return to(grpcOutput);
     }
 

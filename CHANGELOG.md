@@ -5,6 +5,7 @@
 - Added support for GRPC V2 Get Account Info
 - Added support for GRPC V2 Get Account List
 - Added support for GRPC V2 Get Concensus Status/Info
+- Added support for GRPC V2 Get Block Info
 
 ## 4.2.0
 - Added initial support for GRPC V2
