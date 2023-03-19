@@ -509,18 +509,15 @@ interface ClientV2MapperExtensions {
         return builder.build();
     }
 
-    static long to(Energy energy) {
-        return energy.getValue();
-    }
-
     static Hash to(StateHash stateHash) {
         return Hash.from(stateHash.getValue().toByteArray());
     }
+
     static com.concordium.sdk.responses.blockinfo.BlockInfo to(BlockInfo blockInfo) {
         return com.concordium.sdk.responses.blockinfo.BlockInfo.builder()
                 .blockHash(to(blockInfo.getHash()))
                 .blockHeight(to(blockInfo.getHeight()))
-                .transactionEnergyCost((int) to(blockInfo.getTransactionsEnergyCost()))
+                .transactionEnergyCost((int) blockInfo.getTransactionsEnergyCost().getValue())
                 .blockBaker(to((int) blockInfo.getBaker().getValue()).ordinal())
                 .blockStateHash(to(blockInfo.getStateHash()))
                 .blockSlotTime(to(to(blockInfo.getSlotTime())))

@@ -43,7 +43,7 @@ public class GetBlockInfo implements Callable<Integer> {
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetConsensusStatus()).execute(args);
+        int exitCode = new CommandLine(new GetBlockInfo()).execute(args);
         System.exit(exitCode);
     }
 }
