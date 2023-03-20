@@ -2,102 +2,55 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.val;
-
-import java.util.Objects;
+import lombok.*;
 
 /**
  * Construct a transaction to transfer an amount with schedule and memo.
  */
 @Getter
-public class TransferScheduleWithMemoTransaction extends AbstractTransaction {
-    /**
-     * The account address of the recepient.
-     */
-    private final AccountAddress to;
-    /**
-     * The release schedule. This can be at most 255 elements.
-     */
-    private final Schedule[] schedule;
-    /**
-     * The data that was registered on the chain.
-     */
-    private final Memo memo;
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class TransferScheduleWithMemoTransaction extends AbstractAccountTransaction {
+    private TransferScheduleWithMemoTransaction(
+            @NonNull final AccountAddress sender,
+            @NonNull final AccountAddress to,
+            @NonNull final Schedule[] schedule,
+            @NonNull final Memo memo,
+            @NonNull final AccountNonce nonce,
+            @NonNull final Expiry expiry,
+            @NonNull final TransactionSigner signer) {
+        super(sender, nonce, expiry, signer, TransferScheduleWithMemo.createNew(to, schedule, memo));
+
+        if (schedule.length > 255) {
+            throw TransactionCreationException.from(new IllegalArgumentException("Schedule size can be maximum 255"));
+        }
+    }
 
     /**
-     * Account Address of the sender.
+     * @param to       Reciever {@link AccountAddress} of the Scheduled Transfer.
+     * @param schedule {@link Schedule} of the Transfer.
+     * @param memo     {@link Memo}.
+     * @param sender   Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce    Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry   {@link Expiry} of this transaction.
+     * @param signer   {@link Signer} of this transaction.
+     * @return Initialized {@link TransferScheduleWithMemoTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
      */
-    private final AccountAddress sender;
-    /**
-     * The senders account next available nonce.
-     */
-    private final AccountNonce nonce;
-    /**
-     * Indicates when the transaction should expire.
-     */
-    private final Expiry expiry;
-    /**
-     * A signer object that is used to sign the transaction.
-     */
-    private final TransactionSigner signer;
-
-    private BlockItem blockItem;
     @Builder
-    public TransferScheduleWithMemoTransaction(AccountAddress sender, AccountAddress to, Schedule[] schedule, Memo memo, AccountNonce nonce, Expiry expiry, TransactionSigner signer) throws TransactionCreationException {
-        this.sender = sender;
-        this.to = to;
-        this.schedule = schedule;
-        this.memo = memo;
-        this.nonce = nonce;
-        this.expiry = expiry;
-        this.signer = signer;
-    }
-
-    public static TransferScheduleWithMemoTransactionBuilder builder() {
-        return new CustomBuilder();
-    }
-
-    /**
-     * Verify that the input parameters are valid for a transfer schedule transaction with a memo.
-     */
-    static void verifyTransferScheduleWithMemoInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress to, Schedule[] schedule, TransactionSigner signer, Memo memo) throws TransactionCreationException {
-        TransferScheduleTransaction.verifyTransferScheduleInput(sender, nonce, expiry, to, schedule, signer);
-        if (Objects.isNull(memo)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Memo cannot be null"));
+    public static TransferScheduleWithMemoTransaction from(
+            final AccountAddress sender,
+            final AccountAddress to,
+            final Schedule[] schedule,
+            final Memo memo,
+            final AccountNonce nonce,
+            final Expiry expiry,
+            final TransactionSigner signer) {
+        try {
+            return new TransferScheduleWithMemoTransaction(sender, to, schedule, memo, nonce, expiry, signer);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
     }
-
-    /**
-     * This function returns the block item associated with this block.
-     */
-    @Override
-    public BlockItem getBlockItem() {
-        return blockItem;
-    }
-
-    private static class CustomBuilder extends TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder {
-        @Override
-        public TransferScheduleWithMemoTransaction build() throws TransactionCreationException {
-            val transaction = super.build();
-            verifyTransferScheduleWithMemoInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.to, transaction.schedule, transaction.signer, transaction.memo);
-            transaction.blockItem = createTransferScheduleWithMemo(transaction).toBlockItem();
-            return transaction;
-        }
-
-        private Payload createTransferScheduleWithMemo(TransferScheduleWithMemoTransaction transaction) throws TransactionCreationException {
-            return TransferScheduleWithMemo.createNew(
-                            transaction.to,
-                            transaction.schedule,
-                            transaction.memo).
-                    withHeader(TransactionHeader.builder()
-                            .sender(transaction.sender)
-                            .accountNonce(transaction.nonce.getNonce())
-                            .expiry(transaction.expiry.getValue())
-                            .build())
-                    .signWith(transaction.signer);
-        }
-    }
-
 }

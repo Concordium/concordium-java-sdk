@@ -13,26 +13,14 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode(callSuper = true)
 public final class Transfer extends Payload {
 
-    private final AccountAddress receiver;
-    private final CCDAmount amount;
-
+    private final TransferPayload payload;
     private Transfer(AccountAddress receiver, CCDAmount amount) {
-        this.receiver = receiver;
-        this.amount = amount;
+        this.payload = TransferPayload.from(receiver, amount);
     }
 
     @Override
     public PayloadType getType() {
         return PayloadType.TRANSFER;
-    }
-
-    @Override
-    byte[] getBytes() {
-        val buffer = ByteBuffer.allocate(TransactionType.BYTES + AccountAddress.BYTES + UInt64.BYTES);
-        buffer.put(TransactionType.SIMPLE_TRANSFER.getValue());
-        buffer.put(receiver.getBytes());
-        buffer.put(amount.getBytes());
-        return buffer.array();
     }
 
     public static Transfer fromBytes(ByteBuffer source) {
@@ -44,6 +32,16 @@ public final class Transfer extends Payload {
     @Override
     UInt64 getTransactionTypeCost() {
         return BASE_ENERGY_COST;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.SIMPLE_TRANSFER;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        return payload.getBytes();
     }
 
     static Transfer createNew(AccountAddress receiver, CCDAmount amount) {

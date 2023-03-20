@@ -3,112 +3,77 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.types.UInt64;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.val;
-
-import java.util.Objects;
+import lombok.*;
 
 /**
  * A {@link DeployModuleTransaction} deploys compiled WASM smart contract module to chain.
  */
 @Getter
-class DeployModuleTransaction extends AbstractTransaction {
-    /**
-     * A compiled Smart Contract Module in WASM with source and version.
-     */
-    private final WasmModule module;
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class DeployModuleTransaction extends AbstractAccountTransaction {
+    private DeployModuleTransaction(
+            @NonNull final AccountAddress sender,
+            @NonNull final AccountNonce nonce,
+            @NonNull final Expiry expiry,
+            @NonNull final TransactionSigner signer,
+            @NonNull final WasmModule module,
+            @NonNull final UInt64 maxEnergyCost) {
+        super(sender, nonce, expiry, signer, DeployModule.createNew(module, maxEnergyCost));
+    }
 
-    /**
-     * Account Address of the sender.
-     */
-    private final AccountAddress sender;
-    /**
-     * The senders account next available nonce.
-     */
-    private final AccountNonce nonce;
-    /**
-     * Indicates when the transaction should expire.
-     */
-    private final Expiry expiry;
-    /**
-     * A signer object that is used to sign the transaction.
-     */
-    private final TransactionSigner signer;
-
-    /**
-     * Maximum energy **allowed** for the transaction to use.
-     */
-    private final UInt64 maxEnergyCost;
-    private BlockItem blockItem;
-
-    @Builder
-    DeployModuleTransaction(
-            AccountAddress sender,
-            AccountNonce nonce,
-            Expiry expiry,
-            TransactionSigner signer,
-            WasmModule module,
-            UInt64 maxEnergyCost) throws TransactionCreationException {
-        this.sender = sender;
-        this.nonce = nonce;
-        this.expiry = expiry;
-        this.signer = signer;
-        this.module = module;
-        this.maxEnergyCost = maxEnergyCost;
+    private DeployModuleTransaction(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull WasmModule payload) {
+        super(header, signature, TransactionType.DEPLOY_MODULE, payload.getBytes());
     }
 
     /**
-     * This function returns a new instance of the DeployModuleTransaction class.
+     * @param sender        Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce         Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry        {@link Expiry} of this transaction.
+     * @param signer        {@link Signer} of this transaction.
+     * @param module        {@link WasmModule} Compiled Source code of the Smart Contract Module.
+     * @param maxEnergyCost Energy allowed for this transaction.
+     * @return Initialized {@link DeployModuleTransaction}
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
      */
-    public static DeployModuleTransaction.DeployModuleTransactionBuilder builder() {
-        return new DeployModuleTransaction.CustomBuilder();
-    }
-
-    /**
-     * This function returns the block item associated with this block.
-     */
-    @Override
-    public BlockItem getBlockItem() {
-        return blockItem;
-    }
-
-    private static class CustomBuilder extends DeployModuleTransaction.DeployModuleTransactionBuilder {
-        static void verifyDeployModuleInput(
-                AccountAddress sender,
-                AccountNonce nonce,
-                Expiry expiry,
-                WasmModule module,
-                TransactionSigner signer) throws TransactionCreationException {
-            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
-
-            if (Objects.isNull(module)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Module cannot be null"));
-            }
+    @Builder(builderClassName = "DeployModuleTransactionBuilder")
+    public static DeployModuleTransaction from(final AccountAddress sender,
+                                               final AccountNonce nonce,
+                                               final Expiry expiry,
+                                               final TransactionSigner signer,
+                                               final WasmModule module,
+                                               final UInt64 maxEnergyCost) {
+        try {
+            return new DeployModuleTransaction(sender, nonce, expiry, signer, module, maxEnergyCost);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
+    }
 
-        @Override
-        public DeployModuleTransaction build() throws TransactionCreationException {
-            val transaction = super.build();
-            verifyDeployModuleInput(
-                    transaction.sender,
-                    transaction.nonce,
-                    transaction.expiry,
-                    transaction.module,
-                    transaction.signer);
-
-            transaction.blockItem = createNewTransaction(transaction).toBlockItem();
-            return transaction;
-        }
-
-        private Payload createNewTransaction(DeployModuleTransaction transaction) throws TransactionCreationException {
-            return DeployModule.createNew(transaction.getModule(), transaction.maxEnergyCost)
-                    .withHeader(TransactionHeader.builder()
-                            .sender(transaction.getSender())
-                            .accountNonce(transaction.getNonce().getNonce())
-                            .expiry(transaction.getExpiry().getValue())
-                            .build())
-                    .signWith(transaction.getSigner());
+    /**
+     * Creates a new instance of {@link DeployModuleTransaction}.
+     * Using {@link TransactionHeader}, {@link TransactionSignature} and Payload {@link WasmModule}.
+     *
+     * @param header    {@link TransactionHeader}.
+     * @param signature {@link TransactionSignature}.
+     * @param payload   {@link WasmModule} Payload for this transaction.
+     * @return Instantiated {@link DeployModuleTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "DeployModuleBlockItemBuilder")
+    static DeployModuleTransaction from(
+            final TransactionHeader header,
+            final TransactionSignature signature,
+            final WasmModule payload) {
+        try {
+            return new DeployModuleTransaction(header, signature, payload);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
     }
 }

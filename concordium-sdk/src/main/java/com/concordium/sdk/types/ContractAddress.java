@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
 
-
 import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,14 +22,14 @@ import java.util.Optional;
 public final class ContractAddress extends AbstractAddress {
 
     @JsonProperty("subindex")
-    private final int subIndex;
+    private final long subIndex;
 
     @JsonProperty("index")
-    private final int index;
+    private final long index;
 
     @JsonCreator
-    public ContractAddress(@JsonProperty("subindex") int subIndex,
-                           @JsonProperty("index") int index) {
+    public ContractAddress(@JsonProperty("subindex") long subIndex,
+                           @JsonProperty("index") long index) {
         super(AccountType.ADDRESS_CONTRACT);
         this.subIndex = subIndex;
         this.index = index;
@@ -58,12 +57,12 @@ public final class ContractAddress extends AbstractAddress {
         }
     }
 
-    public static ContractAddress from(int index, int subIndex) {
+    public static ContractAddress from(long index, long subIndex) {
         return new ContractAddress(index, subIndex);
     }
 
     public byte[] getBytes() {
-        val buffer = ByteBuffer.allocate(Long.BYTES + Long.BYTES );
+        val buffer = ByteBuffer.allocate(Long.BYTES + Long.BYTES);
         buffer.putLong(this.getIndex());
         buffer.putLong(this.getSubIndex());
         return buffer.array();

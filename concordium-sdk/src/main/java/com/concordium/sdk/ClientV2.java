@@ -11,6 +11,7 @@ import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.BlockItem;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import lombok.val;
@@ -127,6 +128,23 @@ public final class ClientV2 {
      */
     public Iterator<AccountAddress> getAccountList(final BlockHashInput input) {
         var grpcOutput = this.server().getAccountList(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Gets the Block Items for a Particular Input Block.
+     * Block Item represents transactions which are part of a block.
+     * Type of Block Items currently supported are
+     * <br/> {@link com.concordium.sdk.transactions.BlockItemType#ACCOUNT_TRANSACTION}
+     * <br/> {@link com.concordium.sdk.transactions.BlockItemType#CREDENTIAL_DEPLOYMENT}
+     * <br/> {@link com.concordium.sdk.transactions.BlockItemType#UPDATE_INSTRUCTION}
+     *
+     * @param input Pointer to the Block.
+     * @return
+     */
+    public Iterator<BlockItem> getBlockItems(final BlockHashInput input) {
+        var grpcOutput = this.server().getBlockItems(to(input));
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
     }

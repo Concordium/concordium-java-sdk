@@ -44,6 +44,15 @@ public final class ReceiveName {
         return new ReceiveName(contractName, method);
     }
 
+    public static ReceiveName parse(final String value) {
+        val parts = value.split("\\.");
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("name should be in format <ContractName>.<MethodName>");
+        }
+
+        return from(parts[0], parts[1]);
+    }
+
     public byte[] getBytes() {
         val receiveNameBuffer = (contractName + "." + method).getBytes();
         val buffer = ByteBuffer.allocate(UInt16.BYTES + receiveNameBuffer.length);

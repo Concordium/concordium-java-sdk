@@ -1,67 +1,74 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.val;
-
-import java.util.Objects;
+import lombok.*;
 
 @Getter
-public class TransferWithMemoTransaction extends AbstractTransaction {
-    private final AccountAddress receiver;
-    private final CCDAmount amount;
-    private final Memo memo;
-
-    private final AccountAddress sender;
-    private final AccountNonce nonce;
-    private final Expiry expiry;
-    private final TransactionSigner signer;
-
-    private BlockItem blockItem;
-
-    @Builder
-    TransferWithMemoTransaction(AccountAddress sender, AccountAddress receiver, CCDAmount amount, Memo memo, AccountNonce nonce, Expiry expiry, TransactionSigner signer) throws TransactionCreationException {
-        this.receiver = receiver;
-        this.amount = amount;
-        this.memo = memo;
-        this.nonce = nonce;
-        this.sender = sender;
-        this.expiry = expiry;
-        this.signer = signer;
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class TransferWithMemoTransaction extends AbstractAccountTransaction {
+    private TransferWithMemoTransaction(
+            @NonNull final AccountAddress sender,
+            @NonNull final AccountAddress receiver,
+            @NonNull final CCDAmount amount,
+            @NonNull final Memo memo,
+            @NonNull final AccountNonce nonce,
+            @NonNull final Expiry expiry,
+            @NonNull final TransactionSigner signer) {
+        super(sender, nonce, expiry, signer, TransferWithMemo.createNew(receiver, amount, memo));
     }
 
-    @Override
-    BlockItem getBlockItem() {
-        return blockItem;
+    private TransferWithMemoTransaction(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull TransferWithMemoPayload payload) {
+        super(header, signature, TransactionType.TRANSFER_WITH_MEMO, payload.getBytes());
     }
 
-    public static TransferWithMemoTransactionBuilder builder() {
-        return new CustomBuilder();
-    }
-
-    private static class CustomBuilder extends TransferWithMemoTransactionBuilder {
-        @Override
-        public TransferWithMemoTransaction build() throws TransactionCreationException {
-            val transaction = super.build();
-            Transaction.verifyTransferInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.receiver, transaction.amount, transaction.signer);
-            if (Objects.isNull(transaction.memo)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Memo cannot be null"));
-            }
-            transaction.blockItem = createNewTransaction(transaction).toBlockItem();
-            return transaction;
+    /**
+     * @param amount   {@link CCDAmount} being transferred.
+     * @param receiver Receiver {@link AccountAddress} of the Encrypted Amount
+     * @param memo     {@link Memo}.
+     * @param sender   Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce    Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry   {@link Expiry} of this transaction.
+     * @param signer   {@link Signer} of this transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
+    @Builder(builderClassName = "TransferWithMemoTransactionBuilder")
+    public static TransferWithMemoTransaction from(final AccountAddress sender,
+                                                   final AccountAddress receiver,
+                                                   final CCDAmount amount,
+                                                   final Memo memo,
+                                                   final AccountNonce nonce,
+                                                   final Expiry expiry,
+                                                   final TransactionSigner signer) {
+        try {
+            return new TransferWithMemoTransaction(sender, receiver, amount, memo, nonce, expiry, signer);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
+    }
 
-        private Payload createNewTransaction(TransferWithMemoTransaction transaction) throws TransactionCreationException {
-            return TransferWithMemo.createNew(transaction.getReceiver(),
-                            transaction.getAmount(),
-                            transaction.getMemo())
-                    .withHeader(TransactionHeader.builder()
-                            .sender(transaction.getSender())
-                            .accountNonce(transaction.getNonce().getNonce())
-                            .expiry(transaction.getExpiry().getValue())
-                            .build())
-                    .signWith(transaction.getSigner());
+    /**
+     * Creates a new instance of {@link TransferWithMemoTransaction}.
+     * Using {@link TransactionHeader}, {@link TransactionSignature} and Payload {@link TransferWithMemoPayload}.
+     *
+     * @param header    {@link TransactionHeader}.
+     * @param signature {@link TransactionSignature}.
+     * @param payload   {@link TransferWithMemoPayload} Payload for this transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "TransferWithMemoBlockItemBuilder")
+    public static TransferWithMemoTransaction from(final TransactionHeader header,
+                                                   final TransactionSignature signature,
+                                                   final TransferWithMemoPayload payload) {
+        try {
+            return new TransferWithMemoTransaction(header, signature, payload);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
     }
 }

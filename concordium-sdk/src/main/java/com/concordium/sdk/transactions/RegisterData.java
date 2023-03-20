@@ -1,14 +1,12 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt64;
-import com.concordium.sdk.types.UInt16;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
-import java.util.Objects;
 
 @ToString
 @Getter
@@ -30,17 +28,6 @@ public final class RegisterData extends Payload {
         return PayloadType.REGISTER_DATA;
     }
 
-    @Override
-    byte[] getBytes() {
-        val buffer = ByteBuffer.allocate(
-                TransactionType.BYTES +
-                        data.getLength());
-        buffer.put(TransactionType.REGISTER_DATA.getValue());
-        buffer.put(data.getBytes());
-        return buffer.array();
-    }
-    
-
     public static RegisterData fromBytes(ByteBuffer source) {
         val data = Data.fromBytes(source);
         return new RegisterData(data);
@@ -49,6 +36,16 @@ public final class RegisterData extends Payload {
     @Override
     UInt64 getTransactionTypeCost() {
         return BASE_ENERGY_COST;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.REGISTER_DATA;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        return data.getBytes();
     }
 
     private final static UInt64 BASE_ENERGY_COST = UInt64.from(300);

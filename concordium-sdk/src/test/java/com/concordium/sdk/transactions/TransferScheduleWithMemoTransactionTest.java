@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
+
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.Timestamp;
 import lombok.SneakyThrows;
@@ -29,7 +30,7 @@ public class TransferScheduleWithMemoTransactionTest {
                 .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
                 .build();
         assertEquals("9fe5011512b33f45095b95cf731765648f6047b1c7c87da9be2ed41e4292bef5", transaction.getHash().asHex());
-        assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
+        assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
     }
 
     @Test(expected = TransactionCreationException.class)

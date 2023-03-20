@@ -2,6 +2,9 @@ package com.concordium.sdk.transactions;
 
 import lombok.Getter;
 
+/**
+ * Type of Account Transaction.
+ */
 // Types must match https://github.com/Concordium/concordium-base/blob/main/haskell-src/Concordium/Types/Execution.hs
 public enum TransactionType {
     DEPLOY_MODULE((byte) 0),
@@ -24,8 +27,14 @@ public enum TransactionType {
     ENCRYPTED_TRANSFER_WITH_MEMO((byte) 23),
     TRANSFER_WITH_SCHEDULE_AND_MEMO((byte) 24),
     CONFIGURE_BAKER((byte) 25),
-    CONFIGURE_DELEGATION((byte) 26);
+    CONFIGURE_DELEGATION((byte) 26),
 
+    /**
+     * This exists only to deserialize Raw Account Transaction Payload.
+     * Will be removed in future versions.
+     * todo: Deserialize payload using raw byte array.
+     */
+    RAW_PAYLOAD((byte) 255);
 
     /**
      * Number of Bytes used for Serializing {@link TransactionType}.
@@ -38,5 +47,4 @@ public enum TransactionType {
     TransactionType(byte type) {
         this.value = type;
     }
-
 }

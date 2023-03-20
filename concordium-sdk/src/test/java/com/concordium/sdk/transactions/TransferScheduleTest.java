@@ -43,7 +43,7 @@ public class TransferScheduleTest {
         val transferSignedData = transfer.getDataToSign();
         assertEquals("fb6c9e116213a0b7b8f25a694de778ea9ca4f988edb298684fac3ddd98253239", Hex.encodeHexString(transferSignedData));
 
-        val blockItem = transfer.toAccountTransaction().toBlockItem();
+        val blockItem = transfer.toAccountTransaction();
 
         val blockItemBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));

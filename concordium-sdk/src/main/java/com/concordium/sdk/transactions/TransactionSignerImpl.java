@@ -17,7 +17,6 @@ public final class TransactionSignerImpl implements TransactionSigner {
     TransactionSignerImpl() {
     }
 
-
     @Override
     public TransactionSigner put(Index credentialIndex, Index keyIndex, Signer signer) {
         if (Objects.isNull(signers.get(credentialIndex))) {
@@ -33,14 +32,18 @@ public final class TransactionSignerImpl implements TransactionSigner {
      */
     @Override
     public TransactionSignature sign(byte[] message) {
-        val transactionSignature = new TransactionSignature();
+        val transactionSignature = TransactionSignature.builder();
         for (Index credentialIndex : signers.keySet()) {
+            val accntSigs
+                    = TransactionSignatureAccountSignatureMap.builder();
             val keys = this.signers.get(credentialIndex);
             for (Index index : keys.keySet()) {
-                transactionSignature.put(credentialIndex, index, keys.get(index).sign(message));
+                accntSigs.signature(index, Signature.from(keys.get(index).sign(message)));
             }
+            transactionSignature.signature(credentialIndex, accntSigs.build());
         }
-        return transactionSignature;
+
+        return transactionSignature.build();
     }
 
     @Override

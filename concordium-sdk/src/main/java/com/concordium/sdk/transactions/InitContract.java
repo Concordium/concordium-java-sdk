@@ -41,21 +41,18 @@ public final class InitContract extends Payload {
         return PayloadType.INIT_CONTRACT;
     }
 
-    /**
-     * Get the bytes of the payload and put them in a buffer.
-     *
-     * @return The byte array of the payload.
-     */
-    @Override
-    byte[] getBytes() {
-        val payload_bytes = payload.getBytes();
-        val buffer = ByteBuffer.allocate(payload_bytes.length);
-        buffer.put(payload_bytes);
-        return buffer.array();
-    }
-
     @Override
     UInt64 getTransactionTypeCost() {
         return this.maxEnergyCost;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.INITIALIZE_SMART_CONTRACT_INSTANCE;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        return payload.getBytes();
     }
 }

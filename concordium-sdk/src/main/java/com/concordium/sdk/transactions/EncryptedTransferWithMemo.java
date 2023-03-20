@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
-import org.apache.commons.codec.DecoderException;
 
 import java.nio.ByteBuffer;
 
@@ -14,25 +13,10 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public final class EncryptedTransferWithMemo extends Payload {
-    /**
-     *  Data that will go onto an encrypted amount transfer.
-     */
-    private final EncryptedAmountTransferData data;
-
-    /**
-     * Account Address of the sender.
-     */
-    private final AccountAddress receiver;
-
-    /**
-     * The memo message associated with the transfer.
-     */
-    private final Memo memo;
+    private final EncryptedTransferWithMemoPayload payload;
 
     public EncryptedTransferWithMemo(EncryptedAmountTransferData data, AccountAddress receiver, Memo memo) {
-        this.data = data;
-        this.receiver = receiver;
-        this.memo = memo;
+        this.payload = EncryptedTransferWithMemoPayload.from(data, receiver, memo);
     }
 
     @Override
@@ -41,31 +25,18 @@ public final class EncryptedTransferWithMemo extends Payload {
     }
 
     @Override
-    byte[] getBytes() {
-        val toAddress = receiver.getBytes();
-        byte[] dataBytes = new byte[0];
-        try {
-            dataBytes = data.getBytes();
-        } catch (DecoderException e) {
-            throw new RuntimeException(e);
-        }
-        val buffer = ByteBuffer.allocate(
-                TransactionType.BYTES
-                        + toAddress.length
-                        + dataBytes.length
-                        + memo.getLength());
-        buffer.put(TransactionType.ENCRYPTED_TRANSFER_WITH_MEMO.getValue());
-        buffer.put(toAddress);
-        buffer.put(memo.getBytes());
-        buffer.put(dataBytes);
-
-        return buffer.array();
-
+    UInt64 getTransactionTypeCost() {
+        return TransactionTypeCost.ENCRYPTED_TRANSFER_WITH_MEMO.getValue();
     }
 
     @Override
-    UInt64 getTransactionTypeCost() {
-        return TransactionTypeCost.ENCRYPTED_TRANSFER.getValue();
+    public TransactionType getTransactionType() {
+        return TransactionType.ENCRYPTED_TRANSFER_WITH_MEMO;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+       return payload.getBytes();
     }
 
     static EncryptedTransferWithMemo createNew(EncryptedAmountTransferData data, AccountAddress receiver, Memo memo) {

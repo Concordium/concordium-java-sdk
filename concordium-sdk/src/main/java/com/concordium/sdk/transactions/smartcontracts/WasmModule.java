@@ -2,8 +2,9 @@ package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.crypto.SHA256;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
-import com.concordium.sdk.transactions.TransactionType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
@@ -13,6 +14,8 @@ import java.util.Arrays;
  * A compiled Smart Contract Module in WASM with source and version.
  */
 @Getter
+@EqualsAndHashCode
+@ToString
 public class WasmModule {
 
     private static final long MAX_SIZE_V0 = 65536; // 64 kb
@@ -94,10 +97,7 @@ public class WasmModule {
      */
     public byte[] getBytes() {
         val moduleSourceBytes = source.getBytes();
-        val buffer = ByteBuffer.allocate(TransactionType.BYTES +
-                moduleSourceBytes.length +
-                WasmModuleVersion.BYTES);
-        buffer.put(TransactionType.DEPLOY_MODULE.getValue());
+        val buffer = ByteBuffer.allocate(moduleSourceBytes.length + WasmModuleVersion.BYTES);
         buffer.put(version.getBytes());
         buffer.put(moduleSourceBytes);
 

@@ -34,7 +34,7 @@ public class DeployModuleTest {
         assertEquals("5654319dff40a71f183104f8faf126be3dfc242918820381a9ac27838d89e72f",
                 Hex.encodeHexString(payload.getDataToSign()));
         assertEquals("f1ca38ef26bd82515bb4be98b497fa2a33d3474fab27d001c54ac09219c5873f",
-                payload.toAccountTransaction().toBlockItem().getHash().asHex());
+                payload.toAccountTransaction().getHash().asHex());
     }
 
     @SneakyThrows
@@ -56,6 +56,6 @@ public class DeployModuleTest {
         assertEquals("f010b82e89fda27e785b3804e3a5cf474ee7601836f0daf355b67c5577d81c3a",
                 Hex.encodeHexString(payload.getDataToSign()));
         assertEquals("5da6812f05b77f85f86b76f058a3328afba3a6888b66bbb6f27703a68bb201ec",
-                payload.toAccountTransaction().toBlockItem().getHash().asHex());
+                payload.toAccountTransaction().getHash().asHex());
     }
 }

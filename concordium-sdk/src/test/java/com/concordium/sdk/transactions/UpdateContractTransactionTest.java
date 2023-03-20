@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
+
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.UInt64;
@@ -29,7 +30,7 @@ public class UpdateContractTransactionTest {
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         assertEquals("55c4040b1540ac4fbe52d01bd1d4795b306ce65b71f879f62f5d5ef4df504785", transaction.getHash().asHex());
-        assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getBytes()));
+        assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));
     }
 
     @Test(expected = TransactionCreationException.class)
@@ -92,7 +93,6 @@ public class UpdateContractTransactionTest {
     }
 
     @Test(expected = TransactionCreationException.class)
-    @SneakyThrows
     public void testUpdateContractTransactionWithInvalidSignerFails() {
         UpdateContractTransaction
                 .builder()
@@ -103,8 +103,6 @@ public class UpdateContractTransactionTest {
                 .payload(UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
-        fail("Expected TransferTransaction to fail");
-
     }
 
 

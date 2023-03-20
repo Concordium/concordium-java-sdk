@@ -2,9 +2,8 @@ package com.concordium.sdk.types;
 
 import com.concordium.sdk.transactions.AccountType;
 import lombok.Getter;
-import lombok.val;
-
 import java.util.Map;
+import lombok.val;
 
 /**
  * An abstract Address.
