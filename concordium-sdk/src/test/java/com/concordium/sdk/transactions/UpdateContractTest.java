@@ -40,7 +40,7 @@ public class UpdateContractTest {
 
         val transferDataToSign = transfer.getDataToSign();
         assertEquals("e7cdef6d48303783ebda487180ddbad10ab6ab0bcd9717320e3c40062dc7de30", Hex.encodeHexString(transferDataToSign));
-        val blockItem = transfer.toAccountTransaction().toBlockItem();
+        val blockItem = transfer.toAccountTransaction();
 
         val blockItemBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));

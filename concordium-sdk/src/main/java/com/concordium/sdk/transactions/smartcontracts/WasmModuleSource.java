@@ -1,6 +1,8 @@
 package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.types.UInt32;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
@@ -8,6 +10,8 @@ import java.nio.ByteBuffer;
 /**
  * Compiled source in of the WASM Module.
  */
+@EqualsAndHashCode
+@ToString
 class WasmModuleSource {
 
     /**

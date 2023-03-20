@@ -2,10 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt16;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
@@ -30,12 +27,13 @@ public class Data {
     @Getter
     private final byte[] value;
 
-    private Data(byte[] bytes) {
+    private Data(final byte @NonNull [] bytes) {
         this.value = bytes;
     }
 
     /**
      * Initializes {@link Data} from Hex encoded string
+     *
      * @param hexString Hex String
      * @return Initialized {@link Data}
      */
@@ -49,9 +47,10 @@ public class Data {
 
     /**
      * Returns the serialized data with suffixed length
+     *
      * @return Raw bytes array
      */
-    byte[] getBytes() {
+    public byte[] getBytes() {
         val buffer = ByteBuffer.allocate(UInt16.BYTES + value.length);
         buffer.put(UInt16.from(value.length).getBytes());
         buffer.put(this.value);
@@ -60,6 +59,7 @@ public class Data {
 
     /**
      * Initializes {@link Data} from {@link java.nio.ByteBuffer}
+     *
      * @param source The {@link ByteBuffer} to initialize from
      * @return Initialized {@link Data}
      */
@@ -72,6 +72,7 @@ public class Data {
 
     /**
      * Return the length of the serialized data
+     *
      * @return Length of Serialized Byte Array
      */
     int getLength() {
@@ -80,11 +81,12 @@ public class Data {
 
     /**
      * Initializes {@link Data} from Byte Array
+     *
      * @param data Data in Byte Array format
      * @return Initialized {@link Data}
-     * @throws TransactionCreationException
+     * @throws TransactionCreationException: When the data is null Or the length does not match {@link Data#BYTES}.
      */
-    static Data from(byte[] data) throws TransactionCreationException {
+    public static Data from(byte[] data) {
         if (Objects.isNull(data)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));
         }

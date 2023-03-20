@@ -40,7 +40,7 @@ public class TransferToEncryptedTest {
         val transferSignedData = transfer.getDataToSign();
         assertEquals("95435c82b0cf38c4294e3d197fd7845c00348893549c1318f4965142da591b1f", Hex.encodeHexString(transferSignedData));
 
-        val blockItem = transfer.toAccountTransaction().toBlockItem();
+        val blockItem = transfer.toAccountTransaction();
 
         val blockItemBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_TO_ENCRYPTED_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));

@@ -47,7 +47,7 @@ public class InitContractTest {
         val transferSignData = transfer.getDataToSign();
         assertEquals("2786cf40125041fece64a1ed27b0cf6d7c0a5274ae8e2a850279fa324149e06f", Hex.encodeHexString(transferSignData));
 
-        val blockItem = transfer.toAccountTransaction().toBlockItem();
+        val blockItem = transfer.toAccountTransaction();
 
         val blockItemBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_INIT_CONTRACT_BLOCK_ITEM_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));

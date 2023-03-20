@@ -1,48 +1,35 @@
 package com.concordium.sdk.transactions;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import io.grpc.netty.shaded.io.netty.util.internal.UnstableApi;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Getter
-@ToString
-public final class AccountTransaction {
-    private final TransactionSignature signature;
-    private final TransactionHeader header;
-    private final Payload payload;
+@ToString(callSuper = true)
+public final class AccountTransaction extends AbstractAccountTransaction {
 
     AccountTransaction(TransactionSignature signature, TransactionHeader header, Payload payload) {
-        this.signature = signature;
-        this.header = header;
-        this.payload = payload;
-    }
-
-    byte[] getBytes() {
-        val signatureBytes = signature.getBytes();
-        val headerBytes = header.getBytes();
-        val payloadBytes = payload.getBytes();
-        val buffer = ByteBuffer.allocate(signatureBytes.length + headerBytes.length + payloadBytes.length);
-        buffer.put(signatureBytes);
-        buffer.put(headerBytes);
-        buffer.put(payloadBytes);
-        return buffer.array();
+        super(header, signature, payload);
     }
 
     /**
-     * Returns the type of the {@link Payload} associated
-     * with this `AccountTransaction`.
-     * @return the {@link com.concordium.sdk.transactions.Payload.PayloadType}
+     * Creates an {@link AccountTransaction} using {@link TransactionHeader},
+     * {@link TransactionSignature} and raw payload bytes. This will be removed in the subsequent versions.
+     * Since the type of the Account Transaction in unknown
+     * todo: Complete and use {@link AccountTransaction#fromBytes(ByteBuffer)} to deserialize the raw payload.
+     *
+     * @param header       {@link TransactionHeader}
+     * @param signature    {@link TransactionSignature}
+     * @param payloadBytes Raw payload bytes.
      */
-    public Payload.PayloadType getType() {
-        return this.payload.getType();
-    }
-
-    BlockItem toBlockItem() {
-        return BlockItem.from(this);
+    @UnstableApi
+    @Builder(builderMethodName = "builderBlockItem")
+    public AccountTransaction(final @NonNull TransactionHeader header,
+                              final @NonNull TransactionSignature signature,
+                              final byte @NonNull [] payloadBytes) {
+        super(header, signature, TransactionType.RAW_PAYLOAD, payloadBytes);
     }
 
     public static AccountTransaction fromBytes(ByteBuffer source) {
@@ -63,6 +50,7 @@ public final class AccountTransaction {
             default:
                 throw new UnsupportedOperationException("Only transfers and transfers with memo are currently supported.");
         }
+
         return new AccountTransaction(signature, header, payload);
     }
 }

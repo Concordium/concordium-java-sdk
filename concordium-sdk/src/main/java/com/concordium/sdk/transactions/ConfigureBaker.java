@@ -1,9 +1,10 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt64;
-import lombok.*;
-
-import java.nio.ByteBuffer;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /**
  * Payload of the `ConfigureBaker` transaction. This transaction contains the keys
@@ -27,6 +28,7 @@ public final class ConfigureBaker extends Payload {
 
     /**
      * Get the cost of the transaction based on the keys with proofs
+     *
      * @return UInt64
      */
     @Override
@@ -37,20 +39,14 @@ public final class ConfigureBaker extends Payload {
             return TransactionTypeCost.CONFIGURE_BAKER.getValue();
     }
 
-    /**
-     * Get the bytes representation of the payload
-     * @return byte[]
-     */
-    public byte[] getBytes() {
-        val payloadBytes = payload.getBytes();
-        val bufferLength = TransactionType.BYTES +
-                payloadBytes.length;
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.CONFIGURE_BAKER;
+    }
 
-        val buffer = ByteBuffer.allocate(bufferLength);
-
-        buffer.put(TransactionType.CONFIGURE_BAKER.getValue());
-        buffer.put(payloadBytes);
-        return buffer.array();
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        return payload.getBytes();
     }
 
     static ConfigureBaker createNew(ConfigureBakerPayload payload) {

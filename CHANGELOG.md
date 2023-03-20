@@ -1,11 +1,11 @@
 # Changelog
 
 ## Unreleased changes
-
 - Added support for GRPC V2 Get Account Info
 - Added support for GRPC V2 Get Account List
-- Added support for GRPC V2 Get Concensus Status/Info
 - Added support for GRPC V2 Get Block Info
+- Added support for GRPC V2 Get Block Items
+- Added support for GRPC V2 Get Consensus Status/Info
 
 ## 4.2.0
 - Added initial support for GRPC V2
@@ -13,7 +13,7 @@
 - Added CLI example for GRPC V2 query GetAnonymityRevokers
 - Added support for GRPC V2 GetBlocks
 - Added support for GRPC V2 GetFinalizedBlocks
-- Added support for M1/M2 Mac.
+- Added support for M1/M2 Mac
 
 ## 4.1.0
 - Added support for Transfer With Schedule.

@@ -3,7 +3,7 @@ package com.concordium.sdk.exceptions;
 import com.concordium.sdk.transactions.Transaction;
 import lombok.Getter;
 
-public class TransactionCreationException extends Exception {
+public class TransactionCreationException extends RuntimeException {
 
     @Getter
     private final Exception inner;

@@ -2,87 +2,47 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.val;
-
-import java.util.Objects;
+import lombok.*;
 
 /**
  * Construct a transaction to transfer from public to encrypted balance of the sender account.
  */
 @Getter
-public class TransferToEncryptedTransaction extends AbstractTransaction {
-    /**
-     * The amount to transfer from public to encrypted balance of the sender account.
-     */
-    private final CCDAmount amount;
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class TransferToEncryptedTransaction extends AbstractAccountTransaction {
+    private TransferToEncryptedTransaction(
+            @NonNull final CCDAmount amount,
+            @NonNull final AccountAddress sender,
+            @NonNull final AccountNonce nonce,
+            @NonNull final Expiry expiry,
+            @NonNull final TransactionSigner signer) {
+        super(sender, nonce, expiry, signer, TransferToEncrypted.createNew(amount));
+    }
 
     /**
-     * Account Address of the sender.
+     * Creates {@link TransferToEncryptedTransaction}.
+     *
+     * @param amount {@link CCDAmount} to Encrypt.
+     * @param sender Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce  Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry {@link Expiry} of this transaction.
+     * @param signer {@link Signer} of this transaction.
+     * @return Initialized {@link TransferToEncryptedTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
      */
-    private final AccountAddress sender;
-    /**
-     * The senders account next available nonce.
-     */
-    private final AccountNonce nonce;
-    /**
-     * Indicates when the transaction should expire.
-     */
-    private final Expiry expiry;
-    /**
-     * A signer object that is used to sign the transaction.
-     */
-    private final TransactionSigner signer;
-
-    private BlockItem blockItem;
-
     @Builder
-    public TransferToEncryptedTransaction(CCDAmount amount, AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, BlockItem blockItem) throws TransactionCreationException {
-        this.amount = amount;
-        this.sender = sender;
-        this.nonce = nonce;
-        this.expiry = expiry;
-        this.signer = signer;
-        this.blockItem = blockItem;
-    }
-
-    public static TransferToEncryptedTransactionBuilder builder() {
-        return new CustomBuilder();
-    }
-
-    @Override
-    public BlockItem getBlockItem() {
-        return blockItem;
-    }
-
-    private static class CustomBuilder extends TransferToEncryptedTransactionBuilder {
-        @Override
-        public TransferToEncryptedTransaction build() throws TransactionCreationException {
-            val transaction = super.build();
-            verifyTransferToEncryptedInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.signer, transaction.amount);
-            transaction.blockItem = transferToEncryptedInstance(transaction).toBlockItem();
-            return transaction;
-        }
-
-
-        private Payload transferToEncryptedInstance(TransferToEncryptedTransaction transaction) throws TransactionCreationException {
-            return TransferToEncrypted.createNew(
-                            transaction.amount).
-                    withHeader(TransactionHeader.builder()
-                            .sender(transaction.sender)
-                            .accountNonce(transaction.nonce.getNonce())
-                            .expiry(transaction.expiry.getValue())
-                            .build())
-                    .signWith(transaction.signer);
-        }
-
-        static void verifyTransferToEncryptedInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, CCDAmount amount) throws TransactionCreationException {
-            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
-
-            if (Objects.isNull(amount)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Amount cannot be null"));
-            }
+    public static TransferToEncryptedTransaction from(
+            final CCDAmount amount,
+            final AccountAddress sender,
+            final AccountNonce nonce,
+            final Expiry expiry,
+            final TransactionSigner signer) {
+        try {
+            return new TransferToEncryptedTransaction(amount, sender, nonce, expiry, signer);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
     }
 }
