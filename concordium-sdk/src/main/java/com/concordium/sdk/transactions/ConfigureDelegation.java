@@ -1,9 +1,10 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt64;
-import lombok.*;
-
-import java.nio.ByteBuffer;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 
 /**
@@ -31,16 +32,14 @@ public final class ConfigureDelegation extends Payload {
         return TransactionTypeCost.CONFIGURE_DELEGATION.getValue();
     }
 
-    public byte[] getBytes() {
-        val payloadBytes = payload.getBytes();
-        val bufferLength = TransactionType.BYTES +
-                payloadBytes.length;
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.CONFIGURE_DELEGATION;
+    }
 
-        val buffer = ByteBuffer.allocate(bufferLength);
-
-        buffer.put(TransactionType.CONFIGURE_DELEGATION.getValue());
-        buffer.put(payloadBytes);
-        return buffer.array();
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        return payload.getBytes();
     }
 
     static ConfigureDelegation createNew(ConfigureDelegationPayload payload) {

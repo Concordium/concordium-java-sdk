@@ -4,6 +4,7 @@ import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 
 @Getter
 public class DeployModule extends Payload {
@@ -14,8 +15,7 @@ public class DeployModule extends Payload {
 
     private final UInt64 maxEnergyCost;
 
-    @Builder
-    private DeployModule(WasmModule module, UInt64 maxEnergyCost) {
+    private DeployModule(@NonNull final WasmModule module, @NonNull final UInt64 maxEnergyCost) {
         this.module = module;
         this.maxEnergyCost = maxEnergyCost;
     }
@@ -27,7 +27,8 @@ public class DeployModule extends Payload {
      * @param maxEnergyCost The maximum amount of energy that can be consumed by the contract.
      * @return A new DeployModule object.
      */
-    static DeployModule createNew(WasmModule module, UInt64 maxEnergyCost) {
+    @Builder
+    static DeployModule createNew(final WasmModule module, final UInt64 maxEnergyCost) {
         return new DeployModule(module, maxEnergyCost);
     }
 
@@ -39,18 +40,18 @@ public class DeployModule extends Payload {
         return PayloadType.DEPLOY_MODULE;
     }
 
-    /**
-     * This function returns the bytecode of the module.
-     *
-     * @return The byte array of the module.
-     */
-    @Override
-    byte[] getBytes() {
-        return module.getBytes();
-    }
-
     @Override
     UInt64 getTransactionTypeCost() {
         return this.maxEnergyCost;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.DEPLOY_MODULE;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        return module.getBytes();
     }
 }

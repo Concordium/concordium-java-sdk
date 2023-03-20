@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * Enum class representing the cost of different types of transactions
+ * This is in accordance with <a href="https://github.com/Concordium/concordium-base/blob/main/haskell-src/Concordium/Cost.hs">Cost.hs</a>
  */
 public enum TransactionTypeCost {
     /**
@@ -33,7 +34,17 @@ public enum TransactionTypeCost {
     /**
      * Constant representing the cost of transfer to public wallet.
      */
-    TRANSFER_TO_PUBLIC(14850);
+    TRANSFER_TO_PUBLIC(14850),
+
+    /**
+     * Constant representing the cost of Encrypted Transfer With Memo.
+     */
+    ENCRYPTED_TRANSFER_WITH_MEMO(27000),
+
+    /**
+     * Constant representing the cost of Transfer With Memo.
+     */
+    TRANSFER_WITH_MEMO(300);
 
     /**
      * The cost of the transaction
@@ -43,6 +54,7 @@ public enum TransactionTypeCost {
 
     /**
      * Constructor to set the cost of the transaction
+     *
      * @param energy cost of the transaction
      */
     TransactionTypeCost(int energy) {

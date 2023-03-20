@@ -34,7 +34,7 @@ public class ConfigureBakerTransactionTest {
                 .payload(payload)
                 .build();
 
-        assertEquals(589, transaction.getBytes().length);
+        assertEquals(589, transaction.getVersionedBytes().length);
     }
 
 
@@ -55,7 +55,7 @@ public class ConfigureBakerTransactionTest {
                 .payload(payload)
                 .build();
 
-        assertEquals(202, transaction.getBytes().length);
+        assertEquals(202, transaction.getVersionedBytes().length);
     }
 
     @SneakyThrows
@@ -82,7 +82,7 @@ public class ConfigureBakerTransactionTest {
                 .payload(payload)
                 .build();
 
-        assertEquals(576, transaction.getBytes().length);
+        assertEquals(576, transaction.getVersionedBytes().length);
     }
 
     @SneakyThrows
@@ -103,6 +103,6 @@ public class ConfigureBakerTransactionTest {
                 .payload(payload)
                 .build();
 
-        assertEquals(554, transaction.getBytes().length);
+        assertEquals(554, transaction.getVersionedBytes().length);
     }
 }

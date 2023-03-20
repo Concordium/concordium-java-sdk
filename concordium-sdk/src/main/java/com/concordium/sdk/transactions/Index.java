@@ -15,6 +15,7 @@ import java.nio.ByteBuffer;
  */
 @EqualsAndHashCode
 public class Index implements Comparable {
+    static final int BYTES = 1;
     @Getter
     private final byte value;
 

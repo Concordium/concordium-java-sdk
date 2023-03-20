@@ -2,13 +2,16 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt64;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
 /**
  * Unix timestamp i.e. seconds since unix epoch.
  */
+@EqualsAndHashCode
 public final class Expiry {
+    public static final int BYTES = UInt64.BYTES;
     private final Timestamp timestampInMillis;
 
     private Expiry(Timestamp value) {

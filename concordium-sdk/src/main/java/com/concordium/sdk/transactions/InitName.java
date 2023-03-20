@@ -22,7 +22,7 @@ public final class InitName {
      */
     private final String name;
 
-    private final int MAX_FUNC_NAME_SIZE = 100;
+    private static final int MAX_FUNC_NAME_SIZE = 100;
 
     @JsonCreator
     InitName(String name) {
@@ -42,7 +42,7 @@ public final class InitName {
         return new InitName(name);
     }
 
-    private boolean validateInitName(String name) {
+    private static boolean validateInitName(String name) {
         if (name == null) {
             return false;
         }

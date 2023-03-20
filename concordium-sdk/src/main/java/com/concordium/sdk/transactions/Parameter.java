@@ -19,6 +19,7 @@ import java.nio.ByteBuffer;
 @Getter
 @ToString
 public final class Parameter {
+    public static final Parameter EMPTY = Parameter.from(new byte[0]);
     private final byte[] bytes;
 
     @JsonCreator

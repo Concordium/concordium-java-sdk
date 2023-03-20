@@ -1,70 +1,44 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.crypto.SHA256;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
-import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 
+import static com.google.common.primitives.Bytes.concat;
+
+/**
+ * Represents a single item in any Block in Concordium.
+ */
 @EqualsAndHashCode
 @ToString
-public final class BlockItem {
-    // todo: in practice this is true, but in the future this could different as the version is variable length encoded.
-    private static final int VERSION_SIZE = 1;
-    private static final int VERSION = 0;
-    private final BlockItemType type;
-    private final AccountTransaction accountTransaction;
+@Getter
+public abstract class BlockItem implements Transaction {
+    /**
+     * Type of Block Item. Account, Credential Deployment Or Update Instruction.
+     */
+    private final BlockItemType blockItemType;
 
-    private BlockItem(AccountTransaction accountTransaction) {
-        this.type = BlockItemType.ACCOUNT_TRANSACTION;
-        this.accountTransaction = accountTransaction;
+    BlockItem(final @NonNull BlockItemType blockItemType) {
+        this.blockItemType = blockItemType;
     }
 
     /**
-     * Retrieve the account transaction from the block item, if the block item contains it. Otherwise, returns null.
+     * Get the serialized bytes for this {@link BlockItem}.
+     * Which is a concatenation of {@link BlockItemType#getByte()} + {@link BlockItem#getBlockItemBytes()}
+     *
+     * @return
      */
-    @Nullable
-    public AccountTransaction getAccountTransaction() {
-        if (type == BlockItemType.ACCOUNT_TRANSACTION) {
-            return accountTransaction;
-        } else {
-            return null;
-        }
+    final public byte[] getBytes() {
+        return concat(new byte[]{blockItemType.getByte()}, getBlockItemBytes());
     }
 
-    public static BlockItem from(AccountTransaction accountTransaction) {
-        return new BlockItem(accountTransaction);
-    }
-
-    public byte[] getVersionedBytes() {
-        val accountTransactionBytes = accountTransaction.getBytes();
-        val buffer = ByteBuffer.allocate(VERSION_SIZE + BlockItemType.BYTES + accountTransactionBytes.length);
-        buffer.put((byte) BlockItem.VERSION);
-        buffer.put(type.getByte());
-        buffer.put(accountTransactionBytes);
-        return buffer.array();
-    }
-
-    public Hash getHash() {
-        return Hash.from(SHA256.hash(getBytes()));
-    }
-
-    byte[] getBytes() {
-        val accountTransactionBytes = accountTransaction.getBytes();
-        val buffer = ByteBuffer.allocate(BlockItemType.BYTES + accountTransactionBytes.length);
-        buffer.put(type.getByte());
-        buffer.put(accountTransactionBytes);
-        return buffer.array();
-    }
+    abstract byte[] getBlockItemBytes();
 
     static BlockItem fromBytes(ByteBuffer source) {
         val kind = BlockItemType.fromBytes(source);
         switch (kind) {
             case ACCOUNT_TRANSACTION:
-                val at = AccountTransaction.fromBytes(source);
-                return new BlockItem(at);
+                return AccountTransaction.fromBytes(source);
             case CREDENTIAL_DEPLOYMENT:
                 throw new UnsupportedOperationException("Only account transactions are supported in this version. Credential deployments are not.");
             case UPDATE_INSTRUCTION:
@@ -76,7 +50,7 @@ public final class BlockItem {
 
     public static BlockItem fromVersionedBytes(ByteBuffer source) {
         byte tag = source.get();
-        if ((int)tag == VERSION) {
+        if ((int) tag == VERSION) {
             return BlockItem.fromBytes(source);
         } else {
             throw new UnsupportedOperationException("Only block items in version 0 format are supported.");

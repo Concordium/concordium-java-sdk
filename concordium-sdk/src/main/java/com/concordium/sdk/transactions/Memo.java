@@ -53,7 +53,14 @@ public class Memo {
         return UInt16.BYTES + value.length;
     }
 
-    static Memo from(byte[] memo) throws TransactionCreationException {
+    /**
+     * Initializes {@link Memo} from byte array.
+     *
+     * @param memo Byte array
+     * @return Initialized {@link Memo}
+     * @throws TransactionCreationException If input byte array is NULL Or its length does not match {@link Memo#BYTES}
+     */
+    public static Memo from(byte[] memo) {
         if (Objects.isNull(memo)) {
             throw TransactionCreationException.from(new IllegalArgumentException("Memo cannot be null"));
         }

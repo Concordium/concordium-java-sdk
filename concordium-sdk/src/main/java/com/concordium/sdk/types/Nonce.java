@@ -12,6 +12,7 @@ import java.nio.ByteBuffer;
 @Getter
 @EqualsAndHashCode
 public class Nonce {
+    public static final int BYTES = UInt64.BYTES;
     /**
      * The underlying value
      */

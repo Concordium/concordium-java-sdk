@@ -2,75 +2,77 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.val;
-
-import java.util.Objects;
+import lombok.*;
 
 @Getter
-public class RegisterDataTransaction extends AbstractTransaction {
-    private final AccountAddress sender;
-    private final AccountNonce nonce;
-    private final Expiry expiry;
-    private final TransactionSigner signer;
-    private final Data data;
-
-    private BlockItem blockItem;
-
-    @Builder
-    public RegisterDataTransaction(AccountAddress sender,
-                                   Data data,
-                                   AccountNonce nonce,
-                                   Expiry expiry,
-                                   TransactionSigner signer) throws TransactionCreationException {
-        this.sender = sender;
-        this.data = data;
-        this.nonce = nonce;
-        this.expiry = expiry;
-        this.signer = signer;
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class RegisterDataTransaction extends AbstractAccountTransaction {
+    private RegisterDataTransaction(
+            @NonNull final AccountAddress sender,
+            @NonNull final Data data,
+            @NonNull final AccountNonce nonce,
+            @NonNull final Expiry expiry,
+            @NonNull final TransactionSigner signer) {
+        super(sender, nonce, expiry, signer, RegisterData.createNew(data));
     }
 
-    public static RegisterDataTransactionBuilder builder() {
-        return new CustomBuilder();
+    private RegisterDataTransaction(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull Data payload) {
+        super(header,
+                signature,
+                TransactionType.REGISTER_DATA,
+                payload.getBytes());
     }
 
-    @Override
-    public BlockItem getBlockItem() {
-        return blockItem;
-    }
-
-    private static class CustomBuilder extends RegisterDataTransaction.RegisterDataTransactionBuilder {
-        @Override
-        public RegisterDataTransaction build() throws TransactionCreationException {
-            val transaction = super.build();
-            verifyRegisterDataInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.getData(), transaction.signer);
-            transaction.blockItem = createRegisterData(transaction).toBlockItem();
-            return transaction;
+    /**
+     * Creates a new instance of {@link RegisterDataTransaction}.
+     *
+     * @param data   {@link Data} for {@link RegisterDataTransaction}.
+     * @param sender Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce  Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry {@link Expiry} of this transaction.
+     * @param signer {@link Signer} of this transaction.
+     * @return Initialized {@link RegisterDataTransaction}
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
+    @Builder(builderClassName = "RegisterDataTransactionBuilder")
+    public static RegisterDataTransaction from(
+            final AccountAddress sender,
+            final Data data,
+            final AccountNonce nonce,
+            final Expiry expiry,
+            final TransactionSigner signer) {
+        try {
+            return new RegisterDataTransaction(sender, data, nonce, expiry, signer);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
+    }
 
-        private Payload createRegisterData(RegisterDataTransaction transaction) throws TransactionCreationException {
-            return RegisterData.createNew(
-                            transaction.getData()).
-                    withHeader(TransactionHeader.builder()
-                            .sender(transaction.sender)
-                            .accountNonce(transaction.nonce.getNonce())
-                            .expiry(transaction.expiry.getValue())
-                            .build())
-                    .signWith(transaction.signer);
-        }
-
-        static void verifyRegisterDataInput(
-                AccountAddress sender,
-                AccountNonce nonce,
-                Expiry expiry,
-                Data data,
-                TransactionSigner signer) throws TransactionCreationException {
-            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
-
-            if (Objects.isNull(data)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Data cannot be null"));
-            }
+    /**
+     * Creates a new instance of {@link RegisterDataTransaction}.
+     * Using {@link TransactionHeader}, {@link TransactionSignature} and Payload {@link Data}.
+     *
+     * @param header    {@link TransactionHeader}.
+     * @param signature {@link TransactionSignature}.
+     * @param payload   {@link Data} Payload for this transaction.
+     * @return
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "RegisterDataBlockItemBuilder")
+    public static RegisterDataTransaction from(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull Data payload) {
+        try {
+            return new RegisterDataTransaction(header, signature, payload);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
     }
 }

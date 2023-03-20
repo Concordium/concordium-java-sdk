@@ -46,28 +46,30 @@ public final class TransferToPublic extends Payload {
         return PayloadType.TRANSFER_TO_PUBLIC;
     }
 
+    @Override
+    UInt64 getTransactionTypeCost() {
+        return TransactionTypeCost.TRANSFER_TO_PUBLIC.getValue();
+    }
 
     @Override
-    byte[] getBytes() {
+    public TransactionType getTransactionType() {
+        return TransactionType.TRANSFER_TO_PUBLIC;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
         val proofBytes = this.proof.getBytes();
         val remainingAmountBytes = this.remainingAmount.getBytes();
-        val buffer = ByteBuffer.allocate(TransactionType.BYTES
-                + remainingAmountBytes.length
+        val buffer = ByteBuffer.allocate(remainingAmountBytes.length
                 + CCDAmount.BYTES
                 + UInt64.BYTES
                 + proofBytes.length);
-        buffer.put(TransactionType.TRANSFER_TO_PUBLIC.getValue());
         buffer.put(remainingAmountBytes);
         buffer.put(this.transferAmount.getBytes());
         buffer.put(this.index.getBytes());
         buffer.put(proofBytes);
 
         return buffer.array();
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
-        return TransactionTypeCost.TRANSFER_TO_PUBLIC.getValue();
     }
 
     static TransferToPublic createNew(
