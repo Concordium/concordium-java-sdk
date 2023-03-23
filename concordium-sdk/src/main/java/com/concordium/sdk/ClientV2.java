@@ -10,8 +10,7 @@ import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
-import com.concordium.sdk.transactions.AccountAddress;
-import com.concordium.sdk.transactions.BlockItem;
+import com.concordium.sdk.transactions.*;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import lombok.val;
@@ -158,6 +157,13 @@ public final class ClientV2 {
     public ConsensusStatus getConsensusInfo() {
         var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
+        return to(grpcOutput);
+    }
+
+    public Hash sendTransaction(final AccountTransaction accountTransaction) {
+        var req = ClientV2MapperExtensions.to(accountTransaction);
+        var grpcOutput = this.server().sendBlockItem(req);
+
         return to(grpcOutput);
     }
 
