@@ -4,14 +4,17 @@ import com.concordium.grpc.v2.AccountInfoRequest;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.ClientInitializationException;
+import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.BlockItem;
+import com.concordium.sdk.transactions.Hash;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import lombok.val;
@@ -22,6 +25,7 @@ import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import static com.concordium.sdk.ClientV2MapperExtensions.to;
+import static com.concordium.sdk.ClientV2MapperExtensions.toTransactionHash;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -158,6 +162,19 @@ public final class ClientV2 {
     public ConsensusStatus getConsensusInfo() {
         var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
+        return to(grpcOutput);
+    }
+
+    /**
+     * Retrieves the transaction status for a given transaction {@link Hash}
+     *
+     * @param transactionHash The transaction {@link Hash}
+     * @return The {@link TransactionStatus}
+     * @throws TransactionNotFoundException if the transaction was not found.
+     */
+    public TransactionStatus getBlockItemStatus(Hash transactionHash) {
+        var grpcOutput = this.server()
+                .getBlockItemStatus(toTransactionHash(transactionHash));
         return to(grpcOutput);
     }
 

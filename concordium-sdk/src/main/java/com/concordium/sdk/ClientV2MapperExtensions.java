@@ -25,8 +25,10 @@ import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
+import com.concordium.sdk.responses.transactionstatus.TransactionType;
 import com.concordium.sdk.transactions.InitContractPayload;
 import com.concordium.sdk.transactions.InitName;
 import com.concordium.sdk.transactions.Parameter;
@@ -89,6 +91,10 @@ interface ClientV2MapperExtensions {
 
     static com.concordium.grpc.v2.BlockHash to(final Hash blockHash) {
         return com.concordium.grpc.v2.BlockHash.newBuilder().setValue(to(blockHash.getBytes())).build();
+    }
+
+    static com.concordium.grpc.v2.TransactionHash toTransactionHash(final Hash blockHash) {
+        return com.concordium.grpc.v2.TransactionHash.newBuilder().setValue(to(blockHash.getBytes())).build();
     }
 
     static ByteString to(final byte[] bytes) {
@@ -763,4 +769,201 @@ interface ClientV2MapperExtensions {
 
         return builder.build();
     }
+
+
+    // Convert a com.concordium.grpc.v2.BlockItemStatus object to the corresponding com.concordium.sdk.responses.TransactionStatus object
+    static TransactionStatus to(com.concordium.grpc.v2.BlockItemStatus blockItemStatus) {
+        var builder = TransactionStatus.builder();
+        if (blockItemStatus.getStatusCase() == BlockItemStatus.StatusCase.FINALIZED){
+            builder = builder.status(Status.FINALIZED)
+                    .outcomes(to(blockItemStatus.getFinalized().getOutcome()));
+
+        }
+        else if (blockItemStatus.getStatusCase() == BlockItemStatus.StatusCase.COMMITTED){
+            builder = builder.status(Status.COMMITTED)
+                    .outcomes(to(blockItemStatus.getCommitted().getOutcomesList()));
+        }
+        else if (blockItemStatus.getStatusCase() == BlockItemStatus.StatusCase.RECEIVED){
+            builder = builder.status(Status.RECEIVED);
+        }
+        else {
+            builder = builder.status(Status.ABSENT);
+        }
+
+        return builder.build();
+    }
+
+    static Map<Hash, TransactionSummary> to(List<com.concordium.grpc.v2.BlockItemSummaryInBlock> blockItemSummaries) {
+        Map<Hash, TransactionSummary> outcomes = new HashMap<>();
+
+        for (com.concordium.grpc.v2.BlockItemSummaryInBlock outcome : blockItemSummaries) {
+            outcomes.put(to(outcome.getBlockHash()), to(outcome.getOutcome()));
+        }
+
+        return outcomes;
+    }
+    static Map<Hash, TransactionSummary> to(BlockItemSummaryInBlock outcome) {
+        Map<Hash, TransactionSummary> result = new HashMap<>();
+        result.put(to(outcome.getBlockHash()), to(outcome.getOutcome()));
+        return result;
+    }
+
+    static TransactionSummary to(BlockItemSummary blockItemSummary) {
+        var summary = TransactionSummary.builder()
+                .index((int) blockItemSummary.getIndex().getValue())
+                .hash(to(blockItemSummary.getHash()))
+                .energyCost((int) blockItemSummary.getEnergyCost().getValue())
+                .type(toTransactionType(blockItemSummary));
+        if (blockItemSummary.getDetailsCase() == BlockItemSummary.DetailsCase.ACCOUNT_TRANSACTION) {
+            summary = summary.sender(to(blockItemSummary.getAccountTransaction().getSender()))
+                    .cost(to(blockItemSummary.getAccountTransaction().getCost()))
+                    .result(toTransactionResult(blockItemSummary.getAccountTransaction()));
+        }
+
+        return summary.build();
+    }
+
+    static TransactionResult toTransactionResult(AccountTransactionDetails transactionDetails) {
+        var result = TransactionResult.builder();
+        if (transactionDetails.getEffects().hasNone()) {
+            result = result.outcome(Outcome.REJECT);
+            var rejectReason = transactionDetails.getEffects().getNone().getRejectReason().getReasonCase();
+//            switch (rejectReason) {
+//                case MODULE_NOT_WF:
+//                    result.rejectReason()
+//            }
+
+
+        }
+        else {
+            result = result.outcome(Outcome.SUCCESS);
+//          add events
+        }
+
+        return result.build();
+    }
+
+
+    static TransactionTypeInfo toTransactionType(BlockItemSummary summary) {
+        var builder = TransactionTypeInfo.builder();
+
+        var detailsCase = summary.getDetailsCase();
+        switch (detailsCase) {
+            case ACCOUNT_TRANSACTION:
+                builder = builder.type(TransactionType.ACCOUNT_TRANSACTION);
+                var effects = summary.getAccountTransaction().getEffects().getEffectCase();
+                switch (effects) {
+                    case MODULE_DEPLOYED:
+                        builder = builder.contents(TransactionContents.DEPLOY_MODULE);
+                        break;
+                    case CONTRACT_INITIALIZED:
+                        builder = builder.contents(TransactionContents.CONTRACT_INITIALIZED);
+                        break;
+                    case CONTRACT_UPDATE_ISSUED:
+                        builder = builder.contents(TransactionContents.CONTRACT_UPDATED);
+                        break;
+                    case ACCOUNT_TRANSFER:
+                        builder = builder.contents(TransactionContents.TRANSFER);
+                        break;
+                    case BAKER_ADDED:
+                        builder = builder.contents(TransactionContents.ADD_BAKER);
+                        break;
+                    case BAKER_REMOVED:
+                        builder = builder.contents(TransactionContents.REMOVE_BAKER);
+                        break;
+                    case BAKER_STAKE_UPDATED:
+                        builder = builder.contents(TransactionContents.UPDATE_BAKER_STAKE);
+                        break;
+                    case BAKER_RESTAKE_EARNINGS_UPDATED:
+                        builder = builder.contents(TransactionContents.UPDATE_BAKER_RESTAKE_EARNINGS);
+                        break;
+                    case BAKER_KEYS_UPDATED:
+                        builder = builder.contents(TransactionContents.UPDATE_BAKER_KEYS);
+                        break;
+                    case ENCRYPTED_AMOUNT_TRANSFERRED:
+                        builder = builder.contents(TransactionContents.ENCRYPTED_AMOUNT_TRANSFER);
+                        break;
+                    case TRANSFERRED_TO_ENCRYPTED:
+                        builder = builder.contents(TransactionContents.TRANSFER_TO_ENCRYPTED);
+                        break;
+                    case TRANSFERRED_TO_PUBLIC:
+                        builder = builder.contents(TransactionContents.TRANSFER_TO_PUBLIC);
+                        break;
+                    case TRANSFERRED_WITH_SCHEDULE:
+                        builder = builder.contents(TransactionContents.TRANSFER_WITH_SCHEDULE);
+                        break;
+                    case CREDENTIAL_KEYS_UPDATED:
+                        builder = builder.contents(TransactionContents.UPDATE_CREDENTIAL_KEYS);
+                        break;
+                    case DATA_REGISTERED:
+                        builder = builder.contents(TransactionContents.REGISTER_DATA);
+                        break;
+                    case BAKER_CONFIGURED:
+                        builder = builder.contents(TransactionContents.CONFIGURE_BAKER);
+                        break;
+                    case DELEGATION_CONFIGURED:
+                        builder = builder.contents(TransactionContents.CONFIGURE_DELEGATION);
+                        break;
+                }
+                break;
+            case ACCOUNT_CREATION:
+                builder = builder.type(TransactionType.CREDENTIAL_DEPLOYMENT_TRANSACTION);
+                var credentialType = summary.getAccountCreation().getCredentialType();
+                if (credentialType == com.concordium.grpc.v2.CredentialType.CREDENTIAL_TYPE_INITIAL) {
+                    builder = builder.contents(TransactionContents.INITIAL);
+                } else if (credentialType == com.concordium.grpc.v2.CredentialType.CREDENTIAL_TYPE_NORMAL) {
+                    builder = builder.contents(TransactionContents.NORMAL);
+                }
+                break;
+            case UPDATE:
+                builder = builder.type(TransactionType.UPDATE_TRANSACTION);
+                var updatePayload = summary.getUpdate().getPayload().getPayloadCase();
+                switch (updatePayload) {
+                    case PROTOCOL_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_PROTOCOL);
+                    case ELECTION_DIFFICULTY_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_ELECTION_DIFFICULTY);
+                    case EURO_PER_ENERGY_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_EURO_PER_ENERGY);
+                    case MICRO_CCD_PER_EURO_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_MICRO_GTU_PER_EURO);
+                    case FOUNDATION_ACCOUNT_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_FOUNDATION_ACCOUNT);
+                    case MINT_DISTRIBUTION_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_MINT_DISTRIBUTION);
+                    case TRANSACTION_FEE_DISTRIBUTION_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_TRANSACTION_FEE_DISTRIBUTION);
+                    case GAS_REWARDS_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_GAS_REWARDS);
+                    case BAKER_STAKE_THRESHOLD_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_BAKER_STAKE_THRESHOLD);
+                    case ROOT_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_ROOT_KEYS);
+                    case LEVEL_1_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_LEVEL_1_KEYS);
+                    case ADD_ANONYMITY_REVOKER_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_ADD_ANONYMITY_REVOKER);
+                    case ADD_IDENTITY_PROVIDER_UPDATE:
+                        builder = builder.contents(TransactionContents.ADD_IDENTITY_PROVIDER);
+                    case COOLDOWN_PARAMETERS_CPV_1_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_COOLDOWN_PARAMETERS);
+                    case POOL_PARAMETERS_CPV_1_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_POOL_PARAMETERS);
+                    case TIME_PARAMETERS_CPV_1_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_TIME_PARAMETERS);
+                    case MINT_DISTRIBUTION_CPV_1_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_MINT_DISTRIBUTION);
+                    case GAS_REWARDS_CPV_2_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_GAS_REWARDS);
+                    case TIMEOUT_PARAMETERS_UPDATE:
+                        builder = builder.contents(TransactionContents.UPDATE_TIME_PARAMETERS);
+//                        MIN_BLOCK_TIME_UPDATE, BLOCK_ENERGY_LIMIT_UPDATE
+                }
+                break;
+        }
+
+        return builder.build();
+    }
+
+
 }
