@@ -22,6 +22,6 @@ public class DelegationStakeDecreased extends AbstractDelegatorResult {
 
     @Override
     public TransactionResultEventType getType() {
-        return TransactionResultEventType.BAKER_STAKE_DECREASED;
+        return TransactionResultEventType.DELEGATION_STAKE_DECREASED;
     }
 }

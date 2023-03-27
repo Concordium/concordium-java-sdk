@@ -10,4 +10,3 @@ mvn -f ./concordium-sdk/pom.xml clean install
 mvn -f ./concordium-sdk-examples/pom.xml clean install
 java -cp "./target/concordium-sdk-examples-jar-with-dependencies.jar" com.concordium.sdk.examples.<COMMAND_NAME> --endpoint=http://localhost:20001
 ```
-java -cp "./target/concordium-sdk-examples-jar-with-dependencies.jar" com.concordium.sdk.examples.GetBlockItemStatus --endpoint=http://localhost:20001

@@ -4,7 +4,6 @@ import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.Hash;
 import lombok.val;
@@ -25,12 +24,9 @@ public class GetBlockItemStatus implements Callable<Integer> {
             defaultValue = "http://localhost:20001")
     private String endpoint;
 
-    @Option(
-            names = {"--timeout"},
-            description = "GRPC request timeout in milliseconds.",
-            defaultValue = "100000")
-    private int timeout;
-    private Hash blockHash = Hash.from("c0e24fbf97833827eedbc0a9297eaaae16a10c28c3ace0e3a3937cb50ab0c74a");
+    private final Hash blockHashFailure = Hash.from("d1bf95c1a2acc0947ec3900040c2ba172071aa759adf269c55ebb896aa6825c2");
+
+    private final Hash blockHashSuccess = Hash.from("1ea074f0e12e18684f2d6bbf2039c6db32d2fd5c28e6ba74c8e92f36e88b1901");
 
     @Override
     public Integer call() throws MalformedURLException, ClientInitializationException {
@@ -43,10 +39,15 @@ public class GetBlockItemStatus implements Callable<Integer> {
                 .build();
 
         val client = ClientV2.from(connection);
-        val getBlockItemStatus = client
-                .getBlockItemStatus(blockHash);
+        TransactionStatus getBlockItemStatusFailure = client
+                .getBlockItemStatus(blockHashFailure);
 
-        System.out.println(getBlockItemStatus);
+        System.out.println(getBlockItemStatusFailure);
+
+        TransactionStatus getBlockItemStatusSuccess = client
+                .getBlockItemStatus(blockHashSuccess);
+
+        System.out.println(getBlockItemStatusSuccess);
 
         return 0;
     }

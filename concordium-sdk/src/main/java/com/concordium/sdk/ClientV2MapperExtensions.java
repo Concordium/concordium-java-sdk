@@ -28,6 +28,7 @@ import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
+import com.concordium.sdk.responses.transactionstatus.RejectReason;
 import com.concordium.sdk.responses.transactionstatus.TransactionType;
 import com.concordium.sdk.transactions.InitContractPayload;
 import com.concordium.sdk.transactions.InitName;
@@ -57,6 +58,7 @@ import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.concordium.grpc.v2.RejectReason.ReasonCase;
 import static com.concordium.sdk.Constants.UTC_ZONE;
 import static com.google.common.collect.ImmutableList.copyOf;
 
@@ -823,21 +825,136 @@ interface ClientV2MapperExtensions {
         return summary.build();
     }
 
+    static Map<ReasonCase, RejectReasonType> initializeReasonCaseToRejectReasonType() {
+        Map<ReasonCase, RejectReasonType> map = new HashMap<>();
+        map.put(ReasonCase.MODULE_NOT_WF, RejectReasonType.MODULE_NOT_WF);
+        map.put(ReasonCase.MODULE_HASH_ALREADY_EXISTS, RejectReasonType.MODULE_HASH_ALREADY_EXISTS);
+        map.put(ReasonCase.INVALID_ACCOUNT_REFERENCE, RejectReasonType.INVALID_ACCOUNT_REFERENCE);
+        map.put(ReasonCase.INVALID_INIT_METHOD, RejectReasonType.INVALID_INIT_METHOD);
+        map.put(ReasonCase.INVALID_RECEIVE_METHOD, RejectReasonType.INVALID_RECEIVE_METHOD);
+        map.put(ReasonCase.INVALID_MODULE_REFERENCE, RejectReasonType.INVALID_MODULE_REFERENCE);
+        map.put(ReasonCase.INVALID_CONTRACT_ADDRESS, RejectReasonType.INVALID_CONTRACT_ADDRESS);
+        map.put(ReasonCase.RUNTIME_FAILURE, RejectReasonType.RUNTIME_FAILURE);
+        map.put(ReasonCase.AMOUNT_TOO_LARGE, RejectReasonType.AMOUNT_TOO_LARGE);
+        map.put(ReasonCase.SERIALIZATION_FAILURE, RejectReasonType.SERIALIZATION_FAILURE);
+        map.put(ReasonCase.OUT_OF_ENERGY, RejectReasonType.OUT_OF_ENERGY);
+        map.put(ReasonCase.REJECTED_INIT, RejectReasonType.REJECTED_INIT);
+        map.put(ReasonCase.REJECTED_RECEIVE, RejectReasonType.REJECTED_RECEIVE);
+        map.put(ReasonCase.NON_EXISTENT_CRED_IDS, RejectReasonType.NON_EXISTENT_REWARD_ACCOUNT);
+        map.put(ReasonCase.INVALID_PROOF, RejectReasonType.INVALID_PROOF);
+        map.put(ReasonCase.ALREADY_A_BAKER, RejectReasonType.ALREADY_A_BAKER);
+        map.put(ReasonCase.NOT_A_BAKER, RejectReasonType.NOT_A_BAKER);
+        map.put(ReasonCase.INSUFFICIENT_BALANCE_FOR_BAKER_STAKE, RejectReasonType.INSUFFICIENT_BALANCE_FOR_BAKER_STAKE);
+        map.put(ReasonCase.STAKE_UNDER_MINIMUM_THRESHOLD_FOR_BAKING, RejectReasonType.STAKE_UNDER_MINIMUM_THRESHOLD_FOR_BAKING);
+        map.put(ReasonCase.BAKER_IN_COOLDOWN, RejectReasonType.BAKER_IN_COOLDOWN);
+        map.put(ReasonCase.DUPLICATE_AGGREGATION_KEY, RejectReasonType.DUPLICATE_AGGREGATION_KEY);
+        map.put(ReasonCase.NON_EXISTENT_CREDENTIAL_ID, RejectReasonType.NON_EXISTENT_CREDENTIAL_ID);
+        map.put(ReasonCase.KEY_INDEX_ALREADY_IN_USE, RejectReasonType.KEY_INDEX_ALREADY_IN_USE);
+        map.put(ReasonCase.INVALID_ACCOUNT_THRESHOLD, RejectReasonType.INVALID_ACCOUNT_THRESHOLD);
+        map.put(ReasonCase.INVALID_CREDENTIAL_KEY_SIGN_THRESHOLD, RejectReasonType.INVALID_CREDENTIAL_KEY_SIGN_THRESHOLD);
+        map.put(ReasonCase.INVALID_ENCRYPTED_AMOUNT_TRANSFER_PROOF, RejectReasonType.INVALID_ENCRYPTED_AMOUNT_TRANSFER_PROOF);
+        map.put(ReasonCase.INVALID_TRANSFER_TO_PUBLIC_PROOF, RejectReasonType.INVALID_TRANSFER_TO_PUBLIC_PROOF);
+        map.put(ReasonCase.ENCRYPTED_AMOUNT_SELF_TRANSFER, RejectReasonType.ENCRYPTED_AMOUNT_SELF_TRANSFER);
+        map.put(ReasonCase.INVALID_INDEX_ON_ENCRYPTED_TRANSFER, RejectReasonType.INVALID_INDEX_ON_ENCRYPTED_TRANSFER);
+        map.put(ReasonCase.ZERO_SCHEDULEDAMOUNT, RejectReasonType.ZERO_SCHEDULED_AMOUNT);
+        map.put(ReasonCase.NON_INCREASING_SCHEDULE, RejectReasonType.NON_INCREASING_SCHEDULE);
+        map.put(ReasonCase.FIRST_SCHEDULED_RELEASE_EXPIRED, RejectReasonType.FIRST_SCHEDULED_RELEASE_EXPIRED);
+        map.put(ReasonCase.SCHEDULED_SELF_TRANSFER, RejectReasonType.SCHEDULED_SELF_TRANSFER);
+        map.put(ReasonCase.INVALID_CREDENTIALS, RejectReasonType.INVALID_CREDENTIALS);
+        map.put(ReasonCase.DUPLICATE_CRED_IDS, RejectReasonType.DUPLICATE_CRED_IDS);
+        map.put(ReasonCase.NON_EXISTENT_CRED_IDS, RejectReasonType.NON_EXISTENT_CRED_IDS);
+        map.put(ReasonCase.REMOVE_FIRST_CREDENTIAL, RejectReasonType.REMOVE_FIRST_CREDENTIAL);
+        map.put(ReasonCase.CREDENTIAL_HOLDER_DID_NOT_SIGN, RejectReasonType.CREDENTIAL_HOLDER_DID_NOT_SIGN);
+        map.put(ReasonCase.NOT_ALLOWED_MULTIPLE_CREDENTIALS, RejectReasonType.NOT_ALLOWED_MULTIPLE_CREDENTIALS);
+        map.put(ReasonCase.NOT_ALLOWED_TO_RECEIVE_ENCRYPTED, RejectReasonType.NOT_ALLOWED_TO_RECEIVE_ENCRYPTED);
+        map.put(ReasonCase.NOT_ALLOWED_TO_HANDLE_ENCRYPTED, RejectReasonType.NOT_ALLOWED_TO_HANDLE_ENCRYPTED);
+        map.put(ReasonCase.MISSING_BAKER_ADD_PARAMETERS, RejectReasonType.MISSING_BAKER_ADD_PARAMETERS);
+        map.put(ReasonCase.FINALIZATION_REWARD_COMMISSION_NOT_IN_RANGE, RejectReasonType.FINALIZATION_REWARD_COMMISSION_NOT_IN_RANGE);
+        map.put(ReasonCase.BAKING_REWARD_COMMISSION_NOT_IN_RANGE, RejectReasonType.BAKING_REWARD_COMMISSION_NOT_IN_RANGE);
+        map.put(ReasonCase.TRANSACTION_FEE_COMMISSION_NOT_IN_RANGE, RejectReasonType.TRANSACTION_FEE_COMMISSION_NOT_IN_RANGE);
+        map.put(ReasonCase.ALREADY_A_DELEGATOR, RejectReasonType.ALREADY_A_DELEGATOR);
+        map.put(ReasonCase.INSUFFICIENT_BALANCE_FOR_DELEGATION_STAKE, RejectReasonType.INSUFFICIENT_BALANCE_FOR_DELEGATION_STAKE);
+        map.put(ReasonCase.MISSING_DELEGATION_ADD_PARAMETERS, RejectReasonType.MISSING_DELEGATION_ADD_PARAMETERS);
+        map.put(ReasonCase.INSUFFICIENT_DELEGATION_STAKE, RejectReasonType.INSUFFICIENT_DELEGATION_STAKE);
+        map.put(ReasonCase.DELEGATOR_IN_COOLDOWN, RejectReasonType.DELEGATOR_IN_COOLDOWN);
+        map.put(ReasonCase.NOT_A_DELEGATOR, RejectReasonType.NOT_A_DELEGATOR);
+        map.put(ReasonCase.DELEGATION_TARGET_NOT_A_BAKER, RejectReasonType.DELEGATION_TARGET_NOT_A_BAKER);
+        map.put(ReasonCase.STAKE_OVER_MAXIMUM_THRESHOLD_FOR_POOL, RejectReasonType.STAKE_OVER_MAXIMUM_THRESHOLD_FOR_POOL);
+        map.put(ReasonCase.POOL_WOULD_BECOME_OVER_DELEGATED, RejectReasonType.POOL_WOULD_BECOME_OVER_DELEGATED);
+        map.put(ReasonCase.POOL_CLOSED, RejectReasonType.POOL_CLOSED);
+
+        return map;
+    }
+
+    static Map<AccountTransactionEffects.EffectCase, TransactionResultEventType> initializeEffectCaseTransactionResultTypeMap() {
+        Map<AccountTransactionEffects.EffectCase, TransactionResultEventType> map = new HashMap<>();
+        map.put(AccountTransactionEffects.EffectCase.MODULE_DEPLOYED, TransactionResultEventType.MODULE_DEPLOYED);
+        map.put(AccountTransactionEffects.EffectCase.CONTRACT_INITIALIZED, TransactionResultEventType.CONTRACT_INITIALIZED);
+        map.put(AccountTransactionEffects.EffectCase.CONTRACT_UPDATE_ISSUED, TransactionResultEventType.CONTRACT_UPDATED);
+        map.put(AccountTransactionEffects.EffectCase.ACCOUNT_TRANSFER, TransactionResultEventType.TRANSFERRED);
+        map.put(AccountTransactionEffects.EffectCase.BAKER_ADDED, TransactionResultEventType.BAKER_ADDED);
+        map.put(AccountTransactionEffects.EffectCase.BAKER_REMOVED, TransactionResultEventType.BAKER_REMOVED);
+        map.put(AccountTransactionEffects.EffectCase.BAKER_STAKE_UPDATED, TransactionResultEventType.BAKER_STAKE_UPDATED);
+        map.put(AccountTransactionEffects.EffectCase.BAKER_RESTAKE_EARNINGS_UPDATED, TransactionResultEventType.BAKER_SET_RESTAKE_EARNINGS);
+        map.put(AccountTransactionEffects.EffectCase.BAKER_KEYS_UPDATED, TransactionResultEventType.BAKER_KEYS_UPDATED);
+        map.put(AccountTransactionEffects.EffectCase.ENCRYPTED_AMOUNT_TRANSFERRED, TransactionResultEventType.ENCRYPTED_AMOUNT_TRANSFERRED);
+        map.put(AccountTransactionEffects.EffectCase.TRANSFERRED_TO_ENCRYPTED, TransactionResultEventType.TRANSFERRED_TO_ENCRYPTED);
+        map.put(AccountTransactionEffects.EffectCase.TRANSFERRED_TO_PUBLIC, TransactionResultEventType.TRANSFERRED_TO_PUBLIC);
+        map.put(AccountTransactionEffects.EffectCase.TRANSFERRED_WITH_SCHEDULE, TransactionResultEventType.TRANSFERRED_WITH_SCHEDULE);
+        map.put(AccountTransactionEffects.EffectCase.CREDENTIAL_KEYS_UPDATED, TransactionResultEventType.CREDENTIAL_KEYS_UPDATED);
+        map.put(AccountTransactionEffects.EffectCase.CREDENTIALS_UPDATED, TransactionResultEventType.CREDENTIALS_UPDATED);
+        map.put(AccountTransactionEffects.EffectCase.DATA_REGISTERED, TransactionResultEventType.DATA_REGISTERED);
+        map.put(AccountTransactionEffects.EffectCase.BAKER_CONFIGURED, TransactionResultEventType.BAKER_CONFIGURED);
+        map.put(AccountTransactionEffects.EffectCase.DELEGATION_CONFIGURED, TransactionResultEventType.DELEGATION_CONFIGURED);
+
+        return map;
+    }
+
+    Map<ReasonCase, RejectReasonType> REASON_CASE_TO_REJECT_REASON_TYPE = initializeReasonCaseToRejectReasonType();
+    Map<AccountTransactionEffects.EffectCase, TransactionResultEventType> EFFECT_CASE_TRANSACTION_RESULT_EVENT_TYPE_MAP = initializeEffectCaseTransactionResultTypeMap();
+
     static TransactionResult toTransactionResult(AccountTransactionDetails transactionDetails) {
         var result = TransactionResult.builder();
         if (transactionDetails.getEffects().hasNone()) {
             result = result.outcome(Outcome.REJECT);
             var rejectReason = transactionDetails.getEffects().getNone().getRejectReason().getReasonCase();
-//            switch (rejectReason) {
-//                case MODULE_NOT_WF:
-//                    result.rejectReason()
-//            }
 
-
+            for (Map.Entry<ReasonCase, RejectReasonType> entry : REASON_CASE_TO_REJECT_REASON_TYPE.entrySet()) {
+                if (rejectReason == entry.getKey()) {
+                    RejectReasonType rejectReasonType = entry.getValue();
+                    result = result.rejectReason(new RejectReason() {
+                        @Override
+                        public RejectReasonType getType() {
+                            return rejectReasonType;
+                        }
+                    });
+                    break;
+                }
+            }
         }
         else {
-            result = result.outcome(Outcome.SUCCESS);
-//          add events
+            var effectCase = transactionDetails.getEffects().getEffectCase();
+            List<TransactionResultEvent> eventList = new ArrayList<>();
+
+            for (Map.Entry<AccountTransactionEffects.EffectCase, TransactionResultEventType> entry : EFFECT_CASE_TRANSACTION_RESULT_EVENT_TYPE_MAP.entrySet()) {
+                if (effectCase == entry.getKey()) {
+                    TransactionResultEventType transactionResultEventType = entry.getValue();
+                    eventList.add(new TransactionResultEvent() {
+                        @Override
+                        public TransactionResultEventType getType() {
+                            return transactionResultEventType;
+                        }
+                    });
+                }
+            }
+            if (eventList.isEmpty()) {
+                eventList = null;
+            }
+
+
+            result = result.outcome(Outcome.SUCCESS)
+                    .events(eventList);
+
         }
 
         return result.build();
@@ -957,7 +1074,10 @@ interface ClientV2MapperExtensions {
                         builder = builder.contents(TransactionContents.UPDATE_GAS_REWARDS);
                     case TIMEOUT_PARAMETERS_UPDATE:
                         builder = builder.contents(TransactionContents.UPDATE_TIME_PARAMETERS);
-//                        MIN_BLOCK_TIME_UPDATE, BLOCK_ENERGY_LIMIT_UPDATE
+                    case MIN_BLOCK_TIME_UPDATE:
+                        builder = builder.contents(TransactionContents.MIN_BLOCK_TIME_UPDATE);
+                    case BLOCK_ENERGY_LIMIT_UPDATE:
+                        builder = builder.contents(TransactionContents.BLOCK_ENERGY_LIMIT_UPDATE);
                 }
                 break;
         }
