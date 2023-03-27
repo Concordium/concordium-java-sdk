@@ -776,20 +776,22 @@ interface ClientV2MapperExtensions {
     // Convert a com.concordium.grpc.v2.BlockItemStatus object to the corresponding com.concordium.sdk.responses.TransactionStatus object
     static TransactionStatus to(com.concordium.grpc.v2.BlockItemStatus blockItemStatus) {
         var builder = TransactionStatus.builder();
-        if (blockItemStatus.getStatusCase() == BlockItemStatus.StatusCase.FINALIZED){
-            builder = builder.status(Status.FINALIZED)
-                    .outcomes(to(blockItemStatus.getFinalized().getOutcome()));
-
-        }
-        else if (blockItemStatus.getStatusCase() == BlockItemStatus.StatusCase.COMMITTED){
-            builder = builder.status(Status.COMMITTED)
-                    .outcomes(to(blockItemStatus.getCommitted().getOutcomesList()));
-        }
-        else if (blockItemStatus.getStatusCase() == BlockItemStatus.StatusCase.RECEIVED){
-            builder = builder.status(Status.RECEIVED);
-        }
-        else {
-            builder = builder.status(Status.ABSENT);
+        var statusCase = blockItemStatus.getStatusCase();
+        switch (statusCase) {
+            case FINALIZED:
+                builder = builder.status(Status.FINALIZED)
+                        .outcomes(to(blockItemStatus.getFinalized().getOutcome()));
+                break;
+            case COMMITTED:
+                builder = builder.status(Status.COMMITTED)
+                        .outcomes(to(blockItemStatus.getCommitted().getOutcomesList()));
+                break;
+            case RECEIVED:
+                builder = builder.status(Status.RECEIVED);
+                break;
+            default:
+                builder = builder.status(Status.ABSENT);
+                break;
         }
 
         return builder.build();
