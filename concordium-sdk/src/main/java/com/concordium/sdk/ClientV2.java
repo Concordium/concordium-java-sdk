@@ -135,11 +135,11 @@ public final class ClientV2 {
     }
 
     /**
-     * Retrieves the next {@link AccountNonce} for an account.
-     * This is the {@link AccountNonce} to use for future transactions
+     * Retrieves the next available {@link AccountNonce} for an account.
+     * This is the {@link AccountNonce} to use for a future transaction
      * E.g. when using {@link Client#sendTransaction(Transaction)}
      *
-     * @param address The {@link AccountAddress}
+     * @param address The {@link AccountAddress} of the account to retrieve the next available account nonce for.
      * @return The next {@link AccountNonce}
      */
     public AccountNonce getNextAccountSequenceNumber(AccountAddress address) {
