@@ -9,6 +9,7 @@ import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
+import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.BlockItem;
@@ -141,7 +142,7 @@ public final class ClientV2 {
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#UPDATE_INSTRUCTION}
      *
      * @param input Pointer to the Block.
-     * @return
+     * @return {@link Iterator} of {@link BlockItem}
      */
     public Iterator<BlockItem> getBlockItems(final BlockHashInput input) {
         var grpcOutput = this.server().getBlockItems(to(input));
@@ -160,6 +161,19 @@ public final class ClientV2 {
                 .getConsensusInfo(Empty.newBuilder().build());
         return to(grpcOutput);
     }
+
+    /**
+     * Gets all the Identity Providers at the end of the block pointed by {@link BlockHashInput}.
+     *
+     * @param input Pointer to the Block.
+     * @return {@link Iterator} of {@link IdentityProviderInfo}
+     */
+    public Iterator<IdentityProviderInfo> getIdentityProviders(final BlockHashInput input) {
+        var grpcOutput = this.server().getIdentityProviders(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
 
     /**
      * Closes the underlying grpc channel
