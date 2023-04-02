@@ -3,7 +3,7 @@
 ## Unreleased changes
 - Added support for GRPC V2 Get Account Info
 - Added support for GRPC V2 Get Account List
-- Added support for GRPC V2 Get Block Info
+- Added support for GRPC V2 Get Block Info 'GetBlockInfo' for retrieving information of the block being queried.
 - Added support for GRPC V2 Get Block Items
 - Added support for GRPC V2 Get Consensus Status/Info
 
