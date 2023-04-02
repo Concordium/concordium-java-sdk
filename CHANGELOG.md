@@ -5,7 +5,8 @@
 - Added support for GRPC V2 Get Account List
 - Added support for GRPC V2 Get Block Items
 - Added support for GRPC V2 Get Consensus Status/Info
-- Added support for GRPC V2 Get Block Item Status
+- Added support for GRPC V2 'GetBlockItemStatus' for retrieving the status of an individual transaction
+- Fixed incorrect transaction event with respect to a transaction status for when a delegator decreased its stake.
 
 ## 4.2.0
 - Added initial support for GRPC V2

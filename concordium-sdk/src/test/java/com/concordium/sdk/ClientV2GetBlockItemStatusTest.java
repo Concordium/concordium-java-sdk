@@ -38,41 +38,42 @@ public class ClientV2GetBlockItemStatusTest {
 
     private static final BlockItemStatus GRPC_BLOCK_ITEM_STATUS = BlockItemStatus.newBuilder()
             .setFinalized(
-                BlockItemStatus.Finalized.newBuilder()
-                    .setOutcome(
-                            BlockItemSummaryInBlock.newBuilder()
-                                .setBlockHash(to(Hash.from(BLOCK_HASH)))
-                                .setOutcome(
-                                        BlockItemSummary.newBuilder()
-                                                .setIndex(
-                                                        BlockItemSummary.TransactionIndex.newBuilder()
-                                                                .setValue(TRANSACTION_INDEX)
-                                                )
-                                                .setEnergyCost(
-                                                        Energy.newBuilder().setValue(ENERGY_COST)
-                                                )
-                                                .setHash(
-                                                        toTransactionHash(Hash.from(TRANSACTION_HASH))
-                                                )
-                                                .setAccountTransaction(
-                                                        AccountTransactionDetails.newBuilder()
-                                                                .setCost(Amount.newBuilder().setValue(TRANSACTION_COST))
-                                                                .setSender(
-                                                                        to(AccountAddress.from(SENDER_ADDRESS))
-                                                                )
-                                                                .setEffects(
-                                                                        AccountTransactionEffects.newBuilder()
-                                                                                .setAccountTransfer(
-                                                                                        AccountTransactionEffects.AccountTransfer.newBuilder()
-                                                                                                .build()
-                                                                                )
-                                                                )
-                                                )
+                    BlockItemStatus.Finalized.newBuilder()
+                            .setOutcome(
+                                    BlockItemSummaryInBlock.newBuilder()
+                                            .setBlockHash(to(Hash.from(
+                                                    BLOCK_HASH)))
+                                            .setOutcome(
+                                                    BlockItemSummary.newBuilder()
+                                                            .setIndex(
+                                                                    BlockItemSummary.TransactionIndex
+                                                                            .newBuilder()
+                                                                            .setValue(TRANSACTION_INDEX))
+                                                            .setEnergyCost(
+                                                                    Energy.newBuilder()
+                                                                            .setValue(ENERGY_COST))
+                                                            .setHash(
+                                                                    toTransactionHash(
+                                                                            Hash.from(TRANSACTION_HASH)))
+                                                            .setAccountTransaction(
+                                                                    AccountTransactionDetails
+                                                                            .newBuilder()
+                                                                            .setCost(Amount.newBuilder()
+                                                                                    .setValue(TRANSACTION_COST))
+                                                                            .setSender(
+                                                                                    to(AccountAddress
+                                                                                            .from(SENDER_ADDRESS)))
+                                                                            .setEffects(
+                                                                                    AccountTransactionEffects
+                                                                                            .newBuilder()
+                                                                                            .setAccountTransfer(
+                                                                                                    AccountTransactionEffects.AccountTransfer
+                                                                                                            .newBuilder()
+                                                                                                            .build())))
 
-                                )
+                                            )
 
-                    )
-            ).build();
+                            )).build();
 
     private static final TransactionSummary summary = TransactionSummary.builder()
             .index(TRANSACTION_INDEX)
@@ -90,30 +91,32 @@ public class ClientV2GetBlockItemStatusTest {
                     })).build())
             .type(TransactionTypeInfo.builder()
                     .type(TransactionType.ACCOUNT_TRANSACTION)
-                    .contents(TransactionContents.TRANSFER).build()).build();
+                    .contents(TransactionContents.TRANSFER).build())
+            .build();
     private static final TransactionStatus FINALIZED_TRANSACTION_STATUS = TransactionStatus.builder()
             .status(Status.FINALIZED)
-            .outcomes(new HashMap<Hash, TransactionSummary>(){{
-                put(Hash.from(BLOCK_HASH), summary);
-            }})
+            .outcomes(new HashMap<Hash, TransactionSummary>() {
+                {
+                    put(Hash.from(BLOCK_HASH), summary);
+                }
+            })
             .build();
 
-    private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
-            new QueriesGrpc.QueriesImplBase() {
-                @Override
-                public void getBlockItemStatus(
-                        TransactionHash request,
-                        StreamObserver<BlockItemStatus> responseObserver) {
-                    responseObserver.onNext(GRPC_BLOCK_ITEM_STATUS);
-                    responseObserver.onCompleted();
-                }
-            }
-    ));
+    private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class,
+            delegatesTo(
+                    new QueriesGrpc.QueriesImplBase() {
+                        @Override
+                        public void getBlockItemStatus(
+                                TransactionHash request,
+                                StreamObserver<BlockItemStatus> responseObserver) {
+                            responseObserver.onNext(GRPC_BLOCK_ITEM_STATUS);
+                            responseObserver.onCompleted();
+                        }
+                    }));
     @Rule
     public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
 
     private ClientV2 client;
-
 
     @Before
     public void setUp() throws Exception {
@@ -125,10 +128,10 @@ public class ClientV2GetBlockItemStatusTest {
         client = new ClientV2(10000, channel, Credentials.builder().build());
     }
 
-
     @Test
     public void getBlockItemStatus() {
-        var res = client.getBlockItemStatus(Hash.from("1ea074f0e12e18684f2d6bbf2039c6db32d2fd5c28e6ba74c8e92f36e88b"));
+        var res = client.getBlockItemStatus(
+                Hash.from("1ea074f0e12e18684f2d6bbf2039c6db32d2fd5c28e6ba74c8e92f36e88b"));
 
         verify(serviceImpl).getBlockItemStatus(any(TransactionHash.class), any(StreamObserver.class));
         assertEquals(FINALIZED_TRANSACTION_STATUS.toString(), res.toString());

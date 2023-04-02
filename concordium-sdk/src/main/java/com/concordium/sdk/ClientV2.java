@@ -166,11 +166,11 @@ public final class ClientV2 {
     }
 
     /**
-     * Retrieves the transaction status for a given transaction {@link Hash}
+     * Retrieves the {@link TransactionStatus} for a given transaction {@link Hash}
      *
      * @param transactionHash The transaction {@link Hash}
      * @return The {@link TransactionStatus}
-     * @throws TransactionNotFoundException if the transaction was not found.
+     * @throws {@link TransactionNotFoundException} if the transaction was not found.
      */
     public TransactionStatus getBlockItemStatus(Hash transactionHash) {
         var grpcOutput = this.server()
