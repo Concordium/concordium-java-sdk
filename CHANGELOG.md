@@ -5,7 +5,7 @@
 - Added support for GRPC V2 Get Account List
 - Added support for GRPC V2 Get Block Items
 - Added support for GRPC V2 Get Consensus Status/Info
-- Added support for GRPC V2 Send Block Item
+- Added support for GRPC V2 'SendBlockItem' for sending a transaction. 
 
 ## 4.2.0
 - Added initial support for GRPC V2

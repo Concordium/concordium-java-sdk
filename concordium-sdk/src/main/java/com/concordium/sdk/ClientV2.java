@@ -10,7 +10,10 @@ import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
-import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountTransaction;
+import com.concordium.sdk.transactions.BlockItem;
+import com.concordium.sdk.transactions.Hash;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import lombok.val;
@@ -160,6 +163,12 @@ public final class ClientV2 {
         return to(grpcOutput);
     }
 
+    /**
+     * Sends an Account Transaction to the Concordium Node.
+     *
+     * @param accountTransaction Account Transaction to send.
+     * @return Transaction {@link Hash}.
+     */
     public Hash sendTransaction(final AccountTransaction accountTransaction) {
         var req = ClientV2MapperExtensions.to(accountTransaction);
         var grpcOutput = this.server().sendBlockItem(req);
