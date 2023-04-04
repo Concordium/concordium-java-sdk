@@ -763,4 +763,11 @@ interface ClientV2MapperExtensions {
 
         return builder.build();
     }
+
+    // Convert grpc NodeInfo object to client NodeInfo object
+    static com.concordium.sdk.responses.nodeinfo.NodeInfo to(NodeInfo nodeInfo) {
+        var builder = com.concordium.sdk.responses.nodeinfo.NodeInfo.builder()
+                .nodeId(nodeInfo.getNetworkInfo().getNodeId().getValue());
+        return null;
+    }
 }

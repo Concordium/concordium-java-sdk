@@ -10,6 +10,7 @@ import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.BlockItem;
 import io.grpc.CallCredentials;
@@ -193,5 +194,15 @@ public final class ClientV2 {
      */
     private QueriesGrpc.QueriesBlockingStub server(int timeoutMillis) {
         return this.blockingStub.withDeadlineAfter(timeoutMillis, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     *  Gets various node information
+     *
+     * @return Parsed {@link NodeInfo}
+     */
+    public NodeInfo getNodeInfo() {
+        var grpcOutput = this.server().getNodeInfo(Empty.newBuilder().build());
+        return to(grpcOutput);
     }
 }
