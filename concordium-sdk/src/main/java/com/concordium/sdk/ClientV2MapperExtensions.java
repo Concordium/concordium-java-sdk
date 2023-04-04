@@ -827,7 +827,6 @@ interface ClientV2MapperExtensions {
         // Not sure if 1st case is possible
         if (passiveCommitteeInfo.equals(notInCommittee)) {
             builder = builder.bakingStatus(BakingStatus.NOT_IN_COMMITTEE);
-            return builder.build();
         }
         if (passiveCommitteeInfo.equals(addedButNotActiveInCommittee)) {
             builder = builder.bakingStatus(BakingStatus.ADDED_BUT_NOT_ACTIVE_IN_COMMITTEE);
