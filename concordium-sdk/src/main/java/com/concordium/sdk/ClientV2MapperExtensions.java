@@ -25,6 +25,10 @@ import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.nodeinfo.BakingCommitteeDetails;
+import com.concordium.sdk.responses.nodeinfo.BakingStatus;
+import com.concordium.sdk.responses.nodeinfo.ConsensusState;
+import com.concordium.sdk.responses.nodeinfo.PeerType;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
 import com.concordium.sdk.transactions.InitContractPayload;
@@ -50,8 +54,10 @@ import lombok.val;
 import lombok.var;
 
 import javax.annotation.Nullable;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -767,7 +773,62 @@ interface ClientV2MapperExtensions {
     // Convert grpc NodeInfo object to client NodeInfo object
     static com.concordium.sdk.responses.nodeinfo.NodeInfo to(NodeInfo nodeInfo) {
         var builder = com.concordium.sdk.responses.nodeinfo.NodeInfo.builder()
-                .nodeId(nodeInfo.getNetworkInfo().getNodeId().getValue());
-        return null;
+                .nodeId(nodeInfo.getNetworkInfo().getNodeId().getValue())
+                .localTime(toZonedDateTime(nodeInfo.getLocalTime()))
+                .peerType(peerType(nodeInfo))
+                .consensusState(consensusState(nodeInfo))
+                .bakingStatus(bakingStatus(nodeInfo))
+                .committeeDetails(committeeDetails(nodeInfo));
+
+        return builder.build();
     }
+
+    //Finds PeerType of NodeInfo
+    static PeerType peerType(NodeInfo nodeInfo){
+        if (nodeInfo.hasNode()) {return PeerType.NODE;}
+        return PeerType.BOOTSTRAPPER;
+    }
+
+    //Converts from grpc Timestamp to ZonedDateTime, to() was already defined
+    static ZonedDateTime toZonedDateTime(com.concordium.grpc.v2.Timestamp localtime) {
+        return Instant.EPOCH.plusSeconds(localtime.getValue()).atZone(UTC_ZONE);
+    }
+    //Converts grpc NodeInfo.Node.ConsensusStatusCase to ConsensusCase
+    static ConsensusState consensusState(NodeInfo nodeInfo ) {
+        if (!nodeInfo.hasNode()) {return ConsensusState.NOT_RUNNING;} //State for bootstrapper nodes
+        if (nodeInfo.getNode().hasPassive()) {return ConsensusState.PASSIVE;}
+        return ConsensusState.ACTIVE;
+    }
+
+    //Finds BakingStatus of NodeInfo
+    static BakingStatus bakingStatus(NodeInfo nodeInfo) {
+        if (!nodeInfo.hasNode() || !nodeInfo.getNode().hasActive()) {return BakingStatus.NOT_IN_COMMITTEE;}
+
+        var bakerInfo = nodeInfo.getNode().getActive();
+        if (nodeInfo.getNode().getActive().hasActiveBakerCommitteeInfo()) {return BakingStatus.ACTIVE_IN_COMMITTEE;}
+
+        NodeInfo.BakerConsensusInfo.PassiveCommitteeInfo passiveStatus = bakerInfo.getPassiveCommitteeInfo();
+        if (passiveStatus.equals(NodeInfo.BakerConsensusInfo.PassiveCommitteeInfo.NOT_IN_COMMITTEE)) {
+            return BakingStatus.NOT_IN_COMMITTEE;
+        }
+        if (passiveStatus.equals(NodeInfo.BakerConsensusInfo.PassiveCommitteeInfo.ADDED_BUT_NOT_ACTIVE_IN_COMMITTEE)) {
+            return BakingStatus.ADDED_BUT_NOT_ACTIVE_IN_COMMITTEE;
+        }
+        return BakingStatus.ADDED_BUT_WRONG_KEYS;
+
+
+    }
+
+    static BakingCommitteeDetails committeeDetails(NodeInfo nodeInfo) {
+        if (nodeInfo.hasNode() || !nodeInfo.getNode().hasActive()) {return null;}
+        var bakerInfo = nodeInfo.getNode().getActive();
+        if (!bakerInfo.hasActiveBakerCommitteeInfo()) {return null;}
+        BakerId bakerId = bakerInfo.getBakerId();
+        var builder = BakingCommitteeDetails.builder()
+                .bakerId(to(bakerId))
+                .isFinalizer(bakerInfo.hasActiveFinalizerCommitteeInfo());
+        return builder.build();
+    }
+
+
 }
