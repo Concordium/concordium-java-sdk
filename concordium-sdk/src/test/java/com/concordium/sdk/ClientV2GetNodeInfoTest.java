@@ -5,11 +5,13 @@ import com.concordium.sdk.responses.nodeinfo.BakingCommitteeDetails;
 import com.concordium.sdk.responses.nodeinfo.BakingStatus;
 import com.concordium.sdk.responses.nodeinfo.ConsensusState;
 import com.concordium.sdk.responses.nodeinfo.PeerType;
+import com.concordium.sdk.responses.nodeinfov2.NetworkInfo;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
+import lombok.val;
 import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,6 +39,16 @@ public class ClientV2GetNodeInfoTest {
     private static final long AVG_BPS_IN = 1;
     private static final long AVG_BPS_OUT = 1;
     private static final long BAKER_ID = 1;
+    private static final NodeInfo.NetworkInfo GRPC_NETWORK_INFO = NodeInfo.NetworkInfo.newBuilder()
+            .setNodeId(
+                    PeerId.newBuilder()
+                            .setValue(NODE_ID)
+            )
+            .setPeerTotalSent(PEER_TOTAL_SENT)
+            .setPeerTotalReceived(PEER_TOTAL_RECIEVED)
+            .setAvgBpsIn(AVG_BPS_IN)
+            .setAvgBpsOut(AVG_BPS_OUT)
+            .build();
 
     //TODO GRPC_NODE_INFO for BOOTSTRAPPER, BAKER, NOT_BAKER etc? - Create Node objects and other large objects seperately?
     private static final NodeInfo GRPC_NODE_INFO = NodeInfo.newBuilder()
@@ -49,18 +61,7 @@ public class ClientV2GetNodeInfoTest {
                     Duration.newBuilder()
                             .setValue(PEER_UPTIME)
             )
-            .setNetworkInfo(
-                    NodeInfo.NetworkInfo.newBuilder()
-                            .setNodeId(
-                                    PeerId.newBuilder()
-                                            .setValue(NODE_ID)
-                            )
-                            .setPeerTotalSent(PEER_TOTAL_SENT)
-                            .setPeerTotalReceived(PEER_TOTAL_RECIEVED)
-                            .setAvgBpsIn(AVG_BPS_IN)
-                            .setAvgBpsOut(AVG_BPS_OUT)
-                            .build()
-            )
+            .setNetworkInfo(GRPC_NETWORK_INFO)
             .setNode(
                     NodeInfo.Node.newBuilder()
                             .setActive(
@@ -122,5 +123,17 @@ public class ClientV2GetNodeInfoTest {
 
         // Hvorfor er det toString i consensus test
         assertEquals(EXPECTED_NODE_INFO, res);
+    }
+
+    @Test
+    public void foo() {
+        val nodeInfo = com.concordium.sdk.responses.nodeinfov2.NodeInfo.builder()
+                .peerVersion(PEER_VERSION)
+                .localTime(Instant.EPOCH.plusSeconds(LOCAL_TIME).atZone(UTC_ZONE))
+                .peerUptime(java.time.Duration.ofMillis(PEER_UPTIME))
+                .networkInfo(NetworkInfo.parse(GRPC_NETWORK_INFO))
+                .node(null)
+                .peerType(PeerType.NODE).build();
+
     }
 }
