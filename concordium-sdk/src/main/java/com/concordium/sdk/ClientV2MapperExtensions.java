@@ -716,7 +716,7 @@ interface ClientV2MapperExtensions {
     static UInt64 to(TransactionTime expiry) {
         return UInt64.from(expiry.getValue());
     }
-    
+
     // Convert a Duration object to a long value
     static long to(Duration slotDuration) {
         return slotDuration.getValue();
@@ -762,5 +762,12 @@ interface ClientV2MapperExtensions {
                 .currentEraGenesisTime(to(concensusInfo.getCurrentEraGenesisTime()).getDate());
 
         return builder.build();
+    }
+
+    static AccountNonce to(NextAccountSequenceNumber res) {
+        return AccountNonce.builder()
+                .nonce(Nonce.from(res.getSequenceNumber().getValue()))
+                .allFinal(res.getAllFinal())
+                .build();
     }
 }

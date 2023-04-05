@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.Nonce;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -34,14 +35,14 @@ public abstract class AbstractAccountTransaction extends BlockItem {
 
     AbstractAccountTransaction(
             @NonNull final AccountAddress sender,
-            @NonNull final AccountNonce nonce,
+            @NonNull final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer,
             @NonNull final Payload payload) {
         this(payload
                 .withHeader(TransactionHeader.builder()
                         .sender(sender)
-                        .accountNonce(nonce.getNonce())
+                        .accountNonce(nonce)
                         .expiry(expiry.getValue())
                         .build())
                 .signWith(signer));
@@ -84,8 +85,8 @@ public abstract class AbstractAccountTransaction extends BlockItem {
      *
      * @return {@link AccountNonce}.
      */
-    public AccountNonce getNonce() {
-        return AccountNonce.from(this.header.getAccountNonce());
+    public Nonce getNonce() {
+        return this.header.getAccountNonce();
     }
 
     /**

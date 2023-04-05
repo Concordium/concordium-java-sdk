@@ -751,7 +751,7 @@ overview of the supported `Transaction` types and a convenient way of obtaining 
 AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc");
 AccountAddress receiver = AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM");
 GTUAmount amount = GTUAmount.asMicro(17);
-AccountNonce accountNonce = AccountNonce.from(78910);
+Nonce accountNonce = Nonce.from(78910);
 Expiry expiry = Expiry.createNew().addMinutes(5);
 
 ED25519SecretKey firstSecretKey = ED25519SecretKey.from("8f6494e89bb984dfd80bf9e5e9df9573754c9c245ed0981e95785406ca4969e7");
@@ -828,7 +828,7 @@ try{
             secondSecretKey));
     InitContractTransaction transaction = TransactionFactory.newInitContract()
         .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-        .nonce(AccountNonce.from(nonceValue))
+        .nonce(Nonce.from(nonceValue))
         .expiry(Expiry.from(expiry))
         .signer(signer)
         .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", paramBytes))
@@ -860,7 +860,7 @@ The following example demonstrates how to construct a "deployModule" transaction
 
     DeployModuleTransaction transaction = TransactionFactory.newDeployModule()
         .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-        .nonce(AccountNonce.from(nonceValue))
+        .nonce(Nonce.from(nonceValue))
         .expiry(Expiry.from(expiry))
         .signer(signer)
         .module(WasmModule.from(array, 1))
@@ -890,7 +890,7 @@ try{
 
     UpdateContractTransaction transaction = TransactionFactory.newUpdateContract()
         .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-        .nonce(AccountNonce.from(nonceValue))
+        .nonce(Nonce.from(nonceValue))
         .expiry(Expiry.from(expiry))
         .signer(signer)
         .payload(UpdateContractPayload.from(
@@ -925,7 +925,7 @@ try{
             secondSecretKey));
     TransactionScheduleTransaction transaction = TransactionFactory.newScheduledTransfer()
         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-        .nonce(AccountNonce.from(78910))
+        .nonce(Nonce.from(78910))
         .expiry(Expiry.from(123456))
         .signer(signer)
         .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
@@ -954,7 +954,7 @@ try{
             secondSecretKey));
     TransactionScheduleWithMemoTransaction transaction = TransactionFactory.newScheduledTransferWithMemo()
         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-        .nonce(AccountNonce.from(78910))
+        .nonce(Nonce.from(78910))
         .expiry(Expiry.from(123456))
         .signer(signer)
         .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
@@ -991,7 +991,7 @@ update signing keys of a specific credential.
     CredentialPublicKeys credentialPublicKeys = CredentialPublicKeys.from(keys, 1);
     
     UpdateCredentialKeysTransaction transaction = TransactionFactory.newUpdateCredentialKeys()
-        .nonce(AccountNonce.from(525))
+        .nonce(Nonce.from(525))
         .expiry(Expiry.from(1669466666))
         .signer(TransactionTestHelper.getValidSigner())
         .numExistingCredentials(UInt16.from(5))
@@ -1027,7 +1027,7 @@ final TransferToPublicTransaction transaction = TransactionFactory.newTransferTo
                 accountSecretKey,
                 amountToMakePublic)
         .sender(accountInfo.getAccountAddress())
-        .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+        .nonce(Nonce.from(accountInfo.getAccountNonce()))
         .expiry(Expiry.from(System.currentTimeMillis() / 1000 + 60))
         .signer(TransactionSigner.from(
                 SignerEntry.from(
@@ -1053,7 +1053,7 @@ try{
                 secondSecretKey));
         TransferToEncryptedTransaction transaction = TransactionFactory.newTransferToEncrypted()
             .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-            .nonce(AccountNonce.from(nonceValue))
+            .nonce(Nonce.from(nonceValue))
             .expiry(Expiry.from(expiry))
             .signer(signer)
             .payload(TransferToEncryptedPayload.from(1))
@@ -1089,7 +1089,7 @@ The following example demonstrates how to make an encrypted transfer.
                     "1"
                 )
                 .sender(accountInfo.getAccountAddress())
-                .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                .nonce(Nonce.from(accountInfo.getAccountNonce()))
                 .expiry(Expiry.from(System.currentTimeMillis() / 1000 + 60))
                 .signer(TransactionSigner.from(
                     SignerEntry.from(
@@ -1122,7 +1122,7 @@ The following example demonstrates how to make an encrypted transfer with memo.
                     "1"
                 )
                 .sender(accountInfo.getAccountAddress())
-                .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                .nonce(Nonce.from(accountInfo.getAccountNonce()))
                 .expiry(Expiry.from(System.currentTimeMillis() / 1000 + 60))
                 .signer(TransactionSigner.from(
                     SignerEntry.from(
@@ -1163,7 +1163,7 @@ try{
 
     ConfigureBakerTransaction transaction = TransactionFactory.newConfigureBaker()
         .sender(accountAddress)
-        .nonce(AccountNonce.from(nonceValue))
+        .nonce(Nonce.from(nonceValue))
         .expiry(Expiry.from(expiry))
         .signer(signer)
         .payload(configureBakerPayload)
@@ -1190,7 +1190,7 @@ try{
 
     ConfigureBakerTransaction transaction = TransactionFactory.newRemoveBaker()
         .sender(accountAddress)
-        .nonce(AccountNonce.from(nonceValue))
+        .nonce(Nonce.from(nonceValue))
         .expiry(Expiry.from(expiry))
         .signer(signer)
         .build();
@@ -1228,7 +1228,7 @@ try{
 
     ConfigureDelegationTransaction transaction = TransactionFactory.newConfigureDelegation()
         .sender(accountAddress)
-        .nonce(AccountNonce.from(nonceValue))
+        .nonce(Nonce.from(nonceValue))
         .expiry(Expiry.from(expiry))
         .signer(signer)
         .payload(payload)

@@ -23,10 +23,6 @@ public class Nonce {
     }
 
     @JsonCreator
-    Nonce(long nonce) {
-        this.value = UInt64.from(nonce);
-    }
-
     public static Nonce from(long value) {
         return new Nonce(UInt64.from(value));
     }

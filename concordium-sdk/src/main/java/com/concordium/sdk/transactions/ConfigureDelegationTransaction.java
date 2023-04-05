@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.Nonce;
 import lombok.*;
 
 /**
@@ -14,7 +15,7 @@ public class ConfigureDelegationTransaction extends AbstractAccountTransaction {
     private ConfigureDelegationTransaction(
             @NonNull final ConfigureDelegationPayload payload,
             @NonNull final AccountAddress sender,
-            @NonNull final AccountNonce nonce,
+            @NonNull final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
         super(sender, nonce, expiry, signer, ConfigureDelegation.createNew(payload));
@@ -35,7 +36,7 @@ public class ConfigureDelegationTransaction extends AbstractAccountTransaction {
     @Builder
     public static ConfigureDelegationTransaction from(final ConfigureDelegationPayload payload,
                                                       final AccountAddress sender,
-                                                      final AccountNonce nonce,
+                                                      final Nonce nonce,
                                                       final Expiry expiry,
                                                       final TransactionSigner signer) {
         try {

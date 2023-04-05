@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.Nonce;
 import lombok.*;
 
 @Getter
@@ -11,7 +12,7 @@ public class RegisterDataTransaction extends AbstractAccountTransaction {
     private RegisterDataTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final Data data,
-            @NonNull final AccountNonce nonce,
+            @NonNull final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
         super(sender, nonce, expiry, signer, RegisterData.createNew(data));
@@ -43,7 +44,7 @@ public class RegisterDataTransaction extends AbstractAccountTransaction {
     public static RegisterDataTransaction from(
             final AccountAddress sender,
             final Data data,
-            final AccountNonce nonce,
+            final Nonce nonce,
             final Expiry expiry,
             final TransactionSigner signer) {
         try {

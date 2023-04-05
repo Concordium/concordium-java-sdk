@@ -5,6 +5,7 @@ import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt16;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -31,7 +32,7 @@ public class UpdateCredentialKeysTransactionTest {
         val transaction = UpdateCredentialKeysTransaction
                 .builder()
                 .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-                .nonce(AccountNonce.from(525))
+                .nonce(Nonce.from(525))
                 .expiry(Expiry.from(1669466666))
                 .signer(TransactionTestHelper.getValidSigner())
                 .numExistingCredentials(UInt16.from(5))
@@ -55,7 +56,7 @@ public class UpdateCredentialKeysTransactionTest {
 
         UpdateCredentialKeysTransaction
                 .builder()
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .numExistingCredentials(UInt16.from(5))
@@ -100,7 +101,7 @@ public class UpdateCredentialKeysTransactionTest {
         UpdateCredentialKeysTransaction
                 .builder()
                 .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-                .nonce(AccountNonce.from(525))
+                .nonce(Nonce.from(525))
                 .signer(TransactionTestHelper.getValidSigner())
                 .numExistingCredentials(UInt16.from(5))
                 .keys(credentialPublicKeys)
@@ -123,7 +124,7 @@ public class UpdateCredentialKeysTransactionTest {
         UpdateCredentialKeysTransaction
                 .builder()
                 .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-                .nonce(AccountNonce.from(525))
+                .nonce(Nonce.from(525))
                 .expiry(Expiry.from(1669466666))
                 .numExistingCredentials(UInt16.from(5))
                 .keys(credentialPublicKeys)
@@ -144,7 +145,7 @@ public class UpdateCredentialKeysTransactionTest {
         UpdateCredentialKeysTransaction
                 .builder()
                 .sender(AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e"))
-                .nonce(AccountNonce.from(525))
+                .nonce(Nonce.from(525))
                 .expiry(Expiry.from(1669466666))
                 .signer(getSignerWithMalformedSecretKey())
                 .numExistingCredentials(UInt16.from(5))

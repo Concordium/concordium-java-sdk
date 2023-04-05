@@ -8,6 +8,7 @@ import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -16,8 +17,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
-@Command(name = "GetAccountInfo", mixinStandardHelpOptions = true)
-public class GetAccountInfo implements Callable<Integer> {
+@Command(name = "GetNextAccountSequenceNumber", mixinStandardHelpOptions = true)
+public class GetNextAccountSequenceNumber implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
@@ -33,19 +34,18 @@ public class GetAccountInfo implements Callable<Integer> {
                 .credentials(new Credentials())
                 .build();
 
-        AccountInfo accountInfo = ClientV2
+        AccountNonce sequenceNo = ClientV2
                 .from(connection)
-                .getAccountInfo(
-                        BlockHashInput.BEST,
-                        AccountRequest.from(AccountAddress.from("3bkTmK6GBWprhq6z2ukY6dEi1xNoBEMPDyyMQ6j8xrt8yaF7F2")));
+                .getNextAccountSequenceNo(
+                        AccountAddress.from("3bkTmK6GBWprhq6z2ukY6dEi1xNoBEMPDyyMQ6j8xrt8yaF7F2"));
 
-        System.out.println(accountInfo);
+        System.out.println(sequenceNo);
 
         return 0;
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetAccountInfo()).execute(args);
+        int exitCode = new CommandLine(new GetNextAccountSequenceNumber()).execute(args);
         System.exit(exitCode);
     }
 }

@@ -583,7 +583,7 @@ public class TransferToPublicTest {
                         accountSecretKey,
                         amountToMakePublic)
                 .sender(accountInfo.getAccountAddress())
-                .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                .nonce(accountInfo.getAccountNonce())
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .build();
@@ -639,7 +639,7 @@ public class TransferToPublicTest {
                                 accountSecretKey,
                                 amountToMakePublic)
                         .sender(accountInfo.getAccountAddress())
-                        .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                        .nonce(accountInfo.getAccountNonce())
                         .expiry(Expiry.from(123456))
                         .signer(TransactionTestHelper.getValidSigner())
                         .build();

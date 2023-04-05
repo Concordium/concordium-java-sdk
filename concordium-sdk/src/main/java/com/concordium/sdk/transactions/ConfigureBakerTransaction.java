@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.Nonce;
 import lombok.*;
 
 /**
@@ -15,7 +16,7 @@ public class ConfigureBakerTransaction extends AbstractAccountTransaction {
     ConfigureBakerTransaction(
             @NonNull final ConfigureBakerPayload payload,
             @NonNull final AccountAddress sender,
-            @NonNull final AccountNonce nonce,
+            @NonNull final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
         super(sender, nonce, expiry, signer, ConfigureBaker.createNew(payload));
@@ -36,7 +37,7 @@ public class ConfigureBakerTransaction extends AbstractAccountTransaction {
     @Builder
     public static ConfigureBakerTransaction from(final ConfigureBakerPayload payload,
                                                  final AccountAddress sender,
-                                                 final AccountNonce nonce,
+                                                 final Nonce nonce,
                                                  final Expiry expiry,
                                                  final TransactionSigner signer) {
         try {

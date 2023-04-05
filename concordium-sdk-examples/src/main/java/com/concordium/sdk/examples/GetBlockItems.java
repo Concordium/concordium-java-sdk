@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
-@Command(name = "GetBlocks", mixinStandardHelpOptions = true)
+@Command(name = "GetBlockItems", mixinStandardHelpOptions = true)
 public class GetBlockItems implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},

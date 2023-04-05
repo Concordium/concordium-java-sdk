@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt16;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class UpdateCredentialKeysTransaction extends AbstractAccountTransaction 
             @NonNull final CredentialPublicKeys keys,
             @NonNull final UInt16 numExistingCredentials,
             @NonNull final AccountAddress sender,
-            @NonNull final AccountNonce nonce,
+            final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
         super(sender, nonce, expiry, signer, UpdateCredentialKeys.createNew(
@@ -45,7 +46,7 @@ public class UpdateCredentialKeysTransaction extends AbstractAccountTransaction 
             final CredentialPublicKeys keys,
             final UInt16 numExistingCredentials,
             final AccountAddress sender,
-            final AccountNonce nonce,
+            final Nonce nonce,
             final Expiry expiry,
             final TransactionSigner signer) {
         try {

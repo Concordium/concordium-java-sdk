@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.Nonce;
 import lombok.*;
 
 /**
@@ -16,7 +17,7 @@ public class TransferScheduleWithMemoTransaction extends AbstractAccountTransact
             @NonNull final AccountAddress to,
             @NonNull final Schedule[] schedule,
             @NonNull final Memo memo,
-            @NonNull final AccountNonce nonce,
+            final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
         super(sender, nonce, expiry, signer, TransferScheduleWithMemo.createNew(to, schedule, memo));
@@ -44,7 +45,7 @@ public class TransferScheduleWithMemoTransaction extends AbstractAccountTransact
             final AccountAddress to,
             final Schedule[] schedule,
             final Memo memo,
-            final AccountNonce nonce,
+            final Nonce nonce,
             final Expiry expiry,
             final TransactionSigner signer) {
         try {

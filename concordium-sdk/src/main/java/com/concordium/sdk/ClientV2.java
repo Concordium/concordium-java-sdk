@@ -10,8 +10,7 @@ import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
-import com.concordium.sdk.transactions.AccountAddress;
-import com.concordium.sdk.transactions.BlockItem;
+import com.concordium.sdk.transactions.*;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import lombok.val;
@@ -77,7 +76,7 @@ public final class ClientV2 {
      * This can be used to listen for incoming blocks.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator<  BlockIdentifier  >}
+     * @return {@link Iterator<BlockIdentifier>}
      */
     public Iterator<BlockIdentifier> getBlocks(int timeoutMillis) {
         var grpcOutput = this.server(timeoutMillis).getBlocks(Empty.newBuilder().build());
@@ -92,7 +91,7 @@ public final class ClientV2 {
      * This can be used to listen for blocks being Finalized.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator<  BlockIdentifier  >}
+     * @return {@link Iterator<BlockIdentifier>}
      */
     public Iterator<BlockIdentifier> getFinalizedBlocks(int timeoutMillis) {
         var grpcOutput = this.server(timeoutMillis)
@@ -124,7 +123,7 @@ public final class ClientV2 {
      * Retrieve the list of accounts that exist at the end of the given block.
      *
      * @param input Pointer to the Block.
-     * @return {@link Iterator<  AccountAddress  >}.
+     * @return {@link Iterator<AccountAddress>}.
      */
     public Iterator<AccountAddress> getAccountList(final BlockHashInput input) {
         var grpcOutput = this.server().getAccountList(to(input));
@@ -141,7 +140,7 @@ public final class ClientV2 {
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#UPDATE_INSTRUCTION}
      *
      * @param input Pointer to the Block.
-     * @return
+     * @return {@link Iterator<BlockItem>}.
      */
     public Iterator<BlockItem> getBlockItems(final BlockHashInput input) {
         var grpcOutput = this.server().getBlockItems(to(input));
@@ -159,6 +158,19 @@ public final class ClientV2 {
         var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
         return to(grpcOutput);
+    }
+
+    /**
+     * Gets the Next Sequence No (Nonce) for Input {@link AccountAddress}.
+     * The sequence number is used primarily to populate {@link TransactionHeader#getAccountNonce()}
+     *
+     * @param address {@link AccountAddress}.
+     * @return {@link AccountNonce}.
+     */
+    public AccountNonce getNextAccountSequenceNo(AccountAddress address) {
+        var res = this.server().getNextAccountSequenceNumber(to(address));
+
+        return to(res);
     }
 
     /**

@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
-@Command(name = "GetAnonymityRevokers", mixinStandardHelpOptions = true)
+@Command(name = "GetAccountList", mixinStandardHelpOptions = true)
 public class GetAccountList implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},

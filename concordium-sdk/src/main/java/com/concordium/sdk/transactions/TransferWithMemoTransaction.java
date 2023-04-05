@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.Nonce;
 import lombok.*;
 
 @Getter
@@ -12,7 +13,7 @@ public class TransferWithMemoTransaction extends AbstractAccountTransaction {
             @NonNull final AccountAddress receiver,
             @NonNull final CCDAmount amount,
             @NonNull final Memo memo,
-            @NonNull final AccountNonce nonce,
+            @NonNull final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
         super(sender, nonce, expiry, signer, TransferWithMemo.createNew(receiver, amount, memo));
@@ -41,7 +42,7 @@ public class TransferWithMemoTransaction extends AbstractAccountTransaction {
                                                    final AccountAddress receiver,
                                                    final CCDAmount amount,
                                                    final Memo memo,
-                                                   final AccountNonce nonce,
+                                                   final Nonce nonce,
                                                    final Expiry expiry,
                                                    final TransactionSigner signer) {
         try {

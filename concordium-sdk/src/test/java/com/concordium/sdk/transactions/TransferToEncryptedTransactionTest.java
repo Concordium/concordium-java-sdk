@@ -4,6 +4,7 @@ import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.Nonce;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class TransferToEncryptedTransactionTest {
         val transaction = TransferToEncryptedTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .amount(CCDAmount.fromMicro(1))
@@ -33,7 +34,7 @@ public class TransferToEncryptedTransactionTest {
     public void testTransferToEncryptedTransactionWithoutSenderFails() {
         TransferToEncryptedTransaction
                 .builder()
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .amount(CCDAmount.fromMicro(1))
@@ -63,7 +64,7 @@ public class TransferToEncryptedTransactionTest {
         TransferToEncryptedTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .signer(TransactionTestHelper.getValidSigner())
                 .amount(CCDAmount.fromMicro(1))
                 .build();
@@ -77,7 +78,7 @@ public class TransferToEncryptedTransactionTest {
         TransferToEncryptedTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .amount(CCDAmount.fromMicro(1))
                 .build();
@@ -90,7 +91,7 @@ public class TransferToEncryptedTransactionTest {
         TransferToEncryptedTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(getSignerWithMalformedSecretKey())
                 .amount(CCDAmount.fromMicro(1))

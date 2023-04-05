@@ -27,6 +27,7 @@ import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.poolstatus.PassiveDelegationStatus;
 import com.concordium.sdk.responses.poolstatus.PoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
+import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.responses.transactionstatusinblock.TransactionStatusInBlock;
@@ -35,6 +36,8 @@ import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.types.UInt16;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Int32Value;
@@ -136,7 +139,11 @@ public final class Client {
                 .setAccountAddressBytes(ByteString.copyFrom(address.getEncodedBytes()))
                 .build();
         val nextAccountNonce = server().getNextAccountNonce(request);
-        return AccountNonce.fromJson(nextAccountNonce.getValue());
+        try {
+            return JsonMapper.INSTANCE.readValue(nextAccountNonce.getValue(), AccountNonce.class);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
