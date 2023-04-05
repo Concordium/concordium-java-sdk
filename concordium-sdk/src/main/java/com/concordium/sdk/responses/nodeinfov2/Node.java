@@ -17,7 +17,7 @@ public class Node {
     private BakerConsensusInfo bakerInfo;
 
     //TODO comment also for helper methods
-    public static Node parse(NodeInfo nodeInfo) {
+    public static Node parseNodeInfo(NodeInfo nodeInfo) {
 
         // Node is a BOOTSTRAPPER
         if (!nodeInfo.hasNode()) {return buildBootstrapperNode();}
@@ -31,10 +31,10 @@ public class Node {
 
     }
 
-    private static Node buildActiveNode(NodeInfo nodeInfo) {
+    private static Node buildBootstrapperNode() {
         return Node.builder()
-                .consensusState(ConsensusState.ACTIVE)
-                .bakerInfo(BakerConsensusInfo.parse(nodeInfo.getNode().getActive()))
+                .consensusState(ConsensusState.NOT_RUNNING)
+                .bakerInfo(null)
                 .build();
     }
 
@@ -45,10 +45,10 @@ public class Node {
                 .build();
     }
 
-    private static Node buildBootstrapperNode() {
+    private static Node buildActiveNode(NodeInfo nodeInfo) {
         return Node.builder()
-                .consensusState(ConsensusState.NOT_RUNNING)
-                .bakerInfo(null)
+                .consensusState(ConsensusState.ACTIVE)
+                .bakerInfo(BakerConsensusInfo.parse(nodeInfo.getNode().getActive()))
                 .build();
     }
 }

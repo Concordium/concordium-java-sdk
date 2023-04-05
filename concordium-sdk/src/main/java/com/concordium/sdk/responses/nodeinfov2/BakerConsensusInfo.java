@@ -19,6 +19,7 @@ public class BakerConsensusInfo {
     public static BakerConsensusInfo parse(NodeInfo.BakerConsensusInfo bakerConsensusInfo) {
 
         AccountIndex bakerId = AccountIndex.from(bakerConsensusInfo.getBakerId().getValue());
+
         var builder = BakerConsensusInfo.builder()
                 .bakerId(bakerId);
 

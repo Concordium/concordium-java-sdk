@@ -770,6 +770,24 @@ public interface ClientV2MapperExtensions {
         return builder.build();
     }
 
+    /**
+     * Converts from Grpc Timestamp to ZonedDateTime
+     * @param localtime {@link com.concordium.grpc.v2.Timestamp} timestamp from the Grpc API
+     * @return {@link ZonedDateTime} matching ZonedDateTime object
+     */
+    static ZonedDateTime toZonedDateTime(com.concordium.grpc.v2.Timestamp localtime) {
+        return Instant.EPOCH.plusSeconds(localtime.getValue()).atZone(UTC_ZONE);
+    }
+    /**
+     * Converts from Grpc Duration to Java Duration
+     * @param duration {@link com.concordium.grpc.v2.Duration} duration from the Grpc API
+     * @return {@link java.time.Duration} matching Java Duration object
+     */
+    static java.time.Duration toDuration(Duration duration) {
+        return java.time.Duration.ofMillis(duration.getValue());
+    }
+
+    //TODO delete NodeInfo methods when new NodeInfo class implemented
     // Convert grpc NodeInfo object to client NodeInfo object
     static com.concordium.sdk.responses.nodeinfo.NodeInfo to(NodeInfo nodeInfo) {
         var builder = com.concordium.sdk.responses.nodeinfo.NodeInfo.builder()
@@ -797,10 +815,6 @@ public interface ClientV2MapperExtensions {
         return getNodeInfoForActiveBaker(nodeInfo, builder);
     }
 
-    //Converts from grpc Timestamp to ZonedDateTime, to() was already defined
-    static ZonedDateTime toZonedDateTime(com.concordium.grpc.v2.Timestamp localtime) {
-        return Instant.EPOCH.plusSeconds(localtime.getValue()).atZone(UTC_ZONE);
-    }
 
     // Helper method for getNodeInfo. Builds NodeInfo for BOOTSTRAPPER Node
     static com.concordium.sdk.responses.nodeinfo.NodeInfo getNodeInfoForBootstrapper(com.concordium.sdk.responses.nodeinfo.NodeInfo.NodeInfoBuilder builder) {

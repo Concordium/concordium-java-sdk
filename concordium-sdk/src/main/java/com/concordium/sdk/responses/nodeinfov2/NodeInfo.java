@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.nodeinfov2;
 
-import com.concordium.sdk.responses.nodeinfo.BakingStatus;
 import com.concordium.sdk.responses.nodeinfo.ConsensusState;
 import com.concordium.sdk.responses.nodeinfo.PeerType;
 import lombok.*;
@@ -8,6 +7,7 @@ import lombok.*;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
+import static com.concordium.sdk.ClientV2MapperExtensions.toDuration;
 import static com.concordium.sdk.ClientV2MapperExtensions.toZonedDateTime;
 
 @EqualsAndHashCode
@@ -42,7 +42,7 @@ public class NodeInfo {
         return node.getBakerInfo();
     }
 
-    //TODO eror message and comment
+    //TODO error message and comment
     public ConsensusState getConsensusStatus() {
         if (this.peerType.equals(PeerType.BOOTSTRAPPER)) {
             throw new IllegalStateException("Not allowed");
@@ -52,7 +52,9 @@ public class NodeInfo {
 
     //TODO comment
     public static NodeInfo parse(com.concordium.grpc.v2.NodeInfo nodeInfo) {
-        return getStandardNodeInfoBuilder(nodeInfo).node(Node.parse(nodeInfo)).build();
+        return getStandardNodeInfoBuilder(nodeInfo)
+                .node(Node.parseNodeInfo(nodeInfo))
+                .build();
 
     }
 
@@ -62,7 +64,7 @@ public class NodeInfo {
         return NodeInfo.builder()
                 .peerVersion(nodeInfo.getPeerVersion())
                 .localTime(toZonedDateTime(nodeInfo.getLocalTime()))
-                .peerUptime(Duration.ofMillis(nodeInfo.getPeerUptime().getValue()))
+                .peerUptime(toDuration(nodeInfo.getPeerUptime()))
                 .networkInfo(NetworkInfo.parse(nodeInfo.getNetworkInfo()))
                 .peerType((nodeInfo.hasNode() ? PeerType.NODE : PeerType.BOOTSTRAPPER));
     }
