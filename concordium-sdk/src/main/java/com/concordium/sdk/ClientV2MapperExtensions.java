@@ -786,8 +786,12 @@ interface ClientV2MapperExtensions {
 
         builder = builder.consensusState(ConsensusState.ACTIVE);
 
+
+        boolean isActiveBaker = nodeInfo.getNode().getActive().hasActiveBakerCommitteeInfo();
+        boolean isActiveFinalizer = nodeInfo.getNode().getActive().hasActiveFinalizerCommitteeInfo();
+
         // Node has baker keys but is not active in committee
-        if (!nodeInfo.getNode().getActive().hasActiveBakerCommitteeInfo()) {return getNodeInfoForNotActiveBaker(nodeInfo, builder);}
+        if (! (isActiveBaker || isActiveFinalizer)) {return getNodeInfoForNotActiveBaker(nodeInfo, builder);}
 
         // Node us active in committee as all other options are exhausted
         return getNodeInfoForActiveBaker(nodeInfo, builder);

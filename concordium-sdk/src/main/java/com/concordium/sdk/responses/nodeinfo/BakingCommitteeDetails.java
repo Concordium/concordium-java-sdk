@@ -3,6 +3,7 @@ package com.concordium.sdk.responses.nodeinfo;
 import com.concordium.sdk.responses.AccountIndex;
 import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
@@ -10,6 +11,7 @@ import lombok.Getter;
  */
 @Builder
 @Getter
+@EqualsAndHashCode
 public class BakingCommitteeDetails {
 
     /**
