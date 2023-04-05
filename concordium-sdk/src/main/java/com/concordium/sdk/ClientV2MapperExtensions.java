@@ -67,7 +67,7 @@ import static com.google.common.collect.ImmutableList.copyOf;
 /**
  * Object Mapping Extensions. Maps from GRPC types to client types and vice versa.
  */
-interface ClientV2MapperExtensions {
+public interface ClientV2MapperExtensions {
     double HUNDRED_THOUSAND = 100_000D;
 
     static com.concordium.grpc.v2.BlockHashInput to(final BlockHashInput input) {

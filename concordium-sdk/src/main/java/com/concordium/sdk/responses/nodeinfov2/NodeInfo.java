@@ -52,25 +52,8 @@ public class NodeInfo {
 
     //TODO comment
     public static NodeInfo parse(com.concordium.grpc.v2.NodeInfo nodeInfo) {
+        return getStandardNodeInfoBuilder(nodeInfo).node(Node.parse(nodeInfo)).build();
 
-        var builder = getStandardNodeInfoBuilder(nodeInfo);
-
-        // Node is a BOOTSTRAPPER
-        if (!nodeInfo.hasNode()) {
-            return NodeInfo.getNodeInfoForBootstrapper(builder, nodeInfo);
-        }
-
-        builder = builder.peerType(PeerType.NODE);
-
-        // Node is not configured with baker keys
-        if (!nodeInfo.getNode().hasActive()) {
-            return getNodeInfoForPassive(builder);
-        }
-
-        builder = builder.consensusState(ConsensusState.ACTIVE);
-
-
-        return builder.build();
     }
 
 
@@ -80,20 +63,11 @@ public class NodeInfo {
                 .peerVersion(nodeInfo.getPeerVersion())
                 .localTime(toZonedDateTime(nodeInfo.getLocalTime()))
                 .peerUptime(Duration.ofMillis(nodeInfo.getPeerUptime().getValue()))
-                .networkInfo(NetworkInfo.parse(nodeInfo.getNetworkInfo()));
+                .networkInfo(NetworkInfo.parse(nodeInfo.getNetworkInfo()))
+                .peerType((nodeInfo.hasNode() ? PeerType.NODE : PeerType.BOOTSTRAPPER));
     }
 
-    //TODO comment
-    private static NodeInfo getNodeInfoForBootstrapper(NodeInfoBuilder builder, com.concordium.grpc.v2.NodeInfo nodeInfo) {
 
-        val node = Node.builder()
-                .consensusState(ConsensusState.NOT_RUNNING)
-                .bakerInfo(null).build();
-        return builder
-                .node(node)
-                .peerType(PeerType.BOOTSTRAPPER).build();
-
-    }
 
 
 }
