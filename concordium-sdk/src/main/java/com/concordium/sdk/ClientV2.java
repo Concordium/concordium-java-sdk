@@ -3,6 +3,7 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.AccountInfoRequest;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.requests.BlockHashInput;
@@ -170,12 +171,16 @@ public final class ClientV2 {
      *
      * @param transactionHash The transaction {@link Hash}
      * @return The {@link TransactionStatus}
-     * @throws {@link io.grpc.StatusRuntimeException} if the transaction was not found.
+     * @throws {@link BlockNotFoundException} if the transaction was not found.
      */
-    public TransactionStatus getBlockItemStatus(Hash transactionHash) {
-        var grpcOutput = this.server()
-                .getBlockItemStatus(toTransactionHash(transactionHash));
-        return to(grpcOutput);
+    public TransactionStatus getBlockItemStatus(Hash transactionHash) throws BlockNotFoundException {
+        try {
+            var grpcOutput = this.server()
+                    .getBlockItemStatus(toTransactionHash(transactionHash));
+            return to(grpcOutput);
+        } catch (Exception e) {
+            throw BlockNotFoundException.from(transactionHash);
+        }
     }
 
     /**
