@@ -27,35 +27,34 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetAccountListTest {
 
-    private static final com.concordium.sdk.transactions.AccountAddress CLIENT_ACCOUNT_ADDRESS = com.concordium.sdk.transactions.AccountAddress
-            .from(
-                    "37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.transactions.AccountAddress CLIENT_ACCOUNT_ADDRESS
+            = com.concordium.sdk.transactions.AccountAddress.from(
+            "37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final AccountAddress GRPC_ACCOUNT_ADDRESS = AccountAddress.newBuilder()
             .setValue(ByteString.copyFrom(CLIENT_ACCOUNT_ADDRESS.getBytes()))
             .build();
     private static final byte[] BLOCK_HASH = new byte[]{1, 1, 1};
-    private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class,
-            delegatesTo(
-                    new QueriesGrpc.QueriesImplBase() {
-                        @Override
-                        public void getAccountList(
-                                com.concordium.grpc.v2.BlockHashInput request,
-                                StreamObserver<AccountAddress> responseObserver) {
-                            responseObserver.onNext(GRPC_ACCOUNT_ADDRESS);
-                            responseObserver.onCompleted();
-                        }
-                    }));
-    private static final com.concordium.grpc.v2.BlockHashInput BEST_BLOCK = com.concordium.grpc.v2.BlockHashInput
-            .newBuilder().setBest(Empty.newBuilder().build()).build();
-    private static final com.concordium.grpc.v2.BlockHashInput LAST_FINAL_BLOCK = com.concordium.grpc.v2.BlockHashInput
-            .newBuilder().setLastFinal(Empty.newBuilder().build()).build();
+    private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
+            new QueriesGrpc.QueriesImplBase() {
+                @Override
+                public void getAccountList(
+                        com.concordium.grpc.v2.BlockHashInput request,
+                        StreamObserver<AccountAddress> responseObserver) {
+                    responseObserver.onNext(GRPC_ACCOUNT_ADDRESS);
+                    responseObserver.onCompleted();
+                }
+            }
+    ));
+    private static final com.concordium.grpc.v2.BlockHashInput BEST_BLOCK =
+            com.concordium.grpc.v2.BlockHashInput.newBuilder().setBest(Empty.newBuilder().build()).build();
+    private static final com.concordium.grpc.v2.BlockHashInput LAST_FINAL_BLOCK =
+            com.concordium.grpc.v2.BlockHashInput.newBuilder().setLastFinal(Empty.newBuilder().build()).build();
     private static final com.concordium.grpc.v2.BlockHashInput GIVEN_BLOCK_GRPC = com.concordium.grpc.v2.BlockHashInput
             .newBuilder()
             .setGiven(
                     BlockHash
                             .newBuilder()
-                            .setValue(ByteString.copyFrom(BLOCK_HASH)).build())
-            .build();
+                            .setValue(ByteString.copyFrom(BLOCK_HASH)).build()).build();
 
     @Rule
     public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
