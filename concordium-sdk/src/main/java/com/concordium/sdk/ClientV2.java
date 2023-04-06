@@ -18,6 +18,7 @@ import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.transactions.Hash;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
+import io.grpc.StatusRuntimeException;
 import lombok.val;
 import lombok.var;
 
@@ -178,7 +179,7 @@ public final class ClientV2 {
             var grpcOutput = this.server()
                     .getBlockItemStatus(toTransactionHash(transactionHash));
             return to(grpcOutput);
-        } catch (Exception e) {
+        } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(transactionHash);
         }
     }
