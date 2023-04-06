@@ -12,8 +12,10 @@ import com.concordium.grpc.v2.Memo;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
+import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
@@ -762,5 +764,15 @@ interface ClientV2MapperExtensions {
                 .currentEraGenesisTime(to(concensusInfo.getCurrentEraGenesisTime()).getDate());
 
         return builder.build();
+    }
+
+    static com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters to(CryptographicParameters grpcOutput){
+        var builder = com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters.builder()
+                .bulletproofGenerators(BulletproofGenerators.from(grpcOutput.getBulletproofGenerators().toStringUtf8()))
+                .onChainCommitmentKey(PedersenCommitmentKey.from(grpcOutput.getOnChainCommitmentKey().toStringUtf8()))
+                .genesisString(grpcOutput.getGenesisString());
+
+        return builder.build();
+
     }
 }

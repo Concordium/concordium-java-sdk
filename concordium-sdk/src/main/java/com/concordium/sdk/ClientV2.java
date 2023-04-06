@@ -3,6 +3,7 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.AccountInfoRequest;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
@@ -10,10 +11,12 @@ import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.BlockItem;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
+import io.grpc.StatusRuntimeException;
 import lombok.val;
 import lombok.var;
 
@@ -159,6 +162,24 @@ public final class ClientV2 {
         var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
         return to(grpcOutput);
+    }
+
+    /**
+     * Get the {@link CryptographicParameters} at a given block.
+     *
+     * @param blockHash the hash of the block
+     * @return the cryptographic parameters at the given block.
+     * @throws {@link BlockNotFoundException} if the block was not found.
+     */
+
+    public CryptographicParameters getCryptographicParameters(final BlockHashInput blockHash) throws BlockNotFoundException {
+        try {
+            var grpcOutput = this.server()
+                    .getCryptographicParameters(to(blockHash));
+            return to(grpcOutput);
+        } catch (StatusRuntimeException e){
+            throw BlockNotFoundException.from(blockHash.getBlockHash());
+        }
     }
 
     /**
