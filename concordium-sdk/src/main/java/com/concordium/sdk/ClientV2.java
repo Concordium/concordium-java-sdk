@@ -3,6 +3,7 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.AccountInfoRequest;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
@@ -15,6 +16,7 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.BlockItem;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
+import io.grpc.StatusRuntimeException;
 import lombok.val;
 import lombok.var;
 
@@ -167,11 +169,15 @@ public final class ClientV2 {
      *
      * @param blockHashInput the block {@link BlockHashInput} to query.
      * @return A {@link BlockInfo} for the block
+     * @throws BlockNotFoundException If the block was not found.
      */
-    public BlockInfo getBlockInfo(BlockHashInput blockHashInput) {
-        var grpcOutput = this.server()
-                .getBlockInfo(to(blockHashInput));
-        return to(grpcOutput);
+    public BlockInfo getBlockInfo(BlockHashInput blockHashInput) throws BlockNotFoundException {
+        try {
+            return to(this.server()
+                    .getBlockInfo(to(blockHashInput)));
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHashInput.getBlockHash());
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.transactions.Hash;
@@ -161,7 +162,7 @@ public class ClientV2GetBlockInfoTest {
     }
 
     @Test
-    public void getBlockInfo_BestBlock() {
+    public void getBlockInfo_BestBlock() throws BlockNotFoundException {
         var blockInfo = client.getBlockInfo(BlockHashInput.BEST);
 
         verify(serviceImpl).getBlockInfo(eq(BEST_BLOCK), any(StreamObserver.class));
@@ -169,7 +170,7 @@ public class ClientV2GetBlockInfoTest {
     }
 
     @Test
-    public void getBlockInfo_LastFinalBlock() {
+    public void getBlockInfo_LastFinalBlock() throws BlockNotFoundException {
         var blockInfo = client.getBlockInfo(BlockHashInput.LAST_FINAL);
 
         verify(serviceImpl).getBlockInfo(eq(LAST_FINAL_BLOCK), any(StreamObserver.class));
@@ -177,7 +178,7 @@ public class ClientV2GetBlockInfoTest {
     }
 
     @Test
-    public void getBlockInfo_GivenBlock() {
+    public void getBlockInfo_GivenBlock() throws BlockNotFoundException {
         var blockInfo = client.getBlockInfo(
                 BlockHashInput.GIVEN(Hash.from(BLOCK_HASH)));
 
