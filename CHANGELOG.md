@@ -3,10 +3,9 @@
 ## Unreleased changes
 - Added support for GRPC V2 Get Account Info
 - Added support for GRPC V2 Get Account List
-- Added support for GRPC V2 'GetNextAccountSequenceNumber' for acquiring the next available account nonce
-- Added support for GRPC V2 Get Next Account Nonce Number
 - Added support for GRPC V2 Get Block Items
 - Added support for GRPC V2 Get Consensus Status/Info
+- Added support for GRPC V2 'GetNextAccountSequenceNumber' for acquiring the next available account nonce
 
 ## 4.2.0
 - Added initial support for GRPC V2
