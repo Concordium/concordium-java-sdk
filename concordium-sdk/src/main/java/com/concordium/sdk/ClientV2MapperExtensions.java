@@ -768,8 +768,8 @@ interface ClientV2MapperExtensions {
 
     static com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters to(CryptographicParameters grpcOutput){
         var builder = com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters.builder()
-                .bulletproofGenerators(BulletproofGenerators.from(grpcOutput.getBulletproofGenerators().toStringUtf8()))
-                .onChainCommitmentKey(PedersenCommitmentKey.from(grpcOutput.getOnChainCommitmentKey().toStringUtf8()))
+                .bulletproofGenerators(BulletproofGenerators.from(grpcOutput.getBulletproofGenerators().toByteArray()))
+                .onChainCommitmentKey(PedersenCommitmentKey.from(grpcOutput.getOnChainCommitmentKey().toByteArray()))
                 .genesisString(grpcOutput.getGenesisString());
 
         return builder.build();
