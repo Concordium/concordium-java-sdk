@@ -25,6 +25,7 @@ import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
 import com.concordium.sdk.transactions.InitContractPayload;
@@ -763,4 +764,38 @@ interface ClientV2MapperExtensions {
 
         return builder.build();
     }
+
+    static RewardsOverview to(TokenomicsInfo tokenomicsInfo) {
+        var builder = RewardsOverview.builder();
+        if (tokenomicsInfo.hasV0()) {
+            builder = builder.totalAmount(to(tokenomicsInfo.getV0().getTotalAmount()))
+                    .totalEncryptedAmount(to(tokenomicsInfo.getV0().getTotalEncryptedAmount()))
+                    .bakingRewardAccount(to(tokenomicsInfo.getV0().getBakingRewardAccount()))
+                    .finalizationRewardAccount(to(tokenomicsInfo.getV0().getFinalizationRewardAccount()))
+                    .gasAccount(to(tokenomicsInfo.getV0().getGasAccount()))
+                    .protocolVersion(to(tokenomicsInfo.getV0().getProtocolVersion()));
+        }
+        else if (tokenomicsInfo.hasV1()) {
+            builder = builder.totalAmount(to(tokenomicsInfo.getV1().getTotalAmount()))
+                    .totalEncryptedAmount(to(tokenomicsInfo.getV1().getTotalEncryptedAmount()))
+                    .bakingRewardAccount(to(tokenomicsInfo.getV1().getBakingRewardAccount()))
+                    .finalizationRewardAccount(to(tokenomicsInfo.getV1().getFinalizationRewardAccount()))
+                    .gasAccount(to(tokenomicsInfo.getV1().getGasAccount()))
+                    .foundationTransactionRewards(to(tokenomicsInfo.getV1().getFoundationTransactionRewards()))
+                    .nextPaydayTime(to(tokenomicsInfo.getV1().getNextPaydayTime()).getDate())
+                    .nextPaydayMintRate(to(tokenomicsInfo.getV1().getNextPaydayMintRate()))
+                    .totalStakedCapital(to(tokenomicsInfo.getV1().getTotalStakedCapital()))
+                    .protocolVersion(to(tokenomicsInfo.getV1().getProtocolVersion()));
+
+        }
+
+        return builder.build();
+    }
+
+    static double to(MintRate mintRate) {
+        double rate = mintRate.getMantissa() * Math.pow(10, -1 * mintRate.getExponent());
+        return rate;
+    }
+
+
 }

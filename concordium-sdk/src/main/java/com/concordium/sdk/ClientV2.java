@@ -3,6 +3,7 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.AccountInfoRequest;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
@@ -10,10 +11,12 @@ import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.BlockItem;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
+import io.grpc.StatusRuntimeException;
 import lombok.val;
 import lombok.var;
 
@@ -159,6 +162,22 @@ public final class ClientV2 {
         var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
         return to(grpcOutput);
+    }
+
+    /**
+     * Get the information about total amount of CCD and the state of various special accounts in the provided block.
+     *
+     * @param blockHash Block at which the reward status is to be retrieved.
+     * @return Parsed {@link RewardsOverview}.
+     * @throws BlockNotFoundException When the returned response is null.
+     */
+    public RewardsOverview getRewardStatus(final BlockHashInput blockHash) throws BlockNotFoundException {
+        try {
+        val grpcOutput = this.server().getTokenomicsInfo(to(blockHash));
+        return to(grpcOutput);
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHash.getBlockHash());
+        }
     }
 
     /**
