@@ -173,8 +173,8 @@ public final class ClientV2 {
      */
     public RewardsOverview getRewardStatus(final BlockHashInput blockHash) throws BlockNotFoundException {
         try {
-        val grpcOutput = this.server().getTokenomicsInfo(to(blockHash));
-        return to(grpcOutput);
+            val grpcOutput = this.server().getTokenomicsInfo(to(blockHash));
+            return to(grpcOutput);
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(blockHash.getBlockHash());
         }
