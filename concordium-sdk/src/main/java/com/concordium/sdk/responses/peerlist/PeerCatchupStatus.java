@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.peerlist;
 
+import com.concordium.grpc.v2.PeersInfo;
 import concordium.ConcordiumP2PRpc;
 
 /**
@@ -42,6 +43,23 @@ public enum PeerCatchupStatus {
             throw new IllegalArgumentException(String.format(
                     "Invalid catchup status received: %d",
                     catchupStatus.getNumber()));
+        }
+    }
+
+    /**
+     * Parses the input {@link com.concordium.grpc.v2.PeersInfo.Peer.CatchupStatus}.
+     * @param catchupStatus input {@link com.concordium.grpc.v2.PeersInfo.Peer.CatchupStatus}.
+     * @return Parsed {@link PeerCatchupStatus}.
+     */
+    public static PeerCatchupStatus parse(PeersInfo.Peer.CatchupStatus catchupStatus) {
+        switch (catchupStatus) {
+            case UPTODATE: return PeerCatchupStatus.UPTODATE;
+            case PENDING: return PeerCatchupStatus.PENDING;
+            case CATCHINGUP: return PeerCatchupStatus.CATCHINGUP;
+            default:
+                throw new IllegalArgumentException(String.format(
+                        "Invalid catchup status received: %d",
+                        catchupStatus.getNumber()));
         }
     }
 

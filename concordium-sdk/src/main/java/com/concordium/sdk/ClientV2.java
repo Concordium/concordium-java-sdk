@@ -12,8 +12,11 @@ import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.BlockItem;
+import com.google.common.collect.ImmutableList;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
@@ -21,6 +24,7 @@ import lombok.val;
 import lombok.var;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
@@ -191,6 +195,11 @@ public final class ClientV2 {
      */
     public void close() {
         this.channel.shutdown();
+    }
+
+    public ImmutableList<PeerInfo> getPeersInfo() throws UnknownHostException {
+        var grpcOutput = this.server().getPeersInfo(Empty.newBuilder().build());
+        return PeerInfo.parseToList(grpcOutput);
     }
 
     /**
