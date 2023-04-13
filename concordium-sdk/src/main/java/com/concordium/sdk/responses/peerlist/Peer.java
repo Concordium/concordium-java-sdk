@@ -4,6 +4,7 @@ import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Represents the parsed form of {@link ConcordiumP2PRpc.PeerElement}
  */
-@Builder
+@SuperBuilder
 @Getter
 @ToString
 @EqualsAndHashCode
