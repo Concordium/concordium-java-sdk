@@ -10,7 +10,7 @@ import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
-import com.concordium.sdk.responses.nodeinfo.NodeInfo;
+import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.BlockItem;
 import io.grpc.CallCredentials;
@@ -176,6 +176,15 @@ public final class ClientV2 {
     }
 
     /**
+     * Retrieves various information about the node
+     * @return {@link NodeInfo} containing various information about the node
+     */
+    public NodeInfo getNodeInfo() {
+        var grpcOutput = this.server().getNodeInfo(Empty.newBuilder().build());
+        return NodeInfo.parse(grpcOutput);
+    }
+
+    /**
      * Get a {@link QueriesGrpc.QueriesBlockingStub} with a timeout
      * The timeout is the one specified in via the {@link Connection} object used to
      * initialize `this`.
@@ -194,15 +203,5 @@ public final class ClientV2 {
      */
     private QueriesGrpc.QueriesBlockingStub server(int timeoutMillis) {
         return this.blockingStub.withDeadlineAfter(timeoutMillis, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     *  Gets various node information
-     *
-     * @return Parsed {@link NodeInfo}
-     */
-    public NodeInfo getNodeInfo() {
-        var grpcOutput = this.server().getNodeInfo(Empty.newBuilder().build());
-        return to(grpcOutput);
     }
 }

@@ -2,13 +2,11 @@ package com.concordium.sdk.responses.nodeinfov2;
 
 import com.concordium.grpc.v2.NodeInfo;
 import com.concordium.sdk.responses.AccountIndex;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.val;
-import lombok.var;
+import lombok.*;
 
 @Getter
 @Builder
+@EqualsAndHashCode
 public class BakerConsensusInfo {
 
     /**

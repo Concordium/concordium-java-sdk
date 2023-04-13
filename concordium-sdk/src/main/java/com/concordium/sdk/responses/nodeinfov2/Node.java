@@ -3,10 +3,12 @@ package com.concordium.sdk.responses.nodeinfov2;
 import com.concordium.grpc.v2.NodeInfo;
 import com.concordium.sdk.responses.nodeinfo.ConsensusState;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @Builder
+@EqualsAndHashCode
 public class Node {
 
     /**

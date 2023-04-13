@@ -12,6 +12,7 @@ import static com.concordium.sdk.ClientV2MapperExtensions.toZonedDateTime;
 
 @EqualsAndHashCode
 @Builder
+@ToString
 public class NodeInfo {
 
     /**
@@ -94,6 +95,5 @@ public class NodeInfo {
                 .networkInfo(NetworkInfo.parse(nodeInfo.getNetworkInfo()))
                 .peerType((nodeInfo.hasNode() ? PeerType.NODE : PeerType.BOOTSTRAPPER));
     }
-
 
 }
