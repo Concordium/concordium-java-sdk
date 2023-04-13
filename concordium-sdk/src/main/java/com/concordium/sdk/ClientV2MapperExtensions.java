@@ -67,7 +67,7 @@ import static com.google.common.collect.ImmutableList.copyOf;
 /**
  * Object Mapping Extensions. Maps from GRPC types to client types and vice versa.
  */
-public interface ClientV2MapperExtensions {
+interface ClientV2MapperExtensions {
     double HUNDRED_THOUSAND = 100_000D;
 
     static com.concordium.grpc.v2.BlockHashInput to(final BlockHashInput input) {
@@ -786,5 +786,32 @@ public interface ClientV2MapperExtensions {
     static java.time.Duration toDuration(Duration duration) {
         return java.time.Duration.ofMillis(duration.getValue());
     }
+
+
+    static Hash to(StateHash stateHash) {
+        return Hash.from(stateHash.getValue().toByteArray());
+    }
+
+    static com.concordium.sdk.responses.blockinfo.BlockInfo to(BlockInfo blockInfo) {
+        return com.concordium.sdk.responses.blockinfo.BlockInfo.builder()
+                .blockHash(to(blockInfo.getHash()))
+                .blockHeight(to(blockInfo.getHeight()))
+                .transactionEnergyCost((int) blockInfo.getTransactionsEnergyCost().getValue())
+                .blockBaker(to((int) blockInfo.getBaker().getValue()).ordinal())
+                .blockStateHash(to(blockInfo.getStateHash()))
+                .blockSlotTime(to(to(blockInfo.getSlotTime())))
+                .blockParent(to(blockInfo.getParentBlock()))
+                .blockReceiveTime(to(to(blockInfo.getReceiveTime())))
+                .genesisIndex(blockInfo.getGenesisIndex().getValue())
+                .blockSlot((int) blockInfo.getSlotNumber().getValue())
+                .finalized(blockInfo.getFinalized())
+                .eraBlockHeight((int) blockInfo.getEraBlockHeight().getValue())
+                .blockLastFinalized(to(blockInfo.getLastFinalizedBlock()))
+                .transactionsSize(blockInfo.getTransactionsSize())
+                .transactionCount(blockInfo.getTransactionCount())
+                .blockArriveTime(to(to(blockInfo.getArriveTime())))
+                .build();
+    }
+
 
 }
