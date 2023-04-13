@@ -7,6 +7,7 @@ import lombok.*;
 @Getter
 @Builder
 @EqualsAndHashCode
+@ToString
 public class BakerConsensusInfo {
 
     /**

@@ -5,6 +5,7 @@ import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 
 /**
@@ -13,6 +14,7 @@ import lombok.Getter;
 @Builder
 @Getter
 @EqualsAndHashCode
+@ToString
 public class NetworkInfo {
 
     /**
