@@ -5,10 +5,10 @@ import com.concordium.sdk.responses.nodeinfo.PeerType;
 import lombok.*;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
-import static com.concordium.sdk.ClientV2MapperExtensions.toDuration;
-import static com.concordium.sdk.ClientV2MapperExtensions.toZonedDateTime;
+import static com.concordium.sdk.Constants.UTC_ZONE;
 
 @EqualsAndHashCode
 @Builder
@@ -90,8 +90,8 @@ public class NodeInfo {
     private static NodeInfoBuilder getStandardNodeInfoBuilder(com.concordium.grpc.v2.NodeInfo nodeInfo) {
         return NodeInfo.builder()
                 .peerVersion(nodeInfo.getPeerVersion())
-                .localTime(toZonedDateTime(nodeInfo.getLocalTime()))
-                .peerUptime(toDuration(nodeInfo.getPeerUptime()))
+                .localTime(Instant.EPOCH.plusSeconds(nodeInfo.getLocalTime().getValue()).atZone(UTC_ZONE))
+                .peerUptime(java.time.Duration.ofMillis(nodeInfo.getPeerUptime().getValue()))
                 .networkInfo(NetworkInfo.parse(nodeInfo.getNetworkInfo()))
                 .peerType((nodeInfo.hasNode() ? PeerType.NODE : PeerType.BOOTSTRAPPER));
     }
