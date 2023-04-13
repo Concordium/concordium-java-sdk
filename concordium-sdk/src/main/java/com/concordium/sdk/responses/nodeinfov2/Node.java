@@ -9,14 +9,22 @@ import lombok.Getter;
 @Builder
 public class Node {
 
+    /**
+     * Consensus Status of the node
+     */
     private ConsensusState consensusState;
 
     /**
-     * Null if consensusState isn't ACTIVE
+     * Consensus info for a node configured with baker keys
+     * Null if {@link ConsensusState} of the node is not {@link ConsensusState#ACTIVE}
      */
     private BakerConsensusInfo bakerInfo;
 
-    //TODO comment also for helper methods
+    /**
+     * Parses {@link NodeInfo} to {@link Node}
+     * @param nodeInfo {@link NodeInfo} returned from the Grpc API
+     * @return Parsed {@link Node}
+     */
     public static Node parseNodeInfo(NodeInfo nodeInfo) {
 
         // Node is a BOOTSTRAPPER
@@ -31,6 +39,10 @@ public class Node {
 
     }
 
+    /**
+     * Helper method for building BOOTSTRAPPER node
+     * @return {@link Node} not running consensus
+     */
     private static Node buildBootstrapperNode() {
         return Node.builder()
                 .consensusState(ConsensusState.NOT_RUNNING)
@@ -38,6 +50,10 @@ public class Node {
                 .build();
     }
 
+    /**
+     * Helper method for building node not configured with baker keys
+     * @return {@link Node} not configured with baker keys
+     */
     private static Node buildPassiveNode() {
         return Node.builder()
                 .consensusState(ConsensusState.PASSIVE)
@@ -45,6 +61,11 @@ public class Node {
                 .build();
     }
 
+    /**
+     * Helper method for building node configured with baker keys
+     * @param nodeInfo {@link NodeInfo} returned from the Grpc API
+     * @return {@link Node} configured with baker keys
+     */
     private static Node buildActiveNode(NodeInfo nodeInfo) {
         return Node.builder()
                 .consensusState(ConsensusState.ACTIVE)

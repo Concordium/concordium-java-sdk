@@ -15,10 +15,29 @@ import lombok.Getter;
 @EqualsAndHashCode
 public class NetworkInfo {
 
+    /**
+     * The node id
+     */
     private final String nodeID;
+
+    /**
+     * Total number of packets sent by the node
+     */
     private final UInt64 peerTotalSent;
-    private final UInt64 peerTotalRecieved;
+
+    /**
+     * Total number of packets received by the node
+     */
+    private final UInt64 peerTotalReceived;
+
+    /**
+     * Average outbound throughput in bytes per second
+     */
     private final UInt64 avgBpsIn;
+
+    /**
+     * Average inbound throughput in bytes per second
+     */
     private final UInt64 avgBpsOut;
 
     /**
@@ -29,7 +48,7 @@ public class NetworkInfo {
     public static NetworkInfo parse(NodeInfo.NetworkInfo networkInfo) {
         return NetworkInfo.builder().nodeID(networkInfo.getNodeId().getValue())
                 .peerTotalSent(UInt64.from(networkInfo.getPeerTotalSent()))
-                .peerTotalRecieved(UInt64.from(networkInfo.getPeerTotalReceived()))
+                .peerTotalReceived(UInt64.from(networkInfo.getPeerTotalReceived()))
                 .avgBpsIn(UInt64.from(networkInfo.getAvgBpsIn()))
                 .avgBpsOut(UInt64.from(networkInfo.getAvgBpsOut())).build();
     }

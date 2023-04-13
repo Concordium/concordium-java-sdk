@@ -11,11 +11,23 @@ import lombok.var;
 @Builder
 public class BakerConsensusInfo {
 
-    private BakerConsensusStatus status;
+    /**
+     * Status of the baker configured node
+     */
+    private BakingCommitteeStatus status;
 
+    /**
+     * Baker ID of the node
+     */
     private AccountIndex bakerId;
 
-    //TODO comment (kan kun parses for nodeInfo med ACTIVE node)
+
+    /**
+     * Parses {@link com.concordium.grpc.v2.NodeInfo.BakerConsensusInfo} to {@link BakerConsensusInfo}
+     * Only possible for NodeInfo with ACTIVE node
+     * @param bakerConsensusInfo {@link com.concordium.grpc.v2.NodeInfo.BakerConsensusInfo} returned from the Grpc API
+     * @return Parsed {@link BakerConsensusInfo}
+     */
     public static BakerConsensusInfo parse(NodeInfo.BakerConsensusInfo bakerConsensusInfo) {
 
         AccountIndex bakerId = AccountIndex.from(bakerConsensusInfo.getBakerId().getValue());
@@ -32,20 +44,26 @@ public class BakerConsensusInfo {
         }
 
         //If node is not finalizer it must be baker
-        return (isActiveFinalizer ? builder.status(BakerConsensusStatus.ACTIVE_FINALIZER).build() : builder.status(BakerConsensusStatus.ACTIVE_BAKER).build());
+        return (isActiveFinalizer ? builder.status(BakingCommitteeStatus.ACTIVE_FINALIZER).build() : builder.status(BakingCommitteeStatus.ACTIVE_BAKER).build());
     }
 
+    /**
+     * Helper methhod for the parse method. Creates {@link BakerConsensusInfo} that is not active in the committee
+     * @param bakerConsensusInfo {@link com.concordium.grpc.v2.NodeInfo.BakerConsensusInfo} returned from the Grpc API
+     * @param builder {@link BakerConsensusInfoBuilder} with bakerId configured
+     * @return {@link BakerConsensusInfo} for baker node not active in the committee
+     */
     private static BakerConsensusInfo buildPassiveBakerConsensusInfo(NodeInfo.BakerConsensusInfo bakerConsensusInfo, BakerConsensusInfoBuilder builder) {
         val status = bakerConsensusInfo.getPassiveCommitteeInfo();
         switch (status) {
             case NOT_IN_COMMITTEE:
-                builder = builder.status(BakerConsensusStatus.NOT_IN_COMMITTEE);
+                builder = builder.status(BakingCommitteeStatus.NOT_IN_COMMITTEE);
                 break;
             case ADDED_BUT_NOT_ACTIVE_IN_COMMITTEE:
-                builder = builder.status(BakerConsensusStatus.ADDED_BUT_NOT_ACTIVE_IN_COMMITTEE);
+                builder = builder.status(BakingCommitteeStatus.ADDED_BUT_NOT_ACTIVE_IN_COMMITTEE);
                 break;
             case ADDED_BUT_WRONG_KEYS:
-                builder = builder.status(BakerConsensusStatus.ADDED_BUT_WRONG_KEYS);
+                builder = builder.status(BakingCommitteeStatus.ADDED_BUT_WRONG_KEYS);
                 break;
         }
         return builder.build();
