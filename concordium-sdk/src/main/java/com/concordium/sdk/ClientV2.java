@@ -3,17 +3,22 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.AccountInfoRequest;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
+import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Transaction;
+import com.concordium.sdk.transactions.BlockItem;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
+import io.grpc.StatusRuntimeException;
 import lombok.val;
 import lombok.var;
 
@@ -133,9 +138,56 @@ public final class ClientV2 {
     }
 
     /**
+     * Gets the Block Items for a Particular Input Block.
+     * Block Item represents transactions which are part of a block.
+     * Type of Block Items currently supported are
+     * <br/> {@link com.concordium.sdk.transactions.BlockItemType#ACCOUNT_TRANSACTION}
+     * <br/> {@link com.concordium.sdk.transactions.BlockItemType#CREDENTIAL_DEPLOYMENT}
+     * <br/> {@link com.concordium.sdk.transactions.BlockItemType#UPDATE_INSTRUCTION}
+     *
+     * @param input Pointer to the Block.
+     * @return
+     */
+    public Iterator<BlockItem> getBlockItems(final BlockHashInput input) {
+        var grpcOutput = this.server().getBlockItems(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Retrieve the Consensus Info that contains the summary of the current state
+     * of the chain from the perspective of the node.
+     *
+     * @return Concensus Status ({@link ConsensusStatus})
+     */
+    public ConsensusStatus getConsensusInfo() {
+        var grpcOutput = this.server()
+                .getConsensusInfo(Empty.newBuilder().build());
+        return to(grpcOutput);
+    }
+
+    /**
+     * Retrieves a {@link BlockInfo}
+     *
+     * @param blockHashInput the block {@link BlockHashInput} to query.
+     * @return A {@link BlockInfo} for the block
+     * @throws BlockNotFoundException If the block was not found.
+     */
+    public BlockInfo getBlockInfo(BlockHashInput blockHashInput) throws BlockNotFoundException {
+        try {
+            return to(this.server()
+                    .getBlockInfo(to(blockHashInput)));
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHashInput.getBlockHash());
+        }
+    }
+
+
+    /**
      * Retrieves the next {@link AccountNonce} for an account.
      * This is the {@link AccountNonce} to use for future transactions
      * E.g. when using {@link Client#sendTransaction(Transaction)}
+     * When this function is queried with a non existent account it will report the next available account nonce to be 1 and all transactions as finalized.
      *
      * @param address The {@link AccountAddress}
      * @return The next {@link AccountNonce}

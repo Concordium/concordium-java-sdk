@@ -23,7 +23,7 @@ public final class UpdateCredentialKeys extends Payload {
     private final CredentialRegistrationId credentialRegistrationID;
 
     /**
-     *  The new public keys
+     * The new public keys
      */
     private final CredentialPublicKeys keys;
 
@@ -49,20 +49,26 @@ public final class UpdateCredentialKeys extends Payload {
     }
 
     @Override
-    byte[] getBytes() {
-        val credentialRegistrationIdBytes = credentialRegistrationID.getRegId();
-        val keysBytes = keys.getBytes();
-        val buffer = ByteBuffer.allocate(TransactionType.BYTES + credentialRegistrationIdBytes.length + keysBytes.length);
-        buffer.put(TransactionType.UPDATE_CREDENTIAL_KEYS.getValue());
-        buffer.put(credentialRegistrationIdBytes);
-        buffer.put(keysBytes);
-        return buffer.array();
-    }
-    @Override
     UInt64 getTransactionTypeCost() {
         val numCredKeys = keys.getKeys().size();
         val maxEnergyCost = UInt64.from(500 * numExistingCredentials.getValue() + 100 * numCredKeys);
         return maxEnergyCost;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.UPDATE_CREDENTIAL_KEYS;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        val credentialRegistrationIdBytes = credentialRegistrationID.getRegId();
+        val keysBytes = keys.getBytes();
+        val buffer = ByteBuffer.allocate(credentialRegistrationIdBytes.length + keysBytes.length);
+        buffer.put(credentialRegistrationIdBytes);
+        buffer.put(keysBytes);
+        
+        return buffer.array();
     }
 
     static UpdateCredentialKeys createNew(CredentialRegistrationId credentialRegistrationID, CredentialPublicKeys keys, UInt16 numExistingCredentials) {

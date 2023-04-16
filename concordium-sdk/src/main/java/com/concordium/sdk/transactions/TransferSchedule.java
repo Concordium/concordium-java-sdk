@@ -17,6 +17,7 @@ import java.nio.ByteBuffer;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class TransferSchedule extends Payload {
+    static final int SCHEDULE_LENGTH_BYTES = 1;
     /**
      * The account address of the recepient.
      */
@@ -46,28 +47,23 @@ public class TransferSchedule extends Payload {
     /**
      * This function returns the transaction type of the transaction.
      */
-    public byte getTransactionType() {
-        return TransactionType.TRANSFER_WITH_SCHEDULE.getValue();
+    public TransactionType getTransactionType() {
+        return TransactionType.TRANSFER_WITH_SCHEDULE;
     }
 
-    /**
-     * @return The byte array of the transaction.
-     */
     @Override
-    byte[] getBytes() {
+    public byte[] getTransactionPayloadBytes() {
         val scheduleLen = amount.length;
         val scheduleBufferSize = UInt64.BYTES * scheduleLen * 2;
 
-        val buffer = ByteBuffer.allocate(TransactionType.BYTES + TransactionType.BYTES + AccountAddress.BYTES + scheduleBufferSize);
-        buffer.put(this.getTransactionType());
-
+        val buffer = ByteBuffer.allocate(SCHEDULE_LENGTH_BYTES + AccountAddress.BYTES + scheduleBufferSize);
         buffer.put(to.getBytes());
-
         buffer.put((byte) scheduleLen);
         for (int i = 0; i < scheduleLen; i++) {
             val schedule_buffer = amount[i].getBytes();
             buffer.put(schedule_buffer);
         }
+
         return buffer.array();
     }
 

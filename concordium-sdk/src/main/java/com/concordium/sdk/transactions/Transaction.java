@@ -1,15 +1,32 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.crypto.SHA256;
 
-import java.util.Objects;
+import static com.google.common.primitives.Bytes.concat;
 
 public interface Transaction {
+    int DEFAULT_NETWORK_ID = 100;
+    // todo: in practice this is true, but in the future this could different as the version is variable length encoded.
+    int VERSION_SIZE = 1;
+    int VERSION = 0;
+
     /**
      * Returns serialized {@link Transaction}
      * This is the raw bytes that is sent to the node.
+     * It is a concatenation of the Transaction Version {@link Transaction#VERSION} + {@link Transaction#getBytes()}
      *
      * @return The serialized {@link Transaction}
+     */
+    default byte[] getVersionedBytes() {
+        return concat(new byte[]{(byte) VERSION}, getBytes());
+    }
+
+    /**
+     * Transaction serialized as bytes.
+     * How a transaction is serialized to bytes depends on type of the transaction. See {@link BlockItemType}.
+     * <p>These bytes are not sent directly to the node. For that {@link Transaction#getVersionedBytes()} is used.</p>
+     *
+     * @return Serialized bytes of this Transaction.
      */
     byte[] getBytes();
 
@@ -18,7 +35,9 @@ public interface Transaction {
      *
      * @return the hash
      */
-    Hash getHash();
+    default Hash getHash() {
+        return Hash.from(SHA256.hash(getBytes()));
+    }
 
     /**
      * The network id.
@@ -26,38 +45,8 @@ public interface Transaction {
      *
      * @return the network id.
      */
-    int getNetworkId();
-
-    int DEFAULT_NETWORK_ID = 100;
-
-
-    static void verifyTransferInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, AccountAddress receiver, CCDAmount amount, TransactionSigner signer) throws TransactionCreationException {
-        verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
-
-        if (Objects.isNull(receiver)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Receiver cannot be null"));
-        }
-        if (Objects.isNull(amount)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Amount cannot be null"));
-        }
+    default int getNetworkId() {
+        return DEFAULT_NETWORK_ID;
     }
 
-    static void verifyAccountTransactionHeaders(
-            AccountAddress sender,
-            AccountNonce nonce,
-            Expiry expiry,
-            TransactionSigner signer) throws TransactionCreationException {
-        if (Objects.isNull(sender)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Sender cannot be null"));
-        }
-        if (Objects.isNull(nonce)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("AccountNonce cannot be null"));
-        }
-        if (Objects.isNull(expiry)) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Expiry cannot be null"));
-        }
-        if (Objects.isNull(signer) || signer.isEmpty()) {
-            throw TransactionCreationException.from(new IllegalArgumentException("Signer cannot be null or empty"));
-        }
-    }
 }

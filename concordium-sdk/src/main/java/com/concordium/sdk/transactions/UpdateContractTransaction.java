@@ -3,110 +3,81 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt64;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.val;
-
-import java.util.Objects;
+import lombok.*;
 
 /**
  * Construct a transaction to update a smart contract instance.
  */
 @Getter
-public class UpdateContractTransaction extends AbstractTransaction {
-    /**
-     * The payload for updating a smart contract.
-     */
-    private final UpdateContractPayload payload;
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class UpdateContractTransaction extends AbstractAccountTransaction {
+    private UpdateContractTransaction(
+            @NonNull final UpdateContractPayload payload,
+            @NonNull final AccountAddress sender,
+            @NonNull final AccountNonce nonce,
+            @NonNull final Expiry expiry,
+            @NonNull final TransactionSigner signer,
+            @NonNull final UInt64 maxEnergyCost) {
+        super(sender, nonce, expiry, signer, UpdateContract.createNew(payload, maxEnergyCost));
+    }
 
-    /**
-     * Account Address of the sender.
-     */
-    private final AccountAddress sender;
-    /**
-     * The senders account next available nonce.
-     */
-    private final AccountNonce nonce;
-    /**
-     * Indicates when the transaction should expire.
-     */
-    private final Expiry expiry;
-    /**
-     * A signer object that is used to sign the transaction.
-     */
-    private final TransactionSigner signer;
-
-    /**
-     * Maximum energy **allowed** for the transaction to use.
-     */
-    private final UInt64 maxEnergyCost;
-    private BlockItem blockItem;
-
-    @Builder
-    public UpdateContractTransaction(UpdateContractPayload payload,
-                                     AccountAddress sender,
-                                     AccountNonce nonce,
-                                     Expiry expiry,
-                                     TransactionSigner signer,
-                                     BlockItem blockItem,
-                                     UInt64 maxEnergyCost) throws TransactionCreationException  {
-        this.payload = payload;
-        this.sender = sender;
-        this.nonce = nonce;
-        this.expiry = expiry;
-        this.signer = signer;
-        this.blockItem = blockItem;
-        this.maxEnergyCost = maxEnergyCost;
+    private UpdateContractTransaction(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull UpdateContractPayload payload) {
+        super(header,
+                signature,
+                TransactionType.DEPLOY_MODULE,
+                payload.getBytes());
     }
 
     /**
-     * This function returns a new instance of the UpdateContractTransactionBuilder class.
+     * Creates a new instance of {@link UpdateContractTransaction}.
+     *
+     * @param payload       {@link UpdateContractPayload} of the transaction.
+     * @param sender        Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce         Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry        {@link Expiry} of this transaction.
+     * @param signer        {@link Signer} of this transaction.
+     * @param maxEnergyCost Allowed energy of the transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
      */
-    public static UpdateContractTransactionBuilder builder() {
-        return new CustomBuilder();
-    }
-
-    /**
-     * This function returns the block item associated with this block.
-     */
-    @Override
-    public BlockItem getBlockItem() {
-        return blockItem;
-    }
-
-    private static class CustomBuilder extends UpdateContractTransactionBuilder {
-        /**
-         * > The function verifies the input parameters and then calls the updateSmartContractInstance function to update
-         * the smart contract instance
-         *
-         * @return A new UpdateContractTransaction object.
-         */
-        @Override
-        public UpdateContractTransaction build() throws TransactionCreationException {
-            val transaction = super.build();
-            verifyUpdateContractInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.signer, transaction.payload);
-            transaction.blockItem = updateSmartContractInstance(transaction).toBlockItem();
-            return transaction;
+    @Builder(builderClassName = "UpdateContractTransactionBuilder")
+    public static UpdateContractTransaction from(
+            final UpdateContractPayload payload,
+            final AccountAddress sender,
+            final AccountNonce nonce,
+            final Expiry expiry,
+            final TransactionSigner signer,
+            final UInt64 maxEnergyCost) {
+        try {
+            return new UpdateContractTransaction(payload, sender, nonce, expiry, signer, maxEnergyCost);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
+    }
 
-
-        private Payload updateSmartContractInstance(UpdateContractTransaction transaction) throws TransactionCreationException {
-            return UpdateContract.createNew(
-                            transaction.payload,
-                            transaction.maxEnergyCost).
-                    withHeader(TransactionHeader.builder()
-                            .sender(transaction.sender)
-                            .accountNonce(transaction.nonce.getNonce())
-                            .expiry(transaction.expiry.getValue())
-                            .build())
-                    .signWith(transaction.signer);
-        }
-
-        static void verifyUpdateContractInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, UpdateContractPayload payload) throws TransactionCreationException {
-            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
-            if (Objects.isNull(payload)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
-            }
+    /**
+     * Creates a new instance of {@link UpdateContractTransaction}.
+     * Using {@link TransactionHeader}, {@link TransactionSignature} and Payload {@link UpdateContractPayload}.
+     *
+     * @param header    {@link TransactionHeader}.
+     * @param signature {@link TransactionSignature}.
+     * @param payload   {@link UpdateContractPayload} Payload for this transaction.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "UpdateContractBlockItemBuilder")
+    public static UpdateContractTransaction from(
+            final TransactionHeader header,
+            final TransactionSignature signature,
+            final UpdateContractPayload payload) {
+        try {
+            return new UpdateContractTransaction(header, signature, payload);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
     }
 }

@@ -5,9 +5,6 @@ import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.val;
-
-import java.nio.ByteBuffer;
 
 /**
  * Transfer from public to encrypted balance of the sender account.
@@ -34,24 +31,19 @@ public final class TransferToEncrypted extends Payload {
         return PayloadType.TRANSFER_TO_ENCRYPTED;
     }
 
-    /**
-     * The bytes of a transfer to encrypted transaction are the bytes of the transaction type followed by the bytes of the
-     * amount.
-     *
-     * @return The byte array of the transaction type and the amount.
-     */
-    @Override
-    byte[] getBytes() {
-        val amount_bytes = amount.getBytes();
-        val buffer = ByteBuffer.allocate(TransactionType.BYTES + amount_bytes.length);
-        buffer.put(TransactionType.TRANSFER_TO_ENCRYPTED.getValue());
-        buffer.put(amount_bytes);
-        return buffer.array();
-    }
-
     @Override
     UInt64 getTransactionTypeCost() {
         return TransactionTypeCost.TRANSFER_TO_ENCRYPTED.getValue();
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.TRANSFER_TO_ENCRYPTED;
+    }
+
+    @Override
+    public byte[] getTransactionPayloadBytes() {
+        return amount.getBytes();
     }
 
     static TransferToEncrypted createNew(CCDAmount amount) {

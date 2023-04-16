@@ -1,7 +1,9 @@
 package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.types.UInt32;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
@@ -13,7 +15,7 @@ import java.nio.ByteBuffer;
  * V1 contracts allows for larger state and module size (i.e. the actual code deployed on chain)
  * and they also support _synchronized_ calls between contracts.
  */
-
+@ToString
 public enum WasmModuleVersion {
 
     /**

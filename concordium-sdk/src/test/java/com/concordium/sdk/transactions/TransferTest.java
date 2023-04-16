@@ -38,7 +38,7 @@ public class TransferTest {
         assertEquals(41, transfer.getBytes().length);
         assertEquals(601, transfer.header.getMaxEnergyCost().getValue());
         assertEquals("60afc40624ba9c9698efb5f49cae32810bce082b08bd55ca625d63f3e4dd56a2", Hex.encodeHexString(transfer.getDataToSign()));
-        val blockItem = transfer.toAccountTransaction().toBlockItem();
+        val blockItem = transfer.toAccountTransaction();
 
         val blockItemHash = blockItem.getHash();
         assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getBytes()));

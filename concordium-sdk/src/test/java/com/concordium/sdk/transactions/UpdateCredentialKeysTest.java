@@ -55,7 +55,7 @@ public class UpdateCredentialKeysTest {
         val transferSignData = transfer.getDataToSign();
         assertEquals("4bc4ba29186577608baabc97c1f9df9cc37014aaa66f0dc300b91540fe4a2098", Hex.encodeHexString(transferSignData));
 
-        val blockItem = transfer.toAccountTransaction().toBlockItem();
+        val blockItem = transfer.toAccountTransaction();
 
         val blockItemBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_UPDATE_CREDENTIAL_KEYS_BLOCK_ITEM_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));

@@ -12,23 +12,36 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 
 @EqualsAndHashCode
-public abstract class Payload {
+abstract class Payload {
     TransactionHeader header;
     TransactionSignature signature;
 
     PayloadType type;
 
     BlockItem toBlockItem() {
-        return BlockItem.from(new AccountTransaction(signature, header, this));
+        return new AccountTransaction(signature, header, this);
     }
 
     /**
      * Get the {@link PayloadType}
+     *
      * @return the type of the {@link Payload}
      */
     public abstract PayloadType getType();
 
-    abstract byte[] getBytes();
+    /**
+     * Get the bytes representation of the payload
+     *
+     * @return byte[]
+     */
+    final byte[] getBytes() {
+        val payloadBytes = getTransactionPayloadBytes();
+        val buffer = ByteBuffer.allocate(TransactionType.BYTES + payloadBytes.length);
+        buffer.put(getTransactionType().getValue());
+        buffer.put(payloadBytes);
+
+        return buffer.array();
+    }
 
     abstract UInt64 getTransactionTypeCost();
 
@@ -42,7 +55,14 @@ public abstract class Payload {
         return this;
     }
 
-    final Payload signWith(TransactionSigner signer) throws TransactionCreationException {
+    /**
+     * Sets the signature and energy cost. Uses provided {@link TransactionSignature}.
+     *
+     * @param signer {@link TransactionSigner}
+     * @return {@link Payload} with {@link Payload#signature} and {@link Payload#header} energy cost set.
+     * @throws TransactionCreationException When there is a {@link ED25519Exception} while signing.
+     */
+    final Payload signWith(TransactionSigner signer) {
         if (Objects.isNull(this.header)) {
             throw TransactionCreationException.from(new IllegalStateException("TransactionHeader must be set before signing"));
         }
@@ -87,6 +107,10 @@ public abstract class Payload {
                 CONSTANT_B * (TRANSACTION_HEADER_SIZE + payloadSize)
                 + transactionSpecificCost.getValue());
     }
+
+    public abstract TransactionType getTransactionType();
+
+    public abstract byte[] getTransactionPayloadBytes();
 
     public enum PayloadType {
         TRANSFER,

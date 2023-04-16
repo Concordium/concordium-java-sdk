@@ -2,64 +2,52 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.val;
+import lombok.*;
 
 @Getter
-public class TransferTransaction extends AbstractTransaction {
-    private final AccountAddress sender;
-    private final AccountAddress receiver;
-    private final CCDAmount amount;
-    private final AccountNonce nonce;
-    private final Expiry expiry;
-    private final TransactionSigner signer;
-
-    private BlockItem blockItem;
-
-    @Builder
-    public TransferTransaction(AccountAddress sender,
-                               AccountAddress receiver,
-                               CCDAmount amount,
-                               AccountNonce nonce,
-                               Expiry expiry,
-                               TransactionSigner signer) throws TransactionCreationException {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.amount = amount;
-        this.nonce = nonce;
-        this.expiry = expiry;
-        this.signer = signer;
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class TransferTransaction extends AbstractAccountTransaction {
+    private TransferTransaction(
+            @NonNull final AccountAddress sender,
+            @NonNull final AccountAddress receiver,
+            @NonNull final CCDAmount amount,
+            @NonNull final AccountNonce nonce,
+            @NonNull final Expiry expiry,
+            @NonNull final TransactionSigner signer) {
+        super(sender, nonce, expiry, signer, Transfer.createNew(receiver, amount));
     }
 
-    public static TransferTransactionBuilder builder() {
-        return new CustomBuilder();
+    private TransferTransaction(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull TransferPayload payload) {
+        super(header, signature, TransactionType.SIMPLE_TRANSFER, payload.getBytes());
     }
 
-    @Override
-    public BlockItem getBlockItem() {
-        return blockItem;
-    }
-
-    private static class CustomBuilder extends TransferTransaction.TransferTransactionBuilder {
-        @Override
-        public TransferTransaction build() throws TransactionCreationException {
-            val transaction = super.build();
-            Transaction.verifyTransferInput(transaction.sender, transaction.nonce, transaction.expiry, transaction.receiver, transaction.amount, transaction.signer);
-            transaction.blockItem = createSimpleTransfer(transaction).toBlockItem();
-            return transaction;
+    @Builder(builderClassName = "TransferTransactionBuilder")
+    public static TransferTransaction from(
+            final AccountAddress sender,
+            final AccountAddress receiver,
+            final CCDAmount amount,
+            final AccountNonce nonce,
+            final Expiry expiry,
+            final TransactionSigner signer) {
+        try {
+            return new TransferTransaction(sender, receiver, amount, nonce, expiry, signer);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
+    }
 
-        private Payload createSimpleTransfer(TransferTransaction transaction) throws TransactionCreationException {
-            return Transfer.createNew(
-                            transaction.receiver,
-                            transaction.amount).
-                    withHeader(TransactionHeader.builder()
-                            .sender(transaction.sender)
-                            .accountNonce(transaction.nonce.getNonce())
-                            .expiry(transaction.expiry.getValue())
-                            .build())
-                    .signWith(transaction.signer);
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "TransferBlockItemBuilder")
+    public static TransferTransaction from(final TransactionHeader header,
+                                           final TransactionSignature signature,
+                                           final TransferPayload payload) {
+        try {
+            return new TransferTransaction(header, signature, payload);
+        } catch (NullPointerException nullPointerException) {
+            throw TransactionCreationException.from(nullPointerException);
         }
     }
 }

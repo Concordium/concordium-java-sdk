@@ -25,7 +25,6 @@ public class DeployModuleTransactionTest {
     }
 
     @Test
-    @SneakyThrows
     public void testDeployModuleTransaction() {
         val transaction = DeployModuleTransaction
                 .builder()
@@ -40,7 +39,6 @@ public class DeployModuleTransactionTest {
     }
 
     @Test(expected = TransactionCreationException.class)
-    @SneakyThrows
     public void testDeployModuleTransactionWithoutSenderFails() {
         DeployModuleTransaction
                 .builder()
@@ -55,7 +53,6 @@ public class DeployModuleTransactionTest {
 
 
     @Test(expected = TransactionCreationException.class)
-    @SneakyThrows
     public void testDeployModuleTransactionWithoutNonceFails() {
         DeployModuleTransaction
                 .builder()
@@ -71,7 +68,6 @@ public class DeployModuleTransactionTest {
 
 
     @Test(expected = TransactionCreationException.class)
-    @SneakyThrows
     public void testDeployModuleTransactionWithoutExpiryFails() {
         DeployModuleTransaction
                 .builder()
@@ -86,7 +82,6 @@ public class DeployModuleTransactionTest {
 
 
     @Test(expected = TransactionCreationException.class)
-    @SneakyThrows
     public void testDeployModuleTransactionWithoutSignerShouldFail() {
         DeployModuleTransaction
                 .builder()
@@ -100,7 +95,6 @@ public class DeployModuleTransactionTest {
     }
 
     @Test(expected = TransactionCreationException.class)
-    @SneakyThrows
     public void testDeployModuleTransactionWithInvalidSignerFails() {
         DeployModuleTransaction
                 .builder()

@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 import lombok.val;
-import org.apache.commons.codec.DecoderException;
 
 import java.nio.ByteBuffer;
 
@@ -37,7 +36,7 @@ public class EncryptedAmountTransferData {
     private final SecToPubAmountTransferProof proof;
 
 
-    public byte[] getBytes() throws DecoderException {
+    public byte[] getBytes() {
         val remainingAmountBytes = this.remainingAmount.getBytes();
         val transferAmountBytes = this.transferAmount.getBytes();
         val proofBytes = this.proof.getBytes();

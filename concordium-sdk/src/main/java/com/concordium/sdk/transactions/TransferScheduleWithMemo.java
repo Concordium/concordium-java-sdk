@@ -9,6 +9,8 @@ import lombok.val;
 
 import java.nio.ByteBuffer;
 
+import static com.concordium.sdk.transactions.TransferSchedule.SCHEDULE_LENGTH_BYTES;
+
 /**
  * Transfer an amount with schedule and memo.
  */
@@ -51,23 +53,21 @@ public final class TransferScheduleWithMemo extends Payload {
     /**
      * This function returns the transaction type of this transaction.
      */
-    public byte getTransactionType() {
-        return TransactionType.TRANSFER_WITH_SCHEDULE_AND_MEMO.getValue();
+    public TransactionType getTransactionType() {
+        return TransactionType.TRANSFER_WITH_SCHEDULE_AND_MEMO;
     }
 
-    /**
-     * @return The byte array of the transaction.
-     */
     @Override
-    byte[] getBytes() {
+    public byte[] getTransactionPayloadBytes() {
         val schedule_len = amount.length;
         val schedule_buffer_size = UInt64.BYTES * schedule_len * 2;
-        val buffer = ByteBuffer.allocate(TransactionType.BYTES + TransactionType.BYTES + AccountAddress.BYTES + memo.getLength() + schedule_buffer_size);
-
-        buffer.put(this.getTransactionType());
+        val buffer = ByteBuffer.allocate(
+                AccountAddress.BYTES
+                        + memo.getLength()
+                        + SCHEDULE_LENGTH_BYTES
+                        + schedule_buffer_size);
         buffer.put(to.getBytes());
         buffer.put(memo.getBytes());
-
         buffer.put((byte) schedule_len);
         for (int i = 0; i < schedule_len; i++) {
             val schedule_buffer = amount[i].getBytes();

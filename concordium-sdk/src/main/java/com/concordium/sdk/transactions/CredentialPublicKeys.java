@@ -50,7 +50,6 @@ public class CredentialPublicKeys {
         return buffer.array();
     }
 
-    @SneakyThrows
     public byte[] getBytes() {
         val keysLenBytes = keys.keySet().size();
         int keyBufferSize = TransactionType.BYTES;

@@ -4,111 +4,87 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.val;
-
-import java.util.Objects;
+import lombok.NonNull;
 
 
 /**
  * Construct a transaction to initialise a smart contract.
  */
 @Getter
-public class InitContractTransaction extends AbstractTransaction {
-
-    /**
-     * Payload to initialize a smart contract.
-     */
-    private final InitContractPayload payload;
-
-    /**
-     * Account Address of the sender.
-     */
-    private final AccountAddress sender;
-    /**
-     * The senders account next available nonce.
-     */
-    private final AccountNonce nonce;
-    /**
-     * Indicates when the transaction should expire.
-     */
-    private final Expiry expiry;
-    /**
-     * A signer object that is used to sign the transaction.
-     */
-    private final TransactionSigner signer;
-
-    /**
-     * Maximum energy **allowed** for the transaction to use.
-     */
-    private final UInt64 maxEnergyCost;
-    private BlockItem blockItem;
+@EqualsAndHashCode(callSuper = true)
+public class InitContractTransaction extends AbstractAccountTransaction {
 
     /**
      * A constructor of {@link InitContractTransaction} class.
      */
-    @Builder
-    public InitContractTransaction(InitContractPayload payload,
-                                   AccountAddress sender,
-                                   AccountNonce nonce,
-                                   Expiry expiry,
-                                   TransactionSigner signer,
-                                   UInt64 maxEnergyCost) throws TransactionCreationException {
-        this.payload = payload;
-        this.sender = sender;
-        this.nonce = nonce;
-        this.expiry = expiry;
-        this.signer = signer;
-        this.maxEnergyCost = maxEnergyCost;
+    private InitContractTransaction(
+            @NonNull final InitContractPayload payload,
+            @NonNull final AccountAddress sender,
+            @NonNull final AccountNonce nonce,
+            @NonNull final Expiry expiry,
+            @NonNull final TransactionSigner signer,
+            @NonNull final UInt64 maxEnergyCost) {
+        super(sender, nonce, expiry, signer, InitContract.createNew(payload, maxEnergyCost));
+    }
+
+    private InitContractTransaction(
+            final @NonNull TransactionHeader header,
+            final @NonNull TransactionSignature signature,
+            final @NonNull InitContractPayload payload) {
+        super(header,
+                signature,
+                TransactionType.INITIALIZE_SMART_CONTRACT_INSTANCE,
+                payload.getBytes());
     }
 
     /**
-     * @return A new instance of the {@link InitContractTransaction}  class.
+     * @param payload       {@link InitContractPayload} for the transaction
+     * @param sender        Sender ({@link AccountAddress}) of this Transaction.
+     * @param nonce         Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
+     * @param expiry        {@link Expiry} of this transaction.
+     * @param signer        {@link Signer} of this transaction.
+     * @param maxEnergyCost Allowed energy for the transaction.
+     * @return Initialized {@link InitContractTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
      */
-    public static InitContractTransactionBuilder builder() {
-        return new CustomBuilder();
+    @Builder(builderClassName = "InitContractTransactionBuilder")
+    public static InitContractTransaction from(
+            final InitContractPayload payload,
+            final AccountAddress sender,
+            final AccountNonce nonce,
+            final Expiry expiry,
+            final TransactionSigner signer,
+            final UInt64 maxEnergyCost) {
+        try {
+            return new InitContractTransaction(payload, sender, nonce, expiry, signer, maxEnergyCost);
+        } catch (NullPointerException ex) {
+            throw TransactionCreationException.from(ex);
+        }
     }
 
-    @Override
-    public BlockItem getBlockItem() {
-        return blockItem;
-    }
-
-    private static class CustomBuilder extends InitContractTransactionBuilder {
-        static void verifyInitContractInput(AccountAddress sender, AccountNonce nonce, Expiry expiry, TransactionSigner signer, InitContractPayload payload) throws TransactionCreationException {
-            Transaction.verifyAccountTransactionHeaders(sender, nonce, expiry, signer);
-            if (Objects.isNull(payload)) {
-                throw TransactionCreationException.from(new IllegalArgumentException("Payload cannot be null"));
-            }
+    /**
+     * Creates a new instance of {@link InitContractTransaction}.
+     * Using {@link TransactionHeader}, {@link TransactionSignature} and Payload {@link InitContractPayload}.
+     *
+     * @param header    {@link TransactionHeader}.
+     * @param signature {@link TransactionSignature}.
+     * @param payload   {@link InitContractPayload} Payload for this transaction.
+     * @return Instantiated {@link InitContractTransaction}.
+     * @throws TransactionCreationException On failure to create the Transaction from input params.
+     *                                      Ex when any of the input param is NULL.
+     */
+    @Builder(builderMethodName = "builderBlockItem", builderClassName = "InitContractBlockItemBuilder")
+    public static InitContractTransaction from(
+            final TransactionHeader header,
+            final TransactionSignature signature,
+            final InitContractPayload payload) {
+        try {
+            return new InitContractTransaction(header, signature, payload);
+        } catch (NullPointerException ex) {
+            throw TransactionCreationException.from(ex);
         }
-
-        // Overriding the build method of the super class.
-        @Override
-        public InitContractTransaction build() throws TransactionCreationException {
-            val transaction = super.build();
-            verifyInitContractInput(
-                    transaction.sender,
-                    transaction.nonce,
-                    transaction.expiry,
-                    transaction.signer,
-                    transaction.payload
-            );
-            transaction.blockItem = initializeSmartContractInstance(transaction).toBlockItem();
-
-            return transaction;
-        }
-
-        private Payload initializeSmartContractInstance(InitContractTransaction transaction) throws TransactionCreationException {
-            return InitContract.createNew(
-                            transaction.payload,
-                            transaction.maxEnergyCost).
-                    withHeader(TransactionHeader.builder()
-                            .sender(transaction.sender)
-                            .accountNonce(transaction.nonce.getNonce())
-                            .expiry(transaction.expiry.getValue())
-                            .build())
-                    .signWith(transaction.signer);
-        }
-
     }
 }
