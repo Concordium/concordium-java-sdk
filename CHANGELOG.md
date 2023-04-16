@@ -6,6 +6,7 @@
 - Added support for GRPC V2 Get Block Items
 - Added support for GRPC V2 Get Consensus Status/Info
 - Added support for GRPC V2 Get Cryptographic Parameters
+- Added support for GRPC V2 Get Block Info 'GetBlockInfo' for retrieving information of the block being queried.
 
 ## 4.2.0
 - Added initial support for GRPC V2
