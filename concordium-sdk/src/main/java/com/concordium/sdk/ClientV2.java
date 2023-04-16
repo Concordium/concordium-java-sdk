@@ -10,6 +10,7 @@ import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
@@ -165,6 +166,22 @@ public final class ClientV2 {
         var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
         return to(grpcOutput);
+    }
+
+    /**
+     * Retrieves a {@link BlockInfo}
+     *
+     * @param blockHashInput the block {@link BlockHashInput} to query.
+     * @return A {@link BlockInfo} for the block
+     * @throws BlockNotFoundException If the block was not found.
+     */
+    public BlockInfo getBlockInfo(BlockHashInput blockHashInput) throws BlockNotFoundException {
+        try {
+            return to(this.server()
+                    .getBlockInfo(to(blockHashInput)));
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHashInput.getBlockHash());
+        }
     }
 
     /**
