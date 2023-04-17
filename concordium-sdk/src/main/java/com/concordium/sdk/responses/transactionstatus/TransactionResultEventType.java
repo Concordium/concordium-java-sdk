@@ -78,7 +78,19 @@ public enum TransactionResultEventType {
     @JsonProperty("DelegationRemoved")
     DELEGATION_REMOVED,
     @JsonProperty("Upgraded")
-    UPGRADED;
+    UPGRADED,
+    @JsonProperty("BakerStakeUpdated")
+    BAKER_STAKE_UPDATED,
+    @JsonProperty("EncryptedAmountTransferred")
+    ENCRYPTED_AMOUNT_TRANSFERRED,
+    @JsonProperty("TransfererredToEncrypted")
+    TRANSFERRED_TO_ENCRYPTED,
+    @JsonProperty("TransfererredPublic")
+    TRANSFERRED_TO_PUBLIC,
+    @JsonProperty("BakerConfigured")
+    BAKER_CONFIGURED,
+    @JsonProperty("DelegationConfigured")
+    DELEGATION_CONFIGURED;
 
     // Convenience methods for doing 'safe' casting.
     public <T> T convert(TransactionResultEvent event) {

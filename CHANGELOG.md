@@ -4,8 +4,11 @@
 - Added support for GRPC V2 Get Peers Info
 - Added support for GRPC V2 Get Account Info
 - Added support for GRPC V2 Get Account List
+- Added support for GRPC V2 Get Next Account Nonce Number
 - Added support for GRPC V2 Get Block Items
 - Added support for GRPC V2 Get Consensus Status/Info
+- Added support for GRPC V2 'GetBlockItemStatus' for retrieving the status of an individual transaction
+- Fixed incorrect transaction event with respect to a transaction status for when a delegator decreased its stake.
 - Added support for GRPC V2 Get Block Info 'GetBlockInfo' for retrieving information of the block being queried.
 
 ## 4.2.0
