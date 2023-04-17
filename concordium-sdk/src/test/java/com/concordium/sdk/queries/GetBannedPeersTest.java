@@ -41,7 +41,7 @@ public class GetBannedPeersTest {
                 .nodeId("2")
                 .ipAddress(InetAddress.getByName("127.0.0.2"))
                 .port(UInt16.from(10001))
-                .catchupStatus(PeerCatchupStatus.UPTODATE)
+                .catchupStatus(PeerCatchupStatus.UP_TO_DATE)
                 .build();
 
         val res = new ArrayList<ConcordiumP2PRpc.PeerElement>();

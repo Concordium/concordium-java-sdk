@@ -28,7 +28,7 @@ public class Peer {
      */
     private final UInt16 port;
     /**
-     * The ip adress of the peer
+     * The ip address of the peer
      */
     private final InetAddress ipAddress;
     /**
