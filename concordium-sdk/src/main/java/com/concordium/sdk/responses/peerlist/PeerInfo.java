@@ -64,7 +64,7 @@ public class PeerInfo extends Peer{
      * @return parsed {@link PeerInfo}
      */
     private static PeerInfo parse(PeersInfo.Peer peer) throws UnknownHostException {
-        val catchupStatus = (peer.hasNodeCatchupStatus() ? PeerCatchupStatus.parse(peer.getNodeCatchupStatus()) : null);
+        PeerCatchupStatus catchupStatus = (peer.hasNodeCatchupStatus() ? PeerCatchupStatus.parse(peer.getNodeCatchupStatus()) : null);
         val peerType = (peer.hasNodeCatchupStatus() ? PeerType.NODE : PeerType.BOOTSTRAPPER);
         return PeerInfo.builder()
                 .nodeId(peer.getPeerId().getValue())

@@ -197,6 +197,11 @@ public final class ClientV2 {
         this.channel.shutdown();
     }
 
+    /**
+     * Returns a {@link ImmutableList} of {@link PeerInfo} containing information about the nodes' peers
+     * @return {@link ImmutableList} of {@link PeerInfo}
+     * @throws UnknownHostException When the returned IP address of Peer is Invalid
+     */
     public ImmutableList<PeerInfo> getPeersInfo() throws UnknownHostException {
         var grpcOutput = this.server().getPeersInfo(Empty.newBuilder().build());
         return PeerInfo.parseToList(grpcOutput);
