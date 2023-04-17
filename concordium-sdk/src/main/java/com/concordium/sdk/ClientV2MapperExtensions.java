@@ -30,6 +30,11 @@ import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
 import com.concordium.sdk.responses.transactionstatus.RejectReason;
 import com.concordium.sdk.responses.transactionstatus.TransactionType;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.transactions.EncryptedAmountIndex;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.transactions.Index;
 import com.concordium.sdk.transactions.InitContractPayload;
 import com.concordium.sdk.transactions.InitName;
 import com.concordium.sdk.transactions.Parameter;
@@ -447,6 +452,11 @@ interface ClientV2MapperExtensions {
                         to(schedule.getSchedulesList(), ClientV2MapperExtensions::to)))
                 .build();
     }
+
+    static AccountNonce to(NextAccountSequenceNumber nextAccountSequenceNumber) {
+        return AccountNonce.from(to(nextAccountSequenceNumber.getSequenceNumber()));
+    }
+
 
     static <T1, T2> List<T2> to(List<T1> sourceList, Function<T1, T2> map) {
         return sourceList.stream().map(map::apply).collect(Collectors.toList());

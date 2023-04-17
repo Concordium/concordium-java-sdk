@@ -3,6 +3,7 @@
 ## Unreleased changes
 - Added support for GRPC V2 Get Account Info
 - Added support for GRPC V2 Get Account List
+- Added support for GRPC V2 Get Next Account Nonce Number
 - Added support for GRPC V2 Get Block Items
 - Added support for GRPC V2 Get Consensus Status/Info
 - Added support for GRPC V2 'GetBlockItemStatus' for retrieving the status of an individual transaction
