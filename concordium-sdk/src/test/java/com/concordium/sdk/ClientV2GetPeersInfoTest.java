@@ -51,13 +51,13 @@ public class ClientV2GetPeersInfoTest {
             .setIp(IpAddress.newBuilder().setValue("128.0.1.0").build())
             .setPort(Port.newBuilder().setValue(2000).build())
             .build();
-    ;
+
     private static final PeersInfo.Peer.NetworkStats GRPC_NETWORK_STATS_TWO = PeersInfo.Peer.NetworkStats.newBuilder()
             .setPacketsSent(500)
             .setPacketsReceived(1100)
             .setLatency(50)
             .build();
-    ;
+
     private static final PeersInfo.Peer.CatchupStatus GRPC_NODE_CATCHUP_TWO = PeersInfo.Peer.CatchupStatus.UPTODATE;
     private static final PeersInfo.Peer GRPC_PEER_TWO = PeersInfo.Peer.newBuilder()
             .setPeerId(PeerId.newBuilder().setValue("TestTwo").build())
@@ -65,18 +65,18 @@ public class ClientV2GetPeersInfoTest {
             .setNetworkStats(GRPC_NETWORK_STATS_TWO)
             .setNodeCatchupStatus(GRPC_NODE_CATCHUP_TWO)
             .build();
-    ;
+
     private static final IpSocketAddress GRPC_SOCKET_ADDRESS_THREE = IpSocketAddress.newBuilder()
             .setIp(IpAddress.newBuilder().setValue("localhost").build())
             .setPort(Port.newBuilder().setValue(2001).build())
             .build();
-    ;
+
     private static final PeersInfo.Peer.NetworkStats GRPC_NETWORK_STATS_THREE = PeersInfo.Peer.NetworkStats.newBuilder()
             .setPacketsSent(5000)
             .setPacketsReceived(4000)
             .setLatency(20)
             .build();
-    ;
+
     private static final PeersInfo.Peer.CatchupStatus GRPC_NODE_CATCHUP_THREE = PeersInfo.Peer.CatchupStatus.CATCHINGUP;
     private static final PeersInfo.Peer GRPC_PEER_THREE = PeersInfo.Peer.newBuilder()
             .setPeerId(PeerId.newBuilder().setValue("TestThree").build())
@@ -84,7 +84,7 @@ public class ClientV2GetPeersInfoTest {
             .setNetworkStats(GRPC_NETWORK_STATS_THREE)
             .setNodeCatchupStatus(GRPC_NODE_CATCHUP_THREE)
             .build();
-    ;
+
     private static final PeersInfo GRPC_PEERS_INFO = PeersInfo.newBuilder()
             .addPeers(GRPC_PEER_ONE)
             .addPeers(GRPC_PEER_TWO)
