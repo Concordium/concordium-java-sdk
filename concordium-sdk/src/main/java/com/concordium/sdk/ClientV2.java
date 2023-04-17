@@ -13,6 +13,8 @@ import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
@@ -178,6 +180,22 @@ public final class ClientV2 {
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(blockHashInput.getBlockHash());
         }
+    }
+
+
+    /**
+     * Retrieves the next {@link AccountNonce} for an account.
+     * This is the {@link AccountNonce} to use for future transactions
+     * E.g. when using {@link Client#sendTransaction(Transaction)}
+     * When this function is queried with a non existent account it will report the next available account nonce to be 1 and all transactions as finalized.
+     *
+     * @param address The {@link AccountAddress}
+     * @return The next {@link AccountNonce}
+     */
+    public AccountNonce getNextAccountSequenceNumber(AccountAddress address) {
+        var grpcOutput = this.server()
+                .getNextAccountSequenceNumber(to(address));
+        return to(grpcOutput);
     }
 
     /**
