@@ -5,7 +5,6 @@ import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
@@ -13,12 +12,11 @@ import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
-import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
+import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.transactions.AccountAddress;
-import com.concordium.sdk.transactions.AccountNonce;
-import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
-import com.concordium.sdk.transactions.Hash;
+import com.google.common.collect.ImmutableList;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
@@ -26,11 +24,11 @@ import lombok.val;
 import lombok.var;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import static com.concordium.sdk.ClientV2MapperExtensions.to;
-import static com.concordium.sdk.ClientV2MapperExtensions.toTransactionHash;
 
 /**
  * The Client is responsible for sending requests to the node.
@@ -186,39 +184,6 @@ public final class ClientV2 {
         }
     }
 
-
-    /**
-     * Retrieves the next {@link AccountNonce} for an account.
-     * This is the {@link AccountNonce} to use for future transactions
-     * E.g. when using {@link Client#sendTransaction(Transaction)}
-     * When this function is queried with a non existent account it will report the next available account nonce to be 1 and all transactions as finalized.
-     *
-     * @param address The {@link AccountAddress}
-     * @return The next {@link AccountNonce}
-     */
-    public AccountNonce getNextAccountSequenceNumber(AccountAddress address) {
-        var grpcOutput = this.server()
-                .getNextAccountSequenceNumber(to(address));
-        return to(grpcOutput);
-    }
-
-    /**
-     * Retrieves the {@link TransactionStatus} for a given transaction {@link Hash}
-     *
-     * @param transactionHash The transaction {@link Hash}
-     * @return The {@link TransactionStatus}
-     * @throws {@link BlockNotFoundException} if the transaction was not found.
-     */
-    public TransactionStatus getBlockItemStatus(Hash transactionHash) throws BlockNotFoundException {
-        try {
-            var grpcOutput = this.server()
-                    .getBlockItemStatus(toTransactionHash(transactionHash));
-            return to(grpcOutput);
-        } catch (StatusRuntimeException e) {
-            throw BlockNotFoundException.from(transactionHash);
-        }
-    }
-
     /**
      * Closes the underlying grpc channel
      * <p>
@@ -230,6 +195,16 @@ public final class ClientV2 {
      */
     public void close() {
         this.channel.shutdown();
+    }
+
+    /**
+     * Returns a {@link ImmutableList} of {@link PeerInfo} containing information about the nodes' peers
+     * @return {@link ImmutableList} of {@link PeerInfo}
+     * @throws UnknownHostException When the returned IP address of Peer is Invalid
+     */
+    public ImmutableList<PeerInfo> getPeersInfo() throws UnknownHostException {
+        var grpcOutput = this.server().getPeersInfo(Empty.newBuilder().build());
+        return PeerInfo.parseToList(grpcOutput);
     }
 
     /**
