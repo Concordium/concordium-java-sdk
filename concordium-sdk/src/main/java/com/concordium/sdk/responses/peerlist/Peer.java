@@ -19,9 +19,21 @@ import java.util.List;
 @EqualsAndHashCode
 public class Peer {
 
+    /**
+     * The identifier of the peer that it wishes to be identified by
+     */
     private final String nodeId;
+    /**
+     * The port of the peer
+     */
     private final UInt16 port;
+    /**
+     * The ip address of the peer
+     */
     private final InetAddress ipAddress;
+    /**
+     * The catchup status of the peer
+     */
     private final PeerCatchupStatus catchupStatus;
 
     public static ImmutableList<Peer> toList(List<ConcordiumP2PRpc.PeerElement> response) throws UnknownHostException {
@@ -42,4 +54,5 @@ public class Peer {
                 .catchupStatus(PeerCatchupStatus.parse(p.getCatchupStatus()))
                 .build();
     }
+
 }
