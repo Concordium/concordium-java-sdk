@@ -5,23 +5,22 @@ import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.Map;
 
 @Getter
 @ToString
+@Builder
+@Jacksonized
 public final class TransactionStatus {
+    @JsonProperty("status")
     private final Status status;
+    @JsonProperty("outcomes")
     private final Map<Hash, TransactionSummary> outcomes;
-
-    @JsonCreator
-    TransactionStatus(@JsonProperty("status") Status status,
-                      @JsonProperty("outcomes") Map<Hash, TransactionSummary> outcomes) {
-        this.status = status;
-        this.outcomes = outcomes;
-    }
 
     public static TransactionStatus fromJson(String transactionStatus) {
         try {
