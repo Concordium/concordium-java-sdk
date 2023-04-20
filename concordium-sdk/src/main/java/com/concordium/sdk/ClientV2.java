@@ -14,11 +14,13 @@ import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
+import com.concordium.sdk.responses.transactionstatus.TransactionSummary;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.transactions.Hash;
+import com.google.common.collect.ImmutableList;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
@@ -217,6 +219,16 @@ public final class ClientV2 {
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(transactionHash);
         }
+    }
+
+    public ImmutableList<TransactionSummary> getBlockTransactionEvents(BlockHashInput blockHashInput) {
+        val grpcOutput = this.server().getBlockTransactionEvents(to(blockHashInput));
+        val list = new ImmutableList.Builder<TransactionSummary>();
+        val response = to(grpcOutput,ClientV2MapperExtensions::to);
+        while(response.hasNext()) {
+            list.add(response.next());
+        }
+        return list.build();
     }
 
     /**
