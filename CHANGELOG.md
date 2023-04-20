@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for GRPC V2 Dump Start
+- Added support for GRPC V2 Dump Stop
 - Added support for GRPC V2 Get Account Info
 - Added support for GRPC V2 Get Account List
 - Added support for GRPC V2 Get Next Account Nonce Number
