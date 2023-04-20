@@ -247,7 +247,6 @@ public final class ClientV2 {
     }
 
     /**
-     * TODO fix this
      * Tries to connect to a peer with the submitted {@link InetSocketAddress}.
      * If successful, adds the peer to the list of given addresses.
      * Note. The peer might not be connected instantly, in that case the node will
@@ -267,6 +266,7 @@ public final class ClientV2 {
     /**
      * Disconnect from the peer with the submitted {@link InetSocketAddress} and remove them from
      * the address list if they are on it.
+     *
      * @param socketAddress {@link InetSocketAddress} of the peer to disconnect from
      * @throws {@link io.grpc.StatusRuntimeException} if unsuccessful
      */
