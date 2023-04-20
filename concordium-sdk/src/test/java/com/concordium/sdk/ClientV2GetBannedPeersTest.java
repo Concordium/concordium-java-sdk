@@ -24,12 +24,12 @@ import static org.mockito.Mockito.verify;
 
 public class ClientV2GetBannedPeersTest {
 
-    private static final InetAddress CLIENT_BANNED_PEER_ONE;
 
     private static final String IP_ONE = "127.0.0.1";
     private static final String IP_TWO = "178.128.170.151";
     private static final String IP_THREE = "221.0.3.1";
 
+    private static final InetAddress CLIENT_BANNED_PEER_ONE;
 
     static {
         try {
