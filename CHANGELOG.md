@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for GRPC V2 Get Banned Peers
+- Added support for GRPC V2 Ban Peer
+- Added support for GRPC V2 Unban Peer
 - Added support for GRPC V2 Get Peers Info
 - Added support for GRPC V2 Get Account Info
 - Added support for GRPC V2 Get Account List
