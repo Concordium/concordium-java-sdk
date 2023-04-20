@@ -7,6 +7,7 @@ import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.dumpstart.DumpRequest;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
@@ -25,6 +26,7 @@ import io.grpc.StatusRuntimeException;
 import lombok.val;
 import lombok.var;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
@@ -217,6 +219,31 @@ public final class ClientV2 {
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(transactionHash);
         }
+    }
+
+    /**
+     * Start dumping packages into the specified {@link File}
+     * Only enabled if the node was built with the 'network_dump' feature enabled
+     *
+     * @param dumpRequest {@link DumpRequest} specifying the file and if raw packages should be dumped
+     * @throws {@link io.grpc.StatusRuntimeException} if the network dump failed to start
+     */
+    public void dumpStart(DumpRequest dumpRequest) {
+        val grpcRequest = com.concordium.grpc.v2.DumpRequest.newBuilder()
+                .setFile(dumpRequest.getFile().getAbsolutePath())
+                .setRaw(dumpRequest.isRaw())
+                .build();
+        this.server().dumpStart(grpcRequest);
+    }
+
+    /**
+     * Stop dumping packages
+     * Only enabled if the node was built with the 'network_dump' feature enabled
+     *
+     * @throws {@link io.grpc.StatusRuntimeException} if the network dump failed to be stopped
+     */
+    public void dumpStop() {
+        this.server().dumpStop(Empty.newBuilder().build());
     }
 
     /**
