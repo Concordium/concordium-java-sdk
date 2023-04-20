@@ -104,6 +104,7 @@ public class ClientV2GetPeersInfoTest {
                 }
             }
     ));
+
     @Rule
     public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
 
