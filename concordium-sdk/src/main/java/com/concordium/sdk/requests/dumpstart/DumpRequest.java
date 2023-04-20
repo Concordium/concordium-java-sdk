@@ -15,6 +15,7 @@ public class DumpRequest {
 
     /**
      * Which file to dump the packages into
+     * Requires a valid path
      */
     private final File file;
 
