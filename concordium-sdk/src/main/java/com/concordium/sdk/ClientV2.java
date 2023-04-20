@@ -1,8 +1,6 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.AccountInfoRequest;
-import com.concordium.grpc.v2.Empty;
-import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.exceptions.TransactionNotFoundException;
@@ -29,6 +27,7 @@ import lombok.val;
 import lombok.var;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
@@ -238,12 +237,45 @@ public final class ClientV2 {
 
     /**
      * Returns a {@link ImmutableList} of {@link PeerInfo} containing information about the nodes' peers
+     *
      * @return {@link ImmutableList} of {@link PeerInfo}
      * @throws UnknownHostException When the returned IP address of Peer is Invalid
      */
     public ImmutableList<PeerInfo> getPeersInfo() throws UnknownHostException {
         var grpcOutput = this.server().getPeersInfo(Empty.newBuilder().build());
         return PeerInfo.parseToList(grpcOutput);
+    }
+
+    /**
+     * TODO fix this
+     * Tries to connect to a peer with the submitted {@link InetSocketAddress}.
+     * If successful, adds the peer to the list of given addresses.
+     * Note. The peer might not be connected instantly, in that case the node will
+     * try to establish the connection in near future. In this case {@link io.grpc.Status#OK} is returned
+     *
+     * @param socketAddress {@link InetSocketAddress} of the peer to connect to
+     * @throws {@link io.grpc.StatusRuntimeException} if unsuccessful
+     */
+    public void peerConnect(InetSocketAddress socketAddress) {
+        val grpcIpSocket = IpSocketAddress.newBuilder()
+                .setIp(IpAddress.newBuilder().setValue(socketAddress.getAddress().getHostAddress()).build())
+                .setPort(Port.newBuilder().setValue(socketAddress.getPort()))
+                .build();
+        this.server().peerConnect(grpcIpSocket);
+    }
+
+    /**
+     * Disconnect from the peer with the submitted {@link InetSocketAddress} and remove them from
+     * the address list if they are on it.
+     * @param socketAddress {@link InetSocketAddress} of the peer to disconnect from
+     * @throws {@link io.grpc.StatusRuntimeException} if unsuccessful
+     */
+    public void peerDisconnect(InetSocketAddress socketAddress) {
+        val grpcIpSocket = IpSocketAddress.newBuilder()
+                .setIp(IpAddress.newBuilder().setValue(socketAddress.getAddress().getHostAddress()).build())
+                .setPort(Port.newBuilder().setValue(socketAddress.getPort()))
+                .build();
+        this.server().peerDisconnect(grpcIpSocket);
     }
 
     /**
