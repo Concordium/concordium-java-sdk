@@ -89,7 +89,7 @@ public final class ClientV2 {
      * This can be used to listen for incoming blocks.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator<  BlockIdentifier  >}
+     * @return {@link Iterator<BlockIdentifier>}
      */
     public Iterator<BlockIdentifier> getBlocks(int timeoutMillis) {
         var grpcOutput = this.server(timeoutMillis).getBlocks(Empty.newBuilder().build());
@@ -104,7 +104,7 @@ public final class ClientV2 {
      * This can be used to listen for blocks being Finalized.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator<  BlockIdentifier  >}
+     * @return {@link Iterator<BlockIdentifier>}
      */
     public Iterator<BlockIdentifier> getFinalizedBlocks(int timeoutMillis) {
         var grpcOutput = this.server(timeoutMillis)
@@ -136,7 +136,7 @@ public final class ClientV2 {
      * Retrieve the list of accounts that exist at the end of the given block.
      *
      * @param input Pointer to the Block.
-     * @return {@link Iterator<  AccountAddress  >}.
+     * @return {@link Iterator<AccountAddress>}.
      */
     public Iterator<AccountAddress> getAccountList(final BlockHashInput input) {
         var grpcOutput = this.server().getAccountList(to(input));
@@ -145,15 +145,14 @@ public final class ClientV2 {
     }
 
     /**
-     * Gets the Block Items for a Particular Input Block.
-     * Block Item represents transactions which are part of a block.
+     * Gets the transactions of a Block.
      * Type of Block Items currently supported are
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#ACCOUNT_TRANSACTION}
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#CREDENTIAL_DEPLOYMENT}
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#UPDATE_INSTRUCTION}
      *
      * @param input Pointer to the Block.
-     * @return
+     * @return {@link Iterator<BlockItem>}
      */
     public Iterator<BlockItem> getBlockItems(final BlockHashInput input) {
         var grpcOutput = this.server().getBlockItems(to(input));
@@ -165,7 +164,7 @@ public final class ClientV2 {
      * Retrieve the Consensus Info that contains the summary of the current state
      * of the chain from the perspective of the node.
      *
-     * @return Concensus Status ({@link ConsensusStatus})
+     * @return the Consensus Status ({@link ConsensusStatus})
      */
     public ConsensusStatus getConsensusInfo() {
         var grpcOutput = this.server()
@@ -203,7 +202,7 @@ public final class ClientV2 {
      *
      * @param blockHash the hash of the block
      * @return the cryptographic parameters at the given block.
-     * @throws {@link BlockNotFoundException} if the block was not found.
+     * @throws BlockNotFoundException if the block was not found.
      */
     public CryptographicParameters getCryptographicParameters(final BlockHashInput blockHash)
             throws BlockNotFoundException {
@@ -268,7 +267,7 @@ public final class ClientV2 {
      *
      * @param transactionHash The transaction {@link Hash}
      * @return The {@link TransactionStatus}
-     * @throws {@link BlockNotFoundException} if the transaction was not found.
+     * @throws BlockNotFoundException if the transaction was not found.
      */
     public TransactionStatus getBlockItemStatus(Hash transactionHash) throws BlockNotFoundException {
         try {
