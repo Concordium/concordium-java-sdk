@@ -13,6 +13,7 @@ import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountTransaction;
@@ -194,6 +195,24 @@ public final class ClientV2 {
         var grpcOutput = this.server().getIdentityProviders(to(input));
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get the {@link CryptographicParameters} at a given block.
+     *
+     * @param blockHash the hash of the block
+     * @return the cryptographic parameters at the given block.
+     * @throws {@link BlockNotFoundException} if the block was not found.
+     */
+    public CryptographicParameters getCryptographicParameters(final BlockHashInput blockHash)
+            throws BlockNotFoundException {
+        try {
+            var grpcOutput = this.server()
+                    .getCryptographicParameters(to(blockHash));
+            return to(grpcOutput);
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHash.getBlockHash());
+        }
     }
 
     /**

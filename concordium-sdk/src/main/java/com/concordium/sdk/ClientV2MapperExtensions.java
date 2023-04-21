@@ -11,8 +11,10 @@ import com.concordium.grpc.v2.Memo;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
+import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
@@ -866,6 +868,16 @@ interface ClientV2MapperExtensions {
         return accountNonce.getValue().getValue();
     }
 
+    static com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters to(CryptographicParameters grpcOutput) {
+        var builder = com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters.builder()
+                .bulletproofGenerators(BulletproofGenerators.from(grpcOutput.getBulletproofGenerators().toByteArray()))
+                .onChainCommitmentKey(PedersenCommitmentKey.from(grpcOutput.getOnChainCommitmentKey().toByteArray()))
+                .genesisString(grpcOutput.getGenesisString());
+
+        return builder.build();
+
+    }
+
     // Convert a com.concordium.grpc.v2.BlockItemStatus object to the corresponding com.concordium.sdk.responses.TransactionStatus object
     static TransactionStatus to(com.concordium.grpc.v2.BlockItemStatus blockItemStatus) {
         var builder = TransactionStatus.builder();
@@ -935,7 +947,6 @@ interface ClientV2MapperExtensions {
         map.put(ReasonCase.OUT_OF_ENERGY, RejectReasonType.OUT_OF_ENERGY);
         map.put(ReasonCase.REJECTED_INIT, RejectReasonType.REJECTED_INIT);
         map.put(ReasonCase.REJECTED_RECEIVE, RejectReasonType.REJECTED_RECEIVE);
-        map.put(ReasonCase.NON_EXISTENT_CRED_IDS, RejectReasonType.NON_EXISTENT_REWARD_ACCOUNT);
         map.put(ReasonCase.INVALID_PROOF, RejectReasonType.INVALID_PROOF);
         map.put(ReasonCase.ALREADY_A_BAKER, RejectReasonType.ALREADY_A_BAKER);
         map.put(ReasonCase.NOT_A_BAKER, RejectReasonType.NOT_A_BAKER);
@@ -1026,8 +1037,7 @@ interface ClientV2MapperExtensions {
                     break;
                 }
             }
-        }
-        else {
+        } else {
             var effectCase = transactionDetails.getEffects().getEffectCase();
             List<TransactionResultEvent> eventList = new ArrayList<>();
 
