@@ -2,7 +2,6 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.AccountAddress;
 import com.concordium.grpc.v2.AccountInfo;
-import com.concordium.grpc.v2.AccountTransaction;
 import com.concordium.grpc.v2.BlockItem;
 import com.concordium.grpc.v2.Commitment;
 import com.concordium.grpc.v2.CredentialPublicKeys;
@@ -16,6 +15,7 @@ import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
+import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
@@ -26,10 +26,12 @@ import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
+import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
+import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.responses.transactionstatus.RejectReason;
 import com.concordium.sdk.responses.transactionstatus.TransactionType;
 import com.concordium.sdk.transactions.AccountNonce;
@@ -118,6 +120,15 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
+    static IdentityProviderInfo to(final IpInfo ipInfo) {
+        return IdentityProviderInfo.builder()
+                .ipIdentity(to(ipInfo.getIdentity()))
+                .description(to(ipInfo.getDescription()))
+                .ipCdiVerifyKey(to(ipInfo.getCdiVerifyKey()))
+                .ipVerifyKey(to(ipInfo.getVerifyKey()))
+                .build();
+    }
+
     static ElgamalPublicKey to(final ArInfo.ArPublicKey publicKey) {
         return ElgamalPublicKey.from(publicKey.getValue().toByteArray());
     }
@@ -132,6 +143,17 @@ interface ClientV2MapperExtensions {
 
     static int to(final ArInfo.ArIdentity identity) {
         return identity.getValue();
+    }
+    static int to(final IpIdentity identity) {
+        return identity.getValue();
+    }
+
+    static PSPublicKey to(final IpInfo.IpVerifyKey verifyKey) {
+        return new PSPublicKey(verifyKey.getValue().toByteArray());
+    }
+
+    static ED25519PublicKey to(final IpInfo.IpCdiVerifyKey cdiVerifyKey) {
+        return ED25519PublicKey.from(cdiVerifyKey.getValue().toByteArray());
     }
 
     static <T1, T2> Iterator<T2> to(final Iterator<T1> iterator, final Function<? super T1, ? extends T2> to) {
@@ -561,7 +583,7 @@ interface ClientV2MapperExtensions {
         }
     }
 
-    static AbstractAccountTransaction to(AccountTransaction transaction) {
+    static AccountTransaction to(com.concordium.grpc.v2.AccountTransaction transaction) {
         val payload = transaction.getPayload();
 
         switch (payload.getPayloadCase()) {
@@ -617,7 +639,7 @@ interface ClientV2MapperExtensions {
             case RAW_PAYLOAD:
                 final byte[] rawPayloadBytes = payload.getRawPayload().toByteArray();
                 return com.concordium.sdk.transactions.AccountTransaction
-                        .builderBlockItem()
+                        .builderAccountTransactionBlockItem()
                         .header(to(transaction.getHeader(), rawPayloadBytes.length))
                         .signature(to(transaction.getSignature()))
                         .payloadBytes(rawPayloadBytes)
@@ -625,7 +647,7 @@ interface ClientV2MapperExtensions {
             default:
             case PAYLOAD_NOT_SET:
                 return com.concordium.sdk.transactions.AccountTransaction
-                        .builderBlockItem()
+                        .builderAccountTransactionBlockItem()
                         .header(to(transaction.getHeader(), 0))
                         .signature(to(transaction.getSignature()))
                         .payloadBytes(new byte[0])
@@ -748,40 +770,102 @@ interface ClientV2MapperExtensions {
     }
 
     // Convert a ConsensusInfo object to a ConsensusStatus object
-    static ConsensusStatus to(ConsensusInfo concensusInfo) {
+    static ConsensusStatus to(ConsensusInfo consensusInfo) {
         var builder = ConsensusStatus.builder()
-                .bestBlock(to(concensusInfo.getBestBlock()))
-                .genesisBlock(to(concensusInfo.getGenesisBlock()))
-                .genesisTime(to(concensusInfo.getGenesisTime()).getDate())
-                .slotDuration(to(concensusInfo.getSlotDuration()))
-                .epochDuration(to(concensusInfo.getEpochDuration()))
-                .lastFinalizedBlock(to(concensusInfo.getLastFinalizedBlock()))
-                .bestBlockHeight(to(concensusInfo.getBestBlockHeight()).getValue())
-                .lastFinalizedBlockHeight(to(concensusInfo.getLastFinalizedBlockHeight()).getValue())
-                .blocksReceivedCount(concensusInfo.getBlocksReceivedCount())
-                .blockLastReceivedTime(to(concensusInfo.getBlockLastReceivedTime()).toString())
-                .blockReceiveLatencyEMA(concensusInfo.getBlockReceiveLatencyEma())
-                .blockReceiveLatencyEMSD(concensusInfo.getBlockReceiveLatencyEmsd())
-                .blockReceivePeriodEMA(concensusInfo.getBlockReceivePeriodEma())
-                .blockReceivePeriodEMSD(concensusInfo.getBlockReceivePeriodEmsd())
-                .blocksVerifiedCount(concensusInfo.getBlocksVerifiedCount())
-                .blockLastArrivedTime(to(concensusInfo.getBlockLastArrivedTime()).toString())
-                .blockArriveLatencyEMA(concensusInfo.getBlockArriveLatencyEma())
-                .blockArriveLatencyEMSD(concensusInfo.getBlockArriveLatencyEmsd())
-                .blockArrivePeriodEMA(concensusInfo.getBlockArrivePeriodEma())
-                .blockArrivePeriodEMSD(concensusInfo.getBlockArrivePeriodEmsd())
-                .transactionsPerBlockEMA(concensusInfo.getTransactionsPerBlockEma())
-                .transactionsPerBlockEMSD(concensusInfo.getTransactionsPerBlockEmsd())
-                .finalizationCount(concensusInfo.getFinalizationCount())
-                .lastFinalizedTime(to(concensusInfo.getLastFinalizedTime()).toString())
-                .finalizationPeriodEMA(concensusInfo.getFinalizationPeriodEma())
-                .finalizationPeriodEMSD(concensusInfo.getFinalizationPeriodEmsd())
-                .protocolVersion(to(concensusInfo.getProtocolVersion()))
-                .genesisIndex(concensusInfo.getGenesisIndex().getValue())
-                .currentEraGenesisBlock(to(concensusInfo.getCurrentEraGenesisBlock()).toString())
-                .currentEraGenesisTime(to(concensusInfo.getCurrentEraGenesisTime()).getDate());
+                .bestBlock(to(consensusInfo.getBestBlock()))
+                .genesisBlock(to(consensusInfo.getGenesisBlock()))
+                .genesisTime(to(consensusInfo.getGenesisTime()).getDate())
+                .slotDuration(to(consensusInfo.getSlotDuration()))
+                .epochDuration(to(consensusInfo.getEpochDuration()))
+                .lastFinalizedBlock(to(consensusInfo.getLastFinalizedBlock()))
+                .bestBlockHeight(to(consensusInfo.getBestBlockHeight()).getValue())
+                .lastFinalizedBlockHeight(to(consensusInfo.getLastFinalizedBlockHeight()).getValue())
+                .blocksReceivedCount(consensusInfo.getBlocksReceivedCount())
+                .blockLastReceivedTime(to(consensusInfo.getBlockLastReceivedTime()).toString())
+                .blockReceiveLatencyEMA(consensusInfo.getBlockReceiveLatencyEma())
+                .blockReceiveLatencyEMSD(consensusInfo.getBlockReceiveLatencyEmsd())
+                .blockReceivePeriodEMA(consensusInfo.getBlockReceivePeriodEma())
+                .blockReceivePeriodEMSD(consensusInfo.getBlockReceivePeriodEmsd())
+                .blocksVerifiedCount(consensusInfo.getBlocksVerifiedCount())
+                .blockLastArrivedTime(to(consensusInfo.getBlockLastArrivedTime()).toString())
+                .blockArriveLatencyEMA(consensusInfo.getBlockArriveLatencyEma())
+                .blockArriveLatencyEMSD(consensusInfo.getBlockArriveLatencyEmsd())
+                .blockArrivePeriodEMA(consensusInfo.getBlockArrivePeriodEma())
+                .blockArrivePeriodEMSD(consensusInfo.getBlockArrivePeriodEmsd())
+                .transactionsPerBlockEMA(consensusInfo.getTransactionsPerBlockEma())
+                .transactionsPerBlockEMSD(consensusInfo.getTransactionsPerBlockEmsd())
+                .finalizationCount(consensusInfo.getFinalizationCount())
+                .lastFinalizedTime(to(consensusInfo.getLastFinalizedTime()).toString())
+                .finalizationPeriodEMA(consensusInfo.getFinalizationPeriodEma())
+                .finalizationPeriodEMSD(consensusInfo.getFinalizationPeriodEmsd())
+                .protocolVersion(to(consensusInfo.getProtocolVersion()))
+                .genesisIndex(consensusInfo.getGenesisIndex().getValue())
+                .currentEraGenesisBlock(to(consensusInfo.getCurrentEraGenesisBlock()).toString())
+                .currentEraGenesisTime(to(consensusInfo.getCurrentEraGenesisTime()).getDate());
 
         return builder.build();
+    }
+
+    static SendBlockItemRequest to(AccountTransaction accountTransaction) {
+        return SendBlockItemRequest.newBuilder()
+                .setAccountTransaction(com.concordium.grpc.v2.AccountTransaction.newBuilder()
+                        .setHeader(to(accountTransaction.getHeader()))
+                        .setPayload(AccountTransactionPayload.newBuilder()
+                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayloadBytes()))
+                                .build())
+                        .setSignature(to(accountTransaction.getSignature()))
+                        .build())
+                .build();
+    }
+
+    static AccountTransactionSignature to(TransactionSignature signature) {
+        return AccountTransactionSignature.newBuilder()
+                .putAllSignatures(to(
+                        signature.getSignatures(),
+                        ClientV2MapperExtensions::to,
+                        ClientV2MapperExtensions::to))
+                .build();
+    }
+
+    static AccountSignatureMap to(TransactionSignatureAccountSignatureMap v) {
+        return AccountSignatureMap.newBuilder().putAllSignatures(to(
+                        v.getSignatures(),
+                        ClientV2MapperExtensions::to,
+                        ClientV2MapperExtensions::to))
+                .build();
+    }
+
+    static Integer to(Index index) {
+        return (int) index.getValue();
+    }
+
+    static com.concordium.grpc.v2.Signature to(Signature signature) {
+        return com.concordium.grpc.v2.Signature.newBuilder()
+                .setValue(ByteString.copyFrom(signature.getBytes()))
+                .build();
+    }
+
+    static AccountTransactionHeader to(TransactionHeader header) {
+        return AccountTransactionHeader.newBuilder()
+                .setSequenceNumber(SequenceNumber.newBuilder()
+                        .setValue(to(header.getAccountNonce()))
+                        .build())
+                .setSender(to(header.getSender()))
+                .setExpiry(to(header.getExpiry()))
+                .setEnergyAmount(toEnergy(header.getMaxEnergyCost()))
+                .build();
+    }
+
+    static Energy toEnergy(UInt64 maxEnergyCost) {
+        return Energy.newBuilder().setValue(maxEnergyCost.getValue()).build();
+    }
+
+    static TransactionTime to(UInt64 expiry) {
+        return TransactionTime.newBuilder().setValue(expiry.getValue()).build();
+    }
+
+    static long to(Nonce accountNonce) {
+        return accountNonce.getValue().getValue();
     }
 
     static com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters to(CryptographicParameters grpcOutput) {
@@ -827,7 +911,6 @@ interface ClientV2MapperExtensions {
 
         return outcomes;
     }
-
     static Map<Hash, TransactionSummary> to(BlockItemSummaryInBlock outcome) {
         Map<Hash, TransactionSummary> result = new HashMap<>();
         result.put(to(outcome.getBlockHash()), to(outcome.getOutcome()));
@@ -864,7 +947,6 @@ interface ClientV2MapperExtensions {
         map.put(ReasonCase.OUT_OF_ENERGY, RejectReasonType.OUT_OF_ENERGY);
         map.put(ReasonCase.REJECTED_INIT, RejectReasonType.REJECTED_INIT);
         map.put(ReasonCase.REJECTED_RECEIVE, RejectReasonType.REJECTED_RECEIVE);
-        map.put(ReasonCase.NON_EXISTENT_CRED_IDS, RejectReasonType.NON_EXISTENT_REWARD_ACCOUNT);
         map.put(ReasonCase.INVALID_PROOF, RejectReasonType.INVALID_PROOF);
         map.put(ReasonCase.ALREADY_A_BAKER, RejectReasonType.ALREADY_A_BAKER);
         map.put(ReasonCase.NOT_A_BAKER, RejectReasonType.NOT_A_BAKER);
@@ -982,7 +1064,6 @@ interface ClientV2MapperExtensions {
 
         return result.build();
     }
-
 
     static TransactionTypeInfo toTransactionType(BlockItemSummary summary) {
         var builder = TransactionTypeInfo.builder();
