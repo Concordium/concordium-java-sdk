@@ -5,13 +5,13 @@ import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
+import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
@@ -180,8 +180,20 @@ public final class ClientV2 {
     public Hash sendTransaction(final AccountTransaction accountTransaction) {
         var req = ClientV2MapperExtensions.to(accountTransaction);
         var grpcOutput = this.server().sendBlockItem(req);
-        
+
         return to(grpcOutput);
+    }
+
+    /**
+     * Gets all the Identity Providers at the end of the block pointed by {@link BlockHashInput}.
+     *
+     * @param input Pointer to the Block.
+     * @return {@link Iterator} of {@link IdentityProviderInfo}
+     */
+    public Iterator<IdentityProviderInfo> getIdentityProviders(final BlockHashInput input) {
+        var grpcOutput = this.server().getIdentityProviders(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
     /**

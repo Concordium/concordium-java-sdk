@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -28,6 +29,7 @@ public final class IdentityProviderInfo {
     private final PSPublicKey ipVerifyKey;
 
     @JsonCreator
+    @Builder
     public IdentityProviderInfo(@JsonProperty("ipIdentity") int ipIdentity,
                                 @JsonProperty("ipDescription") Description description,
                                 @JsonProperty("ipCdiVerifyKey") ED25519PublicKey ipCdiVerifyKey,

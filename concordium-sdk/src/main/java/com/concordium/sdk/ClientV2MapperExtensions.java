@@ -13,6 +13,7 @@ import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
+import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
@@ -23,6 +24,7 @@ import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
+import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
@@ -116,6 +118,15 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
+    static IdentityProviderInfo to(final IpInfo ipInfo) {
+        return IdentityProviderInfo.builder()
+                .ipIdentity(to(ipInfo.getIdentity()))
+                .description(to(ipInfo.getDescription()))
+                .ipCdiVerifyKey(to(ipInfo.getCdiVerifyKey()))
+                .ipVerifyKey(to(ipInfo.getVerifyKey()))
+                .build();
+    }
+
     static ElgamalPublicKey to(final ArInfo.ArPublicKey publicKey) {
         return ElgamalPublicKey.from(publicKey.getValue().toByteArray());
     }
@@ -130,6 +141,17 @@ interface ClientV2MapperExtensions {
 
     static int to(final ArInfo.ArIdentity identity) {
         return identity.getValue();
+    }
+    static int to(final IpIdentity identity) {
+        return identity.getValue();
+    }
+
+    static PSPublicKey to(final IpInfo.IpVerifyKey verifyKey) {
+        return new PSPublicKey(verifyKey.getValue().toByteArray());
+    }
+
+    static ED25519PublicKey to(final IpInfo.IpCdiVerifyKey cdiVerifyKey) {
+        return ED25519PublicKey.from(cdiVerifyKey.getValue().toByteArray());
     }
 
     static <T1, T2> Iterator<T2> to(final Iterator<T1> iterator, final Function<? super T1, ? extends T2> to) {
