@@ -337,7 +337,8 @@ public class ClientV2GetItemsTest {
                         .setRawPayload(ByteString.copyFrom(payloadBytes))
                         .build())
                 .build());
-        val expected = com.concordium.sdk.transactions.AccountTransaction.builderBlockItem()
+        val expected = com.concordium.sdk.transactions.AccountTransaction
+                .builderAccountTransactionBlockItem()
                 .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(3)).build())
                 .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
                 .payloadBytes(payloadBytes)
@@ -351,7 +352,8 @@ public class ClientV2GetItemsTest {
         val mapped = to(ACCOUNT_TRANSACTION_DEPLOY_MODULE_V0.toBuilder()
                 .setPayload(AccountTransactionPayload.newBuilder().build())
                 .build());
-        val expected = com.concordium.sdk.transactions.AccountTransaction.builderBlockItem()
+        val expected = com.concordium.sdk.transactions.AccountTransaction
+                .builderAccountTransactionBlockItem()
                 .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(0)).build())
                 .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
                 .payloadBytes(new byte[0])

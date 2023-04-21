@@ -15,6 +15,7 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
@@ -167,6 +168,19 @@ public final class ClientV2 {
     public ConsensusStatus getConsensusInfo() {
         var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
+        return to(grpcOutput);
+    }
+
+    /**
+     * Sends an Account Transaction to the Concordium Node.
+     *
+     * @param accountTransaction Account Transaction to send.
+     * @return Transaction {@link Hash}.
+     */
+    public Hash sendTransaction(final AccountTransaction accountTransaction) {
+        var req = ClientV2MapperExtensions.to(accountTransaction);
+        var grpcOutput = this.server().sendBlockItem(req);
+        
         return to(grpcOutput);
     }
 
