@@ -14,7 +14,7 @@ import lombok.NonNull;
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class InitContractTransaction extends AbstractAccountTransaction {
+public class InitContractTransaction extends AccountTransaction {
 
     /**
      * A constructor of {@link InitContractTransaction} class.

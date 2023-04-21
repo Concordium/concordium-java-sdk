@@ -11,7 +11,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class UpdateCredentialKeysTransaction extends AbstractAccountTransaction {
+public class UpdateCredentialKeysTransaction extends AccountTransaction {
     private UpdateCredentialKeysTransaction(
             @NonNull final CredentialRegistrationId credentialRegistrationID,
             @NonNull final CredentialPublicKeys keys,

@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class TransferWithMemoTransaction extends AbstractAccountTransaction {
+public class TransferWithMemoTransaction extends AccountTransaction {
     private TransferWithMemoTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final AccountAddress receiver,

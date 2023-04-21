@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class TransferToEncryptedTransaction extends AbstractAccountTransaction {
+public class TransferToEncryptedTransaction extends AccountTransaction {
     private TransferToEncryptedTransaction(
             @NonNull final CCDAmount amount,
             @NonNull final AccountAddress sender,
