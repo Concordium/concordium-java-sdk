@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ConfigureBakerTransaction extends AbstractAccountTransaction {
+public class ConfigureBakerTransaction extends AccountTransaction {
 
     ConfigureBakerTransaction(
             @NonNull final ConfigureBakerPayload payload,

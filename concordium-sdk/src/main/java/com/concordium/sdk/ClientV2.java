@@ -5,7 +5,6 @@ import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
@@ -16,6 +15,7 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProvider
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
@@ -151,7 +151,7 @@ public final class ClientV2 {
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#UPDATE_INSTRUCTION}
      *
      * @param input Pointer to the Block.
-     * @return {@link Iterator} of {@link BlockItem}
+     * @return
      */
     public Iterator<BlockItem> getBlockItems(final BlockHashInput input) {
         var grpcOutput = this.server().getBlockItems(to(input));
@@ -168,6 +168,19 @@ public final class ClientV2 {
     public ConsensusStatus getConsensusInfo() {
         var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
+        return to(grpcOutput);
+    }
+
+    /**
+     * Sends an Account Transaction to the Concordium Node.
+     *
+     * @param accountTransaction Account Transaction to send.
+     * @return Transaction {@link Hash}.
+     */
+    public Hash sendTransaction(final AccountTransaction accountTransaction) {
+        var req = ClientV2MapperExtensions.to(accountTransaction);
+        var grpcOutput = this.server().sendBlockItem(req);
+
         return to(grpcOutput);
     }
 
