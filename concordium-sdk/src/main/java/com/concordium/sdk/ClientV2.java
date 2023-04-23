@@ -8,6 +8,7 @@ import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
+import com.concordium.sdk.responses.DelegatorInfo;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
@@ -292,6 +293,19 @@ public final class ClientV2 {
         var grpcOutput = this.server().getBranches(Empty.getDefaultInstance());
 
         return ClientV2MapperExtensions.to(grpcOutput);
+    }
+
+
+    /**
+     * Get information about the passive delegators at the end of a given block.
+     *
+     * @param input {@link BlockHashInput}.
+     * @return {@link Iterator} of {@link DelegatorInfo}.
+     */
+    public Iterator<DelegatorInfo> getPassiveDelegators(BlockHashInput input) {
+        var grpcOutput = this.server().getPassiveDelegators(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
     /**
