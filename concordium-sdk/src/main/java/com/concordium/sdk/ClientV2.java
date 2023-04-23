@@ -12,6 +12,7 @@ import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
+import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
@@ -277,6 +278,20 @@ public final class ClientV2 {
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(transactionHash);
         }
+    }
+
+    /**
+     * Get the branches of the node's tree. Branches are all live blocks that
+     * are successors of the last finalized block. In particular this means
+     * that blocks which do not have a parent are not included in this
+     * response
+     *
+     * @return {@link Branch}
+     */
+    public Branch getBranches() {
+        var grpcOutput = this.server().getBranches(Empty.getDefaultInstance());
+
+        return ClientV2MapperExtensions.to(grpcOutput);
     }
 
     /**

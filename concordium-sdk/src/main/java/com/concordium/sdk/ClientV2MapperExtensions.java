@@ -27,6 +27,7 @@ import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
+import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.*;
@@ -1243,6 +1244,13 @@ interface ClientV2MapperExtensions {
                 .transactionsSize(blockInfo.getTransactionsSize())
                 .transactionCount(blockInfo.getTransactionCount())
                 .blockArriveTime(to(to(blockInfo.getArriveTime())))
+                .build();
+    }
+
+    static Branch to(com.concordium.grpc.v2.Branch branch) {
+        return Branch.builder()
+                .blockHash(to(branch.getBlockHash()))
+                .children(to(branch.getChildrenList(), ClientV2MapperExtensions::to))
                 .build();
     }
 }
