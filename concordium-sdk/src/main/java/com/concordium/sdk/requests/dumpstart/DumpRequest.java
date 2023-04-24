@@ -20,7 +20,7 @@ public class DumpRequest {
     private final File file;
 
     /**
-     * Whether the node should dump raw packages
+     * Whether the node should dump raw packages.
      */
     private boolean raw;
 }
