@@ -1,0 +1,51 @@
+package com.concordium.sdk.examples;
+
+import com.concordium.sdk.ClientV2;
+import com.concordium.sdk.Connection;
+import com.concordium.sdk.Credentials;
+import com.concordium.sdk.exceptions.BlockNotFoundException;
+import com.concordium.sdk.exceptions.ClientInitializationException;
+import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import lombok.val;
+import lombok.var;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.Callable;
+
+@Command(name = "GetBlockChainParameters", mixinStandardHelpOptions = true)
+public class GetCryptographicParameters implements Callable<Integer> {
+    @Option(
+            names = {"--endpoint"},
+            description = "GRPC interface of the node.",
+            defaultValue = "http://localhost:20001")
+    private String endpoint;
+
+    @Override
+    public Integer call() throws MalformedURLException, ClientInitializationException, BlockNotFoundException {
+        var endpointUrl = new URL(this.endpoint);
+
+        Connection connection = Connection.builder()
+                .host(endpointUrl.getHost())
+                .port(endpointUrl.getPort())
+                .credentials(new Credentials())
+                .build();
+
+        val client = ClientV2.from(connection);
+        CryptographicParameters getBlockItemStatusFailure = client
+                .getCryptographicParameters(BlockHashInput.BEST);
+
+        System.out.println(getBlockItemStatusFailure);
+
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        int exitCode = new CommandLine(new GetCryptographicParameters()).execute(args);
+        System.exit(exitCode);
+    }
+}
