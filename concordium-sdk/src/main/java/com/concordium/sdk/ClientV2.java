@@ -279,6 +279,20 @@ public final class ClientV2 {
         }
     }
 
+
+    /**
+     * Get the list of transactions hashes for transactions that claim to be from the given account,
+     * but which are not yet finalized. They are either committed to a block or still pending.
+     * If the account does not exist an empty list will be returned.
+     *
+     * @param address {@link AccountAddress}
+     * @return {@link Iterator} of Transaction {@link Hash}
+     */
+    public Iterator<Hash> getAccountNonFinalizedTransactions(AccountAddress address) {
+        val grpcOutput = this.server().getAccountNonFinalizedTransactions(to(address));
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
     /**
      * Closes the underlying grpc channel
      * <p>

@@ -1,4 +1,5 @@
 # Changelog
+- Added support for GRPC V2 `GetAccountNonFinalizedTransactions`
 
 ## Unreleased changes
 - Added support for GRPC V2 `GetAccountInfo`
