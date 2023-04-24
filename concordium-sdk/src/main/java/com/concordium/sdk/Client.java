@@ -565,7 +565,7 @@ public final class Client {
      *
      * @param blockHash {@link Hash} of the block at which the parameters need to be retrived.
      * @return Parsed {@link BirkParameters}
-     * @throws Exception When the returned response is null.
+     * @throws BlockNotFoundException When the returned response is null.
      */
     public BirkParameters getBirkParameters(Hash blockHash) throws BlockNotFoundException {
         val res = server()

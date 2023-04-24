@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class TransferScheduleWithMemoTransaction extends AbstractAccountTransaction {
+public class TransferScheduleWithMemoTransaction extends AccountTransaction {
     private TransferScheduleWithMemoTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final AccountAddress to,

@@ -750,7 +750,7 @@ overview of the supported `Transaction` types and a convenient way of obtaining 
 ```java
 AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc");
 AccountAddress receiver = AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM");
-GTUAmount amount = GTUAmount.asMicro(17);
+CCDAmount amount = CCDAmount.fromMicro(17);
 AccountNonce accountNonce = AccountNonce.from(78910);
 Expiry expiry = Expiry.createNew().addMinutes(5);
 

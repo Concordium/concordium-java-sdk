@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class RegisterDataTransaction extends AbstractAccountTransaction {
+public class RegisterDataTransaction extends AccountTransaction {
     private RegisterDataTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final Data data,

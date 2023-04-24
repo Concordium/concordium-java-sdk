@@ -11,7 +11,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class UpdateContractTransaction extends AbstractAccountTransaction {
+public class UpdateContractTransaction extends AccountTransaction {
     private UpdateContractTransaction(
             @NonNull final UpdateContractPayload payload,
             @NonNull final AccountAddress sender,
