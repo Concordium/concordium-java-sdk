@@ -2,7 +2,7 @@
 
 ## Unreleased changes
 - Added support for GRPC V2 `DumpStart` which instructs the node to start dumping network packages at a specified path.
-- Added support for GRPC V2 Dump Stop
+- Added support for GRPC V2 `DumpStop` which instructs the node to stop dumping packages.
 - Added support for GRPC V2 Get Account Info
 - Added support for GRPC V2 Get Account List
 - Added support for GRPC V2 Get Next Account Nonce Number
