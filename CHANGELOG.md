@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased changes
-- Added support for GRPC V2 Peer Connect
+- Added support for GRPC V2 `PeerConnect` for instructing the node to connect to a specific peer.
 - Added support for GRPC V2 Peer Disconnect
 - Added support for GRPC V2 Get Peers Info
 - Added support for GRPC V2 Get Account Info
