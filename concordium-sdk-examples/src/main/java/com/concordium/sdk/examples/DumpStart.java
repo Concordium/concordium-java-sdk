@@ -10,6 +10,8 @@ import picocli.CommandLine;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "DumpStart", mixinStandardHelpOptions = true)
@@ -29,9 +31,9 @@ public class DumpStart implements Callable<Integer> {
                 .port(endpointUrl.getPort())
                 .credentials(new Credentials())
                 .build();
-        File file = new File("./myDump");
+        Path path = Paths.get("./myDump");
         DumpRequest dumpRequest = DumpRequest.builder()
-                .file(file)
+                .path(path)
                 .raw(true).build();
         ClientV2
                 .from(connection)

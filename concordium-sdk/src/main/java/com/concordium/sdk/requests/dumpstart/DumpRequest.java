@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * The dump request used when requesting dumping of packages.
@@ -17,7 +18,7 @@ public class DumpRequest {
      * Which file to dump the packages into
      * Requires a valid path
      */
-    private final File file;
+    private final Path path;
 
     /**
      * Whether the node should dump raw packages.
