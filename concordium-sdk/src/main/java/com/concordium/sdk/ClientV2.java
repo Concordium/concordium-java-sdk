@@ -225,9 +225,7 @@ public final class ClientV2 {
         val grpcOutput = this.server().getBlockTransactionEvents(to(blockHashInput));
         val list = new ImmutableList.Builder<TransactionSummary>();
         val response = to(grpcOutput,ClientV2MapperExtensions::to);
-        while(response.hasNext()) {
-            list.add(response.next());
-        }
+        response.forEachRemaining(list::add);
         return list.build();
     }
 
