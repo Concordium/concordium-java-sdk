@@ -27,7 +27,7 @@ public class PeerDisconnect implements Callable<Integer> {
                 .credentials(new Credentials())
                 .build();
 
-        InetSocketAddress peer = new InetSocketAddress("3.97.143.216", 8888);
+        InetSocketAddress peer = new InetSocketAddress("192.0.2.0", 8888);
         ClientV2
                 .from(connection)
                 .peerDisconnect(peer);
