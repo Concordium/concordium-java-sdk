@@ -51,11 +51,11 @@ public interface TransactionSigner {
     static TransactionSignerImpl from(File walletExport) throws IOException {
         val transactionSigner = new TransactionSignerImpl();
         JsonNode json = JsonMapper.INSTANCE.readTree(walletExport);
-        val inputEntries = json.get("value").get("accountKeys").get("keys");
-        int nrOfEntries = inputEntries.size();
-        for (int i = 0; i < nrOfEntries; i++) {
+        val credentialEntries = json.get("value").get("accountKeys").get("keys");
+        int nrOfCredentials = credentialEntries.size();
+        for (int i = 0; i < nrOfCredentials; i++) {
             val credentialIndex = Index.from(i);
-            val entryKeys = inputEntries.get(String.valueOf(i)).get("keys");
+            val entryKeys = credentialEntries.get(String.valueOf(i)).get("keys");
             int nrOfKeys = entryKeys.size();
             for (int j = 0; j < nrOfKeys; j++) {
                 val keyIndex = Index.from(j);
