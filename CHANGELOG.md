@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for GRPC V2 `GetBlockFinalizationSummary`for retrieving summary of the finalisation data in a given block
 - Added support for GRPC V2 `GetAccountInfo`
 - Added support for GRPC V2 `GetAccountList`
 - Added support for GRPC V2 `GetNextAccountNonceNumber`

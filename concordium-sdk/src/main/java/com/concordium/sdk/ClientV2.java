@@ -280,6 +280,12 @@ public final class ClientV2 {
         }
     }
 
+    /**
+     * Retrieves the {@link FinalizationData} of a given block {@link BlockHashInput}
+     * Note. Returns NULL if there is no finalization data in the block
+     * @param blockHashInput the block {@link BlockHashInput} to query
+     * @return The {@link FinalizationData} of the block
+     */
     public FinalizationData getBlockFinalizationSummary(BlockHashInput blockHashInput) {
         val grpcOutput = this.server().getBlockFinalizationSummary(to(blockHashInput));
         return to(grpcOutput);
