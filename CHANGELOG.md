@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for importing mobile & browser extension wallet exports
 - Added support for GRPC V2 `GetAccountInfo`
 - Added support for GRPC V2 `GetAccountList`
 - Added support for GRPC V2 `GetNextAccountNonceNumber`
