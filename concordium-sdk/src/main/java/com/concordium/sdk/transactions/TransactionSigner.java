@@ -46,7 +46,7 @@ public interface TransactionSigner {
      *
      * @param walletExport The {@link File} containing an exported wallet
      * @return the {@link TransactionSignerImpl} populated with keys from the exported wallet
-     * @throws IOException //TODO
+     * @throws IOException if provided {@link File} does not contain exported wallet
      */
     static TransactionSignerImpl from(File walletExport) throws IOException {
         val transactionSigner = new TransactionSignerImpl();
