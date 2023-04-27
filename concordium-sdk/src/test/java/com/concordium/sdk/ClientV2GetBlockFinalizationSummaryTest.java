@@ -15,10 +15,8 @@ import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -55,12 +53,12 @@ public class ClientV2GetBlockFinalizationSummaryTest {
             .setBaker(BakerId.newBuilder().setValue(FINALIZER_TWO_ID).build())
             .setWeight(FINALIZER_TWO_WEIGHT)
             .setSigned(FINALIZER_TWO_SIGNED)
-            .build();;
+            .build();
     private static final FinalizationSummaryParty GRPC_FINALIZER_THREE = FinalizationSummaryParty.newBuilder()
             .setBaker(BakerId.newBuilder().setValue(FINALIZER_THREE_ID).build())
             .setWeight(FINALIZER_THREE_WEIGHT)
             .setSigned(FINALIZER_THREE_SIGNED)
-            .build();;
+            .build();
     private static final List<FinalizationSummaryParty> GRPC_FINALIZERS = new ImmutableList.Builder<FinalizationSummaryParty>()
             .add(GRPC_FINALIZER_ONE)
             .add(GRPC_FINALIZER_TWO)
