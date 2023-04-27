@@ -24,6 +24,8 @@ import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.accountinfo.*;
 import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
+import com.concordium.sdk.responses.blocksummary.FinalizationData;
+import com.concordium.sdk.responses.blocksummary.Finalizer;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
@@ -56,6 +58,7 @@ import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
@@ -63,6 +66,7 @@ import lombok.val;
 import lombok.var;
 
 import javax.annotation.Nullable;
+import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.util.*;
@@ -1244,5 +1248,29 @@ interface ClientV2MapperExtensions {
                 .transactionCount(blockInfo.getTransactionCount())
                 .blockArriveTime(to(to(blockInfo.getArriveTime())))
                 .build();
+    }
+
+    static FinalizationData to(BlockFinalizationSummary finalizationSummary) {
+        if (finalizationSummary.hasNone()) {return null;} //There is no finalization data in the block
+        val finalizationData = finalizationSummary.getRecord();
+        val finalizationBlockPointer = to(finalizationData.getBlock()).toString();
+        int finalizationIndex = (int) finalizationData.getIndex().getValue();
+        int finalizationDelay = (int) finalizationData.getDelay().getValue();
+        val grpcFinalizers = finalizationData.getFinalizersList();
+        val finalizers = new ImmutableList.Builder<Finalizer>();
+        grpcFinalizers.forEach(f -> finalizers.add(to(f)));
+
+        return FinalizationData.builder()
+                .finalizationBlockPointer(finalizationBlockPointer)
+                .finalizationIndex(finalizationIndex)
+                .finalizationDelay(finalizationDelay)
+                .finalizers(finalizers.build()).build();
+    }
+
+    static Finalizer to(FinalizationSummaryParty finalizer) {
+        return Finalizer.builder()
+                .bakerId(com.concordium.sdk.responses.AccountIndex.from(finalizer.getBaker().getValue()))
+                .weight(BigInteger.valueOf(finalizer.getWeight()))
+                .signed(finalizer.getSigned()).build();
     }
 }

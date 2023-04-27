@@ -10,6 +10,7 @@ import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
@@ -277,6 +278,11 @@ public final class ClientV2 {
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(transactionHash);
         }
+    }
+
+    public FinalizationData getBlockFinalizationSummary(BlockHashInput blockHashInput) {
+        val grpcOutput = this.server().getBlockFinalizationSummary(to(blockHashInput));
+        return to(grpcOutput);
     }
 
     /**
