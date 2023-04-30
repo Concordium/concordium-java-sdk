@@ -28,6 +28,7 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.election.ElectionInfoBaker;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
@@ -56,6 +57,7 @@ import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
@@ -145,6 +147,7 @@ interface ClientV2MapperExtensions {
     static int to(final ArInfo.ArIdentity identity) {
         return identity.getValue();
     }
+
     static int to(final IpIdentity identity) {
         return identity.getValue();
     }
@@ -888,8 +891,7 @@ interface ClientV2MapperExtensions {
                     .finalizationRewardAccount(to(tokenomicsInfo.getV0().getFinalizationRewardAccount()))
                     .gasAccount(to(tokenomicsInfo.getV0().getGasAccount()))
                     .protocolVersion(to(tokenomicsInfo.getV0().getProtocolVersion()));
-        }
-        else if (tokenomicsInfo.hasV1()) {
+        } else if (tokenomicsInfo.hasV1()) {
             builder = builder.totalAmount(to(tokenomicsInfo.getV1().getTotalAmount()))
                     .totalEncryptedAmount(to(tokenomicsInfo.getV1().getTotalEncryptedAmount()))
                     .bakingRewardAccount(to(tokenomicsInfo.getV1().getBakingRewardAccount()))
@@ -943,6 +945,7 @@ interface ClientV2MapperExtensions {
 
         return outcomes;
     }
+
     static Map<Hash, TransactionSummary> to(BlockItemSummaryInBlock outcome) {
         Map<Hash, TransactionSummary> result = new HashMap<>();
         result.put(to(outcome.getBlockHash()), to(outcome.getOutcome()));
@@ -1243,6 +1246,22 @@ interface ClientV2MapperExtensions {
                 .transactionsSize(blockInfo.getTransactionsSize())
                 .transactionCount(blockInfo.getTransactionCount())
                 .blockArriveTime(to(to(blockInfo.getArriveTime())))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.election.ElectionInfo to(ElectionInfo grpcOutput) {
+        return com.concordium.sdk.responses.election.ElectionInfo.builder()
+                .electionDifficulty(to(grpcOutput.getElectionDifficulty().getValue()))
+                .leadershipElectionNonce(grpcOutput.getElectionNonce().getValue().toByteArray())
+                .bakerElectionInfo(ImmutableList.copyOf(to(grpcOutput.getBakerElectionInfoList(), ClientV2MapperExtensions::to)))
+                .build();
+    }
+
+    static ElectionInfoBaker to(ElectionInfo.Baker i) {
+        return ElectionInfoBaker.builder()
+                .baker(to(i.getBaker()))
+                .account(to(i.getAccount()))
+                .lotteryPower(i.getLotteryPower())
                 .build();
     }
 }

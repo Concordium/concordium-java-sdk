@@ -13,6 +13,7 @@ import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
@@ -277,6 +278,17 @@ public final class ClientV2 {
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(transactionHash);
         }
+    }
+
+    /**
+     * Get information related to the baker election for a particular block.
+     * @param input {@link BlockHashInput}
+     * @return {@link ElectionInfo}
+     */
+    public ElectionInfo getElectionInfo(BlockHashInput input) {
+        var grpcOutput = this.server().getElectionInfo(to(input));
+
+        return ClientV2MapperExtensions.to(grpcOutput);
     }
 
     /**
