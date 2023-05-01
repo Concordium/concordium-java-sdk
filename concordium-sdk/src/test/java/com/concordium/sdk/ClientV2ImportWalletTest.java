@@ -12,8 +12,8 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Constructs {@link TransactionSigner} from the 2 wallets in /test/'*'/walleterxport
- * and asserts the result is as expected.
+ * Constructs {@link TransactionSigner} from the 2 wallets in /test/'*'/walletexports
+ * and asserts the resulting TransactionSigner is correct.
  */
 public class ClientV2ImportWalletTest {
 
