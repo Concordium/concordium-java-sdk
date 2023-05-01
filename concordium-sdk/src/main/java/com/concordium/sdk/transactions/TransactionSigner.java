@@ -51,7 +51,9 @@ public interface TransactionSigner {
     static TransactionSignerImpl from(File walletExport) throws IOException {
         val transactionSigner = new TransactionSignerImpl();
         JsonNode json = JsonMapper.INSTANCE.readTree(walletExport);
-        val credentialEntries = json.get("value").get("accountKeys").get("keys");
+        // Browser wallet format has field "value" otherwise structure for accessing keys is similar
+        if (json.has("value")) {json = json.get("value");}
+        val credentialEntries = json.get("accountKeys").get("keys");
         int nrOfCredentials = credentialEntries.size();
         for (int i = 0; i < nrOfCredentials; i++) {
             val credentialIndex = Index.from(i);
