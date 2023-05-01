@@ -1,14 +1,30 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.BlockSpecialEvent;
+import com.concordium.grpc.v2.*;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.*;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.google.common.collect.ImmutableList;
+import com.google.protobuf.ByteString;
+import io.grpc.ManagedChannel;
+import io.grpc.inprocess.InProcessChannelBuilder;
+import io.grpc.inprocess.InProcessServerBuilder;
+import io.grpc.stub.StreamObserver;
+import io.grpc.testing.GrpcCleanupRule;
+import lombok.val;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.AdditionalAnswers.delegatesTo;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class ClientV2GetBlockSpecialEventsTest {
 
@@ -44,17 +60,24 @@ public class ClientV2GetBlockSpecialEventsTest {
             .add(CLIENT_REWARD_TWO)
             .add(CLIENT_REWARD_THREE)
             .build();
-    private static final BlockSpecialEvent.AccountAmounts.Entry GRPC_REWARD_ONE = null;
-    private static final BlockSpecialEvent.AccountAmounts.Entry GRPC_REWARD_TWO = null;
-    private static final BlockSpecialEvent.AccountAmounts.Entry GRPC_REWARD_THREE = null;
+    private static final BlockSpecialEvent.AccountAmounts.Entry GRPC_REWARD_ONE = BlockSpecialEvent.AccountAmounts.Entry.newBuilder()
+            .setAccount(grpcAddressFrom(ADDRESS_ONE))
+            .setAmount(Amount.newBuilder().setValue(AMOUNT_ONE))
+            .build();
+    private static final BlockSpecialEvent.AccountAmounts.Entry GRPC_REWARD_TWO = BlockSpecialEvent.AccountAmounts.Entry.newBuilder()
+            .setAccount(grpcAddressFrom(ADDRESS_TWO))
+            .setAmount(Amount.newBuilder().setValue(AMOUNT_TWO))
+            .build();
+    private static final BlockSpecialEvent.AccountAmounts.Entry GRPC_REWARD_THREE = BlockSpecialEvent.AccountAmounts.Entry.newBuilder()
+            .setAccount(grpcAddressFrom(ADDRESS_THREE))
+            .setAmount(Amount.newBuilder().setValue(AMOUNT_THREE))
+            .build();
 
-    /** TODO
     private static final BlockSpecialEvent.AccountAmounts GRPC_REWARDS_LIST = BlockSpecialEvent.AccountAmounts.newBuilder()
             .addEntries(GRPC_REWARD_ONE)
             .addEntries(GRPC_REWARD_TWO)
             .addEntries(GRPC_REWARD_THREE)
             .build();
-    */
 
     // Client special events
     private static final SpecialOutcome CLIENT_BAKING_REWARDS = BakingRewards.builder()
@@ -107,14 +130,70 @@ public class ClientV2GetBlockSpecialEventsTest {
             .build();
 
     // GRPC Special events
-    private static final BlockSpecialEvent GRPC_BAKING_REWARDS = null;
-    private static final BlockSpecialEvent GRPC_MINT = null;
-    private static final BlockSpecialEvent GRPC_FINALIZATION_REWARDS = null;
-    private static final BlockSpecialEvent GRPC_BLOCK_REWARD = null;
-    private static final BlockSpecialEvent GRPC_PAYDAY_FOUNDATION_REWARD = null;
-    private static final BlockSpecialEvent GRPC_PAYDAY_ACCOUNT_REWARD = null;
-    private static final BlockSpecialEvent GRPC_BLOCK_ACCRUE_REWARD = null;
-    private static final BlockSpecialEvent GRPC_PAYDAY_POOL_REWARD = null;
+    private static final BlockSpecialEvent GRPC_BAKING_REWARDS = BlockSpecialEvent.newBuilder()
+            .setBakingRewards(BlockSpecialEvent.BakingRewards.newBuilder()
+                    .setBakerRewards(GRPC_REWARDS_LIST)
+                    .setRemainder(Amount.newBuilder().setValue(AMOUNT_ONE).build())
+                    .build())
+            .build();
+    private static final BlockSpecialEvent GRPC_MINT = BlockSpecialEvent.newBuilder()
+            .setMint(BlockSpecialEvent.Mint.newBuilder()
+                    .setMintBakingReward(Amount.newBuilder().setValue(AMOUNT_ONE).build())
+                    .setMintFinalizationReward(Amount.newBuilder().setValue(AMOUNT_TWO).build())
+                    .setMintPlatformDevelopmentCharge(Amount.newBuilder().setValue(AMOUNT_THREE).build())
+                    .setFoundationAccount(grpcAddressFrom(ADDRESS_ONE))
+                    .build())
+            .build();
+    private static final BlockSpecialEvent GRPC_FINALIZATION_REWARDS = BlockSpecialEvent.newBuilder()
+            .setFinalizationRewards(BlockSpecialEvent.FinalizationRewards.newBuilder()
+                    .setFinalizationRewards(GRPC_REWARDS_LIST)
+                    .setRemainder(Amount.newBuilder().setValue(AMOUNT_ONE).build())
+                    .build())
+            .build();
+    private static final BlockSpecialEvent GRPC_BLOCK_REWARD = BlockSpecialEvent.newBuilder()
+            .setBlockReward(BlockSpecialEvent.BlockReward.newBuilder()
+                    .setTransactionFees(Amount.newBuilder().setValue(AMOUNT_ONE).build())
+                    .setOldGasAccount(Amount.newBuilder().setValue(AMOUNT_TWO).build())
+                    .setNewGasAccount(Amount.newBuilder().setValue(AMOUNT_THREE).build())
+                    .setBakerReward(Amount.newBuilder().setValue(AMOUNT_FOUR).build())
+                    .setFoundationCharge(Amount.newBuilder().setValue(AMOUNT_FIVE).build())
+                    .setBaker(grpcAddressFrom(ADDRESS_ONE))
+                    .setFoundationAccount(grpcAddressFrom(ADDRESS_TWO))
+                    .build())
+            .build();
+    private static final BlockSpecialEvent GRPC_PAYDAY_FOUNDATION_REWARD = BlockSpecialEvent.newBuilder()
+            .setPaydayFoundationReward(BlockSpecialEvent.PaydayFoundationReward.newBuilder()
+                    .setFoundationAccount(grpcAddressFrom(ADDRESS_ONE))
+                    .setDevelopmentCharge(Amount.newBuilder().setValue(AMOUNT_ONE).build())
+                    .build())
+            .build();
+    private static final BlockSpecialEvent GRPC_PAYDAY_ACCOUNT_REWARD = BlockSpecialEvent.newBuilder()
+            .setPaydayAccountReward(BlockSpecialEvent.PaydayAccountReward.newBuilder()
+                    .setAccount(grpcAddressFrom(ADDRESS_ONE))
+                    .setTransactionFees(Amount.newBuilder().setValue(AMOUNT_ONE).build())
+                    .setBakerReward(Amount.newBuilder().setValue(AMOUNT_TWO).build())
+                    .setFinalizationReward(Amount.newBuilder().setValue(AMOUNT_THREE).build())
+                    .build())
+            .build();
+    private static final BlockSpecialEvent GRPC_BLOCK_ACCRUE_REWARD = BlockSpecialEvent.newBuilder()
+            .setBlockAccrueReward(BlockSpecialEvent.BlockAccrueReward.newBuilder()
+                    .setTransactionFees(Amount.newBuilder().setValue(AMOUNT_ONE).build())
+                    .setOldGasAccount(Amount.newBuilder().setValue(AMOUNT_TWO).build())
+                    .setNewGasAccount(Amount.newBuilder().setValue(AMOUNT_THREE).build())
+                    .setBakerReward(Amount.newBuilder().setValue(AMOUNT_FOUR).build())
+                    .setPassiveReward(Amount.newBuilder().setValue(AMOUNT_FIVE).build())
+                    .setFoundationCharge(Amount.newBuilder().setValue(AMOUNT_SIX).build())
+                    .setBaker(BakerId.newBuilder().setValue(BAKER_ID))
+                    .build())
+            .build();
+    private static final BlockSpecialEvent GRPC_PAYDAY_POOL_REWARD = BlockSpecialEvent.newBuilder()
+            .setPaydayPoolReward(BlockSpecialEvent.PaydayPoolReward.newBuilder()
+                    .setPoolOwner(BakerId.newBuilder().setValue(BAKER_ID).build())
+                    .setTransactionFees(Amount.newBuilder().setValue(AMOUNT_ONE).build())
+                    .setBakerReward(Amount.newBuilder().setValue(AMOUNT_TWO).build())
+                    .setFinalizationReward(Amount.newBuilder().setValue(AMOUNT_THREE).build())
+                    .build())
+            .build();
 
     // GRPC return value and expected clientside result
     private static final ImmutableList<SpecialOutcome> CLIENT_EXPECTED_RESULT = new ImmutableList.Builder<SpecialOutcome>()
@@ -127,7 +206,7 @@ public class ClientV2GetBlockSpecialEventsTest {
             .add(CLIENT_BLOCK_ACCRUE_REWARD)
             .add(CLIENT_PAYDAY_POOL_REWARD)
             .build();
-    /** TODO
+
     private static final Iterator<BlockSpecialEvent> GRPC_RESULT = new ImmutableList.Builder<BlockSpecialEvent>()
             .add(GRPC_BAKING_REWARDS)
             .add(GRPC_MINT)
@@ -138,10 +217,48 @@ public class ClientV2GetBlockSpecialEventsTest {
             .add(GRPC_BLOCK_ACCRUE_REWARD)
             .add(GRPC_PAYDAY_POOL_REWARD)
             .build().iterator();
-    */
+
+    private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
+            new QueriesGrpc.QueriesImplBase() {
+                @Override
+                public void getBlockSpecialEvents(BlockHashInput request, StreamObserver<BlockSpecialEvent> responseObserver) {
+                    GRPC_RESULT.forEachRemaining(responseObserver::onNext);
+                    responseObserver.onCompleted();
+                }
+            }
+    ));
+    @Rule
+    public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
+    private ClientV2 client;
+
+    @Before
+    public void setUp() throws Exception {
+        String serverName = InProcessServerBuilder.generateName();
+        grpcCleanup.register(InProcessServerBuilder
+                .forName(serverName).directExecutor().addService(serviceImpl).build().start());
+        ManagedChannel channel = grpcCleanup.register(
+                InProcessChannelBuilder.forName(serverName).directExecutor().build());
+        client = new ClientV2(10000, channel, Credentials.builder().build());
+    }
+
+    @Test
+    public void test() {
+        val res = client.getBlockSpecialEvents(com.concordium.sdk.requests.BlockHashInput.BEST);
+
+        verify(serviceImpl).getBlockSpecialEvents(any(BlockHashInput.class), any(StreamObserver.class));
+        assertEquals(CLIENT_EXPECTED_RESULT, res);
+    }
 
     @Test
     public void foo() {
-        System.out.println(CLIENT_EXPECTED_RESULT);
+        System.out.println(client.getBlockSpecialEvents(com.concordium.sdk.requests.BlockHashInput.BEST));
+    }
+
+
+    /**
+     * Helper method for creating {@link com.concordium.grpc.v2.AccountAddress} from byte array to improve readability
+     */
+    private static com.concordium.grpc.v2.AccountAddress grpcAddressFrom(byte[] bytes) {
+        return com.concordium.grpc.v2.AccountAddress.newBuilder().setValue(ByteString.copyFrom(bytes)).build();
     }
 }
