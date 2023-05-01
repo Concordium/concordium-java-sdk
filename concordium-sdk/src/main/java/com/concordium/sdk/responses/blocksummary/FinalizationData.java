@@ -14,9 +14,22 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode
 public final class FinalizationData {
+
+    /**
+     * Block that was finalized by the finalization record.
+     */
     private final String finalizationBlockPointer;
+    /**
+     * Index of the finalization round that finalized the block.
+     */
     private final int finalizationIndex;
+    /**
+     * Finalization delay for the first finalization round.
+     */
     private final int finalizationDelay;
+    /**
+     * List of all finalizers.
+     */
     private final List<Finalizer> finalizers;
 
     @JsonCreator

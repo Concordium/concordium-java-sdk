@@ -25,6 +25,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+/**
+ * The test asserts that {@link ClientV2#getBlockFinalizationSummary(com.concordium.sdk.requests.BlockHashInput)}
+ * correctly converts the {@link BlockFinalizationSummary} returned by the server to {@link FinalizationData}.
+ */
 public class ClientV2GetBlockFinalizationSummaryTest {
 
     private static final byte[] BLOCK_HASH = new byte[]{1, 2, 3};
