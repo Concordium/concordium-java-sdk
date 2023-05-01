@@ -26,6 +26,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+/**
+ * The test asserts that {@link ClientV2#getBlockSpecialEvents(com.concordium.sdk.requests.BlockHashInput)}
+ * correctly converts the {@link Iterator} of {@link BlockSpecialEvent} returned by the server to {@link ImmutableList} of {@link SpecialOutcome}.
+ */
 public class ClientV2GetBlockSpecialEventsTest {
 
     // Amounts and addresses for creating Special Events / Outcomes
