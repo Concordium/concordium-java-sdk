@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableList;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
+import lombok.SneakyThrows;
 import lombok.val;
 import lombok.var;
 
@@ -221,6 +222,11 @@ public final class ClientV2 {
         }
     }
 
+    /**
+     * Get a {@link ImmutableList} of {@link TransactionSummary} events in a given block.
+     * @param blockHashInput The block {@link BlockHashInput} to query
+     * @return {@link ImmutableList} of {@link TransactionSummary}
+     */
     public ImmutableList<TransactionSummary> getBlockTransactionEvents(BlockHashInput blockHashInput) {
         val grpcOutput = this.server().getBlockTransactionEvents(to(blockHashInput));
         val list = new ImmutableList.Builder<TransactionSummary>();
