@@ -253,11 +253,6 @@ public class ClientV2GetBlockSpecialEventsTest {
         assertEquals(CLIENT_EXPECTED_RESULT, res);
     }
 
-    @Test
-    public void foo() {
-        System.out.println(client.getBlockSpecialEvents(com.concordium.sdk.requests.BlockHashInput.BEST));
-    }
-
 
     /**
      * Helper method for creating {@link com.concordium.grpc.v2.AccountAddress} from byte array to improve readability
