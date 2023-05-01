@@ -19,7 +19,7 @@ public class ClientV2ImportWalletTest {
     );
 
     @Test
-    public void importWallet() throws IOException {
+    public void importBrowserWallet() throws IOException {
         assertEquals(EXPECTED_TRANSACTION_SIGNER, TransactionSigner.from(new File("./src/test/java/com/concordium/sdk/walletexports/testWalletExport.export")));
     }
 }
