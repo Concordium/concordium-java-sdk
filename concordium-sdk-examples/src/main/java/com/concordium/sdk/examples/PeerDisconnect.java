@@ -9,6 +9,10 @@ import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
+ * Attempts to disconnect from the Peer on "192.0.2.0:8888".
+ */
 @CommandLine.Command(name = "PeerDisconnect", mixinStandardHelpOptions = true)
 public class PeerDisconnect implements Callable<Integer> {
 
