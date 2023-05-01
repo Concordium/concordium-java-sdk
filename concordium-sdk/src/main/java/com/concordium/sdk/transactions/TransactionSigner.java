@@ -53,15 +53,15 @@ public interface TransactionSigner {
         JsonNode json = JsonMapper.INSTANCE.readTree(walletExport);
         // Browser wallet format has field "value" otherwise structure for accessing keys is similar
         if (json.has("value")) {json = json.get("value");}
-        val credentialEntries = json.get("accountKeys").get("keys");
-        int nrOfCredentials = credentialEntries.size();
+        val credentialsMap = json.get("accountKeys").get("keys"); // Map(index, Map(index, {signKey, verifyKey})
+        int nrOfCredentials = credentialsMap.size();
         for (int i = 0; i < nrOfCredentials; i++) {
             val credentialIndex = Index.from(i);
-            val entryKeys = credentialEntries.get(String.valueOf(i)).get("keys");
-            int nrOfKeys = entryKeys.size();
+            val keysMap = credentialsMap.get(String.valueOf(i)).get("keys"); // Map(index, {signKey, verifyKey})
+            int nrOfKeys = keysMap.size();
             for (int j = 0; j < nrOfKeys; j++) {
                 val keyIndex = Index.from(j);
-                val signKey = entryKeys.get(String.valueOf(j)).get("signKey").asText();
+                val signKey = keysMap.get(String.valueOf(j)).get("signKey").asText();
                 val signer = ED25519SecretKey.from(signKey);
                 transactionSigner.put(credentialIndex, keyIndex, signer);
             }
