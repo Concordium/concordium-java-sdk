@@ -3,6 +3,7 @@ package com.concordium.sdk.responses.blocksummary.specialoutcomes;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,6 +13,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
+@Builder
 @EqualsAndHashCode(callSuper = false)
 public final class BlockAccrueReward extends SpecialOutcome {
     /**

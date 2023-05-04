@@ -27,14 +27,7 @@ public enum TransactionType {
     ENCRYPTED_TRANSFER_WITH_MEMO((byte) 23),
     TRANSFER_WITH_SCHEDULE_AND_MEMO((byte) 24),
     CONFIGURE_BAKER((byte) 25),
-    CONFIGURE_DELEGATION((byte) 26),
-
-    /**
-     * This exists only to deserialize Raw Account Transaction Payload.
-     * Will be removed in future versions.
-     * todo: Deserialize payload using raw byte array.
-     */
-    RAW_PAYLOAD((byte) 255);
+    CONFIGURE_DELEGATION((byte) 26);
 
     /**
      * Number of Bytes used for Serializing {@link TransactionType}.

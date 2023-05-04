@@ -5,17 +5,21 @@ import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.exceptions.TransactionNotFoundException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
+import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
+import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.responses.transactionstatus.TransactionSummary;
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
@@ -89,7 +93,7 @@ public final class ClientV2 {
      * This can be used to listen for incoming blocks.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator<  BlockIdentifier  >}
+     * @return {@link Iterator<BlockIdentifier>}
      */
     public Iterator<BlockIdentifier> getBlocks(int timeoutMillis) {
         var grpcOutput = this.server(timeoutMillis).getBlocks(Empty.newBuilder().build());
@@ -104,7 +108,7 @@ public final class ClientV2 {
      * This can be used to listen for blocks being Finalized.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator<  BlockIdentifier  >}
+     * @return {@link Iterator<BlockIdentifier>}
      */
     public Iterator<BlockIdentifier> getFinalizedBlocks(int timeoutMillis) {
         var grpcOutput = this.server(timeoutMillis)
@@ -136,7 +140,7 @@ public final class ClientV2 {
      * Retrieve the list of accounts that exist at the end of the given block.
      *
      * @param input Pointer to the Block.
-     * @return {@link Iterator<  AccountAddress  >}.
+     * @return {@link Iterator<AccountAddress>}.
      */
     public Iterator<AccountAddress> getAccountList(final BlockHashInput input) {
         var grpcOutput = this.server().getAccountList(to(input));
@@ -145,15 +149,14 @@ public final class ClientV2 {
     }
 
     /**
-     * Gets the Block Items for a Particular Input Block.
-     * Block Item represents transactions which are part of a block.
+     * Gets the transactions of a Block.
      * Type of Block Items currently supported are
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#ACCOUNT_TRANSACTION}
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#CREDENTIAL_DEPLOYMENT}
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#UPDATE_INSTRUCTION}
      *
      * @param input Pointer to the Block.
-     * @return
+     * @return {@link Iterator<BlockItem>}
      */
     public Iterator<BlockItem> getBlockItems(final BlockHashInput input) {
         var grpcOutput = this.server().getBlockItems(to(input));
@@ -165,12 +168,71 @@ public final class ClientV2 {
      * Retrieve the Consensus Info that contains the summary of the current state
      * of the chain from the perspective of the node.
      *
-     * @return Concensus Status ({@link ConsensusStatus})
+     * @return the Consensus Status ({@link ConsensusStatus})
      */
     public ConsensusStatus getConsensusInfo() {
         var grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
         return to(grpcOutput);
+    }
+
+    /**
+     * Sends an Account Transaction to the Concordium Node.
+     *
+     * @param accountTransaction Account Transaction to send.
+     * @return Transaction {@link Hash}.
+     */
+    public Hash sendTransaction(final AccountTransaction accountTransaction) {
+        var req = ClientV2MapperExtensions.to(accountTransaction);
+        var grpcOutput = this.server().sendBlockItem(req);
+
+        return to(grpcOutput);
+    }
+
+    /**
+     * Gets all the Identity Providers at the end of the block pointed by {@link BlockHashInput}.
+     *
+     * @param input Pointer to the Block.
+     * @return {@link Iterator} of {@link IdentityProviderInfo}
+     */
+    public Iterator<IdentityProviderInfo> getIdentityProviders(final BlockHashInput input) {
+        var grpcOutput = this.server().getIdentityProviders(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get the {@link CryptographicParameters} at a given block.
+     *
+     * @param blockHash the hash of the block
+     * @return the cryptographic parameters at the given block.
+     * @throws BlockNotFoundException if the block was not found.
+     */
+    public CryptographicParameters getCryptographicParameters(final BlockHashInput blockHash)
+            throws BlockNotFoundException {
+        try {
+            var grpcOutput = this.server()
+                    .getCryptographicParameters(to(blockHash));
+            return to(grpcOutput);
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHash.getBlockHash());
+        }
+    }
+
+    /**
+     * Get the information about total amount of CCD and the state of various special accounts in the provided block.
+     *
+     * @param blockHash Block at which the reward status is to be retrieved.
+     * @return Parsed {@link RewardsOverview}.
+     * @throws BlockNotFoundException When the returned response is null.
+     */
+    public RewardsOverview getRewardStatus(final BlockHashInput blockHash) throws BlockNotFoundException {
+        try {
+            val grpcOutput = this.server().getTokenomicsInfo(to(blockHash));
+            return to(grpcOutput);
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHash.getBlockHash());
+        }
     }
 
     /**
@@ -188,7 +250,6 @@ public final class ClientV2 {
             throw BlockNotFoundException.from(blockHashInput.getBlockHash());
         }
     }
-
 
     /**
      * Retrieves the next {@link AccountNonce} for an account.
@@ -210,7 +271,7 @@ public final class ClientV2 {
      *
      * @param transactionHash The transaction {@link Hash}
      * @return The {@link TransactionStatus}
-     * @throws {@link BlockNotFoundException} if the transaction was not found.
+     * @throws BlockNotFoundException if the transaction was not found.
      */
     public TransactionStatus getBlockItemStatus(Hash transactionHash) throws BlockNotFoundException {
         try {
@@ -220,6 +281,18 @@ public final class ClientV2 {
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(transactionHash);
         }
+    }
+
+    /**
+     * Retrieves a list of {@link SpecialOutcome}s in a given block {@link BlockHashInput}
+     * These are events generated by the protocol, such as minting and reward payouts.
+     * They are not directly generated by any transaction.
+     * @param blockHashInput the block {@link BlockHashInput} to query
+     * @return {@link ImmutableList} of {@link SpecialOutcome}s not directly caused by a transaction
+     */
+    public ImmutableList<SpecialOutcome> getBlockSpecialEvents(BlockHashInput blockHashInput) {
+        val grpcOutput = this.server().getBlockSpecialEvents(to(blockHashInput));
+        return to(grpcOutput);
     }
 
     /**

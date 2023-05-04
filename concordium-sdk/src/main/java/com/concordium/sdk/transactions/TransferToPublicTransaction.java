@@ -12,7 +12,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class TransferToPublicTransaction extends AbstractAccountTransaction {
+public class TransferToPublicTransaction extends AccountTransaction {
 
     /**
      * A constructor of {@link TransferToPublicTransaction} class.
