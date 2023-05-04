@@ -12,5 +12,13 @@ public enum CredentialType {
     @JsonProperty("initial")
     INITIAL,
     @JsonProperty("normal")
-    NORMAL
+    NORMAL;
+
+    public static CredentialType parse(com.concordium.grpc.v2.CredentialType credentialType) {
+        switch (credentialType) {
+            case CREDENTIAL_TYPE_INITIAL: return CredentialType.INITIAL;
+            case CREDENTIAL_TYPE_NORMAL: return CredentialType.NORMAL;
+            default: throw new IllegalArgumentException();
+        }
+    }
 }
