@@ -131,7 +131,7 @@ public class ClientV2GetBlockFinalizationSummaryTest {
     public void getBlockFinalizationSummary() {
         val res = client.getBlockFinalizationSummary(com.concordium.sdk.requests.BlockHashInput.BEST);
         verify(serviceImpl).getBlockFinalizationSummary(any(BlockHashInput.class), any(StreamObserver.class));
-        assertEquals(CLIENT_FINALIZATION_DATA, res);
+        assertEquals(CLIENT_FINALIZATION_DATA, res.get());
 
     }
 }

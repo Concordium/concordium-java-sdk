@@ -1250,8 +1250,8 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
-    static FinalizationData to(BlockFinalizationSummary finalizationSummary) {
-        if (finalizationSummary.hasNone()) {return null;} //There is no finalization data in the block
+    static Optional<FinalizationData> to(BlockFinalizationSummary finalizationSummary) {
+        if (finalizationSummary.hasNone()) {return Optional.empty();} //There is no finalization data in the block
         val finalizationData = finalizationSummary.getRecord();
         val finalizationBlockPointer = to(finalizationData.getBlock()).toString();
         int finalizationIndex = (int) finalizationData.getIndex().getValue();
@@ -1260,11 +1260,11 @@ interface ClientV2MapperExtensions {
         val finalizers = new ImmutableList.Builder<Finalizer>();
         grpcFinalizers.forEach(f -> finalizers.add(to(f)));
 
-        return FinalizationData.builder()
+        return Optional.of(FinalizationData.builder()
                 .finalizationBlockPointer(finalizationBlockPointer)
                 .finalizationIndex(finalizationIndex)
                 .finalizationDelay(finalizationDelay)
-                .finalizers(finalizers.build()).build();
+                .finalizers(finalizers.build()).build());
     }
 
     static Finalizer to(FinalizationSummaryParty finalizer) {

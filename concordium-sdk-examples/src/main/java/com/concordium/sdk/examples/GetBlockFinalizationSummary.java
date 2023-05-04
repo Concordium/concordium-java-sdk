@@ -5,10 +5,12 @@ import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import picocli.CommandLine;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "GetBlockFinalizationSummary", mixinStandardHelpOptions = true)
@@ -29,7 +31,9 @@ public class GetBlockFinalizationSummary implements Callable<Integer> {
                 .credentials(new Credentials())
                 .build();
 
-        System.out.println(ClientV2.from(connection).getBlockFinalizationSummary(BlockHashInput.BEST));
+        Optional<FinalizationData> res = ClientV2.from(connection).getBlockFinalizationSummary(BlockHashInput.BEST);
+        res.ifPresent(System.out::println);
+
 
         return 0;
     }

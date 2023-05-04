@@ -31,6 +31,7 @@ import lombok.var;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.concordium.sdk.ClientV2MapperExtensions.to;
@@ -286,7 +287,7 @@ public final class ClientV2 {
      * @param blockHashInput the block {@link BlockHashInput} to query
      * @return The {@link FinalizationData} of the block
      */
-    public FinalizationData getBlockFinalizationSummary(BlockHashInput blockHashInput) {
+    public Optional<FinalizationData> getBlockFinalizationSummary(BlockHashInput blockHashInput) {
         val grpcOutput = this.server().getBlockFinalizationSummary(to(blockHashInput));
         return to(grpcOutput);
     }
