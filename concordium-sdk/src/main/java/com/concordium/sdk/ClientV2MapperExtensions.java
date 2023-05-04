@@ -1255,8 +1255,8 @@ interface ClientV2MapperExtensions {
         if (finalizationSummary.hasNone()) {return Optional.empty();} //There is no finalization data in the block
         val finalizationData = finalizationSummary.getRecord();
         val finalizationBlockPointer = to(finalizationData.getBlock()).toString();
-        int finalizationIndex = (int) finalizationData.getIndex().getValue();
-        int finalizationDelay = (int) finalizationData.getDelay().getValue();
+        UInt64 finalizationIndex = UInt64.from(finalizationData.getIndex().getValue());
+        UInt64 finalizationDelay = UInt64.from(finalizationData.getDelay().getValue());
         val grpcFinalizers = finalizationData.getFinalizersList();
         val finalizers = new ImmutableList.Builder<Finalizer>();
         grpcFinalizers.forEach(f -> finalizers.add(to(f)));

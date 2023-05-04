@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blocksummary;
 
+import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -22,11 +23,11 @@ public final class FinalizationData {
     /**
      * Index of the finalization round that finalized the block.
      */
-    private final int finalizationIndex;
+    private final UInt64 finalizationIndex;
     /**
      * Finalization delay for the first finalization round.
      */
-    private final int finalizationDelay;
+    private final UInt64 finalizationDelay;
     /**
      * List of all finalizers.
      */
@@ -34,8 +35,8 @@ public final class FinalizationData {
 
     @JsonCreator
     FinalizationData(@JsonProperty("finalizationBlockPointer") String finalizationBlockPointer,
-                     @JsonProperty("finalizationIndex") int finalizationIndex,
-                     @JsonProperty("finalizationDelay") int finalizationDelay,
+                     @JsonProperty("finalizationIndex") UInt64 finalizationIndex,
+                     @JsonProperty("finalizationDelay") UInt64 finalizationDelay,
                      @JsonProperty("finalizers") List<Finalizer> finalizers) {
         this.finalizationBlockPointer = finalizationBlockPointer;
         this.finalizationIndex = finalizationIndex;

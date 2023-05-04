@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.Finalizer;
 import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.types.UInt64;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
@@ -97,8 +98,8 @@ public class ClientV2GetBlockFinalizationSummaryTest {
             .build();
     private static final FinalizationData CLIENT_FINALIZATION_DATA = FinalizationData.builder()
             .finalizationBlockPointer(Hash.from(BLOCK_HASH).toString())
-            .finalizationIndex((int) FINALIZATION_INDEX)
-            .finalizationDelay((int) DELAY)
+            .finalizationIndex(UInt64.from(FINALIZATION_INDEX))
+            .finalizationDelay(UInt64.from(DELAY))
             .finalizers(CLIENT_FINALIZERS).build();
 
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class,
