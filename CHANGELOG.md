@@ -2,7 +2,7 @@
 
 ## Unreleased changes
 - Added support for GRPC V2 `GetBlockSpecialEvents` for retrieving a list of events not generated directly by any transaction
-- Added support for GRPC V2 `GetBlockFinalizationSummary` for retrieving summary of the finalisation data in a given block
+- Added support for GRPC V2 `GetBlockFinalizationSummary` for retrieving summary of the finalization data in a given block
 - Added support for GRPC V2 `GetAccountInfo`
 - Added support for GRPC V2 `GetAccountList`
 - Added support for GRPC V2 `GetNextAccountNonceNumber`
