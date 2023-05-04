@@ -302,10 +302,7 @@ public final class ClientV2 {
      */
     public ImmutableList<TransactionSummary> getBlockTransactionEvents(BlockHashInput blockHashInput) {
         val grpcOutput = this.server().getBlockTransactionEvents(to(blockHashInput));
-        val list = new ImmutableList.Builder<TransactionSummary>();
-        val response = to(grpcOutput,ClientV2MapperExtensions::to);
-        response.forEachRemaining(list::add);
-        return list.build();
+        return ImmutableList.copyOf(to(grpcOutput,ClientV2MapperExtensions::to));
     }
 
     /**
