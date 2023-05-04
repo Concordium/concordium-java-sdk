@@ -1328,10 +1328,10 @@ interface ClientV2MapperExtensions {
                         .finalizationReward(CCDAmount.fromMicro(paydayPoolReward.getFinalizationReward().getValue()));
                 return result.build();
             }
-            case EVENT_NOT_SET:
-                throw new IllegalArgumentException();
+            default:
+                throw new IllegalStateException("Unexpected value: " + event.getEventCase());
         }
-        throw new IllegalArgumentException();
+
     }
 
     static List<Reward> toRewardList(List<BlockSpecialEvent.AccountAmounts.Entry> entriesList) {
