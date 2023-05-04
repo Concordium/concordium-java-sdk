@@ -10,6 +10,9 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ * Details about a finalization record included in a block
+ */
 @Getter
 @ToString
 @Builder
