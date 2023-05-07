@@ -7,6 +7,7 @@ import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
+import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
@@ -291,6 +292,22 @@ public final class ClientV2 {
     public ImmutableList<SpecialOutcome> getBlockSpecialEvents(BlockHashInput blockHashInput) {
         val grpcOutput = this.server().getBlockSpecialEvents(to(blockHashInput));
         return to(grpcOutput);
+    }
+
+    /**
+     * Get the IDs of the bakers registered in the given block.
+     *
+     * @param blockHashInput {@link BlockHashInput} of the block bakers are to be retrieved.
+     * @return Parsed {@link Iterator} of {@link BakerId}
+     * @throws BlockNotFoundException When the returned JSON is null.
+     */
+    public Iterator<BakerId> getBakerList(BlockHashInput blockHashInput) throws BlockNotFoundException {
+        try {
+            val grpcOutput = this.server().getBakerList(to(blockHashInput));
+            return to(grpcOutput, ClientV2MapperExtensions::toBakerList);
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHashInput.getBlockHash());
+        }
     }
 
     /**

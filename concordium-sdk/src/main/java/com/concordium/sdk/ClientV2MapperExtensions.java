@@ -289,6 +289,10 @@ interface ClientV2MapperExtensions {
         return com.concordium.sdk.responses.AccountIndex.from(bakerId.getValue());
     }
 
+    static com.concordium.sdk.responses.BakerId toBakerList(BakerId bakerId) {
+        return com.concordium.sdk.responses.BakerId.from(bakerId.getValue());
+    }
+
     static PendingChange to(StakePendingChange pendingChange) {
         switch (pendingChange.getChangeCase()) {
             case REDUCE:
