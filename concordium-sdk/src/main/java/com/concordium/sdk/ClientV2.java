@@ -1,6 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.AccountInfoRequest;
+import com.concordium.grpc.v2.AncestorsRequest;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
@@ -291,6 +292,27 @@ public final class ClientV2 {
     public ImmutableList<SpecialOutcome> getBlockSpecialEvents(BlockHashInput blockHashInput) {
         val grpcOutput = this.server().getBlockSpecialEvents(to(blockHashInput));
         return to(grpcOutput);
+    }
+
+    /**
+     * Gets Block Ancestor Blocks.
+     *
+     * @param blockHashInput {@link BlockHashInput} of the block.
+     * @param num       Total no of Ancestor blocks to get.
+     * @return {@link Iterator} of {@link Hash}
+     * @throws BlockNotFoundException When the returned response from Node is invalid or null.
+     */
+    public Iterator<Hash> getAncestors(BlockHashInput blockHashInput, long num) throws BlockNotFoundException {
+        try {
+            val getAncestorsRequestInput = AncestorsRequest.newBuilder()
+                    .setBlockHash(to(blockHashInput))
+                    .setAmount(num)
+                    .build();
+            val grpcOutput = this.server().getAncestors(getAncestorsRequestInput);
+            return to(grpcOutput, ClientV2MapperExtensions::to);
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHashInput.getBlockHash());
+        }
     }
 
     /**
