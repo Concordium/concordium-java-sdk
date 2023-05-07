@@ -40,7 +40,7 @@ public class GetBakerList implements Callable<Integer> {
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetAccountList()).execute(args);
+        int exitCode = new CommandLine(new GetBakerList()).execute(args);
         System.exit(exitCode);
     }
 }
