@@ -289,7 +289,7 @@ interface ClientV2MapperExtensions {
         return com.concordium.sdk.responses.AccountIndex.from(bakerId.getValue());
     }
 
-    static com.concordium.sdk.responses.BakerId toBakerList(BakerId bakerId) {
+    static com.concordium.sdk.responses.BakerId toBakerId(BakerId bakerId) {
         return com.concordium.sdk.responses.BakerId.from(bakerId.getValue());
     }
 

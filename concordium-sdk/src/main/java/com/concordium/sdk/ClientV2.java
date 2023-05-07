@@ -304,7 +304,7 @@ public final class ClientV2 {
     public Iterator<BakerId> getBakerList(BlockHashInput blockHashInput) throws BlockNotFoundException {
         try {
             val grpcOutput = this.server().getBakerList(to(blockHashInput));
-            return to(grpcOutput, ClientV2MapperExtensions::toBakerList);
+            return to(grpcOutput, ClientV2MapperExtensions::toBakerId);
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(blockHashInput.getBlockHash());
         }
