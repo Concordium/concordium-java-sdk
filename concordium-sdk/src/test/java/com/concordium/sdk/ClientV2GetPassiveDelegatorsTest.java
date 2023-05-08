@@ -30,6 +30,11 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
+/**
+ * Tests for {@link ClientV2#getPassiveDelegators(BlockHashInput)}
+ * <br/>
+ * Tests the mapping code. {@link ClientV2MapperExtensions#to(DelegatorInfo)}
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetPassiveDelegatorsTest {
     private static final byte[] BLOCK_HASH = new byte[]{1, 1, 1};
@@ -134,24 +139,33 @@ public class ClientV2GetPassiveDelegatorsTest {
         client = new ClientV2(10000, channel, Credentials.builder().build());
     }
 
+    /**
+     * Tests {@link ClientV2#getPassiveDelegators(BlockHashInput)} for {@link BlockHashInput#BEST}.
+     */
     @Test
-    public void getAnonymityRevokers_BestBlock() {
+    public void getPassiveDelegators_BestBlock() {
         var delegators = client.getPassiveDelegators(BlockHashInput.BEST);
 
         verify(serviceImpl).getPassiveDelegators(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(EXPECTED_DELEGATORS, ImmutableList.copyOf(delegators));
     }
 
+    /**
+     * Tests {@link ClientV2#getPassiveDelegators(BlockHashInput)} for {@link BlockHashInput#LAST_FINAL}.
+     */
     @Test
-    public void getAnonymityRevokers_LastFinalBlock() {
+    public void getPassiveDelegators_LastFinalBlock() {
         var delegators = client.getPassiveDelegators(BlockHashInput.LAST_FINAL);
 
         verify(serviceImpl).getPassiveDelegators(eq(LAST_FINAL_BLOCK), any(StreamObserver.class));
         assertEquals(EXPECTED_DELEGATORS, ImmutableList.copyOf(delegators));
     }
 
+    /**
+     * Tests {@link ClientV2#getPassiveDelegators(BlockHashInput)} for {@link BlockHashInput#GIVEN(Hash)}.
+     */
     @Test
-    public void getAnonymityRevokers_GivenBlock() {
+    public void getPassiveDelegators_GivenBlock() {
         var delegators = client.getPassiveDelegators(BlockHashInput.GIVEN(Hash.from(BLOCK_HASH)));
 
         verify(serviceImpl).getPassiveDelegators(eq(GIVEN_BLOCK_GRPC), any(StreamObserver.class));
