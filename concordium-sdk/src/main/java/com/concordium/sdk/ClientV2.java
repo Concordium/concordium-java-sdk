@@ -1,13 +1,13 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.AccountInfoRequest;
-import com.concordium.grpc.v2.Empty;
-import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
+import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BlockIdentifier;
+import com.concordium.sdk.responses.DelegatorInfo;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
@@ -292,6 +292,36 @@ public final class ClientV2 {
         var grpcOutput = this.server().getBranches(Empty.getDefaultInstance());
 
         return ClientV2MapperExtensions.to(grpcOutput);
+    }
+
+
+    /**
+     * Get information about the passive delegators at the end of a given block.
+     *
+     * @param input {@link BlockHashInput}.
+     * @return {@link Iterator} of {@link DelegatorInfo}.
+     */
+    public Iterator<DelegatorInfo> getPassiveDelegators(BlockHashInput input) {
+        var grpcOutput = this.server().getPassiveDelegators(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get the registered delegators of a given pool at the end of a given block.
+     * Any changes to delegators are immediately visible in this list.
+     *
+     * @param input   {@link BlockHashInput}
+     * @param bakerId {@link AccountIndex}
+     * @return {@link Iterator} of {@link DelegatorInfo}. List of delegators that are registered in the block.
+     */
+    public Iterator<DelegatorInfo> getPoolDelegators(BlockHashInput input, AccountIndex bakerId) {
+        var grpcOutput = this.server().getPoolDelegators(GetPoolDelegatorsRequest.newBuilder()
+                .setBlockHash(to(input))
+                .setBaker(BakerId.newBuilder().setValue(bakerId.getIndex().getValue()).build())
+                .build());
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
     /**

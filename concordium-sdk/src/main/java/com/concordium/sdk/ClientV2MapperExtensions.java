@@ -146,6 +146,7 @@ interface ClientV2MapperExtensions {
     static int to(final ArInfo.ArIdentity identity) {
         return identity.getValue();
     }
+
     static int to(final IpIdentity identity) {
         return identity.getValue();
     }
@@ -889,8 +890,7 @@ interface ClientV2MapperExtensions {
                     .finalizationRewardAccount(to(tokenomicsInfo.getV0().getFinalizationRewardAccount()))
                     .gasAccount(to(tokenomicsInfo.getV0().getGasAccount()))
                     .protocolVersion(to(tokenomicsInfo.getV0().getProtocolVersion()));
-        }
-        else if (tokenomicsInfo.hasV1()) {
+        } else if (tokenomicsInfo.hasV1()) {
             builder = builder.totalAmount(to(tokenomicsInfo.getV1().getTotalAmount()))
                     .totalEncryptedAmount(to(tokenomicsInfo.getV1().getTotalEncryptedAmount()))
                     .bakingRewardAccount(to(tokenomicsInfo.getV1().getBakingRewardAccount()))
@@ -944,6 +944,7 @@ interface ClientV2MapperExtensions {
 
         return outcomes;
     }
+
     static Map<Hash, TransactionSummary> to(BlockItemSummaryInBlock outcome) {
         Map<Hash, TransactionSummary> result = new HashMap<>();
         result.put(to(outcome.getBlockHash()), to(outcome.getOutcome()));
@@ -1251,6 +1252,16 @@ interface ClientV2MapperExtensions {
         return Branch.builder()
                 .blockHash(to(branch.getBlockHash()))
                 .children(to(branch.getChildrenList(), ClientV2MapperExtensions::to))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.DelegatorInfo to(DelegatorInfo delegatorInfo) {
+        return com.concordium.sdk.responses.DelegatorInfo.builder()
+                .account(to(delegatorInfo.getAccount()))
+                .stake(to(delegatorInfo.getStake()))
+                .pendingChange(delegatorInfo.hasPendingChange()
+                        ? Optional.of(to(delegatorInfo.getPendingChange()))
+                        : Optional.empty())
                 .build();
     }
 }
