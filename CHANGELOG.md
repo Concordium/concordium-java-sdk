@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for GRPC V2 `GetBlockSpecialEvents` for retrieving a list of events not generated directly by any transaction
 - Added support for importing mobile & browser extension wallet exports as well as exports in the genesis format
 - Added support for GRPC V2 `GetAccountInfo`
 - Added support for GRPC V2 `GetAccountList`
