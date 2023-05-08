@@ -16,7 +16,6 @@ import lombok.ToString;
 @ToString
 @Getter
 @EqualsAndHashCode
-@Builder
 public final class PoolParameters {
 
     /**

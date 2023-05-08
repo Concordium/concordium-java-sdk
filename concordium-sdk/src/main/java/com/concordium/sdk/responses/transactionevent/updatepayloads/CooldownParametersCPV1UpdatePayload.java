@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.Duration;
+
 @Builder
 @Getter
 @EqualsAndHashCode
@@ -16,7 +18,7 @@ public class CooldownParametersCPV1UpdatePayload implements UpdatePayload {
     /**
      * Number of seconds that pool owners must cooldown when reducing their equity capital or closing the pool.
      */
-    private UInt64 poolOwnerCooldown;
+    private Duration poolOwnerCooldown;
 
     /**
      * Number of seconds that a delegator must cooldown when reducing their delegated stake.
@@ -25,7 +27,7 @@ public class CooldownParametersCPV1UpdatePayload implements UpdatePayload {
 
     public static CooldownParametersCPV1UpdatePayload parse(CooldownParametersCpv1 cooldownParametersCpv1) {
         return CooldownParametersCPV1UpdatePayload.builder()
-                .poolOwnerCooldown(UInt64.from(cooldownParametersCpv1.getPoolOwnerCooldown().getValue()))
+                .poolOwnerCooldown(Duration.ofSeconds(cooldownParametersCpv1.getPoolOwnerCooldown().getValue()))
                 .delegatorCooldown(UInt64.from(cooldownParametersCpv1.getDelegatorCooldown().getValue()))
                 .build();
     }

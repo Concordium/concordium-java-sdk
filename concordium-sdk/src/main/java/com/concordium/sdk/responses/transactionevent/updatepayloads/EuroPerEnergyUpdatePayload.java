@@ -20,7 +20,7 @@ public class EuroPerEnergyUpdatePayload implements UpdatePayload {
      * @param exchangeRate {@link ExchangeRate} returned by the GRPC V2 API.
      * @return parsed {@link EuroPerEnergyUpdatePayload}.
      */
-    public EuroPerEnergyUpdatePayload parse(ExchangeRate exchangeRate){
+    public static EuroPerEnergyUpdatePayload parse(ExchangeRate exchangeRate){
         return EuroPerEnergyUpdatePayload.builder()
                 .value(Fraction.from(exchangeRate.getValue()))
                 .build();

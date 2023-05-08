@@ -25,7 +25,7 @@ public class ElectionDifficultyUpdatePayload implements UpdatePayload {
      * @param electionDifficulty {@link ElectionDifficulty} returned by the GRPC V2 API.
      * @return parsed {@link ElectionDifficultyUpdatePayload}.
      */
-    public ElectionDifficultyUpdatePayload parse(ElectionDifficulty electionDifficulty) {
+    public static ElectionDifficultyUpdatePayload parse(ElectionDifficulty electionDifficulty) {
         return ElectionDifficultyUpdatePayload.builder()
                 .value(Fraction.from(electionDifficulty.getValue()))
                 .build();

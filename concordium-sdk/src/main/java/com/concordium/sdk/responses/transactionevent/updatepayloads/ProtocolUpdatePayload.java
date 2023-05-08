@@ -38,7 +38,7 @@ public class ProtocolUpdatePayload implements UpdatePayload {
      * @param protocolUpdate {@link ProtocolUpdate} returned by the GRPC V2 API.
      * @return parsed {@link ProtocolUpdatePayload}.
      */
-    public ProtocolUpdatePayload parse(ProtocolUpdate protocolUpdate) {
+    public static ProtocolUpdatePayload parse(ProtocolUpdate protocolUpdate) {
         return ProtocolUpdatePayload.builder()
                 .message(protocolUpdate.getMessage())
                 .specificationUrl(protocolUpdate.getSpecificationUrl())
