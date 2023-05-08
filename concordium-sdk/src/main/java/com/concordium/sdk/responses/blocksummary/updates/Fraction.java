@@ -2,10 +2,7 @@ package com.concordium.sdk.responses.blocksummary.updates;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.math.BigInteger;
 
@@ -14,6 +11,7 @@ import java.math.BigInteger;
  */
 @EqualsAndHashCode
 @Getter
+@Builder
 public class Fraction {
     private final BigInteger denominator;
     private final BigInteger numerator;
