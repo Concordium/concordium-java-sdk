@@ -30,6 +30,7 @@ import com.concordium.sdk.responses.blocksummary.specialoutcomes.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
+import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.*;
@@ -1369,5 +1370,26 @@ interface ClientV2MapperExtensions {
                         .amount(CCDAmount.fromMicro(e.getAmount().getValue())).build())
         );
         return result.build();
+    }
+
+    // Note. In extreme cases then the recursion happening below can lead to
+    // stack overflows. However, this should not be a problem in reality, as we
+    // do not expect that much branching. Default stack size is mostly 1mb and ~ 7_000 nested calls, which
+    // is well within the expected branching.
+    static Branch to(com.concordium.grpc.v2.Branch branch) {
+        return Branch.builder()
+                .blockHash(to(branch.getBlockHash()))
+                .children(to(branch.getChildrenList(), ClientV2MapperExtensions::to))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.DelegatorInfo to(DelegatorInfo delegatorInfo) {
+        return com.concordium.sdk.responses.DelegatorInfo.builder()
+                .account(to(delegatorInfo.getAccount()))
+                .stake(to(delegatorInfo.getStake()))
+                .pendingChange(delegatorInfo.hasPendingChange()
+                        ? Optional.of(to(delegatorInfo.getPendingChange()))
+                        : Optional.empty())
+                .build();
     }
 }
