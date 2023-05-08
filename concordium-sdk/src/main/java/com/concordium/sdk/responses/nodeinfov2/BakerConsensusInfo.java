@@ -4,15 +4,14 @@ import com.concordium.grpc.v2.NodeInfo;
 import com.concordium.sdk.responses.AccountIndex;
 import lombok.*;
 
+/**
+ * Consensus info for a node configured with baker keys.
+ * Only present in {@link Node} configured with baker keys
+ */
 @Getter
 @Builder
 @EqualsAndHashCode
 @ToString
-
-/*
- * Consensus info for a node configured with baker keys.
- * Only present in {@link Node} configured with baker keys
- */
 public class BakerConsensusInfo {
 
     /**
