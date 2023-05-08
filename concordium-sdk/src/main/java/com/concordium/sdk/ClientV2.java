@@ -16,6 +16,8 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.peerlist.Peer;
+import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
@@ -24,6 +26,7 @@ import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
+import com.google.common.collect.ImmutableList;
 import com.concordium.sdk.transactions.Hash;
 import com.google.common.collect.ImmutableList;
 import io.grpc.CallCredentials;
@@ -33,6 +36,8 @@ import lombok.val;
 import lombok.var;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -363,6 +368,56 @@ public final class ClientV2 {
     public void close() {
         this.channel.shutdown();
     }
+
+    /**
+     * Returns a {@link ImmutableList} of {@link PeerInfo} containing information about the nodes' peers.
+     *
+     * @return {@link ImmutableList} of {@link PeerInfo}
+     * @throws UnknownHostException When the returned IP address of Peer is Invalid
+     */
+    public ImmutableList<PeerInfo> getPeersInfo() throws UnknownHostException {
+        var grpcOutput = this.server().getPeersInfo(Empty.newBuilder().build());
+        return PeerInfo.parseToList(grpcOutput);
+    }
+
+    /***
+     * Ban a specific peer
+     * Note this will ban all peers located behind the specified IP even though they are using different ports
+     * @param ipToBan ip of the node to ban
+     * @throws {@link io.grpc.StatusRuntimeException} If the action failed
+     */
+    public void banPeer(InetAddress ipToBan) {
+        this.server().banPeer(PeerToBan.newBuilder()
+                .setIpAddress(IpAddress.newBuilder().setValue(ipToBan.getHostAddress()).build())
+                .build());
+    }
+
+    /**
+     * Unban a specific peer
+     *
+     * @param ipToUnban ip of the node to unban
+     * @throws {@link io.grpc.StatusRuntimeException} If the action failed
+     */
+    public void unbanPeer(InetAddress ipToUnban) {
+        this.server().unbanPeer(BannedPeer.newBuilder()
+                .setIpAddress(IpAddress.newBuilder().setValue(ipToUnban.getHostAddress()).build())
+                .build());
+    }
+
+    /**
+     * Get a list of banned peers
+     * @return {@link ImmutableList} of {@link InetAddress} of banned peers
+     * @throws UnknownHostException When the returned IP address of a peer is invalid
+     */
+    public ImmutableList<InetAddress> getBannedPeers() throws UnknownHostException {
+        val response = this.server().getBannedPeers(Empty.newBuilder().build());
+        val bannedPeers = new ImmutableList.Builder<InetAddress>();
+        for (BannedPeer peer : response.getPeersList()) {
+            bannedPeers.add(InetAddress.getByName(peer.getIpAddress().getValue()));
+        }
+        return bannedPeers.build();
+    }
+
 
     /**
      * Get a {@link QueriesGrpc.QueriesBlockingStub} with a timeout

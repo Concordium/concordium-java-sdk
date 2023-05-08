@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for GRPC V2 `GetBannedPeers` for retrieving a list of the banned peers.
+- Added support for GRPC V2 `BanPeer` for banning a peer,
+- Added support for GRPC V2 `UnbanPeer` for unbanning a peer
 - Added support for GRPC V2 `GetBlockSpecialEvents` for retrieving a list of events not generated directly by any transaction
 - Added support for GRPC V2 `GetBlockFinalizationSummary` for retrieving summary of the finalization data in a given block
 - Added support for GRPC V2 `GetAccountInfo`
