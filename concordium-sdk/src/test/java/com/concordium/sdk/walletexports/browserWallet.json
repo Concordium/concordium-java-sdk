@@ -5,9 +5,9 @@
   "value": {
     "accountKeys": {
       "keys": {
-        "0": {
+        "17": {
           "keys": {
-            "0": {
+            "32": {
               "signKey": "56f60de843790c308dac2d59a5eec9f6b1649513f827e5a13d7038accfe31784",
               "verifyKey": "2c1c9c13c93c460ab723c69c0c39f0aa3fc1eda9dbbb4feff85dce222ba67754"
             }
