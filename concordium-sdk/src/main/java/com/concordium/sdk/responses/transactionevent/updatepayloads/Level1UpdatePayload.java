@@ -10,16 +10,16 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class LevelOneUpdatePayload implements UpdatePayload {
+public class Level1UpdatePayload implements UpdatePayload {
 
 
     /**
      * TODO
-     * Parses {@link Level1Update} to {@link LevelOneUpdatePayload}
-     * @param level1Update {@link Level1Update} returned by the GRPC V2 API
-     * @return parsed {@link LevelOneUpdatePayload}
+     * Parses {@link Level1Update} to {@link Level1UpdatePayload}.
+     * @param level1Update {@link Level1Update} returned by the GRPC V2 API.
+     * @return parsed {@link Level1UpdatePayload}.
      */
-    public static LevelOneUpdatePayload parse(Level1Update level1Update) {
+    public static Level1UpdatePayload parse(Level1Update level1Update) {
         return null;
     }
 

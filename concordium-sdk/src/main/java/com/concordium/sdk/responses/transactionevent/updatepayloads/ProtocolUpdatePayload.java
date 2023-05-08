@@ -34,9 +34,9 @@ public class ProtocolUpdatePayload implements UpdatePayload {
     private byte[] specificationAuxiliaryData;
 
     /**
-     * Parses {@link ProtocolUpdate} to {@link ProtocolUpdatePayload}
-     * @param protocolUpdate {@link ProtocolUpdate} returned by the GRPC V2 API
-     * @return parsed {@link ProtocolUpdatePayload}
+     * Parses {@link ProtocolUpdate} to {@link ProtocolUpdatePayload}.
+     * @param protocolUpdate {@link ProtocolUpdate} returned by the GRPC V2 API.
+     * @return parsed {@link ProtocolUpdatePayload}.
      */
     public ProtocolUpdatePayload parse(ProtocolUpdate protocolUpdate) {
         return ProtocolUpdatePayload.builder()

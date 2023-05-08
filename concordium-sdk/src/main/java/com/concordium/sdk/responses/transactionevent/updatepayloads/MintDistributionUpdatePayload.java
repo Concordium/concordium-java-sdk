@@ -8,8 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.math.BigInteger;
-
 @Builder
 @Getter
 @EqualsAndHashCode
@@ -17,17 +15,17 @@ import java.math.BigInteger;
 public class MintDistributionUpdatePayload implements UpdatePayload {
 
     /**
-     * Mint rate per slot
+     * Mint rate per slot.
      */
     private double mintRate;
 
     /**
-     * The fraction of newly created CCD allocated to baker rewards
+     * The fraction of newly created CCD allocated to baker rewards.
      */
     private Fraction bakingReward;
 
     /**
-     * The fraction of newly created CCD allocated to finalization rewards
+     * The fraction of newly created CCD allocated to finalization rewards.
      */
     private Fraction finalizationReward;
 
@@ -35,9 +33,9 @@ public class MintDistributionUpdatePayload implements UpdatePayload {
 
 
     /**
-     * Parses {@link MintDistributionCpv0} to {@link MintDistributionUpdatePayload}
-     * @param mintDistributionCpv0 {@link MintDistributionCpv0} returned by the GRPC V2 API
-     * @return parsed {@link MintDistributionUpdatePayload}
+     * Parses {@link MintDistributionCpv0} to {@link MintDistributionUpdatePayload}.
+     * @param mintDistributionCpv0 {@link MintDistributionCpv0} returned by the GRPC V2 API.
+     * @return parsed {@link MintDistributionUpdatePayload}.
      */
     public static MintDistributionUpdatePayload parse (MintDistributionCpv0 mintDistributionCpv0) {
         return MintDistributionUpdatePayload.builder()
@@ -52,7 +50,7 @@ public class MintDistributionUpdatePayload implements UpdatePayload {
     }
 
     /**
-     * Calculates mantissa*10^(-exponent)
+     * Calculates mantissa*10^(-exponent).
      */
     private static double toMintRate (MintRate mintRate) {
         return mintRate.getMantissa()*Math.pow(10, -1 * mintRate.getExponent());

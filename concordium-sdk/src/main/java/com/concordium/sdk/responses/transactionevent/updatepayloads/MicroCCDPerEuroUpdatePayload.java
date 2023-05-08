@@ -16,9 +16,9 @@ public class MicroCCDPerEuroUpdatePayload implements UpdatePayload {
     private Fraction value;
 
     /**
-     * Parses {@link ExchangeRate} to {@link MicroCCDPerEuroUpdatePayload}
-     * @param exchangeRate {@link ExchangeRate} returned by the GRPC V2 API
-     * @return parsed {@link ExchangeRate}
+     * Parses {@link ExchangeRate} to {@link MicroCCDPerEuroUpdatePayload}.
+     * @param exchangeRate {@link ExchangeRate} returned by the GRPC V2 API.
+     * @return parsed {@link ExchangeRate}.
      */
     public static MicroCCDPerEuroUpdatePayload parse(ExchangeRate exchangeRate) {
         return MicroCCDPerEuroUpdatePayload.builder()

@@ -28,4 +28,11 @@ public class PSPublicKey {
             throw new IllegalArgumentException("Cannot create PSPublicKey", e);
         }
     }
+
+    /**
+     * TODO is this okay?
+     */
+    public static PSPublicKey from(byte[] bytes) {
+        return new PSPublicKey(bytes);
+    }
 }

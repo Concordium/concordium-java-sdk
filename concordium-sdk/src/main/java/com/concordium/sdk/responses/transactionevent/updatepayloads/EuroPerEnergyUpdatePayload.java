@@ -7,8 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.math.BigInteger;
-
 @Builder
 @Getter
 @EqualsAndHashCode
@@ -18,9 +16,9 @@ public class EuroPerEnergyUpdatePayload implements UpdatePayload {
     private Fraction value;
 
     /**
-     * Parses {@link ExchangeRate} to {@link EuroPerEnergyUpdatePayload}
-     * @param exchangeRate {@link ExchangeRate} returned by the GRPC V2 API
-     * @return parsed {@link EuroPerEnergyUpdatePayload}
+     * Parses {@link ExchangeRate} to {@link EuroPerEnergyUpdatePayload}.
+     * @param exchangeRate {@link ExchangeRate} returned by the GRPC V2 API.
+     * @return parsed {@link EuroPerEnergyUpdatePayload}.
      */
     public EuroPerEnergyUpdatePayload parse(ExchangeRate exchangeRate){
         return EuroPerEnergyUpdatePayload.builder()

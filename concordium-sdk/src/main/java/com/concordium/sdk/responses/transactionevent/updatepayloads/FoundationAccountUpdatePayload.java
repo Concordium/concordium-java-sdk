@@ -17,9 +17,9 @@ public class FoundationAccountUpdatePayload implements UpdatePayload{
     private AccountAddress accountAddress;
 
     /**
-     * Parses {@link com.concordium.grpc.v2.AccountAddress} to {@link FoundationAccountUpdatePayload}
-     * @param accountAddress {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API
-     * @return parsed {@link com.concordium.grpc.v2.AccountAddress}
+     * Parses {@link com.concordium.grpc.v2.AccountAddress} to {@link FoundationAccountUpdatePayload}.
+     * @param accountAddress {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
+     * @return parsed {@link com.concordium.grpc.v2.AccountAddress}.
      */
     public static FoundationAccountUpdatePayload parse(com.concordium.grpc.v2.AccountAddress accountAddress) {
         return FoundationAccountUpdatePayload.builder()

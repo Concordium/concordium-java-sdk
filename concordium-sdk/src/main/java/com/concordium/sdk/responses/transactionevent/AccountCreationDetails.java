@@ -31,7 +31,7 @@ public class AccountCreationDetails {
 
     /**
      * Parses {@link com.concordium.grpc.v2.AccountCreationDetails} to {@link AccountCreationDetails}
-     * @param accountCreationDetails {@link com.concordium.grpc.v2.AccountCreationDetails} returned from the GRPC V2 API
+     * @param accountCreationDetails {@link com.concordium.grpc.v2.AccountCreationDetails} returned from the GRPC V2 API.
      * @return parsed {@link AccountCreationDetails}
      */
     public static AccountCreationDetails parse(com.concordium.grpc.v2.AccountCreationDetails accountCreationDetails) {

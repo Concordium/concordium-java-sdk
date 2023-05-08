@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blocksummary.updates.queues;
 
+import com.concordium.grpc.v2.IpInfo;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.serializing.JsonMapper;
@@ -23,9 +24,21 @@ import java.util.Optional;
 @EqualsAndHashCode
 public final class IdentityProviderInfo {
 
+    /**
+     * Unique identifier of the identity provider.
+     */
     private final UInt32 ipIdentity;
+    /**
+     * Description of the identity provider.
+     */
     private final Description description;
+    /**
+     * ED25519 public key of the identity provider.
+     */
     private final ED25519PublicKey ipCdiVerifyKey;
+    /**
+     * Pointcheval-Sanders public key of the identity provider.
+     */
     private final PSPublicKey ipVerifyKey;
 
     @JsonCreator
@@ -47,6 +60,20 @@ public final class IdentityProviderInfo {
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse Identity Provider Array JSON", e);
         }
+    }
+
+    /**
+     * Parses {@link IpInfo} to {@link IdentityProviderInfo}.
+     * @param ipInfo {@link IpInfo} returned by the GRPC C2 API.
+     * @return parsed {@link IdentityProviderInfo}.
+     */
+    public static IdentityProviderInfo parse(IpInfo ipInfo) {
+        return IdentityProviderInfo.builder()
+                .ipIdentity(ipInfo.getIdentity().getValue())
+                .description(Description.parse(ipInfo.getDescription()))
+                .ipCdiVerifyKey(ED25519PublicKey.from(ipInfo.getCdiVerifyKey().getValue().toByteArray()))
+                .ipVerifyKey(PSPublicKey.from(ipInfo.getVerifyKey().getValue().toByteArray()))
+                .build();
     }
 
 }

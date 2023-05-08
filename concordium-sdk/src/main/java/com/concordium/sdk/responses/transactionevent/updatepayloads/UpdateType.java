@@ -95,22 +95,9 @@ public enum UpdateType {
     FINALIZATION_COMMITTEE_PARAMETERS_UPDATE;
 
     /**
-     * TODO keep?
-     * @param updatePayload
-     * @return
-     * @param <T>
-     */
-    public <T> T convert(UpdatePayload updatePayload) {
-        if (this != updatePayload.getType()) {
-            throw new IllegalArgumentException("Unexpected conversion. Expected " + this + " but received " + updatePayload.getType());
-        }
-        return (T) updatePayload;
-    }
-
-    /**
-     * Parses {@link com.concordium.grpc.v2.UpdatePayload.PayloadCase} to {@link UpdateType}
-     * @param payloadCase {@link com.concordium.grpc.v2.UpdatePayload.PayloadCase} returned by the GRPC V2 API
-     * @return parsed {@link UpdateType}
+     * Parses {@link com.concordium.grpc.v2.UpdatePayload.PayloadCase} to {@link UpdateType}.
+     * @param payloadCase {@link com.concordium.grpc.v2.UpdatePayload.PayloadCase} returned by the GRPC V2 API.
+     * @return parsed {@link UpdateType}.
      */
     public static UpdateType parse(com.concordium.grpc.v2.UpdatePayload.PayloadCase payloadCase) {
         switch (payloadCase) {

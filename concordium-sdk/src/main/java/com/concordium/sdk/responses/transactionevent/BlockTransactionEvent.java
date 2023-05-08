@@ -27,29 +27,29 @@ public class BlockTransactionEvent {
     private final UInt64 energyCost;
 
     /**
-     * Hash of the transaction
+     * Hash of the transaction.
      */
     @Getter
     private final Hash hash;
 
     /**
-     * Type of the transaction
+     * Type of the transaction.
      */
     @Getter
     private final TransactionType type;
 
     /**
-     * Details about an account transaction
+     * Details about an account transaction.
      */
     private final AccountTransactionDetails accountTransactionDetails;
 
     /**
-     * Details about an account creation
+     * Details about an account creation.
      */
     private final AccountCreationDetails accountCreationDetails;
 
     /**
-     * Details about a chain update
+     * Details about a chain update.
      */
     private final UpdateDetails updateDetails;
 
@@ -93,9 +93,9 @@ public class BlockTransactionEvent {
     }
 
     /**
-     * Parses {@link BlockItemSummary} to {@link BlockTransactionEvent}
-     * @param blockItemSummary {@link BlockItemSummary} returned by the GRPC V2 API
-     * @return parsed {@link BlockTransactionEvent}
+     * Parses {@link BlockItemSummary} to {@link BlockTransactionEvent}.
+     * @param blockItemSummary {@link BlockItemSummary} returned by the GRPC V2 API.
+     * @return parsed {@link BlockTransactionEvent}.
      */
     public static BlockTransactionEvent parse(BlockItemSummary blockItemSummary) {
         var builder = BlockTransactionEvent.builder()

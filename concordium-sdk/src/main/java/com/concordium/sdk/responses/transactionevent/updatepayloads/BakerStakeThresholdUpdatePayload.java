@@ -2,7 +2,6 @@ package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 import com.concordium.grpc.v2.BakerStakeThreshold;
 import com.concordium.sdk.transactions.CCDAmount;
-import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,9 +19,9 @@ public class BakerStakeThresholdUpdatePayload implements UpdatePayload {
     private CCDAmount bakerStakeThreshold;
 
     /**
-     * Parses {@link BakerStakeThreshold} to {@link BakerStakeThresholdUpdatePayload}
-     * @param bakerStakeThreshold {@link BakerStakeThreshold} returned by the GRPC V2 API
-     * @return parsed {@link BakerStakeThresholdUpdatePayload}
+     * Parses {@link BakerStakeThreshold} to {@link BakerStakeThresholdUpdatePayload}.
+     * @param bakerStakeThreshold {@link BakerStakeThreshold} returned by the GRPC V2 API.
+     * @return parsed {@link BakerStakeThresholdUpdatePayload}.
      */
     public static BakerStakeThresholdUpdatePayload parse(BakerStakeThreshold bakerStakeThreshold) {
         return BakerStakeThresholdUpdatePayload.builder()

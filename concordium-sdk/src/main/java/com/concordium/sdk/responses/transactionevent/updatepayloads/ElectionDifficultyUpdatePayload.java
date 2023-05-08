@@ -2,13 +2,10 @@ package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 import com.concordium.grpc.v2.ElectionDifficulty;
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
-import com.concordium.sdk.types.UInt32;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.math.BigInteger;
 
 @Builder
 @Getter
@@ -19,14 +16,14 @@ public class ElectionDifficultyUpdatePayload implements UpdatePayload {
     /**
      * TODO
      *
-     * Parts per hundred thousand
+     * Parts per hundred thousand.
      */
     private Fraction value;
 
     /**
-     * Parses {@link ElectionDifficulty} to {@link ElectionDifficultyUpdatePayload}
-     * @param electionDifficulty {@link ElectionDifficulty} returned by the GRPC V2 API
-     * @return parsed {@link ElectionDifficultyUpdatePayload}
+     * Parses {@link ElectionDifficulty} to {@link ElectionDifficultyUpdatePayload}.
+     * @param electionDifficulty {@link ElectionDifficulty} returned by the GRPC V2 API.
+     * @return parsed {@link ElectionDifficultyUpdatePayload}.
      */
     public ElectionDifficultyUpdatePayload parse(ElectionDifficulty electionDifficulty) {
         return ElectionDifficultyUpdatePayload.builder()

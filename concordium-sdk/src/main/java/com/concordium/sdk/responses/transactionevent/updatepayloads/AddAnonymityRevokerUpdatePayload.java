@@ -15,16 +15,16 @@ public class AddAnonymityRevokerUpdatePayload implements UpdatePayload {
 
 
     /**
-     * Info of the added anonymity revoker
+     * Info of the added anonymity revoker.
      */
     private AnonymityRevokerInfo anonymityRevokerInfo;
 
 
 
     /**
-     * Parses {@link ArInfo} to {@link AddAnonymityRevokerUpdatePayload}
-     * @param arInfo {@link ArInfo} returned by the GRPC V2 API
-     * @return parsed {@link AddAnonymityRevokerUpdatePayload}
+     * Parses {@link ArInfo} to {@link AddAnonymityRevokerUpdatePayload}.
+     * @param arInfo {@link ArInfo} returned by the GRPC V2 API.
+     * @return parsed {@link AddAnonymityRevokerUpdatePayload}.
      */
     public static AddAnonymityRevokerUpdatePayload parse(ArInfo arInfo) {
         return AddAnonymityRevokerUpdatePayload.builder()
