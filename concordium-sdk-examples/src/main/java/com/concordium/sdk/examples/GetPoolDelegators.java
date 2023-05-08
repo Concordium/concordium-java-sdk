@@ -19,13 +19,12 @@ public class GetPoolDelegators implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "http://localhost:20002")
+            defaultValue = "http://localhost:20000")
     private String endpoint;
 
     @Option(
             names = {"--bakerId"},
-            description = "Baker Id",
-            defaultValue = "2924")
+            description = "Baker Id")
     private long bakerId;
 
     @Override

@@ -29,6 +29,11 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
+/**
+ Tests for {@link ClientV2#getPoolDelegators(BlockHashInput, com.concordium.sdk.responses.AccountIndex)}.
+ <br/>
+ Tests the mapping code {@link ClientV2MapperExtensions#to(DelegatorInfo)}
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetPoolDelegatorsTest {
     private static final byte[] BLOCK_HASH = new byte[]{1, 1, 1};
