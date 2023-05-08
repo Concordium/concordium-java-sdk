@@ -8,6 +8,10 @@ import picocli.CommandLine;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
+ * Retrieves and prints the {@link java.net.InetAddress} of the banned peers.
+ */
 @CommandLine.Command(name = "GetBannedPeers", mixinStandardHelpOptions = true)
 public class GetBannedPeers implements Callable<Integer> {
 

@@ -9,6 +9,10 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
+ * Unbans the peer specified by the {@link InetAddress} 3.97.143.216
+ */
 @CommandLine.Command(name = "UnbanPeer", mixinStandardHelpOptions = true)
 public class UnbanPeer implements Callable<Integer> {
 

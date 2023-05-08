@@ -3,12 +3,16 @@ package com.concordium.sdk.examples;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.responses.peerlist.PeerInfo;
 import picocli.CommandLine;
 
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
+ * Retrieves and prints the {@link PeerInfo}s for the node's peers.
+ */
 @CommandLine.Command(name = "GetPeersInfo", mixinStandardHelpOptions = true)
 public class GetPeersInfo implements Callable<Integer> {
     @CommandLine.Option(
