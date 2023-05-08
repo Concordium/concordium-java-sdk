@@ -92,6 +92,11 @@ public class BlockTransactionEvent {
         return updateDetails;
     }
 
+    /**
+     * Parses {@link BlockItemSummary} to {@link BlockTransactionEvent}
+     * @param blockItemSummary {@link BlockItemSummary} returned by the GRPC V2 API
+     * @return parsed {@link BlockTransactionEvent}
+     */
     public static BlockTransactionEvent parse(BlockItemSummary blockItemSummary) {
         var builder = BlockTransactionEvent.builder()
                 .index(UInt64.from(blockItemSummary.getIndex().getValue()))

@@ -7,29 +7,27 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.math.BigInteger;
-
 @Builder
 @Getter
 @EqualsAndHashCode
 @ToString
-public class EuroPerEnergyUpdatePayload implements UpdatePayload {
+public class MicroCCDPerEuroUpdatePayload implements UpdatePayload {
 
     private Fraction value;
 
     /**
-     * Parses {@link ExchangeRate} to {@link EuroPerEnergyUpdatePayload}
+     * Parses {@link ExchangeRate} to {@link MicroCCDPerEuroUpdatePayload}
      * @param exchangeRate {@link ExchangeRate} returned by the GRPC V2 API
-     * @return parsed {@link EuroPerEnergyUpdatePayload}
+     * @return parsed {@link ExchangeRate}
      */
-    public EuroPerEnergyUpdatePayload parse(ExchangeRate exchangeRate){
-        return EuroPerEnergyUpdatePayload.builder()
+    public static MicroCCDPerEuroUpdatePayload parse(ExchangeRate exchangeRate) {
+        return MicroCCDPerEuroUpdatePayload.builder()
                 .value(Fraction.from(exchangeRate.getValue()))
                 .build();
-
     }
+
     @Override
     public UpdateType getType() {
-        return UpdateType.EURO_PER_ENERGY_UPDATE;
+        return UpdateType.MICRO_CCD_PER_EURO_UPDATE;
     }
 }

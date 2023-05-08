@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blocksummary.updates.queues;
 
+import com.concordium.grpc.v2.ArInfo;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.types.UInt32;
@@ -28,6 +29,9 @@ public final class AnonymityRevokerInfo {
      */
     private final Description description;
 
+    /**
+     * Elgamal encryption key of the anonymity revoker
+     */
     private final ElgamalPublicKey anonymityRevokerPublicKey;
 
     @JsonCreator
@@ -45,6 +49,19 @@ public final class AnonymityRevokerInfo {
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse Anonymity Revoker JSON", e);
         }
+    }
+
+    /**
+     * Parses {@link ArInfo} to {@link AnonymityRevokerInfo}
+     * @param arInfo {@link ArInfo} returned by the GRPC V2 API
+     * @return parsed {@link AnonymityRevokerInfo}
+     */
+    public static AnonymityRevokerInfo parse(ArInfo arInfo) {
+        return AnonymityRevokerInfo.builder()
+                .arIdentity(arInfo.getIdentity().getValue())
+                .description(Description.parse(arInfo.getDescription()))
+                .arPublicKey(ElgamalPublicKey.from(arInfo.getPublicKey().getValue().toByteArray()))
+                .build();
     }
 
 }

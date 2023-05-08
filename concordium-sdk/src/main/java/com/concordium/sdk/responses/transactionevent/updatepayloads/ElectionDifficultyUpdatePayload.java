@@ -30,10 +30,7 @@ public class ElectionDifficultyUpdatePayload implements UpdatePayload {
      */
     public ElectionDifficultyUpdatePayload parse(ElectionDifficulty electionDifficulty) {
         return ElectionDifficultyUpdatePayload.builder()
-                .value(Fraction.builder()
-                        .numerator(BigInteger.valueOf(electionDifficulty.getValue().getPartsPerHundredThousand()))
-                        .denominator(BigInteger.valueOf(100_000))
-                        .build())
+                .value(Fraction.from(electionDifficulty.getValue()))
                 .build();
     }
     @Override

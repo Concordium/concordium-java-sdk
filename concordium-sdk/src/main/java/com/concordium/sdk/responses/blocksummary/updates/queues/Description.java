@@ -25,4 +25,17 @@ public class Description {
         this.url = url;
         this.description = description;
     }
+
+    /**
+     * Parses {@link com.concordium.grpc.v2.Description} to {@link Description}
+     * @param description {@link com.concordium.grpc.v2.Description} returned by the GRPC V2 API
+     * @return parsed {@link Description}
+     */
+    public static Description parse(com.concordium.grpc.v2.Description description) {
+        return Description.builder()
+                .name(description.getName())
+                .url(description.getUrl())
+                .description(description.getDescription())
+                .build();
+    }
 }

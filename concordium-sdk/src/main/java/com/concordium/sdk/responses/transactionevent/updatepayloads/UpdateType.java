@@ -1,5 +1,8 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
+/**
+ * Represents the different types of {@link UpdatePayload}
+ */
 public enum UpdateType {
 
     /**
@@ -49,7 +52,7 @@ public enum UpdateType {
     /**
      * An anonymity revoker was added.
      */
-    ADD_ANONYMITY_REVOKERS_UPDATE,
+    ADD_ANONYMITY_REVOKER_UPDATE,
     /**
      * An identity provider was added.
      */
@@ -122,7 +125,7 @@ public enum UpdateType {
             case BAKER_STAKE_THRESHOLD_UPDATE: return BAKER_STAKE_THRESHOLD_UPDATE;
             case ROOT_UPDATE: return ROOT_UPDATE;
             case LEVEL_1_UPDATE: return LEVEL_1_UPDATE;
-            case ADD_ANONYMITY_REVOKER_UPDATE: return ADD_ANONYMITY_REVOKERS_UPDATE;
+            case ADD_ANONYMITY_REVOKER_UPDATE: return ADD_ANONYMITY_REVOKER_UPDATE;
             case ADD_IDENTITY_PROVIDER_UPDATE: return ADD_IDENTITY_PROVIDER_UPDATE;
             case COOLDOWN_PARAMETERS_CPV_1_UPDATE: return COOLDOWN_PARAMETERS_CPV_1_UPDATE;
             case POOL_PARAMETERS_CPV_1_UPDATE: return POOL_PARAMETERS_CPV_1_UPDATE;
