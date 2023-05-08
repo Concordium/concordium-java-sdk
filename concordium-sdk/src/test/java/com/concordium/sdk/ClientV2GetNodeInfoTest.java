@@ -27,6 +27,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
+/**
+ * The test asserts that {@link ClientV2#getNodeInfo()}
+ * correctly converts the {@link NodeInfo} returned by the server to {@link com.concordium.sdk.responses.nodeinfov2.NodeInfo}.
+ */
 public class ClientV2GetNodeInfoTest {
 
     // ------------- Test Values -------------

@@ -9,9 +9,14 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
+ * Retrieves and prints the {@link NodeInfo} of the node.
+ */
 @Command(name = "GetNodeInfo", mixinStandardHelpOptions = true)
 public class GetNodeInfo implements Callable<Integer> {
 
