@@ -20,7 +20,7 @@ public class GetAccountNonFinalizedTransactions implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "http://localhost:20001")
+            defaultValue = "http://localhost:20000")
     private String endpoint;
 
     @Override
