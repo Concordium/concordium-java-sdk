@@ -3,30 +3,30 @@ package com.concordium.sdk.examples;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.responses.blockinfo.BlockInfo;
-import com.concordium.sdk.responses.election.ElectionInfo;
-import lombok.var;
+import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
-@Command(name = "GetElectionInfo", mixinStandardHelpOptions = true)
-public class GetElectionInfo implements Callable<Integer> {
-    @Option(
+/**
+ * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
+ * Retrieves and prints the {@link SpecialOutcome}s for the block {@link BlockHashInput#BEST}.
+ */
+@CommandLine.Command(name = "GetBlockSpecialEvents", mixinStandardHelpOptions = true)
+public class GetBlockSpecialEvents implements Callable<Integer> {
+    @CommandLine.Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "http://localhost:20000")
+            defaultValue = "http://localhost:20001")
     private String endpoint;
 
+
     @Override
-    public Integer call() throws ClientInitializationException, MalformedURLException, BlockNotFoundException {
+    public Integer call() throws ClientInitializationException, MalformedURLException {
         URL endpointUrl = new URL(this.endpoint);
         Connection connection = Connection.builder()
                 .host(endpointUrl.getHost())
@@ -34,18 +34,16 @@ public class GetElectionInfo implements Callable<Integer> {
                 .credentials(new Credentials())
                 .build();
 
-        var blockHashInput = BlockHashInput.BEST;
-        ElectionInfo blockInfo = ClientV2
+        ClientV2
                 .from(connection)
-                .getElectionInfo(blockHashInput);
-
-        System.out.println(blockInfo);
+                .getBlockSpecialEvents(BlockHashInput.BEST)
+                .forEach(System.out::println);
 
         return 0;
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetElectionInfo()).execute(args);
+        int exitCode = new CommandLine(new GetBlockSpecialEvents()).execute(args);
         System.exit(exitCode);
     }
 }

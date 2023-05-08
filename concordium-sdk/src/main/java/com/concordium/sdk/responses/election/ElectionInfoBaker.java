@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+/**
+ * Baker Information in {@link ElectionInfo}.
+ */
 @Builder
 @ToString
 @EqualsAndHashCode
