@@ -24,6 +24,9 @@ import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.accountinfo.*;
 import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
+import com.concordium.sdk.responses.blocksummary.FinalizationData;
+import com.concordium.sdk.responses.blocksummary.Finalizer;
+import com.concordium.sdk.responses.blocksummary.specialoutcomes.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
@@ -57,6 +60,7 @@ import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
@@ -64,6 +68,7 @@ import lombok.val;
 import lombok.var;
 
 import javax.annotation.Nullable;
+import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.util.*;
@@ -146,7 +151,6 @@ interface ClientV2MapperExtensions {
     static int to(final ArInfo.ArIdentity identity) {
         return identity.getValue();
     }
-
     static int to(final IpIdentity identity) {
         return identity.getValue();
     }
@@ -890,7 +894,8 @@ interface ClientV2MapperExtensions {
                     .finalizationRewardAccount(to(tokenomicsInfo.getV0().getFinalizationRewardAccount()))
                     .gasAccount(to(tokenomicsInfo.getV0().getGasAccount()))
                     .protocolVersion(to(tokenomicsInfo.getV0().getProtocolVersion()));
-        } else if (tokenomicsInfo.hasV1()) {
+        }
+        else if (tokenomicsInfo.hasV1()) {
             builder = builder.totalAmount(to(tokenomicsInfo.getV1().getTotalAmount()))
                     .totalEncryptedAmount(to(tokenomicsInfo.getV1().getTotalEncryptedAmount()))
                     .bakingRewardAccount(to(tokenomicsInfo.getV1().getBakingRewardAccount()))
@@ -944,7 +949,6 @@ interface ClientV2MapperExtensions {
 
         return outcomes;
     }
-
     static Map<Hash, TransactionSummary> to(BlockItemSummaryInBlock outcome) {
         Map<Hash, TransactionSummary> result = new HashMap<>();
         result.put(to(outcome.getBlockHash()), to(outcome.getOutcome()));
@@ -1246,6 +1250,126 @@ interface ClientV2MapperExtensions {
                 .transactionCount(blockInfo.getTransactionCount())
                 .blockArriveTime(to(to(blockInfo.getArriveTime())))
                 .build();
+    }
+
+    static Optional<FinalizationData> to(BlockFinalizationSummary finalizationSummary) {
+        if (finalizationSummary.hasNone()) {return Optional.empty();} //There is no finalization data in the block
+        val finalizationData = finalizationSummary.getRecord();
+        val finalizationBlockPointer = to(finalizationData.getBlock()).toString();
+        UInt64 finalizationIndex = UInt64.from(finalizationData.getIndex().getValue());
+        UInt64 finalizationDelay = UInt64.from(finalizationData.getDelay().getValue());
+        val grpcFinalizers = finalizationData.getFinalizersList();
+        val finalizers = new ImmutableList.Builder<Finalizer>();
+        grpcFinalizers.forEach(f -> finalizers.add(to(f)));
+
+        return Optional.of(FinalizationData.builder()
+                .finalizationBlockPointer(finalizationBlockPointer)
+                .finalizationIndex(finalizationIndex)
+                .finalizationDelay(finalizationDelay)
+                .finalizers(finalizers.build()).build());
+    }
+
+    static Finalizer to(FinalizationSummaryParty finalizer) {
+        return Finalizer.builder()
+                .bakerId(com.concordium.sdk.responses.AccountIndex.from(finalizer.getBaker().getValue()))
+                .weight(BigInteger.valueOf(finalizer.getWeight()))
+                .signed(finalizer.getSigned()).build();
+    }
+
+    static ImmutableList<SpecialOutcome> to(Iterator<BlockSpecialEvent> events) {
+        val result = new ImmutableList.Builder<SpecialOutcome>();
+        events.forEachRemaining(event -> result.add(to(event)));
+        return result.build();
+    }
+
+    static SpecialOutcome to(BlockSpecialEvent event) {
+        switch (event.getEventCase()) {
+            case BAKING_REWARDS: {
+                val bakingRewards = event.getBakingRewards();
+                return BakingRewards.builder()
+                        .remainder(CCDAmount.fromMicro(bakingRewards.getRemainder().getValue()))
+                        .bakerRewards(toRewardList(bakingRewards.getBakerRewards().getEntriesList()))
+                        .build();
+            }
+            case MINT: {
+                val mint = event.getMint();
+                return Mint.builder()
+                        .mintBakingReward(CCDAmount.fromMicro(mint.getMintBakingReward().getValue()))
+                        .mintFinalizationReward(CCDAmount.fromMicro(mint.getMintFinalizationReward().getValue()))
+                        .mintPlatformDevelopmentCharge(CCDAmount.fromMicro(mint.getMintPlatformDevelopmentCharge().getValue()))
+                        .foundationAccount(com.concordium.sdk.transactions.AccountAddress.from(mint.getFoundationAccount().getValue().toByteArray()))
+                        .build();
+            }
+            case FINALIZATION_REWARDS: {
+                val finalizationRewards = event.getFinalizationRewards();
+                return FinalizationRewards.builder()
+                        .rewards(toRewardList(finalizationRewards.getFinalizationRewards().getEntriesList()))
+                        .remainder(CCDAmount.fromMicro(finalizationRewards.getRemainder().getValue()))
+                        .build();
+            }
+            case BLOCK_REWARD: {
+                val blockReward = event.getBlockReward();
+                return BlockReward.builder()
+                        .transactionFees(CCDAmount.fromMicro(blockReward.getTransactionFees().getValue()))
+                        .oldGASAccount(CCDAmount.fromMicro(blockReward.getOldGasAccount().getValue()))
+                        .newGASAccount(CCDAmount.fromMicro(blockReward.getNewGasAccount().getValue()))
+                        .bakerReward(CCDAmount.fromMicro(blockReward.getBakerReward().getValue()))
+                        .foundationCharge(CCDAmount.fromMicro(blockReward.getFoundationCharge().getValue()))
+                        .baker(com.concordium.sdk.transactions.AccountAddress.from(blockReward.getBaker().getValue().toByteArray()))
+                        .foundationAccount(com.concordium.sdk.transactions.AccountAddress.from(blockReward.getFoundationAccount().getValue().toByteArray()))
+                        .build();
+            }
+            case PAYDAY_FOUNDATION_REWARD: {
+                val paydayFoundationReward = event.getPaydayFoundationReward();
+                return PaydayFoundationReward.builder()
+                        .foundationAccount(com.concordium.sdk.transactions.AccountAddress.from(paydayFoundationReward.getFoundationAccount().getValue().toByteArray()))
+                        .developmentCharge(CCDAmount.fromMicro(paydayFoundationReward.getDevelopmentCharge().getValue()))
+                        .build();
+            }
+            case PAYDAY_ACCOUNT_REWARD: {
+                val paydayAccountReward = event.getPaydayAccountReward();
+                return PaydayAccountReward.builder()
+                        .account(com.concordium.sdk.transactions.AccountAddress.from(paydayAccountReward.getAccount().getValue().toByteArray()))
+                        .transactionFees(CCDAmount.fromMicro(paydayAccountReward.getTransactionFees().getValue()))
+                        .bakerReward(CCDAmount.fromMicro(paydayAccountReward.getBakerReward().getValue()))
+                        .finalizationReward(CCDAmount.fromMicro(paydayAccountReward.getFinalizationReward().getValue()))
+                        .build();
+            }
+            case BLOCK_ACCRUE_REWARD: {
+                val blockAccrueReward = event.getBlockAccrueReward();
+                return BlockAccrueReward.builder()
+                        .transactionFees(CCDAmount.fromMicro(blockAccrueReward.getTransactionFees().getValue()))
+                        .oldGASAccount(CCDAmount.fromMicro(blockAccrueReward.getOldGasAccount().getValue()))
+                        .newGASAccount(CCDAmount.fromMicro(blockAccrueReward.getNewGasAccount().getValue()))
+                        .bakerReward(CCDAmount.fromMicro(blockAccrueReward.getBakerReward().getValue()))
+                        .passiveReward(CCDAmount.fromMicro(blockAccrueReward.getPassiveReward().getValue()))
+                        .foundationCharge(CCDAmount.fromMicro(blockAccrueReward.getFoundationCharge().getValue()))
+                        .bakerId(com.concordium.sdk.responses.AccountIndex.from(blockAccrueReward.getBaker().getValue()))
+                        .build();
+            }
+            case PAYDAY_POOL_REWARD: {
+                val paydayPoolReward = event.getPaydayPoolReward();
+                val result = PaydayPoolReward.builder();
+                if (paydayPoolReward.hasPoolOwner()) {result.poolOwner(paydayPoolReward.getPoolOwner().getValue());}
+                result.transactionFees(CCDAmount.fromMicro(paydayPoolReward.getTransactionFees().getValue()))
+                        .bakerReward(CCDAmount.fromMicro(paydayPoolReward.getBakerReward().getValue()))
+                        .finalizationReward(CCDAmount.fromMicro(paydayPoolReward.getFinalizationReward().getValue()));
+                return result.build();
+            }
+            default:
+                throw new IllegalStateException("Unexpected value: " + event.getEventCase());
+        }
+
+    }
+
+    static List<Reward> toRewardList(List<BlockSpecialEvent.AccountAmounts.Entry> entriesList) {
+        val result = new ImmutableList.Builder<Reward>();
+        entriesList.forEach(e ->
+                result.add(Reward.builder()
+                        .address(com.concordium.sdk.transactions.AccountAddress.from(e.getAccount().getValue().toByteArray()))
+                        .amount(CCDAmount.fromMicro(e.getAmount().getValue())).build())
+        );
+        return result.build();
     }
 
     static Branch to(com.concordium.grpc.v2.Branch branch) {
