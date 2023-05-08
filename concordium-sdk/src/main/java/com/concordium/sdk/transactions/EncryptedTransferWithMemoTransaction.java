@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class EncryptedTransferWithMemoTransaction extends AbstractAccountTransaction {
+public class EncryptedTransferWithMemoTransaction extends AccountTransaction {
 
     /**
      * A constructor of {@link EncryptedTransferWithMemoTransaction} class.

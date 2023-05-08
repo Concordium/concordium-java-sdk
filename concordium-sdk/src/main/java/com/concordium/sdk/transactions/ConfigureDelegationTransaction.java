@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ConfigureDelegationTransaction extends AbstractAccountTransaction {
+public class ConfigureDelegationTransaction extends AccountTransaction {
     private ConfigureDelegationTransaction(
             @NonNull final ConfigureDelegationPayload payload,
             @NonNull final AccountAddress sender,

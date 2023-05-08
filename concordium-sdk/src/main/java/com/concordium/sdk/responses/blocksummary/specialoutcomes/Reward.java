@@ -4,6 +4,7 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,6 +14,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
+@Builder
 @EqualsAndHashCode
 public final class Reward {
     private final AccountAddress address;

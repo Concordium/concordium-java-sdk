@@ -2,7 +2,6 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.AccountAddress;
 import com.concordium.grpc.v2.AccountInfo;
-import com.concordium.grpc.v2.AccountTransaction;
 import com.concordium.grpc.v2.BlockItem;
 import com.concordium.grpc.v2.Commitment;
 import com.concordium.grpc.v2.CredentialPublicKeys;
@@ -12,8 +11,11 @@ import com.concordium.grpc.v2.Memo;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
+import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
+import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
@@ -22,12 +24,19 @@ import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.accountinfo.*;
 import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
+import com.concordium.sdk.responses.blocksummary.FinalizationData;
+import com.concordium.sdk.responses.blocksummary.Finalizer;
+import com.concordium.sdk.responses.blocksummary.specialoutcomes.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
+import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
+import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
+import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.responses.transactionstatus.RejectReason;
 import com.concordium.sdk.responses.transactionstatus.TransactionType;
 import com.concordium.sdk.transactions.AccountNonce;
@@ -51,6 +60,7 @@ import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
@@ -58,6 +68,7 @@ import lombok.val;
 import lombok.var;
 
 import javax.annotation.Nullable;
+import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.util.*;
@@ -116,6 +127,15 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
+    static IdentityProviderInfo to(final IpInfo ipInfo) {
+        return IdentityProviderInfo.builder()
+                .ipIdentity(to(ipInfo.getIdentity()))
+                .description(to(ipInfo.getDescription()))
+                .ipCdiVerifyKey(to(ipInfo.getCdiVerifyKey()))
+                .ipVerifyKey(to(ipInfo.getVerifyKey()))
+                .build();
+    }
+
     static ElgamalPublicKey to(final ArInfo.ArPublicKey publicKey) {
         return ElgamalPublicKey.from(publicKey.getValue().toByteArray());
     }
@@ -130,6 +150,17 @@ interface ClientV2MapperExtensions {
 
     static int to(final ArInfo.ArIdentity identity) {
         return identity.getValue();
+    }
+    static int to(final IpIdentity identity) {
+        return identity.getValue();
+    }
+
+    static PSPublicKey to(final IpInfo.IpVerifyKey verifyKey) {
+        return new PSPublicKey(verifyKey.getValue().toByteArray());
+    }
+
+    static ED25519PublicKey to(final IpInfo.IpCdiVerifyKey cdiVerifyKey) {
+        return ED25519PublicKey.from(cdiVerifyKey.getValue().toByteArray());
     }
 
     static <T1, T2> Iterator<T2> to(final Iterator<T1> iterator, final Function<? super T1, ? extends T2> to) {
@@ -559,7 +590,7 @@ interface ClientV2MapperExtensions {
         }
     }
 
-    static AbstractAccountTransaction to(AccountTransaction transaction) {
+    static AccountTransaction to(com.concordium.grpc.v2.AccountTransaction transaction) {
         val payload = transaction.getPayload();
 
         switch (payload.getPayloadCase()) {
@@ -615,7 +646,7 @@ interface ClientV2MapperExtensions {
             case RAW_PAYLOAD:
                 final byte[] rawPayloadBytes = payload.getRawPayload().toByteArray();
                 return com.concordium.sdk.transactions.AccountTransaction
-                        .builderBlockItem()
+                        .builderAccountTransactionBlockItem()
                         .header(to(transaction.getHeader(), rawPayloadBytes.length))
                         .signature(to(transaction.getSignature()))
                         .payloadBytes(rawPayloadBytes)
@@ -623,7 +654,7 @@ interface ClientV2MapperExtensions {
             default:
             case PAYLOAD_NOT_SET:
                 return com.concordium.sdk.transactions.AccountTransaction
-                        .builderBlockItem()
+                        .builderAccountTransactionBlockItem()
                         .header(to(transaction.getHeader(), 0))
                         .signature(to(transaction.getSignature()))
                         .payloadBytes(new byte[0])
@@ -734,7 +765,7 @@ interface ClientV2MapperExtensions {
     static UInt64 to(TransactionTime expiry) {
         return UInt64.from(expiry.getValue());
     }
-    
+
     // Convert a Duration object to a long value
     static long to(Duration slotDuration) {
         return slotDuration.getValue();
@@ -746,38 +777,136 @@ interface ClientV2MapperExtensions {
     }
 
     // Convert a ConsensusInfo object to a ConsensusStatus object
-    static ConsensusStatus to(ConsensusInfo concensusInfo) {
+    static ConsensusStatus to(ConsensusInfo consensusInfo) {
         var builder = ConsensusStatus.builder()
-                .bestBlock(to(concensusInfo.getBestBlock()))
-                .genesisBlock(to(concensusInfo.getGenesisBlock()))
-                .genesisTime(to(concensusInfo.getGenesisTime()).getDate())
-                .slotDuration(to(concensusInfo.getSlotDuration()))
-                .epochDuration(to(concensusInfo.getEpochDuration()))
-                .lastFinalizedBlock(to(concensusInfo.getLastFinalizedBlock()))
-                .bestBlockHeight(to(concensusInfo.getBestBlockHeight()).getValue())
-                .lastFinalizedBlockHeight(to(concensusInfo.getLastFinalizedBlockHeight()).getValue())
-                .blocksReceivedCount(concensusInfo.getBlocksReceivedCount())
-                .blockLastReceivedTime(to(concensusInfo.getBlockLastReceivedTime()).toString())
-                .blockReceiveLatencyEMA(concensusInfo.getBlockReceiveLatencyEma())
-                .blockReceiveLatencyEMSD(concensusInfo.getBlockReceiveLatencyEmsd())
-                .blockReceivePeriodEMA(concensusInfo.getBlockReceivePeriodEma())
-                .blockReceivePeriodEMSD(concensusInfo.getBlockReceivePeriodEmsd())
-                .blocksVerifiedCount(concensusInfo.getBlocksVerifiedCount())
-                .blockLastArrivedTime(to(concensusInfo.getBlockLastArrivedTime()).toString())
-                .blockArriveLatencyEMA(concensusInfo.getBlockArriveLatencyEma())
-                .blockArriveLatencyEMSD(concensusInfo.getBlockArriveLatencyEmsd())
-                .blockArrivePeriodEMA(concensusInfo.getBlockArrivePeriodEma())
-                .blockArrivePeriodEMSD(concensusInfo.getBlockArrivePeriodEmsd())
-                .transactionsPerBlockEMA(concensusInfo.getTransactionsPerBlockEma())
-                .transactionsPerBlockEMSD(concensusInfo.getTransactionsPerBlockEmsd())
-                .finalizationCount(concensusInfo.getFinalizationCount())
-                .lastFinalizedTime(to(concensusInfo.getLastFinalizedTime()).toString())
-                .finalizationPeriodEMA(concensusInfo.getFinalizationPeriodEma())
-                .finalizationPeriodEMSD(concensusInfo.getFinalizationPeriodEmsd())
-                .protocolVersion(to(concensusInfo.getProtocolVersion()))
-                .genesisIndex(concensusInfo.getGenesisIndex().getValue())
-                .currentEraGenesisBlock(to(concensusInfo.getCurrentEraGenesisBlock()).toString())
-                .currentEraGenesisTime(to(concensusInfo.getCurrentEraGenesisTime()).getDate());
+                .bestBlock(to(consensusInfo.getBestBlock()))
+                .genesisBlock(to(consensusInfo.getGenesisBlock()))
+                .genesisTime(to(consensusInfo.getGenesisTime()).getDate())
+                .slotDuration(to(consensusInfo.getSlotDuration()))
+                .epochDuration(to(consensusInfo.getEpochDuration()))
+                .lastFinalizedBlock(to(consensusInfo.getLastFinalizedBlock()))
+                .bestBlockHeight(to(consensusInfo.getBestBlockHeight()).getValue())
+                .lastFinalizedBlockHeight(to(consensusInfo.getLastFinalizedBlockHeight()).getValue())
+                .blocksReceivedCount(consensusInfo.getBlocksReceivedCount())
+                .blockLastReceivedTime(to(consensusInfo.getBlockLastReceivedTime()).toString())
+                .blockReceiveLatencyEMA(consensusInfo.getBlockReceiveLatencyEma())
+                .blockReceiveLatencyEMSD(consensusInfo.getBlockReceiveLatencyEmsd())
+                .blockReceivePeriodEMA(consensusInfo.getBlockReceivePeriodEma())
+                .blockReceivePeriodEMSD(consensusInfo.getBlockReceivePeriodEmsd())
+                .blocksVerifiedCount(consensusInfo.getBlocksVerifiedCount())
+                .blockLastArrivedTime(to(consensusInfo.getBlockLastArrivedTime()).toString())
+                .blockArriveLatencyEMA(consensusInfo.getBlockArriveLatencyEma())
+                .blockArriveLatencyEMSD(consensusInfo.getBlockArriveLatencyEmsd())
+                .blockArrivePeriodEMA(consensusInfo.getBlockArrivePeriodEma())
+                .blockArrivePeriodEMSD(consensusInfo.getBlockArrivePeriodEmsd())
+                .transactionsPerBlockEMA(consensusInfo.getTransactionsPerBlockEma())
+                .transactionsPerBlockEMSD(consensusInfo.getTransactionsPerBlockEmsd())
+                .finalizationCount(consensusInfo.getFinalizationCount())
+                .lastFinalizedTime(to(consensusInfo.getLastFinalizedTime()).toString())
+                .finalizationPeriodEMA(consensusInfo.getFinalizationPeriodEma())
+                .finalizationPeriodEMSD(consensusInfo.getFinalizationPeriodEmsd())
+                .protocolVersion(to(consensusInfo.getProtocolVersion()))
+                .genesisIndex(consensusInfo.getGenesisIndex().getValue())
+                .currentEraGenesisBlock(to(consensusInfo.getCurrentEraGenesisBlock()).toString())
+                .currentEraGenesisTime(to(consensusInfo.getCurrentEraGenesisTime()).getDate());
+
+        return builder.build();
+    }
+
+    static SendBlockItemRequest to(AccountTransaction accountTransaction) {
+        return SendBlockItemRequest.newBuilder()
+                .setAccountTransaction(com.concordium.grpc.v2.AccountTransaction.newBuilder()
+                        .setHeader(to(accountTransaction.getHeader()))
+                        .setPayload(AccountTransactionPayload.newBuilder()
+                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayloadBytes()))
+                                .build())
+                        .setSignature(to(accountTransaction.getSignature()))
+                        .build())
+                .build();
+    }
+
+    static AccountTransactionSignature to(TransactionSignature signature) {
+        return AccountTransactionSignature.newBuilder()
+                .putAllSignatures(to(
+                        signature.getSignatures(),
+                        ClientV2MapperExtensions::to,
+                        ClientV2MapperExtensions::to))
+                .build();
+    }
+
+    static AccountSignatureMap to(TransactionSignatureAccountSignatureMap v) {
+        return AccountSignatureMap.newBuilder().putAllSignatures(to(
+                        v.getSignatures(),
+                        ClientV2MapperExtensions::to,
+                        ClientV2MapperExtensions::to))
+                .build();
+    }
+
+    static Integer to(Index index) {
+        return (int) index.getValue();
+    }
+
+    static com.concordium.grpc.v2.Signature to(Signature signature) {
+        return com.concordium.grpc.v2.Signature.newBuilder()
+                .setValue(ByteString.copyFrom(signature.getBytes()))
+                .build();
+    }
+
+    static AccountTransactionHeader to(TransactionHeader header) {
+        return AccountTransactionHeader.newBuilder()
+                .setSequenceNumber(SequenceNumber.newBuilder()
+                        .setValue(to(header.getAccountNonce()))
+                        .build())
+                .setSender(to(header.getSender()))
+                .setExpiry(to(header.getExpiry()))
+                .setEnergyAmount(toEnergy(header.getMaxEnergyCost()))
+                .build();
+    }
+
+    static Energy toEnergy(UInt64 maxEnergyCost) {
+        return Energy.newBuilder().setValue(maxEnergyCost.getValue()).build();
+    }
+
+    static TransactionTime to(UInt64 expiry) {
+        return TransactionTime.newBuilder().setValue(expiry.getValue()).build();
+    }
+
+    static long to(Nonce accountNonce) {
+        return accountNonce.getValue().getValue();
+    }
+
+    static com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters to(CryptographicParameters grpcOutput) {
+        var builder = com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters.builder()
+                .bulletproofGenerators(BulletproofGenerators.from(grpcOutput.getBulletproofGenerators().toByteArray()))
+                .onChainCommitmentKey(PedersenCommitmentKey.from(grpcOutput.getOnChainCommitmentKey().toByteArray()))
+                .genesisString(grpcOutput.getGenesisString());
+
+        return builder.build();
+
+    }
+
+    static RewardsOverview to(TokenomicsInfo tokenomicsInfo) {
+        var builder = RewardsOverview.builder();
+        if (tokenomicsInfo.hasV0()) {
+            builder = builder.totalAmount(to(tokenomicsInfo.getV0().getTotalAmount()))
+                    .totalEncryptedAmount(to(tokenomicsInfo.getV0().getTotalEncryptedAmount()))
+                    .bakingRewardAccount(to(tokenomicsInfo.getV0().getBakingRewardAccount()))
+                    .finalizationRewardAccount(to(tokenomicsInfo.getV0().getFinalizationRewardAccount()))
+                    .gasAccount(to(tokenomicsInfo.getV0().getGasAccount()))
+                    .protocolVersion(to(tokenomicsInfo.getV0().getProtocolVersion()));
+        }
+        else if (tokenomicsInfo.hasV1()) {
+            builder = builder.totalAmount(to(tokenomicsInfo.getV1().getTotalAmount()))
+                    .totalEncryptedAmount(to(tokenomicsInfo.getV1().getTotalEncryptedAmount()))
+                    .bakingRewardAccount(to(tokenomicsInfo.getV1().getBakingRewardAccount()))
+                    .finalizationRewardAccount(to(tokenomicsInfo.getV1().getFinalizationRewardAccount()))
+                    .gasAccount(to(tokenomicsInfo.getV1().getGasAccount()))
+                    .foundationTransactionRewards(to(tokenomicsInfo.getV1().getFoundationTransactionRewards()))
+                    .nextPaydayTime(to(tokenomicsInfo.getV1().getNextPaydayTime()).getDate())
+                    .nextPaydayMintRate(to(tokenomicsInfo.getV1().getNextPaydayMintRate()))
+                    .totalStakedCapital(to(tokenomicsInfo.getV1().getTotalStakedCapital()))
+                    .protocolVersion(to(tokenomicsInfo.getV1().getProtocolVersion()));
+        }
 
         return builder.build();
     }
@@ -804,6 +933,11 @@ interface ClientV2MapperExtensions {
         }
 
         return builder.build();
+    }
+
+    static double to(MintRate mintRate) {
+        double rate = mintRate.getMantissa() * Math.pow(10, -1 * mintRate.getExponent());
+        return rate;
     }
 
     static Map<Hash, TransactionSummary> to(List<com.concordium.grpc.v2.BlockItemSummaryInBlock> blockItemSummaries) {
@@ -851,7 +985,6 @@ interface ClientV2MapperExtensions {
         map.put(ReasonCase.OUT_OF_ENERGY, RejectReasonType.OUT_OF_ENERGY);
         map.put(ReasonCase.REJECTED_INIT, RejectReasonType.REJECTED_INIT);
         map.put(ReasonCase.REJECTED_RECEIVE, RejectReasonType.REJECTED_RECEIVE);
-        map.put(ReasonCase.NON_EXISTENT_CRED_IDS, RejectReasonType.NON_EXISTENT_REWARD_ACCOUNT);
         map.put(ReasonCase.INVALID_PROOF, RejectReasonType.INVALID_PROOF);
         map.put(ReasonCase.ALREADY_A_BAKER, RejectReasonType.ALREADY_A_BAKER);
         map.put(ReasonCase.NOT_A_BAKER, RejectReasonType.NOT_A_BAKER);
@@ -942,8 +1075,7 @@ interface ClientV2MapperExtensions {
                     break;
                 }
             }
-        }
-        else {
+        } else {
             var effectCase = transactionDetails.getEffects().getEffectCase();
             List<TransactionResultEvent> eventList = new ArrayList<>();
 
@@ -970,7 +1102,6 @@ interface ClientV2MapperExtensions {
 
         return result.build();
     }
-
 
     static TransactionTypeInfo toTransactionType(BlockItemSummary summary) {
         var builder = TransactionTypeInfo.builder();
@@ -1096,7 +1227,6 @@ interface ClientV2MapperExtensions {
         return builder.build();
     }
 
-
     static Hash to(StateHash stateHash) {
         return Hash.from(stateHash.getValue().toByteArray());
     }
@@ -1122,4 +1252,144 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
+    static Optional<FinalizationData> to(BlockFinalizationSummary finalizationSummary) {
+        if (finalizationSummary.hasNone()) {return Optional.empty();} //There is no finalization data in the block
+        val finalizationData = finalizationSummary.getRecord();
+        val finalizationBlockPointer = to(finalizationData.getBlock()).toString();
+        UInt64 finalizationIndex = UInt64.from(finalizationData.getIndex().getValue());
+        UInt64 finalizationDelay = UInt64.from(finalizationData.getDelay().getValue());
+        val grpcFinalizers = finalizationData.getFinalizersList();
+        val finalizers = new ImmutableList.Builder<Finalizer>();
+        grpcFinalizers.forEach(f -> finalizers.add(to(f)));
+
+        return Optional.of(FinalizationData.builder()
+                .finalizationBlockPointer(finalizationBlockPointer)
+                .finalizationIndex(finalizationIndex)
+                .finalizationDelay(finalizationDelay)
+                .finalizers(finalizers.build()).build());
+    }
+
+    static Finalizer to(FinalizationSummaryParty finalizer) {
+        return Finalizer.builder()
+                .bakerId(com.concordium.sdk.responses.AccountIndex.from(finalizer.getBaker().getValue()))
+                .weight(BigInteger.valueOf(finalizer.getWeight()))
+                .signed(finalizer.getSigned()).build();
+    }
+
+    static ImmutableList<SpecialOutcome> to(Iterator<BlockSpecialEvent> events) {
+        val result = new ImmutableList.Builder<SpecialOutcome>();
+        events.forEachRemaining(event -> result.add(to(event)));
+        return result.build();
+    }
+
+    static SpecialOutcome to(BlockSpecialEvent event) {
+        switch (event.getEventCase()) {
+            case BAKING_REWARDS: {
+                val bakingRewards = event.getBakingRewards();
+                return BakingRewards.builder()
+                        .remainder(CCDAmount.fromMicro(bakingRewards.getRemainder().getValue()))
+                        .bakerRewards(toRewardList(bakingRewards.getBakerRewards().getEntriesList()))
+                        .build();
+            }
+            case MINT: {
+                val mint = event.getMint();
+                return Mint.builder()
+                        .mintBakingReward(CCDAmount.fromMicro(mint.getMintBakingReward().getValue()))
+                        .mintFinalizationReward(CCDAmount.fromMicro(mint.getMintFinalizationReward().getValue()))
+                        .mintPlatformDevelopmentCharge(CCDAmount.fromMicro(mint.getMintPlatformDevelopmentCharge().getValue()))
+                        .foundationAccount(com.concordium.sdk.transactions.AccountAddress.from(mint.getFoundationAccount().getValue().toByteArray()))
+                        .build();
+            }
+            case FINALIZATION_REWARDS: {
+                val finalizationRewards = event.getFinalizationRewards();
+                return FinalizationRewards.builder()
+                        .rewards(toRewardList(finalizationRewards.getFinalizationRewards().getEntriesList()))
+                        .remainder(CCDAmount.fromMicro(finalizationRewards.getRemainder().getValue()))
+                        .build();
+            }
+            case BLOCK_REWARD: {
+                val blockReward = event.getBlockReward();
+                return BlockReward.builder()
+                        .transactionFees(CCDAmount.fromMicro(blockReward.getTransactionFees().getValue()))
+                        .oldGASAccount(CCDAmount.fromMicro(blockReward.getOldGasAccount().getValue()))
+                        .newGASAccount(CCDAmount.fromMicro(blockReward.getNewGasAccount().getValue()))
+                        .bakerReward(CCDAmount.fromMicro(blockReward.getBakerReward().getValue()))
+                        .foundationCharge(CCDAmount.fromMicro(blockReward.getFoundationCharge().getValue()))
+                        .baker(com.concordium.sdk.transactions.AccountAddress.from(blockReward.getBaker().getValue().toByteArray()))
+                        .foundationAccount(com.concordium.sdk.transactions.AccountAddress.from(blockReward.getFoundationAccount().getValue().toByteArray()))
+                        .build();
+            }
+            case PAYDAY_FOUNDATION_REWARD: {
+                val paydayFoundationReward = event.getPaydayFoundationReward();
+                return PaydayFoundationReward.builder()
+                        .foundationAccount(com.concordium.sdk.transactions.AccountAddress.from(paydayFoundationReward.getFoundationAccount().getValue().toByteArray()))
+                        .developmentCharge(CCDAmount.fromMicro(paydayFoundationReward.getDevelopmentCharge().getValue()))
+                        .build();
+            }
+            case PAYDAY_ACCOUNT_REWARD: {
+                val paydayAccountReward = event.getPaydayAccountReward();
+                return PaydayAccountReward.builder()
+                        .account(com.concordium.sdk.transactions.AccountAddress.from(paydayAccountReward.getAccount().getValue().toByteArray()))
+                        .transactionFees(CCDAmount.fromMicro(paydayAccountReward.getTransactionFees().getValue()))
+                        .bakerReward(CCDAmount.fromMicro(paydayAccountReward.getBakerReward().getValue()))
+                        .finalizationReward(CCDAmount.fromMicro(paydayAccountReward.getFinalizationReward().getValue()))
+                        .build();
+            }
+            case BLOCK_ACCRUE_REWARD: {
+                val blockAccrueReward = event.getBlockAccrueReward();
+                return BlockAccrueReward.builder()
+                        .transactionFees(CCDAmount.fromMicro(blockAccrueReward.getTransactionFees().getValue()))
+                        .oldGASAccount(CCDAmount.fromMicro(blockAccrueReward.getOldGasAccount().getValue()))
+                        .newGASAccount(CCDAmount.fromMicro(blockAccrueReward.getNewGasAccount().getValue()))
+                        .bakerReward(CCDAmount.fromMicro(blockAccrueReward.getBakerReward().getValue()))
+                        .passiveReward(CCDAmount.fromMicro(blockAccrueReward.getPassiveReward().getValue()))
+                        .foundationCharge(CCDAmount.fromMicro(blockAccrueReward.getFoundationCharge().getValue()))
+                        .bakerId(com.concordium.sdk.responses.AccountIndex.from(blockAccrueReward.getBaker().getValue()))
+                        .build();
+            }
+            case PAYDAY_POOL_REWARD: {
+                val paydayPoolReward = event.getPaydayPoolReward();
+                val result = PaydayPoolReward.builder();
+                if (paydayPoolReward.hasPoolOwner()) {result.poolOwner(paydayPoolReward.getPoolOwner().getValue());}
+                result.transactionFees(CCDAmount.fromMicro(paydayPoolReward.getTransactionFees().getValue()))
+                        .bakerReward(CCDAmount.fromMicro(paydayPoolReward.getBakerReward().getValue()))
+                        .finalizationReward(CCDAmount.fromMicro(paydayPoolReward.getFinalizationReward().getValue()));
+                return result.build();
+            }
+            default:
+                throw new IllegalStateException("Unexpected value: " + event.getEventCase());
+        }
+
+    }
+
+    static List<Reward> toRewardList(List<BlockSpecialEvent.AccountAmounts.Entry> entriesList) {
+        val result = new ImmutableList.Builder<Reward>();
+        entriesList.forEach(e ->
+                result.add(Reward.builder()
+                        .address(com.concordium.sdk.transactions.AccountAddress.from(e.getAccount().getValue().toByteArray()))
+                        .amount(CCDAmount.fromMicro(e.getAmount().getValue())).build())
+        );
+        return result.build();
+    }
+
+    // Note. In extreme cases then the recursion happening below can lead to
+    // stack overflows. However, this should not be a problem in reality, as we
+    // do not expect that much branching. Default stack size is mostly 1mb and ~ 7_000 nested calls, which
+    // is well within the expected branching.
+    static Branch to(com.concordium.grpc.v2.Branch branch) {
+        return Branch.builder()
+                .blockHash(to(branch.getBlockHash()))
+                .children(to(branch.getChildrenList(), ClientV2MapperExtensions::to))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.DelegatorInfo to(DelegatorInfo delegatorInfo) {
+        return com.concordium.sdk.responses.DelegatorInfo.builder()
+                .account(to(delegatorInfo.getAccount()))
+                .stake(to(delegatorInfo.getStake()))
+                .pendingChange(delegatorInfo.hasPendingChange()
+                        ? Optional.of(to(delegatorInfo.getPendingChange()))
+                        : Optional.empty())
+                .build();
+    }
 }

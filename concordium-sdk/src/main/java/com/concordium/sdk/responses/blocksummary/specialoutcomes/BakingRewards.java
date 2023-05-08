@@ -1,15 +1,14 @@
 package com.concordium.sdk.responses.blocksummary.specialoutcomes;
 
-import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Payment to each baker of a previous epoch,
@@ -18,6 +17,7 @@ import java.util.Map;
  */
 @Getter
 @ToString
+@Builder
 @EqualsAndHashCode(callSuper = false)
 public final class BakingRewards extends SpecialOutcome {
     /**

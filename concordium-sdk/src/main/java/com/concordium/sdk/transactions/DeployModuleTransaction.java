@@ -11,7 +11,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class DeployModuleTransaction extends AbstractAccountTransaction {
+public class DeployModuleTransaction extends AccountTransaction {
     private DeployModuleTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final AccountNonce nonce,
