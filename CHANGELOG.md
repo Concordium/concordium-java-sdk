@@ -15,6 +15,8 @@
 - Added support for GRPC V2 `GetIdentityProviders`
 - Added support for GRPC V2 `SendBlockItem` for sending a transaction.
 - Added support for GRPC V2 `GetBlockItemStatus` for retrieving the status of an individual transaction
+- Added support for GRPC V2 `DumpStart` which instructs the node to start dumping network packages at a specified path.
+- Added support for GRPC V2 `DumpStop` which instructs the node to stop dumping packages.
 - Fixed incorrect transaction event with respect to a transaction status for when a delegator decreased its stake.
 - Added support for GRPC V2 `GetBlockInfo` for retrieving information of the block being queried.
 - Added support for GRPC V2 `GetTokenomicsInfo` for acquiring various tokenomics related information for a block.
