@@ -1,19 +1,20 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.AccountInfoRequest;
-import com.concordium.grpc.v2.Empty;
-import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
+import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BlockIdentifier;
+import com.concordium.sdk.responses.DelegatorInfo;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
+import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
@@ -304,6 +305,50 @@ public final class ClientV2 {
     public ImmutableList<SpecialOutcome> getBlockSpecialEvents(BlockHashInput blockHashInput) {
         val grpcOutput = this.server().getBlockSpecialEvents(to(blockHashInput));
         return to(grpcOutput);
+    }
+
+    /**
+     * Get the branches of the node's tree. Branches are all live blocks that
+     * are successors of the last finalized block. In particular this means
+     * that blocks which do not have a parent are not included in this
+     * response
+     *
+     * @return {@link Branch}
+     */
+    public Branch getBranches() {
+        var grpcOutput = this.server().getBranches(Empty.getDefaultInstance());
+
+        return ClientV2MapperExtensions.to(grpcOutput);
+    }
+
+
+    /**
+     * Get information about the passive delegators at the end of a given block.
+     *
+     * @param input {@link BlockHashInput}.
+     * @return {@link Iterator} of {@link DelegatorInfo}.
+     */
+    public Iterator<DelegatorInfo> getPassiveDelegators(BlockHashInput input) {
+        var grpcOutput = this.server().getPassiveDelegators(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get the registered delegators of a given pool at the end of a given block.
+     * Any changes to delegators are immediately visible in this list.
+     *
+     * @param input   {@link BlockHashInput}
+     * @param bakerId {@link AccountIndex}
+     * @return {@link Iterator} of {@link DelegatorInfo}. List of delegators that are registered in the block.
+     */
+    public Iterator<DelegatorInfo> getPoolDelegators(BlockHashInput input, AccountIndex bakerId) {
+        var grpcOutput = this.server().getPoolDelegators(GetPoolDelegatorsRequest.newBuilder()
+                .setBlockHash(to(input))
+                .setBaker(BakerId.newBuilder().setValue(bakerId.getIndex().getValue()).build())
+                .build());
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
     /**
