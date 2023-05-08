@@ -370,7 +370,7 @@ public final class ClientV2 {
     }
 
     /**
-     * Returns a {@link ImmutableList} of {@link PeerInfo} containing information about the nodes' peers
+     * Returns a {@link ImmutableList} of {@link PeerInfo} containing information about the nodes' peers.
      *
      * @return {@link ImmutableList} of {@link PeerInfo}
      * @throws UnknownHostException When the returned IP address of Peer is Invalid
