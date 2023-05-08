@@ -15,6 +15,7 @@
 - Added support for GRPC V2 `GetTokenomicsInfo` for acquiring various tokenomics related information for a block.
 - Added support for GRPC V2 `GetBranches`
 - Added support for GRPC V2 `GetPassiveDelegators`
+- Added support for GRPC V2 `GetPoolDelegators`
 
 ## 4.2.0
 - Added initial support for GRPC V2
