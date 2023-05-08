@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
-/**  TODO
+/**
  * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
  * Retrieves and prints the {@link FinalizationData} for the block {@link BlockHashInput#BEST}.
  */
