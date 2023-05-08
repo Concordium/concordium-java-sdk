@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased changes
-- Added support for GRPC V2 Get Peers Info
+- Added support for GRPC V2 `GetPeersInfo` for retrieving information of the peers that the node holds.
 - Added support for GRPC V2 Get Account Info
 - Added support for GRPC V2 Get Account List
 - Added support for GRPC V2 Get Next Account Nonce Number
