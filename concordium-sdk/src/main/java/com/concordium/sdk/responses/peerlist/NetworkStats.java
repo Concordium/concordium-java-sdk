@@ -16,7 +16,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class NetworkStats {
     /**
-     * The number of messages sent to the peer
+     * The number of messages sent to the peer.
      * Packets are blocks, transactions, catchup messages, finalization records
      * and network messages such as pings and peer requests
      */
