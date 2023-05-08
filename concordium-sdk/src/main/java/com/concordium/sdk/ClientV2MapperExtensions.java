@@ -1372,6 +1372,10 @@ interface ClientV2MapperExtensions {
         return result.build();
     }
 
+    // Note. In extreme cases then the recursion happening below can lead to
+    // stack overflows. However, this should not be a problem in reality, as we
+    // do not expect that much branching. Default stack size is mostly 1mb and ~ 7_000 nested calls, which
+    // is well within the expected branching.
     static Branch to(com.concordium.grpc.v2.Branch branch) {
         return Branch.builder()
                 .blockHash(to(branch.getBlockHash()))
