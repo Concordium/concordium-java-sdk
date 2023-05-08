@@ -54,14 +54,16 @@ public interface TransactionSigner {
         // Browser wallet format has field "value" otherwise structure for accessing keys is similar
         if (json.has("value")) {json = json.get("value");}
         val credentialsMap = json.get("accountKeys").get("keys"); // Map(index, Map(index, {signKey, verifyKey})
-        int nrOfCredentials = credentialsMap.size();
-        for (int i = 0; i < nrOfCredentials; i++) {
-            val credentialIndex = Index.from(i);
-            val keysMap = credentialsMap.get(String.valueOf(i)).get("keys"); // Map(index, {signKey, verifyKey})
-            int nrOfKeys = keysMap.size();
-            for (int j = 0; j < nrOfKeys; j++) {
-                val keyIndex = Index.from(j);
-                val signKey = keysMap.get(String.valueOf(j)).get("signKey").asText();
+        val credentialsIterator = credentialsMap.fieldNames();
+        while (credentialsIterator.hasNext()) {
+            String credentialIndexString = credentialsIterator.next();
+            val credentialIndex = Index.from(Integer.parseInt(credentialIndexString));
+            val keysMap = credentialsMap.get(credentialIndexString).get("keys"); // Map(index, {signKey, verifyKey})
+            val keysIterator = keysMap.fieldNames();
+            while (keysIterator.hasNext()) {
+                String keyIndexString = keysIterator.next();
+                val keyIndex = Index.from(Integer.parseInt(keyIndexString));
+                val signKey = keysMap.get(keyIndexString).get("signKey").asText();
                 val signer = ED25519SecretKey.from(signKey);
                 transactionSigner.put(credentialIndex, keyIndex, signer);
             }
