@@ -10,6 +10,7 @@ import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
@@ -32,6 +33,7 @@ import lombok.var;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.concordium.sdk.ClientV2MapperExtensions.to;
@@ -279,6 +281,17 @@ public final class ClientV2 {
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(transactionHash);
         }
+    }
+
+    /**
+     * Retrieves the {@link FinalizationData} of a given block {@link BlockHashInput}
+     * Note. Returns NULL if there is no finalization data in the block
+     * @param blockHashInput the block {@link BlockHashInput} to query
+     * @return The {@link FinalizationData} of the block
+     */
+    public Optional<FinalizationData> getBlockFinalizationSummary(BlockHashInput blockHashInput) {
+        val grpcOutput = this.server().getBlockFinalizationSummary(to(blockHashInput));
+        return to(grpcOutput);
     }
 
     /**
