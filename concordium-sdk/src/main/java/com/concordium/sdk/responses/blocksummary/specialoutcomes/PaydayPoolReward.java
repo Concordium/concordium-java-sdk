@@ -3,6 +3,7 @@ package com.concordium.sdk.responses.blocksummary.specialoutcomes;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,6 +12,7 @@ import lombok.ToString;
  * Payment distributed to a pool or passive delegators.
  */
 @Getter
+@Builder
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public final class PaydayPoolReward extends SpecialOutcome {
