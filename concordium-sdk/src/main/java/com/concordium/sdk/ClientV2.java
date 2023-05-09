@@ -17,12 +17,10 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
-import com.concordium.sdk.responses.peerlist.Peer;
 import com.concordium.sdk.responses.peerlist.PeerInfo;
+import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
-import com.concordium.sdk.responses.peerlist.Peer;
-import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountTransaction;
@@ -31,7 +29,6 @@ import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
 import com.google.common.collect.ImmutableList;
 import com.concordium.sdk.transactions.Hash;
-import com.google.common.collect.ImmutableList;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
@@ -328,6 +325,17 @@ public final class ClientV2 {
     public Optional<FinalizationData> getBlockFinalizationSummary(BlockHashInput blockHashInput) {
         val grpcOutput = this.server().getBlockFinalizationSummary(to(blockHashInput));
         return to(grpcOutput);
+    }
+
+    /**
+     * Get information related to the baker election for a particular block.
+     * @param input {@link BlockHashInput}
+     * @return {@link ElectionInfo}
+     */
+    public ElectionInfo getElectionInfo(BlockHashInput input) {
+        var grpcOutput = this.server().getElectionInfo(to(input));
+
+        return ClientV2MapperExtensions.to(grpcOutput);
     }
 
     /**

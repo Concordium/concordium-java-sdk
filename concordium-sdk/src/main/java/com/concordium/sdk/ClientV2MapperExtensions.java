@@ -32,6 +32,7 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.election.ElectionInfoBaker;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
@@ -1390,6 +1391,22 @@ interface ClientV2MapperExtensions {
                 .pendingChange(delegatorInfo.hasPendingChange()
                         ? Optional.of(to(delegatorInfo.getPendingChange()))
                         : Optional.empty())
+                .build();
+    }
+
+    static com.concordium.sdk.responses.election.ElectionInfo to(ElectionInfo grpcOutput) {
+        return com.concordium.sdk.responses.election.ElectionInfo.builder()
+                .electionDifficulty(to(grpcOutput.getElectionDifficulty().getValue()))
+                .leadershipElectionNonce(grpcOutput.getElectionNonce().getValue().toByteArray())
+                .bakerElectionInfo(ImmutableList.copyOf(to(grpcOutput.getBakerElectionInfoList(), ClientV2MapperExtensions::to)))
+                .build();
+    }
+
+    static ElectionInfoBaker to(ElectionInfo.Baker i) {
+        return ElectionInfoBaker.builder()
+                .baker(to(i.getBaker()))
+                .account(to(i.getAccount()))
+                .lotteryPower(i.getLotteryPower())
                 .build();
     }
 }
