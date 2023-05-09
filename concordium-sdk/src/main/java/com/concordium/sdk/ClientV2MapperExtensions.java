@@ -24,10 +24,13 @@ import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.accountinfo.*;
 import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
+import com.concordium.sdk.responses.blocksummary.FinalizationData;
+import com.concordium.sdk.responses.blocksummary.Finalizer;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
+import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
@@ -66,6 +69,7 @@ import lombok.val;
 import lombok.var;
 
 import javax.annotation.Nullable;
+import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.util.*;
@@ -148,7 +152,6 @@ interface ClientV2MapperExtensions {
     static int to(final ArInfo.ArIdentity identity) {
         return identity.getValue();
     }
-
     static int to(final IpIdentity identity) {
         return identity.getValue();
     }
@@ -892,7 +895,8 @@ interface ClientV2MapperExtensions {
                     .finalizationRewardAccount(to(tokenomicsInfo.getV0().getFinalizationRewardAccount()))
                     .gasAccount(to(tokenomicsInfo.getV0().getGasAccount()))
                     .protocolVersion(to(tokenomicsInfo.getV0().getProtocolVersion()));
-        } else if (tokenomicsInfo.hasV1()) {
+        }
+        else if (tokenomicsInfo.hasV1()) {
             builder = builder.totalAmount(to(tokenomicsInfo.getV1().getTotalAmount()))
                     .totalEncryptedAmount(to(tokenomicsInfo.getV1().getTotalEncryptedAmount()))
                     .bakingRewardAccount(to(tokenomicsInfo.getV1().getBakingRewardAccount()))
@@ -946,7 +950,6 @@ interface ClientV2MapperExtensions {
 
         return outcomes;
     }
-
     static Map<Hash, TransactionSummary> to(BlockItemSummaryInBlock outcome) {
         Map<Hash, TransactionSummary> result = new HashMap<>();
         result.put(to(outcome.getBlockHash()), to(outcome.getOutcome()));
@@ -1250,22 +1253,30 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
-    static com.concordium.sdk.responses.election.ElectionInfo to(ElectionInfo grpcOutput) {
-        return com.concordium.sdk.responses.election.ElectionInfo.builder()
-                .electionDifficulty(to(grpcOutput.getElectionDifficulty().getValue()))
-                .leadershipElectionNonce(grpcOutput.getElectionNonce().getValue().toByteArray())
-                .bakerElectionInfo(ImmutableList.copyOf(to(grpcOutput.getBakerElectionInfoList(), ClientV2MapperExtensions::to)))
-                .build();
+    static Optional<FinalizationData> to(BlockFinalizationSummary finalizationSummary) {
+        if (finalizationSummary.hasNone()) {return Optional.empty();} //There is no finalization data in the block
+        val finalizationData = finalizationSummary.getRecord();
+        val finalizationBlockPointer = to(finalizationData.getBlock()).toString();
+        UInt64 finalizationIndex = UInt64.from(finalizationData.getIndex().getValue());
+        UInt64 finalizationDelay = UInt64.from(finalizationData.getDelay().getValue());
+        val grpcFinalizers = finalizationData.getFinalizersList();
+        val finalizers = new ImmutableList.Builder<Finalizer>();
+        grpcFinalizers.forEach(f -> finalizers.add(to(f)));
+
+        return Optional.of(FinalizationData.builder()
+                .finalizationBlockPointer(finalizationBlockPointer)
+                .finalizationIndex(finalizationIndex)
+                .finalizationDelay(finalizationDelay)
+                .finalizers(finalizers.build()).build());
     }
 
-    static ElectionInfoBaker to(ElectionInfo.Baker i) {
-        return ElectionInfoBaker.builder()
-                .baker(to(i.getBaker()))
-                .account(to(i.getAccount()))
-                .lotteryPower(i.getLotteryPower())
-                .build();
+    static Finalizer to(FinalizationSummaryParty finalizer) {
+        return Finalizer.builder()
+                .bakerId(com.concordium.sdk.responses.AccountIndex.from(finalizer.getBaker().getValue()))
+                .weight(BigInteger.valueOf(finalizer.getWeight()))
+                .signed(finalizer.getSigned()).build();
     }
-    
+
     static ImmutableList<SpecialOutcome> to(Iterator<BlockSpecialEvent> events) {
         val result = new ImmutableList.Builder<SpecialOutcome>();
         events.forEachRemaining(event -> result.add(to(event)));
@@ -1360,5 +1371,42 @@ interface ClientV2MapperExtensions {
                         .amount(CCDAmount.fromMicro(e.getAmount().getValue())).build())
         );
         return result.build();
+    }
+
+    // Note. In extreme cases then the recursion happening below can lead to
+    // stack overflows. However, this should not be a problem in reality, as we
+    // do not expect that much branching. Default stack size is mostly 1mb and ~ 7_000 nested calls, which
+    // is well within the expected branching.
+    static Branch to(com.concordium.grpc.v2.Branch branch) {
+        return Branch.builder()
+                .blockHash(to(branch.getBlockHash()))
+                .children(to(branch.getChildrenList(), ClientV2MapperExtensions::to))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.DelegatorInfo to(DelegatorInfo delegatorInfo) {
+        return com.concordium.sdk.responses.DelegatorInfo.builder()
+                .account(to(delegatorInfo.getAccount()))
+                .stake(to(delegatorInfo.getStake()))
+                .pendingChange(delegatorInfo.hasPendingChange()
+                        ? Optional.of(to(delegatorInfo.getPendingChange()))
+                        : Optional.empty())
+                .build();
+    }
+
+    static com.concordium.sdk.responses.election.ElectionInfo to(ElectionInfo grpcOutput) {
+        return com.concordium.sdk.responses.election.ElectionInfo.builder()
+                .electionDifficulty(to(grpcOutput.getElectionDifficulty().getValue()))
+                .leadershipElectionNonce(grpcOutput.getElectionNonce().getValue().toByteArray())
+                .bakerElectionInfo(ImmutableList.copyOf(to(grpcOutput.getBakerElectionInfoList(), ClientV2MapperExtensions::to)))
+                .build();
+    }
+
+    static ElectionInfoBaker to(ElectionInfo.Baker i) {
+        return ElectionInfoBaker.builder()
+                .baker(to(i.getBaker()))
+                .account(to(i.getAccount()))
+                .lotteryPower(i.getLotteryPower())
+                .build();
     }
 }
