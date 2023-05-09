@@ -22,6 +22,7 @@ import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
+import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.AccountNonce;
@@ -408,9 +409,16 @@ public final class ClientV2 {
     }
 
     /**
+     * Retrieves various information about the node
+     * @return {@link NodeInfo} containing various information about the node
+     */
+    public NodeInfo getNodeInfo() {
+        var grpcOutput = this.server().getNodeInfo(Empty.newBuilder().build());
+        return NodeInfo.parse(grpcOutput);
+    }
+
+    /**
      * Returns a {@link ImmutableList} of {@link PeerInfo} containing information about the nodes' peers
-     *
-     * Returns a {@link ImmutableList} of {@link PeerInfo} containing information about the nodes' peers.
      *
      * @return {@link ImmutableList} of {@link PeerInfo}
      * @throws UnknownHostException When the returned IP address of Peer is Invalid

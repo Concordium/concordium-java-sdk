@@ -2,6 +2,7 @@
 
 ## Unreleased changes
 - Added support for GRPC V2 `GetPeersInfo` for retrieving information of the peers that the node holds.
+- Added support for GRPC V2 `GetNodeInfo` for retrieving various information of the node queried.
 - Added support for GRPC V2 `GetBannedPeers` for retrieving a list of the banned peers.
 - Added support for GRPC V2 `BanPeer` for banning a peer,
 - Added support for GRPC V2 `UnbanPeer` for unbanning a peer
