@@ -15,6 +15,9 @@
 - Added support for GRPC V2 `GetCryptographic Parameters`
 - Added support for GRPC V2 `GetIdentityProviders`
 - Added support for GRPC V2 `SendBlockItem` for sending a transaction.
+- Added support for GRPC V2 `PeerConnect` for instructing the node to connect to a specific peer.
+- Added support for GRPC V2 `PeerDisconnect`  for instructing the node to drop a peer.
+- Added support for GRPC V2 `GetPeersInfo` for acquiring information of the peers that the node is connected to.
 - Added support for GRPC V2 `GetBlockItemStatus` for retrieving the status of an individual transaction
 - Added support for GRPC V2 `DumpStart` which instructs the node to start dumping network packages at a specified path.
 - Added support for GRPC V2 `DumpStop` which instructs the node to stop dumping packages.
