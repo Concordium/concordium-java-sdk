@@ -28,6 +28,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+/**
+ * The test asserts that {@link ClientV2#getPeersInfo()} correctly converts {@link PeersInfo} to {@link ImmutableList} of {@link PeerInfo}.
+ */
 public class ClientV2GetPeersInfoTest {
 
     private static final PeersInfo.Peer.NetworkStats GRPC_NETWORK_STATS_ONE = PeersInfo.Peer.NetworkStats.newBuilder()

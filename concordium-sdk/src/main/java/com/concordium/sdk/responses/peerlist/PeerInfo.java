@@ -22,7 +22,7 @@ public class PeerInfo extends Peer {
     private NetworkStats networkStats;
 
     /**
-     * Type of the node
+     * Type of the peer.
      */
     private PeerType peerType;
 
