@@ -1,10 +1,7 @@
 package com.concordium.sdk.responses.nodeinfo;
 
 import concordium.ConcordiumP2PRpc;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -17,6 +14,7 @@ import static com.concordium.sdk.Constants.UTC_ZONE;
 @Builder
 @Getter
 @ToString
+@EqualsAndHashCode
 public class NodeInfo {
     /**
      * Node Id.
@@ -120,4 +118,5 @@ public class NodeInfo {
     private static ZonedDateTime parseTime(long currentLocaltime) {
         return Instant.EPOCH.plusSeconds(currentLocaltime).atZone(UTC_ZONE);
     }
+
 }

@@ -1,0 +1,25 @@
+{
+  "type": "concordium-browser-wallet-account",
+  "v": 0,
+  "environment": "testnet",
+  "value": {
+    "accountKeys": {
+      "keys": {
+        "17": {
+          "keys": {
+            "32": {
+              "signKey": "56f60de843790c308dac2d59a5eec9f6b1649513f827e5a13d7038accfe31784",
+              "verifyKey": "2c1c9c13c93c460ab723c69c0c39f0aa3fc1eda9dbbb4feff85dce222ba67754"
+            }
+          },
+          "threshold": 1
+        }
+      },
+      "threshold": 1
+    },
+    "credentials": {
+      "0": "915f5b88af6272157e12fa8fe536c0be0222a7c3d7b8f0b22b7806ac5c5087f4d30eb580010f89b00252581a6de852b1"
+    },
+    "address": "4QEB8DidQcM3x5ziFvdd6HGqHbQkiDDAEcafG4WWsHXpDmGiHu"
+  }
+}

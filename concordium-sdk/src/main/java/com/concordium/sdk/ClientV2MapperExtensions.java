@@ -32,6 +32,11 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.election.ElectionInfoBaker;
+import com.concordium.sdk.responses.nodeinfo.BakingCommitteeDetails;
+import com.concordium.sdk.responses.nodeinfo.BakingStatus;
+import com.concordium.sdk.responses.nodeinfo.ConsensusState;
+import com.concordium.sdk.responses.nodeinfo.PeerType;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
@@ -69,8 +74,10 @@ import lombok.var;
 
 import javax.annotation.Nullable;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1227,6 +1234,24 @@ interface ClientV2MapperExtensions {
         return builder.build();
     }
 
+    /**
+     * Converts from Grpc Timestamp to ZonedDateTime
+     * @param localtime {@link com.concordium.grpc.v2.Timestamp} timestamp from the Grpc API
+     * @return {@link ZonedDateTime} matching ZonedDateTime object
+     */
+    static ZonedDateTime toZonedDateTime(com.concordium.grpc.v2.Timestamp localtime) {
+        return Instant.EPOCH.plusSeconds(localtime.getValue()).atZone(UTC_ZONE);
+    }
+    /**
+     * Converts from Grpc Duration to Java Duration
+     * @param duration {@link com.concordium.grpc.v2.Duration} duration from the Grpc API
+     * @return {@link java.time.Duration} matching Java Duration object
+     */
+    static java.time.Duration toDuration(Duration duration) {
+        return java.time.Duration.ofMillis(duration.getValue());
+    }
+
+
     static Hash to(StateHash stateHash) {
         return Hash.from(stateHash.getValue().toByteArray());
     }
@@ -1390,6 +1415,22 @@ interface ClientV2MapperExtensions {
                 .pendingChange(delegatorInfo.hasPendingChange()
                         ? Optional.of(to(delegatorInfo.getPendingChange()))
                         : Optional.empty())
+                .build();
+    }
+
+    static com.concordium.sdk.responses.election.ElectionInfo to(ElectionInfo grpcOutput) {
+        return com.concordium.sdk.responses.election.ElectionInfo.builder()
+                .electionDifficulty(to(grpcOutput.getElectionDifficulty().getValue()))
+                .leadershipElectionNonce(grpcOutput.getElectionNonce().getValue().toByteArray())
+                .bakerElectionInfo(ImmutableList.copyOf(to(grpcOutput.getBakerElectionInfoList(), ClientV2MapperExtensions::to)))
+                .build();
+    }
+
+    static ElectionInfoBaker to(ElectionInfo.Baker i) {
+        return ElectionInfoBaker.builder()
+                .baker(to(i.getBaker()))
+                .account(to(i.getAccount()))
+                .lotteryPower(i.getLotteryPower())
                 .build();
     }
 }

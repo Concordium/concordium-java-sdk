@@ -1,11 +1,13 @@
 package com.concordium.sdk.transactions;
 
+import lombok.EqualsAndHashCode;
 import lombok.val;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@EqualsAndHashCode
 public final class TransactionSignerImpl implements TransactionSigner {
 
     private final Map<Index, Map<Index, Signer>> signers = new HashMap<>();

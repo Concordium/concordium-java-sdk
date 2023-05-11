@@ -20,7 +20,7 @@ import java.util.List;
 public class Peer {
 
     /**
-     * The identifier of the peer that it wishes to be identified by
+     * The self-chosen identifier of the peer.
      */
     private final String nodeId;
     /**

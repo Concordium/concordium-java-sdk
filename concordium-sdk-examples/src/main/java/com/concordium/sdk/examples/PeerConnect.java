@@ -3,22 +3,23 @@ package com.concordium.sdk.examples;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
-import com.concordium.sdk.responses.peerlist.PeerInfo;
 import picocli.CommandLine;
 
+import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
 /**
  * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
- * Retrieves and prints the {@link PeerInfo} of connected Peers.
+ * Attempts to connect to the Peer on "192.0.2.0:8888".
  */
-@CommandLine.Command(name = "GetPeersInfo", mixinStandardHelpOptions = true)
-public class GetPeersInfo implements Callable<Integer> {
+@CommandLine.Command(name = "PeerConnect", mixinStandardHelpOptions = true)
+public class PeerConnect implements Callable<Integer> {
+
     @CommandLine.Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "http://localhost:20000")
+            defaultValue = "http://localhost:20001")
     private String endpoint;
 
     @Override
@@ -30,16 +31,16 @@ public class GetPeersInfo implements Callable<Integer> {
                 .credentials(new Credentials())
                 .build();
 
+        InetSocketAddress peer = new InetSocketAddress("192.0.2.0", 8888);
         ClientV2
                 .from(connection)
-                .getPeersInfo()
-                .forEach(System.out::println);
+                .peerConnect(peer);
 
         return 0;
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetPeersInfo()).execute(args);
+        int exitCode = new CommandLine(new PeerConnect()).execute(args);
         System.exit(exitCode);
     }
 }
