@@ -1,9 +1,12 @@
 package com.concordium.sdk.responses.blocksummary.updates.keys;
 
+import com.concordium.grpc.v2.UpdatePublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.codec.DecoderException;
@@ -14,6 +17,8 @@ import org.apache.commons.codec.binary.Hex;
  */
 @Getter
 @ToString
+@Builder
+@EqualsAndHashCode
 public final class VerificationKey {
     /**
      * The verification key
@@ -53,5 +58,17 @@ public final class VerificationKey {
      */
     public String asHex() {
         return Hex.encodeHexString(verifyKey);
+    }
+
+    /**
+     * Parses {@link UpdatePublicKey} to {@link VerificationKey}.
+     * @param updatePublicKey {@link UpdatePublicKey} returned by the GRPC V2 API.
+     * @return parsed {@link UpdatePublicKey}.
+     */
+    public static VerificationKey parse(UpdatePublicKey updatePublicKey) {
+        return VerificationKey.builder()
+                .verifyKey(updatePublicKey.getValue().toByteArray())
+                .schemeId(SigningScheme.ED25519)
+                .build();
     }
 }

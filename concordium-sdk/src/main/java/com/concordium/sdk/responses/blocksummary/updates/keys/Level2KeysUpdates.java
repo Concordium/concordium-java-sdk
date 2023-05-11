@@ -1,11 +1,11 @@
 package com.concordium.sdk.responses.blocksummary.updates.keys;
 
-import com.concordium.sdk.responses.blocksummary.updates.*;
-import com.concordium.sdk.types.Nonce;
+import com.concordium.grpc.v2.AuthorizationsV0;
+import com.concordium.grpc.v2.AuthorizationsV1;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.ToString;
+import com.google.common.collect.ImmutableList;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +14,8 @@ import java.util.List;
  */
 @Getter
 @ToString
+@Builder
+@EqualsAndHashCode
 public final class Level2KeysUpdates {
     /**
      * Keys authorized to update mint distribution.
@@ -36,9 +38,9 @@ public final class Level2KeysUpdates {
     private final Authorization bakerStakeThreshold;
 
     /**
-     * Keys authorized for changing the micro per gtu rate.
+     * Keys authorized for changing the MicroCCD per Euro rate.
      */
-    private final Authorization microGTUPerEuro;
+    private final Authorization microCCDPerEuro;
 
     /**
      * Keys authorized for changing the protocol.
@@ -82,11 +84,13 @@ public final class Level2KeysUpdates {
 
     /**
      * Keys authorized for changing the cooldown parameters.
+     * Note that this is null if and only if the chain (protocol version) does not support the update.
      */
     private final Authorization cooldownParameters;
 
     /**
      * Keys authorized for changing the time parameters.
+     * Note that this is null if and only if the chain (protocol version) does not support the update.
      */
     private final Authorization timeParameters;
 
@@ -117,7 +121,7 @@ public final class Level2KeysUpdates {
         this.addAnonymityRevoker = addAnonymityRevoker;
         this.transactionFeeDistribution = transactionFeeDistribution;
         this.bakerStakeThreshold = bakerStakeThreshold;
-        this.microGTUPerEuro = microGTUPerEuro;
+        this.microCCDPerEuro = microGTUPerEuro;
         this.protocol = protocol;
         this.addIdentityProvider = addIdentityProvider;
         this.paramGASRewards = paramGASRewards;
@@ -129,5 +133,51 @@ public final class Level2KeysUpdates {
         this.poolParameters = poolParameters;
         this.cooldownParameters = cooldownParameters;
         this.timeParameters = timeParameters;
+    }
+
+    /**
+     * Parses {@link AuthorizationsV0} to {@link Level2KeysUpdates}.
+     * @param level2KeysUpdateV0 {@link AuthorizationsV0} returned by the GRPC V2 API.
+     * @return parsed {@link Level2KeysUpdates}.
+     */
+    public static Level2KeysUpdates parse(AuthorizationsV0 level2KeysUpdateV0) {
+        return setV0fields(level2KeysUpdateV0).build();
+    }
+
+    /**
+     * Parses {@link AuthorizationsV1} to {@link Level2KeysUpdates}.
+     * @param level2KeysUpdateV1 {@link AuthorizationsV1} returned by the GRPC V2 API.
+     * @return parsed {@link Level2KeysUpdates}.
+     */
+    public static Level2KeysUpdates parse(AuthorizationsV1 level2KeysUpdateV1) {
+        return setV0fields(level2KeysUpdateV1.getV0())
+                .cooldownParameters(Authorization.parse(level2KeysUpdateV1.getParameterCooldown()))
+                .timeParameters(Authorization.parse(level2KeysUpdateV1.getParameterTime()))
+                .build();
+    }
+
+    /**
+     * Helper method for setting the fields available in {@link AuthorizationsV0}.
+     * @param level2KeysUpdateV0 {@link AuthorizationsV0} returned by the GRPC V2 API.
+     * @return Builder for {@link Level2KeysUpdates} with fields availabe in {@link AuthorizationsV0} configured.
+     */
+    private static Level2KeysUpdatesBuilder setV0fields(AuthorizationsV0 level2KeysUpdateV0) {
+        val keys = new ImmutableList.Builder<VerificationKey>();
+        level2KeysUpdateV0.getKeysList().forEach(k -> keys.add(VerificationKey.parse(k)));
+        return Level2KeysUpdates.builder()
+                .verificationKeys(keys.build())
+                .emergency(Authorization.parse(level2KeysUpdateV0.getEmergency()))
+                .protocol(Authorization.parse(level2KeysUpdateV0.getProtocol()))
+                .electionDifficulty(Authorization.parse(level2KeysUpdateV0.getParameterConsensus()))
+                .euroPerEnergy(Authorization.parse(level2KeysUpdateV0.getParameterEuroPerEnergy()))
+                .microCCDPerEuro(Authorization.parse(level2KeysUpdateV0.getParameterMicroCCDPerEuro()))
+                .foundationAccount(Authorization.parse(level2KeysUpdateV0.getParameterFoundationAccount()))
+                .mintDistribution(Authorization.parse(level2KeysUpdateV0.getParameterMintDistribution()))
+                .transactionFeeDistribution(Authorization.parse(level2KeysUpdateV0.getParameterTransactionFeeDistribution()))
+                .paramGASRewards(Authorization.parse(level2KeysUpdateV0.getParameterGasRewards()))
+                .poolParameters(Authorization.parse(level2KeysUpdateV0.getPoolParameters()))
+                .addAnonymityRevoker(Authorization.parse(level2KeysUpdateV0.getAddAnonymityRevoker()))
+                .addIdentityProvider(Authorization.parse(level2KeysUpdateV0.getAddIdentityProvider()));
+
     }
 }

@@ -21,6 +21,7 @@ import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.transactionevent.BlockTransactionEvent;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
 import com.concordium.sdk.responses.transactionstatus.TransactionSummary;
@@ -34,7 +35,6 @@ import com.concordium.sdk.transactions.Hash;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
-import lombok.SneakyThrows;
 import lombok.val;
 import lombok.var;
 
@@ -358,9 +358,11 @@ public final class ClientV2 {
      * @param blockHashInput The block {@link BlockHashInput} to query
      * @return {@link ImmutableList} of {@link TransactionSummary}
      */
-    public ImmutableList<TransactionSummary> getBlockTransactionEvents(BlockHashInput blockHashInput) {
+    public ImmutableList<BlockTransactionEvent> getBlockTransactionEvents(BlockHashInput blockHashInput) {
         val grpcOutput = this.server().getBlockTransactionEvents(to(blockHashInput));
-        return ImmutableList.copyOf(to(grpcOutput,ClientV2MapperExtensions::to));
+        val res = new ImmutableList.Builder<BlockTransactionEvent>();
+        grpcOutput.forEachRemaining(e -> res.add(BlockTransactionEvent.parse(e)));
+        return res.build();
     }
 
     /**

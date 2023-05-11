@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 import com.concordium.grpc.v2.MintDistributionCpv0;
-import com.concordium.grpc.v2.MintRate;
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -39,7 +38,7 @@ public class MintDistributionUpdatePayload implements UpdatePayload {
      */
     public static MintDistributionUpdatePayload parse (MintDistributionCpv0 mintDistributionCpv0) {
         return MintDistributionUpdatePayload.builder()
-                .mintRate(toMintRate(mintDistributionCpv0.getMintPerSlot()))
+                .mintRate(ParsingHelper.toMintRate(mintDistributionCpv0.getMintPerSlot()))
                 .bakingReward(Fraction.from(mintDistributionCpv0.getBakingReward()))
                 .finalizationReward(Fraction.from(mintDistributionCpv0.getFinalizationReward()))
         .build();
@@ -49,10 +48,4 @@ public class MintDistributionUpdatePayload implements UpdatePayload {
         return UpdateType.MINT_DISTRIBUTION_UPDATE;
     }
 
-    /**
-     * Calculates mantissa*10^(-exponent).
-     */
-    private static double toMintRate (MintRate mintRate) {
-        return mintRate.getMantissa()*Math.pow(10, -1 * mintRate.getExponent());
-    }
 }

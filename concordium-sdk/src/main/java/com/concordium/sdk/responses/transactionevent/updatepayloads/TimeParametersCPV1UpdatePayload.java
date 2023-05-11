@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
-import com.concordium.grpc.v2.MintRate;
 import com.concordium.grpc.v2.TimeParametersCpv1;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
@@ -32,18 +31,11 @@ public class TimeParametersCPV1UpdatePayload implements UpdatePayload {
     public static TimeParametersCPV1UpdatePayload parse(TimeParametersCpv1 timeParametersCpv1) {
         return TimeParametersCPV1UpdatePayload.builder()
                 .rewardPeriodLength(UInt64.from(timeParametersCpv1.getRewardPeriodLength().getValue().getValue()))
-                .mintPerPayday(toMintRate(timeParametersCpv1.getMintPerPayday())).build();
+                .mintPerPayday(ParsingHelper.toMintRate(timeParametersCpv1.getMintPerPayday())).build();
     }
 
     @Override
     public UpdateType getType() {
         return UpdateType.TIME_PARAMETERS_CPV_1_UPDATE;
-    }
-
-    /**
-     * Calculates mantissa*10^(-exponent).
-     */
-    private static double toMintRate (MintRate mintRate) {
-        return mintRate.getMantissa()*Math.pow(10, -1 * mintRate.getExponent());
     }
 }

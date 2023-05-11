@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
-import com.concordium.grpc.v2.Level1Update;
 
 /**
  * TODO explain better
@@ -15,7 +14,6 @@ public interface UpdatePayload {
     UpdateType getType();
 
     /**
-     * TODO
      * Parses {@link com.concordium.grpc.v2.UpdatePayload} to {@link UpdatePayload}.
      * @param payload {@link com.concordium.grpc.v2.UpdatePayload} returned by the GRPC V2 API.
      * @return parsed {@link UpdatePayload}.
@@ -31,8 +29,8 @@ public interface UpdatePayload {
             case TRANSACTION_FEE_DISTRIBUTION_UPDATE: return TransactionFeeDistributionUpdatePayload.parse(payload.getTransactionFeeDistributionUpdate());
             case GAS_REWARDS_UPDATE: return GasRewardsUpdatePayload.parse(payload.getGasRewardsUpdate());
             case BAKER_STAKE_THRESHOLD_UPDATE: return BakerStakeThresholdUpdatePayload.parse(payload.getBakerStakeThresholdUpdate());
-            case ROOT_UPDATE: return RootUpdatePayload.parse(payload.getRootUpdate()); // TODO
-            case LEVEL_1_UPDATE: return Level1UpdatePayload.parse(payload.getLevel1Update()); // TODO
+            case ROOT_UPDATE: return RootUpdatePayload.parse(payload.getRootUpdate());
+            case LEVEL_1_UPDATE: return Level1UpdatePayload.parse(payload.getLevel1Update());
             case ADD_ANONYMITY_REVOKER_UPDATE: return AddAnonymityRevokerUpdatePayload.parse(payload.getAddAnonymityRevokerUpdate());
             case ADD_IDENTITY_PROVIDER_UPDATE: return AddIdentityProviderUpdatePayload.parse(payload.getAddIdentityProviderUpdate());
             case COOLDOWN_PARAMETERS_CPV_1_UPDATE: return CooldownParametersCPV1UpdatePayload.parse(payload.getCooldownParametersCpv1Update());
@@ -43,7 +41,7 @@ public interface UpdatePayload {
             case TIMEOUT_PARAMETERS_UPDATE: return TimeoutParametersUpdatePayload.parse(payload.getTimeoutParametersUpdate());
             case MIN_BLOCK_TIME_UPDATE: return MinBlockTimeUpdatePayload.parse(payload.getMinBlockTimeUpdate());
             case BLOCK_ENERGY_LIMIT_UPDATE: return BlockEnergyLimitUpdatePayload.parse(payload.getBlockEnergyLimitUpdate());
-            case PAYLOAD_NOT_SET: // TODO replace with FinalizationCommitteeParameters when available
+            case FINALIZATION_COMMITTEE_PARAMETERS_UPDATE: return FinalizationCommitteeParametersUpdatePayload.parse(payload.getFinalizationCommitteeParametersUpdate());
             default: throw new IllegalArgumentException("Cannot parse payloadCase: " + payload.getPayloadCase());
         }
     }

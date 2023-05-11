@@ -29,9 +29,6 @@ public class PSPublicKey {
         }
     }
 
-    /**
-     * TODO is this okay?
-     */
     public static PSPublicKey from(byte[] bytes) {
         return new PSPublicKey(bytes);
     }
