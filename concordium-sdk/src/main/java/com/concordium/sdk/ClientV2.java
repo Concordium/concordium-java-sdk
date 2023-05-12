@@ -17,6 +17,8 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.responses.modulesource.ModuleSource;
 import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
@@ -28,6 +30,7 @@ import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
+import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.google.common.collect.ImmutableList;
 import com.concordium.sdk.transactions.Hash;
 import io.grpc.CallCredentials;
@@ -498,6 +501,21 @@ public final class ClientV2 {
         return bannedPeers.build();
     }
 
+    /**
+     * Get the source of a smart contract module.
+     *
+     * @param input     {@link BlockHashInput}.
+     * @param moduleRef {@link ModuleRef}.
+     * @return Parsed {@link WasmModule}.
+     */
+    public WasmModule getModuleSource(BlockHashInput input, ModuleRef moduleRef) {
+        val response = this.server().getModuleSource(ModuleSourceRequest.newBuilder()
+                .setBlockHash(to(input))
+                .setModuleRef(to(moduleRef))
+                .build());
+
+        return to(response);
+    }
 
     /**
      * Get a {@link QueriesGrpc.QueriesBlockingStub} with a timeout
