@@ -7,16 +7,19 @@ import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.types.ContractAddress;
 import lombok.var;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
-@Command(name = "GetInstanceState", mixinStandardHelpOptions = true)
-public class GetInstanceState implements Callable<Integer> {
+@Command(name = "InstanceStateLookup", mixinStandardHelpOptions = true)
+public class InstanceStateLookup implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
@@ -41,8 +44,14 @@ public class GetInstanceState implements Callable<Integer> {
             defaultValue = "0")
     private long subindex;
 
+    @Option(
+            names = {"--keyHex"},
+            description = "Lookup Key in Hex.",
+            defaultValue = "")
+    private String keyHex;
+
     @Override
-    public Integer call() throws MalformedURLException, ClientInitializationException {
+    public Integer call() throws MalformedURLException, ClientInitializationException, DecoderException {
         var endpointUrl = new URL(this.endpoint);
 
         Connection connection = Connection.builder()
@@ -51,16 +60,20 @@ public class GetInstanceState implements Callable<Integer> {
                 .credentials(new Credentials())
                 .build();
 
-        ClientV2
+        var value = ClientV2
                 .from(connection)
-                .getInstanceState(BlockHashInput.LAST_FINAL, ContractAddress.from(index, subindex), timeout)
-                .forEachRemaining(System.out::println);
+                .instanceStateLookup(
+                        BlockHashInput.LAST_FINAL,
+                        ContractAddress.from(index, subindex),
+                        Hex.decodeHex(keyHex));
+
+        System.out.println(Arrays.toString(value));
 
         return 0;
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetInstanceState()).execute(args);
+        int exitCode = new CommandLine(new InstanceStateLookup()).execute(args);
         System.exit(exitCode);
     }
 }

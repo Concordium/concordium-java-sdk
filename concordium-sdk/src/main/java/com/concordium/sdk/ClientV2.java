@@ -32,6 +32,7 @@ import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.types.ContractAddress;
 import com.google.common.collect.ImmutableList;
 import com.concordium.sdk.transactions.Hash;
+import com.google.protobuf.ByteString;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
@@ -401,8 +402,8 @@ public final class ClientV2 {
      * Get the exact state of a specific contract instance, streamed as a list of key-value pairs.
      * The list is streamed in lexicographic order of keys.
      *
-     * @param input {@link BlockHashInput}
-     * @param contractAddress {@link ContractAddress}
+     * @param input {@link BlockHashInput}.
+     * @param contractAddress {@link ContractAddress}.
      * @param timeoutMillis Timeout for the request in Milliseconds.
      * @return {@link Iterator} of {@link KeyValurPair}.
      */
@@ -416,6 +417,29 @@ public final class ClientV2 {
                 .build());
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get the value at a specific key of a contract state.
+     * In contrast to {@link ClientV2#getInstanceState(BlockHashInput, ContractAddress, int)} this is more efficient,
+     * but requires the user to know the specific key to look for.
+     *
+     * @param input {@link BlockHashInput}.
+     * @param contractAddress {@link ContractAddress}.
+     * @param key Instance State Key to Lookup.
+     * @return Instance State Value for the input `key`
+     */
+    public byte[] instanceStateLookup(
+            BlockHashInput input,
+            ContractAddress contractAddress,
+            byte[] key) {
+        final InstanceStateValueAtKey grpcOutput = this.server().instanceStateLookup(InstanceStateLookupRequest.newBuilder()
+                .setKey(ByteString.copyFrom(key))
+                .setAddress(to(contractAddress))
+                .setBlockHash(to(input))
+                .build());
+
+        return grpcOutput.getValue().toByteArray();
     }
 
     /**

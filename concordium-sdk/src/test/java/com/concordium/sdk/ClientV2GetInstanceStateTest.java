@@ -2,11 +2,8 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.KeyValurPair;
-import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.ContractAddress;
-import com.concordium.sdk.types.UInt64;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
@@ -20,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
@@ -37,6 +35,14 @@ public class ClientV2GetInstanceStateTest {
                 public void getInstanceState(InstanceInfoRequest request, StreamObserver<InstanceStateKVPair> responseObserver) {
                     responseObserver.onNext(InstanceStateKVPair.newBuilder()
                             .setKey(ByteString.copyFrom(INSTANCE_STATE_KEY))
+                            .setValue(ByteString.copyFrom(INSTANCE_STATE_VALUE))
+                            .build());
+                    responseObserver.onCompleted();
+                }
+
+                @Override
+                public void instanceStateLookup(InstanceStateLookupRequest request, StreamObserver<InstanceStateValueAtKey> responseObserver) {
+                    responseObserver.onNext(InstanceStateValueAtKey.newBuilder()
                             .setValue(ByteString.copyFrom(INSTANCE_STATE_VALUE))
                             .build());
                     responseObserver.onCompleted();
@@ -79,5 +85,28 @@ public class ClientV2GetInstanceStateTest {
                 .key(INSTANCE_STATE_KEY)
                 .value(INSTANCE_STATE_VALUE)
                 .build(), instanceState.next());
+    }
+
+    @Test
+    public void instanceStateLookup() {
+        var value = client.instanceStateLookup(
+                BlockHashInput.BEST,
+                ContractAddress.from(CONTRACT_INDEX, CONTRACT_SUBINDEX),
+                INSTANCE_STATE_KEY);
+
+        verify(serviceImpl).instanceStateLookup(
+                eq(InstanceStateLookupRequest.newBuilder()
+                        .setBlockHash(com.concordium.grpc.v2.BlockHashInput.newBuilder()
+                                .setBest(Empty.getDefaultInstance())
+                                .build())
+                        .setAddress(com.concordium.grpc.v2.ContractAddress.newBuilder()
+                                .setIndex(CONTRACT_INDEX)
+                                .setSubindex(CONTRACT_SUBINDEX)
+                                .build())
+                        .setKey(ByteString.copyFrom(INSTANCE_STATE_KEY))
+                        .build()),
+                any(StreamObserver.class));
+
+        assertArrayEquals(INSTANCE_STATE_VALUE, value);
     }
 }
