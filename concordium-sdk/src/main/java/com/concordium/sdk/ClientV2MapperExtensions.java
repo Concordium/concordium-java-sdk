@@ -19,6 +19,7 @@ import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
+import com.concordium.sdk.responses.KeyValurPair;
 import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
 import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.accountinfo.*;
@@ -1431,6 +1432,20 @@ interface ClientV2MapperExtensions {
                 .baker(to(i.getBaker()))
                 .account(to(i.getAccount()))
                 .lotteryPower(i.getLotteryPower())
+                .build();
+    }
+
+    static ContractAddress to(com.concordium.sdk.types.ContractAddress contractAddress) {
+        return ContractAddress.newBuilder()
+                .setIndex(contractAddress.getIndex())
+                .setSubindex(contractAddress.getSubIndex())
+                .build();
+    }
+
+    static KeyValurPair to(InstanceStateKVPair instanceStateKVPair) {
+        return KeyValurPair.builder()
+                .key(instanceStateKVPair.getKey().toByteArray())
+                .value(instanceStateKVPair.getValue().toByteArray())
                 .build();
     }
 }

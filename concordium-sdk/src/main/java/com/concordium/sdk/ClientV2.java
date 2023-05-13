@@ -9,6 +9,7 @@ import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.DelegatorInfo;
+import com.concordium.sdk.responses.KeyValurPair;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
@@ -28,6 +29,7 @@ import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
+import com.concordium.sdk.types.ContractAddress;
 import com.google.common.collect.ImmutableList;
 import com.concordium.sdk.transactions.Hash;
 import io.grpc.CallCredentials;
@@ -390,6 +392,27 @@ public final class ClientV2 {
         var grpcOutput = this.server().getPoolDelegators(GetPoolDelegatorsRequest.newBuilder()
                 .setBlockHash(to(input))
                 .setBaker(BakerId.newBuilder().setValue(bakerId.getIndex().getValue()).build())
+                .build());
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get the exact state of a specific contract instance, streamed as a list of key-value pairs.
+     * The list is streamed in lexicographic order of keys.
+     *
+     * @param input {@link BlockHashInput}
+     * @param contractAddress {@link ContractAddress}
+     * @param timeoutMillis Timeout for the request in Milliseconds.
+     * @return {@link Iterator} of {@link KeyValurPair}.
+     */
+    public Iterator<KeyValurPair> getInstanceState(
+            BlockHashInput input,
+            ContractAddress contractAddress,
+            int timeoutMillis) {
+        var grpcOutput = this.server(timeoutMillis).getInstanceState(InstanceInfoRequest.newBuilder()
+                        .setBlockHash(to(input))
+                        .setAddress(to(contractAddress))
                 .build());
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
