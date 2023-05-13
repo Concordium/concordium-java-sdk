@@ -30,6 +30,8 @@
 - Added support for GRPC V2 `GetPassiveDelegators` for getting the passive delegators at a certain block.
 - Added support for GRPC V2 `GetPoolDelegators` for getting the delegators for a specified baking pool at a certain block.
 - Added support for GRPC V2 `GetElectionInfo` for getting the bakers at a certain block and other metadata of the election.
+- Added support for GRPC V2 `GetInstanceState` for getting state of any Contract Instance
+- Added support for GRPC V2 `InstanceStateLookup` for getting value of a particular key in Contract Instance.
 
 ## 4.2.0
 - Added initial support for GRPC V2
