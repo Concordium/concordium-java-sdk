@@ -14,12 +14,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Gets Contract Instances ta {@link BlockHashInput#BEST} and prints them to console.
+ */
 @Command(name = "GetInstanceList", mixinStandardHelpOptions = true)
 public class GetInstanceList implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "http://localhost:20001")
+            defaultValue = "http://localhost:20000")
     private String endpoint;
 
     @Override

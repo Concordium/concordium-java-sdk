@@ -1,6 +1,8 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.*;
+import com.concordium.grpc.v2.ContractAddress;
+import com.concordium.grpc.v2.Empty;
+import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.google.common.collect.ImmutableList;
@@ -20,6 +22,10 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
+/**
+ * Mocks the GRPC Interface of the Node.
+ * Tests the mapping of Requests and Responses for {@link ClientV2#getInstanceList(BlockHashInput)}.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetInstanceListTest {
     private static final ContractAddress GRPC_CONTRACT_ADDRESS = ContractAddress.newBuilder().setIndex(1).setSubindex(0).build();
