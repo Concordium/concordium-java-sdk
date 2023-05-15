@@ -1,13 +1,12 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 
+import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.Objects;
 
 @Getter
 @ToString
@@ -21,6 +20,11 @@ public final class AmountAddedByDecryptionResult extends TransactionResultEvent 
         this.amount = amount;
         this.account = account;
 
+    }
+
+    // TODO
+    public static AmountAddedByDecryptionResult parse(AccountTransactionEffects.TransferredToPublic transferredToPublic) {
+        return null;
     }
 
     @Override

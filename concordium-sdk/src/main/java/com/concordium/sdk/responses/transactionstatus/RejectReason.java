@@ -35,7 +35,7 @@ public abstract class RejectReason {
             case STAKE_UNDER_MINIMUM_THRESHOLD_FOR_BAKING: return new RejectReasonStakeUnderMinimumThresholdForBaking();
             case BAKER_IN_COOLDOWN: return new RejectReasonBakerInCooldown();
             case DUPLICATE_AGGREGATION_KEY: return RejectReasonDuplicateAggregationKey.parse(rejectReason.getDuplicateAggregationKey()); // TODO
-            case NON_EXISTENT_CREDENTIAL_ID: return new RejectReasonNonExistentCredIDs(null); //TODO er et EMPTY objekt i GRPC
+            case NON_EXISTENT_CREDENTIAL_ID: return new RejectReasonNonExistentCredentialID();
             case KEY_INDEX_ALREADY_IN_USE: return new RejectReasonKeyIndexAlreadyInUse();
             case INVALID_ACCOUNT_THRESHOLD: return new RejectReasonInvalidAccountThreshold();
             case INVALID_CREDENTIAL_KEY_SIGN_THRESHOLD: return new RejectReasonInvalidCredentialKeySignThreshold();

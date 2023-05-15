@@ -1,15 +1,17 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.NewEncryptedAmountEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.Objects;
+import org.apache.commons.codec.binary.Hex;
 
 @Getter
 @ToString
+@Builder
 public final class NewEncryptedAmountResult extends TransactionResultEvent {
     private final AccountAddress account;
     private final String newIndex;
@@ -24,6 +26,14 @@ public final class NewEncryptedAmountResult extends TransactionResultEvent {
         this.account = account;
         this.newIndex = newIndex;
         this.encryptedAmount = encryptedAmount;
+    }
+
+    public static NewEncryptedAmountResult parse(NewEncryptedAmountEvent added) {
+        return NewEncryptedAmountResult.builder()
+                .account(AccountAddress.from(added.getReceiver().getValue().toByteArray()))
+                .newIndex(String.valueOf(added.getNewIndex()))
+                .encryptedAmount(Hex.encodeHexString(added.getEncryptedAmount().getValue().toByteArray()))
+                .build();
     }
 
     @Override

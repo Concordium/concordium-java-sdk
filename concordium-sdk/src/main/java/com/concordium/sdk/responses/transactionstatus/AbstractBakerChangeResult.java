@@ -7,10 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.codec.binary.Hex;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
+@SuperBuilder
 public abstract class AbstractBakerChangeResult extends AbstractBakerResult {
     private final byte[] electionKey;
     private final byte[] aggregationKey;

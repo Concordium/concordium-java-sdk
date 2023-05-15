@@ -1,13 +1,17 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.EncryptedAmountRemovedEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.codec.binary.Hex;
 
 @Getter
 @ToString
+@Builder
 public final class EncryptedAmountsRemovedResult extends TransactionResultEvent {
     private final int upToIndex;
     private final AccountAddress account;
@@ -23,6 +27,15 @@ public final class EncryptedAmountsRemovedResult extends TransactionResultEvent 
         this.account = account;
         this.inputAmount = inputAmount;
         this.newAmount = newAmount;
+    }
+
+    public static EncryptedAmountsRemovedResult parse(EncryptedAmountRemovedEvent removed) {
+        return EncryptedAmountsRemovedResult.builder()
+                .upToIndex((int) removed.getUpToIndex())
+                .account(AccountAddress.from(removed.getAccount().getValue().toByteArray()))
+                .inputAmount(Hex.encodeHexString(removed.getInputAmount().getValue().toByteArray()))
+                .newAmount(Hex.encodeHexString(removed.getNewAmount().getValue().toByteArray()))
+                .build();
     }
 
     @Override

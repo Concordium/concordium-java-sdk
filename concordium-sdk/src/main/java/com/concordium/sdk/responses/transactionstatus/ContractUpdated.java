@@ -1,13 +1,13 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.InstanceUpdatedEvent;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.ToString;
+import com.google.common.collect.ImmutableList;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import java.util.Objects;
  */
 @ToString
 @Getter
+@Builder
 public class ContractUpdated extends TransactionResultEvent {
 
     /**
@@ -80,6 +81,25 @@ public class ContractUpdated extends TransactionResultEvent {
             this.amount = CCDAmount.fromMicro(amount);
         }
         this.version = version;
+    }
+
+    /**
+     * Parses {@link InstanceUpdatedEvent} to {@link ContractUpdated}.
+     * @param contractUpdateIssued {@link InstanceUpdatedEvent} returned by the GRPC V2 API.
+     * @return parsed {@link ContractUpdated}.
+     */
+    public static ContractUpdated parse(InstanceUpdatedEvent contractUpdateIssued) {
+        val events = new ImmutableList.Builder<byte[]>();
+        contractUpdateIssued.getEventsList().forEach(e -> events.add(e.getValue().toByteArray()));
+        return ContractUpdated.builder()
+                .version(ContractVersion.forValue(contractUpdateIssued.getContractVersionValue()))
+                .address(ContractAddress.parse(contractUpdateIssued.getAddress()))
+                .instigator(AbstractAddress.parse(contractUpdateIssued.getInstigator()))
+                .amount(CCDAmount.fromMicro(contractUpdateIssued.getAmount().getValue()))
+                .message(Hex.encodeHexString(contractUpdateIssued.getParameter().getValue().toByteArray()))
+                .receiveName(contractUpdateIssued.getReceiveName().getValue())
+                .events(events.build())
+                .build();
     }
 
     @Override

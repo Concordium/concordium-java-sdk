@@ -1,11 +1,16 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.ContractInitializedEvent;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableList;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.val;
+import org.apache.commons.codec.binary.Hex;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +20,7 @@ import java.util.Objects;
  */
 @Getter
 @ToString
+@Builder
 public final class ContractInitializedResult extends TransactionResultEvent {
 
     /**
@@ -63,6 +69,24 @@ public final class ContractInitializedResult extends TransactionResultEvent {
         this.initName = initName;
         this.events = events;
         this.version = version;
+    }
+
+    /**
+     * Parses {@link ContractInitializedEvent} to {@link ContractInitializedResult}.
+     * @param contractInitialized {@link ContractInitializedEvent} returned by the GRPC V2 API.
+     * @return parsed {@link ContractInitializedResult}.
+     */
+    public static ContractInitializedResult parse(ContractInitializedEvent contractInitialized) {
+        val events = new ImmutableList.Builder<String>();
+        contractInitialized.getEventsList().forEach(e -> events.add(Hex.encodeHexString(e.getValue().toByteArray())));
+        return ContractInitializedResult.builder()
+                .version(contractInitialized.getContractVersion().getNumber())
+                .ref(Hex.encodeHexString(contractInitialized.getOriginRef().getValue().toByteArray()))
+                .address(ContractAddress.parse(contractInitialized.getAddress()))
+                .amount(CCDAmount.fromMicro(contractInitialized.getAmount().getValue()))
+                .initName(contractInitialized.getInitName().getValue())
+                .events(events.build())
+                .build();
     }
 
     @Override

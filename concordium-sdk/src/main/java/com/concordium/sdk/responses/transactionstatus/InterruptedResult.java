@@ -1,12 +1,12 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.ContractTraceElement;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.ToString;
+import com.google.common.collect.ImmutableList;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Getter
 @ToString
+@Builder
 public class InterruptedResult extends TransactionResultEvent {
 
     private final ContractAddress address;
@@ -29,6 +30,19 @@ public class InterruptedResult extends TransactionResultEvent {
         for (String event : events) {
             this.events.add(Hex.decodeHex(event));
         }
+    }
+
+    /**
+     * Parses {@link com.concordium.grpc.v2.ContractTraceElement.Interrupted} to {@link InterruptedResult}.
+     * @param interrupted {@link com.concordium.grpc.v2.ContractTraceElement.Interrupted} returned by the GRPC V2 API.
+     * @return parsed {@link InterruptedResult}.
+     */
+    public static InterruptedResult parse(ContractTraceElement.Interrupted interrupted) {
+        val events = new ImmutableList.Builder<byte[]>();
+        interrupted.getEventsList().forEach(e -> events.add(e.getValue().toByteArray()));
+        return InterruptedResult.builder()
+                .address(ContractAddress.parse(interrupted.getAddress()))
+                .events(events.build()).build();
     }
 
     @Override
