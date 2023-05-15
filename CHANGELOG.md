@@ -1,5 +1,4 @@
 # Changelog
-- Added support for GRPC V2 `GetAccountNonFinalizedTransactions`
 
 ## Unreleased changes
 - Added support for GRPC V2 `GetAccountInfo`
@@ -14,6 +13,7 @@
 - Fixed incorrect transaction event with respect to a transaction status for when a delegator decreased its stake.
 - Added support for GRPC V2 `GetBlockInfo` for retrieving information of the block being queried.
 - Added support for GRPC V2 `GetTokenomicsInfo` for acquiring various tokenomics related information for a block.
+- Added support for GRPC V2 `GetAccountNonFinalizedTransactions` for querying transactions from a particular account that have not yet been finalized.
 
 ## 4.2.0
 - Added initial support for GRPC V2

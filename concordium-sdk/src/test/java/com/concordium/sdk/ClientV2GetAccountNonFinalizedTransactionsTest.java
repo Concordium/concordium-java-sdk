@@ -23,6 +23,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
+/**
+ * Mocks the Node's GRPC Interface and tests Mapping of Requests and Responses from {@link ClientV2}.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetAccountNonFinalizedTransactionsTest {
 
@@ -39,7 +42,7 @@ public class ClientV2GetAccountNonFinalizedTransactionsTest {
                 @Override
                 public void getAccountNonFinalizedTransactions(
                         com.concordium.grpc.v2.AccountAddress request,
-                       io.grpc.stub.StreamObserver<com.concordium.grpc.v2.TransactionHash> responseObserver) {
+                        io.grpc.stub.StreamObserver<com.concordium.grpc.v2.TransactionHash> responseObserver) {
                     responseObserver.onNext(GRPC_NON_FINAL_TRANSACTIONS);
                     responseObserver.onCompleted();
                 }

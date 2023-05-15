@@ -15,6 +15,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Gets all the Non-Finalized Account Transactions for {@link GetAccountNonFinalizedTransactions#account}.
+ */
 @Command(name = "GetAccountNonFinalizedTransactions", mixinStandardHelpOptions = true)
 public class GetAccountNonFinalizedTransactions implements Callable<Integer> {
     @Option(
@@ -22,6 +25,12 @@ public class GetAccountNonFinalizedTransactions implements Callable<Integer> {
             description = "GRPC interface of the node.",
             defaultValue = "http://localhost:20000")
     private String endpoint;
+
+    @Option(
+            names = {"--account"},
+            description = "Account Address.",
+            defaultValue = "3bkTmK6GBWprhq6z2ukY6dEi1xNoBEMPDyyMQ6j8xrt8yaF7F2")
+    private String account;
 
     @Override
     public Integer call() throws ClientInitializationException, MalformedURLException {
@@ -34,7 +43,7 @@ public class GetAccountNonFinalizedTransactions implements Callable<Integer> {
 
         ClientV2
                 .from(connection)
-                .getAccountNonFinalizedTransactions(AccountAddress.from("3bkTmK6GBWprhq6z2ukY6dEi1xNoBEMPDyyMQ6j8xrt8yaF7F2"))
+                .getAccountNonFinalizedTransactions(AccountAddress.from(account))
                 .forEachRemaining(System.out::println);
 
         return 0;
