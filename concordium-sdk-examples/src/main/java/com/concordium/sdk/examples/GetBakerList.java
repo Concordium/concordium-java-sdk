@@ -14,12 +14,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Gets a List of all the bakers at {@link BlockHashInput#BEST} block and prints them to the console.
+ */
 @Command(name = "GetBakerList", mixinStandardHelpOptions = true)
 public class GetBakerList implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "http://localhost:20001")
+            defaultValue = "http://localhost:20000")
     private String endpoint;
 
     @Override

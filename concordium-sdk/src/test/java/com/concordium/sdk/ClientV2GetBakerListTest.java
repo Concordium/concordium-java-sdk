@@ -21,6 +21,10 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
+/**
+ * Mocks the GRPC Interface of the Node.
+ * Tests for Mapping of Requests and Responses to and fro {@link ClientV2#getBakerList(BlockHashInput)}.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetBakerListTest {
     private static final com.concordium.grpc.v2.BakerId GRPC_BAKER_ID = com.concordium.grpc.v2.BakerId.newBuilder()
