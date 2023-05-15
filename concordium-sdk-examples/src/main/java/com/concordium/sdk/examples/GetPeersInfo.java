@@ -3,26 +3,26 @@ package com.concordium.sdk.examples;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
-import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.responses.peerlist.PeerInfo;
 import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
-@Command(name = "GetAccountList", mixinStandardHelpOptions = true)
-public class GetAccountList implements Callable<Integer> {
-    @Option(
+/**
+ * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
+ * Retrieves and prints the {@link PeerInfo} of connected Peers.
+ */
+@CommandLine.Command(name = "GetPeersInfo", mixinStandardHelpOptions = true)
+public class GetPeersInfo implements Callable<Integer> {
+    @CommandLine.Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "http://localhost:20001")
+            defaultValue = "http://localhost:20000")
     private String endpoint;
 
     @Override
-    public Integer call() throws ClientInitializationException, MalformedURLException {
+    public Integer call() throws Exception {
         URL endpointUrl = new URL(this.endpoint);
         Connection connection = Connection.builder()
                 .host(endpointUrl.getHost())
@@ -32,14 +32,14 @@ public class GetAccountList implements Callable<Integer> {
 
         ClientV2
                 .from(connection)
-                .getAccountList(BlockHashInput.BEST)
-                .forEachRemaining(System.out::println);
+                .getPeersInfo()
+                .forEach(System.out::println);
 
         return 0;
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetAccountList()).execute(args);
+        int exitCode = new CommandLine(new GetPeersInfo()).execute(args);
         System.exit(exitCode);
     }
 }

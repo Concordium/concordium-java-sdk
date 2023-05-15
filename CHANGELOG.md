@@ -1,7 +1,14 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for GRPC V2 `GetPeersInfo` for retrieving information of the peers that the node holds.
+- Added support for GRPC V2 `GetNodeInfo` for retrieving various information of the node queried.
+- Added support for GRPC V2 `GetBannedPeers` for retrieving a list of the banned peers.
+- Added support for GRPC V2 `BanPeer` for banning a peer,
+- Added support for GRPC V2 `UnbanPeer` for unbanning a peer
 - Added support for GRPC V2 `GetBlockSpecialEvents` for retrieving a list of events not generated directly by any transaction
+- Added support for GRPC V2 `GetBlockFinalizationSummary` for retrieving summary of the finalization data in a given block
+- Added support for importing mobile & browser extension wallet exports as well as exports in the genesis format
 - Added support for GRPC V2 `GetAccountInfo`
 - Added support for GRPC V2 `GetAccountList`
 - Added support for GRPC V2 `GetNextAccountNonceNumber`
@@ -10,11 +17,20 @@
 - Added support for GRPC V2 `GetCryptographic Parameters`
 - Added support for GRPC V2 `GetIdentityProviders`
 - Added support for GRPC V2 `SendBlockItem` for sending a transaction.
+- Added support for GRPC V2 `PeerConnect` for instructing the node to connect to a specific peer.
+- Added support for GRPC V2 `PeerDisconnect`  for instructing the node to drop a peer.
+- Added support for GRPC V2 `GetPeersInfo` for acquiring information of the peers that the node is connected to.
 - Added support for GRPC V2 `GetBlockItemStatus` for retrieving the status of an individual transaction
+- Added support for GRPC V2 `DumpStart` which instructs the node to start dumping network packages at a specified path.
+- Added support for GRPC V2 `DumpStop` which instructs the node to stop dumping packages.
 - Fixed incorrect transaction event with respect to a transaction status for when a delegator decreased its stake.
 - Added support for GRPC V2 `GetBlockInfo` for retrieving information of the block being queried.
 - Added support for GRPC V2 `GetTokenomicsInfo` for acquiring various tokenomics related information for a block.
 - Added support for GRPC V2 `GetAncestors` for getting specified no of ancestor blocks for the input block.
+- Added support for GRPC V2 `GetBranches` for gettting branches of the chain (i.e. decendants of the last finalized block).
+- Added support for GRPC V2 `GetPassiveDelegators` for getting the passive delegators at a certain block.
+- Added support for GRPC V2 `GetPoolDelegators` for getting the delegators for a specified baking pool at a certain block.
+- Added support for GRPC V2 `GetElectionInfo` for getting the bakers at a certain block and other metadata of the election.
 
 ## 4.2.0
 - Added initial support for GRPC V2

@@ -5,9 +5,10 @@ import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
@@ -17,25 +18,23 @@ import java.util.List;
  */
 @ToString
 @Getter
+@Builder
+@Jacksonized
+@EqualsAndHashCode
 public class Branch {
 
     /**
      * Hash of the block at the HEAD of this branch.
      */
+    @JsonProperty("blockHash")
     private final Hash blockHash;
 
     /**
      * Children of the {@link Branch#blockHash}.
      */
-    private final List<Branch> children;
-
-    @JsonCreator
-    public Branch(
-            @JsonProperty("blockHash") final Hash blockHash,
-            @JsonProperty("children") final List<Branch> children) {
-        this.blockHash = blockHash;
-        this.children = children;
-    }
+    @JsonProperty("children")
+    @Singular
+    private final ImmutableList<Branch> children;
 
     /**
      * Parses {@link concordium.ConcordiumP2PRpc.JsonResponse} to {@link Branch}
