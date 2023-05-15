@@ -3,6 +3,7 @@ package com.concordium.sdk.responses.transactionevent;
 import com.concordium.grpc.v2.BlockItemSummary;
 import com.concordium.sdk.responses.transactionstatus.TransactionType;
 import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.types.Energy;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
@@ -24,7 +25,7 @@ public class BlockTransactionEvent {
      * The amount of energy the transaction cost.
      */
     @Getter
-    private final UInt64 energyCost;
+    private final Energy energyCost;
 
     /**
      * Hash of the transaction.
@@ -100,7 +101,7 @@ public class BlockTransactionEvent {
     public static BlockTransactionEvent parse(BlockItemSummary blockItemSummary) {
         var builder = BlockTransactionEvent.builder()
                 .index(UInt64.from(blockItemSummary.getIndex().getValue()))
-                .energyCost(UInt64.from(blockItemSummary.getEnergyCost().getValue()))
+                .energyCost(Energy.from(blockItemSummary.getEnergyCost().getValue()))
                 .hash(Hash.from(blockItemSummary.getHash().getValue().toByteArray()));
 
         switch (blockItemSummary.getDetailsCase()) {
