@@ -49,7 +49,7 @@ public class ClientV2GetConsensusStatusTest {
     private static final double BLOCK_ARRIVE_PERIOD_EMSD = 8.583607847328718;
     private static final double TRANSACTIONS_PER_BLOCK_EMA = 8.6468349726549;
     private static final double TRANSACTIONS_PER_BLOCK_EMSD = 0.0029405374006973577;
-    private static final int FINILIZATION_COUNT = 701050;
+    private static final int FINALIZATION_COUNT = 701050;
     private static final long LAST_FINALIZED_TIME = 1678610173968L;
     private static final double FINALIZATION_PERIOD_EMA = 8.578865859539938;
     private static final double FINALIZATION_PERIOD_EMSD = 9.053079310896797;
@@ -110,7 +110,7 @@ public class ClientV2GetConsensusStatusTest {
             .setBlockArrivePeriodEmsd(BLOCK_ARRIVE_PERIOD_EMSD)
             .setTransactionsPerBlockEma(TRANSACTIONS_PER_BLOCK_EMA)
             .setTransactionsPerBlockEmsd(TRANSACTIONS_PER_BLOCK_EMSD)
-            .setFinalizationCount(FINILIZATION_COUNT)
+            .setFinalizationCount(FINALIZATION_COUNT)
             .setLastFinalizedTime(
                     Timestamp.newBuilder()
                             .setValue(LAST_FINALIZED_TIME).build()
@@ -157,7 +157,7 @@ public class ClientV2GetConsensusStatusTest {
             .blockArrivePeriodEMSD(BLOCK_ARRIVE_PERIOD_EMSD)
             .transactionsPerBlockEMA(TRANSACTIONS_PER_BLOCK_EMA)
             .transactionsPerBlockEMSD(TRANSACTIONS_PER_BLOCK_EMSD)
-            .finalizationCount(FINILIZATION_COUNT)
+            .finalizationCount(FINALIZATION_COUNT)
             .lastFinalizedTime(Date.from(Instant.ofEpochMilli(LAST_FINALIZED_TIME)).toString())
             .finalizationPeriodEMA(FINALIZATION_PERIOD_EMA)
             .finalizationPeriodEMSD(FINALIZATION_PERIOD_EMSD)

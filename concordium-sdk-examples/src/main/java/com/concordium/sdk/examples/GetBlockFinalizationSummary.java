@@ -5,20 +5,23 @@ import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
-import com.concordium.sdk.responses.accountinfo.AccountInfo;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.responses.blocksummary.FinalizationData;
+import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
-@Command(name = "GetAccountInfo", mixinStandardHelpOptions = true)
-public class GetAccountInfo implements Callable<Integer> {
-    @Option(
+/**
+ * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
+ * Retrieves and prints the {@link FinalizationData} for the block {@link BlockHashInput#BEST}.
+ */
+@CommandLine.Command(name = "GetBlockFinalizationSummary", mixinStandardHelpOptions = true)
+public class GetBlockFinalizationSummary implements Callable<Integer> {
+
+    @CommandLine.Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
             defaultValue = "http://localhost:20001")
@@ -33,19 +36,15 @@ public class GetAccountInfo implements Callable<Integer> {
                 .credentials(new Credentials())
                 .build();
 
-        AccountInfo accountInfo = ClientV2
-                .from(connection)
-                .getAccountInfo(
-                        BlockHashInput.BEST,
-                        AccountRequest.from(AccountAddress.from("3bkTmK6GBWprhq6z2ukY6dEi1xNoBEMPDyyMQ6j8xrt8yaF7F2")));
+        Optional<FinalizationData> res = ClientV2.from(connection).getBlockFinalizationSummary(BlockHashInput.BEST);
+        res.ifPresent(System.out::println);
 
-        System.out.println(accountInfo);
 
         return 0;
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetAccountInfo()).execute(args);
+        int exitCode = new CommandLine(new GetBlockFinalizationSummary()).execute(args);
         System.exit(exitCode);
     }
 }
