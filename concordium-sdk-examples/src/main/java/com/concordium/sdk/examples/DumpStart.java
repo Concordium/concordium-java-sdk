@@ -4,21 +4,20 @@ import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
-import com.concordium.sdk.responses.accountinfo.AccountInfo;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.requests.dumpstart.DumpRequest;
 import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
-@Command(name = "GetAccountInfo", mixinStandardHelpOptions = true)
-public class GetAccountInfo implements Callable<Integer> {
-    @Option(
+@CommandLine.Command(name = "DumpStart", mixinStandardHelpOptions = true)
+public class DumpStart implements Callable<Integer> {
+
+    @CommandLine.Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
             defaultValue = "http://localhost:20001")
@@ -32,20 +31,18 @@ public class GetAccountInfo implements Callable<Integer> {
                 .port(endpointUrl.getPort())
                 .credentials(new Credentials())
                 .build();
-
-        AccountInfo accountInfo = ClientV2
+        Path path = Paths.get("./myDump");
+        DumpRequest dumpRequest = DumpRequest.builder()
+                .path(path)
+                .raw(true).build();
+        ClientV2
                 .from(connection)
-                .getAccountInfo(
-                        BlockHashInput.BEST,
-                        AccountRequest.from(AccountAddress.from("3bkTmK6GBWprhq6z2ukY6dEi1xNoBEMPDyyMQ6j8xrt8yaF7F2")));
-
-        System.out.println(accountInfo);
-
+                .dumpStart(dumpRequest);
         return 0;
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetAccountInfo()).execute(args);
+        int exitCode = new CommandLine(new DumpStart()).execute(args);
         System.exit(exitCode);
     }
 }
