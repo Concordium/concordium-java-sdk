@@ -24,7 +24,10 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
-
+/**
+ * Mocks the GRPC interface of the node.
+ * Tests mapping of Requests and Responses from {@link ClientV2#getAncestors(BlockHashInput, long)} to the Node.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetAncestorsTest {
 

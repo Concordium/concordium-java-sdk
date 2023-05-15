@@ -14,12 +14,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Gets Ancestor blocks {@link com.concordium.sdk.transactions.Hash}(s) for the current {@link BlockHashInput#BEST} block and prints them to console.
+ */
 @Command(name = "GetAncestors", mixinStandardHelpOptions = true)
 public class GetAncestors implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "http://localhost:20001")
+            defaultValue = "http://localhost:20000")
     private String endpoint;
 
     @Override
