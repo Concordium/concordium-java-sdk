@@ -18,6 +18,11 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 
+/**
+ * Calls {@link ClientV2#instanceStateLookup(BlockHashInput, ContractAddress, byte[])}. with
+ * Contract {@link InstanceStateLookup#index}, Contract {@link InstanceStateLookup#subindex} and
+ * {@link InstanceStateLookup#keyHex} denoting key to lookup and prints the response to console.
+ */
 @Command(name = "InstanceStateLookup", mixinStandardHelpOptions = true)
 public class InstanceStateLookup implements Callable<Integer> {
     @Option(
@@ -50,6 +55,11 @@ public class InstanceStateLookup implements Callable<Integer> {
             defaultValue = "")
     private String keyHex;
 
+    public static void main(String[] args) {
+        int exitCode = new CommandLine(new InstanceStateLookup()).execute(args);
+        System.exit(exitCode);
+    }
+
     @Override
     public Integer call() throws MalformedURLException, ClientInitializationException, DecoderException {
         var endpointUrl = new URL(this.endpoint);
@@ -70,10 +80,5 @@ public class InstanceStateLookup implements Callable<Integer> {
         System.out.println(Arrays.toString(value));
 
         return 0;
-    }
-
-    public static void main(String[] args) {
-        int exitCode = new CommandLine(new InstanceStateLookup()).execute(args);
-        System.exit(exitCode);
     }
 }

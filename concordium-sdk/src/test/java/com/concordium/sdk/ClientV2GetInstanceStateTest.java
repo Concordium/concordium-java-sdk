@@ -22,6 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
+/**
+ * Mocks the GRPC Interface on Node.
+ * Tests Mapping of Request and Response from
+ * {@link ClientV2#getInstanceState(BlockHashInput, ContractAddress, int)} and
+ * {@link ClientV2#instanceStateLookup(BlockHashInput, ContractAddress, byte[])}.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetInstanceStateTest {
     private static final byte[] INSTANCE_STATE_KEY = new byte[]{1, 1, 1};

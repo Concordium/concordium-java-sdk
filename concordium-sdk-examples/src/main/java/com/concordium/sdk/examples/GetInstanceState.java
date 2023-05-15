@@ -15,6 +15,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Calls {@link ClientV2#getInstanceState(BlockHashInput, ContractAddress, int)}. with
+ * Contract {@link GetInstanceState#index}, Contract {@link GetInstanceState#subindex} and prints the response to console.
+ */
 @Command(name = "GetInstanceState", mixinStandardHelpOptions = true)
 public class GetInstanceState implements Callable<Integer> {
     @Option(
@@ -41,6 +45,11 @@ public class GetInstanceState implements Callable<Integer> {
             defaultValue = "0")
     private long subindex;
 
+    public static void main(String[] args) {
+        int exitCode = new CommandLine(new GetInstanceState()).execute(args);
+        System.exit(exitCode);
+    }
+
     @Override
     public Integer call() throws MalformedURLException, ClientInitializationException {
         var endpointUrl = new URL(this.endpoint);
@@ -57,10 +66,5 @@ public class GetInstanceState implements Callable<Integer> {
                 .forEachRemaining(System.out::println);
 
         return 0;
-    }
-
-    public static void main(String[] args) {
-        int exitCode = new CommandLine(new GetInstanceState()).execute(args);
-        System.exit(exitCode);
     }
 }
