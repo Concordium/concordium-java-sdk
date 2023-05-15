@@ -1,31 +1,13 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.AccountInfo;
-import com.concordium.grpc.v2.BakerPoolInfo;
-import com.concordium.grpc.v2.CommissionRates;
-import com.concordium.grpc.v2.Commitment;
-import com.concordium.grpc.v2.CredentialPublicKeys;
-import com.concordium.grpc.v2.Policy;
-import com.concordium.grpc.v2.ReleaseSchedule;
-import com.concordium.grpc.v2.*;
-import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
-import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
-import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
+import com.concordium.grpc.v2.Empty;
+import com.concordium.grpc.v2.ModuleSourceRequest;
+import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.grpc.v2.VersionedModuleSource;
 import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
-import com.concordium.sdk.responses.accountinfo.*;
-import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
-import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
-import com.concordium.sdk.transactions.CCDAmount;
-import com.concordium.sdk.transactions.EncryptedAmountIndex;
-import com.concordium.sdk.transactions.Hash;
-import com.concordium.sdk.transactions.Index;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
-import com.concordium.sdk.types.Nonce;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
@@ -39,18 +21,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-
-import static com.concordium.sdk.Constants.UTC_ZONE;
-import static com.concordium.sdk.responses.accountinfo.credential.AttributeType.FIRST_NAME;
-import static com.concordium.sdk.transactions.CredentialRegistrationId.fromBytes;
-import static java.time.YearMonth.of;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
+/**
+ * Mocks the GRPC interface of the Node.
+ * Tests mapping of Request and Response from {@link ClientV2#getModuleSource(BlockHashInput, ModuleRef)}.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetModuleSourceTest {
     private static final byte[] MODULE_REF = new byte[]{10, 10, 10};
@@ -60,9 +38,6 @@ public class ClientV2GetModuleSourceTest {
                     .setValue(ByteString.copyFrom(MODULE_SOURCE))
                     .build())
             .build();
-
-    private static final WasmModule CLIENT_RES = WasmModule.from(MODULE_SOURCE, WasmModuleVersion.V1);
-
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
             new QueriesGrpc.QueriesImplBase() {
                 @Override
@@ -74,7 +49,7 @@ public class ClientV2GetModuleSourceTest {
                 }
             }
     ));
-
+    private static final WasmModule CLIENT_RES = WasmModule.from(MODULE_SOURCE, WasmModuleVersion.V1);
     @Rule
     public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
     private ClientV2 client;

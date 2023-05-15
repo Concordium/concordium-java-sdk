@@ -18,6 +18,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Gets the source of the module specified by {@link GetModuleSource#moduleRef} and prints it to the console.
+ */
 @Command(name = "GetModuleSource", mixinStandardHelpOptions = true)
 public class GetModuleSource implements Callable<Integer> {
     @Option(
