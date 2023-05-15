@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Getter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public final class ContractAddress extends AbstractAddress {
 
     @JsonProperty("subindex")
@@ -33,6 +33,15 @@ public final class ContractAddress extends AbstractAddress {
         super(AccountType.ADDRESS_CONTRACT);
         this.subIndex = subIndex;
         this.index = index;
+    }
+
+    /**
+     * Parses {@link com.concordium.grpc.v2.ContractAddress} to {@link ContractAddress}.
+     * @param contract {@link com.concordium.grpc.v2.ContractAddress} returned by the GRPC V2 API.
+     * @return parsed {@link ContractAddress}.
+     */
+    public static ContractAddress parse(com.concordium.grpc.v2.ContractAddress contract) {
+        return from(contract.getIndex(), contract.getSubindex());
     }
 
     public String toJson() {
@@ -58,7 +67,7 @@ public final class ContractAddress extends AbstractAddress {
     }
 
     public static ContractAddress from(long index, long subIndex) {
-        return new ContractAddress(index, subIndex);
+        return new ContractAddress(subIndex, index);
     }
 
     public byte[] getBytes() {

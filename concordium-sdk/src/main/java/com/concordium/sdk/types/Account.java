@@ -19,4 +19,20 @@ public final class Account extends AbstractAddress {
         this.address = AccountAddress.from(address);
 
     }
+
+    Account(@JsonProperty("type") AccountType type,
+            @JsonProperty("address") AccountAddress address) {
+        super(type);
+        this.address = address;
+
+    }
+
+    /**
+     * Parses {@link com.concordium.grpc.v2.AccountAddress} to {@link Account}.
+     * @param account {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
+     * @return parsed {@link Account}.
+     */
+    public static Account parse(com.concordium.grpc.v2.AccountAddress account) {
+        return new Account(AccountType.ADDRESS_ACCOUNT ,AccountAddress.from(account.getValue().toByteArray()));
+    }
 }

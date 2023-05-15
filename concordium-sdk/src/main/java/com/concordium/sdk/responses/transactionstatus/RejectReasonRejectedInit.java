@@ -21,6 +21,15 @@ public class RejectReasonRejectedInit extends RejectReason {
         this.rejectedInit = rejectedInit;
     }
 
+    /**
+     * Parses {@link com.concordium.grpc.v2.RejectReason.RejectedInit} to {@link RejectReasonRejectedInit}.
+     * @param rejectedInit {@link com.concordium.grpc.v2.RejectReason.RejectedInit} returned by the GRPC V2 API.
+     * @return parsed {@link RejectReasonRejectedInit}.
+     */
+    public static RejectReasonRejectedInit parse(com.concordium.grpc.v2.RejectReason.RejectedInit rejectedInit) {
+        return new RejectReasonRejectedInit(rejectedInit.getRejectReason());
+    }
+
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.REJECTED_INIT;

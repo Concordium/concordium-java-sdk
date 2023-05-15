@@ -19,6 +19,15 @@ public class RejectReasonNotADelegator extends RejectReason {
         this.accountAddress = accountAddress;
     }
 
+    /**
+     * Parses {@link com.concordium.grpc.v2.AccountAddress} to {@link RejectReasonNotADelegator}.
+     * @param notADelegator {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
+     * @return parsed {@link RejectReasonNotADelegator}.
+     */
+    public static RejectReasonNotADelegator parse(com.concordium.grpc.v2.AccountAddress notADelegator) {
+        return new RejectReasonNotADelegator(AccountAddress.from(notADelegator.getValue().toByteArray()));
+    }
+
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.NOT_A_DELEGATOR;

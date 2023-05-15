@@ -2,8 +2,7 @@ package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 
 /**
- * TODO explain better
- * Tagging interface for different kinds of Update Payloads. Payloads must be casted to a concrete type to access fields.
+ * Payload of an update transaction
  */
 public interface UpdatePayload {
 

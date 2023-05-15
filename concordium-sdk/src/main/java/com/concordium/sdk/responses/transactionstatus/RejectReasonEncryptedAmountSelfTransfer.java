@@ -19,6 +19,15 @@ public class RejectReasonEncryptedAmountSelfTransfer extends RejectReason {
         this.address = address;
     }
 
+    /**
+     * Parses {@link com.concordium.grpc.v2.AccountAddress} to {@link RejectReasonEncryptedAmountSelfTransfer}.
+     * @param encryptedAmountSelfTransfer {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
+     * @return parsed {@link RejectReasonEncryptedAmountSelfTransfer}.
+     */
+    public static RejectReasonEncryptedAmountSelfTransfer parse(com.concordium.grpc.v2.AccountAddress encryptedAmountSelfTransfer) {
+        return new RejectReasonEncryptedAmountSelfTransfer(AccountAddress.from(encryptedAmountSelfTransfer.getValue().toByteArray()));
+    }
+
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.ENCRYPTED_AMOUNT_SELF_TRANSFER;

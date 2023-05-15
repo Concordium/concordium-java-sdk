@@ -1,12 +1,13 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import lombok.val;
 
 import java.util.List;
 
@@ -57,7 +58,14 @@ public final class TransactionResult {
             @JsonSubTypes.Type(value = DelegationRemoved.class, name = "DelegationRemoved"),
             @JsonSubTypes.Type(value = UpgradedResult.class, name = "Upgraded")
     })
+
+    /**
+     * Effects of the transaction.
+     * Note, this is populated if and only if outcome is {@link Outcome#SUCCESS}.
+     */
     private final List<TransactionResultEvent> events;
+
+    @Getter
     private final Outcome outcome;
 
     // Reject reasons https://github.com/Concordium/concordium-base/blob/add1c9884769d2cc84869c8718f215337bdcfafd/haskell-src/Concordium/Types/Execution.hs#L1869
@@ -120,5 +128,79 @@ public final class TransactionResult {
             @JsonSubTypes.Type(value = RejectReasonPoolWouldBecomeOverDelegated.class, name = "PoolWouldBecomeOverDelegated"),
             @JsonSubTypes.Type(value = RejectReasonPoolClosed.class, name = "PoolClosed"),
     })
+    /**
+     * Reason for rejection of the transaction.
+     * Note, this is populated if and only if outcome is {@link Outcome#REJECT}.
+     */
     private final RejectReason rejectReason;
+
+
+    public List<TransactionResultEvent> getEvents() {
+        if (this.outcome != Outcome.SUCCESS) {
+            throw new IllegalArgumentException("Events only present for transactions with outcome " + Outcome.SUCCESS);
+        }
+        return events;
+    }
+
+    public RejectReason getRejectReason() {
+        if (this.outcome != Outcome.REJECT) {
+            throw new IllegalArgumentException("RejectReason only present for transactions with outcome " + Outcome.REJECT);
+        }
+        return rejectReason;
+    }
+
+    /**
+     * Parses {@link AccountTransactionEffects} to {@link TransactionResult}.
+     * @param effects {@link AccountTransactionEffects} returned by the GRPC V2 API.
+     * @return parsed {@link TransactionResult}.
+     */
+    public static TransactionResult parse(AccountTransactionEffects effects) {
+        val builder = TransactionResult.builder();
+        if (! effects.hasNone()) {builder.outcome(Outcome.SUCCESS);}
+
+        switch (effects.getEffectCase()) {
+            case NONE:
+                builder.rejectReason(RejectReason.parse(effects.getNone().getRejectReason()));
+                break;
+            case MODULE_DEPLOYED:
+                break;
+            case CONTRACT_INITIALIZED:
+                break;
+            case CONTRACT_UPDATE_ISSUED:
+                break;
+            case ACCOUNT_TRANSFER:
+                break;
+            case BAKER_ADDED:
+                break;
+            case BAKER_REMOVED:
+                break;
+            case BAKER_STAKE_UPDATED:
+                break;
+            case BAKER_RESTAKE_EARNINGS_UPDATED:
+                break;
+            case BAKER_KEYS_UPDATED:
+                break;
+            case ENCRYPTED_AMOUNT_TRANSFERRED:
+                break;
+            case TRANSFERRED_TO_ENCRYPTED:
+                break;
+            case TRANSFERRED_TO_PUBLIC:
+                break;
+            case TRANSFERRED_WITH_SCHEDULE:
+                break;
+            case CREDENTIAL_KEYS_UPDATED:
+                break;
+            case CREDENTIALS_UPDATED:
+                break;
+            case DATA_REGISTERED:
+                break;
+            case BAKER_CONFIGURED:
+                break;
+            case DELEGATION_CONFIGURED:
+                break;
+            case EFFECT_NOT_SET:
+                break;
+        }
+        return null;
+    }
 }

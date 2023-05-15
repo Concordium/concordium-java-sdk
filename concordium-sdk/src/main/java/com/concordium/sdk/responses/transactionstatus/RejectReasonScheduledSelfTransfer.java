@@ -19,6 +19,15 @@ public class RejectReasonScheduledSelfTransfer extends RejectReason {
         this.accountAddress = accountAddress;
     }
 
+    /**
+     * Parses {@link com.concordium.grpc.v2.AccountAddress} to {@link RejectReasonScheduledSelfTransfer}.
+     * @param scheduledSelfTransfer {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
+     * @return parsed {@link RejectReasonScheduledSelfTransfer}.
+     */
+    public static RejectReasonScheduledSelfTransfer parse(com.concordium.grpc.v2.AccountAddress scheduledSelfTransfer) {
+        return new RejectReasonScheduledSelfTransfer(AccountAddress.from(scheduledSelfTransfer.getValue().toByteArray()));
+    }
+
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.SCHEDULED_SELF_TRANSFER;

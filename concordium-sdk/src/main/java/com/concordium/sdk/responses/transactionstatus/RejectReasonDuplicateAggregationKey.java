@@ -1,9 +1,11 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.BakerAggregationVerifyKey;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  * A baker with the given aggregation key already exists
@@ -16,6 +18,11 @@ public class RejectReasonDuplicateAggregationKey extends RejectReason {
     @JsonCreator
     RejectReasonDuplicateAggregationKey(@JsonProperty("contents") String key) {
         this.publicKey = key;
+    }
+
+    public static RejectReasonDuplicateAggregationKey parse(BakerAggregationVerifyKey duplicateAggregationKey) {
+        // TODO is it okay to parse BakerAggregationVerifyKey like this?
+        return new RejectReasonDuplicateAggregationKey(Hex.encodeHexString(duplicateAggregationKey.getValue().toByteArray()));
     }
 
     @Override

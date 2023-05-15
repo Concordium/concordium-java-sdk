@@ -17,6 +17,15 @@ public class RejectReasonInvalidContractAddress extends RejectReason {
         this.contractAddress = contractAddress;
     }
 
+    /**
+     * Parses {@link com.concordium.grpc.v2.ContractAddress} to {@link RejectReasonInvalidContractAddress}.
+     * @param invalidContractAddress {@link com.concordium.grpc.v2.ContractAddress} returned by the GRPC V2 API.
+     * @return parsed {@link RejectReasonInvalidContractAddress}.
+     */
+    public static RejectReason parse(com.concordium.grpc.v2.ContractAddress invalidContractAddress) {
+        return new RejectReasonInvalidContractAddress(ContractAddress.from(invalidContractAddress.getIndex(), invalidContractAddress.getSubindex()));
+    }
+
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.INVALID_CONTRACT_ADDRESS;

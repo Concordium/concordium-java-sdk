@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.BakerId;
 import com.concordium.sdk.responses.AccountIndex;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,6 +18,15 @@ public class RejectReasonAlreadyABaker extends RejectReason {
     @JsonCreator
     RejectReasonAlreadyABaker(@JsonProperty("contents") AccountIndex bakerId) {
         this.bakerId = bakerId;
+    }
+
+    /**
+     * Parses {@link BakerId} to {@link RejectReasonAlreadyABaker}.
+     * @param alreadyABaker {@link BakerId} returned by the GRPC V2 API.
+     * @return parsed {@link RejectReasonAlreadyABaker}.
+     */
+    public static RejectReasonAlreadyABaker parse(BakerId alreadyABaker) {
+        return new RejectReasonAlreadyABaker(AccountIndex.from(alreadyABaker.getValue()));
     }
 
     @Override

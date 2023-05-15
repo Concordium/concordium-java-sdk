@@ -1,5 +1,6 @@
 package com.concordium.sdk.types;
 
+import com.concordium.grpc.v2.Address;
 import com.concordium.sdk.transactions.AccountType;
 import lombok.Getter;
 import java.util.Map;
@@ -41,4 +42,19 @@ public abstract class AbstractAddress {
         return AccountType.from((String) o.get("type")) == AccountType.ADDRESS_CONTRACT;
     }
 
+    /**
+     * Parses {@link Address} to {@link AbstractAddress}.
+     * @param address {@link Address} returned by the GRPC V2 API.
+     * @return parsed {@link AbstractAddress}.
+     */
+    public static AbstractAddress parse(Address address) {
+        switch (address.getTypeCase()) {
+            case ACCOUNT:
+                return Account.parse(address.getAccount());
+            case CONTRACT:
+                return ContractAddress.parse(address.getContract());
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
 }
