@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Details about an account creation.
+ */
 @Builder
 @Getter
 @EqualsAndHashCode

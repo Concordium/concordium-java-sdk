@@ -11,6 +11,9 @@ import java.time.ZonedDateTime;
 
 import static com.concordium.sdk.Constants.UTC_ZONE;
 
+/**
+ * Details about a chain update.
+ */
 @Builder
 @EqualsAndHashCode
 @ToString
