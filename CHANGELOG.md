@@ -30,6 +30,7 @@
 - Added support for GRPC V2 `GetPassiveDelegators` for getting the passive delegators at a certain block.
 - Added support for GRPC V2 `GetPoolDelegators` for getting the delegators for a specified baking pool at a certain block.
 - Added support for GRPC V2 `GetElectionInfo` for getting the bakers at a certain block and other metadata of the election.
+- Added support for GRPC V2 `GetModuleSource` for getting binary source of Smart Contract Module.
 
 ## 4.2.0
 - Added initial support for GRPC V2
