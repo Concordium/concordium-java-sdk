@@ -33,6 +33,8 @@ import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Transaction;
 import com.concordium.sdk.transactions.BlockItem;
+import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.types.ContractAddress;
 import com.google.common.collect.ImmutableList;
 import com.concordium.sdk.transactions.Hash;
 import io.grpc.CallCredentials;
@@ -402,7 +404,23 @@ public final class ClientV2 {
             throw BlockNotFoundException.from(blockHashInput.getBlockHash());
         }
     }
-    
+
+    /**
+     * Get the list of contract addresses in the given block.
+     *
+     * @param blockHashInput {@link BlockHashInput} of the block bakers are to be retrieved.
+     * @return Parsed {@link Iterator} of {@link ContractAddress}
+     * @throws BlockNotFoundException When the returned JSON is null.
+     */
+    public Iterator<ContractAddress> getInstanceList(BlockHashInput blockHashInput) throws BlockNotFoundException {
+        try {
+            val grpcOutput = this.server().getInstanceList(to(blockHashInput));
+            return to(grpcOutput, ClientV2MapperExtensions::to);
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHashInput.getBlockHash());
+        }
+    }
+
     /**
      * Get the branches of the node's tree. Branches are all live blocks that
      * are successors of the last finalized block. In particular this means
