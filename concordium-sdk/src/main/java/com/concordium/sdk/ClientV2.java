@@ -6,6 +6,7 @@ import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.dumpstart.DumpRequest;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
+import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.DelegatorInfo;
@@ -366,6 +367,22 @@ public final class ClientV2 {
     }
 
     /**
+     * Get the IDs of the bakers registered in the given block.
+     *
+     * @param blockHashInput {@link BlockHashInput} of the block bakers are to be retrieved.
+     * @return Parsed {@link Iterator} of {@link BakerId}
+     * @throws BlockNotFoundException When the returned JSON is null.
+     */
+    public Iterator<BakerId> getBakerList(BlockHashInput blockHashInput) throws BlockNotFoundException {
+        try {
+            val grpcOutput = this.server().getBakerList(to(blockHashInput));
+            return to(grpcOutput, ClientV2MapperExtensions::toBakerId);
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHashInput.getBlockHash());
+        }
+    }
+    
+    /**
      * Get the branches of the node's tree. Branches are all live blocks that
      * are successors of the last finalized block. In particular this means
      * that blocks which do not have a parent are not included in this
@@ -403,7 +420,7 @@ public final class ClientV2 {
     public Iterator<DelegatorInfo> getPoolDelegators(BlockHashInput input, AccountIndex bakerId) {
         var grpcOutput = this.server().getPoolDelegators(GetPoolDelegatorsRequest.newBuilder()
                 .setBlockHash(to(input))
-                .setBaker(BakerId.newBuilder().setValue(bakerId.getIndex().getValue()).build())
+                .setBaker(com.concordium.grpc.v2.BakerId.newBuilder().setValue(bakerId.getIndex().getValue()).build())
                 .build());
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
