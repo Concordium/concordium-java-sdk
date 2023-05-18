@@ -1,11 +1,16 @@
 package com.concordium.sdk;
 
+import com.concordium.grpc.v2.AccountInfoRequest;
+import com.concordium.grpc.v2.AncestorsRequest;
+import com.concordium.grpc.v2.Empty;
+import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.dumpstart.DumpRequest;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
+import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.DelegatorInfo;
@@ -294,6 +299,20 @@ public final class ClientV2 {
         }
     }
 
+
+    /**
+     * Get the list of transactions hashes for transactions from the given account,
+     * but which are not yet finalized. They are either committed to a block or still pending.
+     * If the account does not exist an empty list will be returned.
+     *
+     * @param address {@link AccountAddress}
+     * @return {@link Iterator} of Transaction {@link Hash}
+     */
+    public Iterator<Hash> getAccountNonFinalizedTransactions(AccountAddress address) {
+        val grpcOutput = this.server().getAccountNonFinalizedTransactions(to(address));
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
     /**
      * Start dumping packages into the specified {@link File}
      * Only enabled if the node was built with the 'network_dump' feature enabled
@@ -354,6 +373,39 @@ public final class ClientV2 {
     }
 
     /**
+     * Gets Block Ancestor Blocks.
+     *
+     * @param blockHashInput {@link BlockHashInput} of the block.
+     * @param num       Total no of Ancestor blocks to get.
+     * @return {@link Iterator} of {@link Hash}
+     * @throws BlockNotFoundException When the returned response from Node is invalid or null.
+     */
+    public Iterator<Hash> getAncestors(BlockHashInput blockHashInput, long num) throws BlockNotFoundException {
+        val getAncestorsRequestInput = AncestorsRequest.newBuilder()
+                .setBlockHash(to(blockHashInput))
+                .setAmount(num)
+                .build();
+        val grpcOutput = this.server().getAncestors(getAncestorsRequestInput);
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get the IDs of the bakers registered in the given block.
+     *
+     * @param blockHashInput {@link BlockHashInput} of the block bakers are to be retrieved.
+     * @return Parsed {@link Iterator} of {@link BakerId}
+     * @throws BlockNotFoundException When the returned JSON is null.
+     */
+    public Iterator<BakerId> getBakerList(BlockHashInput blockHashInput) throws BlockNotFoundException {
+        try {
+            val grpcOutput = this.server().getBakerList(to(blockHashInput));
+            return to(grpcOutput, ClientV2MapperExtensions::toBakerId);
+        } catch (StatusRuntimeException e) {
+            throw BlockNotFoundException.from(blockHashInput.getBlockHash());
+        }
+    }
+
+    /**
      * Get the list of contract addresses in the given block.
      *
      * @param blockHashInput {@link BlockHashInput} of the block bakers are to be retrieved.
@@ -407,7 +459,7 @@ public final class ClientV2 {
     public Iterator<DelegatorInfo> getPoolDelegators(BlockHashInput input, AccountIndex bakerId) {
         var grpcOutput = this.server().getPoolDelegators(GetPoolDelegatorsRequest.newBuilder()
                 .setBlockHash(to(input))
-                .setBaker(BakerId.newBuilder().setValue(bakerId.getIndex().getValue()).build())
+                .setBaker(com.concordium.grpc.v2.BakerId.newBuilder().setValue(bakerId.getIndex().getValue()).build())
                 .build());
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
