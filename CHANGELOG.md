@@ -27,6 +27,8 @@
 - Added support for GRPC V2 `GetBlockInfo` for retrieving information of the block being queried.
 - Added support for GRPC V2 `GetTokenomicsInfo` for acquiring various tokenomics related information for a block.
 - Added support for GRPC V2 `GetAncestors` for getting specified no of ancestor blocks for the input block.
+- Added support for GRPC V2 `GetBakerList` for retrieving the bakers at a certain block.
+- Added support for GRPC V2 `GetAccountNonFinalizedTransactions` for querying transactions from a particular account that have not yet been finalized.
 - Added support for GRPC V2 `GetBranches` for gettting branches of the chain (i.e. decendants of the last finalized block).
 - Added support for GRPC V2 `GetPassiveDelegators` for getting the passive delegators at a certain block.
 - Added support for GRPC V2 `GetPoolDelegators` for getting the delegators for a specified baking pool at a certain block.
