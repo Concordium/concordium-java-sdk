@@ -379,13 +379,13 @@ public final class ClientV2 {
      * @throws BlockNotFoundException When the returned response from Node is invalid or null.
      */
     public Iterator<Hash> getAncestors(BlockHashInput blockHashInput, long num) throws BlockNotFoundException {
-        try {
-            val getAncestorsRequestInput = AncestorsRequest.newBuilder()
-                    .setBlockHash(to(blockHashInput))
-                    .setAmount(num)
-                    .build();
-            val grpcOutput = this.server().getAncestors(getAncestorsRequestInput);
-            return to(grpcOutput, ClientV2MapperExtensions::to);
+        val getAncestorsRequestInput = AncestorsRequest.newBuilder()
+                .setBlockHash(to(blockHashInput))
+                .setAmount(num)
+                .build();
+        val grpcOutput = this.server().getAncestors(getAncestorsRequestInput);
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
 
     /**
      * Get the IDs of the bakers registered in the given block.
