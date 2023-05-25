@@ -2,6 +2,7 @@ package com.concordium.sdk.types;
 
 import com.concordium.grpc.v2.Address;
 import com.concordium.sdk.transactions.AccountType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import java.util.Map;
 import lombok.val;
@@ -10,6 +11,7 @@ import lombok.val;
  * An abstract Address.
  * Implementations are either Account - or Contract addresses.
  */
+@EqualsAndHashCode
 public abstract class AbstractAddress {
 
     @Getter

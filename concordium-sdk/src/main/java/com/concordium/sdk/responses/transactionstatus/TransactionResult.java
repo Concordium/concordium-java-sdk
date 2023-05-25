@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.AccountTransactionEffects;
-import com.concordium.grpc.v2.ContractTraceElement;
+import com.concordium.grpc.v2.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.collect.ImmutableList;
@@ -13,6 +12,8 @@ import java.util.List;
 @Data
 @Jacksonized
 @Builder
+@ToString(doNotUseGetters = true)
+@EqualsAndHashCode(doNotUseGetters = true)
 public final class TransactionResult {
 
     // Emitted events from transactions
@@ -60,7 +61,7 @@ public final class TransactionResult {
 
     /**
      * Effects of the transaction.
-     * Note, does not contain any elements if outcome is not {@link Outcome#SUCCESS}.
+     * Note, does not contain any elements if outcome is {@link Outcome#REJECT}.
      */
     private final List<TransactionResultEvent> events;
 
@@ -163,17 +164,15 @@ public final class TransactionResult {
     }
 
     /**
-     * Parses {@link AccountTransactionEffects} to {@link TransactionResult}.
-     *
+     * Parses {@link AccountTransactionEffects} and {@link AccountAddress} to {@link TransactionResult}.
      * @param effects {@link AccountTransactionEffects} returned by the GRPC V2 API.
+     * @param sender {@link AccountAddress} of the Transaction with the corresponding {@link TransactionResult}.
      * @return parsed {@link TransactionResult}.
      */
-    public static TransactionResult parse(AccountTransactionEffects effects) {
+    public static TransactionResult parse(AccountTransactionEffects effects, AccountAddress sender) {
         val builder = TransactionResult.builder();
         var events = new ImmutableList.Builder<TransactionResultEvent>();
-        if (!effects.hasNone()) {
-            builder.outcome(Outcome.SUCCESS);
-        }
+        builder.outcome(effects.hasNone() ? Outcome.REJECT : Outcome.SUCCESS);
 
         switch (effects.getEffectCase()) {
             case NONE:
@@ -185,52 +184,57 @@ public final class TransactionResult {
                 events.add(ModuleDeployedResult.parse(effects.getModuleDeployed()));
                 break;
             case CONTRACT_INITIALIZED:
-                events.add(ContractInitializedResult.parse(effects.getContractInitialized())); // TODO encoding ContractEvents as strings okay?
+                events.add(ContractInitializedResult.parse(effects.getContractInitialized()));
                 break;
             case CONTRACT_UPDATE_ISSUED:
-                events = updateBuilderWithContractUpdatedEvents(events, effects.getContractUpdateIssued().getEffectsList());
+                updateEventsBuilderWithContractUpdatedEvents(events, effects.getContractUpdateIssued().getEffectsList());
                 break;
             case ACCOUNT_TRANSFER:
-                // TODO cannot find class that matches GRPC AccountTransfer message
+                val transfer = effects.getAccountTransfer();
+                events.add(TransferredResult.parse(transfer, sender));
+                if(transfer.hasMemo()) {
+                    events.add((TransferMemoResult.parse(transfer.getMemo())));
+                }
                 break;
             case BAKER_ADDED:
                 events.add(BakerAddedResult.parse(effects.getBakerAdded()));
                 break;
             case BAKER_REMOVED:
-                events.add(BakerRemovedResult.parse(effects.getBakerRemoved())); // TODO GRPC return does not fit clientside object
+                events.add(BakerRemovedResult.parse(effects.getBakerRemoved(), sender));
                 break;
-            case BAKER_STAKE_UPDATED: // TODO GRPC return does not fit clientside object
+            case BAKER_STAKE_UPDATED:
                 val bakerStakeUpdated = effects.getBakerStakeUpdated();
-                if (!bakerStakeUpdated.hasUpdate()) {break;}
+                if (!bakerStakeUpdated.hasUpdate()) {break;} // If the stake was not updated nothing happened.
                 if (bakerStakeUpdated.getUpdate().getIncreased()) {
-                    events.add(BakerStakeIncreasedResult.parse(bakerStakeUpdated.getUpdate() ));
+                    events.add(BakerStakeIncreasedResult.parse(bakerStakeUpdated.getUpdate(), sender));
                 } else {
-                    events.add(BakerStakeDecreasedResult.parse(bakerStakeUpdated.getUpdate()));
+                    events.add(BakerStakeDecreasedResult.parse(bakerStakeUpdated.getUpdate(), sender));
                 }
                 break;
             case BAKER_RESTAKE_EARNINGS_UPDATED:
-                // TODO GRPC return does not fit clientside object
+                events.add(BakerSetRestakeEarningsResult.parse(effects.getBakerRestakeEarningsUpdated(), sender));
                 break;
             case BAKER_KEYS_UPDATED:
-                // TODO mathces GRPC fine but waiting to see if refatoring baker events before implementing
+                events.add(BakerKeysUpdatedResult.parse(effects.getBakerKeysUpdated()));
                 break;
             case ENCRYPTED_AMOUNT_TRANSFERRED:
                 val encryptedAmountTransferred = effects.getEncryptedAmountTransferred();
-                events.add(EncryptedAmountsRemovedResult.parse(encryptedAmountTransferred.getRemoved())); // TODO encodes EncryptedAmount as Hex string ok? loss of precision when casting index to int?
-                events.add(NewEncryptedAmountResult.parse(encryptedAmountTransferred.getAdded())); // TODO same as above, also index is stored as a String here??
+                events.add(EncryptedAmountsRemovedResult.parse(encryptedAmountTransferred.getRemoved()));
+                events.add(NewEncryptedAmountResult.parse(encryptedAmountTransferred.getAdded()));
                 if (encryptedAmountTransferred.hasMemo()) {
                     events.add(TransferMemoResult.parse(encryptedAmountTransferred.getMemo()));
                 }
                 break;
             case TRANSFERRED_TO_ENCRYPTED:
-                events.add(EncryptedSelfAmountAddedResult.parse(effects.getTransferredToEncrypted())); // TODO Amount is a string here. EncryptedAmpunt same quiestion as above
+                events.add(EncryptedSelfAmountAddedResult.parse(effects.getTransferredToEncrypted()));
                 break;
             case TRANSFERRED_TO_PUBLIC:
-                events.add(AmountAddedByDecryptionResult.parse(effects.getTransferredToPublic())); // TODO no clientside class matches this excactly. The one put here throws away lots of information
+                events.add(EncryptedAmountsRemovedResult.parse(effects.getTransferredToPublic().getRemoved()));
+                events.add(AmountAddedByDecryptionResult.parse(effects.getTransferredToPublic()));
                 break;
             case TRANSFERRED_WITH_SCHEDULE:
-                val transferredWithSchedule = effects.getTransferredWithSchedule(); // TODO does not match GRPC schema. Requires sender address. Unsure how NewRelease is parsed to List<List<String>>
-                events.add(TransferredWithScheduleResult.parse(transferredWithSchedule));
+                val transferredWithSchedule = effects.getTransferredWithSchedule();
+                events.add(TransferredWithScheduleResult.parse(transferredWithSchedule, sender));
                 if (transferredWithSchedule.hasMemo()) {
                     events.add(TransferMemoResult.parse(transferredWithSchedule.getMemo()));
                 }
@@ -239,16 +243,16 @@ public final class TransactionResult {
                 events.add(CredentialKeysUpdatedResult.parse(effects.getCredentialKeysUpdated()));
                 break;
             case CREDENTIALS_UPDATED:
-                events.add(CredentialsUpdatedResult.parse(effects.getCredentialsUpdated())); // TODO expects AccountAddress
+                events.add(CredentialsUpdatedResult.parse(effects.getCredentialsUpdated(), sender));
                 break;
             case DATA_REGISTERED:
-                events.add(DataRegisteredResult.parse(effects.getDataRegistered())); // Todo is this parsed correct?
+                events.add(DataRegisteredResult.parse(effects.getDataRegistered()));
                 break;
             case BAKER_CONFIGURED:
-                // TODO see baker cases above
+                updateEventsBuilderWithBakerEvents(sender, events, effects.getBakerConfigured().getEventsList());
                 break;
             case DELEGATION_CONFIGURED:
-                //  TODO uses AccountAddress like the baker cases
+                updateEventsBuilderWithDelegationEvents(sender, events, effects.getDelegationConfigured().getEventsList());
                 break;
             case EFFECT_NOT_SET:
                 throw new IllegalArgumentException();
@@ -259,9 +263,82 @@ public final class TransactionResult {
     }
 
     /**
+     * Helper method for parsing and adding {@link DelegationEvent}s from {@link com.concordium.grpc.v2.AccountTransactionEffects.DelegationConfigured} to the list of events.
+     */
+    private static void updateEventsBuilderWithDelegationEvents(AccountAddress sender, ImmutableList.Builder<TransactionResultEvent> events, List<DelegationEvent> delegationEvents) {
+        delegationEvents.forEach(e -> {
+            switch (e.getEventCase()) {
+                case DELEGATION_STAKE_INCREASED:
+                    events.add(DelegationStakeIncreased.parse(e.getDelegationStakeIncreased(), sender));
+                    break;
+                case DELEGATION_STAKE_DECREASED:
+                    events.add(DelegationStakeDecreased.parse(e.getDelegationStakeDecreased(), sender));
+                    break;
+                case DELEGATION_SET_RESTAKE_EARNINGS:
+                    events.add(DelegationSetRestakeEarnings.parse(e.getDelegationSetRestakeEarnings(), sender));
+                    break;
+                case DELEGATION_SET_DELEGATION_TARGET:
+                    events.add(DelegationSetDelegationTarget.parse(e.getDelegationSetDelegationTarget(), sender));
+                    break;
+                case DELEGATION_ADDED:
+                    events.add(DelegationAdded.parse(e.getDelegationAdded(), sender));
+                    break;
+                case DELEGATION_REMOVED:
+                    events.add(DelegationRemoved.parse(e.getDelegationRemoved(), sender));
+                    break;
+                case EVENT_NOT_SET:
+                    break;
+            }
+        });
+    }
+
+    /**
+     * Helper method for parsing and adding {@link BakerEvent}s from {@link com.concordium.grpc.v2.AccountTransactionEffects.BakerConfigured} to the list of events.
+     */
+    private static void updateEventsBuilderWithBakerEvents(AccountAddress sender, ImmutableList.Builder<TransactionResultEvent> events, List<BakerEvent> bakerEvents) {
+        bakerEvents.forEach(e -> {
+            switch (e.getEventCase()) {
+                case BAKER_ADDED:
+                    events.add(BakerAddedResult.parse(e.getBakerAdded()));
+                case BAKER_REMOVED:
+                    events.add(BakerRemovedResult.parse(e.getBakerRemoved(), sender));
+                    break;
+                case BAKER_STAKE_INCREASED:
+                    events.add(BakerStakeIncreasedResult.parse(e.getBakerStakeIncreased(), sender));
+                    break;
+                case BAKER_STAKE_DECREASED:
+                    events.add(BakerStakeDecreasedResult.parse(e.getBakerStakeDecreased(), sender));
+                    break;
+                case BAKER_RESTAKE_EARNINGS_UPDATED:
+                    events.add(BakerSetRestakeEarningsResult.parse(e.getBakerRestakeEarningsUpdated(), sender));
+                    break;
+                case BAKER_KEYS_UPDATED:
+                    events.add(BakerKeysUpdatedResult.parse(e.getBakerKeysUpdated()));
+                    break;
+                case BAKER_SET_OPEN_STATUS:
+                    events.add(BakerSetOpenStatus.parse(e.getBakerSetOpenStatus(), sender));
+                    break;
+                case BAKER_SET_METADATA_URL:
+                    events.add(BakerSetMetadataURL.parse(e.getBakerSetMetadataUrl(), sender));
+                    break;
+                case BAKER_SET_TRANSACTION_FEE_COMMISSION:
+                    events.add(BakerSetTransactionFeeCommission.parse(e.getBakerSetTransactionFeeCommission(), sender));
+                    break;
+                case BAKER_SET_BAKING_REWARD_COMMISSION:
+                    events.add(BakerSetBakingRewardCommission.parse(e.getBakerSetBakingRewardCommission(), sender));
+                    break;
+                case BAKER_SET_FINALIZATION_REWARD_COMMISSION:
+                    events.add(BakerSetFinalizationRewardCommission.parse(e.getBakerSetFinalizationRewardCommission(), sender));
+                    break;
+                default: throw new IllegalArgumentException();
+            }
+        });
+    }
+
+    /**
      * Helper method for parsing and adding {@link com.concordium.grpc.v2.ContractTraceElement}s from {@link com.concordium.grpc.v2.AccountTransactionEffects.ContractUpdateIssued} to the list of events.
      */
-    private static ImmutableList.Builder<TransactionResultEvent> updateBuilderWithContractUpdatedEvents(ImmutableList.Builder<TransactionResultEvent> events, List<ContractTraceElement> traceElements) {
+    private static void updateEventsBuilderWithContractUpdatedEvents(ImmutableList.Builder<TransactionResultEvent> events, List<ContractTraceElement> traceElements) {
         traceElements.forEach(e -> {
             switch (e.getElementCase()) {
                 case UPDATED:
@@ -283,7 +360,6 @@ public final class TransactionResult {
                     throw new IllegalArgumentException();
             }
         });
-        return events;
     }
 }
 

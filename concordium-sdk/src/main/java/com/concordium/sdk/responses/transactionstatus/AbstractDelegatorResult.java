@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @ToString
 @Getter
-public abstract class AbstractDelegatorResult extends TransactionResultEvent {
+@SuperBuilder
+public abstract class AbstractDelegatorResult implements TransactionResultEvent {
     private final AccountIndex delegatorId;
     private final AccountAddress delegatorAddress;
 

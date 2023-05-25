@@ -25,7 +25,7 @@ public class RejectReasonInvalidAccountReference extends RejectReason {
      * @return parsed {@link RejectReasonInvalidAccountReference}.
      */
     public static RejectReasonInvalidAccountReference parse(com.concordium.grpc.v2.AccountAddress invalidAccountReference) {
-        return new RejectReasonInvalidAccountReference(AccountAddress.from(invalidAccountReference.getValue().toByteArray()));
+        return new RejectReasonInvalidAccountReference(AccountAddress.parse(invalidAccountReference));
     }
 
     @Override

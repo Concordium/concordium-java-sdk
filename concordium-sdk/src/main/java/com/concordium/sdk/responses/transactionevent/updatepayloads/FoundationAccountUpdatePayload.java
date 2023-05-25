@@ -23,7 +23,7 @@ public class FoundationAccountUpdatePayload implements UpdatePayload{
      */
     public static FoundationAccountUpdatePayload parse(com.concordium.grpc.v2.AccountAddress accountAddress) {
         return FoundationAccountUpdatePayload.builder()
-                .accountAddress(AccountAddress.from(accountAddress.getValue().toByteArray()))
+                .accountAddress(AccountAddress.parse(accountAddress))
                 .build();
     }
     @Override

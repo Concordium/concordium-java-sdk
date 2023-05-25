@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public final class AccountCreatedResult extends TransactionResultEvent {
+public final class AccountCreatedResult implements TransactionResultEvent {
     private final String contents;
 
     @JsonCreator

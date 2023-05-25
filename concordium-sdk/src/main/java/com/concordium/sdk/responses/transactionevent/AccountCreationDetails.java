@@ -40,7 +40,7 @@ public class AccountCreationDetails {
     public static AccountCreationDetails parse(com.concordium.grpc.v2.AccountCreationDetails accountCreationDetails) {
         return AccountCreationDetails.builder()
                 .credentialType(CredentialType.parse(accountCreationDetails.getCredentialType()))
-                .address(AccountAddress.from(accountCreationDetails.getAddress().getValue().toByteArray()))
+                .address(AccountAddress.parse(accountCreationDetails.getAddress()))
                 .registrationId(CredentialRegistrationId.fromBytes(accountCreationDetails.getRegId().getValue().toByteArray()))
                 .build();
     }

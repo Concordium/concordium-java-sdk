@@ -5,7 +5,7 @@ import com.concordium.grpc.v2.MintRate;
 /**
  * Various helper methods for parsing {@link com.concordium.grpc.v2.UpdatePayload}.
  */
-public interface ParsingHelper {
+interface ParsingHelper {
 
     /**
      * Calculates mantissa*10^(-exponent).

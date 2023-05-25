@@ -15,8 +15,9 @@ import java.util.Map;
 
 @Getter
 @ToString
+@AllArgsConstructor
 @Builder
-public class InterruptedResult extends TransactionResultEvent {
+public class InterruptedResult implements TransactionResultEvent {
 
     private final ContractAddress address;
     private final List<byte[]> events;

@@ -30,4 +30,11 @@ public abstract class AbstractBakerChangeResult extends AbstractBakerResult {
         this.aggregationKey = Hex.decodeHex(aggregationKey);
         this.signKey = Hex.decodeHex(signKey);
     }
+
+    public AbstractBakerChangeResult(AccountIndex bakerId, AccountAddress account, byte[] electionKey, byte[] aggregationKey, byte[] signKey) {
+        super(bakerId, account);
+        this.electionKey = electionKey;
+        this.aggregationKey = aggregationKey;
+        this.signKey = signKey;
+    }
 }

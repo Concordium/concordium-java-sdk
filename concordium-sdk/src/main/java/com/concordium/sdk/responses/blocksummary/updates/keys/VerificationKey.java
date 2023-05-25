@@ -5,10 +5,7 @@ import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
@@ -17,6 +14,7 @@ import org.apache.commons.codec.binary.Hex;
  */
 @Getter
 @ToString
+@AllArgsConstructor
 @Builder
 @EqualsAndHashCode
 public final class VerificationKey {

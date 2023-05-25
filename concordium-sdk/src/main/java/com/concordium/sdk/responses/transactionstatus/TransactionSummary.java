@@ -6,11 +6,13 @@ import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Hash;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
 @Jacksonized
 @Builder
+@EqualsAndHashCode
 public final class TransactionSummary {
     private final int index;
     private final Hash hash;

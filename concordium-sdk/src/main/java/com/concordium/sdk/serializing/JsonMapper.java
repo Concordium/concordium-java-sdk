@@ -8,7 +8,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 public final class JsonMapper {
     public final static ObjectMapper INSTANCE =
             new ObjectMapper()
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    // TODO commment this back in after testing
+                    //.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                     .registerModule(new JavaTimeModule())
                     // Needed to deserialize Optional Fields
                     .registerModule(new Jdk8Module());

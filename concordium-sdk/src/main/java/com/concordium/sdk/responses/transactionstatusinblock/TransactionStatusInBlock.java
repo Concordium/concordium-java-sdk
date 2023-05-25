@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 import lombok.val;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
 @Data
 @Jacksonized
 @Builder
+@EqualsAndHashCode
 public class TransactionStatusInBlock {
 
     /**

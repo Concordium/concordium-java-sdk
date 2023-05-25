@@ -20,8 +20,12 @@ public class RejectReasonDuplicateAggregationKey extends RejectReason {
         this.publicKey = key;
     }
 
+    /**
+     * Parses {@link BakerAggregationVerifyKey} to {@link RejectReasonDuplicateAggregationKey}.
+     * @param duplicateAggregationKey {@link BakerAggregationVerifyKey} returned by the GRPC V2 API.
+     * @return parsed {@link RejectReasonDuplicateAggregationKey}.
+     */
     public static RejectReasonDuplicateAggregationKey parse(BakerAggregationVerifyKey duplicateAggregationKey) {
-        // TODO is it okay to parse BakerAggregationVerifyKey like this?
         return new RejectReasonDuplicateAggregationKey(Hex.encodeHexString(duplicateAggregationKey.getValue().toByteArray()));
     }
 

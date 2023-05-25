@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,12 +18,10 @@ public class RejectReasonNonExistentCredIDs extends RejectReason {
     private final List<CredentialRegistrationId> ids;
 
     @JsonCreator
-    RejectReasonNonExistentCredIDs(@JsonProperty("contents") List<String> ids) {
-        this.ids = new ArrayList<>();
-        for (String id : ids) {
-            this.ids.add(CredentialRegistrationId.from(id));
-        }
+    RejectReasonNonExistentCredIDs(@JsonProperty("contents") List<CredentialRegistrationId> ids) {
+        this.ids = ids;
     }
+
 
     /**
      * Parses {@link com.concordium.grpc.v2.RejectReason.NonExistentCredIds} to {@link RejectReasonNonExistentCredIDs}.

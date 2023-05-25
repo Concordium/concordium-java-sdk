@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString(callSuper = true)
 @SuperBuilder
-public abstract class AbstractBakerResult extends TransactionResultEvent {
+public abstract class AbstractBakerResult implements TransactionResultEvent {
     private final AccountIndex bakerId;
     private final AccountAddress account;
 

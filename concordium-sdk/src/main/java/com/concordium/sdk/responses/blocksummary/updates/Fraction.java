@@ -57,7 +57,7 @@ public class Fraction {
      * @return parsed {@link Fraction}
      */
     public static Fraction from(AmountFraction amountFraction) {
-        if (amountFraction.getPartsPerHundredThousand() > 100_000) {throw new IllegalArgumentException("Parts per hundred thousand much not exceed 100_000");}
+        if (amountFraction.getPartsPerHundredThousand() > 100_000) {throw new IllegalArgumentException("Parts per hundred thousand must not exceed 100_000");}
         return Fraction.builder()
                 .numerator(BigInteger.valueOf(amountFraction.getPartsPerHundredThousand()))
                 .denominator(BigInteger.valueOf(100_000))

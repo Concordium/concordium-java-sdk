@@ -5,6 +5,7 @@ import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,8 +14,9 @@ import java.util.Map;
 
 @Getter
 @ToString
+@AllArgsConstructor
 @Builder
-public class ResumedResult extends TransactionResultEvent {
+public class ResumedResult implements TransactionResultEvent {
     private final ContractAddress address;
     private final boolean success;
 

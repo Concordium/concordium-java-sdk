@@ -3,28 +3,38 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
-public final class AmountAddedByDecryptionResult extends TransactionResultEvent {
-    private final String amount;
+@AllArgsConstructor
+@Builder
+public final class AmountAddedByDecryptionResult implements TransactionResultEvent {
+    private final CCDAmount amount;
     private final AccountAddress account;
 
     @JsonCreator
     AmountAddedByDecryptionResult(@JsonProperty("amount") String amount,
                                   @JsonProperty("account") AccountAddress account) {
-        this.amount = amount;
+        this.amount = CCDAmount.fromMicro(amount);
         this.account = account;
-
     }
 
-    // TODO
+    /**
+     * Parses {@link AccountTransactionEffects.TransferredToPublic} to {@link AmountAddedByDecryptionResult}.
+     * @param transferredToPublic {@link AccountTransactionEffects.TransferredToPublic} returned by the GRPC V2 API.
+     * @return parsed {@link AmountAddedByDecryptionResult}.
+     */
     public static AmountAddedByDecryptionResult parse(AccountTransactionEffects.TransferredToPublic transferredToPublic) {
-        return null;
+        val removed = transferredToPublic.getRemoved();
+        return AmountAddedByDecryptionResult.builder()
+                .amount(CCDAmount.fromMicro(transferredToPublic.getAmount().getValue()))
+                .account(AccountAddress.parse(removed.getAccount()))
+                .build();
+
     }
 
     @Override

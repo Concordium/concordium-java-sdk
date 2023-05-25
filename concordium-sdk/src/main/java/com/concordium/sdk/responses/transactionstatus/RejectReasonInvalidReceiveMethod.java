@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Getter
 @ToString
+@AllArgsConstructor
 @Builder
 class RejectReasonInvalidReceiveMethod extends RejectReason {
     private final String moduleRef;

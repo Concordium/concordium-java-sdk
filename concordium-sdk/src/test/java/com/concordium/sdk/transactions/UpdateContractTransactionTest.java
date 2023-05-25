@@ -26,7 +26,7 @@ public class UpdateContractTransactionTest {
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
-                .payload(UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
+                .payload(UpdateContractPayload.from(0, ContractAddress.from(0, 81), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         assertEquals("55c4040b1540ac4fbe52d01bd1d4795b306ce65b71f879f62f5d5ef4df504785", transaction.getHash().asHex());
@@ -41,7 +41,7 @@ public class UpdateContractTransactionTest {
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
-                .payload(UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
+                .payload(UpdateContractPayload.from(0, ContractAddress.from(0, 81), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
@@ -56,7 +56,7 @@ public class UpdateContractTransactionTest {
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
-                .payload(UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
+                .payload(UpdateContractPayload.from(0, ContractAddress.from(0, 81), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
@@ -71,7 +71,7 @@ public class UpdateContractTransactionTest {
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(AccountNonce.from(78910))
                 .signer(TransactionTestHelper.getValidSigner())
-                .payload(UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
+                .payload(UpdateContractPayload.from(0, ContractAddress.from(0, 81), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected DeployTransaction to fail");
@@ -86,7 +86,7 @@ public class UpdateContractTransactionTest {
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .payload(UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
+                .payload(UpdateContractPayload.from(0, ContractAddress.from(0, 81), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         fail("Expected TransferTransaction to fail");
@@ -100,7 +100,7 @@ public class UpdateContractTransactionTest {
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(getSignerWithMalformedSecretKey())
-                .payload(UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
+                .payload(UpdateContractPayload.from(0, ContractAddress.from(0, 81), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
     }

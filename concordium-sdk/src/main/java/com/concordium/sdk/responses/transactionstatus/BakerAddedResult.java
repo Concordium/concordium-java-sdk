@@ -31,6 +31,7 @@ public final class BakerAddedResult extends AbstractBakerChangeResult {
         this.stake = stake;
     }
 
+
     /**
      * Parses {@link com.concordium.grpc.v2.BakerEvent.BakerAdded} to {@link BakerAddedResult}.
      * @param bakerAdded {@link com.concordium.grpc.v2.BakerEvent.BakerAdded} returned by the GRPC V2 API.
@@ -39,7 +40,7 @@ public final class BakerAddedResult extends AbstractBakerChangeResult {
     public static BakerAddedResult parse(BakerEvent.BakerAdded bakerAdded) {
         return BakerAddedResult.builder()
                 .bakerId(AccountIndex.from(bakerAdded.getKeysEvent().getBakerId().getValue()))
-                .account(AccountAddress.from(bakerAdded.getKeysEvent().getAccount().getValue().toByteArray()))
+                .account(AccountAddress.parse(bakerAdded.getKeysEvent().getAccount()))
                 .signKey(bakerAdded.getKeysEvent().getSignKey().getValue().toByteArray())
                 .electionKey(bakerAdded.getKeysEvent().getElectionKey().getValue().toByteArray())
                 .aggregationKey(bakerAdded.getKeysEvent().getAggregationKey().getValue().toByteArray())

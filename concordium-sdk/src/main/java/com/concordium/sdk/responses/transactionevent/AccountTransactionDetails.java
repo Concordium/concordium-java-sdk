@@ -3,10 +3,7 @@ package com.concordium.sdk.responses.transactionevent;
 import com.concordium.sdk.responses.transactionstatus.TransactionResult;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Details about an account transaction.
@@ -38,10 +35,11 @@ public class AccountTransactionDetails {
      * @return parsed {@link AccountCreationDetails}.
      */
     public static AccountTransactionDetails parse(com.concordium.grpc.v2.AccountTransactionDetails accountTransaction) {
+        val sender =  accountTransaction.getSender();
         return AccountTransactionDetails.builder()
                 .amount(CCDAmount.fromMicro(accountTransaction.getCost().getValue()))
-                .sender(AccountAddress.from(accountTransaction.getSender().getValue().toByteArray()))
-                .result(TransactionResult.parse(accountTransaction.getEffects()))
+                .sender(AccountAddress.parse(sender))
+                .result(TransactionResult.parse(accountTransaction.getEffects(), sender))
                 .build();
     }
 }

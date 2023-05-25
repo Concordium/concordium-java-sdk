@@ -129,7 +129,7 @@ public enum TransactionResultEventType {
             case TRANSFER_WITH_SCHEDULE_AND_MEMO: return TRANSFERRED_WITH_SCHEDULE_AND_MEMO;
             case CONFIGURE_BAKER: return BAKER_CONFIGURED;
             case CONFIGURE_DELEGATION: return DELEGATION_CONFIGURED;
-            case UNRECOGNIZED: return TransactionResultEventType.NOT_KNOWN;
+            case UNRECOGNIZED: return NOT_KNOWN;
             default: throw new IllegalArgumentException("Unable to parse TransactionType: " + transactionType);
         }
     }

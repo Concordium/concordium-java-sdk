@@ -77,6 +77,7 @@ public final class Connection {
         return new Connection.ValidatingConnectionBuilder();
     }
 
+
     private static class ValidatingConnectionBuilder extends ConnectionBuilder {
         @Override
         public Connection build() {

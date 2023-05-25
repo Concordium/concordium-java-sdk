@@ -25,7 +25,7 @@ public class RejectReasonNotADelegator extends RejectReason {
      * @return parsed {@link RejectReasonNotADelegator}.
      */
     public static RejectReasonNotADelegator parse(com.concordium.grpc.v2.AccountAddress notADelegator) {
-        return new RejectReasonNotADelegator(AccountAddress.from(notADelegator.getValue().toByteArray()));
+        return new RejectReasonNotADelegator(AccountAddress.parse(notADelegator));
     }
 
     @Override

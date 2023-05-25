@@ -3,10 +3,7 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.grpc.v2.ModuleRef;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
 /**
@@ -14,8 +11,10 @@ import org.apache.commons.codec.binary.Hex;
  */
 @Getter
 @ToString
+@AllArgsConstructor
+@EqualsAndHashCode
 @Builder
-public final class ModuleDeployedResult extends TransactionResultEvent {
+public final class ModuleDeployedResult implements TransactionResultEvent {
 
     /**
      * The reference to the module.

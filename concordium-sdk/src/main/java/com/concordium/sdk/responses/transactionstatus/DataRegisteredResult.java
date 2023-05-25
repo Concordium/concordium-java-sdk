@@ -11,7 +11,7 @@ import org.apache.commons.codec.binary.Hex;
 @Getter
 @ToString
 @Builder
-public final class DataRegisteredResult extends TransactionResultEvent {
+public final class DataRegisteredResult implements TransactionResultEvent {
     private final String data;
 
     @JsonCreator

@@ -41,6 +41,19 @@ public class DelegationTarget {
         return new DelegationTarget(DelegationType.BAKER, bakerId);
     }
 
+    /**
+     * Parses {@link com.concordium.grpc.v2.DelegationTarget} to {@link DelegationTarget}.
+     * @param delegationTarget {@link com.concordium.grpc.v2.DelegationTarget} returned by the GRPC V2 API.
+     * @return parsed {@link DelegationTarget}.
+     */
+    public static DelegationTarget parse(com.concordium.grpc.v2.DelegationTarget delegationTarget) {
+        switch (delegationTarget.getTargetCase()) {
+            case PASSIVE: return newPassiveDelegationTarget();
+            case BAKER: return newBakerDelegationTarget(AccountIndex.from(delegationTarget.getBaker().getValue()));
+            default: throw new IllegalArgumentException();
+        }
+    }
+
     public byte[] getBytes() {
         ByteBuffer buffer = ByteBuffer.allocate(TransactionType.BYTES);
         if(this.type == DelegationType.PASSIVE) {

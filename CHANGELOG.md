@@ -1,6 +1,17 @@
 # Changelog
 
 ## Unreleased changes
+- Changed representation of DelegationStakeDecreased
+- Changed representation of BakerSetTransactionFeeCommission
+- Changed representation of BakerStakeDecreasedResult
+- Changed representation of BakerStakeIncreasedResult
+- Changed representation of RejectReasonDuplicateCredIDs
+- Changed representation of RejectReasonNonExistentCredIDs
+- Changed representation of TransferredResult
+- Changed representation of TransferredWithScheduleResult
+- Fixed bug where AmountAddedByDecryptionResult was being represented wrong.
+- Fixed bug where NewEncryptedAmountResult was being represented wrong.
+- Fixed bug where EncryptedAmountsRemovedResult was being represented wrong.
 - Fixed bug where Contract Addresses were being represented wrong.
 - Added support for GRPC V2 `GetPeersInfo` for retrieving information of the peers that the node holds.
 - Added support for GRPC V2 `GetNodeInfo` for retrieving various information of the node queried.

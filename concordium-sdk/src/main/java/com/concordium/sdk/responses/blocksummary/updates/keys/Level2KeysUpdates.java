@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Getter
 @ToString
+@AllArgsConstructor
 @Builder
 @EqualsAndHashCode
 public final class Level2KeysUpdates {

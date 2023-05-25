@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @ToString
 @EqualsAndHashCode
+@AllArgsConstructor
 @Builder
 public final class Authorization {
     /**

@@ -25,7 +25,7 @@ public class RejectReasonEncryptedAmountSelfTransfer extends RejectReason {
      * @return parsed {@link RejectReasonEncryptedAmountSelfTransfer}.
      */
     public static RejectReasonEncryptedAmountSelfTransfer parse(com.concordium.grpc.v2.AccountAddress encryptedAmountSelfTransfer) {
-        return new RejectReasonEncryptedAmountSelfTransfer(AccountAddress.from(encryptedAmountSelfTransfer.getValue().toByteArray()));
+        return new RejectReasonEncryptedAmountSelfTransfer(AccountAddress.parse(encryptedAmountSelfTransfer));
     }
 
     @Override

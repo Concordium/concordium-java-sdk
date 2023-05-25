@@ -25,7 +25,7 @@ public class RejectReasonNotABaker extends RejectReason {
      * @return parsed {@link RejectReasonNotABaker}.
      */
     public static RejectReasonNotABaker parse(com.concordium.grpc.v2.AccountAddress notABaker) {
-        return new RejectReasonNotABaker(AccountAddress.from(notABaker.getValue().toByteArray()));
+        return new RejectReasonNotABaker(AccountAddress.parse(notABaker));
     }
 
     @Override

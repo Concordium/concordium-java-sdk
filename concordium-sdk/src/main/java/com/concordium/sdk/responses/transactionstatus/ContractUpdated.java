@@ -20,8 +20,9 @@ import java.util.Objects;
  */
 @ToString
 @Getter
+@AllArgsConstructor
 @Builder
-public class ContractUpdated extends TransactionResultEvent {
+public class ContractUpdated implements TransactionResultEvent {
 
     /**
      * The amount provided

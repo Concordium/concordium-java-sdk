@@ -6,10 +6,7 @@ import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
 import java.util.List;
@@ -20,8 +17,9 @@ import java.util.Objects;
  */
 @Getter
 @ToString
+@AllArgsConstructor
 @Builder
-public final class ContractInitializedResult extends TransactionResultEvent {
+public final class ContractInitializedResult implements TransactionResultEvent {
 
     /**
      * Module in which the contract source resides.

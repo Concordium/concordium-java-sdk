@@ -123,6 +123,15 @@ public final class AccountAddress {
         }
     }
 
+    /**
+     * Parses {@link com.concordium.grpc.v2.AccountAddress} to {@link AccountAddress}.
+     * @param accountAddress {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
+     * @return parsed {@link AccountAddress}.
+     */
+    public static AccountAddress parse(com.concordium.grpc.v2.AccountAddress accountAddress) {
+        return AccountAddress.from(accountAddress.getValue().toByteArray());
+    }
+
     @JsonCreator
     AccountAddress(String encodedAddress) {
         this.bytes = AccountAddress.from(encodedAddress).getBytes();

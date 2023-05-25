@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Objects;
-
 @Getter
 @ToString
-public final class CredentialDeployedResult extends TransactionResultEvent {
+public final class CredentialDeployedResult implements TransactionResultEvent {
     private final CredentialRegistrationId regId;
     private final AccountAddress account;
 

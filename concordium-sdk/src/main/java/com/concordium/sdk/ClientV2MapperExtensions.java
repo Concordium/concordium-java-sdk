@@ -69,6 +69,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
+import lombok.Builder;
 import lombok.val;
 import lombok.var;
 
@@ -104,7 +105,6 @@ interface ClientV2MapperExtensions {
                 if (Objects.isNull(input.getBlockHash())) {
                     throw new IllegalArgumentException("Block Hash should be set if type is GIVEN");
                 }
-
                 builder.setGiven(to(input.getBlockHash()));
                 break;
             default:
@@ -261,7 +261,7 @@ interface ClientV2MapperExtensions {
     }
 
     static com.concordium.sdk.transactions.AccountAddress to(AccountAddress address) {
-        return com.concordium.sdk.transactions.AccountAddress.from(address.getValue().toByteArray());
+        return com.concordium.sdk.transactions.AccountAddress.parse(address);
     }
 
     @Nullable

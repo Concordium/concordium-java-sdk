@@ -1,12 +1,15 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.grpc.v2.ContractTraceElement;
+import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.Account;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -16,18 +19,19 @@ import java.util.Objects;
 
 @Getter
 @ToString
+@AllArgsConstructor
 @Builder
-public final class TransferredResult extends TransactionResultEvent {
-    private final AbstractAddress to;
+public final class TransferredResult implements TransactionResultEvent {
+    private final AccountAddress to;
     private final AbstractAddress from;
     private CCDAmount amount;
 
     @JsonCreator
-    TransferredResult(@JsonProperty("to") Map<String, Object> to,
+    TransferredResult(@JsonProperty("to") AccountAddress to,
                       @JsonProperty("from") Map<String, Object> from,
                       @JsonProperty("amount") String amount) {
 
-        this.to = AbstractAddress.parseAccount(to);
+        this.to = to;
         this.from = AbstractAddress.parseAccount(from);
         if (!Objects.isNull(amount)) {
             this.amount = CCDAmount.fromMicro(amount);
@@ -41,10 +45,22 @@ public final class TransferredResult extends TransactionResultEvent {
      */
     public static TransferredResult parse(ContractTraceElement.Transferred transferred) {
         return TransferredResult.builder()
-                .to(Account.parse(transferred.getReceiver()))
+                .to(AccountAddress.parse(transferred.getReceiver()))
                 .from(ContractAddress.parse(transferred.getSender()))
                 .amount(CCDAmount.fromMicro(transferred.getAmount().getValue()))
                 .build();
+    }
+
+    /**
+     * TODO comment
+     */
+    public static TransferredResult parse(AccountTransactionEffects.AccountTransfer accountTransfer, com.concordium.grpc.v2.AccountAddress sender) {
+        return TransferredResult.builder()
+                .to(AccountAddress.parse(accountTransfer.getReceiver()))
+                .from(Account.parse(sender))
+                .amount(CCDAmount.fromMicro(accountTransfer.getAmount().getValue()))
+                .build();
+
     }
 
     @Override

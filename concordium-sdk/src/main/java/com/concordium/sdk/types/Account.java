@@ -33,6 +33,6 @@ public final class Account extends AbstractAddress {
      * @return parsed {@link Account}.
      */
     public static Account parse(com.concordium.grpc.v2.AccountAddress account) {
-        return new Account(AccountType.ADDRESS_ACCOUNT ,AccountAddress.from(account.getValue().toByteArray()));
+        return new Account(AccountType.ADDRESS_ACCOUNT ,AccountAddress.parse(account));
     }
 }
