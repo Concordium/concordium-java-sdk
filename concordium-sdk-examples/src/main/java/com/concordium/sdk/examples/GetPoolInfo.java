@@ -15,6 +15,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+/**
+ * Gets the Baker#{@link GetPoolInfo#bakerId} Pool Information at the {@link BlockHashInput#BEST} block.
+ */
 @Command(name = "GetPoolInfo", mixinStandardHelpOptions = true)
 public class GetPoolInfo implements Callable<Integer> {
     @Option(
