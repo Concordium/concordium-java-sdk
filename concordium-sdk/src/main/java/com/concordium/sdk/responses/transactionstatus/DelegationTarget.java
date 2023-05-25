@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.transactions.TransactionType;
 import com.concordium.sdk.types.UInt16;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,9 +27,9 @@ public class DelegationTarget {
      * Specific baker id to delegate.
      */
     @JsonProperty("bakerId")
-    private final AccountIndex bakerId;
+    private final BakerId bakerId;
 
-    private DelegationTarget(DelegationType type, AccountIndex bakerId) {
+    private DelegationTarget(DelegationType type, BakerId bakerId) {
         this.type = type;
         this.bakerId = bakerId;
     }
@@ -37,7 +38,7 @@ public class DelegationTarget {
         return new DelegationTarget(DelegationType.PASSIVE, null);
     }
 
-    public static DelegationTarget newBakerDelegationTarget(AccountIndex bakerId){
+    public static DelegationTarget newBakerDelegationTarget(BakerId bakerId){
         return new DelegationTarget(DelegationType.BAKER, bakerId);
     }
 

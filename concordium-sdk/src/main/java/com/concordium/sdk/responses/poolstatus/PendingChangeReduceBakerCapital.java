@@ -1,10 +1,12 @@
 package com.concordium.sdk.responses.poolstatus;
 
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.Timestamp;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 @Data
@@ -20,5 +22,5 @@ public class PendingChangeReduceBakerCapital extends PendingChange {
     /**
      * Effective time of the change.
      */
-    private final Date effectiveTime;
+    private final OffsetDateTime effectiveTime;
 }

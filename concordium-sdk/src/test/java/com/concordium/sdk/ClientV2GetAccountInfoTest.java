@@ -265,7 +265,7 @@ public class ClientV2GetAccountInfoTest {
                     .stakedAmount(CCDAmount.fromMicro(STAKED_AMOUNT))
                     .restakeEarnings(RESTAKE_EARNINGS)
                     .pendingChange(PENDING_CHANGE)
-                    .bakerId(com.concordium.sdk.responses.AccountIndex.from(BAKER_ID))
+                    .bakerId(com.concordium.sdk.responses.BakerId.from(BAKER_ID))
                     .bakerAggregationVerifyKey(ED25519PublicKey.from(BAKER_AGGREGATION_KEY))
                     .bakerElectionVerifyKey(ED25519PublicKey.from(BAKER_ELECTION_VERIFY_KEY))
                     .bakerSignatureVerifyKey(ED25519PublicKey.from(BAKER_SIGNATURE_VERIFY_KEY))
@@ -332,7 +332,7 @@ public class ClientV2GetAccountInfoTest {
     public void mapAccountStakeDelegationTest() {
         var expected = AccountDelegation.builder()
                 .target(com.concordium.sdk.responses.transactionstatus.DelegationTarget.builder()
-                        .bakerId(com.concordium.sdk.responses.AccountIndex.from(BAKER_ID))
+                        .bakerId(com.concordium.sdk.responses.BakerId.from(BAKER_ID))
                         .type(com.concordium.sdk.responses.transactionstatus.DelegationTarget.DelegationType.BAKER)
                         .build())
                 .stakedAmount(CCDAmount.fromMicro(STAKED_AMOUNT))

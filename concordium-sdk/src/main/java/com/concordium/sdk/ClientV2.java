@@ -24,6 +24,7 @@ import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.election.ElectionInfo;
+import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
@@ -36,7 +37,6 @@ import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.ContractAddress;
 import com.google.common.collect.ImmutableList;
-import com.concordium.sdk.transactions.Hash;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
@@ -496,6 +496,15 @@ public final class ClientV2 {
     public ImmutableList<PeerInfo> getPeersInfo() throws UnknownHostException {
         var grpcOutput = this.server().getPeersInfo(Empty.newBuilder().build());
         return PeerInfo.parseToList(grpcOutput);
+    }
+
+    public BakerPoolStatus getPoolInfo(BlockHashInput input, BakerId bakerId) {
+        var grpcOutput = this.server().getPoolInfo(PoolInfoRequest.newBuilder()
+                        .setBlockHash(to(input))
+                        .setBaker(ClientV2MapperExtensions.to(bakerId))
+                .build());
+
+        return ClientV2MapperExtensions.to(grpcOutput);
     }
 
     /**

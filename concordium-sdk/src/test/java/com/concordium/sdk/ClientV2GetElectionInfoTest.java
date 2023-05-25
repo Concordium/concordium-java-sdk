@@ -58,7 +58,7 @@ public class ClientV2GetElectionInfoTest {
             .electionDifficulty(ELECTION_DIFFICULTY_EXPECTED)
             .leadershipElectionNonce(ELECTION_NONCE)
             .bakerElectionInfo(ImmutableList.of(ElectionInfoBaker.builder()
-                    .baker(com.concordium.sdk.responses.AccountIndex.from(BAKER_ID))
+                    .baker(com.concordium.sdk.responses.BakerId.from(BAKER_ID))
                     .lotteryPower(LOTTERY_POWER)
                     .account(ACCOUNT_ADDRESS_1)
                     .build()))

@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.election;
 
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.transactions.AccountAddress;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -16,7 +17,7 @@ public class ElectionInfoBaker {
     /**
      * The ID of the baker.
      */
-    private final AccountIndex baker;
+    private final BakerId baker;
 
     /**
      * The account address of the baker.

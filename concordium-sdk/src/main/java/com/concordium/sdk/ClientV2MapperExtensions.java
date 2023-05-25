@@ -22,6 +22,7 @@ import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
 import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.accountinfo.*;
+import com.concordium.sdk.responses.accountinfo.PendingChange;
 import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
@@ -37,6 +38,7 @@ import com.concordium.sdk.responses.nodeinfo.BakingCommitteeDetails;
 import com.concordium.sdk.responses.nodeinfo.BakingStatus;
 import com.concordium.sdk.responses.nodeinfo.ConsensusState;
 import com.concordium.sdk.responses.nodeinfo.PeerType;
+import com.concordium.sdk.responses.poolstatus.*;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
@@ -69,6 +71,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
+import lombok.Lombok;
+import lombok.NonNull;
 import lombok.val;
 import lombok.var;
 
@@ -296,8 +300,8 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
-    static com.concordium.sdk.responses.AccountIndex to(BakerId bakerId) {
-        return com.concordium.sdk.responses.AccountIndex.from(bakerId.getValue());
+    static com.concordium.sdk.responses.BakerId to(BakerId bakerId) {
+        return com.concordium.sdk.responses.BakerId.from(bakerId.getValue());
     }
 
     static com.concordium.sdk.responses.BakerId toBakerId(BakerId bakerId) {
@@ -1435,6 +1439,55 @@ interface ClientV2MapperExtensions {
                 .baker(to(i.getBaker()))
                 .account(to(i.getAccount()))
                 .lotteryPower(i.getLotteryPower())
+                .build();
+    }
+
+    static BakerId to(com.concordium.sdk.responses.BakerId bakerId) {
+        return BakerId.newBuilder().setValue(bakerId.toLong()).build();
+    }
+
+    static BakerPoolStatus to(PoolInfoResponse grpcOutput) {
+        return BakerPoolStatus.builder()
+                .bakerId(to(grpcOutput.getBaker()))
+                .bakerAddress(to(grpcOutput.getAddress()))
+                .bakerEquityCapital(to(grpcOutput.getEquityCapital()))
+                .delegatedCapital(to(grpcOutput.getDelegatedCapital()))
+                .delegatedCapitalCap(to(grpcOutput.getDelegatedCapitalCap()))
+                .poolInfo(to(grpcOutput.getPoolInfo()))
+                .bakerStakePendingChange(grpcOutput.hasEquityPendingChange()
+                        ? to(grpcOutput.getEquityPendingChange())
+                        : null)
+                .currentPaydayStatus(grpcOutput.hasCurrentPaydayInfo() ? to(grpcOutput.getCurrentPaydayInfo()) : null)
+                .allPoolTotalCapital(to(grpcOutput.getAllPoolTotalCapital()))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.poolstatus.PendingChange to(PoolPendingChange equityPendingChange) {
+        switch (equityPendingChange.getChangeCase()) {
+            case REDUCE:
+                return PendingChangeReduceBakerCapital.builder()
+                        .effectiveTime(to(to(equityPendingChange.getReduce().getEffectiveTime())))
+                        .bakerEquityCapital(to(equityPendingChange.getReduce().getReducedEquityCapital()))
+                        .build();
+            case REMOVE:
+                return PendingChangeRemovePool.builder()
+                        .effectiveTime(to(to(equityPendingChange.getRemove().getEffectiveTime())))
+                        .build();
+            case CHANGE_NOT_SET:
+            default:
+                return null;
+        }
+    }
+
+    static @NonNull CurrentPaydayStatus to(PoolCurrentPaydayInfo currentPaydayInfo) {
+        return CurrentPaydayStatus.builder()
+                .bakerEquityCapital(to(currentPaydayInfo.getBakerEquityCapital()))
+                .blocksBaked(UInt64.from(currentPaydayInfo.getBlocksBaked()))
+                .delegatedCapital(to(currentPaydayInfo.getDelegatedCapital()))
+                .effectiveStake(to(currentPaydayInfo.getEffectiveStake()))
+                .finalizationLive(currentPaydayInfo.getFinalizationLive())
+                .lotteryPower(currentPaydayInfo.getLotteryPower())
+                .transactionFeesEarned(to(currentPaydayInfo.getTransactionFeesEarned()))
                 .build();
     }
 }

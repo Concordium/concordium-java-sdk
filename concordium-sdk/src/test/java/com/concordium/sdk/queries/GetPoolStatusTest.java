@@ -1,6 +1,7 @@
 package com.concordium.sdk.queries;
 
 import com.concordium.sdk.responses.BakerId;
+import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
 import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.poolstatus.*;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
@@ -57,7 +58,7 @@ public class GetPoolStatusTest {
                 .bakerEquityCapital(CCDAmount.fromMicro(7_115_794_301_385_111L))
                 .delegatedCapital(CCDAmount.fromMicro(0))
                 .delegatedCapitalCap(CCDAmount.fromMicro(790_946_966_340_087L))
-                .poolInfo(PoolInfo.builder()
+                .poolInfo(BakerPoolInfo.builder()
                         .openStatus(OpenStatus.CLOSED_FOR_ALL)
                         .metadataUrl("")
                         .commissionRates(CommissionRates.builder()
@@ -67,7 +68,7 @@ public class GetPoolStatusTest {
                                 .build())
                         .build())
                 .bakerStakePendingChange(new PendingChangeNoChange())
-                .currentPaydayStatus(Optional.of(CurrentPaydayStatus.builder()
+                .currentPaydayStatus(CurrentPaydayStatus.builder()
                         .blocksBaked(UInt64.from(12))
                         .finalizationLive(true)
                         .transactionFeesEarned(CCDAmount.fromMicro(2_522_839L))
@@ -75,7 +76,7 @@ public class GetPoolStatusTest {
                         .lotteryPower(9.09067382096406e-2)
                         .bakerEquityCapital(CCDAmount.fromMicro(7_114_034_220_201_662L))
                         .delegatedCapital(CCDAmount.fromMicro(0))
-                        .build()))
+                        .build())
                 .allPoolTotalCapital(CCDAmount.fromMicro(78_276_465_710_911_895L))
                 .build());
     }
