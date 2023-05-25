@@ -22,6 +22,7 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
@@ -512,6 +513,18 @@ public final class ClientV2 {
                 .build());
 
         return ClientV2MapperExtensions.to(grpcOutput);
+    }
+
+    /**
+     * Get list of Smart Contract modules at the end of the given block.
+     *
+     * @param input {@link BlockHashInput}.
+     * @return {@link Iterator<ModuleRef>}.
+     */
+    public Iterator<ModuleRef> getModuleList(BlockHashInput input) {
+        var grpcOutput = this.server().getModuleList(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
     /**

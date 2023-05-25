@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.responses.modulelist.ModuleRef;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -33,7 +34,7 @@ public final class InitContractPayload {
      */
     private final Parameter param;
 
-    private InitContractPayload(CCDAmount amount, Hash moduleRef, InitName initName, Parameter param) {
+    private InitContractPayload(CCDAmount amount, ModuleRef moduleRef, InitName initName, Parameter param) {
         this.amount = amount;
         this.moduleRef = moduleRef;
         this.initName = initName;
@@ -51,7 +52,7 @@ public final class InitContractPayload {
     public static InitContractPayload from(long amount, byte[] moduleRef, String contractName, byte[] parameter) {
         return from(
                 CCDAmount.fromMicro(amount),
-                Hash.from(moduleRef),
+                ModuleRef.from(moduleRef),
                 InitName.from(contractName),
                 Parameter.from(parameter)
         );
@@ -65,7 +66,7 @@ public final class InitContractPayload {
      * @param initName  Name of the contract in the module. Expected format: "init_<contract_name>"
      * @param parameter Message to invoke the initialization method with.
      */
-    public static InitContractPayload from(CCDAmount amount, Hash moduleRef, InitName initName, Parameter parameter) {
+    public static InitContractPayload from(CCDAmount amount, ModuleRef moduleRef, InitName initName, Parameter parameter) {
         return new InitContractPayload(amount, moduleRef, initName, parameter);
     }
 

@@ -714,8 +714,8 @@ interface ClientV2MapperExtensions {
         return InitName.from(initName.getValue());
     }
 
-    static Hash to(ModuleRef moduleRef) {
-        return Hash.from(moduleRef.getValue().toByteArray());
+    static com.concordium.sdk.responses.modulelist.ModuleRef to(ModuleRef moduleRef) {
+        return com.concordium.sdk.responses.modulelist.ModuleRef.from(moduleRef.getValue().toByteArray());
     }
 
     static com.concordium.sdk.transactions.Memo to(Memo memo) {
