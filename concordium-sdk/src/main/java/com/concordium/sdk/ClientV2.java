@@ -498,6 +498,13 @@ public final class ClientV2 {
         return PeerInfo.parseToList(grpcOutput);
     }
 
+    /**
+     * Get information about a given pool at the end of a given block.
+     *
+     * @param input {@link BlockHashInput}.
+     * @param bakerId {@link BakerId}.
+     * @return {@link BakerPoolStatus}.
+     */
     public BakerPoolStatus getPoolInfo(BlockHashInput input, BakerId bakerId) {
         var grpcOutput = this.server().getPoolInfo(PoolInfoRequest.newBuilder()
                         .setBlockHash(to(input))
