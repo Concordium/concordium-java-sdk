@@ -452,7 +452,7 @@ public final class ClientV2 {
      *
      * @param input {@link BlockHashInput}.
      * @param bakerId {@link BakerId}.
-     * @return {@link BakerPoolStatus}.
+     * @return {@link Iterator<DelegatorRewardPeriodInfo>}.
      */
     public Iterator<DelegatorRewardPeriodInfo> getPoolDelegatorsRewardPeriod(
             BlockHashInput input,
@@ -461,6 +461,23 @@ public final class ClientV2 {
                 .setBlockHash(to(input))
                 .setBaker(to(bakerId))
                 .build());
+
+        return ClientV2MapperExtensions.to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get the fixed passive delegators for the reward period of the given block.
+     * In contracts to the `GetPassiveDelegators` which returns delegators registered
+     * for the given block, this endpoint returns the fixed delegators contributing
+     * stake in the reward period containing the given block.
+     * The stream will end when all the delegators has been returned.
+     *
+     * @param input {@link BlockHashInput}.
+     * @return {@link Iterator<DelegatorRewardPeriodInfo>}.
+     */
+    public Iterator<DelegatorRewardPeriodInfo> getPassiveDelegatorsRewardPeriod(
+            BlockHashInput input) {
+        var grpcOutput = this.server().getPassiveDelegatorsRewardPeriod(to(input));
 
         return ClientV2MapperExtensions.to(grpcOutput, ClientV2MapperExtensions::to);
     }
