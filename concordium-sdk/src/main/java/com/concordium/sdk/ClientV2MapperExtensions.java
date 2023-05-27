@@ -19,6 +19,7 @@ import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
+import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
 import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
 import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.accountinfo.*;
@@ -34,10 +35,6 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProvider
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
-import com.concordium.sdk.responses.nodeinfo.BakingCommitteeDetails;
-import com.concordium.sdk.responses.nodeinfo.BakingStatus;
-import com.concordium.sdk.responses.nodeinfo.ConsensusState;
-import com.concordium.sdk.responses.nodeinfo.PeerType;
 import com.concordium.sdk.responses.poolstatus.*;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.*;
@@ -72,7 +69,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
-import lombok.Lombok;
 import lombok.NonNull;
 import lombok.val;
 import lombok.var;
@@ -302,10 +298,6 @@ interface ClientV2MapperExtensions {
     }
 
     static com.concordium.sdk.responses.BakerId to(BakerId bakerId) {
-        return com.concordium.sdk.responses.BakerId.from(bakerId.getValue());
-    }
-
-    static com.concordium.sdk.responses.BakerId toBakerId(BakerId bakerId) {
         return com.concordium.sdk.responses.BakerId.from(bakerId.getValue());
     }
 
@@ -1526,5 +1518,12 @@ interface ClientV2MapperExtensions {
                         .sourceModule(to(v1.getSourceModule()))
                         .build();
         }
+    }
+
+    static DelegatorRewardPeriodInfo to(com.concordium.grpc.v2.DelegatorRewardPeriodInfo i) {
+        return DelegatorRewardPeriodInfo.builder()
+                .account(to(i.getAccount()))
+                .stake(to(i.getStake()))
+                .build();
     }
 }

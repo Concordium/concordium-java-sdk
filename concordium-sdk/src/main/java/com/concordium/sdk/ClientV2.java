@@ -14,6 +14,7 @@ import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.DelegatorInfo;
+import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
@@ -400,7 +401,7 @@ public final class ClientV2 {
     public Iterator<BakerId> getBakerList(BlockHashInput blockHashInput) throws BlockNotFoundException {
         try {
             val grpcOutput = this.server().getBakerList(to(blockHashInput));
-            return to(grpcOutput, ClientV2MapperExtensions::toBakerId);
+            return to(grpcOutput, ClientV2MapperExtensions::to);
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(blockHashInput.getBlockHash());
         }
@@ -440,6 +441,28 @@ public final class ClientV2 {
                         .build());
 
         return to(grpcOutput);
+    }
+
+    /**
+     * Get the fixed delegators of a given pool for the reward period of the given block.
+     * In contracts to the `GetPoolDelegators` which returns delegators registered
+     * for the given block, this endpoint returns the fixed delegators contributing
+     * stake in the reward period containing the given block.
+     * The stream will end when all the delegators has been returned.
+     *
+     * @param input {@link BlockHashInput}.
+     * @param bakerId {@link BakerId}.
+     * @return {@link BakerPoolStatus}.
+     */
+    public Iterator<DelegatorRewardPeriodInfo> getPoolDelegatorsRewardPeriod(
+            BlockHashInput input,
+            BakerId bakerId) {
+        var grpcOutput = this.server().getPoolDelegatorsRewardPeriod(GetPoolDelegatorsRequest.newBuilder()
+                .setBlockHash(to(input))
+                .setBaker(to(bakerId))
+                .build());
+
+        return ClientV2MapperExtensions.to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
     /**
@@ -529,7 +552,7 @@ public final class ClientV2 {
     public BakerPoolStatus getPoolInfo(BlockHashInput input, BakerId bakerId) {
         var grpcOutput = this.server().getPoolInfo(PoolInfoRequest.newBuilder()
                         .setBlockHash(to(input))
-                        .setBaker(ClientV2MapperExtensions.to(bakerId))
+                        .setBaker(to(bakerId))
                 .build());
 
         return ClientV2MapperExtensions.to(grpcOutput);
