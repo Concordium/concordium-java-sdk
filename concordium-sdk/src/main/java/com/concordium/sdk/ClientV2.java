@@ -423,6 +423,26 @@ public final class ClientV2 {
     }
 
     /**
+     * Get info about a smart contract instance as it appears at the end of the given block.
+     *
+     * @param input           {@link BlockHashInput}
+     * @param contractAddress {@link ContractAddress} of the contract instance.
+     * @return {@link com.concordium.sdk.responses.intanceinfo.InstanceInfo} Information about the contract instance.
+     */
+    public com.concordium.sdk.responses.intanceinfo.InstanceInfo getInstanceInfo(
+            BlockHashInput input,
+            ContractAddress contractAddress) {
+        var grpcOutput = this.server().getInstanceInfo(
+                InstanceInfoRequest
+                        .newBuilder()
+                        .setBlockHash(to(input))
+                        .setAddress(to(contractAddress))
+                        .build());
+
+        return to(grpcOutput);
+    }
+
+    /**
      * Get the branches of the node's tree. Branches are all live blocks that
      * are successors of the last finalized block. In particular this means
      * that blocks which do not have a parent are not included in this

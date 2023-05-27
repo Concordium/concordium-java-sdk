@@ -36,6 +36,7 @@
 - Added support for GRPC V2 `GetElectionInfo` for getting the bakers at a certain block and other metadata of the election.
 - Added support for GRPC V2 `GetPoolInfo` for gettting information about a given pool at the end of a given block.
 - Added support for GRPC V2 `GetModuleList` for getting list of smart contract module at the end of a given block.
+- Added support for GRPC V2 `GetInstanceInfo` for getting information about a contract instance at the end of a given block.
 
 ## 4.2.0
 - Added initial support for GRPC V2

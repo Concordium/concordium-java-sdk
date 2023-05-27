@@ -41,6 +41,7 @@ import com.concordium.sdk.responses.nodeinfo.PeerType;
 import com.concordium.sdk.responses.poolstatus.*;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.*;
+import com.concordium.sdk.responses.transactionstatus.ContractVersion;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
 import com.concordium.sdk.transactions.AccountTransaction;
@@ -724,6 +725,13 @@ interface ClientV2MapperExtensions {
 
     static com.concordium.sdk.types.ContractAddress to(ContractAddress address) {
         return com.concordium.sdk.types.ContractAddress.from(address.getIndex(), address.getSubindex());
+    }
+
+    static ContractAddress to(com.concordium.sdk.types.ContractAddress contractAddress) {
+        return ContractAddress.newBuilder()
+                .setIndex(contractAddress.getIndex())
+                .setSubindex(contractAddress.getSubIndex())
+                .build();
     }
 
     static WasmModule to(VersionedModuleSource deployModule) {
@@ -1489,5 +1497,34 @@ interface ClientV2MapperExtensions {
                 .lotteryPower(currentPaydayInfo.getLotteryPower())
                 .transactionFeesEarned(to(currentPaydayInfo.getTransactionFeesEarned()))
                 .build();
+    }
+
+    static com.concordium.sdk.responses.intanceinfo.InstanceInfo to(com.concordium.grpc.v2.InstanceInfo instanceInfo) {
+        switch (instanceInfo.getVersionCase()) {
+            default:
+            case VERSION_NOT_SET:
+                throw new IllegalArgumentException("Invalid Version");
+            case V0:
+                var v0 = instanceInfo.getV0();
+                return com.concordium.sdk.responses.intanceinfo.InstanceInfo.builder()
+                        .amount(to(v0.getAmount()))
+                        .methods(ImmutableList.copyOf(
+                                to(v0.getMethodsList(), com.concordium.grpc.v2.ReceiveName::getValue)))
+                        .owner(to(v0.getOwner()))
+                        .version(ContractVersion.V0)
+                        .sourceModule(to(v0.getSourceModule()))
+                        .name(v0.getName().getValue())
+                        .build();
+            case V1:
+                var v1 = instanceInfo.getV1();
+                return com.concordium.sdk.responses.intanceinfo.InstanceInfo.builder()
+                        .amount(to(v1.getAmount()))
+                        .methods(ImmutableList.copyOf(
+                                to(v1.getMethodsList(), com.concordium.grpc.v2.ReceiveName::getValue)))
+                        .owner(to(v1.getOwner()))
+                        .version(ContractVersion.V0)
+                        .sourceModule(to(v1.getSourceModule()))
+                        .build();
+        }
     }
 }
