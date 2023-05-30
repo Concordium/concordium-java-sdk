@@ -31,7 +31,6 @@ public final class DataRegisteredResult implements TransactionResultEvent {
 
     /**
      * Parses {@link RegisteredData} to {@link DataRegisteredResult}.
-     * TODO is this parsed correct?
      * @param dataRegistered {@link RegisteredData} returned by the GRPC V2 API.
      * @return parsed {@link DataRegisteredResult}.
      */

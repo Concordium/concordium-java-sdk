@@ -64,7 +64,10 @@ public final class TransferredResult implements TransactionResultEvent {
     }
 
     /**
-     * TODO comment
+     * Parses {@link AccountTransactionEffects.AccountTransfer} and {@link com.concordium.grpc.v2.AccountAddress}to {@link TransferredResult}.
+     * @param accountTransfer {@link AccountTransactionEffects.AccountTransfer} returned by the GRPC V2 API.
+     * @param sender {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
+     * @return parsed {@link TransferredResult}.
      */
     public static TransferredResult parse(AccountTransactionEffects.AccountTransfer accountTransfer, com.concordium.grpc.v2.AccountAddress sender) {
         return TransferredResult.builder()
