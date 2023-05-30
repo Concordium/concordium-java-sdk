@@ -12,7 +12,7 @@ import lombok.*;
  */
 @Builder
 @EqualsAndHashCode
-@ToString
+@ToString(doNotUseGetters = true)
 public class BlockTransactionEvent {
 
     /**

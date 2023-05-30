@@ -1,13 +1,11 @@
 package com.concordium.sdk.types;
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 
 /**
  * Represents an amount of energy.
  */
-@Getter
 @EqualsAndHashCode
 @ToString
 public class Energy {
@@ -27,5 +25,9 @@ public class Energy {
             throw new IllegalArgumentException("Value of Energy cannot be negative");
         }
         return new Energy(UInt64.from(value));
+    }
+
+    public long getValue() {
+        return value.getValue();
     }
 }
