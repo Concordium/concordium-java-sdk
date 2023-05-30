@@ -17,6 +17,7 @@ import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.RelativeHeight;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
@@ -107,10 +108,23 @@ interface ClientV2MapperExtensions {
                 }
                 builder.setGiven(to(input.getBlockHash()));
                 break;
+            case RELATIVE:
+                if (Objects.isNull(input.getRelativeHeight())) {
+                    throw new IllegalArgumentException("Relative height should be set if type is RELATIVE");
+                }
+                builder.setRelativeHeight(RelativeHeight.convertToGRPC(input.getRelativeHeight()));
+                break;
+            case ABSOLUTE:
+                if (Objects.isNull(input.getAbsoluteHeight())) {
+                    throw new IllegalArgumentException("Absolute height should be set if type is RELATIVE");
+                }
+                builder.setAbsoluteHeight(
+                        AbsoluteBlockHeight.newBuilder().setValue(input.getAbsoluteHeight().getValue())
+                                .build());
+                break;
             default:
                 throw new IllegalArgumentException("Invalid type");
         }
-
         return builder.build();
     }
 

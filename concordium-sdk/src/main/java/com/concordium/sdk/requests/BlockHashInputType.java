@@ -10,12 +10,22 @@ public enum BlockHashInputType {
     BEST,
 
     /**
-     * Lst Finalized Block
+     * Last Finalized Block
      */
     LAST_FINAL,
 
     /**
      * Input / Given Block
      */
-    GIVEN
+    GIVEN,
+
+    /**
+     * Input / Relative block height
+     */
+    RELATIVE,
+
+    /**
+     * Input / Absolute block height
+     */
+    ABSOLUTE
 }
