@@ -527,6 +527,18 @@ public final class ClientV2 {
     }
 
     /**
+     * Get next available sequence numbers for updating chain parameters after a given block.
+     *
+     * @param input {@link BlockHashInput}.
+     * @return {@link com.concordium.sdk.responses.NextUpdateSequenceNumbers}.
+     */
+    public com.concordium.sdk.responses.NextUpdateSequenceNumbers getNextUpdateSequenceNumbers(BlockHashInput input) {
+        var grpcOutput = this.server().getNextUpdateSequenceNumbers(to(input));
+
+        return ClientV2MapperExtensions.to(grpcOutput);
+    }
+
+    /**
      * Closes the underlying grpc channel
      * <p>
      * This should only be done when the {@link ClientV2}

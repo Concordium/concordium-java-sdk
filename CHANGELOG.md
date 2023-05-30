@@ -39,6 +39,7 @@
 - Added support for GRPC V2 `GetInstanceInfo` for getting information about a contract instance at the end of a given block.
 - Added support for GRPC V2 `GetPoolDelegatorsRewardPeriod` for getting fixed list of Pool Delegators for a given pool at the end of a given block.
 - Added support for GRPC V2 `GetPassiveDelegatorsRewardPeriod` for getting fixed list of Passive Delegators for a given pool at the end of a given block.
+- Added support for GRPC V2 `GetNextUpdateSequenceNumbers` for getting next available sequence numbers for updating chain parameters after a given block.
 
 ## 4.2.0
 - Added initial support for GRPC V2

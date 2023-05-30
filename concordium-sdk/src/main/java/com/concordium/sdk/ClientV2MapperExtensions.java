@@ -1526,4 +1526,25 @@ interface ClientV2MapperExtensions {
                 .stake(to(i.getStake()))
                 .build();
     }
+
+    static com.concordium.sdk.responses.NextUpdateSequenceNumbers to(NextUpdateSequenceNumbers grpcOutput) {
+        return com.concordium.sdk.responses.NextUpdateSequenceNumbers.builder()
+                .rootKeys(to(grpcOutput.getRootKeys()))
+                .level1Keys(to(grpcOutput.getLevel1Keys()))
+                .level2Keys(to(grpcOutput.getLevel2Keys()))
+                .protocol(to(grpcOutput.getProtocol()))
+                .electionDifficulty(to(grpcOutput.getElectionDifficulty()))
+                .euroPerEnergy(to(grpcOutput.getEuroPerEnergy()))
+                .microCcdPerEuro(to(grpcOutput.getMicroCcdPerEuro()))
+                .foundationAccount(to(grpcOutput.getFoundationAccount()))
+                .mintDistribution(to(grpcOutput.getMintDistribution()))
+                .transactionFeesDistribution(to(grpcOutput.getTransactionFeeDistribution()))
+                .gasRewards(to(grpcOutput.getGasRewards()))
+                .poolParameters(to(grpcOutput.getPoolParameters()))
+                .addAnonymityRevoker(to(grpcOutput.getAddAnonymityRevoker()))
+                .addIdentityProvider(to(grpcOutput.getAddIdentityProvider()))
+                .cooldownParameters(to(grpcOutput.getCooldownParameters()))
+                .timeParameters(to(grpcOutput.getTimeParameters()))
+                .build();
+    }
 }
