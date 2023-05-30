@@ -1,11 +1,13 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * Account is not allowed to have multiple credentials because it contains a non-zero encrypted transfer.
  */
 @ToString
+@EqualsAndHashCode
 public class RejectReasonNotAllowedMultipleCredentials extends RejectReason {
     @Override
     public RejectReasonType getType() {

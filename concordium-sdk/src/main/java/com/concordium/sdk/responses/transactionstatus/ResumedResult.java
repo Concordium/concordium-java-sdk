@@ -5,19 +5,26 @@ import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Map;
 
+/**
+ * A previously interrupted contract was resumed.
+ */
 @Getter
 @ToString
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class ResumedResult implements TransactionResultEvent {
+    /**
+     * The contract resumed.
+     */
     private final ContractAddress address;
+    /**
+     * Whether the action that caused the interruption (invoke contract or make transfer) was successful or not.
+     */
     private final boolean success;
 
     @JsonCreator

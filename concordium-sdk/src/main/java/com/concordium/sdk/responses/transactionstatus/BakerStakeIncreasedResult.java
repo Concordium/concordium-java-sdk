@@ -7,14 +7,23 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Baker stake increaseed.
+ */
 @Getter
-@ToString
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 public final class BakerStakeIncreasedResult extends AbstractBakerResult {
+
+    /**
+     * The new stake.
+     */
     private final CCDAmount newStake;
 
     @JsonCreator

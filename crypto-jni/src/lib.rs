@@ -1,4 +1,4 @@
-use concordium_base::common::derive::Serialize;
+use concordium_base::common::Serialize;
 pub use concordium_base::common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
 use concordium_base::transactions::{BakerKeysPayload, AddBakerKeysMarker, ConfigureBakerKeysPayload};
 use concordium_base::{common::*, base};

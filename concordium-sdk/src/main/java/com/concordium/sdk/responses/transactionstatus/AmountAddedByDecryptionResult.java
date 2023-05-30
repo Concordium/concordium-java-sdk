@@ -8,12 +8,25 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+/**
+ * An account transferred part of its encrypted balance to its public balance.
+ * This along with a {@link EncryptedAmountsRemovedResult} is the result of a successful TransferToPublic transaction.
+ */
 @Getter
 @ToString
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public final class AmountAddedByDecryptionResult implements TransactionResultEvent {
+
+    /**
+     * The amount transferred from encrypted to public balance.
+     */
     private final CCDAmount amount;
+
+    /**
+     * The affected account.
+     */
     private final AccountAddress account;
 
     @JsonCreator

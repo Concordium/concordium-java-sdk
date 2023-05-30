@@ -13,6 +13,7 @@ import java.util.List;
  */
 @ToString
 @Builder
+@EqualsAndHashCode
 public class RejectReasonNonExistentCredIDs extends RejectReason {
     @Getter
     private final List<CredentialRegistrationId> ids;

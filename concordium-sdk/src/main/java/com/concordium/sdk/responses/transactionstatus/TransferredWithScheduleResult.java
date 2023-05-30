@@ -5,19 +5,33 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.util.List;
 
+/**
+ * A transfer with schedule was performed.
+ * This is the result of a successful TransferWithSchedule transaction.
+ */
 @Getter
 @ToString
 @Builder
+@EqualsAndHashCode
 public final class TransferredWithScheduleResult implements TransactionResultEvent {
+
+    /**
+     * The list of new releases. Ordered by increasing timestamp.
+     */
     private final List<NewRelease> amount;
+
+    /**
+     * Receiver account.
+     */
     private final AccountAddress to;
+
+    /**
+     * Sender account.
+     */
     private final AccountAddress from;
 
 

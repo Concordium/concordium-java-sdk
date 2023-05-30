@@ -15,6 +15,7 @@ import java.nio.ByteBuffer;
 @Data
 @Jacksonized
 @Builder
+@ToString
 @EqualsAndHashCode
 public class DelegationTarget {
     /**

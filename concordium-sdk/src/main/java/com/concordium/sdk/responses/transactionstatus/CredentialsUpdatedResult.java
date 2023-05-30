@@ -13,11 +13,13 @@ import java.util.List;
 
 /**
  * The credentials have been updated.
+ * This is the result of a successful UpdateCredentials transaction.
  */
 @Getter
 @ToString
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public final class CredentialsUpdatedResult implements TransactionResultEvent {
 
     /**

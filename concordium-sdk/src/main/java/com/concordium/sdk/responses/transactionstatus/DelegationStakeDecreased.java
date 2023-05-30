@@ -6,14 +6,23 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-@ToString
+/**
+ * The delegator decreased its stake.
+ */
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @SuperBuilder
 public class DelegationStakeDecreased extends AbstractDelegatorResult {
+
+    /**
+     * The new stake.
+     */
     private final CCDAmount newStake;
 
     @JsonCreator

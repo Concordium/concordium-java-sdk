@@ -1,11 +1,13 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * The amount would result in pool capital higher than the maximum threshold
  */
 @ToString
+@EqualsAndHashCode
 public class RejectReasonStakeOverMaximumThresholdForPool extends RejectReason {
 
 

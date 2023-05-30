@@ -4,6 +4,7 @@ import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Hex;
@@ -14,6 +15,7 @@ import org.apache.commons.codec.binary.Hex;
 @Getter
 @ToString
 @Builder
+@EqualsAndHashCode
 public class RejectReasonRejectedReceive extends RejectReason {
     /**
      * The reject reason

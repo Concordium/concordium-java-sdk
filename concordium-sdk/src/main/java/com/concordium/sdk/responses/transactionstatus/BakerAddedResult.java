@@ -6,15 +6,28 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * A baker was added.
+ */
 @ToString(callSuper = true)
 @Getter
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 public final class BakerAddedResult extends AbstractBakerChangeResult {
+
+    /**
+     * Whether the baker will automatically add earnings to their stake or not.
+     */
     private final boolean restakeEarnings;
+
+    /**
+     * The amount the account staked to become a baker.
+     */
     private final CCDAmount stake;
 
     @JsonCreator

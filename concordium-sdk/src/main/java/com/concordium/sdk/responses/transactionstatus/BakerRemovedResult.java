@@ -5,13 +5,18 @@ import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-@ToString
+/**
+ * A baker was removed.
+ */
+@ToString(callSuper = true)
 @Getter
 @SuperBuilder
+@EqualsAndHashCode(callSuper = true)
 public final class BakerRemovedResult extends AbstractBakerResult {
     @JsonCreator
     BakerRemovedResult(@JsonProperty("bakerId") AccountIndex bakerId,

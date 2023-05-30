@@ -9,21 +9,33 @@ import com.concordium.sdk.types.Account;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * A simple account to account transfer or contract to account transfer occurred.
+ * This is the result of a successful Transfer transaction.
+ */
 @Getter
 @ToString
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public final class TransferredResult implements TransactionResultEvent {
+
+    /**
+     * Receiver account.
+     */
     private final AccountAddress to;
+    /**
+     * Sender. Is either a {@link ContractAddress} or {@link Account}
+     */
     private final AbstractAddress from;
+    /**
+     * Amount transferred.
+     */
     private CCDAmount amount;
 
     @JsonCreator

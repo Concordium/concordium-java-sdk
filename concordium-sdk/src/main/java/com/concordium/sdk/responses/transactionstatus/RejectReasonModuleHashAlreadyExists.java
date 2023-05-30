@@ -3,6 +3,7 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.grpc.v2.ModuleRef;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Hex;
@@ -12,6 +13,7 @@ import org.apache.commons.codec.binary.Hex;
  */
 @Getter
 @ToString
+@EqualsAndHashCode
 public class RejectReasonModuleHashAlreadyExists extends RejectReason {
     private final String moduleRef;
 

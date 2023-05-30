@@ -5,20 +5,32 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
+/**
+ * Event generated when an account receives a new encrypted amount.
+ */
 @Getter
 @ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 @Builder
-// Event generated when an account receives a new encrypted amount.
 public final class NewEncryptedAmountResult implements TransactionResultEvent {
+
+    /**
+     * The affected account.
+     */
     private final AccountAddress account;
+
+    /**
+     * The index the amount was assigned.
+     */
     private final UInt64 newIndex;
+
+    /**
+     * The encrypted amount that was added.
+     */
     private final String encryptedAmount;
 
 

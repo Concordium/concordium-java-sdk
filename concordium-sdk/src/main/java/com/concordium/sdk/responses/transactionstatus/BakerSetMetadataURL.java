@@ -5,14 +5,23 @@ import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-@ToString
+/**
+ * Updated metadata URL for a baker pool.
+ */
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @SuperBuilder
 public class BakerSetMetadataURL extends AbstractBakerResult {
+
+    /**
+     * The URL.
+     */
     private final String metadataUrl;
 
     @JsonCreator

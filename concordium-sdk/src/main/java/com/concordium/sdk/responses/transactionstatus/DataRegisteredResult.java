@@ -4,14 +4,23 @@ import com.concordium.grpc.v2.RegisteredData;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Hex;
 
+/**
+ * Some data was registered on the chain.
+ */
 @Getter
 @ToString
 @Builder
+@EqualsAndHashCode
 public final class DataRegisteredResult implements TransactionResultEvent {
+
+    /**
+     * Data registered.
+     */
     private final String data;
 
     @JsonCreator

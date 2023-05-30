@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Hex;
 
+/**
+ * A memo which can be included as part of a transfer.
+ */
 @Getter
 @ToString
 public final class TransferMemoResult implements TransactionResultEvent {

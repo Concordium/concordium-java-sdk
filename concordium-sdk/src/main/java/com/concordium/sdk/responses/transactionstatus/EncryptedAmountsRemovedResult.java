@@ -5,20 +5,37 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
+/**
+ * An encrypted amount was consumed from the account.
+ */
 @Getter
 @ToString
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public final class EncryptedAmountsRemovedResult implements TransactionResultEvent {
+
+    /**
+     * The index indicating which amounts were used.
+     */
     private final UInt64 upToIndex;
+
+    /**
+     * The affected account.
+     */
     private final AccountAddress account;
+
+    /**
+     * The encrypted amount that was removed.
+     */
     private final String inputAmount;
+
+    /**
+     * The new self encrypted amount on the affected account.
+     */
     private final String newAmount;
 
     @JsonCreator
@@ -32,6 +49,11 @@ public final class EncryptedAmountsRemovedResult implements TransactionResultEve
         this.newAmount = newAmount;
     }
 
+    /**
+     * Parses {@link EncryptedAmountRemovedEvent} to {@link EncryptedAmountsRemovedResult}.
+     * @param removed {@link EncryptedAmountRemovedEvent} returned by the GRPC V2 API.
+     * @return parsed {@link EncryptedAmountsRemovedResult}
+     */
     public static EncryptedAmountsRemovedResult parse(EncryptedAmountRemovedEvent removed) {
         return EncryptedAmountsRemovedResult.builder()
                 .upToIndex(UInt64.from(removed.getUpToIndex()))

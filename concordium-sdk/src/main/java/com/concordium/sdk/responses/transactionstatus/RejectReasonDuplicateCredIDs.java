@@ -15,6 +15,7 @@ import java.util.Objects;
 @Getter
 @Builder
 @ToString
+@EqualsAndHashCode
 public class RejectReasonDuplicateCredIDs extends RejectReason {
     private List<CredentialRegistrationId> duplicates;
 

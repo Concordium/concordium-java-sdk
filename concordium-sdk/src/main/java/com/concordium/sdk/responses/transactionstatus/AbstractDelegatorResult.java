@@ -4,6 +4,7 @@ import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -11,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @Getter
 @SuperBuilder
+@EqualsAndHashCode
 public abstract class AbstractDelegatorResult implements TransactionResultEvent {
     private final AccountIndex delegatorId;
     private final AccountAddress delegatorAddress;

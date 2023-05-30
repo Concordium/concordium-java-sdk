@@ -4,6 +4,7 @@ import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.ToString;
@@ -13,9 +14,20 @@ import org.apache.commons.codec.binary.Hex;
 @Getter
 @ToString(callSuper = true)
 @SuperBuilder
+@EqualsAndHashCode(callSuper = true)
 public abstract class AbstractBakerChangeResult extends AbstractBakerResult {
+
+    /**
+     * The new public key for verifying whether the baker won the block lottery.
+     */
     private final byte[] electionKey;
+    /**
+     * The new public key for verifying finalization records.
+     */
     private final byte[] aggregationKey;
+    /**
+     * The new public key for verifying block signatures.
+     */
     private final byte[] signKey;
 
     @SneakyThrows

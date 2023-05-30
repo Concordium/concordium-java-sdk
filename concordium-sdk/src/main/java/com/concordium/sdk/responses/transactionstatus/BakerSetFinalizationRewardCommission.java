@@ -5,15 +5,23 @@ import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Updated finalization reward commission for a baker pool.
+ */
 @Getter
-@ToString
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 public class BakerSetFinalizationRewardCommission extends AbstractBakerResult {
 
+    /**
+     * The finalization reward commission.
+     */
     private final PartsPerHundredThousand finalizationRewardCommission;
 
     @JsonCreator

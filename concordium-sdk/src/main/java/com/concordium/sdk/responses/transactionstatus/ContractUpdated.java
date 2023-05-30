@@ -21,6 +21,7 @@ import java.util.Objects;
 @ToString
 @Getter
 @AllArgsConstructor
+@EqualsAndHashCode
 @Builder
 public class ContractUpdated implements TransactionResultEvent {
 

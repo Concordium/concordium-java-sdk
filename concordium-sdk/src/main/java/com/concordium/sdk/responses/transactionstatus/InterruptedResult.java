@@ -13,13 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A contract was interrupted.
+ * This occurs when a contract invokes another contract or makes a transfer to an account.
+ */
 @Getter
 @ToString
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class InterruptedResult implements TransactionResultEvent {
 
+    /**
+     * The contract interrupted.
+     */
     private final ContractAddress address;
+    /**
+     * The events generated up until the interruption.
+     */
     private final List<byte[]> events;
 
     @SneakyThrows

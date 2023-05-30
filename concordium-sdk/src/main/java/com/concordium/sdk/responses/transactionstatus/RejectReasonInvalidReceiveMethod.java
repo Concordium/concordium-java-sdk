@@ -2,10 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
 import java.util.List;
@@ -17,6 +14,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 class RejectReasonInvalidReceiveMethod extends RejectReason {
     private final String moduleRef;
     private final String receiveName;

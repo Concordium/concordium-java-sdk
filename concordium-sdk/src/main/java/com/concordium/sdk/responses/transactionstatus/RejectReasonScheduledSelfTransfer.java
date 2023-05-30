@@ -3,6 +3,7 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -10,6 +11,7 @@ import lombok.ToString;
  * Account tried to transfer with schedule to itself, that's not allowed.
  */
 @ToString
+@EqualsAndHashCode
 public class RejectReasonScheduledSelfTransfer extends RejectReason {
     @Getter
     private final AccountAddress accountAddress;

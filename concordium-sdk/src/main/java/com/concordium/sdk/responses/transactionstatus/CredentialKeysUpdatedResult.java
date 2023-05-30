@@ -3,16 +3,21 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
+/**
+ * The keys of a specific credential were updated.
+ */
 @Getter
 @ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 @Builder
 public final class CredentialKeysUpdatedResult implements TransactionResultEvent {
+
+    /**
+     * RegistrationID of the credential.
+     */
     private final CredentialRegistrationId credId;
 
     @JsonCreator

@@ -5,19 +5,32 @@ import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
+/**
+ * An account encrypted an amount from public to encrypted balance.
+ */
 @Getter
 @ToString
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public final class EncryptedSelfAmountAddedResult implements TransactionResultEvent {
+
+    /**
+     * The amount that was transferred from public to encrypted balance.
+     */
     private final CCDAmount amount;
+
+    /**
+     * The affected account.
+     */
     private final AccountAddress account;
+
+    /**
+     * The new self encrypted amount of the account.
+     */
     private final String newAmount;
 
     @JsonCreator

@@ -1,11 +1,13 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * Transaction fee commission is not in the valid range for a baker
  */
 @ToString
+@EqualsAndHashCode
 public class RejectReasonTransactionFeeCommissionNotInRange extends RejectReason{
     @Override
     public RejectReasonType getType() {

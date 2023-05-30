@@ -5,6 +5,7 @@ import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -13,9 +14,14 @@ import lombok.experimental.SuperBuilder;
  * The baker's setting for restaking earnings was updated.
  */
 @Getter
-@ToString
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 public final class BakerSetRestakeEarningsResult extends AbstractBakerResult {
+
+    /**
+     * Whether the baker will automatically add earnings to their stake or not.
+     */
     private final boolean restakeEarnings;
 
     @JsonCreator

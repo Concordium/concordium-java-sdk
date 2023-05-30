@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.BakerId;
 import com.concordium.sdk.responses.AccountIndex;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -12,6 +13,7 @@ import lombok.ToString;
  */
 @ToString
 @Getter
+@EqualsAndHashCode
 public class RejectReasonAlreadyABaker extends RejectReason {
     private final AccountIndex bakerId;
 

@@ -18,6 +18,7 @@ import java.util.Objects;
 @Getter
 @ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 @Builder
 public final class ContractInitializedResult implements TransactionResultEvent {
 
