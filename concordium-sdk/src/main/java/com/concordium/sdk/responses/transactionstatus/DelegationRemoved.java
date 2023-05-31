@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.DelegatorId;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.DelegationEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class DelegationRemoved extends AbstractDelegatorResult {
+public class DelegationRemoved extends AbstractDelegatorResult implements DelegationEvent {
 
     @JsonCreator
     DelegationRemoved(@JsonProperty("delegatorId") AccountIndex delegatorId,

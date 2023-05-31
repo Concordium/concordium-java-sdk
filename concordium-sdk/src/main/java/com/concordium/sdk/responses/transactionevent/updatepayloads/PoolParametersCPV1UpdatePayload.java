@@ -3,6 +3,8 @@ package com.concordium.sdk.responses.transactionevent.updatepayloads;
 import com.concordium.grpc.v2.PoolParametersCpv1;
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.Range;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
+import com.concordium.sdk.transactions.CCDAmount;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,15 +19,15 @@ public class PoolParametersCPV1UpdatePayload implements UpdatePayload {
     /**
      * Fraction of finalization rewards charged by the passive delegation.
      */
-    private Fraction passiveFinalizationCommission;
+    private PartsPerHundredThousand passiveFinalizationCommission;
     /**
      * Fraction of baking rewards charged by the passive delegation.
      */
-    private Fraction passiveBakingCommission;
+    private PartsPerHundredThousand passiveBakingCommission;
     /**
      * Fraction of transaction rewards charged by the L-pool
      */
-    private Fraction passiveTransactionCommission;
+    private PartsPerHundredThousand passiveTransactionCommission;
     /**
      * The range of allowed finalization commissions.
      */
@@ -39,9 +41,13 @@ public class PoolParametersCPV1UpdatePayload implements UpdatePayload {
      */
     private Range transactionRange;
     /**
+     * Minimum equity capital required for a new baker.
+     */
+    private CCDAmount minimumEquityCapital;
+    /**
      * Maximum fraction of the total staked capital that a new baker can have.
      */
-    private Fraction capitalBound;
+    private PartsPerHundredThousand capitalBound;
     /**
      * The maximum leverage that a baker can have as a ratio of total stake to equity capital.
      */
@@ -55,13 +61,14 @@ public class PoolParametersCPV1UpdatePayload implements UpdatePayload {
      */
     public static PoolParametersCPV1UpdatePayload parse(PoolParametersCpv1 poolParametersCpv1) {
         return PoolParametersCPV1UpdatePayload.builder()
-                .passiveFinalizationCommission(Fraction.from(poolParametersCpv1.getPassiveFinalizationCommission()))
-                .passiveBakingCommission(Fraction.from(poolParametersCpv1.getPassiveBakingCommission()))
-                .passiveTransactionCommission(Fraction.from(poolParametersCpv1.getPassiveTransactionCommission()))
+                .passiveFinalizationCommission(PartsPerHundredThousand.parse(poolParametersCpv1.getPassiveFinalizationCommission()))
+                .passiveBakingCommission(PartsPerHundredThousand.parse(poolParametersCpv1.getPassiveBakingCommission()))
+                .passiveTransactionCommission(PartsPerHundredThousand.parse(poolParametersCpv1.getPassiveTransactionCommission()))
                 .finalizationRange(Range.from(poolParametersCpv1.getCommissionBounds().getFinalization()))
                 .bakingRange(Range.from(poolParametersCpv1.getCommissionBounds().getBaking()))
                 .transactionRange(Range.from(poolParametersCpv1.getCommissionBounds().getTransaction()))
-                .capitalBound(Fraction.from(poolParametersCpv1.getCapitalBound().getValue()))
+                .minimumEquityCapital(CCDAmount.fromMicro(poolParametersCpv1.getMinimumEquityCapital().getValue()))
+                .capitalBound(PartsPerHundredThousand.parse(poolParametersCpv1.getCapitalBound().getValue()))
                 .leverageBound(Fraction.from(poolParametersCpv1.getLeverageBound().getValue()))
                 .build();
     }

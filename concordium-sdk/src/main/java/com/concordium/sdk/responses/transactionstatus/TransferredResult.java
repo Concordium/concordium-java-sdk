@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.AccountTransactionEffects;
-import com.concordium.grpc.v2.ContractTraceElement;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElement;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AbstractAddress;
@@ -23,7 +23,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public final class TransferredResult implements TransactionResultEvent {
+public final class TransferredResult implements TransactionResultEvent, ContractTraceElement {
 
     /**
      * Receiver account.
@@ -55,7 +55,7 @@ public final class TransferredResult implements TransactionResultEvent {
      * @param transferred {@link com.concordium.grpc.v2.ContractTraceElement.Transferred} returned by the GRPC V2 API.
      * @return parsed {@link TransferredResult}
      */
-    public static TransferredResult parse(ContractTraceElement.Transferred transferred) {
+    public static TransferredResult parse(com.concordium.grpc.v2.ContractTraceElement.Transferred transferred) {
         return TransferredResult.builder()
                 .to(AccountAddress.parse(transferred.getReceiver()))
                 .from(ContractAddress.parse(transferred.getSender()))

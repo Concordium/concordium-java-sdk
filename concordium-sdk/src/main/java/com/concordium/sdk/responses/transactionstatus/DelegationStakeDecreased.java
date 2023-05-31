@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.DelegationEvent;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.DelegationEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @SuperBuilder
-public class DelegationStakeDecreased extends AbstractDelegatorResult {
+public class DelegationStakeDecreased extends AbstractDelegatorResult implements DelegationEvent {
 
     /**
      * The new stake.
@@ -34,12 +34,12 @@ public class DelegationStakeDecreased extends AbstractDelegatorResult {
     }
 
     /**
-     * Parses {@link DelegationEvent.DelegationStakeDecreased} and {@link com.concordium.grpc.v2.AccountAddress} to {@link DelegationStakeDecreased}.
-     * @param delegationStakeDecreased {@link DelegationEvent.DelegationStakeDecreased} returned by the GRPC V2 API.
+     * Parses {@link com.concordium.grpc.v2.DelegationEvent.DelegationStakeDecreased} and {@link com.concordium.grpc.v2.AccountAddress} to {@link DelegationStakeDecreased}.
+     * @param delegationStakeDecreased {@link com.concordium.grpc.v2.DelegationEvent.DelegationStakeDecreased} returned by the GRPC V2 API.
      * @param sender {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
      * @return parsed {@link DelegationStakeDecreased}.
      */
-    public static DelegationStakeDecreased parse(DelegationEvent.DelegationStakeDecreased delegationStakeDecreased, com.concordium.grpc.v2.AccountAddress sender) {
+    public static DelegationStakeDecreased parse(com.concordium.grpc.v2.DelegationEvent.DelegationStakeDecreased delegationStakeDecreased, com.concordium.grpc.v2.AccountAddress sender) {
         return DelegationStakeDecreased.builder()
                 .delegatorId(AccountIndex.from(delegationStakeDecreased.getDelegatorId().getId().getValue()))
                 .delegatorAddress(AccountAddress.parse(sender))

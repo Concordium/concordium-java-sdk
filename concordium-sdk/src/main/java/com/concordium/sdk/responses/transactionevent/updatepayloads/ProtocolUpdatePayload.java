@@ -14,6 +14,7 @@ import lombok.ToString;
 public class ProtocolUpdatePayload implements UpdatePayload {
 
     /**
+     * TODO delete this class as ProtocolUpdate is used instead
      * A brief message about the update.
      */
     private String message;

@@ -169,7 +169,7 @@ public final class TransactionResult {
      * @param sender {@link AccountAddress} of the Transaction with the corresponding {@link TransactionResult}.
      * @return parsed {@link TransactionResult}.
      */
-    public static TransactionResult parse(AccountTransactionEffects effects, AccountAddress sender) {
+    public TransactionResult parse(AccountTransactionEffects effects, AccountAddress sender) {
         val builder = TransactionResult.builder();
         var events = new ImmutableList.Builder<TransactionResultEvent>();
         builder.outcome(effects.hasNone() ? Outcome.REJECT : Outcome.SUCCESS);

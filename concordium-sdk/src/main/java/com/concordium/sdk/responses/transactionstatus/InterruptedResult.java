@@ -1,6 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.ContractTraceElement;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElement;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -22,7 +22,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class InterruptedResult implements TransactionResultEvent {
+public class InterruptedResult implements TransactionResultEvent, ContractTraceElement {
 
     /**
      * The contract interrupted.
@@ -49,7 +49,7 @@ public class InterruptedResult implements TransactionResultEvent {
      * @param interrupted {@link com.concordium.grpc.v2.ContractTraceElement.Interrupted} returned by the GRPC V2 API.
      * @return parsed {@link InterruptedResult}.
      */
-    public static InterruptedResult parse(ContractTraceElement.Interrupted interrupted) {
+    public static InterruptedResult parse(com.concordium.grpc.v2.ContractTraceElement.Interrupted interrupted) {
         val events = new ImmutableList.Builder<byte[]>();
         interrupted.getEventsList().forEach(e -> events.add(e.getValue().toByteArray()));
         return InterruptedResult.builder()

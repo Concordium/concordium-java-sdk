@@ -2,6 +2,8 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.BakerKeysEvent;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public final class BakerKeysUpdatedResult extends AbstractBakerChangeResult {
+public final class BakerKeysUpdatedResult extends AbstractBakerChangeResult implements AccountTransactionResult, BakerEvent {
     @JsonCreator
     BakerKeysUpdatedResult(@JsonProperty("bakerId") AccountIndex bakerId,
                            @JsonProperty("account") AccountAddress account,

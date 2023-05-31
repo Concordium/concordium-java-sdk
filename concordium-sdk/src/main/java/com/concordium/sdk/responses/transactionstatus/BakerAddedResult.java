@@ -1,7 +1,8 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.BakerEvent;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -18,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public final class BakerAddedResult extends AbstractBakerChangeResult {
+public final class BakerAddedResult extends AbstractBakerChangeResult implements AccountTransactionResult, BakerEvent {
 
     /**
      * Whether the baker will automatically add earnings to their stake or not.
@@ -50,7 +51,7 @@ public final class BakerAddedResult extends AbstractBakerChangeResult {
      * @param bakerAdded {@link com.concordium.grpc.v2.BakerEvent.BakerAdded} returned by the GRPC V2 API.
      * @return parsed {@link BakerAddedResult}.
      */
-    public static BakerAddedResult parse(BakerEvent.BakerAdded bakerAdded) {
+    public static BakerAddedResult parse(com.concordium.grpc.v2.BakerEvent.BakerAdded bakerAdded) {
         return BakerAddedResult.builder()
                 .bakerId(AccountIndex.from(bakerAdded.getKeysEvent().getBakerId().getValue()))
                 .account(AccountAddress.parse(bakerAdded.getKeysEvent().getAccount()))

@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.RegisteredData;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import org.apache.commons.codec.binary.Hex;
 @ToString
 @Builder
 @EqualsAndHashCode
-public final class DataRegisteredResult implements TransactionResultEvent {
+public final class DataRegisteredResult implements TransactionResultEvent, AccountTransactionResult {
 
     /**
      * Data registered.

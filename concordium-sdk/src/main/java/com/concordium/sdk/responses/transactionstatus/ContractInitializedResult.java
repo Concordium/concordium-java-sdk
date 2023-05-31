@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.ContractInitializedEvent;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -20,7 +21,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Builder
-public final class ContractInitializedResult implements TransactionResultEvent {
+public final class ContractInitializedResult implements TransactionResultEvent, AccountTransactionResult {
 
     /**
      * Module in which the contract source resides.

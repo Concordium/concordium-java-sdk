@@ -1,6 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.ContractTraceElement;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElement;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -17,7 +17,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class ResumedResult implements TransactionResultEvent {
+public class ResumedResult implements TransactionResultEvent, ContractTraceElement {
     /**
      * The contract resumed.
      */
@@ -39,7 +39,7 @@ public class ResumedResult implements TransactionResultEvent {
      * @param resumed {@link com.concordium.grpc.v2.ContractTraceElement.Resumed} returned by the GRPC V2 API.
      * @return parsed {@link ResumedResult}.
      */
-    public static ResumedResult parse(ContractTraceElement.Resumed resumed) {
+    public static ResumedResult parse(com.concordium.grpc.v2.ContractTraceElement.Resumed resumed) {
         return ResumedResult.builder()
                 .address(ContractAddress.parse(resumed.getAddress()))
                 .success(resumed.getSuccess())

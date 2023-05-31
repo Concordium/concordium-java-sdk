@@ -1,8 +1,9 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.BakerEvent;
 import com.concordium.grpc.v2.BakerStakeUpdatedData;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -19,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public final class BakerStakeDecreasedResult extends AbstractBakerResult {
+public final class BakerStakeDecreasedResult extends AbstractBakerResult implements AccountTransactionResult, BakerEvent {
 
     /**
      * The new stake.
@@ -49,12 +50,12 @@ public final class BakerStakeDecreasedResult extends AbstractBakerResult {
     }
 
     /**
-     * Parses {@link BakerEvent.BakerStakeDecreased} and {@link com.concordium.grpc.v2.AccountAddress} to {@link BakerStakeDecreasedResult}.
-     * @param bakerStakeDecreased {@link BakerEvent.BakerStakeDecreased} returned by the GRPC V2 API.
+     * Parses {@link com.concordium.grpc.v2.BakerEvent.BakerStakeDecreased} and {@link com.concordium.grpc.v2.AccountAddress} to {@link BakerStakeDecreasedResult}.
+     * @param bakerStakeDecreased {@link com.concordium.grpc.v2.BakerEvent.BakerStakeDecreased} returned by the GRPC V2 API.
      * @param sender {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
      * @return parsed {@link BakerStakeDecreasedResult}
      */
-    public static BakerStakeDecreasedResult parse(BakerEvent.BakerStakeDecreased bakerStakeDecreased, com.concordium.grpc.v2.AccountAddress sender) {
+    public static BakerStakeDecreasedResult parse(com.concordium.grpc.v2.BakerEvent.BakerStakeDecreased bakerStakeDecreased, com.concordium.grpc.v2.AccountAddress sender) {
         return BakerStakeDecreasedResult.builder()
                 .bakerId(AccountIndex.from(bakerStakeDecreased.getBakerId().getValue()))
                 .account(AccountAddress.parse(sender))

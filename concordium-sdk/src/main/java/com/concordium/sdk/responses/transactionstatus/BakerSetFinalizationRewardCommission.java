@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.BakerEvent;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public class BakerSetFinalizationRewardCommission extends AbstractBakerResult {
+public class BakerSetFinalizationRewardCommission extends AbstractBakerResult implements BakerEvent {
 
     /**
      * The finalization reward commission.
@@ -33,12 +33,12 @@ public class BakerSetFinalizationRewardCommission extends AbstractBakerResult {
     }
 
     /**
-     * Parses {@link BakerEvent.BakerSetFinalizationRewardCommission} and {@link com.concordium.grpc.v2.AccountAddress} to {@link BakerSetFinalizationRewardCommission}.
-     * @param bakerSetFinalizationRewardCommission {@link BakerEvent.BakerSetFinalizationRewardCommission} returned by the GRPC V2 API.
+     * Parses {@link com.concordium.grpc.v2.BakerEvent.BakerSetFinalizationRewardCommission} and {@link com.concordium.grpc.v2.AccountAddress} to {@link BakerSetFinalizationRewardCommission}.
+     * @param bakerSetFinalizationRewardCommission {@link com.concordium.grpc.v2.BakerEvent.BakerSetFinalizationRewardCommission} returned by the GRPC V2 API.
      * @param sender {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
      * @return parsed {@link BakerSetFinalizationRewardCommission}.
      */
-    public static BakerSetFinalizationRewardCommission parse(BakerEvent.BakerSetFinalizationRewardCommission bakerSetFinalizationRewardCommission, com.concordium.grpc.v2.AccountAddress sender) {
+    public static BakerSetFinalizationRewardCommission parse(com.concordium.grpc.v2.BakerEvent.BakerSetFinalizationRewardCommission bakerSetFinalizationRewardCommission, com.concordium.grpc.v2.AccountAddress sender) {
         return BakerSetFinalizationRewardCommission.builder()
                 .bakerId(AccountIndex.from(bakerSetFinalizationRewardCommission.getBakerId().getValue()))
                 .account(AccountAddress.parse(sender))

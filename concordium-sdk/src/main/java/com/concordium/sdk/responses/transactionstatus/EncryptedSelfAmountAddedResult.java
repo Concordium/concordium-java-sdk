@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.EncryptedSelfAmountAddedEvent;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -16,7 +17,7 @@ import org.apache.commons.codec.binary.Hex;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public final class EncryptedSelfAmountAddedResult implements TransactionResultEvent {
+public final class EncryptedSelfAmountAddedResult implements TransactionResultEvent, AccountTransactionResult {
 
     /**
      * The amount that was transferred from public to encrypted balance.

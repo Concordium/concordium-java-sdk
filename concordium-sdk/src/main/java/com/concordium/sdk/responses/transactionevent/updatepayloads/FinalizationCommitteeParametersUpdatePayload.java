@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 import com.concordium.grpc.v2.FinalizationCommitteeParameters;
-import com.concordium.sdk.responses.blocksummary.updates.Fraction;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.types.UInt32;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -28,7 +28,7 @@ public class FinalizationCommitteeParametersUpdatePayload implements UpdatePaylo
      * The threshold for determining the stake required for being eligible in the finalization committee.
      * The amount is given by 'total stake in pools * finalizer relative stake threshold'
      */
-    private Fraction finalizerRelativeStakeThreshold;
+    private PartsPerHundredThousand finalizerRelativeStakeThreshold;
 
     /**
      * Parses {@link FinalizationCommitteeParameters} to {@link FinalizationCommitteeParametersUpdatePayload}.
@@ -40,7 +40,7 @@ public class FinalizationCommitteeParametersUpdatePayload implements UpdatePaylo
         return FinalizationCommitteeParametersUpdatePayload.builder()
                 .minimumFinalizers(UInt32.from(finalizationCommitteeParameters.getMinimumFinalizers()))
                 .maximumFinalizers(UInt32.from(finalizationCommitteeParameters.getMaximumFinalizers()))
-                .finalizerRelativeStakeThreshold(Fraction.from(finalizationCommitteeParameters.getFinalizerRelativeStakeThreshold()))
+                .finalizerRelativeStakeThreshold(PartsPerHundredThousand.parse(finalizationCommitteeParameters.getFinalizerRelativeStakeThreshold()))
                 .build();
     }
 

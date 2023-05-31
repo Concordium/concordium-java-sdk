@@ -1,6 +1,8 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 
+import com.concordium.sdk.responses.blocksummary.updates.ProtocolUpdate;
+
 /**
  * Payload of an update transaction
  */
@@ -19,7 +21,7 @@ public interface UpdatePayload {
      */
     static UpdatePayload parse(com.concordium.grpc.v2.UpdatePayload payload) {
         switch (payload.getPayloadCase()) {
-            case PROTOCOL_UPDATE: return ProtocolUpdatePayload.parse(payload.getProtocolUpdate());
+            case PROTOCOL_UPDATE: return ProtocolUpdate.parse(payload.getProtocolUpdate());
             case ELECTION_DIFFICULTY_UPDATE: return ElectionDifficultyUpdatePayload.parse(payload.getElectionDifficultyUpdate());
             case EURO_PER_ENERGY_UPDATE: return EuroPerEnergyUpdatePayload.parse(payload.getEuroPerEnergyUpdate());
             case MICRO_CCD_PER_EURO_UPDATE: return MicroCCDPerEuroUpdatePayload.parse(payload.getMicroCcdPerEuroUpdate());

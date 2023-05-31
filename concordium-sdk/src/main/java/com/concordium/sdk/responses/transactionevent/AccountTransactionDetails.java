@@ -1,6 +1,6 @@
 package com.concordium.sdk.responses.transactionevent;
 
-import com.concordium.sdk.responses.transactionstatus.TransactionResult;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import lombok.*;
@@ -27,7 +27,7 @@ public class AccountTransactionDetails {
     /**
      * The result of the transaction.
      */
-    private TransactionResult result;
+    private AccountTransactionResult result;
 
     /**
      * Parses {@link com.concordium.grpc.v2.AccountTransactionDetails} to {@link AccountCreationDetails}.
@@ -39,7 +39,7 @@ public class AccountTransactionDetails {
         return AccountTransactionDetails.builder()
                 .amount(CCDAmount.fromMicro(accountTransaction.getCost().getValue()))
                 .sender(AccountAddress.parse(sender))
-                .result(TransactionResult.parse(accountTransaction.getEffects(), sender))
+                .result(AccountTransactionResult.parse(accountTransaction.getEffects(), sender))
                 .build();
     }
 }

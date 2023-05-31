@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.ContractTraceElement;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElement;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,7 +21,7 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @Builder
-public final class UpgradedResult implements TransactionResultEvent {
+public final class UpgradedResult implements TransactionResultEvent, ContractTraceElement {
 
     /**
      * The contract that was upgraded.
@@ -53,7 +53,7 @@ public final class UpgradedResult implements TransactionResultEvent {
      * @param upgraded {@link com.concordium.grpc.v2.ContractTraceElement.Upgraded} returned by the GRPC V2 API.
      * @return parsed {@link UpgradedResult}.
      */
-    public static UpgradedResult parse(ContractTraceElement.Upgraded upgraded) {
+    public static UpgradedResult parse(com.concordium.grpc.v2.ContractTraceElement.Upgraded upgraded) {
         return UpgradedResult.builder()
                 .contractAddress(ContractAddress.parse(upgraded.getAddress()))
                 .from(ModuleRef.from(upgraded.getFrom().getValue().toByteArray()))

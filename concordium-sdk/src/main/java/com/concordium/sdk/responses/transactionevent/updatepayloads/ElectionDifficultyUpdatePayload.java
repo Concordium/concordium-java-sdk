@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 import com.concordium.grpc.v2.ElectionDifficulty;
-import com.concordium.sdk.responses.blocksummary.updates.Fraction;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,11 +14,9 @@ import lombok.ToString;
 public class ElectionDifficultyUpdatePayload implements UpdatePayload {
 
     /**
-     * TODO
-     *
-     * Parts per hundred thousand.
+     * Election difficulty parameter.
      */
-    private Fraction value;
+    private PartsPerHundredThousand value;
 
     /**
      * Parses {@link ElectionDifficulty} to {@link ElectionDifficultyUpdatePayload}.
@@ -27,7 +25,7 @@ public class ElectionDifficultyUpdatePayload implements UpdatePayload {
      */
     public static ElectionDifficultyUpdatePayload parse(ElectionDifficulty electionDifficulty) {
         return ElectionDifficultyUpdatePayload.builder()
-                .value(Fraction.from(electionDifficulty.getValue()))
+                .value(PartsPerHundredThousand.parse(electionDifficulty.getValue()))
                 .build();
     }
     @Override

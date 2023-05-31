@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.BakerEvent;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public class BakerSetTransactionFeeCommission extends AbstractBakerResult {
+public class BakerSetTransactionFeeCommission extends AbstractBakerResult implements BakerEvent {
 
     /**
      * The transaction fee commission
@@ -34,12 +34,12 @@ public class BakerSetTransactionFeeCommission extends AbstractBakerResult {
     }
 
     /**
-     * Parses {@link BakerEvent.BakerSetTransactionFeeCommission} and {@link com.concordium.grpc.v2.AccountAddress} to {@link BakerSetTransactionFeeCommission}.
-     * @param bakerSetTransactionFeeCommission {@link BakerEvent.BakerSetTransactionFeeCommission} returned by the GRPC V2 API.
+     * Parses {@link com.concordium.grpc.v2.BakerEvent.BakerSetTransactionFeeCommission} and {@link com.concordium.grpc.v2.AccountAddress} to {@link BakerSetTransactionFeeCommission}.
+     * @param bakerSetTransactionFeeCommission {@link com.concordium.grpc.v2.BakerEvent.BakerSetTransactionFeeCommission} returned by the GRPC V2 API.
      * @param sender {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
      * @return parsed {@link BakerSetTransactionFeeCommission}
      */
-    public static BakerSetTransactionFeeCommission parse(BakerEvent.BakerSetTransactionFeeCommission bakerSetTransactionFeeCommission, com.concordium.grpc.v2.AccountAddress sender) {
+    public static BakerSetTransactionFeeCommission parse(com.concordium.grpc.v2.BakerEvent.BakerSetTransactionFeeCommission bakerSetTransactionFeeCommission, com.concordium.grpc.v2.AccountAddress sender) {
         return BakerSetTransactionFeeCommission.builder()
                 .bakerId(AccountIndex.from(bakerSetTransactionFeeCommission.getBakerId().getValue()))
                 .account(AccountAddress.parse(sender))

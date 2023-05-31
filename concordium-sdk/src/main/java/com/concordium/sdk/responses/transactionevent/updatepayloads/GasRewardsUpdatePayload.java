@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 import com.concordium.grpc.v2.GasRewards;
-import com.concordium.sdk.responses.blocksummary.updates.Fraction;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,22 +16,22 @@ public class GasRewardsUpdatePayload implements UpdatePayload {
     /**
      * Fraction paid to the baker.
      */
-    private Fraction baker;
+    private PartsPerHundredThousand baker;
 
     /**
      * Fraction paid for including a finalization proof in a block.
      */
-    private Fraction finalizationProof;
+    private PartsPerHundredThousand finalizationProof;
 
     /**
      * Fraction paid for including each account creation transaction in a block.
      */
-    private Fraction accountCreation;
+    private PartsPerHundredThousand accountCreation;
 
     /**
      * Fraction paid for including an update transaction in a block.
      */
-    private Fraction chainUpdate;
+    private PartsPerHundredThousand chainUpdate;
 
     /**
      * Parses {@link GasRewards} to {@link GasRewardsUpdatePayload}.
@@ -40,10 +40,10 @@ public class GasRewardsUpdatePayload implements UpdatePayload {
      */
     public static GasRewardsUpdatePayload parse(GasRewards gasRewards) {
         return GasRewardsUpdatePayload.builder()
-                .baker(Fraction.from(gasRewards.getBaker()))
-                .finalizationProof(Fraction.from(gasRewards.getFinalizationProof()))
-                .accountCreation(Fraction.from(gasRewards.getAccountCreation()))
-                .chainUpdate(Fraction.from(gasRewards.getChainUpdate()))
+                .baker(PartsPerHundredThousand.parse(gasRewards.getBaker()))
+                .finalizationProof(PartsPerHundredThousand.parse(gasRewards.getFinalizationProof()))
+                .accountCreation(PartsPerHundredThousand.parse(gasRewards.getAccountCreation()))
+                .chainUpdate(PartsPerHundredThousand.parse(gasRewards.getChainUpdate()))
                 .build();
     }
 

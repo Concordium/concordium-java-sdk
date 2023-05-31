@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.BakerEvent;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @SuperBuilder
-public class BakerSetOpenStatus extends AbstractBakerResult {
+public class BakerSetOpenStatus extends AbstractBakerResult implements BakerEvent {
 
     /**
      * The updated {@link OpenStatus} for the baker.
@@ -33,12 +33,12 @@ public class BakerSetOpenStatus extends AbstractBakerResult {
     }
 
     /**
-     * Parses {@link BakerEvent.BakerSetOpenStatus} and {@link com.concordium.grpc.v2.AccountAddress} to {@link BakerSetOpenStatus}.
-     * @param bakerSetOpenStatus {@link BakerEvent.BakerSetOpenStatus} returned by the GRPC V2 API.
+     * Parses {@link com.concordium.grpc.v2.BakerEvent.BakerSetOpenStatus} and {@link com.concordium.grpc.v2.AccountAddress} to {@link BakerSetOpenStatus}.
+     * @param bakerSetOpenStatus {@link com.concordium.grpc.v2.BakerEvent.BakerSetOpenStatus} returned by the GRPC V2 API.
      * @param sender {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
      * @return parsed {@link BakerSetOpenStatus}.
      */
-    public static BakerSetOpenStatus parse(BakerEvent.BakerSetOpenStatus bakerSetOpenStatus, com.concordium.grpc.v2.AccountAddress sender) {
+    public static BakerSetOpenStatus parse(com.concordium.grpc.v2.BakerEvent.BakerSetOpenStatus bakerSetOpenStatus, com.concordium.grpc.v2.AccountAddress sender) {
         return BakerSetOpenStatus.builder()
                 .bakerId(AccountIndex.from(bakerSetOpenStatus.getBakerId().getValue()))
                 .account(AccountAddress.parse(sender))

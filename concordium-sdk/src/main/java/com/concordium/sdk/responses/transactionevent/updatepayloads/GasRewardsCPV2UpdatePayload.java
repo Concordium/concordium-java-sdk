@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 import com.concordium.grpc.v2.GasRewardsCpv2;
-import com.concordium.sdk.responses.blocksummary.updates.Fraction;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,15 +16,15 @@ public class GasRewardsCPV2UpdatePayload implements UpdatePayload {
     /**
      * Fraction paid to the baker.
      */
-    private Fraction baker;
+    private PartsPerHundredThousand baker;
     /**
      * Fraction paid for including each account transaction in a block.
      */
-    private Fraction accountCreation;
+    private PartsPerHundredThousand accountCreation;
     /**
      * Fraction paid for including an update transaction in a block.
      */
-    private Fraction chainUpdate;
+    private PartsPerHundredThousand chainUpdate;
 
 
     /**
@@ -34,9 +34,9 @@ public class GasRewardsCPV2UpdatePayload implements UpdatePayload {
      */
     public static GasRewardsCPV2UpdatePayload parse(GasRewardsCpv2 gasRewardsCpv2) {
         return GasRewardsCPV2UpdatePayload.builder()
-                .baker(Fraction.from(gasRewardsCpv2.getBaker()))
-                .accountCreation(Fraction.from(gasRewardsCpv2.getAccountCreation()))
-                .chainUpdate(Fraction.from(gasRewardsCpv2.getChainUpdate()))
+                .baker(PartsPerHundredThousand.parse(gasRewardsCpv2.getBaker()))
+                .accountCreation(PartsPerHundredThousand.parse(gasRewardsCpv2.getAccountCreation()))
+                .chainUpdate(PartsPerHundredThousand.parse(gasRewardsCpv2.getChainUpdate()))
                 .build();
     }
 

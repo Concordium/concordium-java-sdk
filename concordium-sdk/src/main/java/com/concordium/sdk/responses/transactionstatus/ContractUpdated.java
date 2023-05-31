@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.InstanceUpdatedEvent;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElement;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
@@ -23,7 +24,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Builder
-public class ContractUpdated implements TransactionResultEvent {
+public class ContractUpdated implements TransactionResultEvent, ContractTraceElement {
 
     /**
      * The amount provided

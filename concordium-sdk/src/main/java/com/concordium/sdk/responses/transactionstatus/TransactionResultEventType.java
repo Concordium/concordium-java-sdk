@@ -93,9 +93,18 @@ public enum TransactionResultEventType {
     @JsonProperty("DelegationConfigured")
     DELEGATION_CONFIGURED,
 
+    TRANSFER_WITH_MEMO,
     ENCRYPTED_AMOUNT_TRANSFERRED_WITH_MEMO,
 
+    CONTRACT_UPDATE_ISSUED,
+
     TRANSFERRED_WITH_SCHEDULE_AND_MEMO,
+
+    /**
+     * No effect other than payment from this transaction.
+     */
+    NONE,
+
     /**
      * Type of the failed transaction is not known due to serialization failure.
      */
@@ -124,7 +133,7 @@ public enum TransactionResultEventType {
             case TRANSFER_WITH_SCHEDULE: return TRANSFERRED_WITH_SCHEDULE;
             case UPDATE_CREDENTIALS: return CREDENTIALS_UPDATED;
             case REGISTER_DATA: return DATA_REGISTERED;
-            case TRANSFER_WITH_MEMO: return TRANSFER_MEMO;
+            case TRANSFER_WITH_MEMO: return TRANSFER_WITH_MEMO;
             case ENCRYPTED_AMOUNT_TRANSFER_WITH_MEMO: return ENCRYPTED_AMOUNT_TRANSFERRED_WITH_MEMO;
             case TRANSFER_WITH_SCHEDULE_AND_MEMO: return TRANSFERRED_WITH_SCHEDULE_AND_MEMO;
             case CONFIGURE_BAKER: return BAKER_CONFIGURED;

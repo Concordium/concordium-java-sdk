@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.BakerEvent;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @SuperBuilder
-public class BakerSetBakingRewardCommission extends AbstractBakerResult {
+public class BakerSetBakingRewardCommission extends AbstractBakerResult implements BakerEvent {
 
     /**
      * The baking reward commission.
@@ -33,12 +33,12 @@ public class BakerSetBakingRewardCommission extends AbstractBakerResult {
     }
 
     /**
-     * Parses {@link BakerEvent.BakerSetBakingRewardCommission} and {@link com.concordium.grpc.v2.AccountAddress} to {@link BakerSetBakingRewardCommission}.
-     * @param bakerSetBakingRewardCommission {@link BakerEvent.BakerSetBakingRewardCommission} returned by the GRPC V2 API.
+     * Parses {@link com.concordium.grpc.v2.BakerEvent.BakerSetBakingRewardCommission} and {@link com.concordium.grpc.v2.AccountAddress} to {@link BakerSetBakingRewardCommission}.
+     * @param bakerSetBakingRewardCommission {@link com.concordium.grpc.v2.BakerEvent.BakerSetBakingRewardCommission} returned by the GRPC V2 API.
      * @param sender {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
      * @return parsed {@link BakerSetBakingRewardCommission}.
      */
-    public static BakerSetBakingRewardCommission parse(BakerEvent.BakerSetBakingRewardCommission bakerSetBakingRewardCommission, com.concordium.grpc.v2.AccountAddress sender) {
+    public static BakerSetBakingRewardCommission parse(com.concordium.grpc.v2.BakerEvent.BakerSetBakingRewardCommission bakerSetBakingRewardCommission, com.concordium.grpc.v2.AccountAddress sender) {
         return BakerSetBakingRewardCommission.builder()
                 .bakerId(AccountIndex.from(bakerSetBakingRewardCommission.getBakerId().getValue()))
                 .account(AccountAddress.parse(sender))

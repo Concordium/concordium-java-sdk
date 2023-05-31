@@ -1,12 +1,11 @@
 package com.concordium.sdk.responses.blocksummary.updates;
 
+import com.concordium.sdk.responses.transactionevent.updatepayloads.UpdatePayload;
+import com.concordium.sdk.responses.transactionevent.updatepayloads.UpdateType;
 import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
 /**
@@ -15,7 +14,8 @@ import org.apache.commons.codec.binary.Hex;
 @ToString
 @Getter
 @EqualsAndHashCode
-public class ProtocolUpdate {
+@Builder
+public class ProtocolUpdate implements UpdatePayload {
 
     /**
      * SHA256 hash of the specification document
@@ -47,5 +47,24 @@ public class ProtocolUpdate {
         this.specificationAuxiliaryData = Hex.decodeHex(specificationAuxiliaryData);
         this.message = message;
         this.specificationURL = specificationURL;
+    }
+
+    /**
+     * Parses {@link com.concordium.grpc.v2.ProtocolUpdate} to {@link ProtocolUpdate}.
+     * @param protocolUpdate {@link com.concordium.grpc.v2.ProtocolUpdate} returned by the GRPC V2 API.
+     * @return parsed {@link ProtocolUpdate}.
+     */
+    public static ProtocolUpdate parse(com.concordium.grpc.v2.ProtocolUpdate protocolUpdate) {
+        return ProtocolUpdate.builder()
+                .message(protocolUpdate.getMessage())
+                .specificationURL(protocolUpdate.getSpecificationUrl())
+                .specificationHash(Hash.from(protocolUpdate.getSpecificationHash().getValue().toByteArray()))
+                .specificationAuxiliaryData(protocolUpdate.getSpecificationAuxiliaryData().toByteArray())
+                .build();
+    }
+
+    @Override
+    public UpdateType getType() {
+        return UpdateType.PROTOCOL_UPDATE;
     }
 }
