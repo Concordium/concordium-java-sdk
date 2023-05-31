@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 import com.concordium.grpc.v2.TransactionFeeDistribution;
-import com.concordium.sdk.responses.blocksummary.updates.Fraction;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,12 +16,12 @@ public class TransactionFeeDistributionUpdatePayload implements UpdatePayload {
     /**
      * The fraction allocated to the baker.
      */
-    private Fraction baker;
+    private PartsPerHundredThousand baker;
 
     /**
      * The fraction allocated to the GAS account.
      */
-    private Fraction gasAccount;
+    private PartsPerHundredThousand gasAccount;
 
     /**
      * parses {@link TransactionFeeDistribution} to {@link TransactionFeeDistributionUpdatePayload}.
@@ -30,8 +30,8 @@ public class TransactionFeeDistributionUpdatePayload implements UpdatePayload {
      */
     public static TransactionFeeDistributionUpdatePayload parse(TransactionFeeDistribution transactionFeeDistribution) {
         return TransactionFeeDistributionUpdatePayload.builder()
-                .baker(Fraction.from(transactionFeeDistribution.getBaker()))
-                .gasAccount(Fraction.from(transactionFeeDistribution.getGasAccount()))
+                .baker(PartsPerHundredThousand.parse(transactionFeeDistribution.getBaker()))
+                .gasAccount(PartsPerHundredThousand.parse(transactionFeeDistribution.getGasAccount()))
                 .build();
     }
     @Override

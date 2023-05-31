@@ -13,6 +13,7 @@ import org.apache.commons.codec.binary.Hex;
  */
 @ToString
 @Getter
+@AllArgsConstructor
 @EqualsAndHashCode
 @Builder
 public class ProtocolUpdate implements UpdatePayload {

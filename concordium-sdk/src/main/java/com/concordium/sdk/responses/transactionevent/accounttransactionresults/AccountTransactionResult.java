@@ -32,7 +32,7 @@ public interface AccountTransactionResult extends TransactionResultEvent {
                 return BakerRemovedResult.parse(effects.getBakerRemoved(), sender);
             case BAKER_STAKE_UPDATED:
                 val bakerStakeUpdated = effects.getBakerStakeUpdated();
-                if (!bakerStakeUpdated.hasUpdate()) {break;} // If the stake was not updated nothing happened.
+                if (!bakerStakeUpdated.hasUpdate()) {return null;} // TODO If the stake was not updated nothing happened.
                 if (bakerStakeUpdated.getUpdate().getIncreased()) {
                     return BakerStakeIncreasedResult.parse(bakerStakeUpdated.getUpdate(), sender);
                 } else {
@@ -50,7 +50,7 @@ public interface AccountTransactionResult extends TransactionResultEvent {
                 return TransferredToPublicResult.parse(effects.getTransferredToPublic());
             case TRANSFERRED_WITH_SCHEDULE:
                 // TODO handle memo
-                break;
+                return null;
             case CREDENTIAL_KEYS_UPDATED:
                 return CredentialKeysUpdatedResult.parse(effects.getCredentialKeysUpdated());
             case CREDENTIALS_UPDATED:
@@ -61,10 +61,8 @@ public interface AccountTransactionResult extends TransactionResultEvent {
                 return BakerConfiguredResult.parse(effects.getBakerConfigured(), sender);
             case DELEGATION_CONFIGURED:
                 return DelegationConfiguredResult.parse(effects.getDelegationConfigured(), sender);
-            case EFFECT_NOT_SET:
+            default:
                 throw new IllegalArgumentException();
         }
-
-        return null;
     }
 }

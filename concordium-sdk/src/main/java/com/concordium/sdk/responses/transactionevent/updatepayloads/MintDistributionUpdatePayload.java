@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 import com.concordium.grpc.v2.MintDistributionCpv0;
-import com.concordium.sdk.responses.blocksummary.updates.Fraction;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,12 +21,12 @@ public class MintDistributionUpdatePayload implements UpdatePayload {
     /**
      * The fraction of newly created CCD allocated to baker rewards.
      */
-    private Fraction bakingReward;
+    private PartsPerHundredThousand bakingReward;
 
     /**
      * The fraction of newly created CCD allocated to finalization rewards.
      */
-    private Fraction finalizationReward;
+    private PartsPerHundredThousand finalizationReward;
 
 
 
@@ -39,8 +39,8 @@ public class MintDistributionUpdatePayload implements UpdatePayload {
     public static MintDistributionUpdatePayload parse (MintDistributionCpv0 mintDistributionCpv0) {
         return MintDistributionUpdatePayload.builder()
                 .mintRate(ParsingHelper.toMintRate(mintDistributionCpv0.getMintPerSlot()))
-                .bakingReward(Fraction.from(mintDistributionCpv0.getBakingReward()))
-                .finalizationReward(Fraction.from(mintDistributionCpv0.getFinalizationReward()))
+                .bakingReward(PartsPerHundredThousand.parse(mintDistributionCpv0.getBakingReward()))
+                .finalizationReward(PartsPerHundredThousand.parse(mintDistributionCpv0.getFinalizationReward()))
         .build();
     }
     @Override

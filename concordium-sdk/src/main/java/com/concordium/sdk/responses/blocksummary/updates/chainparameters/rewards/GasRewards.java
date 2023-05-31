@@ -1,7 +1,5 @@
 package com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards;
 
-import com.concordium.sdk.responses.transactionevent.updatepayloads.UpdatePayload;
-import com.concordium.sdk.responses.transactionevent.updatepayloads.UpdateType;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -13,7 +11,7 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 @ToString
-public final class GasRewards implements UpdatePayload {
+public final class GasRewards {
     private final double chainUpdate;
     private final double accountCreation;
     private final double baker;
@@ -44,10 +42,11 @@ public final class GasRewards implements UpdatePayload {
                 .chainUpdate(Fraction.from(gasRewards.getChainUpdate()))
                 .build();
     }
-     */
+
 
     @Override
     public UpdateType getType() {
         return UpdateType.GAS_REWARDS_UPDATE;
     }
+     */
 }
