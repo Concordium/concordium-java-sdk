@@ -1462,4 +1462,13 @@ interface ClientV2MapperExtensions {
     static Amount to(CCDAmount amount) {
         return Amount.newBuilder().setValue(amount.getValue().getValue()).build();
     }
+
+    static com.concordium.grpc.v2.ReceiveName to(ReceiveName receiveName) {
+        return com.concordium.grpc.v2.ReceiveName.newBuilder()
+                .setValue(receiveName.getContractName() + "." + receiveName.getMethod())
+                .build();
+
+    }
+
+    static com.concordium.grpc.v2.Parameter to()
 }
