@@ -2,7 +2,6 @@ package com.concordium.sdk.responses.transactionevent.accounttransactionresults;
 
 import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.transactionstatus.EncryptedAmountsRemovedResult;
-import com.concordium.sdk.responses.transactionstatus.TransactionResultEventType;
 import com.concordium.sdk.transactions.CCDAmount;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -29,11 +28,6 @@ public class TransferredToPublicResult implements AccountTransactionResult {
      */
     private CCDAmount amount;
 
-    @Override
-    public TransactionResultEventType getType() {
-        return TransactionResultEventType.TRANSFERRED_TO_PUBLIC;
-    }
-
     /**
      * Parses {@link AccountTransactionEffects.TransferredToPublic} to {@link TransferredToPublicResult}.
      * @param transferredToPublic {@link AccountTransactionEffects.TransferredToPublic} returned by the GRPC V2 API.
@@ -45,5 +39,10 @@ public class TransferredToPublicResult implements AccountTransactionResult {
                 .amount(CCDAmount.fromMicro(transferredToPublic.getAmount().getValue()))
                 .build();
 
+    }
+
+    @Override
+    public TransactionType getResultType() {
+        return TransactionType.TRANSFER_TO_PUBLIC;
     }
 }

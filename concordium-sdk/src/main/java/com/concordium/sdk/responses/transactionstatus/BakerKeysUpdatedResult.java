@@ -4,6 +4,8 @@ import com.concordium.grpc.v2.BakerKeysEvent;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -47,5 +49,15 @@ public final class BakerKeysUpdatedResult extends AbstractBakerChangeResult impl
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.BAKER_KEYS_UPDATED;
+    }
+
+    @Override
+    public TransactionType getResultType() {
+        return TransactionType.UPDATE_BAKER_KEYS;
+    }
+
+    @Override
+    public BakerEventType getBakerEventType() {
+        return BakerEventType.BAKER_KEYS_UPDATED;
     }
 }

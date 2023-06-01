@@ -3,6 +3,8 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -66,5 +68,15 @@ public final class BakerAddedResult extends AbstractBakerChangeResult implements
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.BAKER_ADDED;
+    }
+
+    @Override
+    public TransactionType getResultType() {
+        return TransactionType.ADD_BAKER;
+    }
+
+    @Override
+    public BakerEventType getBakerEventType() {
+        return BakerEventType.BAKER_ADDED;
     }
 }

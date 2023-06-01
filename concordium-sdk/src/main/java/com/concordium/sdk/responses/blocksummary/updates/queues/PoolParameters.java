@@ -1,14 +1,17 @@
 package com.concordium.sdk.responses.blocksummary.updates.queues;
 
+import com.concordium.grpc.v2.PoolParametersCpv1;
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.Range;
+import com.concordium.sdk.responses.transactionevent.updatepayloads.UpdatePayload;
+import com.concordium.sdk.responses.transactionevent.updatepayloads.UpdateType;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
+
+import java.math.BigInteger;
 
 /**
  * Pool parameters for protocol versions > 3
@@ -16,22 +19,24 @@ import lombok.ToString;
 @ToString
 @Getter
 @EqualsAndHashCode
-public final class PoolParameters {
+@Builder
+@AllArgsConstructor
+public final class PoolParameters implements UpdatePayload {
 
     /**
      * The range of allowed finalization commissions.
      */
-    private final double passiveFinalizationCommission;
+    private final PartsPerHundredThousand passiveFinalizationCommission;
 
     /**
      * The range of allowed baker commissions.
      */
-    private final double passiveBakingCommission;
+    private final PartsPerHundredThousand passiveBakingCommission;
 
     /**
      * Commission rates charged for passive delegation.
      */
-    private final double passiveTransactionCommission;
+    private final PartsPerHundredThousand passiveTransactionCommission;
 
     /**
      * The range of allowed finalization commissions.
@@ -57,7 +62,7 @@ public final class PoolParameters {
      * A bound on the relative share of the total staked capital that a baker can have as its stake.
      * This is required to be greater than 0.
      */
-    private final double capitalBound;
+    private final PartsPerHundredThousand capitalBound;
 
     /**
      * The maximum leverage that a baker can have as a ratio of total stake
@@ -68,23 +73,42 @@ public final class PoolParameters {
 
     @JsonCreator
     PoolParameters(
-            @JsonProperty("passiveTransactionCommission") double passiveTransactionCommission,
+            @JsonProperty("passiveTransactionCommission") BigInteger passiveTransactionCommission,
             @JsonProperty("bakingCommissionRange") Range bakingCommissionRange,
             @JsonProperty("finalizationCommissionRange") Range finalizationCommissionRange,
             @JsonProperty("transactionCommissionRange") Range transactionCommissionRange,
             @JsonProperty("minimumEquityCapital") CCDAmount minimumEquityCapital,
-            @JsonProperty("passiveBakingCommission") double passiveBakingCommission,
+            @JsonProperty("passiveBakingCommission") BigInteger passiveBakingCommission,
             @JsonProperty("leverageBound") Fraction leverageBound,
-            @JsonProperty("passiveFinalizationCommission") double passiveFinalizationCommission,
-            @JsonProperty("capitalBound") double capitalBound) {
-        this.passiveFinalizationCommission = passiveFinalizationCommission;
-        this.passiveBakingCommission = passiveBakingCommission;
-        this.passiveTransactionCommission = passiveTransactionCommission;
+            @JsonProperty("passiveFinalizationCommission") BigInteger passiveFinalizationCommission,
+            @JsonProperty("capitalBound") BigInteger capitalBound) {
+        this.passiveFinalizationCommission = PartsPerHundredThousand.from(passiveFinalizationCommission);
+        this.passiveBakingCommission = PartsPerHundredThousand.from(passiveBakingCommission);
+        this.passiveTransactionCommission = PartsPerHundredThousand.from(passiveTransactionCommission);
         this.finalizationCommissionRange = finalizationCommissionRange;
         this.bakingCommissionRange = bakingCommissionRange;
         this.transactionCommissionRange = transactionCommissionRange;
         this.minimumEquityCapital = minimumEquityCapital;
-        this.capitalBound = capitalBound;
+        this.capitalBound = PartsPerHundredThousand.from(capitalBound);
         this.leverageBound = leverageBound;
+    }
+
+    public static PoolParameters parse(PoolParametersCpv1 poolParametersCpv1) {
+        return PoolParameters.builder()
+                .passiveFinalizationCommission(PartsPerHundredThousand.parse(poolParametersCpv1.getPassiveFinalizationCommission()))
+                .passiveBakingCommission(PartsPerHundredThousand.parse(poolParametersCpv1.getPassiveBakingCommission()))
+                .passiveTransactionCommission(PartsPerHundredThousand.parse(poolParametersCpv1.getPassiveTransactionCommission()))
+                .finalizationCommissionRange(Range.from(poolParametersCpv1.getCommissionBounds().getFinalization()))
+                .bakingCommissionRange(Range.from(poolParametersCpv1.getCommissionBounds().getBaking()))
+                .transactionCommissionRange(Range.from(poolParametersCpv1.getCommissionBounds().getTransaction()))
+                .minimumEquityCapital(CCDAmount.fromMicro(poolParametersCpv1.getMinimumEquityCapital().getValue()))
+                .capitalBound(PartsPerHundredThousand.parse(poolParametersCpv1.getCapitalBound().getValue()))
+                .leverageBound(Fraction.from(poolParametersCpv1.getLeverageBound().getValue()))
+                .build();
+    }
+
+    @Override
+    public UpdateType getType() {
+        return UpdateType.POOL_PARAMETERS_CPV_1_UPDATE;
     }
 }

@@ -2,17 +2,26 @@ package com.concordium.sdk.responses.transactionevent.accounttransactionresults;
 
 import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.transactionstatus.RejectReason;
-import com.concordium.sdk.responses.transactionstatus.TransactionResultEventType;
 import lombok.*;
 
+/**
+ * No effects other than payment from this transaction.
+ */
 @Builder
 @EqualsAndHashCode
 @Getter
 @ToString
 public class NoneResult implements AccountTransactionResult {
 
-    private TransactionResultEventType failedTransactionType;
+    /**
+     * Type of the failed transaction.
+     * In case of serialization failure is {@link TransactionType#NOT_KNOWN}.
+     */
+    private TransactionType failedTransactionType;
 
+    /**
+     * Reason for rejection of the transaction.
+     */
     private RejectReason rejectReason;
 
     /**
@@ -23,9 +32,9 @@ public class NoneResult implements AccountTransactionResult {
     public static NoneResult parse(AccountTransactionEffects.None none) {
         val builder = NoneResult.builder();
         if (none.hasTransactionType()) {
-            builder.failedTransactionType(TransactionResultEventType.parse(none.getTransactionType()));
+            builder.failedTransactionType(TransactionType.parse(none.getTransactionType()));
         } else {
-            builder.failedTransactionType(TransactionResultEventType.NOT_KNOWN);
+            builder.failedTransactionType(TransactionType.NOT_KNOWN);
         }
         return builder
                 .rejectReason(RejectReason.parse(none.getRejectReason()))
@@ -33,7 +42,7 @@ public class NoneResult implements AccountTransactionResult {
     }
 
     @Override
-    public TransactionResultEventType getType() {
-        return TransactionResultEventType.NONE;
+    public TransactionType getResultType() {
+        return TransactionType.NONE;
     }
 }

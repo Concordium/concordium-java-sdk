@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+- Changed representation of TimeParameters
+- Changed representation of PoolParameters
+- Changed representation of GasRewards
 - Changed representation of DelegationStakeDecreased
 - Changed representation of BakerSetTransactionFeeCommission
 - Changed representation of BakerStakeDecreasedResult

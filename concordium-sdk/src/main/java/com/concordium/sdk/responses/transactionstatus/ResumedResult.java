@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElement;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElementType;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -49,5 +50,10 @@ public class ResumedResult implements TransactionResultEvent, ContractTraceEleme
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.RESUMED;
+    }
+
+    @Override
+    public ContractTraceElementType getTraceType() {
+        return ContractTraceElementType.RESUMED;
     }
 }

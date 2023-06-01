@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -82,5 +83,10 @@ public final class CredentialsUpdatedResult implements TransactionResultEvent, A
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.CREDENTIALS_UPDATED;
+    }
+
+    @Override
+    public TransactionType getResultType() {
+        return TransactionType.UPDATE_CREDENTIALS;
     }
 }

@@ -4,6 +4,8 @@ import com.concordium.grpc.v2.BakerId;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -42,5 +44,15 @@ public final class BakerRemovedResult extends AbstractBakerResult implements Acc
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.BAKER_REMOVED;
+    }
+
+    @Override
+    public TransactionType getResultType() {
+        return TransactionType.REMOVE_BAKER;
+    }
+
+    @Override
+    public BakerEventType getBakerEventType() {
+        return BakerEventType.BAKER_REMOVED;
     }
 }

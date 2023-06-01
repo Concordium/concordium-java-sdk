@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElement;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElementType;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -60,5 +61,10 @@ public class InterruptedResult implements TransactionResultEvent, ContractTraceE
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.INTERRUPTED;
+    }
+
+    @Override
+    public ContractTraceElementType getTraceType() {
+        return ContractTraceElementType.INTERRUPTED;
     }
 }

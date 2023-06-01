@@ -5,7 +5,9 @@ import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.transactionstatus.*;
 import lombok.val;
 
-public interface AccountTransactionResult extends TransactionResultEvent {
+public interface AccountTransactionResult {
+
+    TransactionType getResultType();
 
     /**
      * Parses {@link AccountTransactionEffects} and {@link AccountAddress} to {@link AccountTransactionResult}.
@@ -25,32 +27,35 @@ public interface AccountTransactionResult extends TransactionResultEvent {
             case CONTRACT_UPDATE_ISSUED:
                 return ContractUpdateIssuedResult.parse(effects.getContractUpdateIssued());
             case ACCOUNT_TRANSFER:
-                return AccountTransferResult.parse(effects.getAccountTransfer());
+                val transfer = effects.getAccountTransfer();
+                if (transfer.hasMemo()) {return AccountTransferWithMemoResult.parse(transfer);}
+                return AccountTransferResult.parse(transfer);
             case BAKER_ADDED:
                 return BakerAddedResult.parse(effects.getBakerAdded());
             case BAKER_REMOVED:
                 return BakerRemovedResult.parse(effects.getBakerRemoved(), sender);
             case BAKER_STAKE_UPDATED:
-                val bakerStakeUpdated = effects.getBakerStakeUpdated();
-                if (!bakerStakeUpdated.hasUpdate()) {return null;} // TODO If the stake was not updated nothing happened.
-                if (bakerStakeUpdated.getUpdate().getIncreased()) {
-                    return BakerStakeIncreasedResult.parse(bakerStakeUpdated.getUpdate(), sender);
-                } else {
-                    return BakerStakeDecreasedResult.parse(bakerStakeUpdated.getUpdate(), sender);
-                }
+                return BakerStakeUpdatedResult.parse(effects.getBakerStakeUpdated());
             case BAKER_RESTAKE_EARNINGS_UPDATED:
                 return BakerSetRestakeEarningsResult.parse(effects.getBakerRestakeEarningsUpdated(), sender);
             case BAKER_KEYS_UPDATED:
                 return  BakerKeysUpdatedResult.parse(effects.getBakerKeysUpdated());
             case ENCRYPTED_AMOUNT_TRANSFERRED:
-                return EncryptedAmountTransferredResult.parse(effects.getEncryptedAmountTransferred());
+                val encryptedTransfer = effects.getEncryptedAmountTransferred();
+                if (encryptedTransfer.hasMemo()) {
+                    return EncryptedAmountTransferredWithMemoResult.parse(encryptedTransfer);
+                }
+                return EncryptedAmountTransferredResult.parse(encryptedTransfer);
             case TRANSFERRED_TO_ENCRYPTED:
                 return EncryptedSelfAmountAddedResult.parse(effects.getTransferredToEncrypted());
             case TRANSFERRED_TO_PUBLIC:
                 return TransferredToPublicResult.parse(effects.getTransferredToPublic());
             case TRANSFERRED_WITH_SCHEDULE:
-                // TODO handle memo
-                return null;
+                val transferredWithSchedule = effects.getTransferredWithSchedule();
+                if (transferredWithSchedule.hasMemo()) {
+                    return TransferredWithScheduleAndMemoResult.parse(transferredWithSchedule, sender);
+                }
+                return TransferredWithScheduleResult.parse(transferredWithSchedule, sender);
             case CREDENTIAL_KEYS_UPDATED:
                 return CredentialKeysUpdatedResult.parse(effects.getCredentialKeysUpdated());
             case CREDENTIALS_UPDATED:

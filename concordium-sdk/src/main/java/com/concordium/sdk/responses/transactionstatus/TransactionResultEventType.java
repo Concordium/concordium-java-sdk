@@ -111,6 +111,7 @@ public enum TransactionResultEventType {
     NOT_KNOWN;
 
     /**
+     * TODO delete unused from this
      * Parses {@link TransactionType} to {@link TransactionResultEventType}.
      * @param transactionType {@link TransactionType} returned by the GRPC V2 API.
      * @return parsed {@link TransactionResultEventType}.

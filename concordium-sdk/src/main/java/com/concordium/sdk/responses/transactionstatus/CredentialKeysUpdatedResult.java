@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -41,5 +42,10 @@ public final class CredentialKeysUpdatedResult implements TransactionResultEvent
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.CREDENTIAL_KEYS_UPDATED;
+    }
+
+    @Override
+    public TransactionType getResultType() {
+        return TransactionType.UPDATE_CREDENTIAL_KEYS;
     }
 }

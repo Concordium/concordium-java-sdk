@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.InstanceUpdatedEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElement;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElementType;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * A contract was updated
+ * A contract instance was updated
  */
 @ToString
 @Getter
@@ -108,5 +109,10 @@ public class ContractUpdated implements TransactionResultEvent, ContractTraceEle
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.CONTRACT_UPDATED;
+    }
+
+    @Override
+    public ContractTraceElementType getTraceType() {
+        return ContractTraceElementType.INSTANCE_UPDATED;
     }
 }

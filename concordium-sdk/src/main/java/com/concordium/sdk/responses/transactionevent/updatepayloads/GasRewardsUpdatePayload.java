@@ -34,6 +34,7 @@ public class GasRewardsUpdatePayload implements UpdatePayload {
     private PartsPerHundredThousand chainUpdate;
 
     /**
+     * TODO remove class
      * Parses {@link GasRewards} to {@link GasRewardsUpdatePayload}.
      * @param gasRewards {@link GasRewards} returned by the GRPC V2 API.
      * @return parsed {@link GasRewardsUpdatePayload}.

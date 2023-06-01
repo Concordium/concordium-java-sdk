@@ -30,4 +30,8 @@ public class PartsPerHundredThousand {
     public static PartsPerHundredThousand parse(AmountFraction amountFraction) {
         return new PartsPerHundredThousand(BigInteger.valueOf(amountFraction.getPartsPerHundredThousand()));
     }
+
+    public static PartsPerHundredThousand from(BigInteger value) {
+        return new PartsPerHundredThousand(value);
+    }
 }

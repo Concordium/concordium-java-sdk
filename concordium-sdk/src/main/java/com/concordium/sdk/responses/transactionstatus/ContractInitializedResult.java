@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.ContractInitializedEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -92,5 +93,10 @@ public final class ContractInitializedResult implements TransactionResultEvent, 
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.CONTRACT_INITIALIZED;
+    }
+
+    @Override
+    public TransactionType getResultType() {
+        return TransactionType.INIT_CONTRACT;
     }
 }

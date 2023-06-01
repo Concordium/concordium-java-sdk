@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.ModuleRef;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -35,5 +36,10 @@ public final class ModuleDeployedResult implements TransactionResultEvent, Accou
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.MODULE_DEPLOYED;
+    }
+
+    @Override
+    public TransactionType getResultType() {
+        return TransactionType.DEPLOY_MODULE;
     }
 }

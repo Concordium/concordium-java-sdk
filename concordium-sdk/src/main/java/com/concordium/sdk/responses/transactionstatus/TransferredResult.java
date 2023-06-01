@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElement;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElementType;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AbstractAddress;
@@ -81,5 +82,10 @@ public final class TransferredResult implements TransactionResultEvent, Contract
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.TRANSFERRED;
+    }
+
+    @Override
+    public ContractTraceElementType getTraceType() {
+        return ContractTraceElementType.TRANSFERRED;
     }
 }

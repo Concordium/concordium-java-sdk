@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElement;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.ContractTraceElementType;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -64,5 +65,10 @@ public final class UpgradedResult implements TransactionResultEvent, ContractTra
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.UPGRADED;
+    }
+
+    @Override
+    public ContractTraceElementType getTraceType() {
+        return ContractTraceElementType.UPGRADED;
     }
 }

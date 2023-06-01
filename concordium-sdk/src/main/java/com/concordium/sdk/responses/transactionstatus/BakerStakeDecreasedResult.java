@@ -2,8 +2,8 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.BakerStakeUpdatedData;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public final class BakerStakeDecreasedResult extends AbstractBakerResult implements AccountTransactionResult, BakerEvent {
+public final class BakerStakeDecreasedResult extends AbstractBakerResult implements BakerEvent {
 
     /**
      * The new stake.
@@ -66,5 +66,10 @@ public final class BakerStakeDecreasedResult extends AbstractBakerResult impleme
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.BAKER_STAKE_DECREASED;
+    }
+
+    @Override
+    public BakerEventType getBakerEventType() {
+        return BakerEventType.BAKER_STAKE_DECREASED;
     }
 }

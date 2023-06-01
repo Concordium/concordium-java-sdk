@@ -14,6 +14,7 @@ import lombok.ToString;
 public class TimeParametersCPV1UpdatePayload implements UpdatePayload {
 
     /**
+     * TODO delete this class
      * Length of a reward period in Epochs.
      */
     private UInt64 rewardPeriodLength;

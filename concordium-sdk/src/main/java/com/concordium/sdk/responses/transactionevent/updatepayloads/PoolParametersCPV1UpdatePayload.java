@@ -17,6 +17,7 @@ import lombok.ToString;
 public class PoolParametersCPV1UpdatePayload implements UpdatePayload {
 
     /**
+     * TODO delete class
      * Fraction of finalization rewards charged by the passive delegation.
      */
     private PartsPerHundredThousand passiveFinalizationCommission;

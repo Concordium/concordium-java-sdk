@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -50,5 +51,10 @@ public class BakerSetOpenStatus extends AbstractBakerResult implements BakerEven
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.BAKER_SET_OPEN_STATUS;
+    }
+
+    @Override
+    public BakerEventType getBakerEventType() {
+        return BakerEventType.BAKER_SET_OPEN_STATUS;
     }
 }

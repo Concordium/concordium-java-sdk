@@ -2,6 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.DelegationEvent;
+import com.concordium.sdk.responses.transactionevent.accounttransactionresults.DelegationEventType;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -49,5 +50,10 @@ public class DelegationSetDelegationTarget extends AbstractDelegatorResult imple
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.DELEGATION_SET_DELEGATION_TARGET;
+    }
+
+    @Override
+    public DelegationEventType getDelegationEventType() {
+        return DelegationEventType.DELEGATION_SET_DELEGATION_TARGET;
     }
 }

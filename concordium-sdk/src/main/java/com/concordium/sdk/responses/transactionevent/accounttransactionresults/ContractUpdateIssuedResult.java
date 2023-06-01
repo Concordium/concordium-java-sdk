@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.transactionevent.accounttransactionresults;
 
 import com.concordium.grpc.v2.AccountTransactionEffects;
-import com.concordium.sdk.responses.transactionstatus.*;
 import com.google.common.collect.ImmutableList;
 import lombok.*;
 
@@ -27,34 +26,15 @@ public class ContractUpdateIssuedResult implements AccountTransactionResult {
     public static ContractUpdateIssuedResult parse(AccountTransactionEffects.ContractUpdateIssued contractUpdateIssued) {
         val effects = new ImmutableList.Builder<ContractTraceElement>();
         val traceElements = contractUpdateIssued.getEffectsList();
-        traceElements.forEach(e -> {
-            switch (e.getElementCase()) {
-                case UPDATED:
-                    effects.add(ContractUpdated.parse(e.getUpdated()));
-                    break;
-                case TRANSFERRED:
-                    effects.add(TransferredResult.parse(e.getTransferred()));
-                    break;
-                case INTERRUPTED:
-                    effects.add(InterruptedResult.parse(e.getInterrupted()));
-                    break;
-                case RESUMED:
-                    effects.add(ResumedResult.parse(e.getResumed()));
-                    break;
-                case UPGRADED:
-                    effects.add(UpgradedResult.parse(e.getUpgraded()));
-                    break;
-                case ELEMENT_NOT_SET:
-                    throw new IllegalArgumentException();
-            }
-        });
+        traceElements.forEach(traceElement -> effects.add(ContractTraceElement.parse(traceElement)));
+
         return ContractUpdateIssuedResult.builder()
                 .effects(effects.build())
                 .build();
     }
 
     @Override
-    public TransactionResultEventType getType() {
-        return TransactionResultEventType.CONTRACT_UPDATE_ISSUED;
+    public TransactionType getResultType() {
+        return TransactionType.UPDATE;
     }
 }
