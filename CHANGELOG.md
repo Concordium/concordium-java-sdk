@@ -41,6 +41,7 @@
 - Added support for GRPC V2 `GetPassiveDelegatorsRewardPeriod` for getting fixed list of Passive Delegators for a given pool at the end of a given block.
 - Added support for GRPC V2 `GetNextUpdateSequenceNumbers` for getting next available sequence numbers for updating chain parameters after a given block.
 - Added support for GRPC V2 `GetBlockPendingUpdates` for getting the pending updates to chain parameters at the end of a given block.
+- Added support for GRPC V2 `Shutdown` For shutting down the network layer of the Node.
 
 ## 4.2.0
 - Added initial support for GRPC V2

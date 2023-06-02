@@ -604,6 +604,14 @@ public final class ClientV2 {
     }
 
     /**
+     * Shut down the node. Return a GRPC error if the shutdown failed.
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void shutdown() {
+        this.server().shutdown(Empty.getDefaultInstance());
+    }
+
+    /**
      * Tries to connect to a peer with the submitted {@link InetSocketAddress}.
      * If successful, adds the peer to the list of given addresses.
      * Note. The peer might not be connected instantly, in that case the node will
