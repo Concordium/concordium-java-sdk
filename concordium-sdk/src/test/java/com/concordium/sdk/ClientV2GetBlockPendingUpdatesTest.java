@@ -22,7 +22,6 @@ import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.UInt64;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
-import com.sun.istack.internal.NotNull;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
@@ -584,7 +583,7 @@ public class ClientV2GetBlockPendingUpdatesTest {
         return value / HUNDRED_THOUSAND;
     }
 
-    @NotNull
+    @NonNull
     private static VerificationKey toVerificationKey(byte[] key) {
         return VerificationKey.builder().signingScheme(SigningScheme.ED25519).verifyKey(key).build();
     }
