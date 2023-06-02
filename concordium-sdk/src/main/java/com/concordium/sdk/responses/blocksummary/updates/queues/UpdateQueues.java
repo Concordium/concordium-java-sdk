@@ -5,9 +5,8 @@ import com.concordium.sdk.responses.blocksummary.updates.ProtocolUpdate;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.GasRewards;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.MintDistribution;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.TransactionFeeDistribution;
-import com.concordium.sdk.responses.blocksummary.updates.keys.Level1KeysUpdates;
 import com.concordium.sdk.responses.blocksummary.updates.keys.Level2KeysUpdates;
-import com.concordium.sdk.responses.blocksummary.updates.keys.RootKeysUpdates;
+import com.concordium.sdk.responses.blocksummary.updates.keys.KeysUpdate;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,12 +28,12 @@ public final class UpdateQueues {
     /**
      * Root keys updates enqueued.
      */
-    private final EnqueuedUpdate<RootKeysUpdates> rootKeysUpdates;
+    private final EnqueuedUpdate<KeysUpdate> rootKeysUpdates;
 
     /**
      * Level1 keys updates enqueued.
      */
-    private final EnqueuedUpdate<Level1KeysUpdates> level1KeysUpdates;
+    private final EnqueuedUpdate<KeysUpdate> level1KeysUpdates;
 
     /**
      * Level2 keys updates enqueued.
@@ -115,7 +114,7 @@ public final class UpdateQueues {
 
     @JsonCreator
     UpdateQueues(@JsonProperty("mintDistribution") EnqueuedUpdate<MintDistribution> mintDistribution,
-                 @JsonProperty("rootKeys") EnqueuedUpdate<RootKeysUpdates> rootKeysUpdates,
+                 @JsonProperty("rootKeys") EnqueuedUpdate<KeysUpdate> rootKeysUpdates,
                  @JsonProperty("addAnonymityRevoker") EnqueuedUpdate<AnonymityRevokerInfo> addAnonymityRevokerUpdates,
                  @JsonProperty("transactionFeeDistribution") EnqueuedUpdate<TransactionFeeDistribution> transactionFeeDistribution,
                  @JsonProperty("bakerStakeThreshold") EnqueuedUpdate<CCDAmount> bakerStakeThreshold,
@@ -127,7 +126,7 @@ public final class UpdateQueues {
                  @JsonProperty("foundationAccount") EnqueuedUpdate<Integer> foundationAccountUpdates,
                  @JsonProperty("electionDifficulty") EnqueuedUpdate<Double> electionDifficultyUpdates,
                  @JsonProperty("euroPerEnergy") EnqueuedUpdate<Fraction> euroPerEnergyUpdates,
-                 @JsonProperty("level1Keys") EnqueuedUpdate<Level1KeysUpdates> level1KeysUpdates,
+                 @JsonProperty("level1Keys") EnqueuedUpdate<KeysUpdate> level1KeysUpdates,
                  @JsonProperty("cooldownParameters") EnqueuedUpdate<CooldownParameters> cooldownParameters,
                  @JsonProperty("timeParameters") EnqueuedUpdate<TimeParameters> timeParameters,
                  @JsonProperty("poolParameters") EnqueuedUpdate<PoolParameters> poolParameters) {

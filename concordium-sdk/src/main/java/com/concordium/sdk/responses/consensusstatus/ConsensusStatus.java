@@ -42,12 +42,12 @@ public final class ConsensusStatus {
      * Duration of a slot.
      */
     @JsonProperty("slotDuration")
-    private final long slotDuration;
+    private final java.time.Duration slotDuration;
     /**
      * Duration of an epoch.
      */
     @JsonProperty("epochDuration")
-    private final long epochDuration;
+    private final java.time.Duration epochDuration;
     /**
      * Hash of the most recent finalized block.
      */

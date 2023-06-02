@@ -59,9 +59,7 @@ public class ClientV2GetIdentityProvidersTest {
                     .description(IP_DESCRIPTION)
                     .build())
             .ipCdiVerifyKey(ED25519PublicKey.from(IP_CDI_VERIFY_KEY))
-            .ipVerifyKey(PSPublicKey.builder()
-                    .bytes(IP_VERIFY_KEY)
-                    .build())
+            .ipVerifyKey(PSPublicKey.from(IP_VERIFY_KEY))
             .build();
     private static final byte[] BLOCK_HASH = new byte[]{1, 1, 1};
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(

@@ -1,18 +1,14 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.AccountInfoRequest;
-import com.concordium.grpc.v2.AncestorsRequest;
-import com.concordium.grpc.v2.Empty;
-import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.grpc.v2.*;
+import com.concordium.grpc.v2.BakerId;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.dumpstart.DumpRequest;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
-import com.concordium.sdk.responses.BakerId;
+import com.concordium.sdk.responses.*;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.responses.BlockIdentifier;
 import com.concordium.sdk.responses.DelegatorInfo;
 import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
@@ -21,6 +17,7 @@ import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
+import com.concordium.sdk.responses.blocksummary.updates.queues.PendingUpdate;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
@@ -395,10 +392,10 @@ public final class ClientV2 {
      * Get the IDs of the bakers registered in the given block.
      *
      * @param blockHashInput {@link BlockHashInput} of the block bakers are to be retrieved.
-     * @return Parsed {@link Iterator} of {@link BakerId}
+     * @return Parsed {@link Iterator} of {@link com.concordium.sdk.responses.BakerId}
      * @throws BlockNotFoundException When the returned JSON is null.
      */
-    public Iterator<BakerId> getBakerList(BlockHashInput blockHashInput) throws BlockNotFoundException {
+    public Iterator<com.concordium.sdk.responses.BakerId> getBakerList(BlockHashInput blockHashInput) throws BlockNotFoundException {
         try {
             val grpcOutput = this.server().getBakerList(to(blockHashInput));
             return to(grpcOutput, ClientV2MapperExtensions::to);
@@ -451,12 +448,12 @@ public final class ClientV2 {
      * The stream will end when all the delegators has been returned.
      *
      * @param input {@link BlockHashInput}.
-     * @param bakerId {@link BakerId}.
+     * @param bakerId {@link com.concordium.sdk.responses.BakerId}.
      * @return {@link Iterator<DelegatorRewardPeriodInfo>}.
      */
     public Iterator<DelegatorRewardPeriodInfo> getPoolDelegatorsRewardPeriod(
             BlockHashInput input,
-            BakerId bakerId) {
+            com.concordium.sdk.responses.BakerId bakerId) {
         var grpcOutput = this.server().getPoolDelegatorsRewardPeriod(GetPoolDelegatorsRequest.newBuilder()
                 .setBlockHash(to(input))
                 .setBaker(to(bakerId))
@@ -538,6 +535,13 @@ public final class ClientV2 {
         return ClientV2MapperExtensions.to(grpcOutput);
     }
 
+    public Iterator<PendingUpdateV2> getBlockPendingUpdates(BlockHashInput input) {
+        var grpcOutput = this.server().getBlockPendingUpdates(to(input));
+
+        return ClientV2MapperExtensions.to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+
     /**
      * Closes the underlying grpc channel
      * <p>
@@ -578,7 +582,7 @@ public final class ClientV2 {
      * @param bakerId {@link BakerId}.
      * @return {@link BakerPoolStatus}.
      */
-    public BakerPoolStatus getPoolInfo(BlockHashInput input, BakerId bakerId) {
+    public BakerPoolStatus getPoolInfo(BlockHashInput input, com.concordium.sdk.responses.BakerId bakerId) {
         var grpcOutput = this.server().getPoolInfo(PoolInfoRequest.newBuilder()
                         .setBlockHash(to(input))
                         .setBaker(to(bakerId))

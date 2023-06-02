@@ -1,14 +1,22 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.AccountAddress;
+import com.concordium.grpc.v2.AccountIndex;
 import com.concordium.grpc.v2.AccountInfo;
+import com.concordium.grpc.v2.BakerId;
 import com.concordium.grpc.v2.BlockItem;
 import com.concordium.grpc.v2.Commitment;
 import com.concordium.grpc.v2.CredentialPublicKeys;
 import com.concordium.grpc.v2.CredentialRegistrationId;
+import com.concordium.grpc.v2.DelegatorInfo;
+import com.concordium.grpc.v2.DelegatorRewardPeriodInfo;
 import com.concordium.grpc.v2.EncryptedAmount;
 import com.concordium.grpc.v2.Memo;
+import com.concordium.grpc.v2.MintRate;
+import com.concordium.grpc.v2.NextUpdateSequenceNumbers;
+import com.concordium.grpc.v2.PendingUpdate;
 import com.concordium.grpc.v2.Policy;
+import com.concordium.grpc.v2.ProtocolVersion;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
@@ -18,8 +26,8 @@ import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.requests.BlockHashInput;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
-import com.concordium.sdk.responses.BlockIdentifier;
-import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
+import com.concordium.sdk.responses.*;
+import com.concordium.sdk.responses.TimeoutParameters;
 import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
 import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.accountinfo.*;
@@ -29,9 +37,13 @@ import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.Finalizer;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.*;
-import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
-import com.concordium.sdk.responses.blocksummary.updates.queues.Description;
-import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
+import com.concordium.sdk.responses.blocksummary.updates.Fraction;
+import com.concordium.sdk.responses.blocksummary.updates.ProtocolUpdate;
+import com.concordium.sdk.responses.blocksummary.updates.chainparameters.Range;
+import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.TransactionFeeDistributionV2;
+import com.concordium.sdk.responses.blocksummary.updates.keys.*;
+import com.concordium.sdk.responses.blocksummary.updates.queues.*;
+import com.concordium.sdk.responses.blocksummary.updates.queues.CooldownParametersCpv1;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
@@ -148,8 +160,9 @@ interface ClientV2MapperExtensions {
         return ElgamalPublicKey.from(publicKey.getValue().toByteArray());
     }
 
-    static Description to(final com.concordium.grpc.v2.Description description) {
-        return Description.builder()
+    static com.concordium.sdk.responses.blocksummary.updates.queues.Description to(
+            final com.concordium.grpc.v2.Description description) {
+        return com.concordium.sdk.responses.blocksummary.updates.queues.Description.builder()
                 .description(description.getDescription())
                 .url(description.getUrl())
                 .name(description.getName())
@@ -164,7 +177,7 @@ interface ClientV2MapperExtensions {
     }
 
     static PSPublicKey to(final IpInfo.IpVerifyKey verifyKey) {
-        return new PSPublicKey(verifyKey.getValue().toByteArray());
+        return PSPublicKey.from(verifyKey.getValue().toByteArray());
     }
 
     static ED25519PublicKey to(final IpInfo.IpCdiVerifyKey cdiVerifyKey) {
@@ -782,8 +795,8 @@ interface ClientV2MapperExtensions {
     }
 
     // Convert a Duration object to a long value
-    static long to(Duration slotDuration) {
-        return slotDuration.getValue();
+    static java.time.Duration to(Duration slotDuration) {
+        return java.time.Duration.ofMillis(slotDuration.getValue());
     }
 
     // Convert a ProtocolVersion object to the corresponding com.concordium.sdk.responses.ProtocolVersion object
@@ -951,8 +964,7 @@ interface ClientV2MapperExtensions {
     }
 
     static double to(MintRate mintRate) {
-        double rate = mintRate.getMantissa() * Math.pow(10, -1 * mintRate.getExponent());
-        return rate;
+        return mintRate.getMantissa() * Math.pow(10, -1 * mintRate.getExponent());
     }
 
     static Map<Hash, TransactionSummary> to(List<com.concordium.grpc.v2.BlockItemSummaryInBlock> blockItemSummaries) {
@@ -1520,8 +1532,8 @@ interface ClientV2MapperExtensions {
         }
     }
 
-    static DelegatorRewardPeriodInfo to(com.concordium.grpc.v2.DelegatorRewardPeriodInfo i) {
-        return DelegatorRewardPeriodInfo.builder()
+    static com.concordium.sdk.responses.DelegatorRewardPeriodInfo to(DelegatorRewardPeriodInfo i) {
+        return com.concordium.sdk.responses.DelegatorRewardPeriodInfo.builder()
                 .account(to(i.getAccount()))
                 .stake(to(i.getStake()))
                 .build();
@@ -1545,6 +1557,309 @@ interface ClientV2MapperExtensions {
                 .addIdentityProvider(to(grpcOutput.getAddIdentityProvider()))
                 .cooldownParameters(to(grpcOutput.getCooldownParameters()))
                 .timeParameters(to(grpcOutput.getTimeParameters()))
+                .build();
+    }
+
+    static PendingUpdateV2 to(PendingUpdate u) {
+        switch (u.getEffectCase()) {
+            case ROOT_KEYS:
+                return PendingUpdateV2.<KeysUpdate>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.RootKeys)
+                        .update(to(u.getRootKeys()))
+                        .build();
+            case LEVEL1_KEYS:
+                return PendingUpdateV2.<KeysUpdate>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.Level1Keys)
+                        .update(to(u.getLevel1Keys()))
+                        .build();
+            case LEVEL2_KEYS_CPV_0:
+                return PendingUpdateV2.<Level2KeysUpdates>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.Level2CpV0Keys)
+                        .update(to(u.getLevel2KeysCpv0()))
+                        .build();
+            case LEVEL2_KEYS_CPV_1:
+                return PendingUpdateV2.<Level2KeysUpdates>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.Level2CpV1Keys)
+                        .update(to(u.getLevel2KeysCpv1()))
+                        .build();
+            case PROTOCOL:
+                return PendingUpdateV2.<ProtocolUpdate>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.Protocol)
+                        .update(to(u.getProtocol()))
+                        .build();
+            case ELECTION_DIFFICULTY:
+                return PendingUpdateV2.<Double>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.ElectionDifficulty)
+                        .update(to(u.getElectionDifficulty().getValue()))
+                        .build();
+            case EURO_PER_ENERGY:
+                return PendingUpdateV2.<Fraction>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.EuroPerEnergy)
+                        .update(to(u.getEuroPerEnergy().getValue()))
+                        .build();
+            case MICRO_CCD_PER_EURO:
+                return PendingUpdateV2.<Fraction>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.MicroCcdPerEuro)
+                        .update(to(u.getMicroCcdPerEuro().getValue()))
+                        .build();
+            case FOUNDATION_ACCOUNT:
+                return PendingUpdateV2.<com.concordium.sdk.transactions.AccountAddress>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.FoundationAccount)
+                        .update(to(u.getFoundationAccount()))
+                        .build();
+             case MINT_DISTRIBUTION_CPV_0:
+                 return PendingUpdateV2.<MintDistributionCpV0>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.MintDistributionCpV0)
+                         .update(to(u.getMintDistributionCpv0()))
+                         .build();
+             case MINT_DISTRIBUTION_CPV_1:
+                 return PendingUpdateV2.<MintDistributionCpV1>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.MintDistributionCpV1)
+                         .update(to(u.getMintDistributionCpv1()))
+                         .build();
+             case TRANSACTION_FEE_DISTRIBUTION:
+                 return PendingUpdateV2.<TransactionFeeDistributionV2>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.TransactionFeeDistribution)
+                         .update(to(u.getTransactionFeeDistribution()))
+                         .build();
+             case GAS_REWARDS:
+                 return PendingUpdateV2.<com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.GasRewards>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.GasRewards)
+                         .update(to(u.getGasRewards()))
+                         .build();
+             case POOL_PARAMETERS_CPV_0:
+                 return PendingUpdateV2.<CCDAmount>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.PoolParametersCpV0)
+                         .update(to(u.getPoolParametersCpv0().getBakerStakeThreshold()))
+                         .build();
+             case POOL_PARAMETERS_CPV_1:
+                 return PendingUpdateV2.<PoolParameters>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.PoolParametersCpV1)
+                         .update(to(u.getPoolParametersCpv1()))
+                         .build();
+             case ADD_ANONYMITY_REVOKER:
+                 return PendingUpdateV2.<AnonymityRevokerInfo>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.AddAnonymityRevoker)
+                         .update(to(u.getAddAnonymityRevoker()))
+                         .build();
+             case ADD_IDENTITY_PROVIDER:
+                 return PendingUpdateV2.<IdentityProviderInfo>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.AddIdentityProvider)
+                         .update(to(u.getAddIdentityProvider()))
+                         .build();
+             case COOLDOWN_PARAMETERS:
+                 return PendingUpdateV2.<CooldownParametersCpv1>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.CoolDownParameters)
+                         .update(to(u.getCooldownParameters()))
+                         .build();
+             case TIME_PARAMETERS:
+                 return PendingUpdateV2.<TimeParameters>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.TimeParameters)
+                         .update(to(u.getTimeParameters()))
+                         .build();
+             case GAS_REWARDS_CPV_2:
+                 return PendingUpdateV2.<GasRewardsCpV2>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.GasRewardsCpV2)
+                         .update(to(u.getGasRewardsCpv2()))
+                         .build();
+             case TIMEOUT_PARAMETERS:
+                 return PendingUpdateV2.<com.concordium.sdk.responses.TimeoutParameters>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.TimeoutParameters)
+                         .update(to(u.getTimeoutParameters()))
+                         .build();
+             case MIN_BLOCK_TIME:
+                 return PendingUpdateV2.<java.time.Duration>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.MinBlockTime)
+                         .update(to(u.getMinBlockTime()))
+                         .build();
+             case BLOCK_ENERGY_LIMIT:
+                 return PendingUpdateV2.<UInt64>builder()
+                         .effectiveTime(to(u.getEffectiveTime()))
+                         .type(PendingUpdateType.BlockEnergyLimit)
+                         .update(to(u.getBlockEnergyLimit()))
+                         .build();
+            default:
+            case EFFECT_NOT_SET:
+                throw new IllegalArgumentException("Unexpected effect case");
+        }
+    }
+
+    static TimeoutParameters to(com.concordium.grpc.v2.TimeoutParameters timeoutParameters) {
+        return TimeoutParameters.builder()
+                .timeoutBase(to(timeoutParameters.getTimeoutBase()))
+                .timeoutIncrease(to(timeoutParameters.getTimeoutIncrease()))
+                .timeoutDecrease(to(timeoutParameters.getTimeoutDecrease()))
+                .build();
+    }
+
+    static GasRewardsCpV2 to(GasRewardsCpv2 gasRewardsCpv2) {
+        return GasRewardsCpV2.builder()
+                .accountCreation(to(gasRewardsCpv2.getAccountCreation()))
+                .baker(to(gasRewardsCpv2.getBaker()))
+                .chainUpdate(to(gasRewardsCpv2.getChainUpdate()))
+                .build();
+    }
+
+    static TimeParameters to(TimeParametersCpv1 timeParameters) {
+        return TimeParameters.builder()
+                .mintPerPayday(to(timeParameters.getMintPerPayday()))
+                .rewardPeriodLength(timeParameters.getRewardPeriodLength().getValue().getValue())
+                .build();
+    }
+
+    static CooldownParametersCpv1 to(com.concordium.grpc.v2.CooldownParametersCpv1 cooldownParameters) {
+        return CooldownParametersCpv1.builder()
+                .delegatorCooldown(cooldownParameters.getDelegatorCooldown().getValue())
+                .poolOwnerCooldown(cooldownParameters.getPoolOwnerCooldown().getValue())
+                .build();
+    }
+
+    static PoolParameters to(PoolParametersCpv1 poolParametersCpv1) {
+        return PoolParameters.builder()
+                .bakingCommissionRange(to(poolParametersCpv1.getCommissionBounds().getBaking()))
+                .capitalBound(to(poolParametersCpv1.getCapitalBound().getValue()))
+                .finalizationCommissionRange(to(poolParametersCpv1.getCommissionBounds().getFinalization()))
+                .leverageBound(to(poolParametersCpv1.getLeverageBound().getValue()))
+                .minimumEquityCapital(to(poolParametersCpv1.getMinimumEquityCapital()))
+                .passiveTransactionCommission(to(poolParametersCpv1.getPassiveTransactionCommission()))
+                .transactionCommissionRange(to(poolParametersCpv1.getCommissionBounds().getTransaction()))
+                .passiveBakingCommission(to(poolParametersCpv1.getPassiveBakingCommission()))
+                .passiveFinalizationCommission(to(poolParametersCpv1.getPassiveFinalizationCommission()))
+                .build();
+    }
+
+    static Range to(InclusiveRangeAmountFraction baking) {
+        return Range.builder().min(to(baking.getMin())).max(to(baking.getMax())).build();
+    }
+
+    static com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.GasRewards to(GasRewards gasRewards) {
+        return com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.GasRewards.builder()
+                .accountCreation(to(gasRewards.getAccountCreation()))
+                .baker(to(gasRewards.getBaker()))
+                .chainUpdate(to(gasRewards.getChainUpdate()))
+                .finalizationProof(to(gasRewards.getFinalizationProof()))
+                .build();
+    }
+
+    static TransactionFeeDistributionV2 to(TransactionFeeDistribution transactionFeeDistribution) {
+        return TransactionFeeDistributionV2.builder()
+                .gasAccount(to(transactionFeeDistribution.getGasAccount()))
+                .baker(to(transactionFeeDistribution.getBaker()))
+                .build();
+    }
+
+    static MintDistributionCpV1 to(MintDistributionCpv1 mintDistribution) {
+        return MintDistributionCpV1.builder()
+                .bakingReward(to(mintDistribution.getBakingReward()))
+                .finalizationReward(to(mintDistribution.getFinalizationReward()))
+                .build();
+    }
+
+    static MintDistributionCpV0 to(MintDistributionCpv0 mintDistribution) {
+        return MintDistributionCpV0.builder()
+                .mintPerSlot(to(mintDistribution.getMintPerSlot()))
+                .bakingReward(to(mintDistribution.getBakingReward()))
+                .finalizationReward(to(mintDistribution.getFinalizationReward()))
+                .build();
+    }
+
+    static ProtocolUpdate to(com.concordium.grpc.v2.ProtocolUpdate protocol) {
+        return ProtocolUpdate.builder()
+                .message(protocol.getMessage())
+                .specificationURL(protocol.getSpecificationUrl())
+                .specificationHash(to(protocol.getSpecificationHash()))
+                .specificationAuxiliaryData(protocol.getSpecificationAuxiliaryData().toByteArray())
+                .build();
+    }
+
+    static Hash to(Sha256Hash specificationHash) {
+        return Hash.from(specificationHash.getValue().toByteArray());
+    }
+
+    static Level2KeysUpdates to(AuthorizationsV1 level2Keys) {
+        return Level2KeysUpdates.builder()
+                .addAnonymityRevoker(to(level2Keys.getV0().getAddAnonymityRevoker()))
+                .electionDifficulty(to(level2Keys.getV0().getParameterConsensus()))
+                .euroPerEnergy(to(level2Keys.getV0().getParameterEuroPerEnergy()))
+                .protocol(to(level2Keys.getV0().getProtocol()))
+                .poolParameters(to(level2Keys.getV0().getPoolParameters()))
+                .transactionFeeDistribution(to(level2Keys.getV0().getParameterTransactionFeeDistribution()))
+                .mintDistribution(to(level2Keys.getV0().getParameterMintDistribution()))
+                .microGTUPerEuro(to(level2Keys.getV0().getParameterMicroCCDPerEuro()))
+                .paramGASRewards(to(level2Keys.getV0().getParameterGasRewards()))
+                .foundationAccount(to(level2Keys.getV0().getParameterFoundationAccount()))
+                .emergency(to(level2Keys.getV0().getEmergency()))
+                .addIdentityProvider(to(level2Keys.getV0().getAddIdentityProvider()))
+                .verificationKeys(to(level2Keys.getV0().getKeysList(), ClientV2MapperExtensions::to))
+                .addAnonymityRevoker(to(level2Keys.getV0().getAddAnonymityRevoker()))
+                .cooldownParameters(to(level2Keys.getParameterCooldown()))
+                .timeParameters(to(level2Keys.getParameterTime()))
+                .build();
+    }
+
+    static Level2KeysUpdates to(AuthorizationsV0 level2Keys) {
+        return Level2KeysUpdates.builder()
+                .addAnonymityRevoker(to(level2Keys.getAddAnonymityRevoker()))
+                .electionDifficulty(to(level2Keys.getParameterConsensus()))
+                .euroPerEnergy(to(level2Keys.getParameterEuroPerEnergy()))
+                .protocol(to(level2Keys.getProtocol()))
+                .transactionFeeDistribution(to(level2Keys.getParameterTransactionFeeDistribution()))
+                .mintDistribution(to(level2Keys.getParameterMintDistribution()))
+                .microGTUPerEuro(to(level2Keys.getParameterMicroCCDPerEuro()))
+                .paramGASRewards(to(level2Keys.getParameterGasRewards()))
+                .foundationAccount(to(level2Keys.getParameterFoundationAccount()))
+                .emergency(to(level2Keys.getEmergency()))
+                .addIdentityProvider(to(level2Keys.getAddIdentityProvider()))
+                .verificationKeys(to(level2Keys.getKeysList(), ClientV2MapperExtensions::to))
+                .addAnonymityRevoker(to(level2Keys.getAddAnonymityRevoker()))
+                .poolParameters(to(level2Keys.getPoolParameters()))
+                .build();
+    }
+
+    static Authorization to(AccessStructure accessStructure) {
+        return Authorization.builder()
+                .threshold((byte) accessStructure.getAccessThreshold().getValue())
+                .authorizedKeys(to(accessStructure.getAccessPublicKeysList(), (t) -> t.getValue()))
+                .build();
+    }
+
+    static Fraction to(Ratio value) {
+        return new Fraction(value.getDenominator(), value.getNumerator());
+    }
+
+    static KeysUpdate to(HigherLevelKeys rootKeys) {
+        return KeysUpdate.builder()
+                .threshold(rootKeys.getThreshold().getValue())
+                .verificationKeys(to(rootKeys.getKeysList(), ClientV2MapperExtensions::to))
+                .build();
+    }
+
+    static VerificationKey to(UpdatePublicKey k) {
+        return VerificationKey.builder()
+                .verifyKey(k.getValue().toByteArray())
+                .signingScheme(SigningScheme.ED25519)
                 .build();
     }
 }

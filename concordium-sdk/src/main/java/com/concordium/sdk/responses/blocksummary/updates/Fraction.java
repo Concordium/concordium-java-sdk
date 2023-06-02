@@ -33,6 +33,10 @@ public class Fraction {
         }
     }
 
+    public Fraction(long denominator, long numerator) {
+        this(BigInteger.valueOf(denominator), BigInteger.valueOf(numerator));
+    }
+
     @Override
     public String toString() {
         return this.numerator + "/" + this.denominator;

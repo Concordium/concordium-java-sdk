@@ -1,10 +1,11 @@
 package com.concordium.sdk.responses.blocksummary.updates.chainparameters;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * An inclusive range consisting of a minimum value and a maximum value.
@@ -12,13 +13,11 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Getter
+@Builder
+@Jacksonized
 public class Range {
+    @JsonProperty("min")
     private final double min;
+    @JsonProperty("max")
     private final double max;
-
-    @JsonCreator
-    Range(@JsonProperty("min") double min, @JsonProperty("max") double max) {
-        this.min = min;
-        this.max = max;
-    }
 }

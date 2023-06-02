@@ -5,14 +5,14 @@ import lombok.*;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
+import java.util.Arrays;
+
 /**
  * Public Key for Pointcheval-Sanders Signing scheme.
  */
-@RequiredArgsConstructor
-@Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode
 @ToString
-@Builder
 public class PSPublicKey {
 
     /**
@@ -27,5 +27,13 @@ public class PSPublicKey {
         } catch (DecoderException e) {
             throw new IllegalArgumentException("Cannot create PSPublicKey", e);
         }
+    }
+
+    public static PSPublicKey from(final byte[] bytes) {
+        return new PSPublicKey(Arrays.copyOf(bytes, bytes.length));
+    }
+
+    public byte[] getBytes() {
+        return Arrays.copyOf(bytes, bytes.length);
     }
 }

@@ -4,16 +4,21 @@ import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+
+import java.util.Arrays;
 
 /**
  * Root or level1 keys.
  */
 @Getter
 @ToString
+@EqualsAndHashCode
 public final class VerificationKey {
     /**
      * The verification key
@@ -34,6 +39,12 @@ public final class VerificationKey {
         } catch (DecoderException e) {
             throw new IllegalArgumentException("The verification key is not properly HEX encoded.", e);
         }
+    }
+
+    @Builder
+    VerificationKey(final byte[] verifyKey, final SigningScheme signingScheme) {
+        this.verifyKey = Arrays.copyOf(verifyKey, verifyKey.length);
+        this.schemeId = signingScheme;
     }
 
     /**

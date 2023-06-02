@@ -13,7 +13,6 @@ import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Getter
-@ToString
 @EqualsAndHashCode
 public class ElgamalPublicKey {
 
