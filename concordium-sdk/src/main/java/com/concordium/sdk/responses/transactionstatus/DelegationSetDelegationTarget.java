@@ -3,13 +3,13 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.DelegationEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.DelegationEventType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 /**
  * The delegator set a target for delegation.
@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Getter
-@SuperBuilder
 public class DelegationSetDelegationTarget extends AbstractDelegatorResult implements DelegationEvent {
 
     /**
@@ -25,6 +24,7 @@ public class DelegationSetDelegationTarget extends AbstractDelegatorResult imple
      */
     private final DelegationTarget delegationTarget;
 
+    @Builder
     @JsonCreator
     DelegationSetDelegationTarget(@JsonProperty("delegatorId") AccountIndex delegatorId,
                                   @JsonProperty("account") AccountAddress delegatorAddress,

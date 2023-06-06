@@ -1,5 +1,6 @@
-package com.concordium.sdk.transactions;
+package com.concordium.sdk.types;
 
+import com.concordium.sdk.transactions.CredentialRegistrationId;
 import lombok.val;
 import org.junit.Test;
 

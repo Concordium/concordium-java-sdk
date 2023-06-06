@@ -6,6 +6,7 @@ import lombok.*;
 
 /**
  * No effects other than payment from this transaction.
+ * The {@link RejectReason} indicates why the transaction failed.
  */
 @Builder
 @EqualsAndHashCode

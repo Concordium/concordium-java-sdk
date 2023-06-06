@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.ContractInitializedEvent;
+import com.concordium.grpc.v2.ContractVersion;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
 import com.concordium.sdk.transactions.CCDAmount;
@@ -20,9 +21,9 @@ import java.util.Objects;
 @Getter
 @ToString
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Builder
-public final class ContractInitializedResult implements TransactionResultEvent, AccountTransactionResult {
+public final class ContractInitializedResult extends TransactionResultEvent implements AccountTransactionResult {
 
     /**
      * Module in which the contract source resides.
@@ -64,7 +65,7 @@ public final class ContractInitializedResult implements TransactionResultEvent, 
                               @JsonProperty("contractVersion") int version) {
         this.ref = ref;
         this.address = address;
-        if(!Objects.isNull(amount)) {
+        if (!Objects.isNull(amount)) {
             this.amount = CCDAmount.fromMicro(amount);
         }
         this.initName = initName;
@@ -74,14 +75,21 @@ public final class ContractInitializedResult implements TransactionResultEvent, 
 
     /**
      * Parses {@link ContractInitializedEvent} to {@link ContractInitializedResult}.
+     *
      * @param contractInitialized {@link ContractInitializedEvent} returned by the GRPC V2 API.
      * @return parsed {@link ContractInitializedResult}.
      */
     public static ContractInitializedResult parse(ContractInitializedEvent contractInitialized) {
         val events = new ImmutableList.Builder<String>();
+        int version;
+        if (contractInitialized.getContractVersion() == ContractVersion.V0) {
+            version = 0;
+        } else {
+            version = 1;
+        }
         contractInitialized.getEventsList().forEach(e -> events.add(Hex.encodeHexString(e.getValue().toByteArray())));
         return ContractInitializedResult.builder()
-                .version(contractInitialized.getContractVersion().getNumber())
+                .version(version)
                 .ref(Hex.encodeHexString(contractInitialized.getOriginRef().getValue().toByteArray()))
                 .address(ContractAddress.parse(contractInitialized.getAddress()))
                 .amount(CCDAmount.fromMicro(contractInitialized.getAmount().getValue()))

@@ -6,22 +6,23 @@ import com.concordium.sdk.responses.transactionevent.accounttransactionresults.A
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 /**
  * A baker was removed.
  */
 @ToString(callSuper = true)
 @Getter
-@SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public final class BakerRemovedResult extends AbstractBakerResult implements AccountTransactionResult, BakerEvent {
+
+    @Builder
     @JsonCreator
     BakerRemovedResult(@JsonProperty("bakerId") AccountIndex bakerId,
                        @JsonProperty("account") AccountAddress account) {

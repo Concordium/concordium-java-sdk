@@ -101,7 +101,7 @@ public class BlockTransactionEvent {
     public static BlockTransactionEvent parse(BlockItemSummary blockItemSummary) {
         var builder = BlockTransactionEvent.builder()
                 .index(UInt64.from(blockItemSummary.getIndex().getValue()))
-                .energyCost(Energy.from(blockItemSummary.getEnergyCost().getValue()))
+                .energyCost(Energy.parse(blockItemSummary.getEnergyCost()))
                 .hash(Hash.from(blockItemSummary.getHash().getValue().toByteArray()));
 
         switch (blockItemSummary.getDetailsCase()) {

@@ -5,13 +5,13 @@ import com.concordium.sdk.responses.transactionevent.accounttransactionresults.A
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 /**
  * The baker's setting for restaking earnings was updated.
@@ -19,7 +19,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
 public final class BakerSetRestakeEarningsResult extends AbstractBakerResult implements AccountTransactionResult, BakerEvent {
 
     /**
@@ -27,6 +26,7 @@ public final class BakerSetRestakeEarningsResult extends AbstractBakerResult imp
      */
     private final boolean restakeEarnings;
 
+    @Builder
     @JsonCreator
     BakerSetRestakeEarningsResult(@JsonProperty("bakerId") AccountIndex bakerId,
                                   @JsonProperty("account") AccountAddress account,

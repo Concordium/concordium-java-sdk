@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The mint distribution was updated.
+ */
 @Builder
 @Getter
 @EqualsAndHashCode

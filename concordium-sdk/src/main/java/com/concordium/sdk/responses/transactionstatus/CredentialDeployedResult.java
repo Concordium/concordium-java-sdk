@@ -1,6 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,7 +9,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public final class CredentialDeployedResult implements TransactionResultEvent {
+public final class CredentialDeployedResult extends TransactionResultEvent {
     private final CredentialRegistrationId regId;
     private final AccountAddress account;
 

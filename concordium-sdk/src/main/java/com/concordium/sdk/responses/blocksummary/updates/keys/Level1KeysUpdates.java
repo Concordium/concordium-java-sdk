@@ -17,6 +17,9 @@ import java.util.List;
 @EqualsAndHashCode
 public final class Level1KeysUpdates {
     private final List<VerificationKey> verificationKeys;
+    /**
+     * The number of keys needed to authorize an update.
+     */
     private final int threshold;
 
     @JsonCreator

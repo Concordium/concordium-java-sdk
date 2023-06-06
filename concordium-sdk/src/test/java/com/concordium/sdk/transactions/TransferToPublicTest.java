@@ -7,6 +7,7 @@ import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;

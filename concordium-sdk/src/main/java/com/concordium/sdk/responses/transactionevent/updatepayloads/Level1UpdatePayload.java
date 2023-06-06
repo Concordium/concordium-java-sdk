@@ -23,6 +23,9 @@ public class Level1UpdatePayload implements UpdatePayload {
      */
     private Level2KeysUpdates level2KeysUpdate;
 
+    /**
+     * The type of keys updated. Determines which field is populated.
+     */
     @Getter
     private KeysUpdatedType keysUpdatedType;
 

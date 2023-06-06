@@ -20,7 +20,7 @@ import java.util.Optional;
 @EqualsAndHashCode
 public final class AnonymityRevokerInfo {
     /**
-     * The anonymity revoker id
+     * Unique identifier of the anonymity revoker.
      */
     private final UInt32 arIdentity;
 

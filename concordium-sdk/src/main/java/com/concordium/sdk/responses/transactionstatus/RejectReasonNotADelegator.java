@@ -1,6 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
@@ -12,7 +12,7 @@ import lombok.ToString;
  */
 @ToString
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class RejectReasonNotADelegator extends RejectReason {
     private final AccountAddress accountAddress;
 

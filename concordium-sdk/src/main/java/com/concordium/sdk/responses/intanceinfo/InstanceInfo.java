@@ -2,7 +2,7 @@ package com.concordium.sdk.responses.intanceinfo;
 
 import com.concordium.sdk.responses.transactionstatus.ContractVersion;
 import com.concordium.sdk.serializing.JsonMapper;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.annotation.JsonCreator;

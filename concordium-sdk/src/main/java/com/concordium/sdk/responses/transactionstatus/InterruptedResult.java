@@ -22,8 +22,8 @@ import java.util.Map;
 @ToString
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode
-public class InterruptedResult implements TransactionResultEvent, ContractTraceElement {
+@EqualsAndHashCode(callSuper = true)
+public class InterruptedResult extends TransactionResultEvent implements ContractTraceElement {
 
     /**
      * The contract interrupted.

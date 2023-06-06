@@ -6,6 +6,10 @@ import com.concordium.sdk.responses.blocksummary.updates.keys.Level2KeysUpdates;
 import com.concordium.sdk.responses.blocksummary.updates.keys.RootKeysUpdates;
 import lombok.*;
 
+/**
+ * Root updates are the highest kind of key updates. They can update every other set of keys, even themselves.
+ * They can only be performed by Root level keys.
+ */
 @Builder
 @ToString
 @EqualsAndHashCode
@@ -29,6 +33,9 @@ public class RootUpdatePayload implements UpdatePayload {
      */
     private Level2KeysUpdates level2KeysUpdate;
 
+    /**
+     * The type of keys updated. Determines which field is populated.
+     */
     @Getter
     private KeysUpdatedType keysUpdatedType;
 

@@ -1,7 +1,7 @@
 package com.concordium.sdk.exceptions;
 
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.Hash;
 import lombok.Getter;
 

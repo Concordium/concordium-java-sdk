@@ -3,13 +3,13 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 /**
  * Updated transaction fee commission for a baker pool.
@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
 public class BakerSetTransactionFeeCommission extends AbstractBakerResult implements BakerEvent {
 
     /**
@@ -25,6 +24,7 @@ public class BakerSetTransactionFeeCommission extends AbstractBakerResult implem
      */
     private final PartsPerHundredThousand feeCommission;
 
+    @Builder
     @JsonCreator
     BakerSetTransactionFeeCommission(@JsonProperty("bakerId") AccountIndex bakerId,
                                      @JsonProperty("account") AccountAddress bakerAccount,
@@ -43,7 +43,7 @@ public class BakerSetTransactionFeeCommission extends AbstractBakerResult implem
     public static BakerSetTransactionFeeCommission parse(com.concordium.grpc.v2.BakerEvent.BakerSetTransactionFeeCommission bakerSetTransactionFeeCommission, com.concordium.grpc.v2.AccountAddress sender) {
         return BakerSetTransactionFeeCommission.builder()
                 .bakerId(AccountIndex.from(bakerSetTransactionFeeCommission.getBakerId().getValue()))
-                .account(AccountAddress.parse(sender))
+                .bakerAccount(AccountAddress.parse(sender))
                 .feeCommission(PartsPerHundredThousand.parse(bakerSetTransactionFeeCommission.getTransactionFeeCommission()))
                 .build();
     }

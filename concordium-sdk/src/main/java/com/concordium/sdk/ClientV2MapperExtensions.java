@@ -34,10 +34,6 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProvider
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
-import com.concordium.sdk.responses.nodeinfo.BakingCommitteeDetails;
-import com.concordium.sdk.responses.nodeinfo.BakingStatus;
-import com.concordium.sdk.responses.nodeinfo.ConsensusState;
-import com.concordium.sdk.responses.nodeinfo.PeerType;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
@@ -70,7 +66,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
-import lombok.Builder;
 import lombok.val;
 import lombok.var;
 
@@ -238,7 +233,7 @@ interface ClientV2MapperExtensions {
         return AccountIndex.newBuilder().setValue(index.getIndex().getValue()).build();
     }
 
-    static AccountAddress to(com.concordium.sdk.transactions.AccountAddress address) {
+    static AccountAddress to(com.concordium.sdk.types.AccountAddress address) {
         return AccountAddress.newBuilder()
                 .setValue(to(address.getBytes()))
                 .build();
@@ -274,8 +269,8 @@ interface ClientV2MapperExtensions {
         return builder.build();
     }
 
-    static com.concordium.sdk.transactions.AccountAddress to(AccountAddress address) {
-        return com.concordium.sdk.transactions.AccountAddress.parse(address);
+    static com.concordium.sdk.types.AccountAddress to(AccountAddress address) {
+        return com.concordium.sdk.types.AccountAddress.parse(address);
     }
 
     @Nullable
@@ -1336,7 +1331,7 @@ interface ClientV2MapperExtensions {
                         .mintBakingReward(CCDAmount.fromMicro(mint.getMintBakingReward().getValue()))
                         .mintFinalizationReward(CCDAmount.fromMicro(mint.getMintFinalizationReward().getValue()))
                         .mintPlatformDevelopmentCharge(CCDAmount.fromMicro(mint.getMintPlatformDevelopmentCharge().getValue()))
-                        .foundationAccount(com.concordium.sdk.transactions.AccountAddress.from(mint.getFoundationAccount().getValue().toByteArray()))
+                        .foundationAccount(com.concordium.sdk.types.AccountAddress.from(mint.getFoundationAccount().getValue().toByteArray()))
                         .build();
             }
             case FINALIZATION_REWARDS: {
@@ -1354,21 +1349,21 @@ interface ClientV2MapperExtensions {
                         .newGASAccount(CCDAmount.fromMicro(blockReward.getNewGasAccount().getValue()))
                         .bakerReward(CCDAmount.fromMicro(blockReward.getBakerReward().getValue()))
                         .foundationCharge(CCDAmount.fromMicro(blockReward.getFoundationCharge().getValue()))
-                        .baker(com.concordium.sdk.transactions.AccountAddress.from(blockReward.getBaker().getValue().toByteArray()))
-                        .foundationAccount(com.concordium.sdk.transactions.AccountAddress.from(blockReward.getFoundationAccount().getValue().toByteArray()))
+                        .baker(com.concordium.sdk.types.AccountAddress.from(blockReward.getBaker().getValue().toByteArray()))
+                        .foundationAccount(com.concordium.sdk.types.AccountAddress.from(blockReward.getFoundationAccount().getValue().toByteArray()))
                         .build();
             }
             case PAYDAY_FOUNDATION_REWARD: {
                 val paydayFoundationReward = event.getPaydayFoundationReward();
                 return PaydayFoundationReward.builder()
-                        .foundationAccount(com.concordium.sdk.transactions.AccountAddress.from(paydayFoundationReward.getFoundationAccount().getValue().toByteArray()))
+                        .foundationAccount(com.concordium.sdk.types.AccountAddress.from(paydayFoundationReward.getFoundationAccount().getValue().toByteArray()))
                         .developmentCharge(CCDAmount.fromMicro(paydayFoundationReward.getDevelopmentCharge().getValue()))
                         .build();
             }
             case PAYDAY_ACCOUNT_REWARD: {
                 val paydayAccountReward = event.getPaydayAccountReward();
                 return PaydayAccountReward.builder()
-                        .account(com.concordium.sdk.transactions.AccountAddress.from(paydayAccountReward.getAccount().getValue().toByteArray()))
+                        .account(com.concordium.sdk.types.AccountAddress.from(paydayAccountReward.getAccount().getValue().toByteArray()))
                         .transactionFees(CCDAmount.fromMicro(paydayAccountReward.getTransactionFees().getValue()))
                         .bakerReward(CCDAmount.fromMicro(paydayAccountReward.getBakerReward().getValue()))
                         .finalizationReward(CCDAmount.fromMicro(paydayAccountReward.getFinalizationReward().getValue()))
@@ -1405,7 +1400,7 @@ interface ClientV2MapperExtensions {
         val result = new ImmutableList.Builder<Reward>();
         entriesList.forEach(e ->
                 result.add(Reward.builder()
-                        .address(com.concordium.sdk.transactions.AccountAddress.from(e.getAccount().getValue().toByteArray()))
+                        .address(com.concordium.sdk.types.AccountAddress.from(e.getAccount().getValue().toByteArray()))
                         .amount(CCDAmount.fromMicro(e.getAmount().getValue())).build())
         );
         return result.build();

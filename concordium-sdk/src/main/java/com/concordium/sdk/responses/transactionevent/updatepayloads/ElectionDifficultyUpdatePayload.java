@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The election difficulty was updated.
+ */
 @Builder
 @Getter
 @EqualsAndHashCode

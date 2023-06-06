@@ -13,9 +13,9 @@ import lombok.*;
 @Getter
 @ToString
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Builder
-public final class CredentialKeysUpdatedResult implements TransactionResultEvent, AccountTransactionResult {
+public final class CredentialKeysUpdatedResult extends TransactionResultEvent implements AccountTransactionResult {
 
     /**
      * RegistrationID of the credential.

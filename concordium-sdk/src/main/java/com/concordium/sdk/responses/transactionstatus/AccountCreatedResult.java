@@ -7,9 +7,9 @@ import lombok.Getter;
 import lombok.ToString;
 
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString
-public final class AccountCreatedResult implements TransactionResultEvent {
+public final class AccountCreatedResult extends TransactionResultEvent {
     private final String contents;
 
     @JsonCreator

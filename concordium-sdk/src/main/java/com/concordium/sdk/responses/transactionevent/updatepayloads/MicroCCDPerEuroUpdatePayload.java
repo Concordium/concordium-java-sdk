@@ -7,12 +7,18 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The microCCD per euro exchange rate was updated.
+ */
 @Builder
 @Getter
 @EqualsAndHashCode
 @ToString
 public class MicroCCDPerEuroUpdatePayload implements UpdatePayload {
 
+    /**
+     * The new microCCD per euro exchange rate.
+     */
     private Fraction value;
 
     /**
@@ -22,7 +28,7 @@ public class MicroCCDPerEuroUpdatePayload implements UpdatePayload {
      */
     public static MicroCCDPerEuroUpdatePayload parse(ExchangeRate exchangeRate) {
         return MicroCCDPerEuroUpdatePayload.builder()
-                .value(Fraction.from(exchangeRate.getValue()))
+                .value(Fraction.parse(exchangeRate.getValue()))
                 .build();
     }
 

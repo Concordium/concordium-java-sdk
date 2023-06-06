@@ -4,25 +4,22 @@ import com.concordium.grpc.v2.DelegatorId;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.DelegationEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.DelegationEventType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
+
 
 /**
  * Delegator stopped its delegation.
  */
 @Getter
 @Setter
-@SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class DelegationRemoved extends AbstractDelegatorResult implements DelegationEvent {
 
+    @Builder
     @JsonCreator
     DelegationRemoved(@JsonProperty("delegatorId") AccountIndex delegatorId,
                       @JsonProperty("account") AccountAddress delegatorAddress) {

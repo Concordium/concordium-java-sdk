@@ -1,4 +1,4 @@
-package com.concordium.sdk.transactions;
+package com.concordium.sdk.types;
 
 /*
  * Copyright 2011 Google Inc.

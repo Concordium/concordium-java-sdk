@@ -6,13 +6,10 @@ import com.concordium.sdk.responses.transactionstatus.NewRelease;
 import com.concordium.sdk.responses.transactionstatus.TransferredWithScheduleResult;
 import com.concordium.sdk.transactions.Memo;
 import com.google.common.collect.ImmutableList;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
-import lombok.val;
+import lombok.*;
 
-@SuperBuilder
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Getter
@@ -20,21 +17,29 @@ public class TransferredWithScheduleAndMemoResult extends TransferredWithSchedul
 
     private Memo memo;
 
+    TransferredWithScheduleAndMemoResult(List<NewRelease> amount,
+                                         com.concordium.sdk.types.AccountAddress to,
+                                         com.concordium.sdk.types.AccountAddress from,
+                                         Memo memo) {
+        super(amount, to, from);
+        this.memo = memo;
+
+    }
+
     /**
-     * Parses {@link AccountTransactionEffects.TransferredWithSchedule} and {@link com.concordium.grpc.v2.AccountAddress} to {@link TransferredWithScheduleAndMemoResult}.
+     * Parses {@link AccountTransactionEffects.TransferredWithSchedule} and {@link AccountAddress} to {@link TransferredWithScheduleAndMemoResult}.
+     *
      * @param transferredWithSchedule {@link AccountTransactionEffects.TransferredWithSchedule} returned by the GRPC V2 API.
-     * @param sender {@link com.concordium.grpc.v2.AccountAddress} returned by the GRPC V2 API.
+     * @param sender                  {@link AccountAddress} returned by the GRPC V2 API.
      * @return parsed {@link TransferredWithScheduleAndMemoResult}.
      */
     public static TransferredWithScheduleAndMemoResult parse(AccountTransactionEffects.TransferredWithSchedule transferredWithSchedule, AccountAddress sender) {
         val amount = new ImmutableList.Builder<NewRelease>();
+        val to = com.concordium.sdk.types.AccountAddress.parse(transferredWithSchedule.getReceiver());
+        val from = com.concordium.sdk.types.AccountAddress.parse(sender);
+        val memo = Memo.from(transferredWithSchedule.getMemo().getValue().toByteArray());
         transferredWithSchedule.getAmountList().forEach(newRelease -> amount.add(NewRelease.parse(newRelease)));
-        return TransferredWithScheduleAndMemoResult.builder()
-                .amount(amount.build())
-                .to(com.concordium.sdk.transactions.AccountAddress.parse(transferredWithSchedule.getReceiver()))
-                .from(com.concordium.sdk.transactions.AccountAddress.parse(sender))
-                .memo(Memo.from(transferredWithSchedule.getMemo().getValue().toByteArray()))
-                .build();
+        return new TransferredWithScheduleAndMemoResult(amount.build(), to, from, memo);
     }
 
     @Override

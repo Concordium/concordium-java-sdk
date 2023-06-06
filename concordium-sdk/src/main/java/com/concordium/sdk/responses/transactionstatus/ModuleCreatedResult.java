@@ -8,8 +8,8 @@ import lombok.ToString;
 
 @Getter
 @ToString
-@EqualsAndHashCode
-public final class ModuleCreatedResult implements TransactionResultEvent {
+@EqualsAndHashCode(callSuper = true)
+public final class ModuleCreatedResult extends TransactionResultEvent {
     private final String contents;
 
     @JsonCreator

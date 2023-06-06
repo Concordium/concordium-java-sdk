@@ -59,8 +59,7 @@ public final class PoolParameters implements UpdatePayload {
     private final CCDAmount minimumEquityCapital;
 
     /**
-     * A bound on the relative share of the total staked capital that a baker can have as its stake.
-     * This is required to be greater than 0.
+     * Maximum fraction of the total staked capital that a new baker can have.
      */
     private final PartsPerHundredThousand capitalBound;
 
@@ -93,6 +92,11 @@ public final class PoolParameters implements UpdatePayload {
         this.leverageBound = leverageBound;
     }
 
+    /**
+     * Parses {@link PoolParametersCpv1} to {@link PoolParameters}.
+     * @param poolParametersCpv1 {@link PoolParametersCpv1} returned by the GRPC V2 API.
+     * @return parsed {@link PoolParameters}.
+     */
     public static PoolParameters parse(PoolParametersCpv1 poolParametersCpv1) {
         return PoolParameters.builder()
                 .passiveFinalizationCommission(PartsPerHundredThousand.parse(poolParametersCpv1.getPassiveFinalizationCommission()))
@@ -103,7 +107,7 @@ public final class PoolParameters implements UpdatePayload {
                 .transactionCommissionRange(Range.from(poolParametersCpv1.getCommissionBounds().getTransaction()))
                 .minimumEquityCapital(CCDAmount.fromMicro(poolParametersCpv1.getMinimumEquityCapital().getValue()))
                 .capitalBound(PartsPerHundredThousand.parse(poolParametersCpv1.getCapitalBound().getValue()))
-                .leverageBound(Fraction.from(poolParametersCpv1.getLeverageBound().getValue()))
+                .leverageBound(Fraction.parse(poolParametersCpv1.getLeverageBound().getValue()))
                 .build();
     }
 

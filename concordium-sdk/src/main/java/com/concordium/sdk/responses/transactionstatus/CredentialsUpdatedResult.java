@@ -3,7 +3,7 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,8 +21,8 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode
-public final class CredentialsUpdatedResult implements TransactionResultEvent, AccountTransactionResult {
+@EqualsAndHashCode(callSuper = true)
+public final class CredentialsUpdatedResult extends TransactionResultEvent implements AccountTransactionResult {
 
     /**
      * The account which credentials has been updated.
@@ -30,7 +30,7 @@ public final class CredentialsUpdatedResult implements TransactionResultEvent, A
     private final AccountAddress account;
 
     /**
-     * The new {@link CredentialRegistrationId}`s.
+     * The new {@link CredentialRegistrationId}`s that were added.
      */
     private final List<CredentialRegistrationId> newCredIds;
 
@@ -40,7 +40,7 @@ public final class CredentialsUpdatedResult implements TransactionResultEvent, A
     private final List<CredentialRegistrationId> removedCredIds;
 
     /**
-     * The new account threshold
+     * The (possibly) updated account threshold
      */
     private final int newThreshold;
 

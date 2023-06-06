@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The finalizationCommitteeParameters were updated (chain parameters version 2)
+ */
 @Builder
 @Getter
 @ToString

@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The gas rewards were updated (chain parameters version 2).
+ */
 @Builder
 @Getter
 @EqualsAndHashCode

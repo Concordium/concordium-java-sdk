@@ -1,11 +1,8 @@
 package com.concordium.sdk.responses.poolstatus;
 
 import com.concordium.sdk.responses.BakerId;
-import com.concordium.sdk.serializing.JsonMapper;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;

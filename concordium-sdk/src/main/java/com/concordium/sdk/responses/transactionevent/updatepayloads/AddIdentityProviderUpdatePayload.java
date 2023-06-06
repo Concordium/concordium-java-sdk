@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * An identity provider was added.
+ */
 @Builder
 @Getter
 @EqualsAndHashCode

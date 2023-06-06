@@ -38,11 +38,11 @@ public class Fraction {
     }
 
     /**
-     * Parses {@link Ratio} to {@link Fraction}
-     * @param ratio {@link Ratio} returned by the GRPC V2 API
-     * @return parsed {@link Fraction}
+     * Parses {@link Ratio} to {@link Fraction}.
+     * @param ratio {@link Ratio} returned by the GRPC V2 API.
+     * @return parsed {@link Fraction}.
      */
-    public static Fraction from(Ratio ratio) {
+    public static Fraction parse(Ratio ratio) {
         return Fraction.builder()
                 .numerator(BigInteger.valueOf(ratio.getNumerator()))
                 .denominator(BigInteger.valueOf(ratio.getDenominator()))

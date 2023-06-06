@@ -4,7 +4,7 @@ import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.accountinfo.credential.Credential;
 import com.concordium.sdk.serializing.JsonMapper;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Index;
 import com.concordium.sdk.types.Nonce;

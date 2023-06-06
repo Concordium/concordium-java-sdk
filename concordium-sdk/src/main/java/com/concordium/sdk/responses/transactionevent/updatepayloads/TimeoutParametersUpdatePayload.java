@@ -2,7 +2,6 @@ package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 import com.concordium.grpc.v2.TimeoutParameters;
 import com.concordium.sdk.responses.blocksummary.updates.Fraction;
-import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,6 +9,9 @@ import lombok.ToString;
 
 import java.time.Duration;
 
+/**
+ * The consensus timeouts were updated (chain parameters version 2).
+ */
 @Builder
 @Getter
 @EqualsAndHashCode
@@ -37,8 +39,8 @@ public class TimeoutParametersUpdatePayload implements UpdatePayload {
     public static TimeoutParametersUpdatePayload parse(TimeoutParameters timeoutParameters) {
         return TimeoutParametersUpdatePayload.builder()
                 .timeoutBase(Duration.ofMillis(timeoutParameters.getTimeoutBase().getValue()))
-                .timeoutIncrease(Fraction.from(timeoutParameters.getTimeoutIncrease()))
-                .timeoutDecrease(Fraction.from(timeoutParameters.getTimeoutDecrease()))
+                .timeoutIncrease(Fraction.parse(timeoutParameters.getTimeoutIncrease()))
+                .timeoutDecrease(Fraction.parse(timeoutParameters.getTimeoutDecrease()))
                 .build();
     }
 

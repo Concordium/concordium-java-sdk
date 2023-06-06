@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionevent;
 
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import lombok.*;
 

@@ -7,6 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The mint distribution was updated.
+ * The payload as it looks in protocol version 4 and onwards.
+ */
 @Builder
 @Getter
 @EqualsAndHashCode

@@ -12,7 +12,7 @@ import org.apache.commons.codec.binary.Hex;
  */
 @Getter
 @ToString
-public final class TransferMemoResult implements TransactionResultEvent {
+public final class TransferMemoResult extends TransactionResultEvent {
     private final String memo;
 
     @JsonCreator

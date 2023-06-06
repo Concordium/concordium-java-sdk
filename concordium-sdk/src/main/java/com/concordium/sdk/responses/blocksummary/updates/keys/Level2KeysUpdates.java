@@ -10,7 +10,9 @@ import lombok.*;
 import java.util.List;
 
 /**
- * Level 2 update keys
+ * Level 2 update keys.
+ * The set of keys authorized for chain updates,
+ * together with access structures {@link Authorization} determining which keys are authorized for which update types.
  */
 @Getter
 @ToString
@@ -96,7 +98,7 @@ public final class Level2KeysUpdates {
     private final Authorization timeParameters;
 
     /**
-     * All keys authorized.
+     * The set of keys authorized for chain updates.
      */
     private final List<VerificationKey> verificationKeys;
 

@@ -1,9 +1,8 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 
-
-public interface TransactionResultEvent {
+public abstract class TransactionResultEvent {
 // Used for tagging the underlying TransactionResultEvents
 
-    TransactionResultEventType getType();
+    public abstract TransactionResultEventType getType();
 }

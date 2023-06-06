@@ -3,13 +3,13 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 /**
  * Updated baking reward commission for a baker pool.
@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Getter
-@SuperBuilder
 public class BakerSetBakingRewardCommission extends AbstractBakerResult implements BakerEvent {
 
     /**
@@ -25,6 +24,7 @@ public class BakerSetBakingRewardCommission extends AbstractBakerResult implemen
      */
     private final PartsPerHundredThousand bakingRewardCommission;
 
+    @Builder
     @JsonCreator
     BakerSetBakingRewardCommission(@JsonProperty("bakerId") AccountIndex bakerId,
                                    @JsonProperty("account") AccountAddress bakerAccount,
@@ -42,7 +42,7 @@ public class BakerSetBakingRewardCommission extends AbstractBakerResult implemen
     public static BakerSetBakingRewardCommission parse(com.concordium.grpc.v2.BakerEvent.BakerSetBakingRewardCommission bakerSetBakingRewardCommission, com.concordium.grpc.v2.AccountAddress sender) {
         return BakerSetBakingRewardCommission.builder()
                 .bakerId(AccountIndex.from(bakerSetBakingRewardCommission.getBakerId().getValue()))
-                .account(AccountAddress.parse(sender))
+                .bakerAccount(AccountAddress.parse(sender))
                 .bakingRewardCommission(PartsPerHundredThousand.parse(bakerSetBakingRewardCommission.getBakingRewardCommission()))
                 .build();
     }

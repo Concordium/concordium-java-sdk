@@ -27,6 +27,15 @@ public class Energy {
         return new Energy(UInt64.from(value));
     }
 
+    /**
+     * Parses {@link com.concordium.grpc.v2.Energy} to {@link Energy}.
+     * @param energy {@link com.concordium.grpc.v2.Energy} returned by the GRPC V2 API.
+     * @return parsed {@link Energy}.
+     */
+    public static Energy parse(com.concordium.grpc.v2.Energy energy) {
+        return from(energy.getValue());
+    }
+
     public long getValue() {
         return value.getValue();
     }

@@ -17,8 +17,8 @@ import org.apache.commons.codec.binary.Hex;
 @Getter
 @ToString
 @Builder
-@EqualsAndHashCode
-public final class DataRegisteredResult implements TransactionResultEvent, AccountTransactionResult {
+@EqualsAndHashCode(callSuper = true)
+public final class DataRegisteredResult extends TransactionResultEvent implements AccountTransactionResult {
 
     /**
      * Data registered.

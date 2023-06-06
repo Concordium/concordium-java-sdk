@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;

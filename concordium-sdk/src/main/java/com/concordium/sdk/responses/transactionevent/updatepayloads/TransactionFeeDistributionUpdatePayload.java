@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The transaction fee distribution was updated.
+ */
 @Builder
 @Getter
 @EqualsAndHashCode

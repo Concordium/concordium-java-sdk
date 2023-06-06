@@ -1,4 +1,4 @@
-package com.concordium.sdk.transactions;
+package com.concordium.sdk.types;
 
 import lombok.val;
 import org.junit.Test;

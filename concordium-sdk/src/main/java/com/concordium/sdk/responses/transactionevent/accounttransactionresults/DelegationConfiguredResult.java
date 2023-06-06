@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * An account configured delegation.
- * The details of what happened are stored in the list of {@link DelegationEvent}
+ * The details of what happened are stored in the list of {@link DelegationEvent}s.
  */
 @Builder
 @Getter

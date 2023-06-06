@@ -17,8 +17,8 @@ import java.util.Map;
 @ToString
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode
-public class ResumedResult implements TransactionResultEvent, ContractTraceElement {
+@EqualsAndHashCode(callSuper = true)
+public class ResumedResult extends TransactionResultEvent implements ContractTraceElement {
     /**
      * The contract resumed.
      */

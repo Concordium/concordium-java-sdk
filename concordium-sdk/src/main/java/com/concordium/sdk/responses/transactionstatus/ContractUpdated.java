@@ -18,23 +18,24 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * A contract instance was updated
+ * A contract instance was updated.
+ * In general a single Update transaction will generate one or more of these events, together with possibly some transfers.
  */
 @ToString
 @Getter
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Builder
-public class ContractUpdated implements TransactionResultEvent, ContractTraceElement {
+public class ContractUpdated extends TransactionResultEvent implements ContractTraceElement {
 
     /**
-     * The amount provided
+     * The amount the method was invoked with.
      */
     private CCDAmount amount;
 
     /**
      * The instigator i.e. the source invoking the contract.
-     * This can either be account or a contract.
+     * This can either be an account or a contract.
      */
     private final AbstractAddress instigator;
 

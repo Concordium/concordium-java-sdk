@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionevent;
 
 import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

@@ -17,6 +17,9 @@ import java.util.List;
 @Builder
 public final class RootKeysUpdates {
     private final List<VerificationKey> verificationKeys;
+    /**
+     * The number of keys needed to authorize an update.
+     */
     private final int threshold;
 
     @JsonCreator

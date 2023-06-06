@@ -1,7 +1,9 @@
-package com.concordium.sdk.transactions;
+package com.concordium.sdk.types;
 
 import com.concordium.sdk.crypto.SHA256;
 import com.concordium.sdk.serializing.JsonMapper;
+import com.concordium.sdk.transactions.AccountType;
+import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,8 +19,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-@EqualsAndHashCode
-public final class AccountAddress {
+@EqualsAndHashCode(callSuper = true)
+public final class AccountAddress extends AbstractAddress  {
     public static final int BYTES = 32;
     private final static int VERSION = 1;
     private final static int ACCOUNT_ADDRESS_PREFIX_SIZE = 29;
@@ -28,6 +30,7 @@ public final class AccountAddress {
     private final byte[] bytes;
 
     private AccountAddress(byte[] bytes) {
+        super(AccountType.ADDRESS_ACCOUNT);
         this.bytes = bytes;
     }
 
@@ -134,6 +137,7 @@ public final class AccountAddress {
 
     @JsonCreator
     AccountAddress(String encodedAddress) {
+        super(AccountType.ADDRESS_ACCOUNT);
         this.bytes = AccountAddress.from(encodedAddress).getBytes();
     }
 

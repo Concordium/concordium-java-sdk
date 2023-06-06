@@ -7,6 +7,10 @@ import lombok.ToString;
 
 import java.util.Optional;
 
+/**
+ * An account was deregistered as a baker.
+ * This is the result of a successful UpdateBakerStake transaction.
+ */
 @Builder
 @ToString
 @EqualsAndHashCode

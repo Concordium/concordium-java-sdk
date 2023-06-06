@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionevent.accounttransactionresults;
 
 import com.concordium.grpc.v2.AccountTransactionEffects;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Memo;
 import lombok.EqualsAndHashCode;
@@ -9,8 +9,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-@SuperBuilder
 @Getter
+@SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class AccountTransferWithMemoResult extends AccountTransferResult {

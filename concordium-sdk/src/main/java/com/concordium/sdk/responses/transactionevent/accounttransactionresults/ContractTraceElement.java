@@ -21,7 +21,7 @@ public interface ContractTraceElement {
             case UPDATED:
                 return ContractUpdated.parse(traceElement.getUpdated());
             case TRANSFERRED:
-                return TransferredResult.parse(traceElement.getTransferred());
+                TransferredResult.parse(traceElement.getTransferred());
             case INTERRUPTED:
                 return InterruptedResult.parse(traceElement.getInterrupted());
             case RESUMED:

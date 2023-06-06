@@ -4,7 +4,9 @@ import com.concordium.grpc.v2.Address;
 import com.concordium.sdk.transactions.AccountType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
 import java.util.Map;
+
 import lombok.val;
 
 /**
@@ -30,10 +32,7 @@ public abstract class AbstractAddress {
                         contract.get("subindex"),
                         contract.get("index"));
             } else {
-                return new Account(
-                        AccountType.from(
-                                ((String) o.get("type"))),
-                        ((String) o.get("address")));
+                return AccountAddress.from((String) o.get("address"));
             }
         } catch (Exception e) {
             return null;
@@ -46,13 +45,14 @@ public abstract class AbstractAddress {
 
     /**
      * Parses {@link Address} to {@link AbstractAddress}.
+     *
      * @param address {@link Address} returned by the GRPC V2 API.
      * @return parsed {@link AbstractAddress}.
      */
     public static AbstractAddress parse(Address address) {
         switch (address.getTypeCase()) {
             case ACCOUNT:
-                return Account.parse(address.getAccount());
+                return AccountAddress.parse(address.getAccount());
             case CONTRACT:
                 return ContractAddress.parse(address.getContract());
             default:

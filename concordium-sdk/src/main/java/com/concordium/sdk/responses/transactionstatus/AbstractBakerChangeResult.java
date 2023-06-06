@@ -1,19 +1,14 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
 @Getter
 @ToString(callSuper = true)
-@SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public abstract class AbstractBakerChangeResult extends AbstractBakerResult {
 
@@ -43,7 +38,7 @@ public abstract class AbstractBakerChangeResult extends AbstractBakerResult {
         this.signKey = Hex.decodeHex(signKey);
     }
 
-    public AbstractBakerChangeResult(AccountIndex bakerId, AccountAddress account, byte[] electionKey, byte[] aggregationKey, byte[] signKey) {
+    AbstractBakerChangeResult(AccountIndex bakerId, AccountAddress account, byte[] electionKey, byte[] aggregationKey, byte[] signKey) {
         super(bakerId, account);
         this.electionKey = electionKey;
         this.aggregationKey = aggregationKey;

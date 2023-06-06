@@ -27,8 +27,8 @@ import static org.mockito.Mockito.*;
 public class ClientV2GetElectionInfoTest {
 
     private static final byte[] BLOCK_HASH = new byte[]{1, 1, 1};
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
-            = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
+            = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final int ELECTION_DIFFICULTY = 100;
     private static final double ELECTION_DIFFICULTY_EXPECTED = 0.001D;
     private static final byte[] ELECTION_NONCE = new byte[]{9, 9, 9};

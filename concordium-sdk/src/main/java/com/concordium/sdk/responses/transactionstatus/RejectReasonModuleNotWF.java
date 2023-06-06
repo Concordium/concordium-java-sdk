@@ -4,10 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Error raised when validating the Wasm module.
+ * Error raised when validating a Wasm module that is not well formed.
  */
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class RejectReasonModuleNotWF extends RejectReason {
     @Override
     public RejectReasonType getType() {

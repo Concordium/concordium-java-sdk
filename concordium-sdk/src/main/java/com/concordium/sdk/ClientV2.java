@@ -25,7 +25,7 @@ import com.concordium.sdk.responses.transactionevent.BlockTransactionEvent;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
 import com.concordium.sdk.responses.transactionstatus.TransactionSummary;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Transaction;

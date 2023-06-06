@@ -3,13 +3,13 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 /**
  * Updated finalization reward commission for a baker pool.
@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
 public class BakerSetFinalizationRewardCommission extends AbstractBakerResult implements BakerEvent {
 
     /**
@@ -25,6 +24,7 @@ public class BakerSetFinalizationRewardCommission extends AbstractBakerResult im
      */
     private final PartsPerHundredThousand finalizationRewardCommission;
 
+    @Builder
     @JsonCreator
     BakerSetFinalizationRewardCommission(@JsonProperty("bakerId") AccountIndex bakerId,
                                          @JsonProperty("account") AccountAddress bakerAccount,
@@ -42,7 +42,7 @@ public class BakerSetFinalizationRewardCommission extends AbstractBakerResult im
     public static BakerSetFinalizationRewardCommission parse(com.concordium.grpc.v2.BakerEvent.BakerSetFinalizationRewardCommission bakerSetFinalizationRewardCommission, com.concordium.grpc.v2.AccountAddress sender) {
         return BakerSetFinalizationRewardCommission.builder()
                 .bakerId(AccountIndex.from(bakerSetFinalizationRewardCommission.getBakerId().getValue()))
-                .account(AccountAddress.parse(sender))
+                .bakerAccount(AccountAddress.parse(sender))
                 .finalizationRewardCommission(PartsPerHundredThousand.parse(bakerSetFinalizationRewardCommission.getFinalizationRewardCommission()))
                 .build();
     }

@@ -17,8 +17,14 @@ import java.util.List;
 @EqualsAndHashCode
 public class NewRelease {
 
+    /**
+     * Effective time of the release in milliseconds since unix epoch.
+     */
     private final Timestamp timestamp;
 
+    /**
+     * Amount to be released.
+     */
     private final CCDAmount amount;
 
     @JsonCreator

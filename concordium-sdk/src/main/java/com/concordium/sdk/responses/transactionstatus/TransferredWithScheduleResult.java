@@ -3,12 +3,11 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -18,9 +17,8 @@ import java.util.List;
  */
 @Getter
 @ToString
-@SuperBuilder
-@EqualsAndHashCode
-public  class TransferredWithScheduleResult implements TransactionResultEvent, AccountTransactionResult {
+@EqualsAndHashCode(callSuper = true)
+public  class TransferredWithScheduleResult extends TransactionResultEvent implements AccountTransactionResult {
 
     /**
      * The list of new releases. Ordered by increasing timestamp.
@@ -38,8 +36,9 @@ public  class TransferredWithScheduleResult implements TransactionResultEvent, A
     private final AccountAddress from;
 
 
+    @Builder
     @JsonCreator
-    TransferredWithScheduleResult(@JsonProperty("amount") List<NewRelease> amount,
+    public TransferredWithScheduleResult(@JsonProperty("amount") List<NewRelease> amount,
                                   @JsonProperty("to") AccountAddress to,
                                   @JsonProperty("from") AccountAddress from) {
         this.amount = amount;

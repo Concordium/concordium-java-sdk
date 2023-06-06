@@ -3,14 +3,14 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.DelegationEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.DelegationEventType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 /**
  * The delegator increased its stake.
@@ -18,7 +18,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
 public class DelegationStakeIncreased extends AbstractDelegatorResult implements DelegationEvent {
 
     /**
@@ -26,6 +25,7 @@ public class DelegationStakeIncreased extends AbstractDelegatorResult implements
      */
     private final CCDAmount newStake;
 
+    @Builder
     @JsonCreator
     DelegationStakeIncreased(@JsonProperty("delegatorId") AccountIndex delegatorId,
                              @JsonProperty("account") AccountAddress delegatorAddress,

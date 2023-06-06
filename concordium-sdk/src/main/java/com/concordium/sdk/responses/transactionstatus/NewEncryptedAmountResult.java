@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.NewEncryptedAmountEvent;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,9 +14,9 @@ import org.apache.commons.codec.binary.Hex;
 @Getter
 @ToString
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Builder
-public final class NewEncryptedAmountResult implements TransactionResultEvent {
+public final class NewEncryptedAmountResult extends TransactionResultEvent {
 
     /**
      * The affected account.
@@ -44,6 +44,11 @@ public final class NewEncryptedAmountResult implements TransactionResultEvent {
         this.encryptedAmount = encryptedAmount;
     }
 
+    /**
+     * Parses {@link NewEncryptedAmountEvent} to {@link NewEncryptedAmountResult}.
+     * @param added {@link NewEncryptedAmountEvent} returned by the GRPC V2 API.
+     * @return parsed {@link NewEncryptedAmountResult}.
+     */
     public static NewEncryptedAmountResult parse(NewEncryptedAmountEvent added) {
         return NewEncryptedAmountResult.builder()
                 .account(AccountAddress.parse(added.getReceiver()))

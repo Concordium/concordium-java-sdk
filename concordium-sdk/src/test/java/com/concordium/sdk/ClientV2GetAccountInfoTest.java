@@ -51,8 +51,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetAccountInfoTest {
 
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
-            = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
+            = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final byte[] ENCRYPTED_AMOUNT = new byte[]{0, 0, 1};
     private static final long ACCOUNT_AMOUNT = 10000;
     private static final long ACCOUNT_INDEX = 1;

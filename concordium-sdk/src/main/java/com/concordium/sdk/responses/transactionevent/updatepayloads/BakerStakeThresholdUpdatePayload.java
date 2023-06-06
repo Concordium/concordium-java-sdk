@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The minimum CCD needed to become a baker was updated.
+ */
 @Builder
 @Getter
 @EqualsAndHashCode

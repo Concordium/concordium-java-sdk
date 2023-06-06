@@ -10,7 +10,7 @@ import lombok.Getter;
  * Contract instance does not exist on chain.
  */
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class RejectReasonInvalidContractAddress extends RejectReason {
     private final ContractAddress contractAddress;
 
@@ -25,7 +25,7 @@ public class RejectReasonInvalidContractAddress extends RejectReason {
      * @return parsed {@link RejectReasonInvalidContractAddress}.
      */
     public static RejectReason parse(com.concordium.grpc.v2.ContractAddress invalidContractAddress) {
-        return new RejectReasonInvalidContractAddress(ContractAddress.from(invalidContractAddress.getIndex(), invalidContractAddress.getSubindex()));
+        return new RejectReasonInvalidContractAddress(ContractAddress.parse(invalidContractAddress));
     }
 
     @Override

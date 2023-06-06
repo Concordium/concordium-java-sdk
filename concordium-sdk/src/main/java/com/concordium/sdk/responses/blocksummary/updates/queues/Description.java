@@ -14,8 +14,17 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Getter
 public class Description {
+    /**
+     * The name of the anonymity revoker or identity provider.
+     */
     private final String name;
+    /**
+     * A link to more information about the anonymity revoker or identity provider.
+     */
     private final String url;
+    /**
+     * A free form description of the anonymity revoker or identity provider.
+     */
     private final String description;
 
     @JsonCreator

@@ -2,7 +2,7 @@ package com.concordium.sdk.queries;
 
 import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
 import com.concordium.sdk.responses.transactionstatus.ContractVersion;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Hash;
 import concordium.ConcordiumP2PRpc;

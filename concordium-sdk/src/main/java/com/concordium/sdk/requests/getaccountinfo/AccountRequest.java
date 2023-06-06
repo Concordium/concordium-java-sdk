@@ -2,7 +2,7 @@ package com.concordium.sdk.requests.getaccountinfo;
 
 import com.concordium.sdk.Client;
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.transactions.Hash;
 import com.google.protobuf.ByteString;
@@ -87,6 +87,6 @@ public final class AccountRequest {
     }
 
     public enum Type {
-        ADDRESS, INDEX, CREDENTIAL_REGISTRATION_ID;
+        ADDRESS, INDEX, CREDENTIAL_REGISTRATION_ID
     }
 }

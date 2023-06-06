@@ -14,6 +14,11 @@ public enum CredentialType {
     @JsonProperty("normal")
     NORMAL;
 
+    /**
+     * Parses {@link com.concordium.grpc.v2.CredentialType} to {@link CredentialType}.
+     * @param credentialType {@link com.concordium.grpc.v2.CredentialType} returned by the GRPC V2 API.
+     * @return parsed {@link CredentialType}.
+     */
     public static CredentialType parse(com.concordium.grpc.v2.CredentialType credentialType) {
         switch (credentialType) {
             case CREDENTIAL_TYPE_INITIAL: return CredentialType.INITIAL;

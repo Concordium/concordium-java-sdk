@@ -1,10 +1,12 @@
 package com.concordium.sdk.responses.blocksummary.updates.queues;
 
 import com.concordium.grpc.v2.TimeParametersCpv1;
-import com.concordium.sdk.responses.transactionevent.updatepayloads.TimeParametersCPV1UpdatePayload;
+import com.concordium.sdk.responses.transactionevent.updatepayloads.UpdatePayload;
+import com.concordium.sdk.responses.transactionevent.updatepayloads.UpdateType;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,7 +14,8 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public final class TimeParameters {
+@Builder
+public final class TimeParameters implements UpdatePayload {
 
     /**
      * Length of a reward period (a number of epochs).
@@ -33,14 +36,19 @@ public final class TimeParameters {
     }
 
     /**
-     * Parses {@link TimeParametersCpv1} to {@link TimeParametersCPV1UpdatePayload}.
+     * Parses {@link TimeParametersCpv1} to {@link TimeParameters}.
      * @param timeParametersCpv1 {@link TimeParametersCpv1} returned by the GRPC V2 API.
-     * @return parsed {@link TimeParametersCPV1UpdatePayload}.
+     * @return parsed {@link TimeParameters}.
      */
-    public static TimeParametersCPV1UpdatePayload parse(TimeParametersCpv1 timeParametersCpv1) {
-        return TimeParametersCPV1UpdatePayload.builder()
+    public static TimeParameters parse(TimeParametersCpv1 timeParametersCpv1) {
+        return TimeParameters.builder()
                 .rewardPeriodLength(UInt64.from(timeParametersCpv1.getRewardPeriodLength().getValue().getValue()))
                 .mintPerPayday(timeParametersCpv1.getMintPerPayday().getMantissa()*Math.pow(10, -1 * timeParametersCpv1.getMintPerPayday().getExponent()))
                 .build();
+    }
+
+    @Override
+    public UpdateType getType() {
+        return UpdateType.TIME_PARAMETERS_CPV_1_UPDATE;
     }
 }

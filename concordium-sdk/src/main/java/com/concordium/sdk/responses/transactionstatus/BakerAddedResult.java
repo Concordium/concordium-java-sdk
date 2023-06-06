@@ -1,18 +1,19 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.BakerKeysEvent;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.AccountTransactionResult;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEvent;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.BakerEventType;
 import com.concordium.sdk.responses.transactionevent.accounttransactionresults.TransactionType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 /**
  * A baker was added.
@@ -20,7 +21,6 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @Getter
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
 public final class BakerAddedResult extends AbstractBakerChangeResult implements AccountTransactionResult, BakerEvent {
 
     /**
@@ -47,6 +47,20 @@ public final class BakerAddedResult extends AbstractBakerChangeResult implements
         this.stake = stake;
     }
 
+    @Builder
+    BakerAddedResult(
+            AccountIndex bakerId,
+            AccountAddress account,
+            byte[] electionKey,
+            byte[] aggregationKey,
+            byte[] signKey,
+            boolean restakeEarnings,
+            CCDAmount stake) {
+        super(bakerId, account, electionKey, aggregationKey, signKey);
+        this.restakeEarnings = restakeEarnings;
+        this.stake = stake;
+    }
+
 
     /**
      * Parses {@link com.concordium.grpc.v2.BakerEvent.BakerAdded} to {@link BakerAddedResult}.
@@ -54,12 +68,13 @@ public final class BakerAddedResult extends AbstractBakerChangeResult implements
      * @return parsed {@link BakerAddedResult}.
      */
     public static BakerAddedResult parse(com.concordium.grpc.v2.BakerEvent.BakerAdded bakerAdded) {
+        BakerKeysEvent keysEvent = bakerAdded.getKeysEvent();
         return BakerAddedResult.builder()
-                .bakerId(AccountIndex.from(bakerAdded.getKeysEvent().getBakerId().getValue()))
-                .account(AccountAddress.parse(bakerAdded.getKeysEvent().getAccount()))
-                .signKey(bakerAdded.getKeysEvent().getSignKey().getValue().toByteArray())
-                .electionKey(bakerAdded.getKeysEvent().getElectionKey().getValue().toByteArray())
-                .aggregationKey(bakerAdded.getKeysEvent().getAggregationKey().getValue().toByteArray())
+                .bakerId(AccountIndex.from(keysEvent.getBakerId().getValue()))
+                .account(AccountAddress.parse(keysEvent.getAccount()))
+                .signKey(keysEvent.getSignKey().getValue().toByteArray())
+                .electionKey(keysEvent.getElectionKey().getValue().toByteArray())
+                .aggregationKey(keysEvent.getAggregationKey().getValue().toByteArray())
                 .stake(CCDAmount.fromMicro(bakerAdded.getStake().getValue()))
                 .restakeEarnings(bakerAdded.getRestakeEarnings())
                 .build();

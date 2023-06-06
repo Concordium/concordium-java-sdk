@@ -7,12 +7,18 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The euro per energy exchange rate was updated.
+ */
 @Builder
 @Getter
 @EqualsAndHashCode
 @ToString
 public class EuroPerEnergyUpdatePayload implements UpdatePayload {
 
+    /**
+     * The new euro per energy exchange rate.
+     */
     private Fraction value;
 
     /**
@@ -22,7 +28,7 @@ public class EuroPerEnergyUpdatePayload implements UpdatePayload {
      */
     public static EuroPerEnergyUpdatePayload parse(ExchangeRate exchangeRate){
         return EuroPerEnergyUpdatePayload.builder()
-                .value(Fraction.from(exchangeRate.getValue()))
+                .value(Fraction.parse(exchangeRate.getValue()))
                 .build();
 
     }

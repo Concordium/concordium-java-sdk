@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public final class UpdateEnqueuedResult implements TransactionResultEvent {
+public final class UpdateEnqueuedResult extends TransactionResultEvent {
 
     private final UpdateEnqueuedPayloadResult payload;
 

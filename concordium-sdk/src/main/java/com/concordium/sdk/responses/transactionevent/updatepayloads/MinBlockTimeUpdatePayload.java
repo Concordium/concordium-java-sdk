@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
-import com.concordium.grpc.v2.Description;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -8,6 +7,9 @@ import lombok.ToString;
 
 import java.time.Duration;
 
+/**
+ * The minimum time between blocks was updated (chain parameters version 2)
+ */
 @Builder
 @Getter
 @EqualsAndHashCode
@@ -15,7 +17,7 @@ import java.time.Duration;
 public class MinBlockTimeUpdatePayload implements UpdatePayload {
 
     /**
-     * The minimum time between blocks.
+     * The new minimum time between blocks.
      */
     private Duration minBlockTime;
 

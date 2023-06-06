@@ -14,9 +14,9 @@ import org.apache.commons.codec.binary.Hex;
 @Getter
 @ToString
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Builder
-public final class ModuleDeployedResult implements TransactionResultEvent, AccountTransactionResult {
+public final class ModuleDeployedResult extends TransactionResultEvent implements AccountTransactionResult {
 
     /**
      * The reference to the module.
@@ -29,6 +29,11 @@ public final class ModuleDeployedResult implements TransactionResultEvent, Accou
         this.reference = Hex.decodeHex(reference);
     }
 
+    /**
+     * Parses {@link ModuleRef} to {@link ModuleDeployedResult}.
+     * @param moduleDeployed {@link ModuleRef} returned by the GRPC V2 API.
+     * @return parsed {@link ModuleDeployedResult}.
+     */
     public static ModuleDeployedResult parse(ModuleRef moduleDeployed) {
         return ModuleDeployedResult.builder().reference(moduleDeployed.getValue().toByteArray()).build();
     }

@@ -1,8 +1,7 @@
 package com.concordium.sdk.responses.birkparamsters;
 
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.transactions.AccountAddress;
-import com.concordium.sdk.types.UInt64;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;

@@ -3,7 +3,7 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.*;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;

@@ -15,7 +15,7 @@ import org.apache.commons.codec.binary.Hex;
 @Getter
 @ToString
 @Builder
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class RejectReasonRejectedReceive extends RejectReason {
     /**
      * The reject reason
@@ -30,7 +30,7 @@ public class RejectReasonRejectedReceive extends RejectReason {
      */
     private final String receiveName;
     /**
-     * The parameter the it was called with.
+     * The parameter the receive method was called with.
      */
     private final String parameter;
 

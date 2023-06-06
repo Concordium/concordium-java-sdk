@@ -1,19 +1,24 @@
 package com.concordium.sdk.responses.transactionevent.updatepayloads;
 
 
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The foundation account was updated.
+ */
 @Builder
 @Getter
 @ToString
 @EqualsAndHashCode
 public class FoundationAccountUpdatePayload implements UpdatePayload{
 
-
+    /**
+     * The new foundation account.
+     */
     private AccountAddress accountAddress;
 
     /**

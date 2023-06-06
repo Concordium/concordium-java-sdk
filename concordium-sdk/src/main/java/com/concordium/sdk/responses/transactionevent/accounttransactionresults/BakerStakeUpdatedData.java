@@ -24,7 +24,7 @@ public class BakerStakeUpdatedData {
     private CCDAmount newStake;
 
     /**
-     * Whether sthe stake was increased or decreased.
+     * Whether the stake was increased or decreased.
      */
     private boolean increased;
 
