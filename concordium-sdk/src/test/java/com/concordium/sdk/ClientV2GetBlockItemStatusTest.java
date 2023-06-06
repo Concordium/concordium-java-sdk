@@ -36,7 +36,6 @@ public class ClientV2GetBlockItemStatusTest {
     private static final String BLOCK_HASH = "d1bf95c1a2acc0947ec3900040c2ba172071aa759adf269c55ebb896aa6825c2";
     private static final String TRANSACTION_HASH = "1ea074f0e12e18684f2d6bbf2039c6db32d2fd5c28e6ba74c8e92f36e88b1901";
     private static final long TRANSACTION_COST = 123121;
-
     private static final BlockItemStatus GRPC_BLOCK_ITEM_STATUS = BlockItemStatus.newBuilder()
             .setFinalized(
                     BlockItemStatus.Finalized.newBuilder()

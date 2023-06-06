@@ -41,7 +41,8 @@ public class GetTransactionStatusInBlockTest {
         val res = TransactionStatusInBlock.fromJson(req);
 
         Assert.assertTrue(res.isPresent());
-        Assert.assertEquals(res.get(), TransactionStatusInBlock.builder()
+        TransactionStatusInBlock actualStatus = res.get();
+        TransactionStatusInBlock expected = TransactionStatusInBlock.builder()
                 .status(Status.FINALIZED)
                 .result(Optional.of(TransactionSummary.builder()
                         .index(0)
@@ -51,7 +52,7 @@ public class GetTransactionStatusInBlockTest {
                         .hash(Hash.from("ea88c209c40f5828aeedf3326f314f66b7adf49e754a94f29b72e9d334d82eb7"))
                         .result(TransactionResult.builder()
                                 .events(Arrays.asList(
-                                        new ModuleCreatedResult("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07")))
+                                        new ModuleDeployedResult("37eeb3e92025c97eaf40b66891770fcd22d926a91caeb1135c7ce7a1ba977c07")))
                                 .outcome(Outcome.SUCCESS)
                                 .build())
                         .type(TransactionTypeInfo.builder()
@@ -59,7 +60,10 @@ public class GetTransactionStatusInBlockTest {
                                 .contents(TransactionContents.DEPLOY_MODULE)
                                 .build())
                         .build()))
-                .build());
+                .build();
+        System.out.println(expected.hashCode());
+        System.out.println(actualStatus.hashCode());
+        Assert.assertEquals(actualStatus, expected);
     }
 
     @Test

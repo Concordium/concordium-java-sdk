@@ -17,7 +17,7 @@ public final class TransactionResult {
     // Please keep them in same order.
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "tag")
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = ModuleCreatedResult.class, name = "ModuleDeployed"),
+            @JsonSubTypes.Type(value = ModuleDeployedResult.class, name = "ModuleDeployed"),
             @JsonSubTypes.Type(value = ContractInitializedResult.class, name = "ContractInitialized"),
             @JsonSubTypes.Type(value = ContractUpdated.class, name = "Updated"),
             @JsonSubTypes.Type(value = TransferredResult.class, name = "Transferred"),
