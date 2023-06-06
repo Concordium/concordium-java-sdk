@@ -24,7 +24,6 @@ import com.concordium.sdk.responses.cryptographicparameters.CryptographicParamet
 import com.concordium.sdk.responses.transactionevent.BlockTransactionEvent;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
-import com.concordium.sdk.responses.transactionstatus.TransactionSummary;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.AccountNonce;
@@ -354,9 +353,9 @@ public final class ClientV2 {
     }
 
     /**
-     * Get a {@link ImmutableList} of {@link TransactionSummary} events in a given block.
+     * Get a {@link ImmutableList} of {@link BlockTransactionEvent} events in a given block.
      * @param blockHashInput The block {@link BlockHashInput} to query
-     * @return {@link ImmutableList} of {@link TransactionSummary}
+     * @return {@link ImmutableList} of {@link BlockTransactionEvent}
      */
     public ImmutableList<BlockTransactionEvent> getBlockTransactionEvents(BlockHashInput blockHashInput) {
         val grpcOutput = this.server().getBlockTransactionEvents(to(blockHashInput));

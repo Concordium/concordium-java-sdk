@@ -43,6 +43,11 @@ public class BlockHashInput {
         return new BlockHashInput(BlockHashInputType.RELATIVE, null, relativeHeight, null);
     }
 
+    /**
+     * Creates a new {@link BlockHashInput} from input {@link UInt64}.
+     * @param absoluteHeight absolute height of the block.
+     * @return Instance of {@link BlockHashInput}.
+     */
     public static BlockHashInput ABSOLUTE(UInt64 absoluteHeight) {
         return new BlockHashInput(BlockHashInputType.ABSOLUTE, null, null, absoluteHeight);
     }
