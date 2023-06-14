@@ -23,6 +23,7 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
+import com.concordium.sdk.responses.invokeinstance.InvokeInstanceResponse;
 import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
@@ -581,6 +582,12 @@ public final class ClientV2 {
         return bannedPeers.build();
     }
 
+    /**
+     * Run the smart contract entrypoint in a given context and in the state at the end of the given block.
+     * TODO better documentation
+     * @param request {@link InvokeInstanceRequest}
+     * @return {@link InvokeInstanceResponse}
+     */
     public InvokeInstanceResponse invokeInstance(InvokeInstanceRequest request) {
         val grpcRequest = com.concordium.grpc.v2.InvokeInstanceRequest.newBuilder()
                 .setBlockHash(to(request.getBlockHash()));
@@ -593,7 +600,8 @@ public final class ClientV2 {
                 .setParameter(to(request.getParameter()))
                 .setEnergy(Energy.newBuilder().setValue(request.getEnergy().getValue()));
 
-        return null;
+        val grpcResponse = this.server().invokeInstance(grpcRequest.build());
+        return InvokeInstanceResponse.parse(grpcResponse);
     }
 
 

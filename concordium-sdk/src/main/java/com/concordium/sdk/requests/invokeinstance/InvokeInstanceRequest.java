@@ -8,7 +8,9 @@ import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.Energy;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Objects;
 
@@ -17,6 +19,8 @@ import java.util.Objects;
  */
 @Builder
 @Getter
+@ToString
+@EqualsAndHashCode
 public class InvokeInstanceRequest {
 
     /**
