@@ -36,7 +36,7 @@ public class BakerConfiguredResult implements AccountTransactionResult {
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.CONFIGURE_BAKER;
     }
 }

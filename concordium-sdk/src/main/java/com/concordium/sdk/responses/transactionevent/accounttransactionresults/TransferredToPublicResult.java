@@ -42,7 +42,7 @@ public class TransferredToPublicResult implements AccountTransactionResult {
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.TRANSFER_TO_PUBLIC;
     }
 }

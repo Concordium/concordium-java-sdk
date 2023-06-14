@@ -45,7 +45,7 @@ public final class CredentialKeysUpdatedResult extends TransactionResultEvent im
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.UPDATE_CREDENTIAL_KEYS;
     }
 }

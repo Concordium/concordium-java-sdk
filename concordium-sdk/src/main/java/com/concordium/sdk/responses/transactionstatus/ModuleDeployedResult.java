@@ -44,7 +44,7 @@ public final class ModuleDeployedResult extends TransactionResultEvent implement
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.DEPLOY_MODULE;
     }
 }

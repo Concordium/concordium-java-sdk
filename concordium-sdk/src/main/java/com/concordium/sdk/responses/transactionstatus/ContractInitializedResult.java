@@ -104,7 +104,7 @@ public final class ContractInitializedResult extends TransactionResultEvent impl
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.INIT_CONTRACT;
     }
 }

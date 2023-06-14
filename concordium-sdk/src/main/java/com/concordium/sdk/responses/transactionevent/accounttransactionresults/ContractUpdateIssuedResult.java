@@ -34,7 +34,7 @@ public class ContractUpdateIssuedResult implements AccountTransactionResult {
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.UPDATE;
     }
 }

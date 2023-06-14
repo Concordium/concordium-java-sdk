@@ -45,7 +45,7 @@ public class BakerStakeUpdatedResult implements AccountTransactionResult {
         return BakerStakeUpdatedResult.builder().build();
     }
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.UPDATE_BAKER_STAKE;
     }
 }

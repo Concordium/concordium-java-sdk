@@ -48,7 +48,7 @@ public final class BakerRemovedResult extends AbstractBakerResult implements Acc
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.REMOVE_BAKER;
     }
 

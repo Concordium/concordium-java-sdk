@@ -55,6 +55,6 @@ public class DelegationStakeIncreased extends AbstractDelegatorResult implements
 
     @Override
     public DelegationEventType getDelegationEventType() {
-        return DelegationEventType.DELEGATION_STAKE_DECREASED;
+        return DelegationEventType.DELEGATION_STAKE_INCREASED;
     }
 }

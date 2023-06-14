@@ -43,7 +43,7 @@ public class NoneResult implements AccountTransactionResult {
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.NONE;
     }
 }

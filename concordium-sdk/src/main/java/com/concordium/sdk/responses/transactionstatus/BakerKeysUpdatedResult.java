@@ -63,7 +63,7 @@ public final class BakerKeysUpdatedResult extends AbstractBakerChangeResult impl
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.UPDATE_BAKER_KEYS;
     }
 

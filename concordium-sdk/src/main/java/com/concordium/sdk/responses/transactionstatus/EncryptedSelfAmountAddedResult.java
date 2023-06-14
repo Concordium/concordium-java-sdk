@@ -63,7 +63,7 @@ public final class EncryptedSelfAmountAddedResult extends TransactionResultEvent
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.TRANSFER_TO_ENCRYPTED;
     }
 }

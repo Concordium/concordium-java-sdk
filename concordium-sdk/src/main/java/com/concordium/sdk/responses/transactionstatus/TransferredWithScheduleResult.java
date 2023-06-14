@@ -69,7 +69,7 @@ public  class TransferredWithScheduleResult extends TransactionResultEvent imple
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.TRANSFER_WITH_SCHEDULE;
     }
 }

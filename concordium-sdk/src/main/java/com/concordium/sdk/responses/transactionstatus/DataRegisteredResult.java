@@ -48,7 +48,7 @@ public final class DataRegisteredResult extends TransactionResultEvent implement
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.REGISTER_DATA;
     }
 }

@@ -86,7 +86,7 @@ public final class BakerAddedResult extends AbstractBakerChangeResult implements
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.ADD_BAKER;
     }
 

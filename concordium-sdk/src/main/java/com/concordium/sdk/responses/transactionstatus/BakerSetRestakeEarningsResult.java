@@ -55,7 +55,7 @@ public final class BakerSetRestakeEarningsResult extends AbstractBakerResult imp
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.UPDATE_BAKER_RESTAKE_EARNINGS;
     }
 

@@ -35,7 +35,7 @@ public class EncryptedAmountTransferredResult implements AccountTransactionResul
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.ENCRYPTED_AMOUNT_TRANSFER;
     }
 }

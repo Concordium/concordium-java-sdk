@@ -86,7 +86,7 @@ public final class CredentialsUpdatedResult extends TransactionResultEvent imple
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.UPDATE_CREDENTIALS;
     }
 }

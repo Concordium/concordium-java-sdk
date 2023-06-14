@@ -30,7 +30,7 @@ public class AccountTransferWithMemoResult extends AccountTransferResult {
                 .build();
     }
     @Override
-    public TransactionType getResultType(){
+    public TransactionType getTransactionType(){
         return TransactionType.TRANSFER_WITH_MEMO;
     }
 }

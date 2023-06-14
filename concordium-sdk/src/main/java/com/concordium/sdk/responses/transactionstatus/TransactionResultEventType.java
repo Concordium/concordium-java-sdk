@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Events emitted by transactions.
  * Should match https://github.com/Concordium/concordium-base/blob/8dcee8746e40d663222aa3b4b04eaa3710e2779e/haskell-src/Concordium/Types/Execution.hs#L736
+ *
+ * Note that these event types are used in the GRPCv1 API.
  */
 public enum TransactionResultEventType {
     @JsonProperty("ModuleDeployed")

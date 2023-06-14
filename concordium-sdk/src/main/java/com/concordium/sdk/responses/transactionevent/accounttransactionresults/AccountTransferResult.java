@@ -41,7 +41,7 @@ public class AccountTransferResult implements AccountTransactionResult {
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.TRANSFER;
     }
 }

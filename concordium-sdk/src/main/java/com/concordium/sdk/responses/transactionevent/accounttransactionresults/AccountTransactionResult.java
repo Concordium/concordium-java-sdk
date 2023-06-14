@@ -6,12 +6,12 @@ import com.concordium.sdk.responses.transactionstatus.*;
 import lombok.val;
 
 /**
- * Result of ann account transaction.
+ * Result of an account transaction.
  * All variants except {@link NoneResult} correspond to a unique transaction that was successful.
  */
 public interface AccountTransactionResult {
 
-    TransactionType getResultType();
+    TransactionType getTransactionType();
 
     /**
      * Parses {@link AccountTransactionEffects} and {@link AccountAddress} to {@link AccountTransactionResult}.

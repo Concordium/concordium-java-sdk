@@ -30,7 +30,7 @@ public class EncryptedAmountTransferredWithMemoResult extends EncryptedAmountTra
                 .build();
     }
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.ENCRYPTED_AMOUNT_TRANSFER_WITH_MEMO;
     }
 }

@@ -43,7 +43,7 @@ public class TransferredWithScheduleAndMemoResult extends TransferredWithSchedul
     }
 
     @Override
-    public TransactionType getResultType() {
+    public TransactionType getTransactionType() {
         return TransactionType.TRANSFER_WITH_SCHEDULE_AND_MEMO;
     }
 }
