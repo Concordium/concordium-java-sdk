@@ -26,6 +26,7 @@ import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.transactionevent.BlockItemStatus;
 import com.concordium.sdk.responses.transactionevent.BlockTransactionEvent;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
@@ -284,17 +285,17 @@ public final class ClientV2 {
     }
 
     /**
-     * Retrieves the {@link TransactionStatus} for a given transaction {@link Hash}
+     * Retrieves the {@link BlockItemStatus} for a given transaction {@link Hash}
      *
      * @param transactionHash The transaction {@link Hash}
-     * @return The {@link TransactionStatus}
+     * @return The {@link BlockItemStatus}
      * @throws BlockNotFoundException if the transaction was not found.
      */
-    public TransactionStatus getBlockItemStatus(Hash transactionHash) throws BlockNotFoundException {
+    public BlockItemStatus getBlockItemStatus(Hash transactionHash) throws BlockNotFoundException {
         try {
             var grpcOutput = this.server()
                     .getBlockItemStatus(toTransactionHash(transactionHash));
-            return to(grpcOutput);
+            return BlockItemStatus.parse(grpcOutput);
         } catch (StatusRuntimeException e) {
             throw BlockNotFoundException.from(transactionHash);
         }
