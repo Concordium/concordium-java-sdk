@@ -13,7 +13,6 @@
 - Changed representation of BakerStakeIncreasedResult
 - Changed representation of RejectReasonDuplicateCredIDs
 - Changed representation of RejectReasonNonExistentCredIDs
-- Changed representation of TransferredResult
 - Changed representation of TransferredWithScheduleResult
 - Fixed bug where AmountAddedByDecryptionResult was being represented wrong.
 - Fixed bug where NewEncryptedAmountResult was being represented wrong.
