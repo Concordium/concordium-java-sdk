@@ -8,11 +8,11 @@ import com.concordium.grpc.v2.ContractAddress;
 import com.concordium.grpc.v2.CredentialPublicKeys;
 import com.concordium.grpc.v2.CredentialRegistrationId;
 import com.concordium.grpc.v2.EncryptedAmount;
+import com.concordium.grpc.v2.Energy;
 import com.concordium.grpc.v2.Memo;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
-import com.concordium.grpc.v2.Timestamp;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
@@ -1457,8 +1457,8 @@ interface ClientV2MapperExtensions {
         val builder = Address.newBuilder();
         switch (address.getType()) {
             case ADDRESS_ACCOUNT:
-                val account = (Account) address;
-                builder.setAccount(to(account.getAddress())).build();
+                com.concordium.sdk.types.AccountAddress account = (com.concordium.sdk.types.AccountAddress) address;
+                builder.setAccount(AccountAddress.newBuilder().setValue(ByteString.copyFrom(account.getBytes())));
                 break;
             case ADDRESS_CONTRACT:
                 val contract = (com.concordium.sdk.types.ContractAddress) address;
@@ -1479,5 +1479,9 @@ interface ClientV2MapperExtensions {
 
     }
 
-    static com.concordium.grpc.v2.Parameter to()
+    static com.concordium.grpc.v2.Parameter to(Parameter parameter) {
+        return com.concordium.grpc.v2.Parameter.newBuilder()
+                .setValue(ByteString.copyFrom(parameter.getBytes()))
+                .build();
+    }
 }

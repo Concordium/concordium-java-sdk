@@ -591,7 +591,7 @@ public final class ClientV2 {
                 .setAmount(to(request.getAmount()))
                 .setEntrypoint(to(request.getEntrypoint()))
                 .setParameter(to(request.getParameter()))
-                .setEnergy(Energy.newBuilder().setValue(request.getEnergy().getValue())); // TODO use Energy wrapper type from other PR
+                .setEnergy(Energy.newBuilder().setValue(request.getEnergy().getValue()));
 
         return null;
     }

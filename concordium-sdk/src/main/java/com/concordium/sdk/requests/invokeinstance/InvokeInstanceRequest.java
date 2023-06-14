@@ -6,7 +6,7 @@ import com.concordium.sdk.transactions.Parameter;
 import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
-import com.concordium.sdk.types.UInt64;
+import com.concordium.sdk.types.Energy;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -57,7 +57,7 @@ public class InvokeInstanceRequest {
      * This cannot exceed `100_000_000_000`, but in practice it should be much less.
      * The maximum block energy is typically in the range of a few million.
      */
-    private UInt64 energy;
+    private Energy energy;
 
     public boolean hasInvoker() {
         return ! Objects.isNull(this.invoker);
