@@ -29,8 +29,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetAccountNonFinalizedTransactionsTest {
 
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS
-            = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS
+            = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final byte[] TRANSACTION_HASH = new byte[]{0, 0, 3};
     private static final TransactionHash GRPC_NON_FINAL_TRANSACTIONS = TransactionHash.newBuilder()
             .setValue(ByteString.copyFrom(TRANSACTION_HASH))
