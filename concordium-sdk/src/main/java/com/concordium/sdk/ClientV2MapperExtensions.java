@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.AccountAddress;
 import com.concordium.grpc.v2.AccountInfo;
 import com.concordium.grpc.v2.BlockItem;
 import com.concordium.grpc.v2.Commitment;
+import com.concordium.grpc.v2.ContractAddress;
 import com.concordium.grpc.v2.CredentialPublicKeys;
 import com.concordium.grpc.v2.CredentialRegistrationId;
 import com.concordium.grpc.v2.EncryptedAmount;
@@ -11,6 +12,7 @@ import com.concordium.grpc.v2.Memo;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
+import com.concordium.grpc.v2.Timestamp;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
@@ -57,10 +59,8 @@ import com.concordium.sdk.transactions.UpdateContractPayload;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
-import com.concordium.sdk.types.Nonce;
+import com.concordium.sdk.types.*;
 import com.concordium.sdk.types.Timestamp;
-import com.concordium.sdk.types.UInt32;
-import com.concordium.sdk.types.UInt64;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -1446,4 +1446,38 @@ interface ClientV2MapperExtensions {
                 .lotteryPower(i.getLotteryPower())
                 .build();
     }
+
+    static ContractAddress to(com.concordium.sdk.types.ContractAddress address) {
+        return ContractAddress.newBuilder()
+                .setIndex(address.getIndex())
+                .setSubindex(address.getSubIndex()).build();
+    }
+
+    static Address to(AbstractAddress address) {
+        val builder = Address.newBuilder();
+        switch (address.getType()) {
+            case ADDRESS_ACCOUNT:
+                val account = (Account) address;
+                builder.setAccount(to(account.getAddress())).build();
+                break;
+            case ADDRESS_CONTRACT:
+                val contract = (com.concordium.sdk.types.ContractAddress) address;
+                builder.setContract(to(contract)).build();
+                break;
+        }
+        return builder.build();
+    }
+
+    static Amount to(CCDAmount amount) {
+        return Amount.newBuilder().setValue(amount.getValue().getValue()).build();
+    }
+
+    static com.concordium.grpc.v2.ReceiveName to(ReceiveName receiveName) {
+        return com.concordium.grpc.v2.ReceiveName.newBuilder()
+                .setValue(receiveName.getContractName() + "." + receiveName.getMethod())
+                .build();
+
+    }
+
+    static com.concordium.grpc.v2.Parameter to()
 }

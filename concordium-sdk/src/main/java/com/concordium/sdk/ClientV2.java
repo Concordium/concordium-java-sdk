@@ -8,6 +8,7 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.invokeinstance.InvokeInstanceRequest;
 import com.concordium.sdk.requests.dumpstart.DumpRequest;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.BakerId;
@@ -37,7 +38,6 @@ import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.ContractAddress;
 import com.google.common.collect.ImmutableList;
-import com.concordium.sdk.transactions.Hash;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
@@ -579,6 +579,21 @@ public final class ClientV2 {
             bannedPeers.add(InetAddress.getByName(peer.getIpAddress().getValue()));
         }
         return bannedPeers.build();
+    }
+
+    public InvokeInstanceResponse invokeInstance(InvokeInstanceRequest request) {
+        val grpcRequest = com.concordium.grpc.v2.InvokeInstanceRequest.newBuilder()
+                .setBlockHash(to(request.getBlockHash()));
+        if (request.hasInvoker()) {
+            grpcRequest.setInvoker(to(request.getInvoker()));
+        }
+        grpcRequest.setInstance(to(request.getInstance()))
+                .setAmount(to(request.getAmount()))
+                .setEntrypoint(to(request.getEntrypoint()))
+                .setParameter(to(request.getParameter()))
+                .setEnergy(Energy.newBuilder().setValue(request.getEnergy().getValue())); // TODO use Energy wrapper type from other PR
+
+        return null;
     }
 
 
