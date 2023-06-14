@@ -106,13 +106,16 @@ public class BlockTransactionEvent {
 
         switch (blockItemSummary.getDetailsCase()) {
             case ACCOUNT_TRANSACTION:
-                builder.accountTransactionDetails(AccountTransactionDetails.parse(blockItemSummary.getAccountTransaction()));
+                builder.accountTransactionDetails(AccountTransactionDetails.parse(blockItemSummary.getAccountTransaction()))
+                        .type(TransactionType.ACCOUNT_TRANSACTION);
                 break;
             case ACCOUNT_CREATION:
-                builder.accountCreationDetails(AccountCreationDetails.parse(blockItemSummary.getAccountCreation()));
+                builder.accountCreationDetails(AccountCreationDetails.parse(blockItemSummary.getAccountCreation()))
+                        .type(TransactionType.CREDENTIAL_DEPLOYMENT_TRANSACTION);
                 break;
             case UPDATE:
-                builder.updateDetails(UpdateDetails.parse(blockItemSummary.getUpdate()));
+                builder.updateDetails(UpdateDetails.parse(blockItemSummary.getUpdate()))
+                        .type(TransactionType.UPDATE_TRANSACTION);
                 break;
         }
 
