@@ -39,14 +39,17 @@ public class BlockItemStatus {
         switch (status.getStatusCase()) {
             case RECEIVED:
                 builder.status(Status.RECEIVED);
+                break;
             case COMMITTED:
                 builder.status(Status.COMMITTED);
                 status.getCommitted().getOutcomesList().forEach(
                         e -> outcomes.add(BlockItemSummaryInBlock.parse(e))
                 );
+                break;
             case FINALIZED:
                 builder.status(Status.FINALIZED);
                 outcomes.add(BlockItemSummaryInBlock.parse(status.getFinalized().getOutcome()));
+                break;
             case STATUS_NOT_SET:
                 throw new IllegalArgumentException();
         }
