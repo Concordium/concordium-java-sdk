@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for GRPC V2 `InvokeInstance` for invoking smart contracts.
 - Removed redundant Account class. Now using AccountAddress instead.
 - Added Energy wrapper class for representing execution cost
 - Added support for BlockHashInput with ABSOLUTE and RELATIVE block height

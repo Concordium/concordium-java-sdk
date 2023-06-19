@@ -33,7 +33,7 @@ public class InvokeInstanceResponse {
     /**
      * If invoking a V0 contract this is absent.
      * Otherwise, if outcome is {@link Outcome#SUCCESS} this is the return value produced by the contract.
-     * If outcome is {@link Outcome#REJECT} this is the return value unless the call failed with out of energy runtime error.
+     * If outcome is {@link Outcome#REJECT} this is the return value unless the call failed with 'out of energy' runtime error.
      * If the V1 contract terminated with a logic error then the return value is present.
      */
     private byte[] returnValue;
