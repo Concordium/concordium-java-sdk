@@ -1422,6 +1422,8 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
+    /**
+     * TODO delete if unused
     static com.concordium.sdk.responses.election.ElectionInfo to(ElectionInfo grpcOutput) {
         return com.concordium.sdk.responses.election.ElectionInfo.builder()
                 .electionDifficulty(to(grpcOutput.getElectionDifficulty().getValue()))
@@ -1437,4 +1439,5 @@ interface ClientV2MapperExtensions {
                 .lotteryPower(i.getLotteryPower())
                 .build();
     }
+     */
 }

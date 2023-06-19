@@ -357,7 +357,7 @@ public final class ClientV2 {
     public ElectionInfo getElectionInfo(BlockHashInput input) {
         var grpcOutput = this.server().getElectionInfo(to(input));
 
-        return ClientV2MapperExtensions.to(grpcOutput);
+        return ElectionInfo.parse(grpcOutput);
     }
 
     /**
