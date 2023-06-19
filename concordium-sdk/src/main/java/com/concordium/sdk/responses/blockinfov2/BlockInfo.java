@@ -108,8 +108,30 @@ public class BlockInfo {
      * @return parsed {@link BlockInfo}.
      */
     public static BlockInfo parse(com.concordium.grpc.v2.BlockInfo info) {
-        val builder = getDefaultBuilder(info);
-        return null;
+        var builder = getDefaultBuilder(info);
+        addOptionalsIfPresent(info, builder);
+        return builder.build();
+    }
+
+    /**
+     * Helper method for parse method. Adds optional fields to builder if present.
+     *
+     * @param info    {@link com.concordium.grpc.v2.BlockInfo} returned by the GRPC V2 API.
+     * @param builder {@link BlockInfoBuilder}.
+     */
+    private static void addOptionalsIfPresent(com.concordium.grpc.v2.BlockInfo info, BlockInfoBuilder builder) {
+        if (info.hasSlotNumber()) {
+            builder.slotNumber(UInt64.from(info.getSlotNumber().getValue()));
+        }
+        if (info.hasBaker()) {
+            builder.baker(BakerId.from(info.getBaker().getValue()));
+        }
+        if (info.hasRound()) {
+            builder.round(UInt64.from(info.getRound().getValue()));
+        }
+        if (info.hasEpoch()) {
+            builder.epoch(UInt64.from(info.getEpoch().getValue()));
+        }
     }
 
     /**

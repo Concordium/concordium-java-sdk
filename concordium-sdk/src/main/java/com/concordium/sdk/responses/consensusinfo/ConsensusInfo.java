@@ -33,11 +33,11 @@ public class ConsensusInfo {
     private Timestamp genesisTime;
     /**
      * (Current) slot duration in milliseconds. Present only in protocol versions 1-5.
-     * TODO handle optional. milliseconds captured by Duration?
+     * TODO handle optional.
      */
     private Duration slotDuration;
     /**
-     * (Current) epoch duration in milliseconds. TODO milliseconds captured by Duration?
+     * (Current) epoch duration in milliseconds.
      */
     private Duration epochDuration;
     /**
@@ -58,7 +58,7 @@ public class ConsensusInfo {
     private UInt32 blocksReceivedCount;
     /**
      * The last time a block was received.
-     * TODO handle optional.
+     * Note, may be null if TODO when is it null?
      */
     private Timestamp blockLastReceivedTime;
     /**
@@ -71,12 +71,12 @@ public class ConsensusInfo {
     private double blockReceiveLatencyEMSD;
     /**
      * Exponential moving average time between receiving blocks.
-     * TODO handle optional.
+     * Note, may be null if TODO when is it null?
      */
     private double blockReceivePeriodEMA;
     /**
      * standard deviation of exponential moving average time between receiving blocks.
-     * TODO handle optional.
+     * Note, may be null if TODO when is it null?
      */
     private double blockReceivePeriodEMSD;
     /**
@@ -85,7 +85,7 @@ public class ConsensusInfo {
     private UInt32 blocksVerifiedCount;
     /**
      * The last time a block was verified (added to the tree).
-     * TODO handle optional.
+     * Note, may be null if TODO when is it null?
      */
     private Timestamp blockLastArrivedTime;
     /**
@@ -98,12 +98,12 @@ public class ConsensusInfo {
     private double blockArriveLatencyEMSD;
     /**
      * Exponential moving average time between block arrivals.
-     * TODO handle optional.
+     * Note, may be null if TODO when is it null?
      */
     private double blockArrivePeriodEMA;
     /**
      * Standard deviation of exponential moving average time between block arrivals.
-     * TODO handle optional.
+     * Note, may be null if TODO when is it null?
      */
     private double blockArrivePeriodEMSD;
     /**
@@ -120,17 +120,17 @@ public class ConsensusInfo {
     private UInt32 finalizationCount;
     /**
      * Time of last verified finalization.
-     * TODO handle optional.
+     * Note, may be null if TODO when is it null?
      */
     private Timestamp lastFinalizedTime;
     /**
      * Exponential moving average time between finalizations.
-     * TODO handle optional.
+     * Note, may be null if TODO when is it null?
      */
     private double finalizationPeriodEMA;
     /**
      * Standard deviation of exponential moving average time between finalizations.
-     * TODO handle optional.
+     * Note, may be null if TODO when is it null?
      */
     private double finalizationPeriodEMSD;
     /**
@@ -177,18 +177,70 @@ public class ConsensusInfo {
 
     /**
      * Parses {@link com.concordium.grpc.v2.ConsensusInfo} to {@link ConsensusInfo}.
+     *
      * @param info {@link com.concordium.grpc.v2.ConsensusInfo} returned by the GRPC V2 API.
      * @return parsed {@link ConsensusInfo}.
      */
     public static ConsensusInfo parse(com.concordium.grpc.v2.ConsensusInfo info) {
-        val builder = getDefaultBuilder(info);
+        var builder = getDefaultBuilder(info);
+        addOptionalsIfPresent(info, builder);
+        return builder.build();
+    }
 
-
-        return null;
+    /**
+     * Helper method for parse method. Adds optional fields to builder if present.
+     *
+     * @param info    {@link com.concordium.grpc.v2.ConsensusInfo} returned by the GRPC V2 API.
+     * @param builder {@link ConsensusInfoBuilder}.
+     */
+    private static void addOptionalsIfPresent(com.concordium.grpc.v2.ConsensusInfo info, ConsensusInfoBuilder builder) {
+        if (info.hasSlotDuration()) {
+            builder.slotDuration(Duration.ofMillis(info.getSlotDuration().getValue()));
+        }
+        if (info.hasBlockLastReceivedTime()) {
+            builder.blockLastReceivedTime(Timestamp.newMillis(info.getBlockLastReceivedTime().getValue()));
+        }
+        if (info.hasBlockReceivePeriodEma()) {
+            builder.blockReceivePeriodEMA(info.getBlockReceivePeriodEma());
+        }
+        if (info.hasBlockReceivePeriodEmsd()) {
+            builder.blockReceivePeriodEMSD(info.getBlockReceivePeriodEmsd());
+        }
+        if (info.hasBlockLastArrivedTime()) {
+            builder.blockLastArrivedTime(Timestamp.newMillis(info.getBlockLastArrivedTime().getValue()));
+        }
+        if (info.hasBlockArrivePeriodEma()) {
+            builder.blockArrivePeriodEMA(info.getBlockArrivePeriodEma());
+        }
+        if (info.hasBlockArrivePeriodEmsd()) {
+            builder.blockArrivePeriodEMSD(info.getBlockArrivePeriodEmsd());
+        }
+        if (info.hasLastFinalizedTime()) {
+            builder.lastFinalizedTime(Timestamp.newMillis(info.getLastFinalizedTime().getValue()));
+        }
+        if (info.hasFinalizationPeriodEma()) {
+            builder.finalizationPeriodEMA(info.getFinalizationPeriodEma());
+        }
+        if (info.hasFinalizationPeriodEmsd()) {
+            builder.finalizationPeriodEMSD(info.getFinalizationPeriodEmsd());
+        }
+        if (info.hasCurrentTimeoutDuration()) {
+            builder.currentTimeoutDuration(Duration.ofMillis(info.getCurrentTimeoutDuration().getValue()));
+        }
+        if (info.hasCurrentRound()) {
+            builder.currentRound(UInt64.from(info.getCurrentRound().getValue()));
+        }
+        if (info.hasCurrentEpoch()) {
+            builder.currentEpoch(UInt64.from(info.getCurrentEpoch().getValue()));
+        }
+        if (info.hasTriggerBlockTime()) {
+            builder.triggerBlockTime(Timestamp.newMillis(info.getTriggerBlockTime().getValue()));
+        }
     }
 
     /**
      * Helper method for parse method. Creates builder with always present fields set.
+     *
      * @param info {@link com.concordium.grpc.v2.ConsensusInfo} returned by the GRPC V2 API.
      * @return {@link ConsensusInfoBuilder} with always present fields set.
      */

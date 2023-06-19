@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Support for protocol V6.
 - Added support for GRPC V2 `GetPeersInfo` for retrieving information of the peers that the node holds.
 - Added support for GRPC V2 `GetNodeInfo` for retrieving various information of the node queried.
 - Added support for GRPC V2 `GetBannedPeers` for retrieving a list of the banned peers.
