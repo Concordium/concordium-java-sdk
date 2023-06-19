@@ -1,10 +1,6 @@
 package com.concordium.sdk.responses;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import lombok.Getter;
-import lombok.val;
-
-import java.util.*;
 
 /**
  * Protocol versions supported by the chain.
@@ -26,7 +22,11 @@ public enum ProtocolVersion {
     /**
      * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P5.txt
      */
-    V5;
+    V5,
+    /**
+     * TODO include link to update like above
+     */
+    V6;
 
     @JsonCreator
     public static ProtocolVersion forValue(int protocolVersion) {
@@ -36,6 +36,7 @@ public enum ProtocolVersion {
             case 3: return ProtocolVersion.V3;
             case 4: return ProtocolVersion.V4;
             case 5: return ProtocolVersion.V5;
+            case 6: return V6;
             default:
                 throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }
@@ -47,6 +48,15 @@ public enum ProtocolVersion {
      * @return parsed {@link ProtocolVersion}.
      */
     public static ProtocolVersion parse(com.concordium.grpc.v2.ProtocolVersion protocolVersion) {
-        return null;
+        switch (protocolVersion) {
+            case PROTOCOL_VERSION_1: return V1;
+            case PROTOCOL_VERSION_2: return V2;
+            case PROTOCOL_VERSION_3: return V3;
+            case PROTOCOL_VERSION_4: return V4;
+            case PROTOCOL_VERSION_5: return V5;
+            case PROTOCOL_VERSION_6: return V6;
+            default:
+                throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
+        }
     }
 }

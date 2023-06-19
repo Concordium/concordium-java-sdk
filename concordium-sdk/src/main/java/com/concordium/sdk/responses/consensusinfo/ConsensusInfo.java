@@ -193,7 +193,8 @@ public class ConsensusInfo {
      * @return {@link ConsensusInfoBuilder} with always present fields set.
      */
     private static ConsensusInfoBuilder getDefaultBuilder(com.concordium.grpc.v2.ConsensusInfo info) {
-        return ConsensusInfo.builder().bestBlock(Hash.from(info.getBestBlock().getValue().toByteArray()))
+        return ConsensusInfo.builder()
+                .bestBlock(Hash.from(info.getBestBlock().getValue().toByteArray()))
                 .genesisBlock(Hash.from(info.getGenesisBlock().getValue().toByteArray()))
                 .genesisTime(Timestamp.newMillis(info.getGenesisTime().getValue()))
                 .epochDuration(Duration.ofMillis(info.getEpochDuration().getValue()))

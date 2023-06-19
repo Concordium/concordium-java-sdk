@@ -253,7 +253,7 @@ public final class ClientV2 {
 
     /**
      * Retrieves a {@link BlockInfo}
-     *
+     * TODO change return value to new BlockInfo
      * @param blockHashInput the block {@link BlockHashInput} to query.
      * @return A {@link BlockInfo} for the block
      * @throws BlockNotFoundException If the block was not found.
