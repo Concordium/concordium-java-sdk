@@ -183,7 +183,7 @@ public final class ClientV2 {
     /**
      * Retrieve the Consensus Info that contains the summary of the current state
      * of the chain from the perspective of the node.
-     *
+     * TODO change return value to ConsensusInfo
      * @return the Consensus Status ({@link ConsensusStatus})
      */
     public ConsensusStatus getConsensusInfo() {

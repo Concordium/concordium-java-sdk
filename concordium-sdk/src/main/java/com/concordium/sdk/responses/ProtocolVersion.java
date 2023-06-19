@@ -40,4 +40,13 @@ public enum ProtocolVersion {
                 throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }
     }
+
+    /**
+     * Parses {@link com.concordium.grpc.v2.ProtocolVersion} to {@link ProtocolVersion}.
+     * @param protocolVersion {@link com.concordium.grpc.v2.ProtocolVersion} returned by the GRPC V2 API.
+     * @return parsed {@link ProtocolVersion}.
+     */
+    public static ProtocolVersion parse(com.concordium.grpc.v2.ProtocolVersion protocolVersion) {
+        return null;
+    }
 }
