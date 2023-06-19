@@ -1421,23 +1421,4 @@ interface ClientV2MapperExtensions {
                         : Optional.empty())
                 .build();
     }
-
-    /**
-     * TODO delete if unused
-    static com.concordium.sdk.responses.election.ElectionInfo to(ElectionInfo grpcOutput) {
-        return com.concordium.sdk.responses.election.ElectionInfo.builder()
-                .electionDifficulty(to(grpcOutput.getElectionDifficulty().getValue()))
-                .leadershipElectionNonce(grpcOutput.getElectionNonce().getValue().toByteArray())
-                .bakerElectionInfo(ImmutableList.copyOf(to(grpcOutput.getBakerElectionInfoList(), ClientV2MapperExtensions::to)))
-                .build();
-    }
-
-    static ElectionInfoBaker to(ElectionInfo.Baker i) {
-        return ElectionInfoBaker.builder()
-                .baker(to(i.getBaker()))
-                .account(to(i.getAccount()))
-                .lotteryPower(i.getLotteryPower())
-                .build();
-    }
-     */
 }
