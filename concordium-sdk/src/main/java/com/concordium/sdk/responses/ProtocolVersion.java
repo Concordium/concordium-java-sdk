@@ -26,7 +26,11 @@ public enum ProtocolVersion {
     /**
      * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P5.txt
      */
-    V5;
+    V5,
+    /**
+     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P6.txt
+     */
+    V6;
 
     @JsonCreator
     public static ProtocolVersion forValue(int protocolVersion) {
@@ -36,6 +40,7 @@ public enum ProtocolVersion {
             case 3: return ProtocolVersion.V3;
             case 4: return ProtocolVersion.V4;
             case 5: return ProtocolVersion.V5;
+            case 6: return ProtocolVersion.V6;
             default:
                 throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }
