@@ -77,16 +77,16 @@ public final class ClientV2 {
 
     public static ClientV2 from(final Connection connection) throws ClientInitializationException {
         try {
-            return new ClientV2(connection.getTimeout(), connection.newChannel(), connection.getCredentials());
+            return new ClientV2(connection.getTimeout(), connection.newChannel());
         } catch (IOException e) {
             throw ClientInitializationException.from(e);
         }
     }
 
-    ClientV2(final int timeout, final ManagedChannel channel, CallCredentials credentials) {
+    ClientV2(final int timeout, final ManagedChannel channel) {
         this.timeout = timeout;
         this.channel = channel;
-        this.blockingStub = QueriesGrpc.newBlockingStub(channel).withCallCredentials(credentials);
+        this.blockingStub = QueriesGrpc.newBlockingStub(channel);
     }
 
     /**

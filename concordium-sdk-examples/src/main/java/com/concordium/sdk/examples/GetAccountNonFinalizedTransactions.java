@@ -35,10 +35,9 @@ public class GetAccountNonFinalizedTransactions implements Callable<Integer> {
     @Override
     public Integer call() throws ClientInitializationException, MalformedURLException {
         URL endpointUrl = new URL(this.endpoint);
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         ClientV2

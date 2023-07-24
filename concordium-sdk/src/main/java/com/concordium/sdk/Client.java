@@ -57,7 +57,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * The Client is responsible for sending requests to the node.
+ * @deprecated since version 5.0.0 instead use {@link ClientV2}.
  */
+@Deprecated
 public final class Client {
 
     /**

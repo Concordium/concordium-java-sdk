@@ -1526,8 +1526,9 @@ interface ClientV2MapperExtensions {
                         .methods(ImmutableList.copyOf(
                                 to(v1.getMethodsList(), com.concordium.grpc.v2.ReceiveName::getValue)))
                         .owner(to(v1.getOwner()))
-                        .version(ContractVersion.V0)
+                        .version(ContractVersion.V1)
                         .sourceModule(to(v1.getSourceModule()))
+                        .name(v1.getName().getValue())
                         .build();
         }
     }
@@ -1557,6 +1558,10 @@ interface ClientV2MapperExtensions {
                 .addIdentityProvider(to(grpcOutput.getAddIdentityProvider()))
                 .cooldownParameters(to(grpcOutput.getCooldownParameters()))
                 .timeParameters(to(grpcOutput.getTimeParameters()))
+                .timeoutParameters(to(grpcOutput.getTimeoutParameters()))
+                .minBlockTime(to(grpcOutput.getMinBlockTime()))
+                .blockEnergyLimit(to(grpcOutput.getBlockEnergyLimit()))
+                .finalizationCommitteeParameters(to(grpcOutput.getFinalizationCommitteeParameters()))
                 .build();
     }
 

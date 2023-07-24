@@ -73,10 +73,28 @@ public final class Connection {
         return !Objects.isNull(tlsConfig);
     }
 
+    /**
+     * A connection builder to use with the {@link Client}
+     * I.e. the GRPCv1 API.
+     * @return the {@link ValidatingConnectionBuilder}
+     * @deprecated since version 5.0.0, instead use {@link Connection#newBuilder()}
+     */
+    @Deprecated
     public static Connection.ConnectionBuilder builder() {
         return new Connection.ValidatingConnectionBuilder();
     }
 
+    /**
+     * A connection builder to use with the {@link ClientV2}
+     * I.e. the GRPCv2 API.
+     * @return the {@link NoCredentialsConnectionBuilder}
+     */
+    public static Connection.ConnectionBuilder newBuilder() {
+        return new Connection.NoCredentialsConnectionBuilder();
+    }
+
+    // A connection builder used for GRPCv1 connections.
+    // In particular this builder also checks that the credentials are set.
     private static class ValidatingConnectionBuilder extends ConnectionBuilder {
         @Override
         public Connection build() {
@@ -89,6 +107,32 @@ public final class Connection {
             }
             if (Objects.isNull(connection.credentials)) {
                 throw new IllegalArgumentException("Connection credentials cannot be null");
+            }
+            // setting a default timeout of 15 000 ms
+            if (connection.timeout < 1) {
+                connection.timeout = DEFAULT_TIMEOUT_MS;
+            }
+            // throws an `IllegalArgumentException` if the configuration is
+            // deemed invalid.
+            if (connection.enforceTLS()) {
+                connection.getTlsConfig().assertOk();
+            }
+            return connection;
+        }
+    }
+
+    // A connection builder used for GRPCv2 connections.
+    // This builder does not check the credentials as they are not used in
+    // this API.
+    private static class NoCredentialsConnectionBuilder extends ConnectionBuilder {
+        @Override
+        public Connection build() {
+            val connection = super.build();
+            if (Objects.isNull(connection.host)) {
+                throw new IllegalArgumentException("Connection host cannot be null");
+            }
+            if (connection.port == 0) {
+                throw new IllegalArgumentException("Connection port must be set");
             }
             // setting a default timeout of 15 000 ms
             if (connection.timeout < 1) {

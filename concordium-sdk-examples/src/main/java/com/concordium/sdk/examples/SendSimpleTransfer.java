@@ -35,10 +35,9 @@ public class SendSimpleTransfer implements Callable<Integer> {
     public Integer call() throws MalformedURLException, ClientInitializationException {
         var endpointUrl = new URL(this.endpoint);
 
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         AccountAddress sender = AccountAddress.from("3WZE6etUvVp1eyhEtTxqZrQaanTAZnZCHEmZmDyCbCwxnmQuPE");

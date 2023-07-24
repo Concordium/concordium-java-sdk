@@ -33,10 +33,9 @@ public class GetBlockItems implements Callable<Integer> {
     public Integer call() throws MalformedURLException, ClientInitializationException {
         var endpointUrl = new URL(this.endpoint);
 
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         val client = ClientV2.from(connection);

@@ -29,10 +29,9 @@ public class GetNodeInfo implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         URL endpointUrl = new URL(this.endpoint);
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         ClientV2 client = ClientV2.from(connection);

@@ -91,4 +91,24 @@ public class NextUpdateSequenceNumbers {
      * Updates to time parameters for chain parameters version 1 introduced in protocol version 4.
      */
     private final Nonce timeParameters;
+
+    /**
+     * Updates to the timeout parameters for chain parameters version 2 introduced in protocol version 6.
+     */
+    private final Nonce timeoutParameters;
+
+    /**
+     * Updates to the minimum block time parameter for chain parameters version 2 introduced in protocol version 6.
+     */
+    private final Nonce minBlockTime;
+
+    /**
+     * Updates to the maximum block energy limit parameter for chain parameters version 2 introduced in protocol version 6.
+     */
+    private final Nonce blockEnergyLimit;
+
+    /**
+     * Updates to the finalization committee parameters for chain parameters version 2 introduced in protocol version 6.
+     */
+    private final Nonce finalizationCommitteeParameters;
 }

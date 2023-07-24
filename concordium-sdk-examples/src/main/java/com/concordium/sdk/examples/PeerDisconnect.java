@@ -25,10 +25,9 @@ public class PeerDisconnect implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         URL endpointUrl = new URL(this.endpoint);
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         InetSocketAddress peer = new InetSocketAddress("192.0.2.0", 8888);

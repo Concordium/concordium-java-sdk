@@ -25,11 +25,34 @@ import java.util.Optional;
 @EqualsAndHashCode
 public class InstanceInfo {
 
+    /**
+     * The account address which deployed the instance.
+     */
     private final AccountAddress owner;
+
+    /**
+     * The amount of CCD tokens in the balance of the instance.
+     */
     private final CCDAmount amount;
+
+    /**
+     * The endpoints exposed by the instance.
+     */
     private final ImmutableList<String> methods;
+
+    /**
+     * The name of the smart contract instance.
+     */
     private final String name;
+
+    /**
+     * The module reference.
+     */
     private final ModuleRef sourceModule;
+
+    /**
+     * The version of the contract.
+     */
     private final ContractVersion version;
 
     @JsonCreator
