@@ -49,6 +49,7 @@ public class NodeInfo {
 
     /**
      * Parses {@link concordium.ConcordiumP2PRpc.NodeInfoResponse} to {@link NodeInfo}.
+     *
      * @param value {@link concordium.ConcordiumP2PRpc.NodeInfoResponse}.
      * @return Parsed {@link NodeInfo}.
      */
@@ -66,17 +67,18 @@ public class NodeInfo {
 
     private static PeerType parsePeerType(ConcordiumP2PRpc.NodeInfoResponse value) {
         switch (value.getPeerType()) {
-            case "Bootstrapper" :
+            case "Bootstrapper":
                 return PeerType.BOOTSTRAPPER;
-            case "Node" :
+            case "Node":
                 return PeerType.NODE;
-            default: throw new IllegalArgumentException(
-                    String.format("Invalid 'PeerType': %s", value.getPeerType()));
+            default:
+                throw new IllegalArgumentException(
+                        String.format("Invalid 'PeerType': %s", value.getPeerType()));
         }
     }
 
     private static BakingStatus parseBakingStatus(ConcordiumP2PRpc.NodeInfoResponse value) {
-        switch(value.getConsensusBakerCommittee()) {
+        switch (value.getConsensusBakerCommittee()) {
             case ACTIVE_IN_COMMITTEE:
                 return BakingStatus.ACTIVE_IN_COMMITTEE;
             case NOT_IN_COMMITTEE:
@@ -95,15 +97,16 @@ public class NodeInfo {
 
     /**
      * Parses {@link ConsensusState} from input {@link concordium.ConcordiumP2PRpc.NodeInfoResponse}.
+     *
      * @param value input {@link concordium.ConcordiumP2PRpc.NodeInfoResponse}.
      * @return Parsed {@link ConsensusState}.
      */
     private static ConsensusState parseConsensusState(ConcordiumP2PRpc.NodeInfoResponse value) {
-        if(!value.getConsensusRunning()) {
+        if (!value.getConsensusRunning()) {
             return ConsensusState.NOT_RUNNING;
         }
 
-        if(!value.getConsensusBakerRunning()) {
+        if (!value.getConsensusBakerRunning()) {
             return ConsensusState.PASSIVE;
         }
 
@@ -112,6 +115,7 @@ public class NodeInfo {
 
     /**
      * Parses time to {@link ZonedDateTime} from the input value.
+     *
      * @param currentLocaltime Input value.
      * @return Parsed {@link ZonedDateTime}.
      */

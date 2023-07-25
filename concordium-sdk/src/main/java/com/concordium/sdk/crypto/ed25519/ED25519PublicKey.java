@@ -42,7 +42,7 @@ public final class ED25519PublicKey {
      */
     public static ED25519PublicKey from(byte[] bytes) {
         if (bytes.length != ED25519.KEY_SIZE) {
-            throw ED25519Exception.from(ED25519ResultCode.MALFORMED_SECRET_KEY);
+            throw ED25519Exception.from(ED25519ResultCode.MALFORMED_PUBLIC_KEY);
         }
 
         return new ED25519PublicKey(copyOf(bytes, bytes.length));

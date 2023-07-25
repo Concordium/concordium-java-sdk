@@ -2,11 +2,10 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
+import com.concordium.sdk.requests.AccountQuery;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.transactions.*;
 import lombok.var;
 import picocli.CommandLine;
@@ -35,10 +34,9 @@ public class SendSimpleTransfer implements Callable<Integer> {
     public Integer call() throws MalformedURLException, ClientInitializationException {
         var endpointUrl = new URL(this.endpoint);
 
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         AccountAddress sender = AccountAddress.from("3WZE6etUvVp1eyhEtTxqZrQaanTAZnZCHEmZmDyCbCwxnmQuPE");
@@ -52,7 +50,7 @@ public class SendSimpleTransfer implements Callable<Integer> {
                                 .from("56f60de843790c308dac2d59a5eec9f6b1649513f827e5a13d7038accfe31784")));
 
         var client = ClientV2.from(connection);
-        var senderInfo = client.getAccountInfo(BlockHashInput.BEST, AccountRequest.from(sender));
+        var senderInfo = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(sender));
         var nonce = senderInfo.getAccountNonce();
         var txnHash = client.sendTransaction(TransactionFactory.newTransfer()
                 .sender(sender)

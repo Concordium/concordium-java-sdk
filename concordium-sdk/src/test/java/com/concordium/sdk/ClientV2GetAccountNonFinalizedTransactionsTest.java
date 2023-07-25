@@ -1,9 +1,6 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
-import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.transactions.Hash;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
@@ -60,7 +57,7 @@ public class ClientV2GetAccountNonFinalizedTransactionsTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test

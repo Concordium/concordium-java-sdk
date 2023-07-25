@@ -7,7 +7,7 @@ public enum ED25519ResultCode {
     SUCCESS(0),
     NATIVE_CONVERSION_ERROR(1, "Unable to do native conversion."),
     MALFORMED_SECRET_KEY(2, "Invalid ED25519SecretKey"),
-    MALFORMED_PUBLIC_KEY(3, "Invalid ED25519SecretKey"),
+    MALFORMED_PUBLIC_KEY(3, "Invalid ED25519PublicKey"),
     SIGNATURE_VERIFICATION_FAILURE(4, "Signature failed verification"),
     SECRET_KEY_GENERATION_FAILURE(5, "Failed creating secret key"),
     PUBLIC_KEY_GENERATION_FAILURE(6, "Failed creating public key"),

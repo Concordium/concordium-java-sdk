@@ -239,6 +239,7 @@ public class TransactionFactory {
                 .data(amountTransferData);
 
     }
+
     /**
      * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
      * creating a {@link ConfigureBakerTransaction}

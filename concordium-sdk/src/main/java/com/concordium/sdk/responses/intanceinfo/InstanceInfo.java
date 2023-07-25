@@ -1,15 +1,16 @@
 package com.concordium.sdk.responses.intanceinfo;
 
+import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.transactionstatus.ContractVersion;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
-import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.val;
@@ -24,20 +25,44 @@ import java.util.Optional;
 @EqualsAndHashCode
 public class InstanceInfo {
 
+    /**
+     * The account address which deployed the instance.
+     */
     private final AccountAddress owner;
+
+    /**
+     * The amount of CCD tokens in the balance of the instance.
+     */
     private final CCDAmount amount;
+
+    /**
+     * The endpoints exposed by the instance.
+     */
     private final ImmutableList<String> methods;
+
+    /**
+     * The name of the smart contract instance.
+     */
     private final String name;
-    private final Hash sourceModule;
+
+    /**
+     * The module reference.
+     */
+    private final ModuleRef sourceModule;
+
+    /**
+     * The version of the contract.
+     */
     private final ContractVersion version;
 
     @JsonCreator
+    @Builder
     public InstanceInfo(
             @JsonProperty("owner") AccountAddress owner,
             @JsonProperty("amount") CCDAmount amount,
             @JsonProperty("methods") List<String> methods,
             @JsonProperty("name") String name,
-            @JsonProperty("sourceModule") Hash sourceModule,
+            @JsonProperty("sourceModule") ModuleRef sourceModule,
             @JsonProperty("version") ContractVersion version
     ) {
         this.owner = owner;

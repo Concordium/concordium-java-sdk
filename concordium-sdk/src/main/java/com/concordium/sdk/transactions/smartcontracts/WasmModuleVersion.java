@@ -1,7 +1,6 @@
 package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.types.UInt32;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;

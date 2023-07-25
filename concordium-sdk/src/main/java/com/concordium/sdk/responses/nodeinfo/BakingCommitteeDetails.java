@@ -26,6 +26,7 @@ public class BakingCommitteeDetails {
 
     /**
      * Parses {@link concordium.ConcordiumP2PRpc.NodeInfoResponse} to {@link BakingCommitteeDetails}.
+     *
      * @param value {@link concordium.ConcordiumP2PRpc.NodeInfoResponse} returned from the Grpc API.
      * @return Parsed {@link BakingCommitteeDetails}.
      */

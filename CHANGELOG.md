@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+- Renamed `AccountRequest` to `AccountQuery`.
+- Added support for GRPC V2 `GetBlockChainParameters` for retrieving the parameters of the chain.
+- Deprecated the `Client`. Instead one should use `ClientV2` which leverages the GRPCv2 API of the node.
 - Added support for GRPC V2 `GetPeersInfo` for retrieving information of the peers that the node holds.
 - Added support for GRPC V2 `GetNodeInfo` for retrieving various information of the node queried.
 - Added support for GRPC V2 `GetBannedPeers` for retrieving a list of the banned peers.
@@ -34,6 +37,14 @@
 - Added support for GRPC V2 `GetPassiveDelegators` for getting the passive delegators at a certain block.
 - Added support for GRPC V2 `GetPoolDelegators` for getting the delegators for a specified baking pool at a certain block.
 - Added support for GRPC V2 `GetElectionInfo` for getting the bakers at a certain block and other metadata of the election.
+- Added support for GRPC V2 `GetPoolInfo` for gettting information about a given pool at the end of a given block.
+- Added support for GRPC V2 `GetModuleList` for getting list of smart contract module at the end of a given block.
+- Added support for GRPC V2 `GetInstanceInfo` for getting information about a contract instance at the end of a given block.
+- Added support for GRPC V2 `GetPoolDelegatorsRewardPeriod` for getting fixed list of Pool Delegators for a given pool at the end of a given block.
+- Added support for GRPC V2 `GetPassiveDelegatorsRewardPeriod` for getting fixed list of Passive Delegators for a given pool at the end of a given block.
+- Added support for GRPC V2 `GetNextUpdateSequenceNumbers` for getting next available sequence numbers for updating chain parameters after a given block.
+- Added support for GRPC V2 `GetBlockPendingUpdates` for getting the pending updates to chain parameters at the end of a given block.
+- Added support for GRPC V2 `Shutdown` For shutting down the network layer of the Node.
 
 ## 4.2.0
 - Added initial support for GRPC V2

@@ -44,6 +44,7 @@ public class TLSConfig {
 
     /**
      * Constructor for establishing a basic TLS connection.
+     *
      * @param serverCert The X509 certificate of the server.
      * @return the TLSConfig
      */
@@ -53,10 +54,11 @@ public class TLSConfig {
 
     /**
      * Constructor for establishing a mTLS connection.
-     * @param serverCert The pem encoded certificate of the server.
-     *                   Supply 'null' here if the default JVM trust store should
-     *                   be used for the connection.
-     * @param clientCert The pem encoded certificate of the client
+     *
+     * @param serverCert    The pem encoded certificate of the server.
+     *                      Supply 'null' here if the default JVM trust store should
+     *                      be used for the connection.
+     * @param clientCert    The pem encoded certificate of the client
      * @param clientKeyFile The PEM encoded PKCS#8 private key for the client.
      * @return the TLSConfig
      */
@@ -70,9 +72,10 @@ public class TLSConfig {
     /**
      * The underlying connection is forced to use TLS.
      * Note. the servers certificate must be trusted by the default jks CA.
-     *
+     * <p>
      * See {@link TLSConfig#from(File)} or {@link TLSConfig#mTLS(File, File, File)} for configuring
      * custom trust or mTLS.
+     *
      * @return the TLSConfig
      */
     public static TLSConfig auto() {

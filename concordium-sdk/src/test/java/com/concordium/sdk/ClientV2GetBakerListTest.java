@@ -2,7 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;
 import com.google.common.collect.ImmutableList;
 import io.grpc.ManagedChannel;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Mocks the GRPC Interface of the Node.
- * Tests for Mapping of Requests and Responses to and fro {@link ClientV2#getBakerList(BlockHashInput)}.
+ * Tests for Mapping of Requests and Responses to and fro {@link ClientV2#getBakerList(BlockQuery)}.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetBakerListTest {
@@ -57,12 +57,12 @@ public class ClientV2GetBakerListTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test
     public void getBakerList() throws BlockNotFoundException {
-        var bakerList = client.getBakerList(BlockHashInput.BEST);
+        var bakerList = client.getBakerList(BlockQuery.BEST);
 
         verify(serviceImpl).getBakerList(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(bakerList), ImmutableList.of(BAKER_ID_CLIENT));

@@ -67,7 +67,7 @@ public final class UpdateCredentialKeys extends Payload {
         val buffer = ByteBuffer.allocate(credentialRegistrationIdBytes.length + keysBytes.length);
         buffer.put(credentialRegistrationIdBytes);
         buffer.put(keysBytes);
-        
+
         return buffer.array();
     }
 

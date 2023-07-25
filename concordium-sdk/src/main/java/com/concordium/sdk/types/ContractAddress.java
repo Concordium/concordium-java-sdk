@@ -58,7 +58,7 @@ public final class ContractAddress extends AbstractAddress {
     }
 
     public static ContractAddress from(long index, long subIndex) {
-        return new ContractAddress(index, subIndex);
+        return new ContractAddress(subIndex, index);
     }
 
     public byte[] getBytes() {

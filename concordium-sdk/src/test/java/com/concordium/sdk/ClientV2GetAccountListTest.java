@@ -4,7 +4,7 @@ import com.concordium.grpc.v2.AccountAddress;
 import com.concordium.grpc.v2.BlockHash;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.transactions.Hash;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
@@ -68,12 +68,12 @@ public class ClientV2GetAccountListTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test
     public void getAccountList_BestBlock() {
-        var output = client.getAccountList(BlockHashInput.BEST);
+        var output = client.getAccountList(BlockQuery.BEST);
 
         verify(serviceImpl).getAccountList(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(output), ImmutableList.of(CLIENT_ACCOUNT_ADDRESS));
@@ -81,7 +81,7 @@ public class ClientV2GetAccountListTest {
 
     @Test
     public void getAccountList_LastFinalBlock() {
-        var output = client.getAccountList(BlockHashInput.LAST_FINAL);
+        var output = client.getAccountList(BlockQuery.LAST_FINAL);
 
         verify(serviceImpl).getAccountList(eq(LAST_FINAL_BLOCK), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(output), ImmutableList.of(CLIENT_ACCOUNT_ADDRESS));
@@ -90,7 +90,7 @@ public class ClientV2GetAccountListTest {
     @Test
     public void getAccountList_GivenBlock() {
         var output = client.getAccountList(
-                BlockHashInput.GIVEN(Hash.from(BLOCK_HASH)));
+                BlockQuery.HASH(Hash.from(BLOCK_HASH)));
 
         verify(serviceImpl).getAccountList(eq(GIVEN_BLOCK_GRPC), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(output), ImmutableList.of(CLIENT_ACCOUNT_ADDRESS));

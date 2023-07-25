@@ -2,7 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.transactions.Hash;
 import com.google.common.collect.ImmutableList;
@@ -86,12 +86,12 @@ public class ClientV2GetAnonymityRevokersTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test
     public void getAnonymityRevokers_BestBlock() {
-        var arInfos = client.getAnonymityRevokers(BlockHashInput.BEST);
+        var arInfos = client.getAnonymityRevokers(BlockQuery.BEST);
 
         verify(serviceImpl).getAnonymityRevokers(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(arInfos), ImmutableList.of(AR_CLIENT));
@@ -99,7 +99,7 @@ public class ClientV2GetAnonymityRevokersTest {
 
     @Test
     public void getAnonymityRevokers_LastFinalBlock() {
-        var arInfos = client.getAnonymityRevokers(BlockHashInput.LAST_FINAL);
+        var arInfos = client.getAnonymityRevokers(BlockQuery.LAST_FINAL);
 
         verify(serviceImpl).getAnonymityRevokers(eq(LAST_FINAL_BLOCK), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(arInfos), ImmutableList.of(AR_CLIENT));
@@ -108,7 +108,7 @@ public class ClientV2GetAnonymityRevokersTest {
     @Test
     public void getAnonymityRevokers_GivenBlock() {
         var arInfos = client.getAnonymityRevokers(
-                BlockHashInput.GIVEN(Hash.from(BLOCK_HASH)));
+                BlockQuery.HASH(Hash.from(BLOCK_HASH)));
 
         verify(serviceImpl).getAnonymityRevokers(eq(GIVEN_BLOCK_GRPC), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(arInfos), ImmutableList.of(AR_CLIENT));

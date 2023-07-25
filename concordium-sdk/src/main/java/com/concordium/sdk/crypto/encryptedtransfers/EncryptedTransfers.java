@@ -24,9 +24,9 @@ public final class EncryptedTransfers {
      * amount from the encrypted amount to a public account
      *
      * @param cryptographicParameters global context with parameters for generating proofs, and generators for encryted amounts.
-     * @param accountEncryptedAmount The encrypted amount of the account that is being transferred from.
-     * @param secretKey The secret key of the sender (who is also the receiver).
-     * @param amount The amount of money to transfer.
+     * @param accountEncryptedAmount  The encrypted amount of the account that is being transferred from.
+     * @param secretKey               The secret key of the sender (who is also the receiver).
+     * @param amount                  The amount of money to transfer.
      * @return A payload of a secret to public amount transaction..
      */
     public static TransferToPublicJniOutput createSecToPubTransferPayload(

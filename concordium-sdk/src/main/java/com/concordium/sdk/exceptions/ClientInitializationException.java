@@ -14,7 +14,7 @@ public class ClientInitializationException extends Exception {
     @Getter
     private final Exception inner;
 
-     private ClientInitializationException(Exception inner) {
+    private ClientInitializationException(Exception inner) {
         super("The Client could not be constructed. " + inner.getMessage());
         this.inner = inner;
     }

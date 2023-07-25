@@ -31,7 +31,7 @@ public class ConfigureBakerTransaction extends AccountTransaction {
      * @param signer  {@link Signer} of this transaction.
      * @return Instance of {@link ConfigureBakerTransaction}
      * @throws TransactionCreationException On failure to create the Transaction from input params.
-     * Ex when any of the input param is NULL.
+     *                                      Ex when any of the input param is NULL.
      */
     @Builder
     public static ConfigureBakerTransaction from(final ConfigureBakerPayload payload,

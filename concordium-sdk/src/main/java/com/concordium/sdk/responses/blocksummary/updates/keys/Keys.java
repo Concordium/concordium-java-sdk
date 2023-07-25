@@ -1,9 +1,10 @@
 package com.concordium.sdk.responses.blocksummary.updates.keys;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Authorizations for updating chain parameters.
@@ -13,17 +14,13 @@ import lombok.ToString;
  */
 @Getter
 @ToString
+@Builder
+@Jacksonized
 public final class Keys {
-    private final RootKeysUpdates rootKeysUpdates;
-    private final Level1KeysUpdates level1KeysUpdates;
+    @JsonProperty("rootKeys")
+    private final KeysUpdate rootKeysUpdates;
+    @JsonProperty("level1Keys")
+    private final KeysUpdate level1KeysUpdates;
+    @JsonProperty("level2Keys")
     private final Level2KeysUpdates level2KeysUpdates;
-
-    @JsonCreator
-    Keys(@JsonProperty("rootKeys") RootKeysUpdates rootKeysUpdates,
-                @JsonProperty("level1Keys") Level1KeysUpdates level1KeysUpdates,
-                @JsonProperty("level2Keys") Level2KeysUpdates level2KeysUpdates) {
-        this.rootKeysUpdates = rootKeysUpdates;
-        this.level1KeysUpdates = level1KeysUpdates;
-        this.level2KeysUpdates = level2KeysUpdates;
-    }
 }

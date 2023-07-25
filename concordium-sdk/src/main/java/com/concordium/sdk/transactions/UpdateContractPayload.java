@@ -1,13 +1,9 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.ContractAddress;
-import com.google.common.primitives.Bytes;
 import lombok.*;
 
 import java.nio.ByteBuffer;
-import java.util.stream.Stream;
-
-import static com.google.common.primitives.Bytes.concat;
 
 /**
  * The payload for updating a smart contract.
