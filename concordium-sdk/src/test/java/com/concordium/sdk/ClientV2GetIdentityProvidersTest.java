@@ -4,7 +4,7 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.transactions.Hash;
 import com.google.common.collect.ImmutableList;
@@ -101,7 +101,7 @@ public class ClientV2GetIdentityProvidersTest {
 
     @Test
     public void getIdentityProviders_BestBlock() {
-        var IpInfos = client.getIdentityProviders(BlockHashInput.BEST);
+        var IpInfos = client.getIdentityProviders(BlockQuery.BEST);
 
         verify(serviceImpl).getIdentityProviders(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(IpInfos), ImmutableList.of(AR_CLIENT));
@@ -109,7 +109,7 @@ public class ClientV2GetIdentityProvidersTest {
 
     @Test
     public void getIdentityProviders_LastFinalBlock() {
-        var IpInfos = client.getIdentityProviders(BlockHashInput.LAST_FINAL);
+        var IpInfos = client.getIdentityProviders(BlockQuery.LAST_FINAL);
 
         verify(serviceImpl).getIdentityProviders(eq(LAST_FINAL_BLOCK), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(IpInfos), ImmutableList.of(AR_CLIENT));
@@ -118,7 +118,7 @@ public class ClientV2GetIdentityProvidersTest {
     @Test
     public void getIdentityProviders_GivenBlock() {
         var IpInfos = client.getIdentityProviders(
-                BlockHashInput.GIVEN(Hash.from(BLOCK_HASH)));
+                BlockQuery.HASH(Hash.from(BLOCK_HASH)));
 
         verify(serviceImpl).getIdentityProviders(eq(GIVEN_BLOCK_GRPC), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(IpInfos), ImmutableList.of(AR_CLIENT));

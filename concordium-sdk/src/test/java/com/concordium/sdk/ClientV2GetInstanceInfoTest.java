@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.transactionstatus.ContractVersion;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.ContractAddress;
@@ -93,7 +93,7 @@ public class ClientV2GetInstanceInfoTest {
 
     @Test
     public void getInstanceInfoTest() {
-        var res = client.getInstanceInfo(BlockHashInput.BEST, ContractAddress.from(INDEX, SUBINDEX));
+        var res = client.getInstanceInfo(BlockQuery.BEST, ContractAddress.from(INDEX, SUBINDEX));
 
         verify(serviceImpl).getInstanceInfo(eq(InstanceInfoRequest.newBuilder()
                 .setAddress(com.concordium.grpc.v2.ContractAddress.newBuilder()

@@ -1,6 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.Finalizer;
 import com.concordium.sdk.transactions.Hash;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
- * The test asserts that {@link ClientV2#getBlockFinalizationSummary(com.concordium.sdk.requests.BlockHashInput)}
+ * The test asserts that {@link ClientV2#getBlockFinalizationSummary(BlockQuery)}
  * correctly converts the {@link BlockFinalizationSummary} returned by the server to {@link FinalizationData}.
  */
 public class ClientV2GetBlockFinalizationSummaryTest {
@@ -130,7 +131,7 @@ public class ClientV2GetBlockFinalizationSummaryTest {
 
     @Test
     public void getBlockFinalizationSummary() {
-        val res = client.getBlockFinalizationSummary(com.concordium.sdk.requests.BlockHashInput.BEST);
+        val res = client.getBlockFinalizationSummary(BlockQuery.BEST);
         verify(serviceImpl).getBlockFinalizationSummary(any(BlockHashInput.class), any(StreamObserver.class));
         assertEquals(CLIENT_FINALIZATION_DATA, res.get());
 

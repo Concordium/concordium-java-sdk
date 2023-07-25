@@ -4,7 +4,7 @@ import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.NextUpdateSequenceNumbers;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.grpc.v2.SequenceNumber;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.types.Nonce;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
@@ -45,6 +45,10 @@ public class ClientV2GetNextUpdateSequenceNumbersTest {
             .setAddIdentityProvider(toSeqNo(14))
             .setCooldownParameters(toSeqNo(15))
             .setTimeParameters(toSeqNo(16))
+            .setTimeoutParameters(toSeqNo(17))
+            .setMinBlockTime(toSeqNo(18))
+            .setBlockEnergyLimit(toSeqNo(19))
+            .setFinalizationCommitteeParameters(toSeqNo(20))
             .build();
     private static final com.concordium.sdk.responses.NextUpdateSequenceNumbers EXPECTED
             = com.concordium.sdk.responses.NextUpdateSequenceNumbers.builder()
@@ -64,6 +68,10 @@ public class ClientV2GetNextUpdateSequenceNumbersTest {
             .addIdentityProvider(toNonce(14))
             .cooldownParameters(toNonce(15))
             .timeParameters(toNonce(16))
+            .timeoutParameters(toNonce(17))
+            .minBlockTime(toNonce(18))
+            .blockEnergyLimit(toNonce(19))
+            .finalizationCommitteeParameters(toNonce(20))
             .build();
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
             new QueriesGrpc.QueriesImplBase() {
@@ -100,7 +108,7 @@ public class ClientV2GetNextUpdateSequenceNumbersTest {
 
     @Test
     public void getInstanceInfoTest() {
-        var res = client.getNextUpdateSequenceNumbers(BlockHashInput.BEST);
+        var res = client.getNextUpdateSequenceNumbers(BlockQuery.BEST);
 
         verify(serviceImpl).getNextUpdateSequenceNumbers(eq(
                         com.concordium.grpc.v2.BlockHashInput.newBuilder().setBest(Empty.getDefaultInstance()).build()),

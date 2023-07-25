@@ -1,17 +1,12 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.Empty;
-import com.concordium.grpc.v2.ModuleRef;
 import com.concordium.grpc.v2.QueriesGrpc;
-import com.concordium.sdk.requests.BlockHashInput;
-import com.google.common.collect.ImmutableList;
-import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
-import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

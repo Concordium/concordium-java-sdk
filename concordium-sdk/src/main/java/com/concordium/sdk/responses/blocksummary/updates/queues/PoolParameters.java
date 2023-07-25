@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.blocksummary.updates.queues;
 
-import com.concordium.sdk.responses.blocksummary.updates.Fraction;
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.Range;
+import com.concordium.sdk.responses.Fraction;
+import com.concordium.sdk.Range;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.blocksummary.updates.chainparameters;
+package com.concordium.sdk;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

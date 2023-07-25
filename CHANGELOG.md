@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+- Renamed `AccountRequest` to `AccountQuery`.
+- Added support for GRPC V2 `GetBlockChainParameters` for retrieving the parameters of the chain.
 - Deprecated the `Client`. Instead one should use `ClientV2` which leverages the GRPCv2 API of the node.
 - Added support for GRPC V2 `GetPeersInfo` for retrieving information of the peers that the node holds.
 - Added support for GRPC V2 `GetNodeInfo` for retrieving various information of the node queried.

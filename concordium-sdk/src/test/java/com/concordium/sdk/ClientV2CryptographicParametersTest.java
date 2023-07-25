@@ -4,7 +4,7 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
@@ -81,7 +81,7 @@ public class ClientV2CryptographicParametersTest {
 
     @Test
     public void GetBlockChainParameters() throws BlockNotFoundException {
-        var parameters = client.getCryptographicParameters(BlockHashInput.BEST);
+        var parameters = client.getCryptographicParameters(BlockQuery.BEST);
 
         verify(serviceImpl).getCryptographicParameters(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(parameters.toString(), PARAMETERS_CLIENT.toString());

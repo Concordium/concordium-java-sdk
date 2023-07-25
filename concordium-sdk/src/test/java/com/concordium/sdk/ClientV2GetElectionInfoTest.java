@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
 import com.google.common.collect.ImmutableList;
@@ -95,7 +95,7 @@ public class ClientV2GetElectionInfoTest {
 
     @Test
     public void getElectionInfo() {
-        var electionInfo = client.getElectionInfo(BlockHashInput.BEST);
+        var electionInfo = client.getElectionInfo(BlockQuery.BEST);
 
         verify(serviceImpl).getElectionInfo(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(ELECTION_INFO_EXPECTED, electionInfo);

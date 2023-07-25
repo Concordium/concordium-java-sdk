@@ -1,10 +1,8 @@
-package com.concordium.sdk.requests.getaccountinfo;
+package com.concordium.sdk.requests;
 
-import com.concordium.sdk.Client;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
-import com.concordium.sdk.transactions.Hash;
 import com.google.protobuf.ByteString;
 import lombok.Getter;
 
@@ -12,17 +10,16 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * The account request to use when querying accounts on chain.
- * See {@link Client#getAccountInfo(AccountRequest, Hash)}
  */
 @Getter
-public final class AccountRequest {
+public final class AccountQuery {
 
     private final Type type;
     private final AccountAddress address;
     private final AccountIndex index;
     private final CredentialRegistrationId registrationId;
 
-    private AccountRequest(Type type, AccountAddress address, AccountIndex index, CredentialRegistrationId credentialRegistrationId) {
+    private AccountQuery(Type type, AccountAddress address, AccountIndex index, CredentialRegistrationId credentialRegistrationId) {
         this.type = type;
         this.address = address;
         this.index = index;
@@ -43,33 +40,33 @@ public final class AccountRequest {
     }
 
     /**
-     * Create an {@link AccountRequest} given the provided {@link AccountAddress}
+     * Create an {@link AccountQuery} given the provided {@link AccountAddress}
      *
      * @param address The account address
      * @return the AccountRequest
      */
-    public static AccountRequest from(AccountAddress address) {
-        return new AccountRequest(Type.ADDRESS, address, null, null);
+    public static AccountQuery from(AccountAddress address) {
+        return new AccountQuery(Type.ADDRESS, address, null, null);
     }
 
     /**
-     * Create an {@link AccountRequest} given the provided {@link AccountIndex}
+     * Create an {@link AccountQuery} given the provided {@link AccountIndex}
      *
      * @param index the account index, baker id, delegator id etc.
      * @return the AccountRequest
      */
-    public static AccountRequest from(AccountIndex index) {
-        return new AccountRequest(Type.INDEX, null, index, null);
+    public static AccountQuery from(AccountIndex index) {
+        return new AccountQuery(Type.INDEX, null, index, null);
     }
 
     /**
-     * Create an {@link AccountRequest} given the provided {@link CredentialRegistrationId}
+     * Create an {@link AccountQuery} given the provided {@link CredentialRegistrationId}
      *
      * @param credentialRegistrationId the credential registration id.
      * @return the AccountRequest
      */
-    public static AccountRequest from(CredentialRegistrationId credentialRegistrationId) {
-        return new AccountRequest(Type.CREDENTIAL_REGISTRATION_ID, null, null, credentialRegistrationId);
+    public static AccountQuery from(CredentialRegistrationId credentialRegistrationId) {
+        return new AccountQuery(Type.CREDENTIAL_REGISTRATION_ID, null, null, credentialRegistrationId);
     }
 
     @Override

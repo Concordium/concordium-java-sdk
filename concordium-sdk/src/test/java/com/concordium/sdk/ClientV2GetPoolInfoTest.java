@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.poolstatus.CurrentPaydayStatus;
@@ -160,7 +160,7 @@ public class ClientV2GetPoolInfoTest {
 
     @Test
     public void getPoolInfoTest() {
-        var res = client.getPoolInfo(BlockHashInput.BEST, BakerId.from(BAKER_ID));
+        var res = client.getPoolInfo(BlockQuery.BEST, BakerId.from(BAKER_ID));
 
         verify(serviceImpl).getPoolInfo(eq(PoolInfoRequest.newBuilder()
                 .setBaker(com.concordium.grpc.v2.BakerId.newBuilder().setValue(BAKER_ID).build())

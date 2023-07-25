@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 /**
  * Mocks the GRPC Interface of the Node.
  * Tests the mapping of Requests and Responses for
- * {@link ClientV2#getPoolDelegatorsRewardPeriod(BlockHashInput, com.concordium.sdk.responses.BakerId)}.
+ * {@link ClientV2#getPoolDelegatorsRewardPeriod(BlockQuery, com.concordium.sdk.responses.BakerId)}.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetPoolDelegatorsRewardPeriodTest {
@@ -92,7 +92,7 @@ public class ClientV2GetPoolDelegatorsRewardPeriodTest {
     @Test
     public void getPoolDelegatorsRewardPeriodTest() {
         var poolDelegatorsRewardPeriod = client.getPoolDelegatorsRewardPeriod(
-                BlockHashInput.BEST,
+                BlockQuery.BEST,
                 com.concordium.sdk.responses.BakerId.from(BAKER_ID));
 
         verify(serviceImpl).getPoolDelegatorsRewardPeriod(eq(GetPoolDelegatorsRequest.newBuilder()

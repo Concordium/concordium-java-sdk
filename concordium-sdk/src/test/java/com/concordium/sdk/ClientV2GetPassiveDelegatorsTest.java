@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.accountinfo.ReduceStakeChange;
 import com.concordium.sdk.responses.accountinfo.RemoveStakeChange;
 import com.concordium.sdk.transactions.CCDAmount;
@@ -21,7 +21,6 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,7 @@ import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests for {@link ClientV2#getPassiveDelegators(BlockHashInput)}
+ * Tests for {@link ClientV2#getPassiveDelegators(BlockQuery)}
  * <br/>
  * Tests the mapping code. {@link ClientV2MapperExtensions#to(DelegatorInfo)}
  */
@@ -140,33 +139,33 @@ public class ClientV2GetPassiveDelegatorsTest {
     }
 
     /**
-     * Tests {@link ClientV2#getPassiveDelegators(BlockHashInput)} for {@link BlockHashInput#BEST}.
+     * Tests {@link ClientV2#getPassiveDelegators(BlockQuery)} for {@link BlockQuery#BEST}.
      */
     @Test
     public void getPassiveDelegators_BestBlock() {
-        var delegators = client.getPassiveDelegators(BlockHashInput.BEST);
+        var delegators = client.getPassiveDelegators(BlockQuery.BEST);
 
         verify(serviceImpl).getPassiveDelegators(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(EXPECTED_DELEGATORS, ImmutableList.copyOf(delegators));
     }
 
     /**
-     * Tests {@link ClientV2#getPassiveDelegators(BlockHashInput)} for {@link BlockHashInput#LAST_FINAL}.
+     * Tests {@link ClientV2#getPassiveDelegators(BlockQuery)} for {@link BlockQuery#LAST_FINAL}.
      */
     @Test
     public void getPassiveDelegators_LastFinalBlock() {
-        var delegators = client.getPassiveDelegators(BlockHashInput.LAST_FINAL);
+        var delegators = client.getPassiveDelegators(BlockQuery.LAST_FINAL);
 
         verify(serviceImpl).getPassiveDelegators(eq(LAST_FINAL_BLOCK), any(StreamObserver.class));
         assertEquals(EXPECTED_DELEGATORS, ImmutableList.copyOf(delegators));
     }
 
     /**
-     * Tests {@link ClientV2#getPassiveDelegators(BlockHashInput)} for {@link BlockHashInput#GIVEN(Hash)}.
+     * Tests {@link ClientV2#getPassiveDelegators(BlockQuery)} for {@link BlockQuery#HASH(Hash)}.
      */
     @Test
     public void getPassiveDelegators_GivenBlock() {
-        var delegators = client.getPassiveDelegators(BlockHashInput.GIVEN(Hash.from(BLOCK_HASH)));
+        var delegators = client.getPassiveDelegators(BlockQuery.HASH(Hash.from(BLOCK_HASH)));
 
         verify(serviceImpl).getPassiveDelegators(eq(GIVEN_BLOCK_GRPC), any(StreamObserver.class));
         assertEquals(EXPECTED_DELEGATORS, ImmutableList.copyOf(delegators));

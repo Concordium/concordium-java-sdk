@@ -35,7 +35,7 @@ public class BakerConsensusInfo {
 
         AccountIndex bakerId = AccountIndex.from(bakerConsensusInfo.getBakerId().getValue());
 
-        var builder = BakerConsensusInfo.builder()
+        val builder = BakerConsensusInfo.builder()
                 .bakerId(bakerId);
 
         val isActiveBaker = bakerConsensusInfo.hasActiveBakerCommitteeInfo();

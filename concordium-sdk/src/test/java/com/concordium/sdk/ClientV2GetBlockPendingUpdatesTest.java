@@ -7,13 +7,12 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
-import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.responses.GasRewardsCpV2;
-import com.concordium.sdk.responses.MintDistributionCpV0;
-import com.concordium.sdk.responses.MintDistributionCpV1;
+import com.concordium.sdk.requests.BlockQuery;
+import com.concordium.sdk.responses.chainparameters.GasRewardsCpV2;
+import com.concordium.sdk.responses.chainparameters.MintDistributionCpV0;
+import com.concordium.sdk.responses.chainparameters.MintDistributionCpV1;
 import com.concordium.sdk.responses.PendingUpdateV2;
-import com.concordium.sdk.responses.blocksummary.updates.Fraction;
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.Range;
+import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.TransactionFeeDistributionV2;
 import com.concordium.sdk.responses.blocksummary.updates.keys.*;
 import com.concordium.sdk.responses.blocksummary.updates.queues.*;
@@ -369,8 +368,8 @@ public class ClientV2GetBlockPendingUpdatesTest {
             .specificationURL(PROTOCOL_SPEC_URL)
             .build();
     private static final double HUNDRED_THOUSAND = 100_000D;
-    private static final com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.GasRewards EXPE_GAS_REWARDS
-            = com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.GasRewards.builder()
+    private static final com.concordium.sdk.responses.chainparameters.GasRewards EXPE_GAS_REWARDS
+            = com.concordium.sdk.responses.chainparameters.GasRewards.builder()
             .baker(toPPHT(GAS_REWARDS_BAKER))
             .chainUpdate(toPPHT(GAS_REWARDS_CHAIN))
             .accountCreation(toPPHT(GAS_REWARDS_ACCOUNT_CREATION))
@@ -395,8 +394,9 @@ public class ClientV2GetBlockPendingUpdatesTest {
                     .max(toPPHT(POOL_PARAMS_CPV1_COMM_RANGE_TXN_MAX))
                     .build())
             .leverageBound(new Fraction(
-                    POOL_PARAMS_CPV1_COMM_RANGE_LEVERAGE_DENO,
-                    POOL_PARAMS_CPV1_COMM_RANGE_LEVERAGE_NUME))
+                    POOL_PARAMS_CPV1_COMM_RANGE_LEVERAGE_NUME,
+                    POOL_PARAMS_CPV1_COMM_RANGE_LEVERAGE_DENO
+                    ))
             .minimumEquityCapital(CCDAmount.fromMicro(POOL_PARAMS_CPV1_MIN_EQUITY_CAPITAL))
             .passiveFinalizationCommission(toPPHT(POOL_PARAMS_CPV1_PASSIVE_FIN_COMM))
             .passiveBakingCommission(toPPHT(POOL_PARAMS_CPV1_PASSIVE_BAKING_COMM))
@@ -447,8 +447,8 @@ public class ClientV2GetBlockPendingUpdatesTest {
             .build();
     private static final com.concordium.sdk.responses.TimeoutParameters EXPE_TIMEOUT = com.concordium.sdk.responses.TimeoutParameters.builder()
             .timeoutBase(java.time.Duration.ofMillis(TIMEOUT_DURATION))
-            .timeoutIncrease(new Fraction(TIMEOUT_INC_DENOMINATOR, TIMEOUT_INC_NUMERATOR))
-            .timeoutDecrease(new Fraction(TIMEOUT_DEC_DENOMINATOR, TIMEOUT_DEC_NUMERATOR))
+            .timeoutIncrease(new Fraction(TIMEOUT_INC_NUMERATOR, TIMEOUT_INC_DENOMINATOR))
+            .timeoutDecrease(new Fraction(TIMEOUT_DEC_NUMERATOR, TIMEOUT_DEC_DENOMINATOR))
             .build();
     private static final List<PendingUpdateV2> EXPECTED
             = Lists.newArrayList(
@@ -485,12 +485,12 @@ public class ClientV2GetBlockPendingUpdatesTest {
             PendingUpdateV2.<Fraction>builder()
                     .effectiveTime(EXPE_EFFECTIVE_TIME)
                     .type(PendingUpdateType.EuroPerEnergy)
-                    .update(new Fraction(EURO_PER_ENERGY_DENOMINATOR, EURO_PER_ENERGY_NUMERATOR))
+                    .update(new Fraction(EURO_PER_ENERGY_NUMERATOR, EURO_PER_ENERGY_DENOMINATOR))
                     .build(),
             PendingUpdateV2.<Fraction>builder()
                     .effectiveTime(EXPE_EFFECTIVE_TIME)
                     .type(PendingUpdateType.MicroCcdPerEuro)
-                    .update(new Fraction(MICRO_CCD_PER_EURO_DENO, MICRO_CCD_PER_EURO_NUME))
+                    .update(new Fraction(MICRO_CCD_PER_EURO_NUME, MICRO_CCD_PER_EURO_DENO))
                     .build(),
             PendingUpdateV2.<com.concordium.sdk.transactions.AccountAddress>builder()
                     .effectiveTime(EXPE_EFFECTIVE_TIME)
@@ -512,7 +512,7 @@ public class ClientV2GetBlockPendingUpdatesTest {
                     .type(PendingUpdateType.TransactionFeeDistribution)
                     .update(EXPE_TXN_FEE_DISTRIBUTION)
                     .build(),
-            PendingUpdateV2.<com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.GasRewards>builder()
+            PendingUpdateV2.<com.concordium.sdk.responses.chainparameters.GasRewards>builder()
                     .effectiveTime(EXPE_EFFECTIVE_TIME)
                     .type(PendingUpdateType.GasRewards)
                     .update(EXPE_GAS_REWARDS)
@@ -636,7 +636,7 @@ public class ClientV2GetBlockPendingUpdatesTest {
 
     @Test
     public void getBlockPendingUpdatesTest() {
-        var res = client.getBlockPendingUpdates(BlockHashInput.BEST);
+        var res = client.getBlockPendingUpdates(BlockQuery.BEST);
 
         verify(serviceImpl).getBlockPendingUpdates(eq(
                         com.concordium.grpc.v2.BlockHashInput.newBuilder().setBest(Empty.getDefaultInstance()).build()),

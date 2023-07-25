@@ -3,8 +3,7 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.ModuleRef;
 import com.concordium.grpc.v2.QueriesGrpc;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Mocks the GRPC Interface of the Node.
- * Tests the mapping of Requests and Responses for {@link ClientV2#getModuleList(BlockHashInput)}.
+ * Tests the mapping of Requests and Responses for {@link ClientV2#getModuleList(BlockQuery)}.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetModuleListTest {
@@ -67,7 +66,7 @@ public class ClientV2GetModuleListTest {
 
     @Test
     public void getModuleList() {
-        var moduleList = client.getModuleList(BlockHashInput.BEST);
+        var moduleList = client.getModuleList(BlockQuery.BEST);
 
         verify(serviceImpl).getModuleList(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(ImmutableList.copyOf(moduleList), ImmutableList.of(

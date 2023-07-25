@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses;
 
-import com.concordium.sdk.responses.blocksummary.updates.Fraction;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

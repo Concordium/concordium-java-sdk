@@ -2,7 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.Timestamp;
@@ -163,7 +163,7 @@ public class ClientV2GetBlockInfoTest {
 
     @Test
     public void getBlockInfo_BestBlock() throws BlockNotFoundException {
-        var blockInfo = client.getBlockInfo(BlockHashInput.BEST);
+        var blockInfo = client.getBlockInfo(BlockQuery.BEST);
 
         verify(serviceImpl).getBlockInfo(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(blockInfo, GET_BLOCK_INFO_RESPONSE);
@@ -171,7 +171,7 @@ public class ClientV2GetBlockInfoTest {
 
     @Test
     public void getBlockInfo_LastFinalBlock() throws BlockNotFoundException {
-        var blockInfo = client.getBlockInfo(BlockHashInput.LAST_FINAL);
+        var blockInfo = client.getBlockInfo(BlockQuery.LAST_FINAL);
 
         verify(serviceImpl).getBlockInfo(eq(LAST_FINAL_BLOCK), any(StreamObserver.class));
         assertEquals(blockInfo, GET_BLOCK_INFO_RESPONSE);
@@ -180,7 +180,7 @@ public class ClientV2GetBlockInfoTest {
     @Test
     public void getBlockInfo_GivenBlock() throws BlockNotFoundException {
         var blockInfo = client.getBlockInfo(
-                BlockHashInput.GIVEN(Hash.from(BLOCK_HASH)));
+                BlockQuery.HASH(Hash.from(BLOCK_HASH)));
 
         verify(serviceImpl).getBlockInfo(eq(GIVEN_BLOCK_GRPC), any(StreamObserver.class));
         assertEquals(blockInfo, GET_BLOCK_INFO_RESPONSE);

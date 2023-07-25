@@ -36,8 +36,7 @@ public class BirkParameters {
 
     public static Optional<BirkParameters> fromJson(ConcordiumP2PRpc.JsonResponse jsonResponse) {
         try {
-            val ret = JsonMapper.INSTANCE.readValue(jsonResponse.getValue(), BirkParameters.class);
-
+            BirkParameters ret = JsonMapper.INSTANCE.readValue(jsonResponse.getValue(), BirkParameters.class);
             return Optional.ofNullable(ret);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse BirkParameters JSON", e);

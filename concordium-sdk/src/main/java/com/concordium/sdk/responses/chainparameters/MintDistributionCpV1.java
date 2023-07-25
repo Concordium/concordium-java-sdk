@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses;
+package com.concordium.sdk.responses.chainparameters;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

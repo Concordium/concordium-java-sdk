@@ -13,6 +13,7 @@ import com.concordium.grpc.v2.TransferPayload;
 import com.concordium.grpc.v2.TransferWithMemoPayload;
 import com.concordium.grpc.v2.UpdateContractPayload;
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
@@ -174,7 +175,7 @@ public class ClientV2GetItemsTest {
 
     @Test
     public void getBlockItems() {
-        var res = client.getBlockItems(com.concordium.sdk.requests.BlockHashInput.BEST);
+        var res = client.getBlockItems(BlockQuery.BEST);
         val resList = ImmutableList.copyOf(res);
 
         verify(serviceImpl).getBlockItems(any(BlockHashInput.class), any(StreamObserver.class));

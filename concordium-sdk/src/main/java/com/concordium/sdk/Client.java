@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
-import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
+import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
@@ -103,23 +103,23 @@ public final class Client {
     /**
      * Retrieves the {@link AccountInfo} based on the address {@link Hash} and the block {@link Hash}
      *
-     * @param accountRequest The {@link AccountRequest}
-     *                       See {@link AccountRequest#from(AccountAddress)},
-     *                       {@link AccountRequest#from(AccountIndex)}
+     * @param accountQuery The {@link AccountQuery}
+     *                       See {@link AccountQuery#from(AccountAddress)},
+     *                       {@link AccountQuery#from(AccountIndex)}
      * @param blockHash      the block hash
      * @return The {@link AccountInfo}
      * @throws AccountNotFoundException if the account was not found.
      */
-    public AccountInfo getAccountInfo(AccountRequest accountRequest, Hash blockHash) throws AccountNotFoundException {
+    public AccountInfo getAccountInfo(AccountQuery accountQuery, Hash blockHash) throws AccountNotFoundException {
         val request = ConcordiumP2PRpc.GetAddressInfoRequest
                 .newBuilder()
-                .setAddressBytes(accountRequest.getByteString())
+                .setAddressBytes(accountQuery.getByteString())
                 .setBlockHash(blockHash.asHex())
                 .build();
         val response = server().getAccountInfo(request);
         val accountInfo = AccountInfo.fromJson(response.getValue());
         if (Objects.isNull(accountInfo)) {
-            throw AccountNotFoundException.from(accountRequest, blockHash);
+            throw AccountNotFoundException.from(accountQuery, blockHash);
         }
         return accountInfo;
     }

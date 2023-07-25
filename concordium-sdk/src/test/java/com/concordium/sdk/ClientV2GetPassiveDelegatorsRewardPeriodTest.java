@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 /**
  * Mocks the GRPC Interface of the Node.
  * Tests the mapping of Requests and Responses for
- * {@link ClientV2#getPassiveDelegatorsRewardPeriod(BlockHashInput)}.
+ * {@link ClientV2#getPassiveDelegatorsRewardPeriod(BlockQuery)}.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetPassiveDelegatorsRewardPeriodTest {
@@ -88,7 +88,7 @@ public class ClientV2GetPassiveDelegatorsRewardPeriodTest {
 
     @Test
     public void getPassiveDelegatorsRewardPeriodTest() {
-        var poolDelegatorsRewardPeriod = client.getPassiveDelegatorsRewardPeriod(BlockHashInput.BEST);
+        var poolDelegatorsRewardPeriod = client.getPassiveDelegatorsRewardPeriod(BlockQuery.BEST);
 
         verify(serviceImpl).getPassiveDelegatorsRewardPeriod(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(
