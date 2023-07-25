@@ -2,7 +2,6 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.grpc.v2.BakerId;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.dumpstart.DumpRequest;
@@ -37,7 +36,6 @@ import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.ContractAddress;
 import com.google.common.collect.ImmutableList;
 import io.grpc.ManagedChannel;
-import io.grpc.StatusRuntimeException;
 import lombok.val;
 
 import java.io.File;
@@ -218,17 +216,11 @@ public final class ClientV2 {
      *
      * @param blockHash the hash of the block
      * @return the cryptographic parameters at the given block.
-     * @throws BlockNotFoundException if the block was not found.
      */
-    public CryptographicParameters getCryptographicParameters(final BlockQuery blockHash)
-            throws BlockNotFoundException {
-        try {
-            val grpcOutput = this.server()
-                    .getCryptographicParameters(to(blockHash));
-            return to(grpcOutput);
-        } catch (StatusRuntimeException e) {
-            throw BlockNotFoundException.from(blockHash.getBlockHash());
-        }
+    public CryptographicParameters getCryptographicParameters(final BlockQuery blockHash) {
+        val grpcOutput = this.server()
+                .getCryptographicParameters(to(blockHash));
+        return to(grpcOutput);
     }
 
     /**
@@ -236,15 +228,10 @@ public final class ClientV2 {
      *
      * @param blockHash Block at which the reward status is to be retrieved.
      * @return Parsed {@link RewardsOverview}.
-     * @throws BlockNotFoundException When the returned response is null.
      */
-    public RewardsOverview getRewardStatus(final BlockQuery blockHash) throws BlockNotFoundException {
-        try {
-            val grpcOutput = this.server().getTokenomicsInfo(to(blockHash));
-            return to(grpcOutput);
-        } catch (StatusRuntimeException e) {
-            throw BlockNotFoundException.from(blockHash.getBlockHash());
-        }
+    public RewardsOverview getRewardStatus(final BlockQuery blockHash) {
+        val grpcOutput = this.server().getTokenomicsInfo(to(blockHash));
+        return to(grpcOutput);
     }
 
     /**
@@ -252,15 +239,11 @@ public final class ClientV2 {
      *
      * @param blockQuery the block {@link BlockQuery} to query.
      * @return A {@link BlockInfo} for the block
-     * @throws BlockNotFoundException If the block was not found.
      */
-    public BlockInfo getBlockInfo(BlockQuery blockQuery) throws BlockNotFoundException {
-        try {
-            return to(this.server()
-                    .getBlockInfo(to(blockQuery)));
-        } catch (StatusRuntimeException e) {
-            throw BlockNotFoundException.from(blockQuery.getBlockHash());
-        }
+    public BlockInfo getBlockInfo(BlockQuery blockQuery) {
+        return to(this.server()
+                .getBlockInfo(to(blockQuery)));
+
     }
 
 
@@ -270,13 +253,9 @@ public final class ClientV2 {
      * @param blockQuery block to query.
      * @return the {@link ChainParameters}
      */
-    public ChainParameters getChainParameters(BlockQuery blockQuery) throws BlockNotFoundException {
-        try {
-            val blockChainParameters = this.server().getBlockChainParameters(to(blockQuery));
-            return to(blockChainParameters);
-        } catch (StatusRuntimeException e) {
-            throw BlockNotFoundException.from(blockQuery.getHeight());
-        }
+    public ChainParameters getChainParameters(BlockQuery blockQuery) {
+        val blockChainParameters = this.server().getBlockChainParameters(to(blockQuery));
+        return to(blockChainParameters);
     }
 
     /**
@@ -299,16 +278,11 @@ public final class ClientV2 {
      *
      * @param transactionHash The transaction {@link Hash}
      * @return The {@link TransactionStatus}
-     * @throws BlockNotFoundException if the transaction was not found.
      */
-    public TransactionStatus getBlockItemStatus(Hash transactionHash) throws BlockNotFoundException {
-        try {
-            val grpcOutput = this.server()
-                    .getBlockItemStatus(toTransactionHash(transactionHash));
-            return to(grpcOutput);
-        } catch (StatusRuntimeException e) {
-            throw BlockNotFoundException.from(transactionHash);
-        }
+    public TransactionStatus getBlockItemStatus(Hash transactionHash) {
+        val grpcOutput = this.server()
+                .getBlockItemStatus(toTransactionHash(transactionHash));
+        return to(grpcOutput);
     }
 
 
@@ -353,6 +327,7 @@ public final class ClientV2 {
     /**
      * Retrieves the {@link FinalizationData} of a given block {@link BlockQuery}
      * Note. Returns NULL if there is no finalization data in the block
+     *
      * @param blockQuery the block {@link BlockQuery} to query
      * @return The {@link FinalizationData} of the block
      */
@@ -363,6 +338,7 @@ public final class ClientV2 {
 
     /**
      * Get information related to the baker election for a particular block.
+     *
      * @param input {@link BlockQuery}
      * @return {@link ElectionInfo}
      */
@@ -376,6 +352,7 @@ public final class ClientV2 {
      * Retrieves a list of {@link SpecialOutcome}s in a given block {@link BlockQuery}
      * These are events generated by the protocol, such as minting and reward payouts.
      * They are not directly generated by any transaction.
+     *
      * @param blockQuery the block {@link BlockQuery} to query
      * @return {@link ImmutableList} of {@link SpecialOutcome}s not directly caused by a transaction
      */
@@ -388,11 +365,10 @@ public final class ClientV2 {
      * Gets Block Ancestor Blocks.
      *
      * @param blockQuery {@link BlockQuery} of the block.
-     * @param num       Total no of Ancestor blocks to get.
+     * @param num        Total no of Ancestor blocks to get.
      * @return {@link Iterator} of {@link Hash}
-     * @throws BlockNotFoundException When the returned response from Node is invalid or null.
      */
-    public Iterator<Hash> getAncestors(BlockQuery blockQuery, long num) throws BlockNotFoundException {
+    public Iterator<Hash> getAncestors(BlockQuery blockQuery, long num) {
         val getAncestorsRequestInput = AncestorsRequest.newBuilder()
                 .setBlockHash(to(blockQuery))
                 .setAmount(num)
@@ -406,15 +382,10 @@ public final class ClientV2 {
      *
      * @param blockQuery {@link BlockQuery} of the block bakers are to be retrieved.
      * @return Parsed {@link Iterator} of {@link com.concordium.sdk.responses.BakerId}
-     * @throws BlockNotFoundException When the returned JSON is null.
      */
-    public Iterator<com.concordium.sdk.responses.BakerId> getBakerList(BlockQuery blockQuery) throws BlockNotFoundException {
-        try {
-            val grpcOutput = this.server().getBakerList(to(blockQuery));
-            return to(grpcOutput, ClientV2MapperExtensions::to);
-        } catch (StatusRuntimeException e) {
-            throw BlockNotFoundException.from(blockQuery.getBlockHash());
-        }
+    public Iterator<com.concordium.sdk.responses.BakerId> getBakerList(BlockQuery blockQuery) {
+        val grpcOutput = this.server().getBakerList(to(blockQuery));
+        return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
     /**
@@ -422,15 +393,10 @@ public final class ClientV2 {
      *
      * @param blockQuery {@link BlockQuery} of the block bakers are to be retrieved.
      * @return Parsed {@link Iterator} of {@link ContractAddress}
-     * @throws BlockNotFoundException When the returned JSON is null.
      */
-    public Iterator<ContractAddress> getInstanceList(BlockQuery blockQuery) throws BlockNotFoundException {
-        try {
-            val grpcOutput = this.server().getInstanceList(to(blockQuery));
-            return to(grpcOutput, ClientV2MapperExtensions::to);
-        } catch (StatusRuntimeException e) {
-            throw BlockNotFoundException.from(blockQuery.getBlockHash());
-        }
+    public Iterator<ContractAddress> getInstanceList(BlockQuery blockQuery) {
+        val grpcOutput = this.server().getInstanceList(to(blockQuery));
+        return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
     /**
@@ -460,7 +426,7 @@ public final class ClientV2 {
      * stake in the reward period containing the given block.
      * The stream will end when all the delegators has been returned.
      *
-     * @param input {@link BlockQuery}.
+     * @param input   {@link BlockQuery}.
      * @param bakerId {@link com.concordium.sdk.responses.BakerId}.
      * @return {@link Iterator<DelegatorRewardPeriodInfo>}.
      */
@@ -570,6 +536,7 @@ public final class ClientV2 {
 
     /**
      * Retrieves valious information about the node
+     *
      * @return {@link NodeInfo} containing valious information about the node
      */
     public NodeInfo getNodeInfo() {
@@ -591,14 +558,14 @@ public final class ClientV2 {
     /**
      * Get information about a given pool at the end of a given block.
      *
-     * @param input {@link BlockQuery}.
+     * @param input   {@link BlockQuery}.
      * @param bakerId {@link BakerId}.
      * @return {@link BakerPoolStatus}.
      */
     public BakerPoolStatus getPoolInfo(BlockQuery input, com.concordium.sdk.responses.BakerId bakerId) {
         val grpcOutput = this.server().getPoolInfo(PoolInfoRequest.newBuilder()
-                        .setBlockHash(to(input))
-                        .setBaker(to(bakerId))
+                .setBlockHash(to(input))
+                .setBaker(to(bakerId))
                 .build());
 
         return ClientV2MapperExtensions.to(grpcOutput);
@@ -682,6 +649,7 @@ public final class ClientV2 {
 
     /**
      * Get a list of banned peers
+     *
      * @return {@link ImmutableList} of {@link InetAddress} of banned peers
      * @throws UnknownHostException When the returned IP address of a peer is invalid
      */
