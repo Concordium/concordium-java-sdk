@@ -2,10 +2,9 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -15,7 +14,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 /**
- * Gets Contract Modules ta {@link BlockHashInput#BEST} and prints them to console.
+ * Gets Contract Modules ta {@link BlockQuery#BEST} and prints them to console.
  */
 @Command(name = "GetModuleList", mixinStandardHelpOptions = true)
 public class GetModuleList implements Callable<Integer> {
@@ -35,7 +34,7 @@ public class GetModuleList implements Callable<Integer> {
 
         ClientV2
                 .from(connection)
-                .getModuleList(BlockHashInput.BEST)
+                .getModuleList(BlockQuery.BEST)
                 .forEachRemaining(System.out::println);
 
         return 0;

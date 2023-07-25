@@ -2,9 +2,8 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -14,7 +13,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 /**
- * Gets the Passive Delegators Information at the {@link BlockHashInput#BEST} block.
+ * Gets the Passive Delegators Information at the {@link BlockQuery#BEST} block.
  */
 @Command(name = "GetPassiveDelegatorsRewardsPeriod", mixinStandardHelpOptions = true)
 public class GetPassiveDelegatorsRewardsPeriod implements Callable<Integer> {
@@ -39,7 +38,7 @@ public class GetPassiveDelegatorsRewardsPeriod implements Callable<Integer> {
 
         ClientV2
                 .from(connection)
-                .getPassiveDelegatorsRewardPeriod(BlockHashInput.BEST)
+                .getPassiveDelegatorsRewardPeriod(BlockQuery.BEST)
                 .forEachRemaining(System.out::println);
 
         return 0;

@@ -2,12 +2,8 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.responses.PendingUpdateV2;
-import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
-import com.concordium.sdk.types.ContractAddress;
+import com.concordium.sdk.requests.BlockQuery;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -17,7 +13,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 /**
- * Gets the Pending Updates of Chain Parameters at the {@link BlockHashInput#BEST} block.
+ * Gets the Pending Updates of Chain Parameters at the {@link BlockQuery#BEST} block.
  */
 @Command(name = "GetBlockPendingUpdates", mixinStandardHelpOptions = true)
 public class GetBlockPendingUpdates implements Callable<Integer> {
@@ -42,7 +38,7 @@ public class GetBlockPendingUpdates implements Callable<Integer> {
 
         ClientV2
                 .from(connection)
-                .getBlockPendingUpdates(BlockHashInput.BEST)
+                .getBlockPendingUpdates(BlockQuery.BEST)
                 .forEachRemaining(System.out::println);
 
         return 0;

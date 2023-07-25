@@ -2,9 +2,8 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import picocli.CommandLine;
@@ -16,7 +15,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 /**
- * Gets the Baker#{@link GetPoolInfo#bakerId} Pool Information at the {@link BlockHashInput#BEST} block.
+ * Gets the Baker#{@link GetPoolInfo#bakerId} Pool Information at the {@link BlockQuery#BEST} block.
  */
 @Command(name = "GetPoolInfo", mixinStandardHelpOptions = true)
 public class GetPoolInfo implements Callable<Integer> {
@@ -46,7 +45,7 @@ public class GetPoolInfo implements Callable<Integer> {
 
         BakerPoolStatus bakerPoolInfo = ClientV2
                 .from(connection)
-                .getPoolInfo(BlockHashInput.BEST, BakerId.from(bakerId));
+                .getPoolInfo(BlockQuery.BEST, BakerId.from(bakerId));
 
         System.out.println(bakerPoolInfo);
 

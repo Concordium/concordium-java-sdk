@@ -2,9 +2,8 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.AccountIndex;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -37,7 +36,7 @@ public class GetPoolDelegators implements Callable<Integer> {
 
         ClientV2
                 .from(connection)
-                .getPoolDelegators(BlockHashInput.BEST, AccountIndex.from(bakerId))
+                .getPoolDelegators(BlockQuery.BEST, AccountIndex.from(bakerId))
                 .forEachRemaining(System.out::println);
 
         return 0;

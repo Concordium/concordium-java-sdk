@@ -2,9 +2,8 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.NextUpdateSequenceNumbers;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -15,7 +14,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 /**
- * Gets the chain parameters Update Sequence Numbers at the end of {@link BlockHashInput#BEST} block.
+ * Gets the chain parameters Update Sequence Numbers at the end of {@link BlockQuery#BEST} block.
  */
 @Command(name = "GetNextUpdateSequenceNumbers", mixinStandardHelpOptions = true)
 public class GetNextUpdateSequenceNumbers implements Callable<Integer> {
@@ -40,7 +39,7 @@ public class GetNextUpdateSequenceNumbers implements Callable<Integer> {
 
         NextUpdateSequenceNumbers instanceINfo = ClientV2
                 .from(connection)
-                .getNextUpdateSequenceNumbers(BlockHashInput.BEST);
+                .getNextUpdateSequenceNumbers(BlockQuery.BEST);
 
         System.out.println(instanceINfo);
 

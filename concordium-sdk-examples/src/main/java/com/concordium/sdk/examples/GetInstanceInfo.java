@@ -2,9 +2,8 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
 import com.concordium.sdk.types.ContractAddress;
 import picocli.CommandLine;
@@ -16,7 +15,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 /**
- * Gets the Contract Instance Information at the {@link BlockHashInput#BEST} block.
+ * Gets the Contract Instance Information at the {@link BlockQuery#BEST} block.
  */
 @Command(name = "GetInstanceInfo", mixinStandardHelpOptions = true)
 public class GetInstanceInfo implements Callable<Integer> {
@@ -47,7 +46,7 @@ public class GetInstanceInfo implements Callable<Integer> {
 
         InstanceInfo instanceINfo = ClientV2
                 .from(connection)
-                .getInstanceInfo(BlockHashInput.BEST, ContractAddress.from(index, subindex));
+                .getInstanceInfo(BlockQuery.BEST, ContractAddress.from(index, subindex));
 
         System.out.println(instanceINfo);
 

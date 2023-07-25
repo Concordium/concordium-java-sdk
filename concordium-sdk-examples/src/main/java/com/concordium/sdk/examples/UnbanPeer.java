@@ -2,7 +2,6 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import picocli.CommandLine;
 
 import java.net.InetAddress;

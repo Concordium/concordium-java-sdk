@@ -2,11 +2,9 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
-import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import picocli.CommandLine;
 
 import java.net.MalformedURLException;
@@ -16,7 +14,7 @@ import java.util.concurrent.Callable;
 
 /**
  * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
- * Retrieves and prints the {@link FinalizationData} for the block {@link BlockHashInput#BEST}.
+ * Retrieves and prints the {@link FinalizationData} for the block {@link BlockQuery#BEST}.
  */
 @CommandLine.Command(name = "GetBlockFinalizationSummary", mixinStandardHelpOptions = true)
 public class GetBlockFinalizationSummary implements Callable<Integer> {
@@ -35,7 +33,7 @@ public class GetBlockFinalizationSummary implements Callable<Integer> {
                 .port(endpointUrl.getPort())
                 .build();
 
-        Optional<FinalizationData> res = ClientV2.from(connection).getBlockFinalizationSummary(BlockHashInput.BEST);
+        Optional<FinalizationData> res = ClientV2.from(connection).getBlockFinalizationSummary(BlockQuery.BEST);
         res.ifPresent(System.out::println);
 
 

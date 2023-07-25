@@ -2,9 +2,8 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import lombok.val;
 import lombok.var;
 import picocli.CommandLine;
@@ -42,7 +41,7 @@ public class GetBlockItems implements Callable<Integer> {
         client
                 .getBlocks(timeout)
                 .forEachRemaining(b -> client
-                        .getBlockItems(BlockHashInput.GIVEN(b.getBlockHash()))
+                        .getBlockItems(BlockQuery.HASH(b.getBlockHash()))
                         .forEachRemaining(System.out::println));
 
         return 0;
