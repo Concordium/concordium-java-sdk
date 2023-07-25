@@ -44,6 +44,6 @@ public class RawTransaction implements Transaction {
         val versionByte = versionedTransactionBytes[0];
         val bytes = Arrays.copyOfRange(versionedTransactionBytes, 1, versionedTransactionBytes.length);
 
-        return new RawTransaction((int) versionByte, bytes);
+        return new RawTransaction(versionByte, bytes);
     }
 }

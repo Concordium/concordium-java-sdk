@@ -170,9 +170,9 @@ public final class ConsensusStatus {
     @JsonProperty("finalizationPeriodEMA")
     private final double finalizationPeriodEMA;
     /**
-     *  Exponential moving average standard deviation of the time between
-     *  finalizations. Will be `0` if there are no finalizations yet
-     *  since the node start.
+     * Exponential moving average standard deviation of the time between
+     * finalizations. Will be `0` if there are no finalizations yet
+     * since the node start.
      */
     @JsonProperty("finalizationPeriodEMSD")
     private final double finalizationPeriodEMSD;

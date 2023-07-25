@@ -28,6 +28,7 @@ public class BakerConsensusInfo {
     /**
      * Parses {@link com.concordium.grpc.v2.NodeInfo.BakerConsensusInfo} to {@link BakerConsensusInfo}
      * Only possible for NodeInfo with ACTIVE node
+     *
      * @param bakerConsensusInfo {@link com.concordium.grpc.v2.NodeInfo.BakerConsensusInfo} returned from the Grpc API
      * @return Parsed {@link BakerConsensusInfo}
      */
@@ -42,7 +43,7 @@ public class BakerConsensusInfo {
         val isActiveFinalizer = bakerConsensusInfo.hasActiveFinalizerCommitteeInfo();
 
         // Node has baker keys but is not active in committee
-        if (! (isActiveBaker || isActiveFinalizer)) {
+        if (!(isActiveBaker || isActiveFinalizer)) {
             return buildPassiveBakerConsensusInfo(bakerConsensusInfo, builder);
         }
 
@@ -52,8 +53,9 @@ public class BakerConsensusInfo {
 
     /**
      * Helper methhod for the parse method. Creates {@link BakerConsensusInfo} that is not active in the committee
+     *
      * @param bakerConsensusInfo {@link com.concordium.grpc.v2.NodeInfo.BakerConsensusInfo} returned from the Grpc API
-     * @param builder {@link BakerConsensusInfoBuilder} with bakerId configured
+     * @param builder            {@link BakerConsensusInfoBuilder} with bakerId configured
      * @return {@link BakerConsensusInfo} for baker node not active in the committee
      */
     private static BakerConsensusInfo buildPassiveBakerConsensusInfo(NodeInfo.BakerConsensusInfo bakerConsensusInfo, BakerConsensusInfoBuilder builder) {

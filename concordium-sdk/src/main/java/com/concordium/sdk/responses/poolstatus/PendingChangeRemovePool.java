@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 
 @Data
 @Jacksonized

@@ -31,6 +31,7 @@ class GlobalContext {
 
     /**
      * Converts {@link CryptographicParameters} to {@link GlobalContext}
+     *
      * @param cryptographicParameters input {@link CryptographicParameters}
      * @return Instance of {@link GlobalContext}
      */

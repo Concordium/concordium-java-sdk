@@ -2,11 +2,11 @@ package com.concordium.sdk.responses.blocksummary.updates.queues;
 
 import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.ProtocolUpdate;
-import com.concordium.sdk.responses.chainparameters.GasRewards;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.MintDistribution;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.TransactionFeeDistribution;
-import com.concordium.sdk.responses.blocksummary.updates.keys.Level2KeysUpdates;
 import com.concordium.sdk.responses.blocksummary.updates.keys.KeysUpdate;
+import com.concordium.sdk.responses.blocksummary.updates.keys.Level2KeysUpdates;
+import com.concordium.sdk.responses.chainparameters.GasRewards;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

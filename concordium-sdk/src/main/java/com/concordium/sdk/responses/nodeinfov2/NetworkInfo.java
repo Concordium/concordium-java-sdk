@@ -44,6 +44,7 @@ public class NetworkInfo {
 
     /**
      * Parses {@link com.concordium.grpc.v2.NodeInfo.NetworkInfo} to {@link NetworkInfo}
+     *
      * @param networkInfo {@link com.concordium.grpc.v2.NodeInfo.NetworkInfo} returned from the Grpc API
      * @return Parsed {@link NetworkInfo}
      */

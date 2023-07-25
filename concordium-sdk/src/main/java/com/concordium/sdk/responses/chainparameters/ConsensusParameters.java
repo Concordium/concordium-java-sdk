@@ -4,6 +4,7 @@ import com.concordium.sdk.responses.TimeoutParameters;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -13,6 +14,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
+@Getter
 public class ConsensusParameters {
     /**
      * The current timeout parameters.

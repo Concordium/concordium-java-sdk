@@ -21,5 +21,5 @@ public enum BlockQueryType {
     /**
      * Query a block at a certain height.
      */
-    HEIGHT;
+    HEIGHT
 }

@@ -14,6 +14,7 @@ import java.nio.ByteBuffer;
 public final class Transfer extends Payload {
 
     private final TransferPayload payload;
+
     private Transfer(AccountAddress receiver, CCDAmount amount) {
         this.payload = TransferPayload.from(receiver, amount);
     }

@@ -57,7 +57,7 @@ public final class ContractInitializedResult extends TransactionResultEvent {
                               @JsonProperty("contractVersion") int version) {
         this.ref = ref;
         this.address = address;
-        if(!Objects.isNull(amount)) {
+        if (!Objects.isNull(amount)) {
             this.amount = CCDAmount.fromMicro(amount);
         }
         this.initName = initName;

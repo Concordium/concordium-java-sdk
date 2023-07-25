@@ -30,7 +30,7 @@ public final class GasRewards {
     private final double accountCreation;
 
     /**
-     *  The fraction paid to the baker.
+     * The fraction paid to the baker.
      */
     @JsonProperty("baker")
     private final double baker;

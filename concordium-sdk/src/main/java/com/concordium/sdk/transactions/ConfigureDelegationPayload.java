@@ -2,7 +2,10 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.types.UInt16;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.val;
 
 import java.nio.ByteBuffer;
 
@@ -37,23 +40,25 @@ public class ConfigureDelegationPayload {
     /**
      * This method returns an array of bytes that represents the bitmap of the fields that are not null
      * in the ConfigureDelegationPayload object
-     * @return  byte[]
+     *
+     * @return byte[]
      */
     public byte[] getBitMapBytes() {
         int bitValue = 0;
         int it = 1;
 
-        bitValue |= ((this.capital != null) ? it: 0);
+        bitValue |= ((this.capital != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.restakeEarnings != null) ? it: 0);
+        bitValue |= ((this.restakeEarnings != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.delegationTarget != null) ? it: 0);
+        bitValue |= ((this.delegationTarget != null) ? it : 0);
 
         return UInt16.from(bitValue).getBytes();
     }
 
     /**
      * This method returns an array of bytes that represents the ConfigureDelegationPayload object
+     *
      * @return byte[]
      */
     public byte[] getBytes() {
@@ -72,7 +77,7 @@ public class ConfigureDelegationPayload {
         }
 
         if (this.restakeEarnings != null) {
-            val restakeEarningsByte = (byte)(this.restakeEarnings?1:0);
+            val restakeEarningsByte = (byte) (this.restakeEarnings ? 1 : 0);
             restakeEarningBuffer = createNotNullBuffer(new byte[]{restakeEarningsByte});
             bufferLength += TransactionType.BYTES;
         }

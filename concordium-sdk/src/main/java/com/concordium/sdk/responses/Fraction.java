@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.val;
 
 import java.math.BigInteger;
@@ -35,7 +34,7 @@ public class Fraction {
         if (gcd.equals(BigInteger.ZERO)) {
             this.denominator = denominator;
             this.numerator = numerator;
-        }else {
+        } else {
             this.denominator = denominator.divide(gcd);
             this.numerator = numerator.divide(gcd);
         }
@@ -52,6 +51,7 @@ public class Fraction {
 
     /**
      * Get the fraction as a floating point value.
+     *
      * @return the floating point value.
      */
     public double asDouble() {

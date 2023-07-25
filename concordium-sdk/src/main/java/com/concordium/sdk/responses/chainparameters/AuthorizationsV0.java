@@ -3,8 +3,12 @@ package com.concordium.sdk.responses.chainparameters;
 import com.concordium.grpc.v2.UpdatePublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.google.protobuf.ByteString;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import lombok.val;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 

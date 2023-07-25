@@ -84,6 +84,6 @@ public final class AccountQuery {
     }
 
     public enum Type {
-        ADDRESS, INDEX, CREDENTIAL_REGISTRATION_ID;
+        ADDRESS, INDEX, CREDENTIAL_REGISTRATION_ID
     }
 }

@@ -14,11 +14,11 @@ public final class AccountNotFoundException extends Exception {
     /**
      * Creates a new {@link AccountNotFoundException} from a {@link AccountAddress} and a {@link Hash}.
      * This happens when the account could not be found for the given block.
-     *
+     * <p>
      * Use {@link AccountNotFoundException#from(AccountQuery, Hash)} to instantiate.
      *
      * @param accountQuery The request which could not find an account.
-     * @param blockHash The block hash
+     * @param blockHash    The block hash
      */
     private AccountNotFoundException(AccountQuery accountQuery, Hash blockHash) {
         super("Account " + accountQuery.toString() + ") not found for block " + blockHash.asHex());

@@ -15,7 +15,7 @@ public class BakerSetMetadataURL extends AbstractBakerResult {
     @JsonCreator
     BakerSetMetadataURL(@JsonProperty("bakerId") AccountIndex bakerId,
                         @JsonProperty("account") AccountAddress bakerAccount,
-                        @JsonProperty("metadataURL") String metadataUrl){
+                        @JsonProperty("metadataURL") String metadataUrl) {
         super(bakerId, bakerAccount);
         this.metadataUrl = metadataUrl;
     }

@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.chainparameters;
 
 import com.concordium.grpc.v2.UpdateKeysIndex;
-import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.transactions.Index;
 import com.concordium.sdk.types.UInt32;
 import lombok.EqualsAndHashCode;
@@ -9,7 +8,6 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
 
-import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 

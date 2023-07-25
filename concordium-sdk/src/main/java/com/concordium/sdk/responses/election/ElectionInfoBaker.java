@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.election;
 
-import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.transactions.AccountAddress;
 import lombok.Builder;

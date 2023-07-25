@@ -15,7 +15,7 @@ import lombok.ToString;
 public class TransactionFeeDistributionV2 {
 
     /**
-     *  The fraction allocated to the GAS account.
+     * The fraction allocated to the GAS account.
      */
     private final double gasAccount;
     /**

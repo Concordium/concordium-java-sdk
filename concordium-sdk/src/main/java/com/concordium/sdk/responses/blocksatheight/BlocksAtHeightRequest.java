@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.blocksatheight;
 
 import com.concordium.sdk.Client;
-import com.concordium.sdk.responses.ProtocolVersion;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -9,7 +8,7 @@ import lombok.ToString;
  * Request type for {@link Client#getBlocksAtHeight(BlocksAtHeightRequest)}
  * This type allows for requesting blocks at a specified height either by an absolute
  * value or by a relative one.
- *
+ * <p>
  * Refer to {@link BlocksAtHeightRequest#newAbsolute(long)} and {@link BlocksAtHeightRequest#newRelative(long, int, boolean)}
  * for creating the request.
  */
@@ -35,6 +34,7 @@ public class BlocksAtHeightRequest {
 
     /**
      * Request blocks at an absolute height.
+     *
      * @param height the absolute height, i.e., height starting from the genesis block
      * @return the request.
      */
@@ -45,8 +45,8 @@ public class BlocksAtHeightRequest {
     /**
      * Request blocks at a relative height wrt. a specified genesis index.
      *
-     * @param height the height counting from the last protocol update, 
-     * @param genesisIndex the genesis index.
+     * @param height                   the height counting from the last protocol update,
+     * @param genesisIndex             the genesis index.
      * @param restrictedToGenesisIndex if true then only blocks at the specified genesis index will be returned.
      * @return the request.
      */

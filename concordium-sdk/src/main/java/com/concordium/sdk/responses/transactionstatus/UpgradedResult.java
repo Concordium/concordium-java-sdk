@@ -13,7 +13,7 @@ import lombok.ToString;
  * The event contains the {@link ContractAddress} that was upgraded, a {@link ModuleRef}
  * pointing to the old 'Module and a {@link ModuleRef} pointing to the new 'Module' which
  * will be used for future executions of the contract.
- *
+ * <p>
  * Native contract upgrading was added as part of P5 {@link com.concordium.sdk.responses.ProtocolVersion#V5}.
  */
 @ToString

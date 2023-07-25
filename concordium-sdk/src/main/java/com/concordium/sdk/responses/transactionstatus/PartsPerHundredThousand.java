@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.math.BigInteger;
+
 @EqualsAndHashCode
 @Getter
 @ToString
@@ -26,6 +27,7 @@ public class PartsPerHundredThousand {
 
     /**
      * Get the parts per hundred thousand as a floating point value.
+     *
      * @return the value as a floating point value.
      */
     public double asDouble() {

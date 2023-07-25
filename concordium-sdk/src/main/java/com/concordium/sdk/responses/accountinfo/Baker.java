@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.accountinfo;
 
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
-import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonProperty;

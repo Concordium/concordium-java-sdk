@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.math.BigInteger;
-
 @Getter
 @ToString
 public class BakerSetFinalizationRewardCommission extends AbstractBakerResult {
@@ -18,7 +16,7 @@ public class BakerSetFinalizationRewardCommission extends AbstractBakerResult {
     @JsonCreator
     BakerSetFinalizationRewardCommission(@JsonProperty("bakerId") AccountIndex bakerId,
                                          @JsonProperty("account") AccountAddress bakerAccount,
-                                         @JsonProperty("finalizationRewardCommission") PartsPerHundredThousand finalizationRewardCommission){
+                                         @JsonProperty("finalizationRewardCommission") PartsPerHundredThousand finalizationRewardCommission) {
         super(bakerId, bakerAccount);
         this.finalizationRewardCommission = finalizationRewardCommission;
     }

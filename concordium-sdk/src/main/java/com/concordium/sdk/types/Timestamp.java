@@ -22,15 +22,17 @@ public class Timestamp {
 
     /**
      * Create a new {@link Timestamp} from milliseconds.
+     *
      * @param millis the amount of milliseconds that have passed since 1/1-1970.
      * @return a new timestamp
      */
-    public static Timestamp newMillis(long millis){
+    public static Timestamp newMillis(long millis) {
         return new Timestamp(millis);
     }
 
     /**
      * Create a new {@link Timestamp} from seconds i.e. a Unix timestamp.
+     *
      * @param seconds the amount of seconds that have passed since 1/1-1970.
      * @return a new timestamp
      */

@@ -36,5 +36,5 @@ public enum AttributeType {
     @JsonProperty("taxIdNo")
     TAX_ID_NO,
     @JsonProperty("lei")
-    LEI;
+    LEI
 }

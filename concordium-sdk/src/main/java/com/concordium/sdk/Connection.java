@@ -76,6 +76,7 @@ public final class Connection {
     /**
      * A connection builder to use with the {@link Client}
      * I.e. the GRPCv1 API.
+     *
      * @return the {@link ValidatingConnectionBuilder}
      * @deprecated since version 5.0.0, instead use {@link Connection#newBuilder()}
      */
@@ -87,6 +88,7 @@ public final class Connection {
     /**
      * A connection builder to use with the {@link ClientV2}
      * I.e. the GRPCv2 API.
+     *
      * @return the {@link NoCredentialsConnectionBuilder}
      */
     public static Connection.ConnectionBuilder newBuilder() {
@@ -170,9 +172,9 @@ public final class Connection {
     private ChannelCredentials getTLSChannel(TLSConfig tlsConfig) throws IOException {
         if (Objects.isNull(tlsConfig.getServerCert())) {
             return TlsChannelCredentials.create();
-        }else {
+        } else {
             val builder = TlsChannelCredentials.newBuilder();
-            if(!Objects.isNull(tlsConfig.getServerCert())) {
+            if (!Objects.isNull(tlsConfig.getServerCert())) {
                 builder.trustManager(tlsConfig.getServerCert());
             }
             if (getTlsConfig().isMTLS()) {

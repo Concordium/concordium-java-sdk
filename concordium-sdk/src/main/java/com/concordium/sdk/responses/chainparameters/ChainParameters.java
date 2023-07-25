@@ -5,8 +5,8 @@ package com.concordium.sdk.responses.chainparameters;
  * All chain parameters must implement 'getVersion'.
  */
 public abstract class ChainParameters {
-    
-    abstract Version getVersion();
+
+    public abstract Version getVersion();
 
     /**
      * Chain parameters versions

@@ -101,7 +101,7 @@ public final class ChainParametersV2 extends ChainParameters {
 
 
     @Override
-    protected Version getVersion() {
+    public Version getVersion() {
         return Version.CPV2;
     }
 }

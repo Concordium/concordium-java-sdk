@@ -1,13 +1,11 @@
 package com.concordium.sdk.responses.poolstatus;
 
 import com.concordium.sdk.transactions.CCDAmount;
-import com.concordium.sdk.types.Timestamp;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 
 @Data
 @Jacksonized

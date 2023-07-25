@@ -89,7 +89,7 @@ public class ChainParametersV0 extends ChainParameters {
     private final AuthorizationsV0 level2Keys;
 
     @Override
-    protected Version getVersion() {
+    public Version getVersion() {
         return Version.CPV0;
     }
 }

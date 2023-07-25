@@ -2,7 +2,6 @@ package com.concordium.sdk.transactions;
 
 import io.grpc.netty.shaded.io.netty.util.internal.UnstableApi;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Arrays;

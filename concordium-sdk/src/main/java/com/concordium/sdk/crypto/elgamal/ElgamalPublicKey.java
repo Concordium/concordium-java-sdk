@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
@@ -39,7 +38,7 @@ public class ElgamalPublicKey {
     public static ElgamalPublicKey from(final byte[] bytes) {
         return new ElgamalPublicKey(Arrays.copyOf(bytes, bytes.length));
     }
-    
+
     @Override
     @JsonValue
     public String toString() {
