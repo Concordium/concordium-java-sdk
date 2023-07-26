@@ -8,6 +8,7 @@ import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.dumpstart.DumpRequest;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.DelegatorInfo;
+import com.concordium.sdk.responses.KeyValurPair;
 import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
 import com.concordium.sdk.responses.*;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
@@ -21,12 +22,9 @@ import com.concordium.sdk.responses.chainparameters.ChainParameters;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
-import com.concordium.sdk.responses.modulesource.ModuleSource;
 import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.election.ElectionInfo;
-import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
-import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
@@ -37,6 +35,8 @@ import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.google.common.collect.ImmutableList;
+import com.concordium.sdk.transactions.Hash;
+import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import lombok.val;
 
@@ -521,6 +521,48 @@ public final class ClientV2 {
         return ClientV2MapperExtensions.to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
+
+    /**
+     * Get the exact state of a specific contract instance, streamed as a list of key-value pairs.
+     * The list is streamed in lexicographic order of keys.
+     *
+     * @param input {@link BlockQuery}.
+     * @param contractAddress {@link ContractAddress}.
+     * @return {@link Iterator} of {@link KeyValurPair}.
+     */
+    public Iterator<KeyValurPair> getInstanceState(
+            BlockQuery input,
+            ContractAddress contractAddress) {
+        val grpcOutput = this.server().getInstanceState(InstanceInfoRequest.newBuilder()
+                        .setBlockHash(to(input))
+                        .setAddress(to(contractAddress))
+                .build());
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get the value at a specific key of a contract state.
+     * In contrast to {@link ClientV2#getInstanceState(BlockQuery, ContractAddress)} this is more efficient,
+     * but requires the user to know the specific key to look for.
+     *
+     * @param input {@link BlockHashInput}.
+     * @param contractAddress {@link ContractAddress}.
+     * @param key Instance State Key to Lookup.
+     * @return Instance State Value for the input `key`
+     */
+    public byte[] instanceStateLookup(
+            BlockQuery input,
+            ContractAddress contractAddress,
+            byte[] key) {
+        final InstanceStateValueAtKey grpcOutput = this.server().instanceStateLookup(InstanceStateLookupRequest.newBuilder()
+                .setKey(ByteString.copyFrom(key))
+                .setAddress(to(contractAddress))
+                .setBlockHash(to(input))
+                .build());
+
+        return grpcOutput.getValue().toByteArray();
+    }
 
     /**
      * Closes the underlying grpc channel

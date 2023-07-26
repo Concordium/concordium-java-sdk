@@ -7,10 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 import java.util.Objects;
@@ -28,6 +25,7 @@ public final class ContractAddress extends AbstractAddress {
     private final long index;
 
     @JsonCreator
+    @Builder
     public ContractAddress(@JsonProperty("subindex") long subIndex,
                            @JsonProperty("index") long index) {
         super(AccountType.ADDRESS_CONTRACT);
@@ -58,7 +56,10 @@ public final class ContractAddress extends AbstractAddress {
     }
 
     public static ContractAddress from(long index, long subIndex) {
-        return new ContractAddress(subIndex, index);
+        return ContractAddress.builder()
+                .index(index)
+                .subIndex(subIndex)
+                .build();
     }
 
     public byte[] getBytes() {
