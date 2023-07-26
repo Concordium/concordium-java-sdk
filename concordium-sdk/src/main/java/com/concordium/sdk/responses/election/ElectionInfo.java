@@ -14,6 +14,7 @@ import lombok.ToString;
 public class ElectionInfo {
     /**
      * Baking lottery election difficulty.
+     * Note that this is only set for protocol versions 1-5.
      */
     private final double electionDifficulty;
 

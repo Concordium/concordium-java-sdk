@@ -52,7 +52,9 @@ public interface TransactionSigner {
         val transactionSigner = new TransactionSignerImpl();
         JsonNode json = JsonMapper.INSTANCE.readTree(walletExport);
         // Browser wallet format has field "value" otherwise structure for accessing keys is similar
-        if (json.has("value")) {json = json.get("value");}
+        if (json.has("value")) {
+            json = json.get("value");
+        }
         val credentialsMap = json.get("accountKeys").get("keys"); // Map(index, Map(index, {signKey, verifyKey})
         val credentialsIterator = credentialsMap.fieldNames();
         while (credentialsIterator.hasNext()) {

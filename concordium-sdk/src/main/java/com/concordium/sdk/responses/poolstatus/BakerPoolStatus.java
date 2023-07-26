@@ -1,13 +1,12 @@
 package com.concordium.sdk.responses.poolstatus;
 
 import com.concordium.sdk.responses.BakerId;
-import com.concordium.sdk.serializing.JsonMapper;
+import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.Optional;
@@ -15,6 +14,7 @@ import java.util.Optional;
 @Data
 @Jacksonized
 @Builder
+@EqualsAndHashCode(callSuper = false)
 public class BakerPoolStatus extends PoolStatus {
 
     private final PoolType poolType = PoolType.BAKER_POOL;
@@ -47,7 +47,7 @@ public class BakerPoolStatus extends PoolStatus {
     /**
      * The pool info associated with the pool: open status, metadata URL and commission rates.
      */
-    private final PoolInfo poolInfo;
+    private final BakerPoolInfo poolInfo;
 
     /**
      * Any pending change to the baker's stake.
@@ -57,10 +57,18 @@ public class BakerPoolStatus extends PoolStatus {
     /**
      * Status of the pool in the current reward period.
      */
-    private final Optional<CurrentPaydayStatus> currentPaydayStatus;
+    private final CurrentPaydayStatus currentPaydayStatus;
 
     /**
      * Total capital staked across all pools.
      */
     private final CCDAmount allPoolTotalCapital;
+
+    public Optional<PendingChange> getBakerStakePendingChange() {
+        return Optional.ofNullable(bakerStakePendingChange);
+    }
+
+    public Optional<CurrentPaydayStatus> getCurrentPaydayStatus() {
+        return Optional.ofNullable(currentPaydayStatus);
+    }
 }

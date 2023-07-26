@@ -1,7 +1,7 @@
 package com.concordium.sdk.exceptions;
 
-import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.types.ContractAddress;
 
 /**
  * A checked exception thrown when a contract instance could not be found with the {@link ContractAddress}

@@ -4,7 +4,7 @@ import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.types.ContractAddress;
 import lombok.var;
 import org.apache.commons.codec.DecoderException;
@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 /**
- * Calls {@link ClientV2#instanceStateLookup(BlockHashInput, ContractAddress, byte[])}. with
+ * Calls {@link ClientV2#instanceStateLookup(BlockQuery, ContractAddress, byte[])}. with
  * Contract {@link InstanceStateLookup#index}, Contract {@link InstanceStateLookup#subindex} and
  * {@link InstanceStateLookup#keyHex} denoting key to lookup and prints the response to console.
  */
@@ -64,7 +64,7 @@ public class InstanceStateLookup implements Callable<Integer> {
     public Integer call() throws MalformedURLException, ClientInitializationException, DecoderException {
         var endpointUrl = new URL(this.endpoint);
 
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
                 .credentials(new Credentials())
@@ -73,7 +73,7 @@ public class InstanceStateLookup implements Callable<Integer> {
         var value = ClientV2
                 .from(connection)
                 .instanceStateLookup(
-                        BlockHashInput.LAST_FINAL,
+                        BlockQuery.LAST_FINAL,
                         ContractAddress.from(index, subindex),
                         Hex.decodeHex(keyHex));
 

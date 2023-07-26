@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
 
 /**
  * A CCD amount with 'micro' precision.
@@ -45,7 +46,7 @@ public class CCDAmount {
 
     @Override
     public String toString() {
-        return value.toString();
+        return (DecimalFormat.getNumberInstance().format(value.getValue() / 1000000) + " CCD");
     }
 
     @JsonValue

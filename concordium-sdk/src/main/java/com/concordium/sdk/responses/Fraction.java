@@ -1,10 +1,9 @@
-package com.concordium.sdk.responses.blocksummary.updates;
+package com.concordium.sdk.responses;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.val;
 
 import java.math.BigInteger;
@@ -15,11 +14,19 @@ import java.math.BigInteger;
 @EqualsAndHashCode
 @Getter
 public class Fraction {
-    private final BigInteger denominator;
+
+    /**
+     * The numerator of the fraction.
+     */
     private final BigInteger numerator;
 
+    /**
+     * The denominator of the fraction.
+     */
+    private final BigInteger denominator;
+
     @JsonCreator
-    public Fraction(@JsonProperty("denominator") BigInteger denominator, @JsonProperty("numerator") BigInteger numerator) {
+    public Fraction(@JsonProperty("numerator") BigInteger numerator, @JsonProperty("denominator") BigInteger denominator) {
         if (denominator.equals(BigInteger.ZERO)) {
             throw new IllegalArgumentException("Unable to compute gcd.");
         }
@@ -27,14 +34,27 @@ public class Fraction {
         if (gcd.equals(BigInteger.ZERO)) {
             this.denominator = denominator;
             this.numerator = numerator;
-        }else {
+        } else {
             this.denominator = denominator.divide(gcd);
             this.numerator = numerator.divide(gcd);
         }
     }
 
+    public Fraction(long numerator, long denominator) {
+        this(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator));
+    }
+
     @Override
     public String toString() {
         return this.numerator + "/" + this.denominator;
+    }
+
+    /**
+     * Get the fraction as a floating point value.
+     *
+     * @return the floating point value.
+     */
+    public double asDouble() {
+        return this.numerator.divide(this.denominator).doubleValue();
     }
 }

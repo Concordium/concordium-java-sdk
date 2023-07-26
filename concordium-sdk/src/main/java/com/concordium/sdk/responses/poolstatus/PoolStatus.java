@@ -4,8 +4,7 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import concordium.ConcordiumP2PRpc;
-import lombok.*;
+import lombok.val;
 
 import java.util.Optional;
 

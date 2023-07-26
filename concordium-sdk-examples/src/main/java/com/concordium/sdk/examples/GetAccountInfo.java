@@ -2,10 +2,9 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
-import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
+import com.concordium.sdk.requests.AccountQuery;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.transactions.AccountAddress;
 import picocli.CommandLine;
@@ -27,17 +26,16 @@ public class GetAccountInfo implements Callable<Integer> {
     @Override
     public Integer call() throws ClientInitializationException, MalformedURLException {
         URL endpointUrl = new URL(this.endpoint);
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         AccountInfo accountInfo = ClientV2
                 .from(connection)
                 .getAccountInfo(
-                        BlockHashInput.BEST,
-                        AccountRequest.from(AccountAddress.from("3bkTmK6GBWprhq6z2ukY6dEi1xNoBEMPDyyMQ6j8xrt8yaF7F2")));
+                        BlockQuery.BEST,
+                        AccountQuery.from(AccountAddress.from("3bkTmK6GBWprhq6z2ukY6dEi1xNoBEMPDyyMQ6j8xrt8yaF7F2")));
 
         System.out.println(accountInfo);
 

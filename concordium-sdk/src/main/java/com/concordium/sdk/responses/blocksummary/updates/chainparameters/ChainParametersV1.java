@@ -1,18 +1,15 @@
 package com.concordium.sdk.responses.blocksummary.updates.chainparameters;
 
 
-import com.concordium.sdk.responses.blocksummary.updates.Fraction;
+import com.concordium.sdk.Range;
+import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.chainparameters.rewards.RewardParameters;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.Map;
 
 /**
  * Chain parameters used from P4 and onwards.

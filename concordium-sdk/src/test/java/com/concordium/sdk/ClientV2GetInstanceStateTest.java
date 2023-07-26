@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.KeyValurPair;
 import com.concordium.sdk.types.ContractAddress;
 import com.google.protobuf.ByteString;
@@ -25,8 +25,8 @@ import static org.mockito.Mockito.*;
 /**
  * Mocks the GRPC Interface on Node.
  * Tests Mapping of Request and Response from
- * {@link ClientV2#getInstanceState(BlockHashInput, ContractAddress, int)} and
- * {@link ClientV2#instanceStateLookup(BlockHashInput, ContractAddress, byte[])}.
+ * {@link ClientV2#getInstanceState(BlockQuery, ContractAddress, int)} and
+ * {@link ClientV2#instanceStateLookup(BlockQuery, ContractAddress, byte[])}.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetInstanceStateTest {
@@ -68,13 +68,13 @@ public class ClientV2GetInstanceStateTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test
     public void getInstanceState() {
         var instanceState = client.getInstanceState(
-                BlockHashInput.BEST,
+                BlockQuery.BEST,
                 ContractAddress.from(CONTRACT_INDEX, CONTRACT_SUBINDEX),
                 100000);
 
@@ -96,7 +96,7 @@ public class ClientV2GetInstanceStateTest {
     @Test
     public void instanceStateLookup() {
         var value = client.instanceStateLookup(
-                BlockHashInput.BEST,
+                BlockQuery.BEST,
                 ContractAddress.from(CONTRACT_INDEX, CONTRACT_SUBINDEX),
                 INSTANCE_STATE_KEY);
 

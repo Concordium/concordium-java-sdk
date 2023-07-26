@@ -2,7 +2,10 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt32;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.val;
 
 import java.nio.ByteBuffer;
 
@@ -58,21 +61,21 @@ public class ConfigureBakerPayload {
         int bitValue = 0;
         int it = 1;
 
-        bitValue |= ((this.capital != null) ? it: 0);
+        bitValue |= ((this.capital != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.restakeEarnings != null) ? it: 0);
+        bitValue |= ((this.restakeEarnings != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.openForDelegation != null) ? it: 0);
+        bitValue |= ((this.openForDelegation != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.keysWithProofs != null) ? it: 0);
+        bitValue |= ((this.keysWithProofs != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.metadataUrl != null) ? it: 0);
+        bitValue |= ((this.metadataUrl != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.transactionFeeCommission != null) ? it: 0);
+        bitValue |= ((this.transactionFeeCommission != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.bakingRewardCommission != null) ? it: 0);
+        bitValue |= ((this.bakingRewardCommission != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.finalizationRewardCommission != null) ? it: 0);
+        bitValue |= ((this.finalizationRewardCommission != null) ? it : 0);
 
         return UInt16.from(bitValue).getBytes();
     }
@@ -99,7 +102,7 @@ public class ConfigureBakerPayload {
         }
 
         if (this.restakeEarnings != null) {
-            val restakeEarningsByte = (byte)(this.restakeEarnings?1:0);
+            val restakeEarningsByte = (byte) (this.restakeEarnings ? 1 : 0);
             restakeEarningBuffer = createNotNullBuffer(new byte[]{restakeEarningsByte});
             bufferLength += TransactionType.BYTES;
         }

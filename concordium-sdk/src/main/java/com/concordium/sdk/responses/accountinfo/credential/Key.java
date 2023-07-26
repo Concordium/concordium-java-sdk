@@ -15,7 +15,7 @@ import java.util.Arrays;
 @ToString
 @EqualsAndHashCode
 public final class Key {
-    private byte[] verifyKey;
+    private final byte[] verifyKey;
 
     public byte[] getVerifyKey() {
         return Arrays.copyOf(verifyKey, verifyKey.length);

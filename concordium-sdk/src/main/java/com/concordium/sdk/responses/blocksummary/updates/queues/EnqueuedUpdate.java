@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * A wrapper around an enqueued update containing the 'nextSequenceNumber' and an enqueued update.
+ *
  * @param <T> The actual pending update
  */
 @Getter

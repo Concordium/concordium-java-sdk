@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
 import com.google.common.collect.ImmutableList;
@@ -58,7 +58,7 @@ public class ClientV2GetElectionInfoTest {
             .electionDifficulty(ELECTION_DIFFICULTY_EXPECTED)
             .leadershipElectionNonce(ELECTION_NONCE)
             .bakerElectionInfo(ImmutableList.of(ElectionInfoBaker.builder()
-                    .baker(com.concordium.sdk.responses.AccountIndex.from(BAKER_ID))
+                    .baker(com.concordium.sdk.responses.BakerId.from(BAKER_ID))
                     .lotteryPower(LOTTERY_POWER)
                     .account(ACCOUNT_ADDRESS_1)
                     .build()))
@@ -90,12 +90,12 @@ public class ClientV2GetElectionInfoTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test
     public void getElectionInfo() {
-        var electionInfo = client.getElectionInfo(BlockHashInput.BEST);
+        var electionInfo = client.getElectionInfo(BlockQuery.BEST);
 
         verify(serviceImpl).getElectionInfo(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(ELECTION_INFO_EXPECTED, electionInfo);

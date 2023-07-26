@@ -12,13 +12,14 @@ public enum AccountType {
     ADDRESS_CONTRACT("AddressContract");
 
     private final String identifier;
+
     AccountType(String identifier) {
         this.identifier = identifier;
     }
 
     public static AccountType from(String val) {
         for (AccountType value : AccountType.values()) {
-            if(value.identifier.equals(val)) {
+            if (value.identifier.equals(val)) {
                 return value;
             }
         }

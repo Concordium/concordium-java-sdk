@@ -1,10 +1,12 @@
 package com.concordium.sdk.queries;
 
 import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
+import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.transactionstatus.ContractVersion;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Hash;
+import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
 import lombok.val;
 import org.junit.Assert;
@@ -34,7 +36,7 @@ public class GetInstanceInfoTest {
                 CCDAmount.fromMicro(0),
                 Arrays.asList("weather.get", "weather.set"),
                 "init_weather",
-                Hash.from("67d568433bd72e4326241f262213d77f446db8ba03dfba351ae35c1b2e7e5109"),
+                ModuleRef.from("67d568433bd72e4326241f262213d77f446db8ba03dfba351ae35c1b2e7e5109"),
                 ContractVersion.V1
         ));
     }

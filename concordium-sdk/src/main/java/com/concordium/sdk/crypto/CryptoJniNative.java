@@ -6,8 +6,8 @@ public class CryptoJniNative {
      * Signs a message using the provided private key.
      *
      * @param privateKey The private key to use for signing.
-     * @param message The message to sign.
-     * @param out The buffer to write the signature to.
+     * @param message    The message to sign.
+     * @param out        The buffer to write the signature to.
      * @return 0 on success, non-zero on error.
      */
     public static native int sign(byte[] privateKey, byte[] message, byte[] out);
@@ -16,7 +16,7 @@ public class CryptoJniNative {
      * Verifies a signature for a message using the provided public key.
      *
      * @param publicKey The public key to use for verification.
-     * @param message The message to verify the signature for.
+     * @param message   The message to verify the signature for.
      * @param signature The signature to verify.
      * @return 0 if the signature is valid, non-zero on error or if the signature is invalid.
      */
@@ -34,7 +34,7 @@ public class CryptoJniNative {
      * Generates the public key corresponding to the given secret key, and stores it in the provided buffer.
      *
      * @param secretKey The secret key to generate the public key for.
-     * @param buffer The buffer to write the public key to.
+     * @param buffer    The buffer to write the public key to.
      * @return 0 on success, non-zero on error.
      */
     public static native int generatePublicKey(byte[] secretKey, byte[] buffer);

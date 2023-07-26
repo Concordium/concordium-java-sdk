@@ -33,7 +33,7 @@ public class PeerStatistics {
         val peerStats = value
                 .getPeerstatsList()
                 .stream()
-                .map(s->PeerStat.parse(s))
+                .map(s -> PeerStat.parse(s))
                 .collect(Collectors.toList());
 
         return PeerStatistics.builder()

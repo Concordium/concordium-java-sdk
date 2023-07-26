@@ -6,8 +6,8 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
 /**
-* A shared commitment key known to the chain and the account holder (and therefore it is public).
-    * The account holder uses this commitment key to generate commitments to values in the attribute list.
+ * A shared commitment key known to the chain and the account holder (and therefore it is public).
+ * The account holder uses this commitment key to generate commitments to values in the attribute list.
  */
 
 public class PedersenCommitmentKey {

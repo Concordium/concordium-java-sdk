@@ -4,7 +4,7 @@ import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.types.ContractAddress;
 import lombok.var;
 import picocli.CommandLine;
@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 /**
- * Calls {@link ClientV2#getInstanceState(BlockHashInput, ContractAddress, int)}. with
+ * Calls {@link ClientV2#getInstanceState(BlockQuery, ContractAddress, int)}. with
  * Contract {@link GetInstanceState#index}, Contract {@link GetInstanceState#subindex} and prints the response to console.
  */
 @Command(name = "GetInstanceState", mixinStandardHelpOptions = true)
@@ -54,7 +54,7 @@ public class GetInstanceState implements Callable<Integer> {
     public Integer call() throws MalformedURLException, ClientInitializationException {
         var endpointUrl = new URL(this.endpoint);
 
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
                 .credentials(new Credentials())
@@ -62,7 +62,7 @@ public class GetInstanceState implements Callable<Integer> {
 
         ClientV2
                 .from(connection)
-                .getInstanceState(BlockHashInput.LAST_FINAL, ContractAddress.from(index, subindex), timeout)
+                .getInstanceState(BlockQuery.LAST_FINAL, ContractAddress.from(index, subindex), timeout)
                 .forEachRemaining(System.out::println);
 
         return 0;

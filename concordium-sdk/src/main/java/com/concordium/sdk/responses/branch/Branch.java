@@ -2,15 +2,12 @@ package com.concordium.sdk.responses.branch;
 
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
-
-import java.util.List;
 
 /**
  * Represents a Tree of Block {@link Hash}es, The branches above the last finalized block.
