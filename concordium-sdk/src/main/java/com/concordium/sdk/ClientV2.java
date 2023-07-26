@@ -528,14 +528,12 @@ public final class ClientV2 {
      *
      * @param input {@link BlockQuery}.
      * @param contractAddress {@link ContractAddress}.
-     * @param timeoutMillis Timeout for the request in Milliseconds.
      * @return {@link Iterator} of {@link KeyValurPair}.
      */
     public Iterator<KeyValurPair> getInstanceState(
             BlockQuery input,
-            ContractAddress contractAddress,
-            int timeoutMillis) {
-        val grpcOutput = this.server(timeoutMillis).getInstanceState(InstanceInfoRequest.newBuilder()
+            ContractAddress contractAddress) {
+        val grpcOutput = this.server().getInstanceState(InstanceInfoRequest.newBuilder()
                         .setBlockHash(to(input))
                         .setAddress(to(contractAddress))
                 .build());
@@ -545,7 +543,7 @@ public final class ClientV2 {
 
     /**
      * Get the value at a specific key of a contract state.
-     * In contrast to {@link ClientV2#getInstanceState(BlockQuery, ContractAddress, int)} this is more efficient,
+     * In contrast to {@link ClientV2#getInstanceState(BlockQuery, ContractAddress)} this is more efficient,
      * but requires the user to know the specific key to look for.
      *
      * @param input {@link BlockHashInput}.

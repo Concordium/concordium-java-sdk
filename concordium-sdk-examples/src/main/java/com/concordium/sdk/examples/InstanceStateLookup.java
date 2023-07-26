@@ -67,7 +67,6 @@ public class InstanceStateLookup implements Callable<Integer> {
         Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         var value = ClientV2

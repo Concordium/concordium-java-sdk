@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 /**
  * Mocks the GRPC Interface on Node.
  * Tests Mapping of Request and Response from
- * {@link ClientV2#getInstanceState(BlockQuery, ContractAddress, int)} and
+ * {@link ClientV2#getInstanceState(BlockQuery, ContractAddress)} and
  * {@link ClientV2#instanceStateLookup(BlockQuery, ContractAddress, byte[])}.
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -75,8 +75,7 @@ public class ClientV2GetInstanceStateTest {
     public void getInstanceState() {
         var instanceState = client.getInstanceState(
                 BlockQuery.BEST,
-                ContractAddress.from(CONTRACT_INDEX, CONTRACT_SUBINDEX),
-                100000);
+                ContractAddress.from(CONTRACT_INDEX, CONTRACT_SUBINDEX));
 
         verify(serviceImpl).getInstanceState(eq(InstanceInfoRequest.newBuilder()
                 .setBlockHash(com.concordium.grpc.v2.BlockHashInput.newBuilder()
