@@ -20,7 +20,7 @@ public class UpdateContractTest {
     public void updateContractTest() {
         byte[] emptyArray = new byte[0];
         val transfer = UpdateContract.createNew(
-                        UpdateContractPayload.from(0, ContractAddress.from(0, 81), "CIS2-NFT", "mint", emptyArray), UInt64.from(3000))
+                        UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray), UInt64.from(3000))
                 .withHeader(TransactionHeader
                         .builder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))

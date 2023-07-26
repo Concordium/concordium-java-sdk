@@ -24,7 +24,7 @@ public class UpdateContractTransactionTest {
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
-                .payload(UpdateContractPayload.from(0, ContractAddress.from(0, 81), "CIS2-NFT", "mint", emptyArray))
+                .payload(UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         assertEquals("ac20e2a4be17d4e85bfbbbdc430b249517cfc634eaa57baa7df6cd42d711d94c", transaction.getHash().asHex());
