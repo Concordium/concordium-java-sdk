@@ -114,6 +114,7 @@
                             <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.40.1:exe:osx-x86_64</pluginArtifact>
                             <includeDependenciesInDescriptorSet>true</includeDependenciesInDescriptorSet>
                             <protoSourceRoot>${project.basedir}/../concordium-base/concordium-grpc-api/</protoSourceRoot>
+                            <checkStaleness>true</checkStaleness>
                         </configuration>
                         <executions>
                             <execution>

@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.AmountFraction;
 import com.concordium.sdk.responses.Fraction;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;

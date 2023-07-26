@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
@@ -12,6 +13,7 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
+import lombok.val;
 import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,16 +32,17 @@ public class ClientV2GetElectionInfoTest {
     private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
             = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final int ELECTION_DIFFICULTY = 100;
-    private static final double ELECTION_DIFFICULTY_EXPECTED = 0.001D;
+
+    private static final AmountFraction GRPC_ELECTION_DIFFICULTY_FACTION = AmountFraction.newBuilder()
+            .setPartsPerHundredThousand(ELECTION_DIFFICULTY)
+            .build();
     private static final byte[] ELECTION_NONCE = new byte[]{9, 9, 9};
     private static final long BAKER_ID = 1L;
     private static final double LOTTERY_POWER = 0.25D;
     private static final com.concordium.grpc.v2.ElectionInfo GRPC_ELECTION_INFO = com.concordium.grpc.v2.ElectionInfo
             .newBuilder()
             .setElectionDifficulty(ElectionDifficulty.newBuilder()
-                    .setValue(AmountFraction.newBuilder()
-                            .setPartsPerHundredThousand(ELECTION_DIFFICULTY)
-                            .build())
+                    .setValue(GRPC_ELECTION_DIFFICULTY_FACTION)
                     .build())
             .setElectionNonce(LeadershipElectionNonce.newBuilder()
                     .setValue(ByteString.copyFrom(ELECTION_NONCE))
@@ -55,7 +58,7 @@ public class ClientV2GetElectionInfoTest {
             .build();
 
     private static final ElectionInfo ELECTION_INFO_EXPECTED = ElectionInfo.builder()
-            .electionDifficulty(ELECTION_DIFFICULTY_EXPECTED)
+            .electionDifficulty(ELECTION_DIFFICULTY/100000d)
             .leadershipElectionNonce(ELECTION_NONCE)
             .bakerElectionInfo(ImmutableList.of(ElectionInfoBaker.builder()
                     .baker(com.concordium.sdk.responses.BakerId.from(BAKER_ID))

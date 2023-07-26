@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 import lombok.val;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class RewardsOverview {
     /**
      * The time of the next payday.
      */
-    private final Date nextPaydayTime;
+    private final ZonedDateTime nextPaydayTime;
 
     /**
      * Protocol version that applies to these rewards. V0 variant only exists for protocol versions 1, 2, and 3.

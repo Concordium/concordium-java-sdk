@@ -13,6 +13,7 @@ import com.concordium.grpc.v2.CredentialPublicKeys;
 import com.concordium.grpc.v2.CredentialRegistrationId;
 import com.concordium.grpc.v2.DelegatorInfo;
 import com.concordium.grpc.v2.DelegatorRewardPeriodInfo;
+import com.concordium.grpc.v2.Duration;
 import com.concordium.grpc.v2.EncryptedAmount;
 import com.concordium.grpc.v2.GasRewards;
 import com.concordium.grpc.v2.HigherLevelKeys;
@@ -34,6 +35,7 @@ import com.concordium.sdk.responses.KeyValurPair;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.Epoch;
+import com.concordium.sdk.responses.Round;
 import com.concordium.sdk.responses.TimeoutParameters;
 import com.concordium.sdk.responses.*;
 import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
@@ -91,10 +93,7 @@ import lombok.val;
 
 import javax.annotation.Nullable;
 import java.math.BigInteger;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.YearMonth;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -652,8 +651,8 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
-    static YearMonth to(com.concordium.grpc.v2.YearMonth validTo) {
-        return YearMonth.of(validTo.getYear(), validTo.getMonth());
+    static java.time.YearMonth to(com.concordium.grpc.v2.YearMonth validTo) {
+        return java.time.YearMonth.of(validTo.getYear(), validTo.getMonth());
     }
 
     static AttributeType to(Integer ordinal) {
@@ -997,13 +996,13 @@ interface ClientV2MapperExtensions {
                 .bestBlockHeight(to(consensusInfo.getBestBlockHeight()).getValue())
                 .lastFinalizedBlockHeight(to(consensusInfo.getLastFinalizedBlockHeight()).getValue())
                 .blocksReceivedCount(consensusInfo.getBlocksReceivedCount())
-                .blockLastReceivedTime(to(consensusInfo.getBlockLastReceivedTime()).toString())
+                .blockLastReceivedTime(toZonedDateTime(consensusInfo.getBlockLastReceivedTime()))
                 .blockReceiveLatencyEMA(consensusInfo.getBlockReceiveLatencyEma())
                 .blockReceiveLatencyEMSD(consensusInfo.getBlockReceiveLatencyEmsd())
                 .blockReceivePeriodEMA(consensusInfo.getBlockReceivePeriodEma())
                 .blockReceivePeriodEMSD(consensusInfo.getBlockReceivePeriodEmsd())
                 .blocksVerifiedCount(consensusInfo.getBlocksVerifiedCount())
-                .blockLastArrivedTime(to(consensusInfo.getBlockLastArrivedTime()).toString())
+                .blockLastArrivedTime(toZonedDateTime(consensusInfo.getBlockLastArrivedTime()))
                 .blockArriveLatencyEMA(consensusInfo.getBlockArriveLatencyEma())
                 .blockArriveLatencyEMSD(consensusInfo.getBlockArriveLatencyEmsd())
                 .blockArrivePeriodEMA(consensusInfo.getBlockArrivePeriodEma())
@@ -1011,15 +1010,25 @@ interface ClientV2MapperExtensions {
                 .transactionsPerBlockEMA(consensusInfo.getTransactionsPerBlockEma())
                 .transactionsPerBlockEMSD(consensusInfo.getTransactionsPerBlockEmsd())
                 .finalizationCount(consensusInfo.getFinalizationCount())
-                .lastFinalizedTime(to(consensusInfo.getLastFinalizedTime()).toString())
+                .lastFinalizedTime(toZonedDateTime(consensusInfo.getLastFinalizedTime()))
                 .finalizationPeriodEMA(consensusInfo.getFinalizationPeriodEma())
                 .finalizationPeriodEMSD(consensusInfo.getFinalizationPeriodEmsd())
                 .protocolVersion(to(consensusInfo.getProtocolVersion()))
                 .genesisIndex(consensusInfo.getGenesisIndex().getValue())
-                .currentEraGenesisBlock(to(consensusInfo.getCurrentEraGenesisBlock()).toString())
-                .currentEraGenesisTime(to(consensusInfo.getCurrentEraGenesisTime()).getDate());
-
+                .currentEraGenesisBlock(to(consensusInfo.getCurrentEraGenesisBlock()))
+                .currentEraGenesisTime(to(consensusInfo.getCurrentEraGenesisTime()).getDate())
+                .currentRound(to(consensusInfo.getCurrentRound()))
+                .currentEpoch(to(consensusInfo.getCurrentEpoch()))
+                .triggerBlockTime(toZonedDateTime(consensusInfo.getTriggerBlockTime()));
         return builder.build();
+    }
+
+    static Epoch to(com.concordium.grpc.v2.Epoch currentEpoch) {
+        return Epoch.from(currentEpoch.getValue());
+    }
+
+    static Round to(com.concordium.grpc.v2.Round currentRound) {
+        return Round.from(currentRound.getValue());
     }
 
     static SendBlockItemRequest to(AccountTransaction accountTransaction) {
@@ -1441,19 +1450,8 @@ interface ClientV2MapperExtensions {
      * @return {@link ZonedDateTime} matching ZonedDateTime object
      */
     static ZonedDateTime toZonedDateTime(com.concordium.grpc.v2.Timestamp localtime) {
-        return Instant.EPOCH.plusSeconds(localtime.getValue()).atZone(UTC_ZONE);
+        return Instant.EPOCH.plusMillis(localtime.getValue()).atZone(UTC_ZONE);
     }
-
-    /**
-     * Converts from Grpc Duration to Java Duration
-     *
-     * @param duration {@link com.concordium.grpc.v2.Duration} duration from the Grpc API
-     * @return {@link java.time.Duration} matching Java Duration object
-     */
-    static java.time.Duration toDuration(Duration duration) {
-        return java.time.Duration.ofMillis(duration.getValue());
-    }
-
 
     static Hash to(StateHash stateHash) {
         return Hash.from(stateHash.getValue().toByteArray());
@@ -1464,9 +1462,9 @@ interface ClientV2MapperExtensions {
                 .blockHash(to(blockInfo.getHash()))
                 .blockHeight(to(blockInfo.getHeight()))
                 .transactionEnergyCost((int) blockInfo.getTransactionsEnergyCost().getValue())
-                .blockBaker(to((int) blockInfo.getBaker().getValue()).ordinal())
+                .blockBaker(to(blockInfo.getBaker().getValue()))
                 .blockStateHash(to(blockInfo.getStateHash()))
-                .blockSlotTime(to(to(blockInfo.getSlotTime())))
+                .blockTime(to(to(blockInfo.getSlotTime())))
                 .blockParent(to(blockInfo.getParentBlock()))
                 .blockReceiveTime(to(to(blockInfo.getReceiveTime())))
                 .genesisIndex(blockInfo.getGenesisIndex().getValue())
@@ -1477,7 +1475,14 @@ interface ClientV2MapperExtensions {
                 .transactionsSize(blockInfo.getTransactionsSize())
                 .transactionCount(blockInfo.getTransactionCount())
                 .blockArriveTime(to(to(blockInfo.getArriveTime())))
+                .protocolVersion(to(blockInfo.getProtocolVersion()))
+                .round(to(blockInfo.getRound()))
+                .epoch(to(blockInfo.getEpoch()))
                 .build();
+    }
+
+    static com.concordium.sdk.responses.BakerId to(long value) {
+        return com.concordium.sdk.responses.BakerId.from(value);
     }
 
     static Optional<FinalizationData> to(BlockFinalizationSummary finalizationSummary) {
