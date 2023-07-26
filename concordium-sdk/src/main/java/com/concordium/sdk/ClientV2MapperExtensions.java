@@ -155,6 +155,12 @@ interface ClientV2MapperExtensions {
         return com.concordium.grpc.v2.BlockHash.newBuilder().setValue(to(blockHash.getBytes())).build();
     }
 
+    static ModuleRef to(final com.concordium.sdk.responses.modulelist.ModuleRef moduleRef) {
+        return ModuleRef.newBuilder()
+                .setValue(to(moduleRef.getBytes()))
+                .build();
+    }
+
     static com.concordium.grpc.v2.TransactionHash toTransactionHash(final Hash blockHash) {
         return com.concordium.grpc.v2.TransactionHash.newBuilder().setValue(to(blockHash.getBytes())).build();
     }

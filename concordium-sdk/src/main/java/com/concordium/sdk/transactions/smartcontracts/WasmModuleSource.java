@@ -4,6 +4,7 @@ import com.concordium.sdk.types.UInt32;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.val;
+import org.apache.commons.codec.binary.Hex;
 
 import java.nio.ByteBuffer;
 
@@ -11,7 +12,6 @@ import java.nio.ByteBuffer;
  * Compiled source in of the WASM Module.
  */
 @EqualsAndHashCode
-@ToString
 class WasmModuleSource {
 
     /**
@@ -38,5 +38,10 @@ class WasmModuleSource {
         buffer.put(bytes);
 
         return buffer.array();
+    }
+
+    @Override
+    public String toString() {
+        return Hex.encodeHexString(this.bytes);
     }
 }

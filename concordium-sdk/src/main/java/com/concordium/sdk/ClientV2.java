@@ -20,6 +20,9 @@ import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.chainparameters.ChainParameters;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.responses.modulesource.ModuleSource;
+import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
@@ -32,6 +35,7 @@ import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.ContractAddress;
+import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.google.common.collect.ImmutableList;
 import io.grpc.ManagedChannel;
 import lombok.val;
@@ -244,7 +248,6 @@ public final class ClientV2 {
 
     }
 
-
     /**
      * Get the blockchain parameters
      *
@@ -316,7 +319,7 @@ public final class ClientV2 {
      * Stop dumping packages
      * Only enabled if the node was built with the 'network_dump' feature enabled
      *
-     * @throws {@link io.grpc.StatusRuntimeException} if the network dump failed to be stopped or if the node was not built with the 'network_dump' feature
+     * @throws io.grpc.StatusRuntimeException if the network dump failed to be stopped or if the node was not built with the 'network_dump' feature
      */
     public void dumpStop() {
         this.server().dumpStop(Empty.newBuilder().build());
@@ -660,6 +663,23 @@ public final class ClientV2 {
         return bannedPeers.build();
     }
 
+    /**
+     * Get the source of a smart contract module from
+     * the perspective of the last finalized block.
+     *
+     * @param query The query is at the end of the block specified.
+     * @param moduleRef the reference of the module.
+     * @return the parsed {@link WasmModule}.
+     * @throws io.grpc.StatusRuntimeException if the module could not be looked up on the chain.
+     */
+    public WasmModule getModuleSource(BlockQuery query, ModuleRef moduleRef) {
+        val response = this.server().getModuleSource(ModuleSourceRequest.newBuilder()
+                .setBlockHash(to(query))
+                .setModuleRef(to(moduleRef))
+                .build());
+
+        return to(response);
+    }
 
     /**
      * Get a {@link QueriesGrpc.QueriesBlockingStub} with a timeout
