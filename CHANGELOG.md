@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased changes
-- Migrated usages of `Date` to `ZonedDateTime` in order to provide timestamps in local timezone.
+- Migrated usages of `Date` to be using `ZonedDateTime` for convenience.
 - Renamed `AccountRequest` to `AccountQuery`.
 - Added support for GRPC V2 `GetBlockChainParameters` for retrieving the parameters of the chain.
 - Deprecated the `Client`. Instead one should use `ClientV2` which leverages the GRPCv2 API of the node.
