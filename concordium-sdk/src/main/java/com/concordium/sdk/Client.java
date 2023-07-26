@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.sdk.exceptions.*;
-import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
+import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
@@ -27,13 +27,13 @@ import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.poolstatus.PassiveDelegationStatus;
 import com.concordium.sdk.responses.poolstatus.PoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
-import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.responses.transactionstatusinblock.TransactionStatusInBlock;
 import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.Transaction;
+import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
@@ -46,8 +46,8 @@ import lombok.val;
 import org.semver4j.Semver;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.List;
@@ -57,7 +57,10 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * The Client is responsible for sending requests to the node.
+ *
+ * @deprecated since version 5.0.0 instead use {@link ClientV2}.
  */
+@Deprecated
 public final class Client {
 
     /**
@@ -101,23 +104,23 @@ public final class Client {
     /**
      * Retrieves the {@link AccountInfo} based on the address {@link Hash} and the block {@link Hash}
      *
-     * @param accountRequest The {@link AccountRequest}
-     *                       See {@link AccountRequest#from(AccountAddress)},
-     *                       {@link AccountRequest#from(AccountIndex)}
-     * @param blockHash      the block hash
+     * @param accountQuery The {@link AccountQuery}
+     *                     See {@link AccountQuery#from(AccountAddress)},
+     *                     {@link AccountQuery#from(AccountIndex)}
+     * @param blockHash    the block hash
      * @return The {@link AccountInfo}
      * @throws AccountNotFoundException if the account was not found.
      */
-    public AccountInfo getAccountInfo(AccountRequest accountRequest, Hash blockHash) throws AccountNotFoundException {
+    public AccountInfo getAccountInfo(AccountQuery accountQuery, Hash blockHash) throws AccountNotFoundException {
         val request = ConcordiumP2PRpc.GetAddressInfoRequest
                 .newBuilder()
-                .setAddressBytes(accountRequest.getByteString())
+                .setAddressBytes(accountQuery.getByteString())
                 .setBlockHash(blockHash.asHex())
                 .build();
         val response = server().getAccountInfo(request);
         val accountInfo = AccountInfo.fromJson(response.getValue());
         if (Objects.isNull(accountInfo)) {
-            throw AccountNotFoundException.from(accountRequest, blockHash);
+            throw AccountNotFoundException.from(accountQuery, blockHash);
         }
         return accountInfo;
     }
@@ -396,6 +399,7 @@ public final class Client {
      * <p>
      * Note. Delegation was added to the chain as part of {@link com.concordium.sdk.responses.ProtocolVersion#V4}
      * </p>
+     *
      * @param blockHash {@link Hash} of the block.
      * @param bakerId   {@link BakerId} The baker id.
      * @return The {@link BakerPoolStatus} at the block specified.
@@ -418,6 +422,7 @@ public final class Client {
      * <p>
      * Note. Delegation was added to the chain as part of {@link com.concordium.sdk.responses.ProtocolVersion#V4}
      * </p>
+     *
      * @param blockHash {@link Hash} of the block.
      * @return The {@link PassiveDelegationStatus} at the block specified.
      * @throws PoolNotFoundException when the pool could not be found for the given block.
@@ -756,7 +761,7 @@ public final class Client {
 
     /**
      * Closes the underlying grpc channel
-     *
+     * <p>
      * This should only be done when the {@link Client}
      * is of no more use as creating a new {@link Client} (and the associated)
      * channel is rather expensive.

@@ -2,7 +2,10 @@ package com.concordium.sdk.responses.nodeinfov2;
 
 import com.concordium.sdk.responses.nodeinfo.ConsensusState;
 import com.concordium.sdk.responses.nodeinfo.PeerType;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -50,6 +53,7 @@ public class NodeInfo {
     /**
      * Gets the Consensus info for a node configured with baker keys
      * {@link ConsensusState} of the node must be {@link ConsensusState#ACTIVE}
+     *
      * @return {@link BakerConsensusInfo} of node configured with baker keys
      */
     public BakerConsensusInfo getBakerInfo() {
@@ -61,6 +65,7 @@ public class NodeInfo {
 
     /**
      * Gets the Consensus Status of the node.
+     *
      * @return {@link ConsensusState} of the node.
      */
     public ConsensusState getConsensusStatus() {

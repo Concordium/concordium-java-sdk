@@ -5,6 +5,7 @@ import com.concordium.sdk.Connection;
 import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.getaccountinfo.AccountRequest;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
@@ -38,7 +39,7 @@ public class GetModuleSource implements Callable<Integer> {
     @Override
     public Integer call() throws ClientInitializationException, MalformedURLException {
         URL endpointUrl = new URL(this.endpoint);
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
                 .credentials(new Credentials())
@@ -47,7 +48,7 @@ public class GetModuleSource implements Callable<Integer> {
         WasmModule moduleSource = ClientV2
                 .from(connection)
                 .getModuleSource(
-                        BlockHashInput.BEST,
+                        BlockQuery.LAST_FINAL,
                         ModuleRef.from(moduleRef));
 
         System.out.println(moduleSource);

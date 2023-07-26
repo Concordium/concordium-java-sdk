@@ -16,7 +16,7 @@ public class UpdateContractPayloadTest {
         byte[] emptyArray = new byte[0];
         val payload = UpdateContractPayload.from(
                 0,
-                ContractAddress.from(81, 0),
+                ContractAddress.from(0, 81),
                 "CIS2-NFT",
                 "mint",
                 emptyArray);

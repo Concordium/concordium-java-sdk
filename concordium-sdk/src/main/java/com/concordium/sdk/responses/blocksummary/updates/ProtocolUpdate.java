@@ -3,11 +3,10 @@ package com.concordium.sdk.responses.blocksummary.updates;
 import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
+
+import java.util.Arrays;
 
 /**
  * A protocol update
@@ -47,5 +46,20 @@ public class ProtocolUpdate {
         this.specificationAuxiliaryData = Hex.decodeHex(specificationAuxiliaryData);
         this.message = message;
         this.specificationURL = specificationURL;
+    }
+
+    @Builder
+    ProtocolUpdate(Hash specificationHash,
+                   byte[] specificationAuxiliaryData,
+                   String message,
+                   String specificationURL) {
+        this.specificationHash = specificationHash;
+        this.specificationAuxiliaryData = Arrays.copyOf(specificationAuxiliaryData, specificationAuxiliaryData.length);
+        this.message = message;
+        this.specificationURL = specificationURL;
+    }
+
+    public byte[] getSpecificationAuxiliaryData() {
+        return Arrays.copyOf(specificationAuxiliaryData, specificationAuxiliaryData.length);
     }
 }

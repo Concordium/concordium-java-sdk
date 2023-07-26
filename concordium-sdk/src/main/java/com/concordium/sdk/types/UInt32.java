@@ -26,7 +26,7 @@ public final class UInt32 {
         return new UInt32(Integer.parseUnsignedInt(value));
     }
 
-    public static UInt32 from(int value)  {
+    public static UInt32 from(int value) {
         if (value < 0) {
             throw new NumberFormatException("Value of UInt32 can not be negative");
         }

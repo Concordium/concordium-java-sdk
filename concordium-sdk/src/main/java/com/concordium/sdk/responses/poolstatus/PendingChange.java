@@ -2,9 +2,6 @@ package com.concordium.sdk.responses.poolstatus;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "pendingChangeType")
 @JsonSubTypes({

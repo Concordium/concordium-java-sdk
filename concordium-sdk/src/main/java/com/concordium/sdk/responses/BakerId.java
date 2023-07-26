@@ -4,7 +4,6 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
-import concordium.ConcordiumP2PRpc;
 import lombok.Data;
 import lombok.val;
 
@@ -59,5 +58,9 @@ public class BakerId {
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse Baker Ids Array JSON", e);
         }
+    }
+
+    public byte[] getBytes() {
+        return this.id.getBytes();
     }
 }

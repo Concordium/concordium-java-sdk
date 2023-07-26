@@ -55,10 +55,7 @@ public final class InitName {
         if (name.contains(".")) {
             return false;
         }
-        if (!name.matches("^[!-/:-@\\[-`{~a-zA-Z0-9]*$")) {
-            return false;
-        }
-        return true;
+        return name.matches("^[!-/:-@\\[-`{~a-zA-Z0-9]*$");
     }
 
     /**

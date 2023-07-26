@@ -1,7 +1,5 @@
-use concordium_base::common::derive::Serialize;
 pub use concordium_base::common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
-use concordium_base::transactions::{BakerKeysPayload, AddBakerKeysMarker, ConfigureBakerKeysPayload};
-use concordium_base::{common::*, base};
+use concordium_base::common::Serialize;
 use concordium_base::contracts_common::Amount;
 use concordium_base::encrypted_transfers;
 use concordium_base::encrypted_transfers::types::{
@@ -12,6 +10,10 @@ use concordium_base::id;
 use concordium_base::id::curve_arithmetic::Curve;
 use concordium_base::id::elgamal;
 use concordium_base::id::{constants::ArCurve, types::GlobalContext};
+use concordium_base::transactions::{
+    AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload,
+};
+use concordium_base::{base, common::*};
 use core::slice;
 use ed25519_dalek::*;
 use jni::sys::jstring;
@@ -374,8 +376,8 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateBa
 #[derive(Serialize, SerdeSerialize, SerdeDeserialize)]
 #[serde(rename_all = "camelCase")]
 struct AddBakerPayloadInput {
-    pub sender:   AccountAddress,
-    pub keys:     base::BakerKeyPairs,
+    pub sender: AccountAddress,
+    pub keys: base::BakerKeyPairs,
 }
 
 type AddBakerResult = CryptoJniResult<BakerKeysPayload<AddBakerKeysMarker>>;

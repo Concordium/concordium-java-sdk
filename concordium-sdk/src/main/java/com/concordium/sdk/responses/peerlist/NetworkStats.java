@@ -26,7 +26,7 @@ public class NetworkStats {
      * Packets are blocks, transactions, catchup messages, finalization records
      * and network messages such as pings and peer requests
      */
-    private  UInt64 packetsReceived;
+    private UInt64 packetsReceived;
     /**
      * The connection latenct (i.e., ping time) in milliseconds
      */
@@ -34,6 +34,7 @@ public class NetworkStats {
 
     /**
      * Parses {@link com.concordium.grpc.v2.PeersInfo.Peer.NetworkStats} to {@link NetworkStats}
+     *
      * @param networkStats {@link com.concordium.grpc.v2.PeersInfo.Peer.NetworkStats} returned from the Grpc API
      * @return Parsed {@link NetworkStats}
      */

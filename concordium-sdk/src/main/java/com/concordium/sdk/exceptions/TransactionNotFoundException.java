@@ -10,7 +10,7 @@ public class TransactionNotFoundException extends Exception {
     /**
      * Creates a new {@link TransactionNotFoundException} from a {@link Hash}
      * This happens when a transaction could not be found.
-     *
+     * <p>
      * Use {@link TransactionNotFoundException#from(Hash)} to instantiate.
      *
      * @param hash the transaction hash

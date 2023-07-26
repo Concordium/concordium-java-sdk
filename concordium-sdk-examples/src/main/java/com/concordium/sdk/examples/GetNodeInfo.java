@@ -1,15 +1,12 @@
 package com.concordium.sdk.examples;
 
-import com.concordium.grpc.v2.Empty;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-import java.net.InetAddress;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
@@ -29,10 +26,9 @@ public class GetNodeInfo implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         URL endpointUrl = new URL(this.endpoint);
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         ClientV2 client = ClientV2.from(connection);

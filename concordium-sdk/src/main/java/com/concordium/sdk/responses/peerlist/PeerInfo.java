@@ -4,8 +4,11 @@ import com.concordium.grpc.v2.PeersInfo;
 import com.concordium.sdk.responses.nodeinfo.PeerType;
 import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.ImmutableList;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import lombok.val;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

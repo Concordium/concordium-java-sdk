@@ -5,9 +5,6 @@ import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.val;
-
-import java.nio.ByteBuffer;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -36,7 +33,7 @@ public final class EncryptedTransferWithMemo extends Payload {
 
     @Override
     public byte[] getTransactionPayloadBytes() {
-       return payload.getBytes();
+        return payload.getBytes();
     }
 
     static EncryptedTransferWithMemo createNew(EncryptedAmountTransferData data, AccountAddress receiver, Memo memo) {

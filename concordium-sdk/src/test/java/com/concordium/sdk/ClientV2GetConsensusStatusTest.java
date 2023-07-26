@@ -138,8 +138,8 @@ public class ClientV2GetConsensusStatusTest {
             .bestBlock(Hash.from(BLOCK_HASH_1))
             .genesisBlock(Hash.from(BLOCK_HASH_4))
             .genesisTime(Date.from(Instant.ofEpochMilli(GENESIS_TIME)))
-            .slotDuration(SLOT_DURATION)
-            .epochDuration(EPOCH_DURATION)
+            .slotDuration(java.time.Duration.ofMillis(SLOT_DURATION))
+            .epochDuration(java.time.Duration.ofMillis(EPOCH_DURATION))
             .lastFinalizedBlock(Hash.from(BLOCK_HASH_2))
             .bestBlockHeight(BLOCK_HEIGHT_1)
             .lastFinalizedBlockHeight(BLOCK_HEIGHT_2)
@@ -191,7 +191,7 @@ public class ClientV2GetConsensusStatusTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
 

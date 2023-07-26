@@ -3,8 +3,11 @@ package com.concordium.sdk.responses.peerlist;
 import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import lombok.val;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -15,7 +15,9 @@ import org.apache.commons.codec.binary.Hex;
 public class ConfigureBakerKeysPayload {
     private final byte[] bytes;
 
-    private ConfigureBakerKeysPayload(byte[] bytes) {this.bytes = bytes;}
+    private ConfigureBakerKeysPayload(byte[] bytes) {
+        this.bytes = bytes;
+    }
 
     @JsonCreator
     public static ConfigureBakerKeysPayload from(ConfigureBakerKeysJniOutput jniOutput) {
@@ -24,6 +26,7 @@ public class ConfigureBakerKeysPayload {
 
     /**
      * Generates a new ConfigureBakerKeysPayload with the given sender and baker keys
+     *
      * @param sender The account address of the sender
      * @return The newly generated ConfigureBakerKeysPayload
      */

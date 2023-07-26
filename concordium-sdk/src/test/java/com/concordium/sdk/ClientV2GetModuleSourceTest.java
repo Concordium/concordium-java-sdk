@@ -4,7 +4,7 @@ import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.ModuleSourceRequest;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.grpc.v2.VersionedModuleSource;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Mocks the GRPC interface of the Node.
- * Tests mapping of Request and Response from {@link ClientV2#getModuleSource(BlockHashInput, ModuleRef)}.
+ * Tests mapping of Request and Response from {@link ClientV2#getModuleSource(ModuleRef)}.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetModuleSourceTest {
@@ -61,15 +61,15 @@ public class ClientV2GetModuleSourceTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test
     public void getModuleSourceTest() {
-        var actual = client.getModuleSource(BlockHashInput.BEST, ModuleRef.from(MODULE_REF));
+        var actual = client.getModuleSource(BlockQuery.LAST_FINAL, ModuleRef.from(MODULE_REF));
         verify(serviceImpl).getModuleSource(eq(ModuleSourceRequest.newBuilder()
                         .setBlockHash(com.concordium.grpc.v2.BlockHashInput.newBuilder()
-                                .setBest(Empty.getDefaultInstance())
+                                .setLastFinal(Empty.getDefaultInstance())
                                 .build())
                         .setModuleRef(com.concordium.grpc.v2.ModuleRef.newBuilder()
                                 .setValue(ByteString.copyFrom(MODULE_REF))

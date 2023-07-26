@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @Data
 @Jacksonized
@@ -14,5 +14,5 @@ public class PendingChangeRemovePool extends PendingChange {
     /**
      * Effective time of the change.
      */
-    private final Date effectiveTime;
+    private final OffsetDateTime effectiveTime;
 }

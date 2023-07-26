@@ -2,7 +2,6 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.responses.peerlist.PeerInfo;
 import picocli.CommandLine;
 
@@ -24,10 +23,9 @@ public class GetPeersInfo implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         URL endpointUrl = new URL(this.endpoint);
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         ClientV2
