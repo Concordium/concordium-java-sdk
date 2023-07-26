@@ -3,7 +3,7 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.transactions.Hash;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Mocks the GRPC interface of the node.
- * Tests mapping of Requests and Responses from {@link ClientV2#getAncestors(BlockHashInput, long)} to the Node.
+ * Tests mapping of Requests and Responses from {@link ClientV2#getAncestors(BlockQuery, long)} to the Node.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetAncestorsTest {
@@ -67,13 +67,13 @@ public class ClientV2GetAncestorsTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
 
     @Test
     public void getAncestors() throws BlockNotFoundException {
-        var ancestors = client.getAncestors(BlockHashInput.BEST, 1);
+        var ancestors = client.getAncestors(BlockQuery.BEST, 1);
 
 
         verify(serviceImpl).getAncestors(eq(BEST_BLOCK), any(StreamObserver.class));

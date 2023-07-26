@@ -26,16 +26,21 @@ public class Node {
 
     /**
      * Parses {@link NodeInfo} to {@link Node}
+     *
      * @param nodeInfo {@link NodeInfo} returned from the Grpc API
      * @return Parsed {@link Node}
      */
     public static Node parseNodeInfo(NodeInfo nodeInfo) {
 
         // Node is a BOOTSTRAPPER
-        if (!nodeInfo.hasNode()) {return buildBootstrapperNode();}
+        if (!nodeInfo.hasNode()) {
+            return buildBootstrapperNode();
+        }
 
         // Node runs consensus but is not baker
-        if (!nodeInfo.getNode().hasActive()) {return buildPassiveNode();}
+        if (!nodeInfo.getNode().hasActive()) {
+            return buildPassiveNode();
+        }
 
         // Node is active baker
         return buildActiveNode(nodeInfo);
@@ -45,6 +50,7 @@ public class Node {
 
     /**
      * Helper method for building BOOTSTRAPPER node
+     *
      * @return {@link Node} not running consensus
      */
     private static Node buildBootstrapperNode() {
@@ -56,6 +62,7 @@ public class Node {
 
     /**
      * Helper method for building node not configured with baker keys
+     *
      * @return {@link Node} not configured with baker keys
      */
     private static Node buildPassiveNode() {
@@ -67,6 +74,7 @@ public class Node {
 
     /**
      * Helper method for building node configured with baker keys
+     *
      * @param nodeInfo {@link NodeInfo} returned from the Grpc API
      * @return {@link Node} configured with baker keys
      */

@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.accountinfo.ReduceStakeChange;
 import com.concordium.sdk.responses.accountinfo.RemoveStakeChange;
 import com.concordium.sdk.transactions.CCDAmount;
@@ -30,7 +30,7 @@ import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
 /**
- Tests for {@link ClientV2#getPoolDelegators(BlockHashInput, com.concordium.sdk.responses.AccountIndex)}.
+ Tests for {@link ClientV2#getPoolDelegators(BlockQuery, com.concordium.sdk.responses.AccountIndex)}.
  <br/>
  Tests the mapping code {@link ClientV2MapperExtensions#to(DelegatorInfo)}
  */
@@ -136,13 +136,13 @@ public class ClientV2GetPoolDelegatorsTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test
     public void getPoolDelegators_BestBlock() {
         var delegators = client.getPoolDelegators(
-                BlockHashInput.BEST,
+                BlockQuery.BEST,
                 com.concordium.sdk.responses.AccountIndex.from(BAKER_ID));
 
         verify(serviceImpl).getPoolDelegators(eq(
@@ -156,7 +156,7 @@ public class ClientV2GetPoolDelegatorsTest {
     @Test
     public void getPoolDelegators_LastFinalBlock() {
         var delegators = client.getPoolDelegators(
-                BlockHashInput.LAST_FINAL,
+                BlockQuery.LAST_FINAL,
                 com.concordium.sdk.responses.AccountIndex.from(BAKER_ID));
 
         verify(serviceImpl).getPoolDelegators(eq(
@@ -170,7 +170,7 @@ public class ClientV2GetPoolDelegatorsTest {
     @Test
     public void getPoolDelegators_GivenBlock() {
         var delegators = client.getPoolDelegators(
-                BlockHashInput.GIVEN(Hash.from(BLOCK_HASH)),
+                BlockQuery.HASH(Hash.from(BLOCK_HASH)),
                 com.concordium.sdk.responses.AccountIndex.from(BAKER_ID));
 
         verify(serviceImpl).getPoolDelegators(eq(

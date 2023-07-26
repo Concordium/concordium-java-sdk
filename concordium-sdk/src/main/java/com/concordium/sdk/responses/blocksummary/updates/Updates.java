@@ -46,7 +46,7 @@ public final class Updates {
             @JsonProperty("protocolUpdate") ProtocolUpdate protocolUpdate) {
         if (chainParameters.findPath("minimumThresholdForBaking").isTextual()) {
             this.chainParameters = JsonMapper.INSTANCE.convertValue(chainParameters, ChainParametersV0.class);
-        }else {
+        } else {
             this.chainParameters = JsonMapper.INSTANCE.convertValue(chainParameters, ChainParametersV1.class);
         }
         this.keys = keys;

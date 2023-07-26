@@ -4,9 +4,6 @@ import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.val;
-
-import java.nio.ByteBuffer;
 
 /**
  * Update a new smart contract instance.

@@ -4,8 +4,6 @@ import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.transactions.CCDAmount;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
 @Data

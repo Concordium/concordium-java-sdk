@@ -1,6 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.*;
 import com.concordium.sdk.transactions.AccountAddress;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
- * The test asserts that {@link ClientV2#getBlockSpecialEvents(com.concordium.sdk.requests.BlockHashInput)}
+ * The test asserts that {@link ClientV2#getBlockSpecialEvents(BlockQuery)}
  * correctly converts the {@link Iterator} of {@link BlockSpecialEvent} returned by the server to {@link ImmutableList} of {@link SpecialOutcome}.
  */
 public class ClientV2GetBlockSpecialEventsTest {
@@ -242,12 +243,12 @@ public class ClientV2GetBlockSpecialEventsTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test
     public void test() {
-        val res = client.getBlockSpecialEvents(com.concordium.sdk.requests.BlockHashInput.BEST);
+        val res = client.getBlockSpecialEvents(BlockQuery.BEST);
 
         verify(serviceImpl).getBlockSpecialEvents(any(BlockHashInput.class), any(StreamObserver.class));
         assertEquals(CLIENT_EXPECTED_RESULT, res);

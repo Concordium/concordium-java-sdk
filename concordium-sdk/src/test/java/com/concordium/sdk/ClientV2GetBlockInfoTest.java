@@ -2,7 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.Timestamp;
@@ -33,7 +33,7 @@ public class ClientV2GetBlockInfoTest {
     private static final byte[] BLOCK_HASH = new byte[]{1, 1, 1};
     private static final int BLOCK_HEIGHT = 1;
     private static final int TRANSACTION_ENERGY_COST = 1;
-    private static final int BLOCK_BAKER = 1;
+    private static final com.concordium.sdk.responses.BakerId BLOCK_BAKER = com.concordium.sdk.responses.BakerId.from(1);
     private static final byte[] BLOCK_STATE_HASH = new byte[]{3, 6, 7};
     private static final byte[] PARENT_BLOCK_HASH = new byte[]{3, 6, 7};
     private static final Timestamp BLOCK_SLOT_TIME = Timestamp.newSeconds(1000000);
@@ -90,7 +90,7 @@ public class ClientV2GetBlockInfoTest {
             )
             .setBaker(
                     BakerId.newBuilder()
-                            .setValue(BLOCK_BAKER).build()
+                            .setValue(BLOCK_BAKER.toLong()).build()
             )
             .setFinalized(FINALIZED)
             .setTransactionCount(TRANSACTION_COUNT)
@@ -103,6 +103,9 @@ public class ClientV2GetBlockInfoTest {
                     StateHash.newBuilder()
                             .setValue(ByteString.copyFrom(BLOCK_STATE_HASH)).build()
             )
+            .setProtocolVersionValue(ProtocolVersion.PROTOCOL_VERSION_6_VALUE)
+            .setEpoch(Epoch.newBuilder().setValue(0).build())
+            .setRound(Round.newBuilder().setValue(1).build())
 
             .build();
     private static final com.concordium.sdk.responses.blockinfo.BlockInfo GET_BLOCK_INFO_RESPONSE = BlockInfo.builder()
@@ -111,7 +114,7 @@ public class ClientV2GetBlockInfoTest {
             .transactionEnergyCost(TRANSACTION_ENERGY_COST)
             .blockBaker(BLOCK_BAKER)
             .blockStateHash(Hash.from(BLOCK_STATE_HASH))
-            .blockSlotTime(OffsetDateTime.ofInstant(BLOCK_SLOT_TIME.getDate().toInstant(), UTC_ZONE))
+            .blockTime(OffsetDateTime.ofInstant(BLOCK_SLOT_TIME.getDate().toInstant(), UTC_ZONE))
             .blockParent(Hash.from(PARENT_BLOCK_HASH))
             .blockReceiveTime(OffsetDateTime.ofInstant(BLOCK_RECEIVE_TIME.getDate().toInstant(), UTC_ZONE))
             .genesisIndex(GENESIS_INDEX)
@@ -122,6 +125,9 @@ public class ClientV2GetBlockInfoTest {
             .transactionsSize(TRANSACTION_SIZE)
             .transactionCount(TRANSACTION_COUNT)
             .blockArriveTime(OffsetDateTime.ofInstant(BLOCK_ARRIVAL_TIME.getDate().toInstant(), UTC_ZONE))
+            .protocolVersion(com.concordium.sdk.responses.ProtocolVersion.V6)
+            .round(com.concordium.sdk.responses.Round.from(1))
+            .epoch(com.concordium.sdk.responses.Epoch.from(0))
             .build();
 
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
@@ -158,12 +164,12 @@ public class ClientV2GetBlockInfoTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test
     public void getBlockInfo_BestBlock() throws BlockNotFoundException {
-        var blockInfo = client.getBlockInfo(BlockHashInput.BEST);
+        var blockInfo = client.getBlockInfo(BlockQuery.BEST);
 
         verify(serviceImpl).getBlockInfo(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(blockInfo, GET_BLOCK_INFO_RESPONSE);
@@ -171,7 +177,7 @@ public class ClientV2GetBlockInfoTest {
 
     @Test
     public void getBlockInfo_LastFinalBlock() throws BlockNotFoundException {
-        var blockInfo = client.getBlockInfo(BlockHashInput.LAST_FINAL);
+        var blockInfo = client.getBlockInfo(BlockQuery.LAST_FINAL);
 
         verify(serviceImpl).getBlockInfo(eq(LAST_FINAL_BLOCK), any(StreamObserver.class));
         assertEquals(blockInfo, GET_BLOCK_INFO_RESPONSE);
@@ -180,7 +186,7 @@ public class ClientV2GetBlockInfoTest {
     @Test
     public void getBlockInfo_GivenBlock() throws BlockNotFoundException {
         var blockInfo = client.getBlockInfo(
-                BlockHashInput.GIVEN(Hash.from(BLOCK_HASH)));
+                BlockQuery.HASH(Hash.from(BLOCK_HASH)));
 
         verify(serviceImpl).getBlockInfo(eq(GIVEN_BLOCK_GRPC), any(StreamObserver.class));
         assertEquals(blockInfo, GET_BLOCK_INFO_RESPONSE);

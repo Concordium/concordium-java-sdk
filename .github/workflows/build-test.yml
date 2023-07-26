@@ -79,6 +79,8 @@ jobs:
         key: ${{ runner.os }}-${{ env.dummy }}-rust-java-deps-${{ hashFiles('**/Cargo.toml', '**/Cargo.lock', '**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-${{ env.dummy }}-rust-java-deps
-    - name: Build & Test Java
+    - name: Build and test sdk
       run: cd concordium-sdk && mvn --batch-mode --update-snapshots install
+    - name: Build and test examples
+      run: cd concordium-sdk-examples && mvn --batch-mode --update-snapshots install
 

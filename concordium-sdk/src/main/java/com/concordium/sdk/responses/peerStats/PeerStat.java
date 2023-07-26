@@ -32,6 +32,7 @@ public class PeerStat {
 
     /**
      * Parses the Grpc response to {@link PeerStat}
+     *
      * @param stat of type {@link ConcordiumP2PRpc.PeerStatsResponse.PeerStats}
      * @return Parsed {@link PeerStat}
      */

@@ -1,28 +1,23 @@
 package com.concordium.sdk.responses.blockinfo;
 
-import com.concordium.sdk.responses.BlockIdentifier;
+import com.concordium.sdk.responses.*;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 @ToString
 @Getter
-@EqualsAndHashCode
-public class BlockInfo {
-
-    /**
-     * Block Identifiers, Block Height & Block Hash
-     */
-    @JsonIgnore
-    @Getter(AccessLevel.NONE)
-    private final BlockIdentifier blockIdentifier;
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
+public class BlockInfo extends BlockIdentifier {
 
     /**
      * The total energy consumption of transactions in the block.
@@ -32,17 +27,18 @@ public class BlockInfo {
      * Identity of the baker of the block. For non-genesis blocks the value is
      * non-null.
      */
-    private final Integer blockBaker;
+    private final BakerId blockBaker;
+
     /**
      * Hash of the block state at the end of the given block.
      */
     private final Hash blockStateHash;
     /**
-     * Slot time of the slot the block is in. In contrast to
+     * Time of the block is in. In contrast to
      * {@link BlockInfo#blockArriveTime} this is an objective value, all nodes
      * agree on it.
      */
-    private final OffsetDateTime blockSlotTime;
+    private final OffsetDateTime blockTime;
     /**
      * Parent block pointer.
      */
@@ -93,11 +89,60 @@ public class BlockInfo {
     private final OffsetDateTime blockArriveTime;
 
     /**
+     * The protocol version that the block
+     * was baked in.
+     */
+    private final ProtocolVersion protocolVersion;
+
+    /**
+     * Round of the block.
+     * This is non-null for protocol version 6 and above.
+     */
+    private final Round round;
+
+    /**
+     * Get the round of the block if the protocol version
+     * is 6 or above
+     * @return return the round if present otherwise nothing.
+     * @throws IllegalStateException if the protocol version is unrecognized.
+     */
+    public Optional<Round> getRound() {
+        switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)) {
+            case V1:
+                return Optional.empty();
+            case V2:
+                return Optional.of(this.round);
+        }
+        throw new IllegalStateException("Unrecognized protocol version");
+    }
+
+    /**
+     * Epoch of the block.
+     * This is non-null for protocol version 6 and above.
+     */
+    private final Epoch epoch;
+
+    /**
+     * Get the epoch of the block if the protocol version is 6 or above.
+     * @return the epoch if present otherwise nothing.
+     * @throws IllegalStateException if the protocol version is unrecognized.
+     */
+    public Optional<Epoch> getEpoch() {
+        switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)) {
+            case V1:
+                return Optional.empty();
+            case V2:
+                return Optional.of(this.epoch);
+        }
+        throw new IllegalStateException("Unrecognized protocol version.");
+    }
+
+    /**
      * Hash of the Block.
      */
     @JsonProperty("blockHash")
     public Hash getBlockHash() {
-        return this.blockIdentifier.getBlockHash();
+        return super.getBlockHash();
     }
 
     /**
@@ -105,18 +150,18 @@ public class BlockInfo {
      */
     @JsonProperty("blockHeight")
     public UInt64 getBlockHeight() {
-        return blockIdentifier.getBlockHeight();
+        return super.getBlockHeight();
     }
 
-    @Builder
+
     @JsonCreator
     BlockInfo(
             @JsonProperty("blockHash") final Hash blockHash,
             @JsonProperty("blockHeight") final UInt64 blockHeight,
             @JsonProperty("transactionEnergyCost") final Integer transactionEnergyCost,
-            @JsonProperty("blockBaker") final Integer blockBaker,
+            @JsonProperty("blockBaker") final long blockBaker,
             @JsonProperty("blockStateHash") final Hash blockStateHash,
-            @JsonProperty("blockSlotTime") final OffsetDateTime blockSlotTime,
+            @JsonProperty("blockSlotTime") final OffsetDateTime blockTime,
             @JsonProperty("blockParent") final Hash blockParent,
             @JsonProperty("blockReceiveTime") final OffsetDateTime blockReceiveTime,
             @JsonProperty("genesisIndex") final Integer genesisIndex,
@@ -127,14 +172,11 @@ public class BlockInfo {
             @JsonProperty("transactionsSize") final Integer transactionsSize,
             @JsonProperty("transactionCount") final Integer transactionCount,
             @JsonProperty("blockArriveTime") final OffsetDateTime blockArriveTime) {
-        this.blockIdentifier = BlockIdentifier.builder()
-                .blockHash(blockHash)
-                .blockHeight(blockHeight)
-                .build();
+        super(blockHash, blockHeight);
         this.transactionEnergyCost = transactionEnergyCost;
-        this.blockBaker = blockBaker;
+        this.blockBaker = BakerId.from(blockBaker);
         this.blockStateHash = blockStateHash;
-        this.blockSlotTime = blockSlotTime;
+        this.blockTime = blockTime;
         this.blockParent = blockParent;
         this.blockReceiveTime = blockReceiveTime;
         this.genesisIndex = genesisIndex;
@@ -145,6 +187,12 @@ public class BlockInfo {
         this.transactionsSize = transactionsSize;
         this.transactionCount = transactionCount;
         this.blockArriveTime = blockArriveTime;
+        // these fields are simply null as json parsing is only
+        // used for grpcv1 api and that is deprecated (I.e. the Client)
+        // Instead one should use ClientV2 which leverages the newer API of the node.
+        this.round = null;
+        this.protocolVersion = null;
+        this.epoch = null;
     }
 
     public static BlockInfo fromJson(String blockInfoJsonString) {

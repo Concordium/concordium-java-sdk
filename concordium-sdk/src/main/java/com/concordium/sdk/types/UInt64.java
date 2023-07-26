@@ -2,7 +2,6 @@ package com.concordium.sdk.types;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;

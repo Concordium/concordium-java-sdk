@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
@@ -137,20 +138,20 @@ public class ClientV2GetConsensusStatusTest {
     private static final ConsensusStatus CONSENSUS_INFO_RES_EXPECTED = ConsensusStatus.builder()
             .bestBlock(Hash.from(BLOCK_HASH_1))
             .genesisBlock(Hash.from(BLOCK_HASH_4))
-            .genesisTime(Date.from(Instant.ofEpochMilli(GENESIS_TIME)))
-            .slotDuration(SLOT_DURATION)
-            .epochDuration(EPOCH_DURATION)
+            .genesisTime(com.concordium.sdk.types.Timestamp.newMillis(GENESIS_TIME).getDate())
+            .slotDuration(java.time.Duration.ofMillis(SLOT_DURATION))
+            .epochDuration(java.time.Duration.ofMillis(EPOCH_DURATION))
             .lastFinalizedBlock(Hash.from(BLOCK_HASH_2))
             .bestBlockHeight(BLOCK_HEIGHT_1)
             .lastFinalizedBlockHeight(BLOCK_HEIGHT_2)
             .blocksReceivedCount(BLOCKS_RECEIVED_COUNT)
-            .blockLastReceivedTime(Date.from(Instant.ofEpochMilli(BLOCK_LAST_RECEIVED_TIME)).toString())
+            .blockLastReceivedTime(com.concordium.sdk.types.Timestamp.newMillis(BLOCK_LAST_RECEIVED_TIME).getDate())
             .blockReceiveLatencyEMA(BLOCK_RECEIVE_LATENCY_EMA)
             .blockReceiveLatencyEMSD(BLOCK_RECEIVE_LATENCY_EMSD)
             .blockReceivePeriodEMA(BLOCK_RECEIVE_PERIOD_EMA)
             .blockReceivePeriodEMSD(BLOCK_RECEIVE_PERIOD_EMSD)
             .blocksVerifiedCount(BLOCKS_VERIFIED_COUNT)
-            .blockLastArrivedTime(Date.from(Instant.ofEpochMilli(BLOCK_LAST_ARRIVED_TIME)).toString())
+            .blockLastArrivedTime(com.concordium.sdk.types.Timestamp.newMillis(BLOCK_LAST_ARRIVED_TIME).getDate())
             .blockArriveLatencyEMA(BLOCK_ARRIVE_LATENCY_EMA)
             .blockArriveLatencyEMSD(BLOCK_ARRIVE_LATENCY_EMSD)
             .blockArrivePeriodEMA(BLOCK_ARRIVE_PERIOD_EMA)
@@ -158,13 +159,13 @@ public class ClientV2GetConsensusStatusTest {
             .transactionsPerBlockEMA(TRANSACTIONS_PER_BLOCK_EMA)
             .transactionsPerBlockEMSD(TRANSACTIONS_PER_BLOCK_EMSD)
             .finalizationCount(FINALIZATION_COUNT)
-            .lastFinalizedTime(Date.from(Instant.ofEpochMilli(LAST_FINALIZED_TIME)).toString())
+            .lastFinalizedTime(com.concordium.sdk.types.Timestamp.newMillis(LAST_FINALIZED_TIME).getDate())
             .finalizationPeriodEMA(FINALIZATION_PERIOD_EMA)
             .finalizationPeriodEMSD(FINALIZATION_PERIOD_EMSD)
             .protocolVersion(PROTOCOL_VERSION)
             .genesisIndex(GENESIS_INDEX)
-            .currentEraGenesisBlock(Hash.from(BLOCK_HASH_3).toString())
-            .currentEraGenesisTime(Date.from(Instant.ofEpochMilli(CURRENT_ERA_GENESIS_TIME)))
+            .currentEraGenesisBlock(Hash.from(BLOCK_HASH_3))
+            .currentEraGenesisTime(com.concordium.sdk.types.Timestamp.newMillis(CURRENT_ERA_GENESIS_TIME).getDate())
             .build();
 
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
@@ -191,7 +192,7 @@ public class ClientV2GetConsensusStatusTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
 
@@ -200,6 +201,6 @@ public class ClientV2GetConsensusStatusTest {
         var res = client.getConsensusInfo();
 
         verify(serviceImpl).getConsensusInfo(any(Empty.class), any(StreamObserver.class));
-        assertEquals(CONSENSUS_INFO_RES_EXPECTED.toString(), res.toString());
+        assertEquals(CONSENSUS_INFO_RES_EXPECTED, res);
     }
 }

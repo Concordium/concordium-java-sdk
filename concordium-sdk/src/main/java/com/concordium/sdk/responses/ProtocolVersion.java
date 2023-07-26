@@ -24,19 +24,25 @@ public enum ProtocolVersion {
      */
     V5,
     /**
-     * TODO include link to update like above
+     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P6.txt
      */
     V6;
 
     @JsonCreator
     public static ProtocolVersion forValue(int protocolVersion) {
-        switch (protocolVersion){
-            case 1: return ProtocolVersion.V1;
-            case 2: return ProtocolVersion.V2;
-            case 3: return ProtocolVersion.V3;
-            case 4: return ProtocolVersion.V4;
-            case 5: return ProtocolVersion.V5;
-            case 6: return V6;
+        switch (protocolVersion) {
+            case 1:
+                return ProtocolVersion.V1;
+            case 2:
+                return ProtocolVersion.V2;
+            case 3:
+                return ProtocolVersion.V3;
+            case 4:
+                return ProtocolVersion.V4;
+            case 5:
+                return ProtocolVersion.V5;
+            case 6:
+                return ProtocolVersion.V6;
             default:
                 throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }
@@ -49,14 +55,46 @@ public enum ProtocolVersion {
      */
     public static ProtocolVersion parse(com.concordium.grpc.v2.ProtocolVersion protocolVersion) {
         switch (protocolVersion) {
-            case PROTOCOL_VERSION_1: return V1;
-            case PROTOCOL_VERSION_2: return V2;
-            case PROTOCOL_VERSION_3: return V3;
-            case PROTOCOL_VERSION_4: return V4;
-            case PROTOCOL_VERSION_5: return V5;
-            case PROTOCOL_VERSION_6: return V6;
+            case PROTOCOL_VERSION_1:
+                return V1;
+            case PROTOCOL_VERSION_2:
+                return V2;
+            case PROTOCOL_VERSION_3:
+                return V3;
+            case PROTOCOL_VERSION_4:
+                return V4;
+            case PROTOCOL_VERSION_5:
+                return V5;
+            case PROTOCOL_VERSION_6:
+                return V6;
             default:
                 throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }
+    }
+
+    /**
+     * Get the consensus version by the protocol version
+     * @param protocolVersion the protocol version
+     * @return the consensus version
+     */
+    public static ConsensusVersion getConsensusVersion(ProtocolVersion protocolVersion) {
+        switch (protocolVersion) {
+            case V1:
+            case V2:
+            case V3:
+            case V4:
+            case V5:
+                return ConsensusVersion.V1;
+            case V6:
+                return ConsensusVersion.V2;
+        }
+        throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
+    }
+
+    public enum ConsensusVersion {
+        // Consensus version 1 used in protocol versions 1-5.
+        V1,
+        // Consensus version 2 used in protocol version 6 and onwards.
+        V2
     }
 }

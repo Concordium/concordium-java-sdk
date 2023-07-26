@@ -4,7 +4,9 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import concordium.ConcordiumP2PRpc;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Singular;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
@@ -36,8 +38,7 @@ public class BirkParameters {
 
     public static Optional<BirkParameters> fromJson(ConcordiumP2PRpc.JsonResponse jsonResponse) {
         try {
-            val ret = JsonMapper.INSTANCE.readValue(jsonResponse.getValue(), BirkParameters.class);
-
+            BirkParameters ret = JsonMapper.INSTANCE.readValue(jsonResponse.getValue(), BirkParameters.class);
             return Optional.ofNullable(ret);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse BirkParameters JSON", e);

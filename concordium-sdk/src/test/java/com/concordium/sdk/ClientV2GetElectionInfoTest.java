@@ -1,7 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.requests.BlockHashInput;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
@@ -36,7 +36,6 @@ public class ClientV2GetElectionInfoTest {
     private static final AmountFraction GRPC_ELECTION_DIFFICULTY_FACTION = AmountFraction.newBuilder()
             .setPartsPerHundredThousand(ELECTION_DIFFICULTY)
             .build();
-    private static final PartsPerHundredThousand ELECTION_DIFFICULTY_EXPECTED = PartsPerHundredThousand.parse(GRPC_ELECTION_DIFFICULTY_FACTION);
     private static final byte[] ELECTION_NONCE = new byte[]{9, 9, 9};
     private static final long BAKER_ID = 1L;
     private static final double LOTTERY_POWER = 0.25D;
@@ -59,7 +58,7 @@ public class ClientV2GetElectionInfoTest {
             .build();
 
     private static final ElectionInfo ELECTION_INFO_EXPECTED = ElectionInfo.builder()
-            .electionDifficulty(ELECTION_DIFFICULTY_EXPECTED)
+            .electionDifficulty(ELECTION_DIFFICULTY/100000d)
             .leadershipElectionNonce(ELECTION_NONCE)
             .bakerElectionInfo(ImmutableList.of(ElectionInfoBaker.builder()
                     .baker(com.concordium.sdk.responses.BakerId.from(BAKER_ID))
@@ -94,12 +93,12 @@ public class ClientV2GetElectionInfoTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel, Credentials.builder().build());
+        client = new ClientV2(10000, channel);
     }
 
     @Test
     public void getElectionInfo() {
-        var electionInfo = client.getElectionInfo(BlockHashInput.BEST);
+        var electionInfo = client.getElectionInfo(BlockQuery.BEST);
 
         verify(serviceImpl).getElectionInfo(eq(BEST_BLOCK), any(StreamObserver.class));
         assertEquals(ELECTION_INFO_EXPECTED, electionInfo);

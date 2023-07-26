@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.ToString;
 import lombok.val;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 @ToString
 public enum SigningScheme {

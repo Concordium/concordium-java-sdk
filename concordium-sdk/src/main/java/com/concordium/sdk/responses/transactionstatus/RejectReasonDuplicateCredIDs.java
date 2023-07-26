@@ -20,7 +20,7 @@ public class RejectReasonDuplicateCredIDs extends RejectReason {
 
     @JsonCreator
     RejectReasonDuplicateCredIDs(@JsonProperty("contents") List<String> duplicates) {
-        if(!Objects.isNull(duplicates)) {
+        if (!Objects.isNull(duplicates)) {
             this.duplicates = new ArrayList<>();
             for (String duplicate : duplicates) {
                 this.duplicates.add(CredentialRegistrationId.from(duplicate));

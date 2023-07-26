@@ -2,7 +2,6 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Credentials;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import picocli.CommandLine;
@@ -24,10 +23,9 @@ public class GetConsensusStatus implements Callable<Integer> {
     @Override
     public Integer call() throws ClientInitializationException, MalformedURLException {
         URL endpointUrl = new URL(this.endpoint);
-        Connection connection = Connection.builder()
+        Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .credentials(new Credentials())
                 .build();
 
         ConsensusStatus consensusStatus = ClientV2

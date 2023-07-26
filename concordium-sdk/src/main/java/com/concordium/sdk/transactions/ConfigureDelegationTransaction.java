@@ -30,7 +30,7 @@ public class ConfigureDelegationTransaction extends AccountTransaction {
      * @param signer  {@link Signer} of this transaction.
      * @return Initialized {@link ConfigureDelegationTransaction}
      * @throws TransactionCreationException On failure to create the Transaction from input params.
-     * Ex when any of the input param is NULL.
+     *                                      Ex when any of the input param is NULL.
      */
     @Builder
     public static ConfigureDelegationTransaction from(final ConfigureDelegationPayload payload,

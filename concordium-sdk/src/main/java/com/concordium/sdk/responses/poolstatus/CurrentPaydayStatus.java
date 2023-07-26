@@ -4,8 +4,6 @@ import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
 @Data

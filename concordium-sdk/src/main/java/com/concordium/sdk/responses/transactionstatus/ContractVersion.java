@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.sdk.responses.ProtocolVersion;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.ToString;
 import lombok.val;

@@ -3,7 +3,6 @@ package com.concordium.sdk.requests.dumpstart;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.io.File;
 import java.nio.file.Path;
 
 /**
