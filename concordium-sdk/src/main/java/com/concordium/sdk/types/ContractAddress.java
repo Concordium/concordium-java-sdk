@@ -33,6 +33,10 @@ public final class ContractAddress extends AbstractAddress {
         this.index = index;
     }
 
+    public static ContractAddress from(com.concordium.grpc.v2.ContractAddress address) {
+        return ContractAddress.from(address.getIndex(), address.getSubindex());
+    }
+
     public String toJson() {
         try {
             return JsonMapper.INSTANCE.writeValueAsString(this);

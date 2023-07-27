@@ -79,7 +79,7 @@ public class ClientV2GetNodeInfoTest {
     // Builder for clientside NodeInfo with "standard" fields set
     private static final com.concordium.sdk.responses.nodeinfov2.NodeInfo.NodeInfoBuilder CLIENT_BUILDER = com.concordium.sdk.responses.nodeinfov2.NodeInfo.builder()
             .peerVersion(PEER_VERSION)
-            .localTime(Instant.EPOCH.plusSeconds(LOCAL_TIME).atZone(UTC_ZONE))
+            .localTime(com.concordium.sdk.types.Timestamp.newMillis(LOCAL_TIME))
             .peerUptime(java.time.Duration.ofMillis(PEER_UPTIME))
             .networkInfo(CLIENT_NETWORK_INFO);
 

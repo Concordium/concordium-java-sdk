@@ -35,8 +35,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetPoolInfoTest {
 
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
-            = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
+            = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final long BAKER_ID = 1;
     private static final String BAKER_POOL_URL = "www.example-baker-pool.com";
     private static final int COMMISSION_BAKING_PPHT = 10;
@@ -105,7 +105,7 @@ public class ClientV2GetPoolInfoTest {
             .bakerId(BakerId.from(BAKER_ID))
             .bakerAddress(ACCOUNT_ADDRESS_1)
             .bakerStakePendingChange(PendingChangeReduceBakerCapital.builder()
-                    .effectiveTime(Instant.ofEpochMilli(BAKER_REDUCE_STAKE_TIME).atOffset(ZoneOffset.UTC))
+                    .effectiveTime(com.concordium.sdk.types.Timestamp.newMillis(BAKER_REDUCE_STAKE_TIME))
                     .bakerEquityCapital(CCDAmount.fromMicro(BAKER_REDUCE_STAKE_AMOUNT))
                     .build())
             .delegatedCapitalCap(CCDAmount.fromMicro(DELEGATED_CAPITAL))

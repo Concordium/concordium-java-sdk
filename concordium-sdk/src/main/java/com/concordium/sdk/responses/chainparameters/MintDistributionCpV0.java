@@ -10,10 +10,10 @@ import lombok.ToString;
  * Mint distribution for chain parameters v0.
  */
 @Builder
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString
 @Getter
-public class MintDistributionCpV0 {
+public class MintDistributionCpV0 extends MintDistribution {
 
     /**
      * Mint rate per slot.
@@ -37,5 +37,10 @@ public class MintDistributionCpV0 {
                 .bakingReward(PartsPerHundredThousand.from(value.getBakingReward().getPartsPerHundredThousand()).asDouble())
                 .finalizationReward(PartsPerHundredThousand.from(value.getFinalizationReward().getPartsPerHundredThousand()).asDouble())
                 .build();
+    }
+
+    @Override
+    public MintDistribution.MintDistributionType getType() {
+        return MintDistributionType.V1;
     }
 }

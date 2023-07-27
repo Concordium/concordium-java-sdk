@@ -1,12 +1,8 @@
 package com.concordium.sdk.responses.nodeinfo;
 
+import com.concordium.sdk.types.Timestamp;
 import concordium.ConcordiumP2PRpc;
 import lombok.*;
-
-import java.time.Instant;
-import java.time.ZonedDateTime;
-
-import static com.concordium.sdk.Constants.UTC_ZONE;
 
 /**
  * Node Information.
@@ -24,7 +20,7 @@ public class NodeInfo {
     /**
      * Current local time of the node.
      */
-    private final ZonedDateTime localTime;
+    private final Timestamp localTime;
 
     /**
      * Type of Peer. Bootstrapper Or Node.
@@ -56,7 +52,7 @@ public class NodeInfo {
     public static NodeInfo parse(ConcordiumP2PRpc.NodeInfoResponse value) {
         val builder = NodeInfo.builder()
                 .nodeId(value.getNodeId().getValue())
-                .localTime(parseTime(value.getCurrentLocaltime()))
+                .localTime(Timestamp.newMillis(value.getCurrentLocaltime()))
                 .peerType(parsePeerType(value))
                 .consensusState(parseConsensusState(value))
                 .bakingStatus(parseBakingStatus(value))
@@ -111,16 +107,6 @@ public class NodeInfo {
         }
 
         return ConsensusState.ACTIVE;
-    }
-
-    /**
-     * Parses time to {@link ZonedDateTime} from the input value.
-     *
-     * @param currentLocaltime Input value.
-     * @return Parsed {@link ZonedDateTime}.
-     */
-    private static ZonedDateTime parseTime(long currentLocaltime) {
-        return Instant.EPOCH.plusSeconds(currentLocaltime).atZone(UTC_ZONE);
     }
 
 }

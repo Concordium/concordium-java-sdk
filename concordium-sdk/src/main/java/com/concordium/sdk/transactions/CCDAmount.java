@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.grpc.v2.Amount;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -33,6 +34,10 @@ public class CCDAmount {
     @JsonCreator
     CCDAmount(String amount) {
         this.value = UInt64.from(amount);
+    }
+
+    public static CCDAmount from(Amount cost) {
+        return CCDAmount.fromMicro(cost.getValue());
     }
 
     byte[] getBytes() {

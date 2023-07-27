@@ -4,7 +4,7 @@ import com.concordium.grpc.v2.AccountTransaction;
 import com.concordium.grpc.v2.Signature;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.Nonce;
 import com.google.protobuf.ByteString;

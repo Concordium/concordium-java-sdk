@@ -5,8 +5,8 @@ import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.UInt64;
-import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;
 

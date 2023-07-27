@@ -1,13 +1,12 @@
 package com.concordium.sdk.responses.accountinfo;
 
+import com.concordium.sdk.types.Timestamp;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-
-import java.time.OffsetDateTime;
 
 /**
  * The baker has removed its stake.
@@ -15,11 +14,11 @@ import java.time.OffsetDateTime;
 @Jacksonized
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@SuperBuilder
 public class RemoveStakeChange extends PendingChange {
 
     @JsonCreator
-    @Builder
-    public RemoveStakeChange(@JsonProperty("effectiveTime") OffsetDateTime effectiveTime) {
+    public RemoveStakeChange(@JsonProperty("effectiveTime") Timestamp effectiveTime) {
         super(effectiveTime);
     }
 }

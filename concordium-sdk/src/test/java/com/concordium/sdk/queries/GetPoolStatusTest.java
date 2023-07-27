@@ -5,16 +5,13 @@ import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
 import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.poolstatus.*;
 import com.concordium.sdk.responses.transactionstatus.OpenStatus;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.UInt64;
-import concordium.ConcordiumP2PRpc;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Optional;
 
 public class GetPoolStatusTest {
 

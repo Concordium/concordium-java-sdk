@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.responses.transactionstatus.EncryptedAmountsRemovedResult;
 import com.concordium.sdk.types.UInt16;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,6 +32,10 @@ public class Memo {
         } catch (DecoderException e) {
             throw new IllegalArgumentException("Not valid hex provided: ", e);
         }
+    }
+
+    public static Memo from(com.concordium.grpc.v2.Memo memo) {
+        return Memo.from(memo.getValue().toByteArray());
     }
 
     // returns the serialized memo with suffixed length

@@ -1,26 +1,32 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.ContractEvent;
+import com.concordium.grpc.v2.InstanceUpdatedEvent;
+import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
+import com.concordium.sdk.responses.smartcontracts.ContractTraceElementType;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.ToString;
+import com.google.protobuf.ByteString;
+import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * A contract was updated
  */
 @ToString
 @Getter
-public class ContractUpdated extends TransactionResultEvent {
+@Builder
+@EqualsAndHashCode(callSuper = true)
+public class ContractUpdated extends TransactionResultEvent implements ContractTraceElement {
 
     /**
      * The amount provided
@@ -52,7 +58,7 @@ public class ContractUpdated extends TransactionResultEvent {
     /**
      * The message which was sent to the contract.
      */
-    private final String message;
+    private final byte[] message;
 
     /**
      * The contract version.
@@ -75,15 +81,39 @@ public class ContractUpdated extends TransactionResultEvent {
         for (String event : events) {
             this.events.add(Hex.decodeHex(event));
         }
-        this.message = message;
+        this.message = Hex.decodeHex(message);
         if (!Objects.isNull(amount)) {
             this.amount = CCDAmount.fromMicro(amount);
         }
         this.version = version;
     }
 
+
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.CONTRACT_UPDATED;
+    }
+
+    @Override
+    public ContractTraceElementType getTraceType() {
+        return ContractTraceElementType.INSTANCE_UPDATED;
+    }
+
+    public static ContractUpdated from(InstanceUpdatedEvent e) {
+        val events = e.getEventsList()
+                .stream()
+                .map(ContractEvent::getValue)
+                .map(ByteString::toByteArray)
+                .collect(Collectors.toList());
+        return ContractUpdated
+                .builder()
+                .amount(CCDAmount.from(e.getAmount()))
+                .instigator(AbstractAddress.from(e.getInstigator()))
+                .address(ContractAddress.from(e.getAddress()))
+                .receiveName(e.getReceiveName().getValue())
+                .message(e.getParameter().getValue().toByteArray())
+                .version(ContractVersion.from(e.getContractVersion()))
+                .events(events)
+                .build();
     }
 }

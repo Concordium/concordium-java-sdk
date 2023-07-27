@@ -1,5 +1,6 @@
 package com.concordium.sdk.crypto.ed25519;
 
+import com.concordium.grpc.v2.BakerSignatureVerifyKey;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -69,6 +70,10 @@ public final class ED25519PublicKey {
      */
     public static ED25519PublicKey from(ED25519SecretKey secretKey) {
         return ED25519.makePublicKey(secretKey);
+    }
+
+    public static ED25519PublicKey from(BakerSignatureVerifyKey signKey) {
+        return ED25519PublicKey.from(signKey.getValue().toByteArray());
     }
 
     @Override

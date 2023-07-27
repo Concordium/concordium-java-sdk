@@ -42,7 +42,7 @@ import java.util.Arrays;
  * number of leading zeros (which are otherwise lost during the mathematical operations on the
  * numbers), and finally represent the resulting base-58 digits as alphanumeric ASCII characters.
  */
-class Base58 {
+public class Base58 {
     static final char[] ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
     private static final char ENCODED_ZERO = ALPHABET[0];
     private static final int[] INDEXES = new int[128];
@@ -97,7 +97,7 @@ class Base58 {
      * @param payload the bytes to encode, e.g. pubkey hash
      * @return the base58-encoded string
      */
-    static String encodeChecked(int version, byte[] payload) {
+    public static String encodeChecked(int version, byte[] payload) {
         if (version < 0 || version > 255) {
             throw new IllegalArgumentException("Version not in range.");
         }
@@ -148,7 +148,7 @@ class Base58 {
         return Arrays.copyOfRange(decoded, outputStart - zeros, decoded.length);
     }
 
-    static byte[] decodeChecked(int version, String input) {
+    public static byte[] decodeChecked(int version, String input) {
         byte[] decoded = decode(input);
         if (decoded.length < 4) {
             throw new IllegalArgumentException("Input too short: " + decoded.length);

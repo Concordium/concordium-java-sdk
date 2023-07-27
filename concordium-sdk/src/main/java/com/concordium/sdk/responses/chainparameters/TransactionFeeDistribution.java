@@ -27,4 +27,12 @@ public class TransactionFeeDistribution {
         this.allocatedForBaker = allocatedForBaker;
         this.allocatedForGASAccount = allocatedForGASAccount;
     }
+
+    public static TransactionFeeDistribution from(com.concordium.grpc.v2.TransactionFeeDistribution update) {
+        return TransactionFeeDistribution
+                .builder()
+                .allocatedForBaker(update.getBaker().getPartsPerHundredThousand()/100_000d)
+                .allocatedForGASAccount(update.getGasAccount().getPartsPerHundredThousand()/100_000d)
+                .build();
+    }
 }

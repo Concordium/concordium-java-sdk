@@ -1,28 +1,45 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.grpc.v2.AccountTransactionEffects;
+import com.concordium.grpc.v2.EncryptedAmountRemovedEvent;
+import com.concordium.sdk.transactions.EncryptedAmount;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
+@Builder
+@EqualsAndHashCode(callSuper = true)
 public final class EncryptedAmountsRemovedResult extends TransactionResultEvent {
-    private final int upToIndex;
+    private final long upToIndex;
     private final AccountAddress account;
-    private final String inputAmount;
-    private final String newAmount;
+    private final EncryptedAmount inputAmount;
+    private final EncryptedAmount newAmount;
 
     @JsonCreator
-    EncryptedAmountsRemovedResult(@JsonProperty("upToIndex") int upToIndex,
+    EncryptedAmountsRemovedResult(@JsonProperty("upToIndex") long upToIndex,
                                   @JsonProperty("account") AccountAddress account,
                                   @JsonProperty("inputAmount") String inputAmount,
                                   @JsonProperty("newAmount") String newAmount) {
         this.upToIndex = upToIndex;
         this.account = account;
-        this.inputAmount = inputAmount;
-        this.newAmount = newAmount;
+        this.inputAmount = EncryptedAmount.from(inputAmount);
+        this.newAmount = EncryptedAmount.from(newAmount);
+    }
+
+    public static EncryptedAmountsRemovedResult from(EncryptedAmountRemovedEvent removed) {
+        return EncryptedAmountsRemovedResult
+                .builder()
+                .account(AccountAddress.from(removed.getAccount()))
+                .inputAmount(EncryptedAmount.from(removed.getInputAmount()))
+                .newAmount(EncryptedAmount.from(removed.getNewAmount()))
+                .upToIndex(removed.getUpToIndex())
+                .build();
     }
 
     @Override

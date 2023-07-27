@@ -1,7 +1,9 @@
 package com.concordium.sdk.responses;
 
+import com.concordium.grpc.v2.Ratio;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
@@ -13,6 +15,7 @@ import java.math.BigInteger;
  */
 @EqualsAndHashCode
 @Getter
+@Builder
 public class Fraction {
 
     /**
@@ -42,6 +45,10 @@ public class Fraction {
 
     public Fraction(long numerator, long denominator) {
         this(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator));
+    }
+
+    public static Fraction from(Ratio value) {
+        return Fraction.builder().numerator(BigInteger.valueOf(value.getNumerator())).denominator(BigInteger.valueOf(value.getDenominator())).build();
     }
 
     @Override

@@ -55,7 +55,7 @@ public class ClientV2GetRewardsOverviewTest {
             .finalizationRewardAccount(CCDAmount.fromMicro(FINALIZATION_REWARD_AMOUNT))
             .foundationTransactionRewards(CCDAmount.fromMicro(FOUNDATION_TRANSACTIONS_AMOUNT))
             .gasAccount(CCDAmount.fromMicro(GAS_AMOUNT))
-            .nextPaydayTime(com.concordium.sdk.types.Timestamp.newMillis(NEXT_PAYDAY_TIME).getDate())
+            .nextPaydayTime(com.concordium.sdk.types.Timestamp.newMillis(NEXT_PAYDAY_TIME))
             .nextPaydayMintRate((double)MANTISSA * Math.pow(10, -1 * EXPONENT))
             .protocolVersion(com.concordium.sdk.responses.ProtocolVersion.forValue(PROTOCOL_VERSION + 1))
             .totalAmount(CCDAmount.fromMicro(TOTAL_AMOUNT))

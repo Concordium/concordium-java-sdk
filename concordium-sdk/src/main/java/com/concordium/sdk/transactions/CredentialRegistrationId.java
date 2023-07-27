@@ -34,6 +34,10 @@ public class CredentialRegistrationId {
         }
     }
 
+    public static CredentialRegistrationId from(com.concordium.grpc.v2.CredentialRegistrationId regId) {
+        return new CredentialRegistrationId(regId.getValue().toByteArray());
+    }
+
     /**
      * Get the hex encoded credential registration id
      *

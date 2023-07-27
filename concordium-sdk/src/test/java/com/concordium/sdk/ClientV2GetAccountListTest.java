@@ -27,8 +27,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetAccountListTest {
 
-    private static final com.concordium.sdk.transactions.AccountAddress CLIENT_ACCOUNT_ADDRESS
-            = com.concordium.sdk.transactions.AccountAddress.from(
+    private static final com.concordium.sdk.types.AccountAddress CLIENT_ACCOUNT_ADDRESS
+            = com.concordium.sdk.types.AccountAddress.from(
             "37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final AccountAddress GRPC_ACCOUNT_ADDRESS = AccountAddress.newBuilder()
             .setValue(ByteString.copyFrom(CLIENT_ACCOUNT_ADDRESS.getBytes()))

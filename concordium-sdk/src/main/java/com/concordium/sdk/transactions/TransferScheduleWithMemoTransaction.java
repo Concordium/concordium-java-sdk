@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.*;
 
 /**

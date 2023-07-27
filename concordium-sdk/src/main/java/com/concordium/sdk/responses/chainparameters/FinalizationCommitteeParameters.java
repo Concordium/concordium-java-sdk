@@ -30,4 +30,12 @@ public class FinalizationCommitteeParameters {
      */
     private final double finalizerRelativeStakeThreshold;
 
+    public static FinalizationCommitteeParameters from(com.concordium.grpc.v2.FinalizationCommitteeParameters params) {
+        return FinalizationCommitteeParameters
+                .builder()
+                .minimumFinalizers(params.getMinimumFinalizers())
+                .maxFinalizers(params.getMaximumFinalizers())
+                .finalizerRelativeStakeThreshold(params.getFinalizerRelativeStakeThreshold().getPartsPerHundredThousand()/100_000d)
+                .build();
+    }
 }

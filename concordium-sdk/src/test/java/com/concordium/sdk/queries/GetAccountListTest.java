@@ -1,6 +1,6 @@
 package com.concordium.sdk.queries;
 
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import concordium.ConcordiumP2PRpc;
 import lombok.val;
 import org.junit.Assert;

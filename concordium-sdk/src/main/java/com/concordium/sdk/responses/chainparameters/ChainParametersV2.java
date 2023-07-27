@@ -4,7 +4,7 @@ import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.blocksummary.updates.queues.CooldownParametersCpv1;
 import com.concordium.sdk.responses.blocksummary.updates.queues.PoolParameters;
 import com.concordium.sdk.responses.blocksummary.updates.queues.TimeParameters;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -4,7 +4,6 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
-import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
@@ -13,7 +12,6 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
-import lombok.val;
 import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,8 +27,8 @@ import static org.mockito.Mockito.*;
 public class ClientV2GetElectionInfoTest {
 
     private static final byte[] BLOCK_HASH = new byte[]{1, 1, 1};
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
-            = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
+            = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final int ELECTION_DIFFICULTY = 100;
 
     private static final AmountFraction GRPC_ELECTION_DIFFICULTY_FACTION = AmountFraction.newBuilder()

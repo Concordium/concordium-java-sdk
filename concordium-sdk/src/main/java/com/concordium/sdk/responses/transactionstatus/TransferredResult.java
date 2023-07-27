@@ -1,9 +1,16 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.grpc.v2.AccountTransactionEffects;
+import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
+import com.concordium.sdk.responses.smartcontracts.ContractTraceElementType;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AbstractAddress;
+import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -12,7 +19,9 @@ import java.util.Objects;
 
 @Getter
 @ToString
-public final class TransferredResult extends TransactionResultEvent {
+@Builder
+@EqualsAndHashCode(callSuper = true)
+public final class TransferredResult extends TransactionResultEvent implements ContractTraceElement {
     private final AbstractAddress to;
     private final AbstractAddress from;
     private CCDAmount amount;
@@ -29,8 +38,31 @@ public final class TransferredResult extends TransactionResultEvent {
         }
     }
 
+    public static TransferredResult from(AccountTransactionEffects.AccountTransfer accountTransfer, AccountAddress sender) {
+        return TransferredResult
+                .builder()
+                .from(sender)
+                .to(AccountAddress.from(accountTransfer.getReceiver()))
+                .amount(CCDAmount.from(accountTransfer.getAmount()))
+                .build();
+    }
+
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.TRANSFERRED;
+    }
+
+    public static TransferredResult from(com.concordium.grpc.v2.ContractTraceElement.Transferred transferred) {
+        return TransferredResult
+                .builder()
+                .from(ContractAddress.from(transferred.getSender()))
+                .to(AccountAddress.from(transferred.getReceiver()))
+                .amount(CCDAmount.from(transferred.getAmount()))
+                .build();
+    }
+
+    @Override
+    public ContractTraceElementType getTraceType() {
+        return ContractTraceElementType.TRANSFERRED;
     }
 }

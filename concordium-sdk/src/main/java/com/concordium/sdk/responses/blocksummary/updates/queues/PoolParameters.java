@@ -1,5 +1,7 @@
 package com.concordium.sdk.responses.blocksummary.updates.queues;
 
+import com.concordium.grpc.v2.CommissionRanges;
+import com.concordium.grpc.v2.PoolParametersCpv1;
 import com.concordium.sdk.Range;
 import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.transactions.CCDAmount;
@@ -75,4 +77,20 @@ public final class PoolParameters {
      */
     @JsonProperty("leverageBound")
     private final Fraction leverageBound;
+
+    public static PoolParameters from(PoolParametersCpv1 update) {
+        CommissionRanges commissionBounds = update.getCommissionBounds();
+        return PoolParameters
+                .builder()
+                .passiveBakingCommission(update.getPassiveBakingCommission().getPartsPerHundredThousand()/100_000d)
+                .passiveTransactionCommission(update.getPassiveTransactionCommission().getPartsPerHundredThousand()/100_000d)
+                .passiveFinalizationCommission(update.getPassiveFinalizationCommission().getPartsPerHundredThousand()/100_000d)
+                .finalizationCommissionRange(Range.from(commissionBounds.getFinalization()))
+                .bakingCommissionRange(Range.from(commissionBounds.getBaking()))
+                .transactionCommissionRange(Range.from(commissionBounds.getTransaction()))
+                .minimumEquityCapital(CCDAmount.fromMicro(update.getMinimumEquityCapital().getValue()))
+                .capitalBound(update.getCapitalBound().getValue().getPartsPerHundredThousand()/100_000d)
+                .leverageBound(Fraction.from(update.getLeverageBound().getValue()))
+                .build();
+    }
 }

@@ -29,8 +29,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetInstanceInfoTest {
 
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
-            = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
+            = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final long AMOUNT = 10L;
     private static final String METHOD_1 = "contract.method_1";
     private static final String METHOD_2 = "contract.method_2";

@@ -1,15 +1,13 @@
 package com.concordium.sdk.types;
 
+import com.concordium.sdk.Constants;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.time.Instant;
-import java.time.ZoneId;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.Date;
-
-import static com.concordium.sdk.Constants.UTC_ZONE;
 
 /**
  * A Unix like timestamp with 1/1-1970 as the offset with millisecond precision.
@@ -23,6 +21,11 @@ public class Timestamp {
     @JsonCreator
     Timestamp(long millis) {
         this.millis = millis;
+    }
+
+    @JsonCreator
+    public Timestamp(OffsetDateTime dateTime) {
+        this.millis = dateTime.toInstant().toEpochMilli();
     }
 
     /**
@@ -46,15 +49,28 @@ public class Timestamp {
     }
 
     /**
-     * Get the UTC timestamp
-     * @return the UTC timestamp
+     * Construct a timestamp from a {@link Instant}
+     * @param instant the time
+     * @return the corresponding timestamp.
      */
-    public ZonedDateTime getDate() {
-        return Instant.EPOCH.plusMillis(millis).atZone(UTC_ZONE);
+    public static Timestamp from(Instant instant) {
+        return Timestamp.newMillis(instant.toEpochMilli());
+    }
+
+    /**
+     * Get the UTC timestamp as a {@link ZonedDateTime}
+     * @return the time of the timestamp.
+     */
+    public ZonedDateTime getZonedDateTime() {
+        return ZonedDateTime.from(Instant.EPOCH.plusMillis(millis).atZone(Constants.UTC_ZONE));
+    }
+
+    public static Timestamp from(com.concordium.grpc.v2.Timestamp ts) {
+        return Timestamp.newMillis(ts.getValue());
     }
 
     @Override
     public String toString() {
-        return getDate().toString();
+        return getZonedDateTime().toString();
     }
 }

@@ -28,4 +28,16 @@ public enum ContractVersion {
         }
         return version;
     }
+
+    public static ContractVersion from(com.concordium.grpc.v2.ContractVersion contractVersion) {
+        switch (contractVersion) {
+            case V0:
+                return V0;
+            case V1:
+                return V1;
+            default:
+                throw new IllegalArgumentException("Unrecognized contract version.");
+        }
+
+    }
 }

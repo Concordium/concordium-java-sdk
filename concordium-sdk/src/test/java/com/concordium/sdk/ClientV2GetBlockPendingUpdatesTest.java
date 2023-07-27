@@ -46,8 +46,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetBlockPendingUpdatesTest {
 
-    private static final com.concordium.sdk.transactions.AccountAddress FOUNDATION_ACCNT
-            = com.concordium.sdk.transactions.AccountAddress.from(
+    private static final com.concordium.sdk.types.AccountAddress FOUNDATION_ACCNT
+            = com.concordium.sdk.types.AccountAddress.from(
             "37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
 
     private static final String AR_NAME = "ar_name";
@@ -492,7 +492,7 @@ public class ClientV2GetBlockPendingUpdatesTest {
                     .type(PendingUpdateType.MicroCcdPerEuro)
                     .update(new Fraction(MICRO_CCD_PER_EURO_NUME, MICRO_CCD_PER_EURO_DENO))
                     .build(),
-            PendingUpdateV2.<com.concordium.sdk.transactions.AccountAddress>builder()
+            PendingUpdateV2.<com.concordium.sdk.types.AccountAddress>builder()
                     .effectiveTime(EXPE_EFFECTIVE_TIME)
                     .type(PendingUpdateType.FoundationAccount)
                     .update(FOUNDATION_ACCNT)

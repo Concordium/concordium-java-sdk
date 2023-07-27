@@ -1,8 +1,7 @@
 package com.concordium.sdk.responses.chainparameters;
 
-import com.concordium.sdk.responses.Epoch;
 import com.concordium.sdk.responses.Fraction;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -36,7 +35,7 @@ public class ChainParametersV0 extends ChainParameters {
      * Extra number of epochs before stake is reduced, or
      * a baker is completely de-registered.
      */
-    private final Epoch bakerCooldownEpochs;
+    private final CooldownInEpochs bakerCooldownEpochs;
 
     /**
      * The maximum limit of credential deployments per block.

@@ -4,7 +4,7 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatus.TransactionType;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Hash;
 import io.grpc.ManagedChannel;

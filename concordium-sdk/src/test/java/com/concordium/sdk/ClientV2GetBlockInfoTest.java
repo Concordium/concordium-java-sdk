@@ -20,9 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.OffsetDateTime;
-
-import static com.concordium.sdk.Constants.UTC_ZONE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
@@ -114,9 +111,9 @@ public class ClientV2GetBlockInfoTest {
             .transactionEnergyCost(TRANSACTION_ENERGY_COST)
             .blockBaker(BLOCK_BAKER)
             .blockStateHash(Hash.from(BLOCK_STATE_HASH))
-            .blockTime(OffsetDateTime.ofInstant(BLOCK_SLOT_TIME.getDate().toInstant(), UTC_ZONE))
+            .blockTime(BLOCK_SLOT_TIME)
             .blockParent(Hash.from(PARENT_BLOCK_HASH))
-            .blockReceiveTime(OffsetDateTime.ofInstant(BLOCK_RECEIVE_TIME.getDate().toInstant(), UTC_ZONE))
+            .blockReceiveTime(BLOCK_RECEIVE_TIME)
             .genesisIndex(GENESIS_INDEX)
             .blockSlot(BLOCK_SLOT)
             .finalized(FINALIZED)
@@ -124,7 +121,7 @@ public class ClientV2GetBlockInfoTest {
             .blockLastFinalized(Hash.from(LAST_FINALIZED_BLOCK_HASH))
             .transactionsSize(TRANSACTION_SIZE)
             .transactionCount(TRANSACTION_COUNT)
-            .blockArriveTime(OffsetDateTime.ofInstant(BLOCK_ARRIVAL_TIME.getDate().toInstant(), UTC_ZONE))
+            .blockArriveTime(BLOCK_ARRIVAL_TIME)
             .protocolVersion(com.concordium.sdk.responses.ProtocolVersion.V6)
             .round(com.concordium.sdk.responses.Round.from(1))
             .epoch(com.concordium.sdk.responses.Epoch.from(0))

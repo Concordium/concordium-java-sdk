@@ -3,6 +3,7 @@ package com.concordium.sdk.responses.blockinfo;
 import com.concordium.sdk.responses.*;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @ToString
@@ -38,7 +38,7 @@ public class BlockInfo extends BlockIdentifier {
      * {@link BlockInfo#blockArriveTime} this is an objective value, all nodes
      * agree on it.
      */
-    private final OffsetDateTime blockTime;
+    private final Timestamp blockTime;
     /**
      * Parent block pointer.
      */
@@ -48,7 +48,7 @@ public class BlockInfo extends BlockIdentifier {
      * principle quite different from the arrive time if, e.g., block execution
      * takes a long time, or the block must wait for the arrival of its parent.
      */
-    private final OffsetDateTime blockReceiveTime;
+    private final Timestamp blockReceiveTime;
     /**
      * The genesis index for this block. This counts the number of protocol
      * updates that have preceded this block, and defines the era of the
@@ -86,7 +86,7 @@ public class BlockInfo extends BlockIdentifier {
      * Time when the block was added to the node's tree. This is a subjective
      * (i.e., node specific) value.
      */
-    private final OffsetDateTime blockArriveTime;
+    private final Timestamp blockArriveTime;
 
     /**
      * The protocol version that the block
@@ -161,9 +161,9 @@ public class BlockInfo extends BlockIdentifier {
             @JsonProperty("transactionEnergyCost") final Integer transactionEnergyCost,
             @JsonProperty("blockBaker") final long blockBaker,
             @JsonProperty("blockStateHash") final Hash blockStateHash,
-            @JsonProperty("blockSlotTime") final OffsetDateTime blockTime,
+            @JsonProperty("blockSlotTime") final Timestamp blockTime,
             @JsonProperty("blockParent") final Hash blockParent,
-            @JsonProperty("blockReceiveTime") final OffsetDateTime blockReceiveTime,
+            @JsonProperty("blockReceiveTime") final Timestamp blockReceiveTime,
             @JsonProperty("genesisIndex") final Integer genesisIndex,
             @JsonProperty("blockSlot") final Integer blockSlot,
             @JsonProperty("finalized") final Boolean finalized,
@@ -171,7 +171,7 @@ public class BlockInfo extends BlockIdentifier {
             @JsonProperty("blockLastFinalized") final Hash blockLastFinalized,
             @JsonProperty("transactionsSize") final Integer transactionsSize,
             @JsonProperty("transactionCount") final Integer transactionCount,
-            @JsonProperty("blockArriveTime") final OffsetDateTime blockArriveTime) {
+            @JsonProperty("blockArriveTime") final Timestamp blockArriveTime) {
         super(blockHash, blockHeight);
         this.transactionEnergyCost = transactionEnergyCost;
         this.blockBaker = BakerId.from(blockBaker);

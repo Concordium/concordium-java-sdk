@@ -2,7 +2,7 @@ package com.concordium.sdk.responses.poolstatus;
 
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import lombok.Builder;
 import lombok.Data;

@@ -44,6 +44,18 @@ public class DelegationTarget {
         return new DelegationTarget(DelegationType.BAKER, bakerId);
     }
 
+    public static DelegationTarget from(com.concordium.grpc.v2.DelegationTarget delegationTarget) {
+        switch (delegationTarget.getTargetCase()) {
+            case PASSIVE:
+                return DelegationTarget.newPassiveDelegationTarget();
+            case BAKER:
+                return DelegationTarget.newBakerDelegationTarget(BakerId.from(delegationTarget.getBaker()));
+            case TARGET_NOT_SET:
+                throw new IllegalArgumentException("Delegation target was not set.");
+        }
+        throw new IllegalArgumentException("Unrecognized delegation target type.");
+    }
+
     public byte[] getBytes() {
         ByteBuffer buffer = ByteBuffer.allocate(TransactionType.BYTES);
         if (this.type == DelegationType.PASSIVE) {

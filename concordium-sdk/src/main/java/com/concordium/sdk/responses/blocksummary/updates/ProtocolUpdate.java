@@ -59,6 +59,15 @@ public class ProtocolUpdate {
         this.specificationURL = specificationURL;
     }
 
+    public static ProtocolUpdate from(com.concordium.grpc.v2.ProtocolUpdate protocolUpdate) {
+        return ProtocolUpdate.builder()
+                .message(protocolUpdate.getMessage())
+                .specificationURL(protocolUpdate.getSpecificationUrl())
+                .message(protocolUpdate.getMessage())
+                .specificationAuxiliaryData(protocolUpdate.getSpecificationAuxiliaryData().toByteArray())
+                .build();
+    }
+
     public byte[] getSpecificationAuxiliaryData() {
         return Arrays.copyOf(specificationAuxiliaryData, specificationAuxiliaryData.length);
     }

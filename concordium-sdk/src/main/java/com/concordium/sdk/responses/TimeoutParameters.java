@@ -29,4 +29,13 @@ public class TimeoutParameters {
      * Factor for decreasing the timeout. Must be between 0 and 1.
      */
     private final Fraction timeoutDecrease;
+
+    public static TimeoutParameters from(com.concordium.grpc.v2.TimeoutParameters params) {
+        return TimeoutParameters
+                .builder()
+                .timeoutBase(Duration.ofMillis(params.getTimeoutBase().getValue()))
+                .timeoutIncrease(Fraction.from(params.getTimeoutIncrease()))
+                .timeoutDecrease(Fraction.from(params.getTimeoutDecrease()))
+                .build();
+    }
 }

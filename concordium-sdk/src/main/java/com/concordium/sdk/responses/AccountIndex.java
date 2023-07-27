@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses;
 
+import com.concordium.grpc.v2.DelegatorId;
 import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -36,6 +37,10 @@ public final class AccountIndex {
 
     public static AccountIndex from(long index) {
         return new AccountIndex(UInt64.from(index));
+    }
+
+    public static AccountIndex from(DelegatorId delegatorId) {
+        return AccountIndex.from(delegatorId.getId().getValue());
     }
 
     public byte[] getBytes() {
