@@ -277,7 +277,7 @@ public final class ClientV2 {
      * Retrieves the next {@link AccountNonce} for an account.
      * This is the {@link AccountNonce} to use for future transactions
      * E.g. when using {@link Client#sendTransaction(Transaction)}
-     * When this function is queried with a non existent account it will report the next available account nonce to be 1 and all transactions as finalized.
+     * When this function is queried with a non-existent account it will report the next available account nonce to be 1 and all transactions as finalized.
      *
      * @param address The {@link AccountAddress}
      * @return The next {@link AccountNonce}
