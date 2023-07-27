@@ -1,7 +1,8 @@
 # Changelog
 
 ## Unreleased changes
-- Added support for `InvokeInstance`.
+- Added support for `getBlockTransactionEvents` for retrieving events emitted by transactions.
+- Added support for `InvokeInstance` for executing a smart contract instance locally.
 - Removed `Account` instead one should simply use `AccountAddress`.
 - All timestamps are now exposed as `Timestamp`s with convenience methods for getting ZonedDateTime.
 - Renamed `AccountRequest` to `AccountQuery`.
