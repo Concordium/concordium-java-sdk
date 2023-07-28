@@ -53,7 +53,7 @@ public class CredentialDeploymentTransaction extends BlockItem {
     @Override
     @UnstableApi
     byte[] getBlockItemBytes() {
-        var buff = ByteBuffer.allocate(Expiry.BYTES + payloadBytes.length);
+        val buff = ByteBuffer.allocate(Expiry.BYTES + payloadBytes.length);
         buff.put(expiry.getValue().getBytes());
         buff.put(payloadBytes);
 

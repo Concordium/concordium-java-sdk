@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.transactionstatus;
+package com.concordium.sdk.responses.smartcontracts;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.ToString;
@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Smart contract versions that exist on the chain.
+ */
 @ToString
 public enum ContractVersion {
     V0, V1;
@@ -27,5 +30,17 @@ public enum ContractVersion {
             throw new IllegalArgumentException("Unrecognized contract version " + contractVersion);
         }
         return version;
+    }
+
+    public static ContractVersion from(com.concordium.grpc.v2.ContractVersion contractVersion) {
+        switch (contractVersion) {
+            case V0:
+                return V0;
+            case V1:
+                return V1;
+            default:
+                throw new IllegalArgumentException("Unrecognized contract version.");
+        }
+
     }
 }

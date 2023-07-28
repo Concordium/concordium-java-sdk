@@ -3,8 +3,8 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519ResultCode;
 import com.concordium.sdk.exceptions.ED25519Exception;
-
 import com.concordium.sdk.exceptions.TransactionCreationException;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.UInt16;
 import lombok.SneakyThrows;
 import lombok.val;

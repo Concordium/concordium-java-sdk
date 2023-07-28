@@ -7,6 +7,7 @@ import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class EncryptedTransferWithMemoTransactionTest {
+public class EncryptedTransferResultWithMemoTransactionTest {
 
     private static BulletproofGenerators BULLETPROOF_GENERATOR = BulletproofGenerators.from(
             "0000010098855a650637f2086157d32536f646b758a3c45a2f299a4dad7ea3dbd1c4cfb4ba42aca5461f8e45aab911" +
@@ -597,7 +598,7 @@ public class EncryptedTransferWithMemoTransactionTest {
                 transaction.getHeader().getMaxEnergyCost());
     }
 
-    @Test(expected= RuntimeException.class)
+    @Test(expected = RuntimeException.class)
     @SneakyThrows
     public void shouldThrowCreateExceptionWhenInvalidCryptographicParams() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");

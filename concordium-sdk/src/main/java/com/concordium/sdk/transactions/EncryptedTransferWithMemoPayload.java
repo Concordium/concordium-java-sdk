@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.AccountAddress;
 import lombok.Getter;
 import lombok.val;
 

@@ -1,12 +1,13 @@
 package com.concordium.sdk.crypto.bakertransactions;
 
-import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.ConfigureBakerKeysPayload;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class BakerKeysTest {
     @SneakyThrows

@@ -17,9 +17,6 @@ import lombok.val;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.time.Instant;
-
-import static com.concordium.sdk.Constants.UTC_ZONE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.ArgumentMatchers.any;
@@ -79,7 +76,7 @@ public class ClientV2GetNodeInfoTest {
     // Builder for clientside NodeInfo with "standard" fields set
     private static final com.concordium.sdk.responses.nodeinfov2.NodeInfo.NodeInfoBuilder CLIENT_BUILDER = com.concordium.sdk.responses.nodeinfov2.NodeInfo.builder()
             .peerVersion(PEER_VERSION)
-            .localTime(Instant.EPOCH.plusSeconds(LOCAL_TIME).atZone(UTC_ZONE))
+            .localTime(com.concordium.sdk.types.Timestamp.newMillis(LOCAL_TIME))
             .peerUptime(java.time.Duration.ofMillis(PEER_UPTIME))
             .networkInfo(CLIENT_NETWORK_INFO);
 
@@ -87,10 +84,10 @@ public class ClientV2GetNodeInfoTest {
     private static final NodeInfo.Node GRPC_FINALIZER_NODE = NodeInfo.Node.newBuilder()
             .setActive(
                     NodeInfo.BakerConsensusInfo.newBuilder()
-                        .setActiveBakerCommitteeInfo(NodeInfo.BakerConsensusInfo.ActiveBakerCommitteeInfo.newBuilder().build())
-                        .setActiveFinalizerCommitteeInfo(NodeInfo.BakerConsensusInfo.ActiveFinalizerCommitteeInfo.newBuilder().build())
-                        .setBakerId(BakerId.newBuilder().setValue(BAKER_ID))
-                        .build()
+                            .setActiveBakerCommitteeInfo(NodeInfo.BakerConsensusInfo.ActiveBakerCommitteeInfo.newBuilder().build())
+                            .setActiveFinalizerCommitteeInfo(NodeInfo.BakerConsensusInfo.ActiveFinalizerCommitteeInfo.newBuilder().build())
+                            .setBakerId(BakerId.newBuilder().setValue(BAKER_ID))
+                            .build()
             )
             .build();
 
@@ -210,7 +207,7 @@ public class ClientV2GetNodeInfoTest {
         QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
                 new QueriesGrpc.QueriesImplBase() {
                     @Override
-                    public void getNodeInfo (Empty request, StreamObserver<NodeInfo> responseObserver) {
+                    public void getNodeInfo(Empty request, StreamObserver<NodeInfo> responseObserver) {
                         responseObserver.onNext(response);
                         responseObserver.onCompleted();
                     }
@@ -230,7 +227,7 @@ public class ClientV2GetNodeInfoTest {
         val serviceImpl = configureResponseAndSetup(GRPC_FINALIZER_NODE_INFO);
         val res = client.getNodeInfo();
 
-        verify(serviceImpl).getNodeInfo(any(Empty.class),any(StreamObserver.class));
+        verify(serviceImpl).getNodeInfo(any(Empty.class), any(StreamObserver.class));
 
         assertEquals(CLIENT_FINALIZER_NODE_INFO, res);
     }
@@ -240,7 +237,7 @@ public class ClientV2GetNodeInfoTest {
         val serviceImpl = configureResponseAndSetup(GRPC_BOOTSTRAPPER_NODE_INFO);
         val res = client.getNodeInfo();
 
-        verify(serviceImpl).getNodeInfo(any(Empty.class),any(StreamObserver.class));
+        verify(serviceImpl).getNodeInfo(any(Empty.class), any(StreamObserver.class));
 
         assertEquals(CLIENT_BOOTSTRAPPER_NODE_INFO, res);
     }
@@ -250,7 +247,7 @@ public class ClientV2GetNodeInfoTest {
         val serviceImpl = configureResponseAndSetup(GRPC_BAKER_NODE_INFO);
         val res = client.getNodeInfo();
 
-        verify(serviceImpl).getNodeInfo(any(Empty.class),any(StreamObserver.class));
+        verify(serviceImpl).getNodeInfo(any(Empty.class), any(StreamObserver.class));
 
         assertEquals(CLIENT_BAKER_NODE_INFO, res);
     }
@@ -260,7 +257,7 @@ public class ClientV2GetNodeInfoTest {
         val serviceImpl = configureResponseAndSetup(GRPC_PASSIVE_COMMITTEE_NODE_INFO);
         val res = client.getNodeInfo();
 
-        verify(serviceImpl).getNodeInfo(any(Empty.class),any(StreamObserver.class));
+        verify(serviceImpl).getNodeInfo(any(Empty.class), any(StreamObserver.class));
 
         assertEquals(CLIENT_PASSIVE_COMMITTEE_NODE_INFO, res);
     }
@@ -270,7 +267,7 @@ public class ClientV2GetNodeInfoTest {
         val serviceImpl = configureResponseAndSetup(GRPC_PASSIVE_NODE_INFO);
         val res = client.getNodeInfo();
 
-        verify(serviceImpl).getNodeInfo(any(Empty.class),any(StreamObserver.class));
+        verify(serviceImpl).getNodeInfo(any(Empty.class), any(StreamObserver.class));
 
         assertEquals(CLIENT_PASSIVE_NODE_INFO, res);
     }

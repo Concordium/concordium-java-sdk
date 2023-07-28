@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @Getter
-public class AuthorizationsV1 extends AuthorizationsV0 {
+public class AuthorizationsV1 extends AuthorizationsV0 implements Authorizations {
 
     /**
      * Keys allowed to alter the cooldown parameters.
@@ -51,5 +51,10 @@ public class AuthorizationsV1 extends AuthorizationsV0 {
                 .timeParameters(AccessStructure.from(value.getParameterTime()))
                 .cooldownParameters(AccessStructure.from(value.getParameterCooldown()))
                 .build();
+    }
+
+    @Override
+    public AuthorizationsType getType() {
+        return AuthorizationsType.V2;
     }
 }

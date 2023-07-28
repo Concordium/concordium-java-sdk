@@ -1,7 +1,10 @@
-package com.concordium.sdk.responses.blocksummary.updates.queues;
+package com.concordium.sdk.responses.chainparameters;
 
+import com.concordium.grpc.v2.CommissionRanges;
+import com.concordium.grpc.v2.PoolParametersCpv1;
 import com.concordium.sdk.Range;
 import com.concordium.sdk.responses.Fraction;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -75,4 +78,20 @@ public final class PoolParameters {
      */
     @JsonProperty("leverageBound")
     private final Fraction leverageBound;
+
+    public static PoolParameters from(PoolParametersCpv1 update) {
+        CommissionRanges commissionBounds = update.getCommissionBounds();
+        return PoolParameters
+                .builder()
+                .passiveBakingCommission(PartsPerHundredThousand.from(update.getPassiveBakingCommission().getPartsPerHundredThousand()).asDouble())
+                .passiveTransactionCommission(PartsPerHundredThousand.from(update.getPassiveTransactionCommission().getPartsPerHundredThousand()).asDouble())
+                .passiveFinalizationCommission(PartsPerHundredThousand.from(update.getPassiveFinalizationCommission().getPartsPerHundredThousand()).asDouble())
+                .finalizationCommissionRange(Range.from(commissionBounds.getFinalization()))
+                .bakingCommissionRange(Range.from(commissionBounds.getBaking()))
+                .transactionCommissionRange(Range.from(commissionBounds.getTransaction()))
+                .minimumEquityCapital(CCDAmount.fromMicro(update.getMinimumEquityCapital().getValue()))
+                .capitalBound(PartsPerHundredThousand.from(update.getCapitalBound().getValue().getPartsPerHundredThousand()).asDouble())
+                .leverageBound(Fraction.from(update.getLeverageBound().getValue()))
+                .build();
+    }
 }

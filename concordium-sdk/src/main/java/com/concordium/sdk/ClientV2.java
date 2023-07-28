@@ -1,18 +1,20 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.BakerId;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.dumpstart.DumpRequest;
+import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.DelegatorInfo;
-import com.concordium.sdk.responses.KeyValurPair;
 import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
 import com.concordium.sdk.responses.*;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
+import com.concordium.sdk.responses.blockitemstatus.BlockItemStatus;
+import com.concordium.sdk.responses.blockitemsummary.Summary;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
@@ -21,21 +23,20 @@ import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.chainparameters.ChainParameters;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
-import com.concordium.sdk.responses.modulelist.ModuleRef;
-import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.election.ElectionInfo;
+import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
+import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
-import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.responses.smartcontracts.InvokeInstanceResult;
 import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.transactions.*;
-import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
+import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.ContractAddress;
 import com.google.common.collect.ImmutableList;
-import com.concordium.sdk.transactions.Hash;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import lombok.val;
@@ -161,6 +162,17 @@ public final class ClientV2 {
     }
 
     /**
+     * Retrieve a stream of transaction events in the specified block.
+     *
+     * @param input the block to query.
+     * @return the stream of transaction events
+     */
+    public Iterator<Summary> getBlockTransactionEvents(final BlockQuery input) {
+        val output = this.server().getBlockTransactionEvents(to(input));
+        return to(output, ClientV2MapperExtensions::to);
+    }
+
+    /**
      * Gets the transactions of a Block.
      * Type of Block Items currently supported are
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#ACCOUNT_TRANSACTION}
@@ -172,7 +184,6 @@ public final class ClientV2 {
      */
     public Iterator<BlockItem> getBlockItems(final BlockQuery input) {
         val grpcOutput = this.server().getBlockItems(to(input));
-
         return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
@@ -263,7 +274,7 @@ public final class ClientV2 {
      * Retrieves the next {@link AccountNonce} for an account.
      * This is the {@link AccountNonce} to use for future transactions
      * E.g. when using {@link Client#sendTransaction(Transaction)}
-     * When this function is queried with a non existent account it will report the next available account nonce to be 1 and all transactions as finalized.
+     * When this function is queried with a non-existent account it will report the next available account nonce to be 1 and all transactions as finalized.
      *
      * @param address The {@link AccountAddress}
      * @return The next {@link AccountNonce}
@@ -275,15 +286,15 @@ public final class ClientV2 {
     }
 
     /**
-     * Retrieves the {@link TransactionStatus} for a given transaction {@link Hash}
+     * Retrieves the {@link BlockItemStatus} for a given transaction {@link Hash}
      *
      * @param transactionHash The transaction {@link Hash}
-     * @return The {@link TransactionStatus}
+     * @return The {@link BlockItemStatus}
      */
-    public TransactionStatus getBlockItemStatus(Hash transactionHash) {
+    public BlockItemStatus getBlockItemStatus(Hash transactionHash) {
         val grpcOutput = this.server()
                 .getBlockItemStatus(toTransactionHash(transactionHash));
-        return to(grpcOutput);
+        return BlockItemStatus.from(grpcOutput);
     }
 
 
@@ -526,7 +537,7 @@ public final class ClientV2 {
      * Get the exact state of a specific contract instance, streamed as a list of key-value pairs.
      * The list is streamed in lexicographic order of keys.
      *
-     * @param input {@link BlockQuery}.
+     * @param input           {@link BlockQuery}.
      * @param contractAddress {@link ContractAddress}.
      * @return {@link Iterator} of {@link KeyValurPair}.
      */
@@ -534,8 +545,8 @@ public final class ClientV2 {
             BlockQuery input,
             ContractAddress contractAddress) {
         val grpcOutput = this.server().getInstanceState(InstanceInfoRequest.newBuilder()
-                        .setBlockHash(to(input))
-                        .setAddress(to(contractAddress))
+                .setBlockHash(to(input))
+                .setAddress(to(contractAddress))
                 .build());
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
@@ -546,9 +557,9 @@ public final class ClientV2 {
      * In contrast to {@link ClientV2#getInstanceState(BlockQuery, ContractAddress)} this is more efficient,
      * but requires the user to know the specific key to look for.
      *
-     * @param input {@link BlockHashInput}.
+     * @param input           {@link BlockHashInput}.
      * @param contractAddress {@link ContractAddress}.
-     * @param key Instance State Key to Lookup.
+     * @param key             Instance State Key to Lookup.
      * @return Instance State Value for the input `key`
      */
     public byte[] instanceStateLookup(
@@ -709,7 +720,7 @@ public final class ClientV2 {
      * Get the source of a smart contract module from
      * the perspective of the last finalized block.
      *
-     * @param query The query is at the end of the block specified.
+     * @param query     The query is at the end of the block specified.
      * @param moduleRef the reference of the module.
      * @return the parsed {@link WasmModule}.
      * @throws io.grpc.StatusRuntimeException if the module could not be looked up on the chain.
@@ -721,6 +732,37 @@ public final class ClientV2 {
                 .build());
 
         return to(response);
+    }
+
+    /**
+     * This function can be used to either
+     * 1. Dry-run the smart contract entrypoint with the
+     * provided context and in the state at the end of the given block.
+     * 2. Call a view function on a smart contract.
+     * View functions are a special kind of functions that smart contract writers
+     * write in order to be able to read the state of a smart contract instance.
+     * <br>
+     * Note that calling a smart contract instance with this function does not
+     * have any effect on the actual chain, it's solely a local operation on the node,
+     * hence it's "free" to call a smart contract instance with this function.
+     *
+     * @param request {@link InvokeInstanceRequest}
+     * @return {@link InvokeInstanceResult}
+     */
+    public InvokeInstanceResult invokeInstance(InvokeInstanceRequest request) {
+        val grpcRequest = com.concordium.grpc.v2.InvokeInstanceRequest.newBuilder()
+                .setBlockHash(to(request.getBlockHash()));
+        if (request.hasInvoker()) {
+            grpcRequest.setInvoker(to(request.getInvoker()));
+        }
+        grpcRequest.setInstance(to(request.getInstance()))
+                .setAmount(to(request.getAmount()))
+                .setEntrypoint(to(request.getEntrypoint()))
+                .setParameter(to(request.getParameter()))
+                .setEnergy(com.concordium.grpc.v2.Energy.newBuilder().setValue(request.getEnergy().getValue().getValue()));
+
+        val grpcResponse = this.server().invokeInstance(grpcRequest.build());
+        return InvokeInstanceResult.parse(grpcResponse);
     }
 
     /**

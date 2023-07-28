@@ -1,5 +1,6 @@
-package com.concordium.sdk.responses.blocksummary.updates.queues;
+package com.concordium.sdk.responses.chainparameters;
 
+import com.concordium.grpc.v2.TimeParametersCpv1;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -7,6 +8,9 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Time parameters exists from protocol version 4 and onwards.
+ */
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -27,4 +31,13 @@ public final class TimeParameters {
      */
     @JsonProperty("mintPerDay")
     private final double mintPerPayday;
+
+    public static TimeParameters from(TimeParametersCpv1 update) {
+        return TimeParameters
+                .builder()
+                .rewardPeriodLength(update.getRewardPeriodLength().getValue().getValue())
+                //mantissa * 10^(-exponent)
+                .mintPerPayday(update.getMintPerPayday().getMantissa() * Math.pow(10, -1 * update.getMintPerPayday().getExponent()))
+                .build();
+    }
 }

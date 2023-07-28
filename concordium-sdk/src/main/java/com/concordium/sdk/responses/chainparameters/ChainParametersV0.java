@@ -1,13 +1,12 @@
 package com.concordium.sdk.responses.chainparameters;
 
-import com.concordium.sdk.responses.Epoch;
 import com.concordium.sdk.responses.Fraction;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import com.concordium.sdk.types.AccountAddress;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 /**
  * Chain parameters for protocol versions 1 to 3.
@@ -16,6 +15,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @Builder
+@AllArgsConstructor
 public class ChainParametersV0 extends ChainParameters {
     /**
      * The election difficulty parameter for the consensus lottery.
@@ -36,7 +36,7 @@ public class ChainParametersV0 extends ChainParameters {
      * Extra number of epochs before stake is reduced, or
      * a baker is completely de-registered.
      */
-    private final Epoch bakerCooldownEpochs;
+    private final CooldownInEpochs bakerCooldownEpochs;
 
     /**
      * The maximum limit of credential deployments per block.
@@ -87,6 +87,60 @@ public class ChainParametersV0 extends ChainParameters {
      * Level 2 are allowed to do chain parameter updates.
      */
     private final AuthorizationsV0 level2Keys;
+
+    @JsonCreator
+    ChainParametersV0(
+            @JsonProperty("rewardParameters") RewardParameters rewardParameters,
+            @JsonProperty("microGTUPerEuro") Fraction microCCDPerEuro,
+            @JsonProperty("accountCreationLimit") int accountCreationLimit,
+            @JsonProperty("electionDifficulty") double electionDifficulty,
+            @JsonProperty("euroPerEnergy") Fraction euroPerEnergy,
+            @JsonProperty("minimumThresholdForBaking") CCDAmount bakerStakeThreshold,
+            @JsonProperty("bakerCooldownEpochs") long bakerCooldownEpochs) {
+        this.euroPerEnergy = euroPerEnergy;
+        this.microCCDPerEuro = microCCDPerEuro;
+        this.credentialsPerBlockLimit = accountCreationLimit;
+        this.electionDifficulty = electionDifficulty;
+        this.minimumThresholdForBaking = bakerStakeThreshold;
+        this.bakerCooldownEpochs = CooldownInEpochs.from(bakerCooldownEpochs);
+        this.gasRewards = rewardParameters.getGasRewards();
+        this.mintDistribution = (MintDistributionCpV0) rewardParameters.getMintDistribution();
+        this.transactionFeeDistribution = rewardParameters.getTransactionFeeDistribution();
+        // these are not returned in the grpcv1 api.
+        this.foundationAccount = null;
+        this.rootKeys = null;
+        this.level1Keys = null;
+        this.level2Keys = null;
+    }
+
+    public static ChainParametersV0 from(com.concordium.grpc.v2.ChainParametersV0 v0Params) {
+        return com.concordium.sdk.responses.chainparameters.ChainParametersV0
+                .builder()
+                .electionDifficulty(PartsPerHundredThousand.from(v0Params.getElectionDifficulty().getValue().getPartsPerHundredThousand()).asDouble())
+                .microCCDPerEuro(Fraction.from(v0Params.getMicroCcdPerEuro().getValue()))
+                .euroPerEnergy(Fraction.from(v0Params.getEuroPerEnergy().getValue()))
+                .transactionFeeDistribution(com.concordium.sdk.responses.chainparameters.TransactionFeeDistribution
+                        .builder()
+                        .allocatedForBaker(PartsPerHundredThousand.from(v0Params.getTransactionFeeDistribution().getBaker().getPartsPerHundredThousand()).asDouble())
+                        .allocatedForGASAccount(PartsPerHundredThousand.from(v0Params.getTransactionFeeDistribution().getGasAccount().getPartsPerHundredThousand()).asDouble())
+                        .build())
+                .bakerCooldownEpochs(CooldownInEpochs.from(v0Params.getBakerCooldownEpochs().getValue()))
+                .credentialsPerBlockLimit(v0Params.getAccountCreationLimit().getValue())
+                .foundationAccount(com.concordium.sdk.types.AccountAddress.from(v0Params.getFoundationAccount().getValue().toByteArray()))
+                .minimumThresholdForBaking(CCDAmount.from(v0Params.getMinimumThresholdForBaking()))
+                .mintDistribution(MintDistributionCpV0.from(v0Params.getMintDistribution()))
+                .gasRewards(com.concordium.sdk.responses.chainparameters.GasRewards
+                        .builder()
+                        .accountCreation(PartsPerHundredThousand.from(v0Params.getGasRewards().getAccountCreation().getPartsPerHundredThousand()).asDouble())
+                        .chainUpdate(PartsPerHundredThousand.from(v0Params.getGasRewards().getChainUpdate().getPartsPerHundredThousand()).asDouble())
+                        .finalizationProof(PartsPerHundredThousand.from(v0Params.getGasRewards().getFinalizationProof().getPartsPerHundredThousand()).asDouble())
+                        .baker(PartsPerHundredThousand.from(v0Params.getGasRewards().getBaker().getPartsPerHundredThousand()).asDouble())
+                        .build())
+                .rootKeys(com.concordium.sdk.responses.chainparameters.HigherLevelKeys.from(v0Params.getRootKeys()))
+                .level1Keys(com.concordium.sdk.responses.chainparameters.HigherLevelKeys.from(v0Params.getLevel1Keys()))
+                .level2Keys(com.concordium.sdk.responses.chainparameters.AuthorizationsV0.from(v0Params.getLevel2Keys()))
+                .build();
+    }
 
     @Override
     public Version getVersion() {

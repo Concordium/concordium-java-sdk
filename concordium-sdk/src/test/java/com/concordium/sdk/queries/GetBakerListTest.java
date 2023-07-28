@@ -1,4 +1,5 @@
 package com.concordium.sdk.queries;
+
 import com.concordium.sdk.responses.BakerId;
 import com.google.common.collect.ImmutableList;
 import lombok.SneakyThrows;

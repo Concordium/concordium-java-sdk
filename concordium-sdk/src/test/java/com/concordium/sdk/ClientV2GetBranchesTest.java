@@ -1,9 +1,10 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.*;
-import com.concordium.sdk.responses.BlockIdentifier;
+import com.concordium.grpc.v2.BlockHash;
+import com.concordium.grpc.v2.Branch;
+import com.concordium.grpc.v2.Empty;
+import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.transactions.Hash;
-import com.concordium.sdk.types.UInt64;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;

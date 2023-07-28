@@ -81,12 +81,6 @@ public enum TransactionResultEventType {
     UPGRADED,
     @JsonProperty("BakerStakeUpdated")
     BAKER_STAKE_UPDATED,
-    @JsonProperty("EncryptedAmountTransferred")
-    ENCRYPTED_AMOUNT_TRANSFERRED,
-    @JsonProperty("TransfererredToEncrypted")
-    TRANSFERRED_TO_ENCRYPTED,
-    @JsonProperty("TransfererredPublic")
-    TRANSFERRED_TO_PUBLIC,
     @JsonProperty("BakerConfigured")
     BAKER_CONFIGURED,
     @JsonProperty("DelegationConfigured")

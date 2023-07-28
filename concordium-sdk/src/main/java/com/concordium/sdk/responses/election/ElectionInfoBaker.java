@@ -1,7 +1,7 @@
 package com.concordium.sdk.responses.election;
 
 import com.concordium.sdk.responses.BakerId;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

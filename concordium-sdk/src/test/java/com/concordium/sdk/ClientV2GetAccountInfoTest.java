@@ -11,8 +11,8 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
-import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.AccountQuery;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.accountinfo.*;
 import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
@@ -37,10 +37,8 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.OffsetDateTime;
+import java.util.Optional;
 
-import static com.concordium.sdk.Constants.UTC_ZONE;
 import static com.concordium.sdk.responses.accountinfo.credential.AttributeType.FIRST_NAME;
 import static com.concordium.sdk.transactions.CredentialRegistrationId.fromBytes;
 import static java.time.YearMonth.of;
@@ -51,8 +49,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetAccountInfoTest {
 
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
-            = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
+            = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final byte[] ENCRYPTED_AMOUNT = new byte[]{0, 0, 1};
     private static final long ACCOUNT_AMOUNT = 10000;
     private static final long ACCOUNT_INDEX = 1;
@@ -209,7 +207,7 @@ public class ClientV2GetAccountInfoTest {
 
     private static final PendingChange PENDING_CHANGE = ReduceStakeChange.builder()
             .newStake(CCDAmount.fromMicro(BAKER_REDUCE_STAKE_AMOUNT))
-            .effectiveTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(BAKER_REDUCE_STAKE_TIME), UTC_ZONE))
+            .effectiveTime(com.concordium.sdk.types.Timestamp.newMillis(BAKER_REDUCE_STAKE_TIME))
             .build();
     private static final com.concordium.sdk.responses.accountinfo.AccountInfo ACCOUNT_INFO_RES_EXPECTED_1
             = com.concordium.sdk.responses.accountinfo.AccountInfo.builder()
@@ -219,6 +217,8 @@ public class ClientV2GetAccountInfoTest {
                     .startIndex(EncryptedAmountIndex.from(ENCRYPTED_AMOUNT_START_INDEX))
                     .selfAmount(com.concordium.sdk.transactions.EncryptedAmount.from(ENCRYPTED_AMOUNT_SELF_AMOUNT_1))
                     .incomingAmounts(ImmutableList.of(com.concordium.sdk.transactions.EncryptedAmount.from(ENCRYPTED_AMOUNT_INCOMING_AMOUNT_1)))
+                    .numAggregated(Optional.of(1))
+                    .aggregatedAmount(Optional.of(com.concordium.sdk.transactions.EncryptedAmount.from(ENCRYPTED_AMOUNT)))
                     .build())
             .accountIndex(com.concordium.sdk.responses.AccountIndex.from(ACCOUNT_INDEX))
             .accountThreshold(ACCOUNT_THRESHOLD)
@@ -355,7 +355,7 @@ public class ClientV2GetAccountInfoTest {
     @Test
     public void mapPendingRemoveStakeChangeTest() {
         var expected = RemoveStakeChange.builder()
-                .effectiveTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(BAKER_REDUCE_STAKE_TIME), UTC_ZONE))
+                .effectiveTime(com.concordium.sdk.types.Timestamp.newMillis(BAKER_REDUCE_STAKE_TIME))
                 .build();
 
         var res = ClientV2MapperExtensions.to(StakePendingChange.newBuilder()

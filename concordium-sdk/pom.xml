@@ -53,8 +53,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
-            <scope>provided</scope>
+            <version>1.18.26</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -113,7 +112,8 @@
                             <pluginId>grpc-java</pluginId>
                             <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.40.1:exe:osx-x86_64</pluginArtifact>
                             <includeDependenciesInDescriptorSet>true</includeDependenciesInDescriptorSet>
-                            <protoSourceRoot>${project.basedir}/../concordium-base/concordium-grpc-api/</protoSourceRoot>
+                            <protoSourceRoot>${project.basedir}/../concordium-base/concordium-grpc-api/
+                            </protoSourceRoot>
                             <checkStaleness>true</checkStaleness>
                         </configuration>
                         <executions>
@@ -153,11 +153,14 @@
                         <artifactId>protobuf-maven-plugin</artifactId>
                         <version>0.6.1</version>
                         <configuration>
-                            <protocArtifact>com.google.protobuf:protoc:3.17.3:exe:${os.detected.classifier}</protocArtifact>
+                            <protocArtifact>com.google.protobuf:protoc:3.17.3:exe:${os.detected.classifier}
+                            </protocArtifact>
                             <pluginId>grpc-java</pluginId>
-                            <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.40.1:exe:${os.detected.classifier}</pluginArtifact>
+                            <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.40.1:exe:${os.detected.classifier}
+                            </pluginArtifact>
                             <includeDependenciesInDescriptorSet>true</includeDependenciesInDescriptorSet>
-                            <protoSourceRoot>${project.basedir}/../concordium-base/concordium-grpc-api/</protoSourceRoot>
+                            <protoSourceRoot>${project.basedir}/../concordium-base/concordium-grpc-api/
+                            </protoSourceRoot>
                         </configuration>
                         <executions>
                             <execution>

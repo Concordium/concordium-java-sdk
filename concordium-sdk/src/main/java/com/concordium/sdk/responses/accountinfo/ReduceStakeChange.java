@@ -1,15 +1,14 @@
 package com.concordium.sdk.responses.accountinfo;
 
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.Timestamp;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-
-import java.time.OffsetDateTime;
 
 /**
  * The baker has reduced its stake.
@@ -18,6 +17,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Jacksonized
 @EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 public class ReduceStakeChange extends PendingChange {
 
     /**
@@ -26,8 +26,7 @@ public class ReduceStakeChange extends PendingChange {
     private final CCDAmount newStake;
 
     @JsonCreator
-    @Builder
-    public ReduceStakeChange(@JsonProperty("effectiveTime") OffsetDateTime effectiveTime,
+    public ReduceStakeChange(@JsonProperty("effectiveTime") Timestamp effectiveTime,
                              @JsonProperty("newStake") CCDAmount newStake) {
         super(effectiveTime);
         this.newStake = newStake;

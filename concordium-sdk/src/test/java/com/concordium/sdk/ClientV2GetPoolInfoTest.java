@@ -6,6 +6,7 @@ import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.poolstatus.CurrentPaydayStatus;
 import com.concordium.sdk.responses.poolstatus.PendingChangeReduceBakerCapital;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.UInt64;
 import com.google.protobuf.ByteString;
@@ -22,9 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.Instant;
-import java.time.ZoneOffset;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
@@ -35,8 +33,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetPoolInfoTest {
 
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
-            = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
+            = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final long BAKER_ID = 1;
     private static final String BAKER_POOL_URL = "www.example-baker-pool.com";
     private static final int COMMISSION_BAKING_PPHT = 10;
@@ -105,7 +103,7 @@ public class ClientV2GetPoolInfoTest {
             .bakerId(BakerId.from(BAKER_ID))
             .bakerAddress(ACCOUNT_ADDRESS_1)
             .bakerStakePendingChange(PendingChangeReduceBakerCapital.builder()
-                    .effectiveTime(Instant.ofEpochMilli(BAKER_REDUCE_STAKE_TIME).atOffset(ZoneOffset.UTC))
+                    .effectiveTime(com.concordium.sdk.types.Timestamp.newMillis(BAKER_REDUCE_STAKE_TIME))
                     .bakerEquityCapital(CCDAmount.fromMicro(BAKER_REDUCE_STAKE_AMOUNT))
                     .build())
             .delegatedCapitalCap(CCDAmount.fromMicro(DELEGATED_CAPITAL))
@@ -125,9 +123,9 @@ public class ClientV2GetPoolInfoTest {
             .poolInfo(com.concordium.sdk.responses.accountinfo.BakerPoolInfo.builder()
                     .openStatus(com.concordium.sdk.responses.transactionstatus.OpenStatus.OPEN_FOR_ALL)
                     .commissionRates(com.concordium.sdk.responses.accountinfo.CommissionRates.builder()
-                            .bakingCommission((double) COMMISSION_BAKING_PPHT / 100_000D)
-                            .finalizationCommission((double) COMMISSION_FINALIZATION_PPHT / 100_000D)
-                            .transactionCommission((double) COMMISSION_TRANSACTION_PPHT / 100_000D)
+                            .bakingCommission(PartsPerHundredThousand.from(COMMISSION_BAKING_PPHT).asDouble())
+                            .finalizationCommission(PartsPerHundredThousand.from(COMMISSION_FINALIZATION_PPHT).asDouble())
+                            .transactionCommission(PartsPerHundredThousand.from(COMMISSION_TRANSACTION_PPHT).asDouble())
                             .build())
                     .metadataUrl(BAKER_POOL_URL)
                     .build())

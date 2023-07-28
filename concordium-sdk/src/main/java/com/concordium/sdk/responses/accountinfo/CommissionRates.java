@@ -1,8 +1,8 @@
 package com.concordium.sdk.responses.accountinfo;
 
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
@@ -12,7 +12,6 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 @Jacksonized
 @Builder
-@EqualsAndHashCode
 @ToString
 public class CommissionRates {
     /**
@@ -27,4 +26,12 @@ public class CommissionRates {
      * Fraction of baking rewards charged by the pool owner.
      */
     private final double bakingCommission;
+
+    public static CommissionRates from(com.concordium.grpc.v2.CommissionRates commissionRates) {
+        return CommissionRates.builder()
+                .transactionCommission(PartsPerHundredThousand.from(commissionRates.getTransaction().getPartsPerHundredThousand()).asDouble())
+                .finalizationCommission(PartsPerHundredThousand.from(commissionRates.getFinalization().getPartsPerHundredThousand()).asDouble())
+                .bakingCommission(PartsPerHundredThousand.from(commissionRates.getBaking().getPartsPerHundredThousand()).asDouble())
+                .build();
+    }
 }

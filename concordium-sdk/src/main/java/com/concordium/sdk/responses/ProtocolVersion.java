@@ -50,6 +50,7 @@ public enum ProtocolVersion {
 
     /**
      * Parses {@link com.concordium.grpc.v2.ProtocolVersion} to {@link ProtocolVersion}.
+     *
      * @param protocolVersion {@link com.concordium.grpc.v2.ProtocolVersion} returned by the GRPC V2 API.
      * @return parsed {@link ProtocolVersion}.
      */
@@ -74,6 +75,7 @@ public enum ProtocolVersion {
 
     /**
      * Get the consensus version by the protocol version
+     *
      * @param protocolVersion the protocol version
      * @return the consensus version
      */

@@ -1,24 +1,28 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The credentials have been updated.
  */
 @Getter
 @ToString
-public final class CredentialsUpdatedResult extends TransactionResultEvent {
+@Builder
+@EqualsAndHashCode
+@AllArgsConstructor
+public final class CredentialsUpdatedResult implements TransactionResultEvent {
 
     /**
-     * The account which credentials has been updated.
+     * The account which credentials have been updated.
      */
     private final AccountAddress account;
 
@@ -52,6 +56,16 @@ public final class CredentialsUpdatedResult extends TransactionResultEvent {
             this.removedCredIds.add(CredentialRegistrationId.from(removedCredId));
         }
         this.newThreshold = Integer.parseInt(newThreshold);
+    }
+
+    public static CredentialsUpdatedResult from(AccountTransactionEffects.CredentialsUpdated credentialsUpdated, AccountAddress account) {
+        return CredentialsUpdatedResult
+                .builder()
+                .account(account)
+                .newCredIds(credentialsUpdated.getNewCredIdsList().stream().map(CredentialRegistrationId::from).collect(Collectors.toList()))
+                .removedCredIds(credentialsUpdated.getRemovedCredIdsList().stream().map(CredentialRegistrationId::from).collect(Collectors.toList()))
+                .newThreshold(credentialsUpdated.getNewThreshold().getValue())
+                .build();
     }
 
     @Override

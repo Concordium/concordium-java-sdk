@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Getter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public final class ContractAddress extends AbstractAddress {
 
     @JsonProperty("subindex")
@@ -31,6 +31,10 @@ public final class ContractAddress extends AbstractAddress {
         super(AccountType.ADDRESS_CONTRACT);
         this.subIndex = subIndex;
         this.index = index;
+    }
+
+    public static ContractAddress from(com.concordium.grpc.v2.ContractAddress address) {
+        return ContractAddress.from(address.getIndex(), address.getSubindex());
     }
 
     public String toJson() {

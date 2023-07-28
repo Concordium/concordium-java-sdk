@@ -1,8 +1,8 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.ProtocolVersion;
+import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.transactions.Hash;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
@@ -14,10 +14,6 @@ import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
@@ -35,7 +31,7 @@ public class ClientV2GetConsensusStatusTest {
     private static final int BLOCK_HEIGHT_2 = 2;
     private static final long GENESIS_TIME = 1655114400000L;
     private static final long SLOT_DURATION = 250;
-    private static final long EPOCH_DURATION =  3600000;
+    private static final long EPOCH_DURATION = 3600000;
     private static final int BLOCKS_RECEIVED_COUNT = 760779;
     private static final long BLOCK_LAST_RECEIVED_TIME = 1678610173039L;
     private static final double BLOCK_RECEIVE_LATENCY_EMA = 0.16338705415134258;
@@ -138,20 +134,20 @@ public class ClientV2GetConsensusStatusTest {
     private static final ConsensusStatus CONSENSUS_INFO_RES_EXPECTED = ConsensusStatus.builder()
             .bestBlock(Hash.from(BLOCK_HASH_1))
             .genesisBlock(Hash.from(BLOCK_HASH_4))
-            .genesisTime(com.concordium.sdk.types.Timestamp.newMillis(GENESIS_TIME).getDate())
+            .genesisTime(com.concordium.sdk.types.Timestamp.newMillis(GENESIS_TIME))
             .slotDuration(java.time.Duration.ofMillis(SLOT_DURATION))
             .epochDuration(java.time.Duration.ofMillis(EPOCH_DURATION))
             .lastFinalizedBlock(Hash.from(BLOCK_HASH_2))
             .bestBlockHeight(BLOCK_HEIGHT_1)
             .lastFinalizedBlockHeight(BLOCK_HEIGHT_2)
             .blocksReceivedCount(BLOCKS_RECEIVED_COUNT)
-            .blockLastReceivedTime(com.concordium.sdk.types.Timestamp.newMillis(BLOCK_LAST_RECEIVED_TIME).getDate())
+            .blockLastReceivedTime(com.concordium.sdk.types.Timestamp.newMillis(BLOCK_LAST_RECEIVED_TIME))
             .blockReceiveLatencyEMA(BLOCK_RECEIVE_LATENCY_EMA)
             .blockReceiveLatencyEMSD(BLOCK_RECEIVE_LATENCY_EMSD)
             .blockReceivePeriodEMA(BLOCK_RECEIVE_PERIOD_EMA)
             .blockReceivePeriodEMSD(BLOCK_RECEIVE_PERIOD_EMSD)
             .blocksVerifiedCount(BLOCKS_VERIFIED_COUNT)
-            .blockLastArrivedTime(com.concordium.sdk.types.Timestamp.newMillis(BLOCK_LAST_ARRIVED_TIME).getDate())
+            .blockLastArrivedTime(com.concordium.sdk.types.Timestamp.newMillis(BLOCK_LAST_ARRIVED_TIME))
             .blockArriveLatencyEMA(BLOCK_ARRIVE_LATENCY_EMA)
             .blockArriveLatencyEMSD(BLOCK_ARRIVE_LATENCY_EMSD)
             .blockArrivePeriodEMA(BLOCK_ARRIVE_PERIOD_EMA)
@@ -159,13 +155,13 @@ public class ClientV2GetConsensusStatusTest {
             .transactionsPerBlockEMA(TRANSACTIONS_PER_BLOCK_EMA)
             .transactionsPerBlockEMSD(TRANSACTIONS_PER_BLOCK_EMSD)
             .finalizationCount(FINALIZATION_COUNT)
-            .lastFinalizedTime(com.concordium.sdk.types.Timestamp.newMillis(LAST_FINALIZED_TIME).getDate())
+            .lastFinalizedTime(com.concordium.sdk.types.Timestamp.newMillis(LAST_FINALIZED_TIME))
             .finalizationPeriodEMA(FINALIZATION_PERIOD_EMA)
             .finalizationPeriodEMSD(FINALIZATION_PERIOD_EMSD)
             .protocolVersion(PROTOCOL_VERSION)
             .genesisIndex(GENESIS_INDEX)
             .currentEraGenesisBlock(Hash.from(BLOCK_HASH_3))
-            .currentEraGenesisTime(com.concordium.sdk.types.Timestamp.newMillis(CURRENT_ERA_GENESIS_TIME).getDate())
+            .currentEraGenesisTime(com.concordium.sdk.types.Timestamp.newMillis(CURRENT_ERA_GENESIS_TIME))
             .build();
 
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(

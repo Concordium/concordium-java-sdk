@@ -1,16 +1,10 @@
 package com.concordium.sdk.responses.blocksatheight;
 
-import com.concordium.sdk.Client;
 import lombok.Getter;
 import lombok.ToString;
 
 /**
- * Request type for {@link Client#getBlocksAtHeight(BlocksAtHeightRequest)}
- * This type allows for requesting blocks at a specified height either by an absolute
- * value or by a relative one.
- * <p>
- * Refer to {@link BlocksAtHeightRequest#newAbsolute(long)} and {@link BlocksAtHeightRequest#newRelative(long, int, boolean)}
- * for creating the request.
+ * Request blocks at a particular height.
  */
 @Getter
 @ToString

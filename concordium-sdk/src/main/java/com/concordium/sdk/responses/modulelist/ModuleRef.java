@@ -43,4 +43,8 @@ public class ModuleRef extends Hash {
             throw new IllegalArgumentException("Cannot parse Module Ref Array JSON", e);
         }
     }
+
+    public static ModuleRef from(com.concordium.grpc.v2.ModuleRef originRef) {
+        return ModuleRef.from(originRef.getValue().toByteArray());
+    }
 }

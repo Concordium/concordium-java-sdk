@@ -20,6 +20,7 @@ import java.nio.ByteBuffer;
 public class ConfigureBakerPayload {
     /**
      * The equity capital of the baker.
+     * I.e. the effective stake of the baker.
      */
     private final CCDAmount capital;
     /**

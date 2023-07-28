@@ -5,6 +5,7 @@ import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.val;
 
 /**

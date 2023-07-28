@@ -5,6 +5,7 @@ import com.concordium.sdk.responses.ProtocolVersion;
 import com.concordium.sdk.responses.Round;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.types.Timestamp;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Builder;
@@ -14,14 +15,14 @@ import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
 /**
  * Summary of the current state of consensus.
  */
-@ToString
+@ToString(doNotUseGetters = true)
 @Jacksonized
 @Builder
 @EqualsAndHashCode
@@ -48,7 +49,7 @@ public final class ConsensusStatus {
      */
     @Getter
     @JsonProperty("genesisTime")
-    private final ZonedDateTime genesisTime;
+    private final Timestamp genesisTime;
 
     /**
      * Duration of a slot if available.
@@ -62,6 +63,7 @@ public final class ConsensusStatus {
     /**
      * Returns the slot duration if the protocol supports it.
      * This is supported in protocol versions 1-5.
+     *
      * @return the slot duration
      * @throws IllegalStateException if the protocol is unrecognized.
      */
@@ -116,17 +118,17 @@ public final class ConsensusStatus {
      * Note. The time is node local.
      */
     @JsonProperty("blockLastReceivedTime")
-    private final String blockLastReceivedTimeString;
+    private final OffsetDateTime blockLastReceivedTimeString;
 
-    private ZonedDateTime blockLastReceivedTime;
+    private Timestamp blockLastReceivedTime;
 
-    public ZonedDateTime getBlockLastReceivedTime() {
+    public Timestamp getBlockLastReceivedTime() {
         if (Objects.isNull(this.blockLastReceivedTimeString)) {
             return blockLastReceivedTime;
         }
         // in this case we parsed it from json, so convert it and save it for
         // future use.
-        this.blockLastReceivedTime = ZonedDateTime.parse(this.blockLastReceivedTimeString);
+        this.blockLastReceivedTime = new Timestamp(this.blockLastReceivedTimeString);
         return this.blockLastReceivedTime;
     }
 
@@ -178,17 +180,17 @@ public final class ConsensusStatus {
      * verified and added to the node's tree.
      */
     @JsonProperty("blockLastArrivedTime")
-    private final String blockLastArrivedTimeString;
+    private final OffsetDateTime blockLastArrivedTimeString;
 
-    private ZonedDateTime blockLastArrivedTime;
+    private Timestamp blockLastArrivedTime;
 
-    public ZonedDateTime getBlockLastArrivedTime() {
+    public Timestamp getBlockLastArrivedTime() {
         if (Objects.isNull(this.blockLastArrivedTimeString)) {
             return blockLastArrivedTime;
         }
         // in this case we parsed it from json, so convert it and save it for
         // future use.
-        this.blockLastArrivedTime = ZonedDateTime.parse(this.blockLastArrivedTimeString);
+        this.blockLastArrivedTime = new Timestamp(this.blockLastArrivedTimeString);
         return this.blockLastArrivedTime;
     }
 
@@ -248,16 +250,16 @@ public final class ConsensusStatus {
      * time of the node at the time the block was finalized.
      */
     @JsonProperty("lastFinalizedTime")
-    private final String lastFinalizedTimeString;
-    private ZonedDateTime lastFinalizedTime;
+    private final OffsetDateTime lastFinalizedTimeString;
+    private Timestamp lastFinalizedTime;
 
-    public ZonedDateTime getLastFinalizedTime() {
+    public Timestamp getLastFinalizedTime() {
         if (Objects.isNull(this.lastFinalizedTimeString)) {
             return lastFinalizedTime;
         }
         // in this case we parsed it from json, so convert it and save it for
         // future use.
-        this.lastFinalizedTime = ZonedDateTime.parse(this.lastFinalizedTimeString);
+        this.lastFinalizedTime = new Timestamp(this.lastFinalizedTimeString);
         return this.lastFinalizedTime;
     }
 
@@ -303,17 +305,17 @@ public final class ConsensusStatus {
      * Time when the current era started.
      */
     @JsonProperty("currentEraGenesisTime")
-    private final String currentEraGenesisTimeString;
+    private final OffsetDateTime currentEraGenesisTimeString;
 
-    private ZonedDateTime currentEraGenesisTime;
+    private Timestamp currentEraGenesisTime;
 
-    public ZonedDateTime getCurrentEraGenesisTime() {
+    public Timestamp getCurrentEraGenesisTime() {
         if (Objects.isNull(this.currentEraGenesisTimeString)) {
             return currentEraGenesisTime;
         }
         // in this case we parsed it from json, so convert it and save it for
         // future use.
-        this.currentEraGenesisTime = ZonedDateTime.parse(this.currentEraGenesisTimeString);
+        this.currentEraGenesisTime = new Timestamp(this.currentEraGenesisTimeString);
         return this.currentEraGenesisTime;
     }
 
@@ -326,11 +328,12 @@ public final class ConsensusStatus {
     /**
      * Gets the current timeout duration if the protocol supports it.
      * This is supported in protocol version 6 and onwards.
+     *
      * @return the current timeout duration if supported.
      * @throws IllegalStateException if the protocol is unrecognized
      */
     public Optional<Duration> getCurrentTimeoutDuration() {
-        switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)){
+        switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)) {
             case V1:
                 return Optional.empty();
             case V2:
@@ -347,6 +350,7 @@ public final class ConsensusStatus {
     /**
      * Get the current round if the current protocol version is version 6 or above,
      * otherwise return nothing.
+     *
      * @return the current round wrapped in an optional implying whether it's supported or not.
      * @throws IllegalStateException if the protocol version is unrecognized.
      */
@@ -369,11 +373,12 @@ public final class ConsensusStatus {
     /**
      * Get the current epoch if the protocol version is 6 or more,
      * otherwise this yields nothing.
+     *
      * @return the current epoch.
      * @throws IllegalStateException if the protocol version is unrecognized.
      */
-    public Optional<Epoch> getCurrentEpoch(){
-        switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)){
+    public Optional<Epoch> getCurrentEpoch() {
+        switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)) {
             case V1:
                 return Optional.empty();
             case V2:
@@ -387,14 +392,15 @@ public final class ConsensusStatus {
      * Whenever the trigger block is finalized then the consensus protocol
      * will progress to a new {@link Epoch}.
      */
-    private final ZonedDateTime triggerBlockTime;
+    private final Timestamp triggerBlockTime;
 
     /**
      * Get the trigger block time of if present.
+     *
      * @return the trigger block time if the protocol version is 6 or more.
      * @throws IllegalStateException if the protocol version is unrecognized.
      */
-    public Optional<ZonedDateTime> getTriggerBlockTime() {
+    public Optional<Timestamp> getTriggerBlockTime() {
         switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)) {
             case V1:
                 return Optional.empty();

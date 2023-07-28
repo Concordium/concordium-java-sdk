@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.AccountAddress;
 import lombok.val;
 import org.junit.Test;
 
@@ -39,13 +40,13 @@ public class TransactionFactoryTest {
     }
 
     @Test
-    public  void testCanDeployModuleFactory() {
+    public void testCanDeployModuleFactory() {
         val builder = TransactionFactory.newDeployModule();
         assertNotNull(builder);
     }
 
     @Test
-    public  void testCanTransferScheduleFactory() {
+    public void testCanTransferScheduleFactory() {
         val builder = TransactionFactory.newScheduledTransfer();
         assertNotNull(builder);
     }

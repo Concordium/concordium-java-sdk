@@ -1,6 +1,5 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.AccountAddress;
 import com.concordium.grpc.v2.AccountTransaction;
 import com.concordium.grpc.v2.BlockItem;
 import com.concordium.grpc.v2.InitContractPayload;
@@ -44,8 +43,8 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetItemsTest {
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
-            = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
+            = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final long ACCOUNT_TRANSACTION_ENERGY = 300;
     private static final long ACCOUNT_TRANSACTION_EXPIRY = 8989;
     private static final long ACCOUNT_TRANSACTION_SEQ_NO = 7;
@@ -274,7 +273,7 @@ public class ClientV2GetItemsTest {
     public void shouldMapTransferTransaction() {
         final byte[] dataBytes = new byte[]{9, 9, 9};
         final long amount = 10L;
-        final byte[] recieverAccountAddress = com.concordium.sdk.transactions.AccountAddress
+        final byte[] recieverAccountAddress = com.concordium.sdk.types.AccountAddress
                 .from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf").getBytes();
 
         val mapped = to(ACCOUNT_TRANSACTION_DEPLOY_MODULE_V0.toBuilder()
@@ -291,7 +290,7 @@ public class ClientV2GetItemsTest {
                 .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(40)).build())
                 .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
                 .payload(com.concordium.sdk.transactions.TransferPayload.from(
-                        com.concordium.sdk.transactions.AccountAddress.from(recieverAccountAddress),
+                        com.concordium.sdk.types.AccountAddress.from(recieverAccountAddress),
                         CCDAmount.fromMicro(amount)))
                 .build();
 
@@ -302,7 +301,7 @@ public class ClientV2GetItemsTest {
     public void shouldMapTransferWithMemoTransaction() {
         final byte[] dataBytes = new byte[]{9, 9, 9};
         final long amount = 10L;
-        final byte[] recieverAccountAddress = com.concordium.sdk.transactions.AccountAddress
+        final byte[] recieverAccountAddress = com.concordium.sdk.types.AccountAddress
                 .from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf").getBytes();
         final byte[] memoBytes = new byte[]{10, 10, 10};
 
@@ -321,7 +320,7 @@ public class ClientV2GetItemsTest {
                 .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(45)).build())
                 .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
                 .payload(com.concordium.sdk.transactions.TransferWithMemoPayload.from(
-                        com.concordium.sdk.transactions.AccountAddress.from(recieverAccountAddress),
+                        com.concordium.sdk.types.AccountAddress.from(recieverAccountAddress),
                         CCDAmount.fromMicro(amount),
                         com.concordium.sdk.transactions.Memo.from(memoBytes)))
                 .build();

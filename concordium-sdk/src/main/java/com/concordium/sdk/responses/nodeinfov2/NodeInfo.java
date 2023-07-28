@@ -2,16 +2,13 @@ package com.concordium.sdk.responses.nodeinfov2;
 
 import com.concordium.sdk.responses.nodeinfo.ConsensusState;
 import com.concordium.sdk.responses.nodeinfo.PeerType;
+import com.concordium.sdk.types.Timestamp;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-
-import static com.concordium.sdk.Constants.UTC_ZONE;
 
 @EqualsAndHashCode
 @Builder
@@ -28,7 +25,7 @@ public class NodeInfo {
      * Local time of the node
      */
     @Getter
-    private final ZonedDateTime localTime;
+    private final Timestamp localTime;
 
     /**
      * Duration the node has been alive
@@ -95,7 +92,7 @@ public class NodeInfo {
     private static NodeInfoBuilder getStandardNodeInfoBuilder(com.concordium.grpc.v2.NodeInfo nodeInfo) {
         return NodeInfo.builder()
                 .peerVersion(nodeInfo.getPeerVersion())
-                .localTime(Instant.EPOCH.plusSeconds(nodeInfo.getLocalTime().getValue()).atZone(UTC_ZONE))
+                .localTime(Timestamp.from(nodeInfo.getLocalTime()))
                 .peerUptime(java.time.Duration.ofMillis(nodeInfo.getPeerUptime().getValue()))
                 .networkInfo(NetworkInfo.parse(nodeInfo.getNetworkInfo()))
                 .peerType((nodeInfo.hasNode() ? PeerType.NODE : PeerType.BOOTSTRAPPER));

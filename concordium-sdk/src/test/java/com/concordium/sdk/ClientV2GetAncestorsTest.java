@@ -1,7 +1,9 @@
 package com.concordium.sdk;
 
 
-import com.concordium.grpc.v2.*;
+import com.concordium.grpc.v2.AncestorsRequest;
+import com.concordium.grpc.v2.Empty;
+import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.transactions.Hash;
@@ -18,7 +20,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;

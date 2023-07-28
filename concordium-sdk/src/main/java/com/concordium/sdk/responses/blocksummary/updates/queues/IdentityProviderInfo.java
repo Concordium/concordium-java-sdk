@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blocksummary.updates.queues;
 
+import com.concordium.grpc.v2.IpInfo;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.serializing.JsonMapper;
@@ -49,4 +50,18 @@ public final class IdentityProviderInfo {
         }
     }
 
+    public static IdentityProviderInfo from(IpInfo ip) {
+        return IdentityProviderInfo
+                .builder()
+                .ipIdentity(ip.getIdentity().getValue())
+                .description(Description
+                        .builder()
+                        .name(ip.getDescription().getName())
+                        .url(ip.getDescription().getUrl())
+                        .description(ip.getDescription().getDescription())
+                        .build())
+                .ipCdiVerifyKey(ED25519PublicKey.from(ip.getCdiVerifyKey().getValue().toByteArray()))
+                .ipVerifyKey(PSPublicKey.from(ip.getVerifyKey().getValue().toByteArray()))
+                .build();
+    }
 }

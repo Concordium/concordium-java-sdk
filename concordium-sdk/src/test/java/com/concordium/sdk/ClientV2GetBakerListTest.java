@@ -1,6 +1,7 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.*;
+import com.concordium.grpc.v2.Empty;
+import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;

@@ -1,10 +1,12 @@
 package com.concordium.sdk.responses.chainparameters;
 
+import com.concordium.sdk.Range;
 import com.concordium.sdk.responses.Fraction;
-import com.concordium.sdk.responses.blocksummary.updates.queues.CooldownParametersCpv1;
-import com.concordium.sdk.responses.blocksummary.updates.queues.PoolParameters;
-import com.concordium.sdk.responses.blocksummary.updates.queues.TimeParameters;
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.responses.TimeoutParameters;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
+import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,7 +17,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Builder
 public final class ChainParametersV2 extends ChainParameters {
 
@@ -98,6 +100,74 @@ public final class ChainParametersV2 extends ChainParameters {
      * The finalization committee parameters.
      */
     private final FinalizationCommitteeParameters finalizationCommitteeParameters;
+
+    public static com.concordium.sdk.responses.chainparameters.ChainParametersV2 from(com.concordium.grpc.v2.ChainParametersV2 v2Params) {
+        return com.concordium.sdk.responses.chainparameters.ChainParametersV2
+                .builder()
+                .consensusParameters(ConsensusParameters
+                        .builder()
+                        .blockEnergyLimit(UInt64.from(v2Params.getConsensusParameters().getBlockEnergyLimit().getValue()))
+                        .minBlockTime(java.time.Duration.ofMillis(v2Params.getConsensusParameters().getMinBlockTime().getValue()))
+                        .timeoutParameters(TimeoutParameters
+                                .builder()
+                                .timeoutBase(java.time.Duration.ofMillis(v2Params.getConsensusParameters().getTimeoutParameters().getTimeoutBase().getValue()))
+                                .timeoutIncrease(Fraction.from(v2Params.getConsensusParameters().getTimeoutParameters().getTimeoutIncrease()))
+                                .timeoutDecrease(Fraction.from(v2Params.getConsensusParameters().getTimeoutParameters().getTimeoutDecrease()))
+                                .build())
+                        .build())
+                .microCCDPerEuro(Fraction.from(v2Params.getMicroCcdPerEuro().getValue()))
+                .euroPerEnergy(Fraction.from(v2Params.getEuroPerEnergy().getValue()))
+                .mintDistribution(MintDistributionCpV1
+                        .builder()
+                        .bakingReward(PartsPerHundredThousand.from(v2Params.getMintDistribution().getBakingReward().getPartsPerHundredThousand()).asDouble())
+                        .finalizationReward(PartsPerHundredThousand.from(v2Params.getMintDistribution().getFinalizationReward().getPartsPerHundredThousand()).asDouble())
+                        .build())
+                .transactionFeeDistribution(com.concordium.sdk.responses.chainparameters.TransactionFeeDistribution
+                        .builder()
+                        .allocatedForBaker(PartsPerHundredThousand.from(v2Params.getTransactionFeeDistribution().getBaker().getPartsPerHundredThousand()).asDouble())
+                        .allocatedForGASAccount(PartsPerHundredThousand.from(v2Params.getTransactionFeeDistribution().getGasAccount().getPartsPerHundredThousand()).asDouble())
+                        .build())
+                .cooldownParameters(CooldownParametersCpv1
+                        .builder()
+                        .delegatorCooldown(v2Params.getCooldownParameters().getDelegatorCooldown().getValue())
+                        .poolOwnerCooldown(v2Params.getCooldownParameters().getPoolOwnerCooldown().getValue())
+                        .build())
+                .credentialsPerBlockLimit(v2Params.getAccountCreationLimit().getValue())
+                .foundationAccount(com.concordium.sdk.types.AccountAddress.from(v2Params.getFoundationAccount().getValue().toByteArray()))
+                .timeParameters(TimeParameters
+                        .builder()
+                        .mintPerPayday(v2Params.getTimeParameters().getMintPerPayday().getMantissa() * Math.pow(10, -1 * v2Params.getTimeParameters().getMintPerPayday().getExponent()))
+                        .rewardPeriodLength(v2Params.getTimeParameters().getRewardPeriodLength().getValue().getValue())
+                        .build())
+                .poolParameters(PoolParameters
+                        .builder()
+                        .passiveFinalizationCommission(PartsPerHundredThousand.from(v2Params.getPoolParameters().getPassiveFinalizationCommission().getPartsPerHundredThousand()).asDouble())
+                        .passiveBakingCommission(PartsPerHundredThousand.from(v2Params.getPoolParameters().getPassiveBakingCommission().getPartsPerHundredThousand()).asDouble())
+                        .passiveTransactionCommission(PartsPerHundredThousand.from(v2Params.getPoolParameters().getPassiveTransactionCommission().getPartsPerHundredThousand()).asDouble())
+                        .transactionCommissionRange(Range.from(v2Params.getPoolParameters().getCommissionBounds().getTransaction()))
+                        .finalizationCommissionRange(Range.from(v2Params.getPoolParameters().getCommissionBounds().getFinalization()))
+                        .bakingCommissionRange(Range.from(v2Params.getPoolParameters().getCommissionBounds().getBaking()))
+                        .minimumEquityCapital(CCDAmount.from(v2Params.getPoolParameters().getMinimumEquityCapital()))
+                        .capitalBound(PartsPerHundredThousand.from(v2Params.getPoolParameters().getCapitalBound().getValue().getPartsPerHundredThousand()).asDouble())
+                        .leverageBound(Fraction.from(v2Params.getPoolParameters().getLeverageBound().getValue()))
+                        .build())
+                .gasRewards(GasRewardsCpV2
+                        .builder()
+                        .accountCreation(PartsPerHundredThousand.from(v2Params.getGasRewards().getAccountCreation().getPartsPerHundredThousand()).asDouble())
+                        .chainUpdate(PartsPerHundredThousand.from(v2Params.getGasRewards().getChainUpdate().getPartsPerHundredThousand()).asDouble())
+                        .baker(PartsPerHundredThousand.from(v2Params.getGasRewards().getBaker().getPartsPerHundredThousand()).asDouble())
+                        .build())
+                .finalizationCommitteeParameters(FinalizationCommitteeParameters
+                        .builder()
+                        .minimumFinalizers(v2Params.getFinalizationCommitteeParameters().getMinimumFinalizers())
+                        .maxFinalizers(v2Params.getFinalizationCommitteeParameters().getMaximumFinalizers())
+                        .finalizerRelativeStakeThreshold(PartsPerHundredThousand.from(v2Params.getFinalizationCommitteeParameters().getFinalizerRelativeStakeThreshold().getPartsPerHundredThousand()).asDouble())
+                        .build())
+                .rootKeys(com.concordium.sdk.responses.chainparameters.HigherLevelKeys.from(v2Params.getRootKeys()))
+                .level1Keys(com.concordium.sdk.responses.chainparameters.HigherLevelKeys.from(v2Params.getLevel1Keys()))
+                .level2Keys(com.concordium.sdk.responses.chainparameters.AuthorizationsV1.from(v2Params.getLevel2Keys()))
+                .build();
+    }
 
 
     @Override

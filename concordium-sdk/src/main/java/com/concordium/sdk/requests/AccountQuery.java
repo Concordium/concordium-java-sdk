@@ -1,8 +1,8 @@
 package com.concordium.sdk.requests;
 
 import com.concordium.sdk.responses.AccountIndex;
-import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
+import com.concordium.sdk.types.AccountAddress;
 import com.google.protobuf.ByteString;
 import lombok.Getter;
 

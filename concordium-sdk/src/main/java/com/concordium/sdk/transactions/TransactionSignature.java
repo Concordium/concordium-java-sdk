@@ -39,11 +39,11 @@ public class TransactionSignature {
 
     public static TransactionSignature fromBytes(ByteBuffer source) {
         byte outerLen = source.get();
-        var builder = TransactionSignature.builder();
+        val builder = TransactionSignature.builder();
         for (byte outerCount = 0; outerCount < outerLen; ++outerCount) {
             final Index credIdx = Index.fromBytes(source);
             byte innerLen = source.get();
-            var builderInternal
+            val builderInternal
                     = TransactionSignatureAccountSignatureMap.builder();
             for (byte innerCount = 0; innerCount < innerLen; ++innerCount) {
                 Index keyIndex = Index.fromBytes(source);

@@ -1,6 +1,6 @@
 package com.concordium.sdk.crypto.bakertransactions;
 
-import com.concordium.sdk.transactions.AccountAddress;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.Builder;
 import lombok.Data;
 

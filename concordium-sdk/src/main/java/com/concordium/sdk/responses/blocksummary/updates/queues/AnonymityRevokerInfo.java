@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blocksummary.updates.queues;
 
+import com.concordium.grpc.v2.ArInfo;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.types.UInt32;
@@ -47,4 +48,17 @@ public final class AnonymityRevokerInfo {
         }
     }
 
+    public static AnonymityRevokerInfo from(ArInfo ar) {
+        return AnonymityRevokerInfo
+                .builder()
+                .arIdentity(ar.getIdentity().getValue())
+                .description(Description
+                        .builder()
+                        .url(ar.getDescription().getUrl())
+                        .description(ar.getDescription().getDescription())
+                        .name(ar.getDescription().getName())
+                        .build())
+                .arPublicKey(ElgamalPublicKey.from(ar.getPublicKey().getValue().toByteArray()))
+                .build();
+    }
 }

@@ -1,10 +1,10 @@
 package com.concordium.sdk.responses.intanceinfo;
 
 import com.concordium.sdk.responses.modulelist.ModuleRef;
-import com.concordium.sdk.responses.transactionstatus.ContractVersion;
+import com.concordium.sdk.responses.smartcontracts.ContractVersion;
 import com.concordium.sdk.serializing.JsonMapper;
-import com.concordium.sdk.transactions.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;

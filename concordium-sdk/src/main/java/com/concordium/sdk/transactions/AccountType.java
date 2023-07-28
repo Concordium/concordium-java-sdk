@@ -3,8 +3,10 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.types.AbstractAddress;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.ToString;
 
 @JsonFormat(shape = JsonFormat.Shape.STRING)
+@ToString
 public enum AccountType {
     @JsonProperty("AddressAccount")
     ADDRESS_ACCOUNT("AddressAccount"),

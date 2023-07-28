@@ -3,6 +3,7 @@ package com.concordium.sdk.queries;
 import com.concordium.sdk.responses.ProtocolVersion;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.Timestamp;
 import concordium.ConcordiumP2PRpc;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -10,9 +11,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 public class GetRewardsOverviewTest {
 
@@ -41,7 +39,7 @@ public class GetRewardsOverviewTest {
                 .foundationTransactionRewards(CCDAmount.fromMicro(1827365))
                 .gasAccount(CCDAmount.fromMicro(364547))
                 .nextPaydayMintRate(2.61157877e-4)
-                .nextPaydayTime(ZonedDateTime.ofInstant(Instant.parse("2022-08-19T11:00:32.25Z"), ZoneId.of("UTC")))
+                .nextPaydayTime(Timestamp.from(Instant.parse("2022-08-19T11:00:32.25Z")))
                 .protocolVersion(ProtocolVersion.V4)
                 .totalAmount(CCDAmount.fromMicro(82_510_710_429_923_844L))
                 .totalEncryptedAmount(CCDAmount.fromMicro(7_954_000_000L))

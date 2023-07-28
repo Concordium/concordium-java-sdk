@@ -1,5 +1,7 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.grpc.v2.BlockHash;
+import com.concordium.grpc.v2.TransactionHash;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,6 +33,14 @@ public class Hash {
 
     protected Hash(byte[] hash) {
         this.bytes = hash;
+    }
+
+    public static Hash from(BlockHash blockHash) {
+        return Hash.from(blockHash.getValue().toByteArray());
+    }
+
+    public static Hash from(TransactionHash hash) {
+        return Hash.from(hash.getValue().toByteArray());
     }
 
     public String asHex() {

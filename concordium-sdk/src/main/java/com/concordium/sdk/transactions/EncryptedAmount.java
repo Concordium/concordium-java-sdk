@@ -16,6 +16,10 @@ public class EncryptedAmount {
      */
     private final byte[] bytes;
 
+    public static EncryptedAmount from(com.concordium.grpc.v2.EncryptedAmount inputAmount) {
+        return new EncryptedAmount(inputAmount.getValue().toByteArray());
+    }
+
     public byte[] getBytes() {
         return copyOf(bytes, bytes.length);
     }

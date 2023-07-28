@@ -3,7 +3,10 @@ package com.concordium.sdk.responses;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.UInt64;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**

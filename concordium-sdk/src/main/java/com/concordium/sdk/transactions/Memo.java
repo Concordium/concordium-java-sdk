@@ -33,6 +33,10 @@ public class Memo {
         }
     }
 
+    public static Memo from(com.concordium.grpc.v2.Memo memo) {
+        return Memo.from(memo.getValue().toByteArray());
+    }
+
     // returns the serialized memo with suffixed length
     byte[] getBytes() {
         val buffer = ByteBuffer.allocate(UInt16.BYTES + value.length);

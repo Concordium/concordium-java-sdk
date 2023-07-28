@@ -18,7 +18,7 @@ public class UInt32Test {
         try {
             UInt32.from(-13);
             fail("Should not be able to create a negative UInt32");
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             if (!e.getMessage().equals("Value of UInt32 can not be negative")) {
                 fail("Unexpected error when creating UInt32: " + e.getMessage());
             }
@@ -29,8 +29,8 @@ public class UInt32Test {
         try {
             UInt32.from("4294967296"); //(2^32)
             fail("This should exceed the range.");
-        }catch (NumberFormatException e) {
-            if(!e.getMessage().equals("String value 4294967296 exceeds range of unsigned int.")) {
+        } catch (NumberFormatException e) {
+            if (!e.getMessage().equals("String value 4294967296 exceeds range of unsigned int.")) {
                 fail("Unexpected error when creating too big UInt32: " + e.getMessage());
             }
         }

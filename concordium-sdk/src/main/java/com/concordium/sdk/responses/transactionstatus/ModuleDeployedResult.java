@@ -12,7 +12,7 @@ import org.apache.commons.codec.binary.Hex;
  */
 @Getter
 @ToString
-public final class ModuleDeployedResult extends TransactionResultEvent {
+public final class ModuleDeployedResult implements TransactionResultEvent {
 
     /**
      * The reference to the module.

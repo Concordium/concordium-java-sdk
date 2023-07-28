@@ -13,7 +13,6 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
-import lombok.val;
 import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,8 +28,8 @@ import static org.mockito.Mockito.*;
 public class ClientV2GetElectionInfoTest {
 
     private static final byte[] BLOCK_HASH = new byte[]{1, 1, 1};
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
-            = com.concordium.sdk.transactions.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
+            = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
     private static final int ELECTION_DIFFICULTY = 100;
 
     private static final AmountFraction GRPC_ELECTION_DIFFICULTY_FACTION = AmountFraction.newBuilder()
@@ -58,7 +57,7 @@ public class ClientV2GetElectionInfoTest {
             .build();
 
     private static final ElectionInfo ELECTION_INFO_EXPECTED = ElectionInfo.builder()
-            .electionDifficulty(ELECTION_DIFFICULTY/100000d)
+            .electionDifficulty(PartsPerHundredThousand.from(ELECTION_DIFFICULTY).asDouble())
             .leadershipElectionNonce(ELECTION_NONCE)
             .bakerElectionInfo(ImmutableList.of(ElectionInfoBaker.builder()
                     .baker(com.concordium.sdk.responses.BakerId.from(BAKER_ID))

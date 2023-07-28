@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
@@ -23,7 +24,7 @@ public class UpdateCredentialKeysTest {
     @SneakyThrows
     @Test
     public void testUpdateCredentialKeys() {
-        Map<Index, ED25519PublicKey> keys =  new HashMap<>();
+        Map<Index, ED25519PublicKey> keys = new HashMap<>();
         ED25519PublicKey newKey = ED25519PublicKey.from("ad6591a2deb03c32357615d73e144e01a49abad49671428d46db58cf2d4e4d87");
         keys.put(Index.from(0), newKey);
 

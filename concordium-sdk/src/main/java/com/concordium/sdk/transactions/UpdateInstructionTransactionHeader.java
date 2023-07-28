@@ -17,7 +17,7 @@ public class UpdateInstructionTransactionHeader {
 
     @UnstableApi
     byte[] getBytes() {
-        var buff = ByteBuffer.allocate(3 * UInt64.BYTES);
+        val buff = ByteBuffer.allocate(3 * UInt64.BYTES);
         buff.put(effectiveTime.getBytes());
         buff.put(timeout.getBytes());
         buff.put(sequenceNumber.getBytes());

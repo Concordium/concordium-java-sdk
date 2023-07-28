@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 @ToString
 @SuperBuilder
-public class AuthorizationsV0 {
+public class AuthorizationsV0 implements Authorizations {
 
     /**
      * Keys allowed to do chain parameters.
@@ -106,5 +106,10 @@ public class AuthorizationsV0 {
                 .transactionFeeDistribution(com.concordium.sdk.responses.chainparameters.AccessStructure.from(value.getParameterTransactionFeeDistribution()))
                 .keys(keys)
                 .build();
+    }
+
+    @Override
+    public AuthorizationsType getType() {
+        return AuthorizationsType.V1;
     }
 }

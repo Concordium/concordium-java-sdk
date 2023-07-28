@@ -29,6 +29,10 @@ public class BakerId {
         this.id = accountIndex;
     }
 
+    public static BakerId from(com.concordium.grpc.v2.BakerId bakerId) {
+        return BakerId.from(bakerId.getValue());
+    }
+
     @Override
     public String toString() {
         return this.id.toString();

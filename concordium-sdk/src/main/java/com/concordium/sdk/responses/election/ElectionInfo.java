@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -37,6 +36,7 @@ public class ElectionInfo {
     /**
      * Get the election difficulty if present.
      * This is present in protocols 1-5.
+     *
      * @return The election difficulty
      */
     public Optional<Double> getElectionDifficulty() {

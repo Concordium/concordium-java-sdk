@@ -7,7 +7,10 @@ import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
-import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.transactions.EncryptedAmount;
+import com.concordium.sdk.transactions.EncryptedAmountIndex;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -16,7 +19,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class EncryptedTransfersTest {
+public class EncryptedTransfersTestResult {
 
     public static CryptographicParameters getTestCryptographicParameters() {
         val bulletproofGenerators = BulletproofGenerators.from(
@@ -549,10 +552,10 @@ public class EncryptedTransfersTest {
                         "3fac");
 
         return CryptographicParameters.builder()
-            .onChainCommitmentKey(onChainCommitmentKey)
-            .bulletproofGenerators(bulletproofGenerators)
-            .genesisString("Concordium Testnet Version 5")
-            .build();
+                .onChainCommitmentKey(onChainCommitmentKey)
+                .bulletproofGenerators(bulletproofGenerators)
+                .genesisString("Concordium Testnet Version 5")
+                .build();
     }
 
     @SneakyThrows

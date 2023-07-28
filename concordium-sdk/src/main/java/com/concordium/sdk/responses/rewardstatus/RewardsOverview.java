@@ -3,6 +3,7 @@ package com.concordium.sdk.responses.rewardstatus;
 import com.concordium.sdk.responses.ProtocolVersion;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.Timestamp;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
@@ -10,8 +11,6 @@ import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 import lombok.val;
 
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -50,7 +49,7 @@ public class RewardsOverview {
     /**
      * The time of the next payday.
      */
-    private final ZonedDateTime nextPaydayTime;
+    private final Timestamp nextPaydayTime;
 
     /**
      * Protocol version that applies to these rewards. V0 variant only exists for protocol versions 1, 2, and 3.

@@ -20,8 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.Instant;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,21 +28,21 @@ import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
 /**
- Tests for {@link ClientV2#getPoolDelegators(BlockQuery, com.concordium.sdk.responses.AccountIndex)}.
- <br/>
- Tests the mapping code {@link ClientV2MapperExtensions#to(DelegatorInfo)}
+ * Tests for {@link ClientV2#getPoolDelegators(BlockQuery, com.concordium.sdk.responses.AccountIndex)}.
+ * <br/>
+ * Tests the mapping code {@link ClientV2MapperExtensions#to(DelegatorInfo)}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetPoolDelegatorsTest {
     private static final byte[] BLOCK_HASH = new byte[]{1, 1, 1};
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_1
-            = com.concordium.sdk.transactions.AccountAddress.from(
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
+            = com.concordium.sdk.types.AccountAddress.from(
             "37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_2
-            = com.concordium.sdk.transactions.AccountAddress.from(
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_2
+            = com.concordium.sdk.types.AccountAddress.from(
             "3VQCZrqCGsUnKD4DXSWDu1ynsKqfRrrfF7cN51KszryYkHytt8");
-    private static final com.concordium.sdk.transactions.AccountAddress ACCOUNT_ADDRESS_3
-            = com.concordium.sdk.transactions.AccountAddress.from(
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_3
+            = com.concordium.sdk.types.AccountAddress.from(
             "35CJPZohio6Ztii2zy1AYzJKvuxbGG44wrBn7hLHiYLoF2nxnh");
     private static final long STAKE_AMOUNT = 10L;
     private static final long STAKE_REMOVE_TIME = 1000000;
@@ -84,7 +82,7 @@ public class ClientV2GetPoolDelegatorsTest {
                     .account(ACCOUNT_ADDRESS_2)
                     .stake(CCDAmount.fromMicro(STAKE_AMOUNT))
                     .pendingChange(Optional.of(RemoveStakeChange.builder()
-                            .effectiveTime(Instant.ofEpochMilli(STAKE_REMOVE_TIME).atOffset(ZoneOffset.UTC))
+                            .effectiveTime(com.concordium.sdk.types.Timestamp.newMillis(STAKE_REMOVE_TIME))
                             .build()))
                     .build(),
             com.concordium.sdk.responses.DelegatorInfo.builder()
@@ -93,7 +91,7 @@ public class ClientV2GetPoolDelegatorsTest {
                     .pendingChange(Optional.of(
                             ReduceStakeChange.builder()
                                     .newStake(CCDAmount.fromMicro(NEW_STAKE))
-                                    .effectiveTime(Instant.ofEpochMilli(EFFECTIVE_TIME).atOffset(ZoneOffset.UTC))
+                                    .effectiveTime(com.concordium.sdk.types.Timestamp.newMillis(EFFECTIVE_TIME))
                                     .build()
                     ))
                     .build()

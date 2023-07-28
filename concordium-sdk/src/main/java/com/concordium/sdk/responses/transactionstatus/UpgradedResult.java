@@ -1,9 +1,12 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
+import com.concordium.sdk.responses.smartcontracts.ContractTraceElementType;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,8 +21,9 @@ import lombok.ToString;
  */
 @ToString
 @Getter
-@EqualsAndHashCode(callSuper = true)
-public final class UpgradedResult extends TransactionResultEvent {
+@EqualsAndHashCode
+@Builder
+public final class UpgradedResult implements TransactionResultEvent, ContractTraceElement {
 
     /**
      * The contract that was upgraded.
@@ -46,8 +50,22 @@ public final class UpgradedResult extends TransactionResultEvent {
         this.to = to;
     }
 
+    public static UpgradedResult from(com.concordium.grpc.v2.ContractTraceElement.Upgraded upgraded) {
+        return UpgradedResult
+                .builder()
+                .contractAddress(ContractAddress.from(upgraded.getAddress()))
+                .from(ModuleRef.from(upgraded.getFrom()))
+                .to(ModuleRef.from(upgraded.getTo()))
+                .build();
+    }
+
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.UPGRADED;
+    }
+
+    @Override
+    public ContractTraceElementType getTraceType() {
+        return ContractTraceElementType.UPGRADED;
     }
 }

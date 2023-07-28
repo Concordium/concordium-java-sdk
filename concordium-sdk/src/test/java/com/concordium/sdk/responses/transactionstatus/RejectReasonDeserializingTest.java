@@ -2,7 +2,7 @@ package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
-import com.concordium.sdk.types.Account;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class RejectReasonDeserializingTest {
 
             if (type == RejectReasonType.AMOUNT_TOO_LARGE) {
                 val converted = type.<RejectReasonAmountTooLarge>convert(rejectReason);
-                assertEquals("4PXJrvKGKb1YZt2Vua3mSDThqUU2EChweuydsFtVFtvDDr585H", ((Account) converted.getAccount()).getAddress().encoded())
+                assertEquals("4PXJrvKGKb1YZt2Vua3mSDThqUU2EChweuydsFtVFtvDDr585H", ((AccountAddress) converted.getAccount()).encoded())
                 ;
             }
 
