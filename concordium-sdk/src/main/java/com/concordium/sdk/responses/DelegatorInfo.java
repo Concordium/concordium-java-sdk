@@ -1,8 +1,8 @@
 package com.concordium.sdk.responses;
 
 import com.concordium.sdk.responses.accountinfo.PendingChange;
-import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -6,18 +6,16 @@ import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Map;
 
 @Getter
 @ToString
 @Builder
-@EqualsAndHashCode(callSuper = true)
-public class ResumedResult extends TransactionResultEvent implements ContractTraceElement {
+@EqualsAndHashCode
+@AllArgsConstructor
+public class ResumedResult implements ContractTraceElement, TransactionResultEvent {
     private final ContractAddress address;
     private final boolean success;
 

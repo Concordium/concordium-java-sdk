@@ -1,21 +1,18 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.grpc.v2.EncryptedAmountRemovedEvent;
 import com.concordium.sdk.transactions.EncryptedAmount;
 import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
 @Builder
-@EqualsAndHashCode(callSuper = true)
-public final class EncryptedAmountsRemovedResult extends TransactionResultEvent {
+@EqualsAndHashCode
+@AllArgsConstructor
+public final class EncryptedAmountsRemovedResult implements TransactionResultEvent {
     private final long upToIndex;
     private final AccountAddress account;
     private final EncryptedAmount inputAmount;

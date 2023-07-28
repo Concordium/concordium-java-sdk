@@ -1,6 +1,8 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.*;
+import com.concordium.grpc.v2.AccountAddress;
+import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.grpc.v2.TransactionHash;
 import com.concordium.sdk.transactions.Hash;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;

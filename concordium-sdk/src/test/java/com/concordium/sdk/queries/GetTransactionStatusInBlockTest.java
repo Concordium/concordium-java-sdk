@@ -2,9 +2,9 @@ package com.concordium.sdk.queries;
 
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.responses.transactionstatusinblock.TransactionStatusInBlock;
-import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Hash;
+import com.concordium.sdk.types.AccountAddress;
 import concordium.ConcordiumP2PRpc;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -38,10 +38,10 @@ public class GetTransactionStatusInBlockTest {
                 "\"status\": \"finalized\"" +
                 "}";
         val req = ConcordiumP2PRpc.JsonResponse.newBuilder().setValue(json).build();
-        val res = TransactionStatusInBlock.fromJson(req);
+        val actual = TransactionStatusInBlock.fromJson(req);
 
-        Assert.assertTrue(res.isPresent());
-        Assert.assertEquals(res.get(), TransactionStatusInBlock.builder()
+        Assert.assertTrue(actual.isPresent());
+        TransactionStatusInBlock expected = TransactionStatusInBlock.builder()
                 .status(Status.FINALIZED)
                 .result(Optional.of(TransactionSummary.builder()
                         .index(0)
@@ -59,7 +59,8 @@ public class GetTransactionStatusInBlockTest {
                                 .contents(TransactionContents.DEPLOY_MODULE)
                                 .build())
                         .build()))
-                .build());
+                .build();
+        Assert.assertEquals(expected, actual.get());
     }
 
     @Test

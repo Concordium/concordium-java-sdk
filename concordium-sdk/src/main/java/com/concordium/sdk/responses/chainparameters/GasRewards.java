@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.chainparameters;
 
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -49,7 +50,7 @@ public final class GasRewards {
     public Optional<Double> getFinalizationProof() {
         if (this.type == Type.V2) {
             return Optional.empty();
-        }else {
+        } else {
             return Optional.of(finalizationProof);
         }
     }
@@ -64,9 +65,9 @@ public final class GasRewards {
                 .chainUpdate(update.getChainUpdate().getPartsPerHundredThousand() / 100_000d)
                 .accountCreation(update.getAccountCreation().getPartsPerHundredThousand() / 100_000d);
         if (update.hasFinalizationProof()) {
-            builder.finalizationProof(update.getFinalizationProof().getPartsPerHundredThousand()/100_000d);
+            builder.finalizationProof(PartsPerHundredThousand.from(update.getFinalizationProof().getPartsPerHundredThousand()).asDouble());
             builder.type(Type.V1);
-        }else {
+        } else {
             builder.type(Type.V2);
         }
         return builder.build();

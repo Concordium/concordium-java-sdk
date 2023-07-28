@@ -3,7 +3,10 @@ package com.concordium.sdk.responses.blockitemstatus;
 import com.concordium.grpc.v2.BlockItemStatus;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
 import com.concordium.sdk.transactions.Hash;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 
 /**

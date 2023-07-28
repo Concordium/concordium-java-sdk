@@ -21,9 +21,9 @@ import lombok.ToString;
  */
 @ToString
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @Builder
-public final class UpgradedResult extends TransactionResultEvent implements ContractTraceElement {
+public final class UpgradedResult implements TransactionResultEvent, ContractTraceElement {
 
     /**
      * The contract that was upgraded.

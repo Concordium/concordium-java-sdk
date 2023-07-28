@@ -10,7 +10,7 @@ import lombok.ToString;
  * Mint distribution for chain parameters v0.
  */
 @Builder
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @ToString
 @Getter
 public class MintDistributionCpV0 extends MintDistribution {

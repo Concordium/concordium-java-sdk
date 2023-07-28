@@ -13,7 +13,7 @@ public class RawTransactionTest {
 
     @SneakyThrows
     @Test
-    public void testRawTransactionCorrespondsToATransfer(){
+    public void testRawTransactionCorrespondsToATransfer() {
         val transfer = TransferTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))

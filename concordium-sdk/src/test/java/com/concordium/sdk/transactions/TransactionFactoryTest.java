@@ -40,13 +40,13 @@ public class TransactionFactoryTest {
     }
 
     @Test
-    public  void testCanDeployModuleFactory() {
+    public void testCanDeployModuleFactory() {
         val builder = TransactionFactory.newDeployModule();
         assertNotNull(builder);
     }
 
     @Test
-    public  void testCanTransferScheduleFactory() {
+    public void testCanTransferScheduleFactory() {
         val builder = TransactionFactory.newScheduledTransfer();
         assertNotNull(builder);
     }

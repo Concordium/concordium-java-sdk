@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.transactionstatus;
+package com.concordium.sdk.responses.smartcontracts;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.ToString;
@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Smart contract versions that exist on the chain.
+ */
 @ToString
 public enum ContractVersion {
     V0, V1;

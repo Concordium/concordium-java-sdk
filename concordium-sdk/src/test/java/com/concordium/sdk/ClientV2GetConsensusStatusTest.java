@@ -1,8 +1,8 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.ProtocolVersion;
+import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.transactions.Hash;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
@@ -31,7 +31,7 @@ public class ClientV2GetConsensusStatusTest {
     private static final int BLOCK_HEIGHT_2 = 2;
     private static final long GENESIS_TIME = 1655114400000L;
     private static final long SLOT_DURATION = 250;
-    private static final long EPOCH_DURATION =  3600000;
+    private static final long EPOCH_DURATION = 3600000;
     private static final int BLOCKS_RECEIVED_COUNT = 760779;
     private static final long BLOCK_LAST_RECEIVED_TIME = 1678610173039L;
     private static final double BLOCK_RECEIVE_LATENCY_EMA = 0.16338705415134258;

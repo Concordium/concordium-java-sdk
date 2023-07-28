@@ -1,16 +1,12 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.EncryptedSelfAmountAddedEvent;
-import com.concordium.grpc.v2.NewEncryptedAmountEvent;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.EncryptedAmount;
 import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * The sender has transferred funds from public to encrypted balance.
@@ -18,8 +14,9 @@ import lombok.ToString;
 @Getter
 @ToString
 @Builder
-@EqualsAndHashCode(callSuper = true)
-public final class EncryptedSelfAmountAddedResult extends TransactionResultEvent {
+@EqualsAndHashCode
+@AllArgsConstructor
+public final class EncryptedSelfAmountAddedResult implements TransactionResultEvent {
     private final CCDAmount amount;
     private final AccountAddress account;
     private final EncryptedAmount newAmount;

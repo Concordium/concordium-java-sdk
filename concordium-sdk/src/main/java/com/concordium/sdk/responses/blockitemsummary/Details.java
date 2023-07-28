@@ -6,8 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Optional;
-
 /**
  * Details of a block item executed on the chain.
  */
@@ -50,32 +48,4 @@ public class Details {
     public static Details newChainUpdate(UpdateDetails update) {
         return Details.builder().chainUpdateDetails(ChainUpdateDetails.from(update)).build();
     }
-
-    /**
-     * Get the account transaction details.
-     * This is only present if the type is {@link Type#ACCOUNT_TRANSACTION}
-     * @return the details
-     */
-    public Optional<AccountTransactionDetails> getAccountTransactionDetails() {
-        return Optional.of(accountTransactionDetails);
-    }
-
-    /**
-     * Get the account transaction details.
-     * This is only present if the type is {@link Type#ACCOUNT_CREATION}
-     * @return the details
-     */
-    public Optional<AccountCreationDetails> getAccountCreationDetails() {
-        return Optional.of(accountCreationDetails);
-    }
-
-    /**
-     * Get the account transaction details.
-     * This is only present if the type is {@link Type#CHAIN_UPDATE}
-     * @return the details
-     */
-    public Optional<ChainUpdateDetails> getChainUpdateDetails() {
-        return Optional.of(chainUpdateDetails);
-    }
-
 }

@@ -2,9 +2,9 @@ package com.concordium.sdk.queries;
 
 import com.concordium.sdk.responses.intanceinfo.InstanceInfo;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
-import com.concordium.sdk.responses.transactionstatus.ContractVersion;
-import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.responses.smartcontracts.ContractVersion;
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.types.AccountAddress;
 import concordium.ConcordiumP2PRpc;
 import lombok.val;
 import org.junit.Assert;

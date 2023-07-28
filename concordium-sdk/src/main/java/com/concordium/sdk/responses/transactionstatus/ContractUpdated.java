@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.ContractEvent;
 import com.concordium.grpc.v2.InstanceUpdatedEvent;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElementType;
+import com.concordium.sdk.responses.smartcontracts.ContractVersion;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
@@ -25,8 +26,9 @@ import java.util.stream.Collectors;
 @ToString
 @Getter
 @Builder
-@EqualsAndHashCode(callSuper = true)
-public class ContractUpdated extends TransactionResultEvent implements ContractTraceElement {
+@EqualsAndHashCode
+@AllArgsConstructor
+public class ContractUpdated implements TransactionResultEvent, ContractTraceElement {
 
     /**
      * The amount provided

@@ -19,8 +19,9 @@ import java.util.stream.Collectors;
 @Getter
 @ToString
 @Builder
-@EqualsAndHashCode(callSuper = true)
-public class InterruptedResult extends TransactionResultEvent implements ContractTraceElement{
+@EqualsAndHashCode
+@AllArgsConstructor
+public class InterruptedResult implements TransactionResultEvent, ContractTraceElement {
 
     /**
      * The contract that was interrupted.

@@ -2,7 +2,6 @@ package com.concordium.sdk.responses.blockitemsummary;
 
 import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.transactionstatus.EncryptedAmountsRemovedResult;
-import com.concordium.sdk.responses.transactionstatus.EncryptedSelfAmountAddedResult;
 import com.concordium.sdk.responses.transactionstatus.NewEncryptedAmountResult;
 import com.concordium.sdk.transactions.Memo;
 import lombok.Builder;
@@ -16,7 +15,7 @@ import java.util.Optional;
 @Builder
 @Getter
 @EqualsAndHashCode
-@ToString
+@ToString(doNotUseGetters = true)
 public class EncryptedTransferResult {
     private final EncryptedAmountsRemovedResult sender;
     private final NewEncryptedAmountResult receiver;

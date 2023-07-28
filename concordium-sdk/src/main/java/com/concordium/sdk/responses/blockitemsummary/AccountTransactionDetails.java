@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Details of a transaction with a sender account.
  */
 @EqualsAndHashCode
-@ToString
+@ToString(doNotUseGetters = true)
 @Builder
 @Getter
 public class AccountTransactionDetails {

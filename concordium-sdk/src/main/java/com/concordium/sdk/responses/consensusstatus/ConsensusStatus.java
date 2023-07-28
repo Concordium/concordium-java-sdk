@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * Summary of the current state of consensus.
  */
-@ToString
+@ToString(doNotUseGetters = true)
 @Jacksonized
 @Builder
 @EqualsAndHashCode
@@ -63,6 +63,7 @@ public final class ConsensusStatus {
     /**
      * Returns the slot duration if the protocol supports it.
      * This is supported in protocol versions 1-5.
+     *
      * @return the slot duration
      * @throws IllegalStateException if the protocol is unrecognized.
      */
@@ -327,11 +328,12 @@ public final class ConsensusStatus {
     /**
      * Gets the current timeout duration if the protocol supports it.
      * This is supported in protocol version 6 and onwards.
+     *
      * @return the current timeout duration if supported.
      * @throws IllegalStateException if the protocol is unrecognized
      */
     public Optional<Duration> getCurrentTimeoutDuration() {
-        switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)){
+        switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)) {
             case V1:
                 return Optional.empty();
             case V2:
@@ -348,6 +350,7 @@ public final class ConsensusStatus {
     /**
      * Get the current round if the current protocol version is version 6 or above,
      * otherwise return nothing.
+     *
      * @return the current round wrapped in an optional implying whether it's supported or not.
      * @throws IllegalStateException if the protocol version is unrecognized.
      */
@@ -370,11 +373,12 @@ public final class ConsensusStatus {
     /**
      * Get the current epoch if the protocol version is 6 or more,
      * otherwise this yields nothing.
+     *
      * @return the current epoch.
      * @throws IllegalStateException if the protocol version is unrecognized.
      */
-    public Optional<Epoch> getCurrentEpoch(){
-        switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)){
+    public Optional<Epoch> getCurrentEpoch() {
+        switch (ProtocolVersion.getConsensusVersion(this.protocolVersion)) {
             case V1:
                 return Optional.empty();
             case V2:
@@ -392,6 +396,7 @@ public final class ConsensusStatus {
 
     /**
      * Get the trigger block time of if present.
+     *
      * @return the trigger block time if the protocol version is 6 or more.
      * @throws IllegalStateException if the protocol version is unrecognized.
      */

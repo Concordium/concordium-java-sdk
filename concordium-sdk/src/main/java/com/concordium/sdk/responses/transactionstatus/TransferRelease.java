@@ -10,9 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A CCD release as a result of a {@link TransferredWithScheduleResult}
@@ -21,10 +19,17 @@ import java.util.Set;
 @Getter
 @Builder
 @ToString
-@JsonFormat(shape=JsonFormat.Shape.ARRAY)
-@JsonPropertyOrder({ "timestamp", "amount" })
+@JsonFormat(shape = JsonFormat.Shape.ARRAY)
+@JsonPropertyOrder({"timestamp", "amount"})
 public class TransferRelease {
+    /**
+     * Amount scheduled for the release.
+     */
     private final CCDAmount amount;
+
+    /**
+     * Time that the amount is released.
+     */
     private final Timestamp timestamp;
 
     public static TransferRelease from(NewRelease release) {

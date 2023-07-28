@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
@@ -56,7 +57,7 @@ public class ClientV2GetElectionInfoTest {
             .build();
 
     private static final ElectionInfo ELECTION_INFO_EXPECTED = ElectionInfo.builder()
-            .electionDifficulty(ELECTION_DIFFICULTY/100000d)
+            .electionDifficulty(PartsPerHundredThousand.from(ELECTION_DIFFICULTY).asDouble())
             .leadershipElectionNonce(ELECTION_NONCE)
             .bakerElectionInfo(ImmutableList.of(ElectionInfoBaker.builder()
                     .baker(com.concordium.sdk.responses.BakerId.from(BAKER_ID))

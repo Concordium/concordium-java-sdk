@@ -24,7 +24,7 @@ public class DelegatorConfigured {
         val builder = DelegatorConfigured.builder();
         val delegationEvents = delegationConfigured.getEventsList();
         for (DelegationEvent delegationEvent : delegationEvents) {
-            switch (delegationEvent.getEventCase()){
+            switch (delegationEvent.getEventCase()) {
                 case DELEGATION_STAKE_INCREASED:
                     builder.event(DelegationStakeIncreased.from(delegationEvent.getDelegationStakeIncreased(), sender));
                     break;

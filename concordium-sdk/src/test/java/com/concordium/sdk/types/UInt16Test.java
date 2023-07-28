@@ -19,7 +19,7 @@ public class UInt16Test {
         try {
             UInt16.from((short) -13);
             fail("Should not be able to create a negative UInt16");
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             if (!e.getMessage().equals("Value of UInt16 cannot be negative")) {
                 fail("Unexpected error when creating UInt16: " + e.getMessage());
             }
@@ -30,8 +30,8 @@ public class UInt16Test {
         try {
             UInt16.from("65536"); //(2^16)
             fail("This should exceed the range.");
-        }catch (NumberFormatException e) {
-            if(!e.getMessage().equals("Value of UInt16 cannot exceed 2^16")) {
+        } catch (NumberFormatException e) {
+            if (!e.getMessage().equals("Value of UInt16 cannot exceed 2^16")) {
                 fail("Unexpected error when creating too big UInt16: " + e.getMessage());
             }
         }

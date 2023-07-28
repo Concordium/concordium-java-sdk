@@ -5,7 +5,8 @@ import com.concordium.sdk.requests.smartcontracts.Energy;
 import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.TimeoutParameters;
 import com.concordium.sdk.responses.blocksummary.updates.ProtocolUpdate;
-import com.concordium.sdk.responses.blocksummary.updates.queues.*;
+import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
+import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.chainparameters.*;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
@@ -22,7 +23,7 @@ import java.util.Optional;
  * Details of the different chain updates that
  * may occur on the chain.
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(doNotUseGetters = true)
 @Builder
 @ToString
 public class ChainUpdateDetails {

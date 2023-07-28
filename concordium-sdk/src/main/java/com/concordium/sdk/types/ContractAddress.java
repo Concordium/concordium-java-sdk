@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Getter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public final class ContractAddress extends AbstractAddress {
 
     @JsonProperty("subindex")

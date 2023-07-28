@@ -12,14 +12,15 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @Jacksonized
+@Builder
 public final class ReleaseSchedule {
     private final CCDAmount total;
     private final ImmutableList<ScheduledRelease> schedule;
 
     @Builder
     ReleaseSchedule(@JsonProperty("total") CCDAmount total,
-                    @Singular(value = "scheduleRelease") @JsonProperty("schedule") List<ScheduledRelease> schedule) {
+                    @Singular(value = "scheduleRelease") @JsonProperty("schedule") List<ScheduledRelease> newSchedule) {
         this.total = total;
-        this.schedule = ImmutableList.copyOf(schedule);
+        this.schedule = ImmutableList.copyOf(newSchedule);
     }
 }

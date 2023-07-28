@@ -11,7 +11,7 @@ public enum OpenStatus {
     CLOSED_FOR_ALL;
 
     public static OpenStatus from(com.concordium.grpc.v2.OpenStatus openStatus) {
-        switch (openStatus){
+        switch (openStatus) {
             case OPEN_STATUS_OPEN_FOR_ALL:
                 return OPEN_FOR_ALL;
             case OPEN_STATUS_CLOSED_FOR_NEW:

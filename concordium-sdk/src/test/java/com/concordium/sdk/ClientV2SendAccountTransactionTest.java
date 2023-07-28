@@ -4,8 +4,8 @@ import com.concordium.grpc.v2.AccountTransaction;
 import com.concordium.grpc.v2.Signature;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
-import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
@@ -23,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;

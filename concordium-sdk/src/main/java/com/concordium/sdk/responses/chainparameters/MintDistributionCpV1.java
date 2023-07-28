@@ -1,13 +1,14 @@
 package com.concordium.sdk.responses.chainparameters;
 
 import com.concordium.grpc.v2.MintDistributionCpv1;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 @Builder
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @ToString
 @Getter
 public class MintDistributionCpV1 extends MintDistribution {
@@ -24,8 +25,8 @@ public class MintDistributionCpV1 extends MintDistribution {
     public static MintDistributionCpV1 from(MintDistributionCpv1 update) {
         return MintDistributionCpV1
                 .builder()
-                .bakingReward(update.getBakingReward().getPartsPerHundredThousand()/100_000d)
-                .finalizationReward(update.getFinalizationReward().getPartsPerHundredThousand()/100_000d)
+                .bakingReward(PartsPerHundredThousand.from(update.getBakingReward().getPartsPerHundredThousand()).asDouble())
+                .finalizationReward(PartsPerHundredThousand.from(update.getFinalizationReward().getPartsPerHundredThousand()).asDouble())
                 .build();
     }
 

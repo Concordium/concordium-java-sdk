@@ -4,7 +4,7 @@
 - Added support for `getBlockTransactionEvents` for retrieving events emitted by transactions.
 - Added support for `InvokeInstance` for executing a smart contract instance locally.
 - Removed `Account` instead one should simply use `AccountAddress`.
-- All timestamps are now exposed as `Timestamp`s with convenience methods for getting ZonedDateTime.
+- All timestamps are now exposed as `Timestamp`s with convenience method for getting ZonedDateTime.
 - Renamed `AccountRequest` to `AccountQuery`.
 - Added support for GRPC V2 `GetBlockChainParameters` for retrieving the parameters of the chain.
 - Deprecated the `Client`. Instead one should use `ClientV2` which leverages the GRPCv2 API of the node.

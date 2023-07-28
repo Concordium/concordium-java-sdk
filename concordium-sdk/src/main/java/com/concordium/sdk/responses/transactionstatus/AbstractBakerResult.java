@@ -13,8 +13,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString
 @SuperBuilder
-@EqualsAndHashCode(callSuper = true)
-public abstract class AbstractBakerResult extends TransactionResultEvent {
+@EqualsAndHashCode
+public abstract class AbstractBakerResult implements TransactionResultEvent {
     private final BakerId bakerId;
     private final AccountAddress account;
 
@@ -24,4 +24,5 @@ public abstract class AbstractBakerResult extends TransactionResultEvent {
         this.bakerId = BakerId.from(bakerId);
         this.account = account;
     }
+
 }

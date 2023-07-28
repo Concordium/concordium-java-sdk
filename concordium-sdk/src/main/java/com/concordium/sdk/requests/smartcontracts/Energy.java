@@ -22,4 +22,8 @@ public class Energy {
     public static Energy from(com.concordium.grpc.v2.Energy energy) {
         return new Energy(UInt64.from(energy.getValue()));
     }
+
+    public static Energy from(UInt64 value) {
+        return new Energy(value);
+    }
 }

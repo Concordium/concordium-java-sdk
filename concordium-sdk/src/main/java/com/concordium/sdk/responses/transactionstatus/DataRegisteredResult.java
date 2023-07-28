@@ -14,9 +14,9 @@ import org.apache.commons.codec.binary.Hex;
  */
 @Getter
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @Builder
-public final class DataRegisteredResult extends TransactionResultEvent {
+public final class DataRegisteredResult implements TransactionResultEvent {
 
     /**
      * The hex encoded data registered on the chain.

@@ -43,7 +43,7 @@ public abstract class AbstractAddress {
     }
 
     public static AbstractAddress from(Address instigator) {
-        switch (instigator.getTypeCase()){
+        switch (instigator.getTypeCase()) {
             case ACCOUNT:
                 return AccountAddress.from(instigator.getAccount());
             case CONTRACT:

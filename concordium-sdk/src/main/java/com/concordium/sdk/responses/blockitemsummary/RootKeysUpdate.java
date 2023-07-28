@@ -29,7 +29,7 @@ public class RootKeysUpdate {
         builder.level1Keys(HigherLevelKeys.from(rootUpdate.getLevel1KeysUpdate()));
         if (rootUpdate.hasLevel2KeysUpdateV0()) {
             builder.level2Keys(AuthorizationsV0.from(rootUpdate.getLevel2KeysUpdateV0()));
-        }else {
+        } else {
             builder.level2Keys(AuthorizationsV1.from(rootUpdate.getLevel2KeysUpdateV1()));
         }
         return builder.build();

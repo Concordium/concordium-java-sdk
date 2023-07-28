@@ -3,7 +3,6 @@ package com.concordium.sdk.responses.accountinfo.credential;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
@@ -11,11 +10,10 @@ import java.util.Arrays;
 
 import static java.util.Arrays.copyOf;
 
-@EqualsAndHashCode
-@ToString
 /**
  * Share of the encryption of IdCredPub.
  */
+@EqualsAndHashCode
 public class EncIdPubShare {
     private final byte[] value;
 

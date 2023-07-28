@@ -1,6 +1,5 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.AccountAddress;
 import com.concordium.grpc.v2.AccountTransaction;
 import com.concordium.grpc.v2.BlockItem;
 import com.concordium.grpc.v2.InitContractPayload;

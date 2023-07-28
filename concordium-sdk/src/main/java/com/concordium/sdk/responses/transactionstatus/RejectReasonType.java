@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 
-import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 // These types must correspond the 'RejectReason' types found here
@@ -237,7 +236,7 @@ public enum RejectReasonType {
     // Convenience methods for do 'safe' casting.
     public <T> T convert(RejectReason reason) {
         if (this != reason.getType()) {
-            throw new IllegalArgumentException("Unexpected conversion. Expected " + this + " but received " + reason.getType() +".");
+            throw new IllegalArgumentException("Unexpected conversion. Expected " + this + " but received " + reason.getType() + ".");
         }
         return (T) reason;
     }

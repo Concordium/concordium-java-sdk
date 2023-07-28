@@ -12,8 +12,8 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @Getter
 @SuperBuilder
-@EqualsAndHashCode(callSuper = true)
-public abstract class AbstractDelegatorResult extends TransactionResultEvent {
+@EqualsAndHashCode
+public abstract class AbstractDelegatorResult implements TransactionResultEvent {
     private final AccountIndex delegatorId;
     private final AccountAddress delegatorAddress;
 

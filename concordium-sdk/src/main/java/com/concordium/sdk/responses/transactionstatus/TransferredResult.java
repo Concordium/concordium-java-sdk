@@ -9,10 +9,7 @@ import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Map;
 import java.util.Objects;
@@ -20,10 +17,23 @@ import java.util.Objects;
 @Getter
 @ToString
 @Builder
-@EqualsAndHashCode(callSuper = true)
-public final class TransferredResult extends TransactionResultEvent implements ContractTraceElement {
+@EqualsAndHashCode
+@AllArgsConstructor
+public final class TransferredResult implements TransactionResultEvent, ContractTraceElement {
+
+    /**
+     * Receiver of the transaction.
+     */
     private final AbstractAddress to;
+
+    /**
+     * Sender of the transaction.
+     */
     private final AbstractAddress from;
+
+    /**
+     * The amount sent from "from".
+     */
     private CCDAmount amount;
 
     @JsonCreator

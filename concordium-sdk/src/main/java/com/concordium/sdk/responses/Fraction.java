@@ -1,14 +1,13 @@
 package com.concordium.sdk.responses;
 
 import com.concordium.grpc.v2.Ratio;
+import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
-
-import java.math.BigInteger;
 
 /**
  * A fraction
@@ -21,34 +20,47 @@ public class Fraction {
     /**
      * The numerator of the fraction.
      */
-    private final BigInteger numerator;
+    private final UInt64 numerator;
 
     /**
      * The denominator of the fraction.
      */
-    private final BigInteger denominator;
+    private final UInt64 denominator;
 
     @JsonCreator
-    public Fraction(@JsonProperty("numerator") BigInteger numerator, @JsonProperty("denominator") BigInteger denominator) {
-        if (denominator.equals(BigInteger.ZERO)) {
+    public Fraction(@JsonProperty("numerator") UInt64 numerator, @JsonProperty("denominator") UInt64 denominator) {
+        val num = numerator.getValue();
+        val den = denominator.getValue();
+        if (den == 0) {
             throw new IllegalArgumentException("Unable to compute gcd.");
         }
-        val gcd = numerator.gcd(denominator);
-        if (gcd.equals(BigInteger.ZERO)) {
-            this.denominator = denominator;
-            this.numerator = numerator;
+
+        val gcd = getGcd(num, den);
+        if (gcd == 0) {
+            this.numerator = UInt64.from(num);
+            this.denominator = UInt64.from(den);
         } else {
-            this.denominator = denominator.divide(gcd);
-            this.numerator = numerator.divide(gcd);
+            this.numerator = UInt64.from(num / gcd);
+            this.denominator = UInt64.from(den / gcd);
         }
     }
 
-    public Fraction(long numerator, long denominator) {
-        this(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator));
+    /**
+     * get the greatest common divisor using the Euclidean algorithm.
+     */
+    private static long getGcd(long a, long b) {
+        if (b == 0) {
+            return a;
+        }
+        return getGcd(b, a % b);
     }
 
     public static Fraction from(Ratio value) {
-        return Fraction.builder().numerator(BigInteger.valueOf(value.getNumerator())).denominator(BigInteger.valueOf(value.getDenominator())).build();
+        return Fraction.builder().numerator(UInt64.from(value.getNumerator())).denominator(UInt64.from(value.getDenominator())).build();
+    }
+
+    public static Fraction from(long num, long den) {
+        return new Fraction(UInt64.from(num), UInt64.from(den));
     }
 
     @Override
@@ -62,6 +74,6 @@ public class Fraction {
      * @return the floating point value.
      */
     public double asDouble() {
-        return this.numerator.divide(this.denominator).doubleValue();
+        return (double) this.numerator.getValue() / (double) this.denominator.getValue();
     }
 }

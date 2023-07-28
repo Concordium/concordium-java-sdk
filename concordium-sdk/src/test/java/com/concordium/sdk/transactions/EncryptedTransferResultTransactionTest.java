@@ -597,7 +597,7 @@ public class EncryptedTransferResultTransactionTest {
                 transaction.getHeader().getMaxEnergyCost());
     }
 
-    @Test(expected= RuntimeException.class)
+    @Test(expected = RuntimeException.class)
     @SneakyThrows
     public void shouldThrowCreateExceptionWhenInvalidCryptographicParams() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");

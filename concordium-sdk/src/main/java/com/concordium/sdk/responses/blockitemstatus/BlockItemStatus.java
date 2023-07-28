@@ -19,7 +19,7 @@ public class BlockItemStatus {
     private final CommittedBlockItem committedBlockItem;
 
     public Optional<CommittedBlockItem> getCommittedBlockItem() {
-        if(this.status == Status.COMMITTED) {
+        if (this.status == Status.COMMITTED) {
             return Optional.of(committedBlockItem);
         }
         return Optional.empty();
@@ -28,7 +28,7 @@ public class BlockItemStatus {
     private final FinalizedBlockItem finalizedBlockItem;
 
     public Optional<FinalizedBlockItem> getFinalizedBlockItem() {
-        if(this.status == Status.FINALIZED) {
+        if (this.status == Status.FINALIZED) {
             return Optional.of(finalizedBlockItem);
         }
         return Optional.empty();
@@ -51,7 +51,8 @@ public class BlockItemStatus {
                         .finalizedBlockItem(FinalizedBlockItem.from(value.getFinalized()))
                         .status(Status.FINALIZED);
                 break;
-            default: builder.status(Status.ABSENT);
+            default:
+                builder.status(Status.ABSENT);
         }
         return builder.build();
     }

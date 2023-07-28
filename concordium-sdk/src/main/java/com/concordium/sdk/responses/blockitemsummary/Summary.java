@@ -22,7 +22,7 @@ public class Summary {
     /**
      * The cost of the transaction.
      */
-    private final Energy cost;
+    private final Energy energyCost;
 
     /**
      * The transaction hash
@@ -39,10 +39,10 @@ public class Summary {
         val builder = Summary
                 .builder()
                 .transactionIndex(UInt64.from(outcome.getIndex().getValue()))
-                .cost(Energy.from(outcome.getEnergyCost()))
+                .energyCost(Energy.from(outcome.getEnergyCost()))
                 .transactionHash(Hash.from(outcome.getHash()));
 
-        switch (outcome.getDetailsCase()){
+        switch (outcome.getDetailsCase()) {
             case ACCOUNT_TRANSACTION:
                 builder.details(Details.newAccountTransaction(outcome.getAccountTransaction()));
                 break;

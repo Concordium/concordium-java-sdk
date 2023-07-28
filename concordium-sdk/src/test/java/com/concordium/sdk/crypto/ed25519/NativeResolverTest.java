@@ -6,7 +6,7 @@ import org.junit.Test;
 public class NativeResolverTest {
 
     @Test
-    public void testCanLoadNativeLib (){
+    public void testCanLoadNativeLib() {
         NativeResolver.loadLib();
     }
 }

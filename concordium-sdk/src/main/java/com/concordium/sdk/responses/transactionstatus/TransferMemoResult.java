@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public final class TransferMemoResult extends TransactionResultEvent {
+public final class TransferMemoResult implements TransactionResultEvent {
     private final String memo;
 
     @JsonCreator

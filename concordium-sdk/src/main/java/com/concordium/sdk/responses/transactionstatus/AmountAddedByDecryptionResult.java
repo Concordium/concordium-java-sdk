@@ -9,7 +9,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public final class AmountAddedByDecryptionResult extends TransactionResultEvent {
+public final class AmountAddedByDecryptionResult implements TransactionResultEvent {
     private final String amount;
     private final AccountAddress account;
 

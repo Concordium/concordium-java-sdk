@@ -33,7 +33,7 @@ public abstract class BakerStakeUpdated extends AbstractBakerResult {
                     .bakerId(BakerId.from(update.getBakerId()))
                     .account(account)
                     .build();
-        }else {
+        } else {
             return BakerStakeDecreasedResult
                     .builder()
                     .newStake(CCDAmount.from(update.getNewStake()))

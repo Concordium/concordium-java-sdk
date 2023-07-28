@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.chainparameters;
 
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -35,7 +36,7 @@ public class FinalizationCommitteeParameters {
                 .builder()
                 .minimumFinalizers(params.getMinimumFinalizers())
                 .maxFinalizers(params.getMaximumFinalizers())
-                .finalizerRelativeStakeThreshold(params.getFinalizerRelativeStakeThreshold().getPartsPerHundredThousand()/100_000d)
+                .finalizerRelativeStakeThreshold(PartsPerHundredThousand.from(params.getFinalizerRelativeStakeThreshold().getPartsPerHundredThousand()).asDouble())
                 .build();
     }
 }

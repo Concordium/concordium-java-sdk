@@ -6,30 +6,23 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
 @ToString
 @Builder
-@EqualsAndHashCode(callSuper = true)
-public final class TransferredWithScheduleResult extends TransactionResultEvent {
+@EqualsAndHashCode
+public final class TransferredWithScheduleResult implements TransactionResultEvent {
     private final List<TransferRelease> releases;
     private final AccountAddress to;
     private final AccountAddress from;
 
     @JsonCreator
-    TransferredWithScheduleResult(@JsonProperty("amount") List<Map<Long, String>> amount, // list of tuples
+    TransferredWithScheduleResult(@JsonProperty("amount") List<TransferRelease> releases, // list of tuples
                                   @JsonProperty("to") AccountAddress to,
                                   @JsonProperty("from") AccountAddress from) {
-        val amounts = new ArrayList<TransferRelease>();
-        for (Map<Long, String> release : amount) {
-            amounts.add(TransferRelease.from(release));
-        }
-        this.releases = amounts;
+        this.releases = releases;
         this.to = to;
         this.from = from;
     }

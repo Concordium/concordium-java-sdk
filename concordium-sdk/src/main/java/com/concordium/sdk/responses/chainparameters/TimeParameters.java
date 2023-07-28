@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.blocksummary.updates.queues;
+package com.concordium.sdk.responses.chainparameters;
 
 import com.concordium.grpc.v2.TimeParametersCpv1;
 import com.fasterxml.jackson.annotation.JsonProperty;

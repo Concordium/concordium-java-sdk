@@ -23,14 +23,14 @@ public class BakerSetTransactionFeeCommission extends AbstractBakerResult {
                                      @JsonProperty("account") AccountAddress bakerAccount,
                                      @JsonProperty("transactionFeeCommission") long feeCommission) {
         super(bakerId, bakerAccount);
-        this.feeCommission = feeCommission/100_000d;
+        this.feeCommission = PartsPerHundredThousand.from(feeCommission).asDouble();
 
     }
 
     public static BakerSetTransactionFeeCommission from(BakerEvent.BakerSetTransactionFeeCommission bakerSetTransactionFeeCommission, AccountAddress sender) {
         return BakerSetTransactionFeeCommission
                 .builder()
-                .feeCommission(bakerSetTransactionFeeCommission.getTransactionFeeCommission().getPartsPerHundredThousand()/100_000d)
+                .feeCommission(PartsPerHundredThousand.from(bakerSetTransactionFeeCommission.getTransactionFeeCommission().getPartsPerHundredThousand()).asDouble())
                 .bakerId(BakerId.from(bakerSetTransactionFeeCommission.getBakerId()))
                 .account(sender)
                 .build();

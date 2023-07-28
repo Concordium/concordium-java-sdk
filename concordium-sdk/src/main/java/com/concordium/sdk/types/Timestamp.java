@@ -50,6 +50,7 @@ public class Timestamp {
 
     /**
      * Construct a timestamp from a {@link Instant}
+     *
      * @param instant the time
      * @return the corresponding timestamp.
      */
@@ -59,6 +60,7 @@ public class Timestamp {
 
     /**
      * Get the UTC timestamp as a {@link ZonedDateTime}
+     *
      * @return the time of the timestamp.
      */
     public ZonedDateTime getZonedDateTime() {

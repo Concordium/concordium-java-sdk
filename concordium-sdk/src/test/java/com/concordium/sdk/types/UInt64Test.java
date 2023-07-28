@@ -19,7 +19,7 @@ public class UInt64Test {
         try {
             UInt64.from(-13);
             fail("Should not be able to create a negative UInt64");
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             if (!e.getMessage().equals("Value of UInt64 can not be negative")) {
                 fail("Unexpected error when creating UInt64: " + e.getMessage());
             }
@@ -30,8 +30,8 @@ public class UInt64Test {
         try {
             UInt64.from("18446744073709551616"); //(2^64)
             fail("This should exceed the range.");
-        }catch (NumberFormatException e) {
-            if(!e.getMessage().equals("String value 18446744073709551616 exceeds range of unsigned long.")) {
+        } catch (NumberFormatException e) {
+            if (!e.getMessage().equals("String value 18446744073709551616 exceeds range of unsigned long.")) {
                 fail("Unexpected error when creating too big UInt64: " + e.getMessage());
             }
         }

@@ -4,11 +4,13 @@ import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.transactions.CCDAmount;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
 @Jacksonized
 @Builder
+@EqualsAndHashCode(callSuper = false)
 public class PassiveDelegationStatus extends PoolStatus {
 
     private final PoolType poolType = PoolType.PASSIVE_DELEGATION;

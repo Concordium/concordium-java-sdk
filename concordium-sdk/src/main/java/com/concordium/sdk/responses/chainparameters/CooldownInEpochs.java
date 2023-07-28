@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class CooldownInEpochs extends CooldownParameter {
     private final UInt64 numberOfEpochs;
 

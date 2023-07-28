@@ -29,7 +29,7 @@ public class BakerSetBakingRewardCommission extends AbstractBakerResult {
     public static BakerSetBakingRewardCommission from(BakerEvent.BakerSetBakingRewardCommission bakerSetBakingRewardCommission, AccountAddress sender) {
         return BakerSetBakingRewardCommission
                 .builder()
-                .bakingRewardCommission(bakerSetBakingRewardCommission.getBakingRewardCommission().getPartsPerHundredThousand()/100_000d)
+                .bakingRewardCommission(PartsPerHundredThousand.from(bakerSetBakingRewardCommission.getBakingRewardCommission().getPartsPerHundredThousand()).asDouble())
                 .bakerId(BakerId.from(bakerSetBakingRewardCommission.getBakerId()))
                 .account(sender)
                 .build();

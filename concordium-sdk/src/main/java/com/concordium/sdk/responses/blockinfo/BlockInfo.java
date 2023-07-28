@@ -8,7 +8,9 @@ import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Optional;
@@ -103,6 +105,7 @@ public class BlockInfo extends BlockIdentifier {
     /**
      * Get the round of the block if the protocol version
      * is 6 or above
+     *
      * @return return the round if present otherwise nothing.
      * @throws IllegalStateException if the protocol version is unrecognized.
      */
@@ -124,6 +127,7 @@ public class BlockInfo extends BlockIdentifier {
 
     /**
      * Get the epoch of the block if the protocol version is 6 or above.
+     *
      * @return the epoch if present otherwise nothing.
      * @throws IllegalStateException if the protocol version is unrecognized.
      */

@@ -52,6 +52,7 @@ public class AuthorizationsV1 extends AuthorizationsV0 implements Authorizations
                 .cooldownParameters(AccessStructure.from(value.getParameterCooldown()))
                 .build();
     }
+
     @Override
     public AuthorizationsType getType() {
         return AuthorizationsType.V2;

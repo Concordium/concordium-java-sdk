@@ -1,6 +1,5 @@
-package com.concordium.sdk.responses.blocksummary.updates.queues;
+package com.concordium.sdk.responses.chainparameters;
 
-import com.concordium.sdk.responses.chainparameters.CooldownParameter;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,7 +10,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Builder
 public final class CooldownParametersCpv1 extends CooldownParameter {
     /**

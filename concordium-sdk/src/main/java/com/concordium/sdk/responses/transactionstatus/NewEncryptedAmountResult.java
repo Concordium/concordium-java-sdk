@@ -16,12 +16,18 @@ import lombok.ToString;
  */
 @Getter
 @ToString
-@Builder
-@EqualsAndHashCode(callSuper = true)
-public final class NewEncryptedAmountResult extends TransactionResultEvent {
+@EqualsAndHashCode
+public final class NewEncryptedAmountResult implements TransactionResultEvent {
     private final AccountAddress account;
     private final long newIndex;
     private final EncryptedAmount encryptedAmount;
+
+    @Builder
+    public NewEncryptedAmountResult(AccountAddress account, long newIndex, EncryptedAmount encryptedAmount) {
+        this.account = account;
+        this.newIndex = newIndex;
+        this.encryptedAmount = encryptedAmount;
+    }
 
 
     @JsonCreator

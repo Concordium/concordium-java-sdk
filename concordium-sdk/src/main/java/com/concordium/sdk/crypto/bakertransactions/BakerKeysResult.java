@@ -4,6 +4,7 @@ import com.concordium.sdk.crypto.CryptoJniResultCode;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import java.util.Optional;
  * Class that holds the result of generating baker keys payload
  */
 @Data
+@ToString(doNotUseGetters = true)
 public class BakerKeysResult {
     /**
      * An optional `BakerKeysJniOutput` object, containing the output of the generate baker keys function.

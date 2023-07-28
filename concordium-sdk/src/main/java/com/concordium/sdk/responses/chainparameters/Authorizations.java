@@ -5,6 +5,6 @@ public interface Authorizations {
     AuthorizationsType getType();
 
     enum AuthorizationsType {
-        V1,V2
+        V1, V2
     }
 }

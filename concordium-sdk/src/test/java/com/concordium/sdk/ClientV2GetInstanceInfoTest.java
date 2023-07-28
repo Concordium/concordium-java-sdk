@@ -2,7 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.requests.BlockQuery;
-import com.concordium.sdk.responses.transactionstatus.ContractVersion;
+import com.concordium.sdk.responses.smartcontracts.ContractVersion;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.ContractAddress;
 import com.google.common.collect.Lists;

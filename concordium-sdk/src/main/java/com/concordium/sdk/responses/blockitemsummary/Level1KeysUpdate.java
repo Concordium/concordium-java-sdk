@@ -24,7 +24,7 @@ public class Level1KeysUpdate {
         builder.level1Keys(HigherLevelKeys.from(level1Update.getLevel1KeysUpdate()));
         if (level1Update.hasLevel2KeysUpdateV0()) {
             builder.level2Keys(AuthorizationsV0.from(level1Update.getLevel2KeysUpdateV0()));
-        }else {
+        } else {
             builder.level2Keys(AuthorizationsV1.from(level1Update.getLevel2KeysUpdateV1()));
         }
         return builder.build();

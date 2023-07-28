@@ -2,13 +2,17 @@ package com.concordium.sdk.exceptions;
 
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.transactions.Hash;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Optional;
 
 /**
  * An exception that is thrown when a pool could not be looked up.
  */
+@ToString(doNotUseGetters = true)
+@Getter
 public final class PoolNotFoundException extends Exception {
     @Getter
     private final Optional<BakerId> bakerId;
@@ -19,7 +23,6 @@ public final class PoolNotFoundException extends Exception {
      * Creates a new {@link PoolNotFoundException} from a {@link BakerId} and a {@link Hash}.
      * This happens when the Pool could not be found for the given block.
      * <p>
-     * Use {@link PoolNotFoundException#from(BakerId, Hash)} to instantiate.
      *
      * @param bakerId   The Baker Id for which the pool could not be found.
      * @param blockHash The block hash

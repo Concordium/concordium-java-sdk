@@ -1,7 +1,6 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import com.concordium.sdk.responses.transactionstatus.EncryptedAmountsRemovedResult;
 import com.concordium.sdk.types.UInt16;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

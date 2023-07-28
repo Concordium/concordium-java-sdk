@@ -3,7 +3,7 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.grpc.v2.ContractEvent;
 import com.concordium.grpc.v2.ContractInitializedEvent;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
-import com.concordium.sdk.responses.smartcontracts.SmartContractVersion;
+import com.concordium.sdk.responses.smartcontracts.ContractVersion;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -12,6 +12,7 @@ import com.google.protobuf.ByteString;
 import lombok.*;
 import org.apache.commons.codec.binary.Hex;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -22,8 +23,9 @@ import java.util.stream.Collectors;
 @Getter
 @ToString
 @Builder
-@EqualsAndHashCode(callSuper = true)
-public final class ContractInitializedResult extends TransactionResultEvent {
+@EqualsAndHashCode
+@AllArgsConstructor
+public final class ContractInitializedResult implements TransactionResultEvent {
 
     /**
      * Module in which the contract source resides.
@@ -54,27 +56,28 @@ public final class ContractInitializedResult extends TransactionResultEvent {
     /**
      * The contract version of the contract that was initialized.
      */
-    private final SmartContractVersion version;
+    private final ContractVersion version;
 
     @JsonCreator
     @SneakyThrows
-    ContractInitializedResult(@JsonProperty("ref") String ref,
+    ContractInitializedResult(@JsonProperty("ref") ModuleRef modRef,
                               @JsonProperty("address") ContractAddress address,
                               @JsonProperty("amount") String amount,
                               @JsonProperty("initName") String initName,
                               @JsonProperty("events") List<String> events,
-                              @JsonProperty("contractVersion") int version) {
-        this.ref = ModuleRef.from(ref);
+                              @JsonProperty("contractVersion") ContractVersion version) {
+        this.ref = modRef;
         this.address = address;
         if (!Objects.isNull(amount)) {
             this.amount = CCDAmount.fromMicro(amount);
         }
         this.initName = initName;
-        this.events = events
-                .stream()
-                .map(Hex::decodeHex)
-                .collect(Collectors.toList());
-        this.version = SmartContractVersion.from(version);
+        val list = new ArrayList<byte[]>();
+        for (String event : events) {
+            list.add(Hex.decodeHex(event));
+        }
+        this.events = list;
+        this.version = version;
     }
 
     public static ContractInitializedResult from(ContractInitializedEvent contractInitialized) {
@@ -88,7 +91,7 @@ public final class ContractInitializedResult extends TransactionResultEvent {
                 .address(ContractAddress.from(contractInitialized.getAddress()))
                 .ref(ModuleRef.from(contractInitialized.getOriginRef()))
                 .amount(CCDAmount.from(contractInitialized.getAmount()))
-                .version(SmartContractVersion.from(contractInitialized.getContractVersion()))
+                .version(ContractVersion.from(contractInitialized.getContractVersion()))
                 .initName(contractInitialized.getInitName().getValue())
                 .events(events)
                 .build();

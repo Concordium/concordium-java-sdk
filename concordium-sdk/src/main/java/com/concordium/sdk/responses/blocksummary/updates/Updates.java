@@ -1,10 +1,10 @@
 package com.concordium.sdk.responses.blocksummary.updates;
 
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParameters;
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParametersV0;
-import com.concordium.sdk.responses.blocksummary.updates.chainparameters.ChainParametersV1;
 import com.concordium.sdk.responses.blocksummary.updates.keys.Keys;
 import com.concordium.sdk.responses.blocksummary.updates.queues.UpdateQueues;
+import com.concordium.sdk.responses.chainparameters.ChainParameters;
+import com.concordium.sdk.responses.chainparameters.ChainParametersV0;
+import com.concordium.sdk.responses.chainparameters.ChainParametersV1;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

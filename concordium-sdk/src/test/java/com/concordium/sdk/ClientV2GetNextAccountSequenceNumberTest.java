@@ -1,6 +1,9 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.*;
+import com.concordium.grpc.v2.AccountAddress;
+import com.concordium.grpc.v2.NextAccountSequenceNumber;
+import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.grpc.v2.SequenceNumber;
 import com.concordium.sdk.transactions.AccountNonce;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;

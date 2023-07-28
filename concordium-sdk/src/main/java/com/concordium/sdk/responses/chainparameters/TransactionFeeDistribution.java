@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.chainparameters;
 
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,8 +32,8 @@ public class TransactionFeeDistribution {
     public static TransactionFeeDistribution from(com.concordium.grpc.v2.TransactionFeeDistribution update) {
         return TransactionFeeDistribution
                 .builder()
-                .allocatedForBaker(update.getBaker().getPartsPerHundredThousand()/100_000d)
-                .allocatedForGASAccount(update.getGasAccount().getPartsPerHundredThousand()/100_000d)
+                .allocatedForBaker(PartsPerHundredThousand.from(update.getBaker().getPartsPerHundredThousand()).asDouble())
+                .allocatedForGASAccount(PartsPerHundredThousand.from(update.getGasAccount().getPartsPerHundredThousand()).asDouble())
                 .build();
     }
 }

@@ -24,7 +24,7 @@ public class UpdateCredentialKeysTest {
     @SneakyThrows
     @Test
     public void testUpdateCredentialKeys() {
-        Map<Index, ED25519PublicKey> keys =  new HashMap<>();
+        Map<Index, ED25519PublicKey> keys = new HashMap<>();
         ED25519PublicKey newKey = ED25519PublicKey.from("ad6591a2deb03c32357615d73e144e01a49abad49671428d46db58cf2d4e4d87");
         keys.put(Index.from(0), newKey);
 

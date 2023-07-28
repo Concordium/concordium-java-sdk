@@ -6,6 +6,7 @@ import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.poolstatus.CurrentPaydayStatus;
 import com.concordium.sdk.responses.poolstatus.PendingChangeReduceBakerCapital;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.UInt64;
 import com.google.protobuf.ByteString;
@@ -21,9 +22,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.time.Instant;
-import java.time.ZoneOffset;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
@@ -125,9 +123,9 @@ public class ClientV2GetPoolInfoTest {
             .poolInfo(com.concordium.sdk.responses.accountinfo.BakerPoolInfo.builder()
                     .openStatus(com.concordium.sdk.responses.transactionstatus.OpenStatus.OPEN_FOR_ALL)
                     .commissionRates(com.concordium.sdk.responses.accountinfo.CommissionRates.builder()
-                            .bakingCommission((double) COMMISSION_BAKING_PPHT / 100_000D)
-                            .finalizationCommission((double) COMMISSION_FINALIZATION_PPHT / 100_000D)
-                            .transactionCommission((double) COMMISSION_TRANSACTION_PPHT / 100_000D)
+                            .bakingCommission(PartsPerHundredThousand.from(COMMISSION_BAKING_PPHT).asDouble())
+                            .finalizationCommission(PartsPerHundredThousand.from(COMMISSION_FINALIZATION_PPHT).asDouble())
+                            .transactionCommission(PartsPerHundredThousand.from(COMMISSION_TRANSACTION_PPHT).asDouble())
                             .build())
                     .metadataUrl(BAKER_POOL_URL)
                     .build())

@@ -20,8 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.Instant;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,9 +28,9 @@ import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
 
 /**
- Tests for {@link ClientV2#getPoolDelegators(BlockQuery, com.concordium.sdk.responses.AccountIndex)}.
- <br/>
- Tests the mapping code {@link ClientV2MapperExtensions#to(DelegatorInfo)}
+ * Tests for {@link ClientV2#getPoolDelegators(BlockQuery, com.concordium.sdk.responses.AccountIndex)}.
+ * <br/>
+ * Tests the mapping code {@link ClientV2MapperExtensions#to(DelegatorInfo)}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientV2GetPoolDelegatorsTest {

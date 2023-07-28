@@ -1,20 +1,16 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.transactions.CredentialRegistrationId;
-import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 @Getter
 @ToString
 @Builder
-@EqualsAndHashCode(callSuper = true)
-public final class CredentialKeysUpdatedResult extends TransactionResultEvent {
+@EqualsAndHashCode
+@AllArgsConstructor
+public final class CredentialKeysUpdatedResult implements TransactionResultEvent {
     private final CredentialRegistrationId credId;
 
     @JsonCreator

@@ -4,12 +4,14 @@ import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.Timestamp;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
 
 @Data
 @Jacksonized
 @Builder
+@EqualsAndHashCode(callSuper = true)
 public class PendingChangeReduceBakerCapital extends PendingChange {
 
     /**
