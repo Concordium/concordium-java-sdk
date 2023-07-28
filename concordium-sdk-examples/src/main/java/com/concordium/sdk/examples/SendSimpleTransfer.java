@@ -7,6 +7,7 @@ import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.types.AccountAddress;
 import lombok.var;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;

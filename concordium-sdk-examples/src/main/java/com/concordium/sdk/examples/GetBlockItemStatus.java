@@ -1,5 +1,6 @@
 package com.concordium.sdk.examples;
 
+import com.concordium.grpc.v2.BlockItemStatus;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.exceptions.BlockNotFoundException;
@@ -38,12 +39,12 @@ public class GetBlockItemStatus implements Callable<Integer> {
                 .build();
 
         val client = ClientV2.from(connection);
-        TransactionStatus getBlockItemStatusFailure = client
+        com.concordium.sdk.responses.blockitemstatus.BlockItemStatus getBlockItemStatusFailure = client
                 .getBlockItemStatus(blockTransactionHashFailure);
 
         System.out.println(getBlockItemStatusFailure);
 
-        TransactionStatus getBlockItemStatusSuccess = client
+        com.concordium.sdk.responses.blockitemstatus.BlockItemStatus  getBlockItemStatusSuccess = client
                 .getBlockItemStatus(blockTransactionHashSuccess);
 
         System.out.println(getBlockItemStatusSuccess);
