@@ -1,6 +1,8 @@
 package com.concordium.sdk.responses.chainparameters;
 
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,7 +26,9 @@ public class TransactionFeeDistribution {
      */
     private final double allocatedForGASAccount;
 
-    public TransactionFeeDistribution(double allocatedForBaker, double allocatedForGASAccount) {
+    @JsonCreator
+    public TransactionFeeDistribution(@JsonProperty("baker") double allocatedForBaker,
+                                      @JsonProperty("gasAccount") double allocatedForGASAccount) {
         this.allocatedForBaker = allocatedForBaker;
         this.allocatedForGASAccount = allocatedForGASAccount;
     }

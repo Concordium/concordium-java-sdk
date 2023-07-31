@@ -10,17 +10,18 @@ import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.crypto.vrf.VRFPublicKey;
 import com.concordium.sdk.crypto.vrf.VRFSecretKey;
 import com.concordium.sdk.exceptions.CryptoJniException;
+import com.concordium.sdk.requests.AccountQuery;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;
+import com.concordium.sdk.responses.accountinfo.Baker;
 import com.concordium.sdk.serializing.JsonMapper;
+import com.concordium.sdk.transactions.TransactionFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
-import lombok.val;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -85,9 +86,17 @@ public final class BakerKeys {
 
 
     /**
-     * Write the {@link BakerCredentials} to the provided Writer.
+     * Write the {@link BakerCredentials} to the provided Writer with the supplied baker id.
+     * Note that the supplied {@link BakerId} must be the one for the account that sent the
+     * {@link com.concordium.sdk.transactions.ConfigureBaker} transaction.
+     * <br>
+     * The baker id can be looked up via {@link com.concordium.sdk.ClientV2#getAccountInfo(BlockQuery, AccountQuery)} if
+     * the account is registered as a baker this will yield a {@link Baker#getBakerId()}
+     * @param writer where to output the baker credentials.
+     * @param bakerId the baker id
      */
-    public void createBakerCredentials(Writer writer, BakerId bakerId) throws IOException {
+    @SneakyThrows
+    public void createBakerCredentials(Writer writer, BakerId bakerId) {
         JsonMapper.INSTANCE.writeValue(writer, new BakerCredentials(bakerId, this));
     }
 

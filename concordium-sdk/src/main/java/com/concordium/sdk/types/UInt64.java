@@ -21,7 +21,7 @@ public final class UInt64 {
 
     @JsonCreator
     public UInt64(BigInteger value) {
-        this.value = UInt64.from(value.toByteArray()).getValue();
+        this.value = UInt64.from(value.toString()).getValue();
     }
 
     public byte[] getBytes() {

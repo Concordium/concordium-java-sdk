@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.chainparameters;
 
+import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
@@ -96,7 +97,8 @@ public class ChainParametersV0 extends ChainParameters {
             @JsonProperty("electionDifficulty") double electionDifficulty,
             @JsonProperty("euroPerEnergy") Fraction euroPerEnergy,
             @JsonProperty("minimumThresholdForBaking") CCDAmount bakerStakeThreshold,
-            @JsonProperty("bakerCooldownEpochs") long bakerCooldownEpochs) {
+            @JsonProperty("bakerCooldownEpochs") long bakerCooldownEpochs,
+            @JsonProperty("foundationAccountIndex") AccountIndex foundationAccountIndex) {
         this.euroPerEnergy = euroPerEnergy;
         this.microCCDPerEuro = microCCDPerEuro;
         this.credentialsPerBlockLimit = accountCreationLimit;
