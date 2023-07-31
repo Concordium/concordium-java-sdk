@@ -62,6 +62,6 @@ public class BakerConfigured {
                     throw new IllegalArgumentException("Baker event was not set.");
             }
         }
-        throw new IllegalArgumentException("Unrecognized baker event.");
+        return builder.build();
     }
 }

@@ -10,21 +10,10 @@ public class UInt64Test {
 
     @Test
     public void testCreation() {
-        checkNegativeNumber();
         UInt64.from("18446744073709551615"); //(2^64)-1
         checkTooLargeNumber();
     }
 
-    private void checkNegativeNumber() {
-        try {
-            UInt64.from(-13);
-            fail("Should not be able to create a negative UInt64");
-        } catch (RuntimeException e) {
-            if (!e.getMessage().equals("Value of UInt64 can not be negative")) {
-                fail("Unexpected error when creating UInt64: " + e.getMessage());
-            }
-        }
-    }
 
     private void checkTooLargeNumber() {
         try {

@@ -35,7 +35,11 @@ public class Fraction {
     }
 
     public static Fraction from(Ratio value) {
-        return Fraction.builder().numerator(UInt64.from(value.getNumerator())).denominator(UInt64.from(value.getDenominator())).build();
+        return Fraction
+                .builder()
+                .numerator(UInt64.from(value.getNumerator()))
+                .denominator(UInt64.from(value.getDenominator()))
+                .build();
     }
 
     public static Fraction from(long num, long den) {

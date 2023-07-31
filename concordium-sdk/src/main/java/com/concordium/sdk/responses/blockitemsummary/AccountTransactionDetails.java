@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * If the transaction was successful then first check the type via {@link AccountTransactionDetails#getType()} and use the corresponding
  * getter for getting the concrete event.
  */
-@EqualsAndHashCode(doNotUseGetters = true)
+@EqualsAndHashCode
 @ToString(doNotUseGetters = true)
 @Builder
 @Getter
@@ -39,6 +39,8 @@ public class AccountTransactionDetails {
 
     /**
      * Type of the outcome.
+     * Note that the type is only set if the transaction was successfully executed
+     * i.e., {@link AccountTransactionDetails#isSuccessful()} returns true.
      */
     private final TransactionResultEventType type;
 
@@ -52,26 +54,12 @@ public class AccountTransactionDetails {
      */
     private final boolean successful;
 
-    public Optional<RejectReasonType> getRejectReason() {
-        if (!this.successful) {
-            return Optional.of(rejectReason);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The module reference if a module was deployed if the transaction
      * deployed a module.
      * Present if the transaction was a {@link DeployModule}
      */
     private final ModuleRef moduleDeployed;
-
-    public Optional<ModuleRef> getModuleDeployed() {
-        if (this.type == TransactionResultEventType.MODULE_DEPLOYED) {
-            return Optional.of(moduleDeployed);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of a contract being initialized if the transaction
@@ -80,26 +68,12 @@ public class AccountTransactionDetails {
      */
     private final ContractInitializedResult contractInitialized;
 
-    public Optional<ContractInitializedResult> getContractInitialized() {
-        if (this.type == TransactionResultEventType.CONTRACT_INITIALIZED) {
-            return Optional.of(contractInitialized);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The resulting list of events of a contract being updated if the transaction
      * updated a smart contract.
      * Present if the transaction was a {@link UpdateContract}
      */
     private final List<ContractTraceElement> contractUpdated;
-
-    public Optional<List<ContractTraceElement>> getContractUpdated() {
-        if (this.type == TransactionResultEventType.CONTRACT_UPDATED) {
-            return Optional.of(contractUpdated);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of an account transfer if the transaction
@@ -108,27 +82,11 @@ public class AccountTransactionDetails {
      */
     private final TransferredResult accountTransfer;
 
-
-    public Optional<TransferredResult> getAccountTransfer() {
-        if (this.type == TransactionResultEventType.TRANSFERRED) {
-            return Optional.of(accountTransfer);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of a baker being added to the chain.
      * Present if the transaction was a {@link ConfigureBaker}
      */
     private final BakerAddedResult bakerAdded;
-
-
-    public Optional<BakerAddedResult> getBakerAdded() {
-        if (this.type == TransactionResultEventType.BAKER_ADDED) {
-            return Optional.of(bakerAdded);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of a baker being removed from the chain.
@@ -138,26 +96,11 @@ public class AccountTransactionDetails {
     private final BakerRemovedResult bakerRemoved;
 
 
-    public Optional<BakerRemovedResult> getBakerRemoved() {
-        if (this.type == TransactionResultEventType.BAKER_REMOVED) {
-            return Optional.of(bakerRemoved);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of a baker having its stake updated.
      * Present if the transaction was a {@link ConfigureBaker} with an updated stake.
      */
     private final BakerStakeUpdated bakerStakeUpdated;
-
-
-    public Optional<BakerStakeUpdated> getBakerStakeUpdated() {
-        if (this.type == TransactionResultEventType.BAKER_STAKE_UPDATED) {
-            return Optional.of(bakerStakeUpdated);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of a baker having its restake flag updated.
@@ -165,27 +108,11 @@ public class AccountTransactionDetails {
      */
     private final BakerSetRestakeEarningsResult bakerRestakeEarningsUpdated;
 
-
-    public Optional<BakerSetRestakeEarningsResult> getBakerRestakeEarningsUpdated() {
-        if (this.type == TransactionResultEventType.BAKER_SET_RESTAKE_EARNINGS) {
-            return Optional.of(bakerRestakeEarningsUpdated);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of a baker having its keys updated.
      * Present if the transaction was a {@link ConfigureBaker} with new keys.
      */
     private final BakerKeysUpdatedResult bakerKeysUpdated;
-
-
-    public Optional<BakerKeysUpdatedResult> getBakerKeysUpdated() {
-        if (this.type == TransactionResultEventType.BAKER_KEYS_UPDATED) {
-            return Optional.of(bakerKeysUpdated);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of a transaction that is transferring CCD with a schedule.
@@ -193,37 +120,16 @@ public class AccountTransactionDetails {
      */
     private final TransferredWithScheduleResult transferredWithSchedule;
 
-    public Optional<TransferredWithScheduleResult> getTransferredWithSchedule() {
-        if (this.type == TransactionResultEventType.TRANSFERRED_WITH_SCHEDULE) {
-            return Optional.of(transferredWithSchedule);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of the sender updating keys.
      * Present if the transaction was a {@link UpdateCredentialKeysTransaction}.
      */
     private final CredentialKeysUpdatedResult credentialKeysUpdated;
 
-    public Optional<CredentialKeysUpdatedResult> getCredentialKeysUpdated() {
-        if (this.type == TransactionResultEventType.CREDENTIAL_KEYS_UPDATED) {
-            return Optional.of(credentialKeysUpdated);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of a credential being updated.
      */
     private final CredentialsUpdatedResult credentialsUpdated;
-
-    public Optional<CredentialsUpdatedResult> getCredentialsUpdated() {
-        if (this.type == TransactionResultEventType.CREDENTIALS_UPDATED) {
-            return Optional.of(credentialsUpdated);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of the sender registering data on the chain.
@@ -231,25 +137,11 @@ public class AccountTransactionDetails {
      */
     private final DataRegisteredResult dataRegistered;
 
-    public Optional<DataRegisteredResult> getDataRegistered() {
-        if (this.type == TransactionResultEventType.DATA_REGISTERED) {
-            return Optional.of(dataRegistered);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of the sender configuring baking.
      * Present if the transaction was a {@link ConfigureBaker}.
      */
     private final BakerConfigured bakerConfigured;
-
-    public Optional<BakerConfigured> getBakerConfigured() {
-        if (this.type == TransactionResultEventType.BAKER_CONFIGURED) {
-            return Optional.of(bakerConfigured);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of the sender configuring delegation.
@@ -257,25 +149,11 @@ public class AccountTransactionDetails {
      */
     private final DelegatorConfigured delegatorConfigured;
 
-    public Optional<DelegatorConfigured> getDelegatorConfigured() {
-        if (this.type == TransactionResultEventType.DELEGATION_CONFIGURED) {
-            return Optional.of(delegatorConfigured);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of the sender sending an encrypted transfer.
      * Present if the transaction was an {@link EncryptedTransfer}.
      */
     private final EncryptedTransferResult encryptedTransfer;
-
-    public Optional<EncryptedTransferResult> getEncryptedTransfer() {
-        if (this.type == TransactionResultEventType.NEW_ENCRYPTED_AMOUNT) {
-            return Optional.of(encryptedTransfer);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of the sender adding CCD to its encrypted balance from its
@@ -284,26 +162,12 @@ public class AccountTransactionDetails {
      */
     private final EncryptedSelfAmountAddedResult addedToEncryptedBalance;
 
-    public Optional<EncryptedSelfAmountAddedResult> getAddedToEncryptedBalance() {
-        if (this.type == TransactionResultEventType.ENCRYPTED_SELF_AMOUNT_ADDED) {
-            return Optional.of(addedToEncryptedBalance);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of the sender subtracting CCD from its encrypted balance to its
      * non-encrypted balance.
      * Present if the transaction was a {@link TransferToPublic}.
      */
     private final EncryptedAmountsRemovedResult removedFromEncryptedBalance;
-
-    public Optional<EncryptedAmountsRemovedResult> getRemovedFromEncryptedBalance() {
-        if (this.type == TransactionResultEventType.ENCRYPTED_AMOUNTS_REMOVED) {
-            return Optional.of(removedFromEncryptedBalance);
-        }
-        return Optional.empty();
-    }
 
     public static AccountTransactionDetails from(com.concordium.grpc.v2.AccountTransactionDetails tx) {
         val sender = AccountAddress.from(tx.getSender());

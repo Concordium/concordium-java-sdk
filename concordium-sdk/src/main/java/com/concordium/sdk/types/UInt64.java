@@ -10,8 +10,13 @@ import java.nio.ByteBuffer;
 
 @Getter
 @EqualsAndHashCode
-public final class UInt64 {
+public final class UInt64 implements Comparable<UInt64> {
     public static final int BYTES = Long.BYTES;
+
+    /**
+     * The internal value.
+     * This should be treated as an unsigned
+     */
     private final long value;
 
     @JsonCreator
@@ -35,9 +40,6 @@ public final class UInt64 {
     }
 
     public static UInt64 from(long value) {
-        if (value < 0) {
-            throw new NumberFormatException("Value of UInt64 can not be negative");
-        }
         return new UInt64(value);
     }
 
@@ -56,6 +58,11 @@ public final class UInt64 {
 
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return Long.toUnsignedString(value);
+    }
+
+    @Override
+    public int compareTo(UInt64 other) {
+        return Long.compareUnsigned(this.value, other.value);
     }
 }

@@ -991,6 +991,7 @@ interface ClientV2MapperExtensions {
                         .type(Type.ACCOUNT_CREATION)
                         .accountCreationDetails(AccountCreationDetails.from(accountCreation))
                         .build());
+                break;
             case UPDATE:
                 val details = ChainUpdateDetails.from(blockItemSummary.getUpdate());
                 summary.details(Details
