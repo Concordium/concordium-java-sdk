@@ -18,7 +18,7 @@ public class BakerKeysResult {
      * An optional `BakerKeysJniOutput` object, containing the output of the generate baker keys function.
      */
     @JsonProperty("Ok")
-    private final Optional<BakerKeysJniOutput> ok;
+    private final Optional<BakerKeys> ok;
 
     /**
      * An optional `CryptoJniResultCode` object, containing an error code if the generate baker keys function failed.
@@ -28,7 +28,7 @@ public class BakerKeysResult {
 
     @JsonCreator
     BakerKeysResult(
-            @JsonProperty("Ok") BakerKeysJniOutput ok,
+            @JsonProperty("Ok") BakerKeys ok,
             @JsonProperty("Err") CryptoJniResultCode err
     ) {
         this.ok = Optional.ofNullable(ok);

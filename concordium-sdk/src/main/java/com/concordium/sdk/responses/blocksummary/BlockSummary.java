@@ -42,6 +42,7 @@ public final class BlockSummary {
 
     public static BlockSummary fromJson(String json) {
         try {
+            System.out.println(json);
             return JsonMapper.INSTANCE.readValue(json, BlockSummary.class);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Cannot parse BlockSummary JSON", e);

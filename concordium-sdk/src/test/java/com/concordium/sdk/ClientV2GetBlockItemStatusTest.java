@@ -6,6 +6,7 @@ import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
 import com.concordium.sdk.responses.blockitemsummary.Details;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
 import com.concordium.sdk.responses.transactionstatus.Status;
+import com.concordium.sdk.responses.transactionstatus.TransactionResultEventType;
 import com.concordium.sdk.responses.transactionstatus.TransferredResult;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Hash;
@@ -90,6 +91,7 @@ public class ClientV2GetBlockItemStatusTest {
                     .accountTransactionDetails(com.concordium.sdk.responses.blockitemsummary.AccountTransactionDetails
                             .builder()
                             .successful(true)
+                            .type(TransactionResultEventType.TRANSFERRED)
                             .sender(AccountAddress.from(SENDER_ADDRESS))
                             .cost(CCDAmount.fromMicro(TRANSACTION_COST))
                             .accountTransfer(TransferredResult

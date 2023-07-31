@@ -25,7 +25,7 @@ public class BakerKeysTest {
     @SneakyThrows
     @Test
     public void shouldConfigureEmptyBakerKeysTest() {
-        BakerKeysJniOutput bakerKeys = BakerKeys.createBakerKeys();
+        BakerKeys bakerKeys = BakerKeys.createBakerKeys();
         AccountAddress sender = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
         ConfigureBakerKeysJniInput input = ConfigureBakerKeysJniInput.builder()
                 .keys(bakerKeys)
@@ -45,7 +45,7 @@ public class BakerKeysTest {
     @Test
     public void shouldCreateNewBakerKeysTest() {
         AccountAddress sender = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
-        val bakerKeys = ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(sender);
+        val bakerKeys = ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(sender, BakerKeys.createBakerKeys());
         assertEquals(352, bakerKeys.getBytes().length);
     }
 }

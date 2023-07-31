@@ -1,6 +1,10 @@
 package com.concordium.sdk.responses.accountinfo;
 
+import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
+import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
+import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
+import com.concordium.sdk.crypto.vrf.VRFPublicKey;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,7 +44,7 @@ public final class Baker {
      * The baker's public VRF key used to verify that the baker has won the lottery.
      */
     @JsonProperty("bakerElectionVerifyKey")
-    private final ED25519PublicKey bakerElectionVerifyKey;
+    private final VRFPublicKey bakerElectionVerifyKey;
 
     /**
      * The baker's public key, used to verify baker's signatures on the blocks and finalization messages.
@@ -52,7 +56,7 @@ public final class Baker {
      * The baker's public key used to verify the baker's signature on finalization records in case the baker is a finalizer.
      */
     @JsonProperty("bakerAggregationVerifyKey")
-    private final ED25519PublicKey bakerAggregationVerifyKey;
+    private final BLSPublicKey bakerAggregationVerifyKey;
 
     /**
      * The pending changes for the baker.

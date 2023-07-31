@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
@@ -296,9 +297,9 @@ public class TransactionFactory {
      *
      * @return the builder for a {@link ConfigureBakerTransaction}
      */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerKeys(AccountAddress accountAddress) {
+    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerKeys(AccountAddress accountAddress, BakerKeys bakerKeys) {
         val payload = ConfigureBakerPayload.builder()
-                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress))
+                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, bakerKeys))
                 .build();
         return ConfigureBakerTransaction.builder().payload(payload);
     }

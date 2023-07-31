@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+- Added typing for baker keys and moved `createBakerKeys` to `BakerKeys`. Likewise the `TransactionFactory.newUpdateBakerKeys` takes 
+  the in generated baker keys.
 - Added support for `getBlockTransactionEvents` for retrieving events emitted by transactions.
 - Added support for `InvokeInstance` for executing a smart contract instance locally.
 - Removed `Account` instead one should simply use `AccountAddress`.

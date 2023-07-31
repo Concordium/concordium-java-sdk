@@ -11,10 +11,8 @@ import com.concordium.sdk.responses.chainparameters.*;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Timestamp;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.val;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import lombok.*;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -25,7 +23,8 @@ import java.util.Optional;
  */
 @EqualsAndHashCode(doNotUseGetters = true)
 @Builder
-@ToString
+@ToString(doNotUseGetters = true)
+@Getter
 public class ChainUpdateDetails {
     private final Timestamp effectiveTime;
 

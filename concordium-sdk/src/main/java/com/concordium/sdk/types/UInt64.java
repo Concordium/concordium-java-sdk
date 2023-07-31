@@ -1,9 +1,11 @@
 package com.concordium.sdk.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 @Getter
@@ -12,8 +14,14 @@ public final class UInt64 {
     public static final int BYTES = Long.BYTES;
     private final long value;
 
-    private UInt64(long value) {
+    @JsonCreator
+    public UInt64(long value) {
         this.value = value;
+    }
+
+    @JsonCreator
+    public UInt64(BigInteger value) {
+        this.value = UInt64.from(value.toByteArray()).getValue();
     }
 
     public byte[] getBytes() {

@@ -31,9 +31,7 @@ public class ConfigureBakerKeysPayload {
      * @param sender The account address of the sender
      * @return The newly generated ConfigureBakerKeysPayload
      */
-    public static ConfigureBakerKeysPayload getNewConfigureBakerKeysPayload(AccountAddress sender) {
-        // Create a new set of baker keys
-        BakerKeysJniOutput bakerKeys = BakerKeys.createBakerKeys();
+    public static ConfigureBakerKeysPayload getNewConfigureBakerKeysPayload(AccountAddress sender, BakerKeys bakerKeys) {
         // Create the input for the ConfigureBakerKeys JNI function
         ConfigureBakerKeysJniInput input = ConfigureBakerKeysJniInput.builder()
                 .keys(bakerKeys)

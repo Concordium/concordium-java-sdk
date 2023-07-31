@@ -6,7 +6,9 @@ import com.google.common.collect.ImmutableList;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @ToString
@@ -21,6 +23,11 @@ public final class ReleaseSchedule {
     ReleaseSchedule(@JsonProperty("total") CCDAmount total,
                     @Singular(value = "scheduleRelease") @JsonProperty("schedule") List<ScheduledRelease> newSchedule) {
         this.total = total;
-        this.schedule = ImmutableList.copyOf(newSchedule);
+        if(Objects.isNull(newSchedule)) {
+            this.schedule = ImmutableList.of();
+        } else {
+            this.schedule = ImmutableList.copyOf(newSchedule);
+
+        }
     }
 }

@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.Ratio;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
