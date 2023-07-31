@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Events emitted by transactions.
- * Should match https://github.com/Concordium/concordium-base/blob/8dcee8746e40d663222aa3b4b04eaa3710e2779e/haskell-src/Concordium/Types/Execution.hs#L736
+ * Should match https://github.com/Concordium/concordium-base/blob/8dcee8746e40d663222aa3b4b04eaa3710e2779e/haskell-src/Concordium/Types/Execution.hs
  */
 public enum TransactionResultEventType {
     @JsonProperty("ModuleDeployed")
@@ -84,7 +84,12 @@ public enum TransactionResultEventType {
     @JsonProperty("BakerConfigured")
     BAKER_CONFIGURED,
     @JsonProperty("DelegationConfigured")
-    DELEGATION_CONFIGURED;
+    DELEGATION_CONFIGURED,
+    // An event that occurs when an account send an
+    // encrypted transfer.
+    // The result of such a transaction is a 'NEW_ENCRYPTED_AMOUNT' event for the
+    // account receiving and 'ENCRYPTED_AMOUNTS_REMOVED' for sender account.
+    ENCRYPTED_TRANSFER;
 
     // Convenience methods for doing 'safe' casting.
     public <T> T convert(TransactionResultEvent event) {

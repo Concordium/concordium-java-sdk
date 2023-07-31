@@ -1,10 +1,14 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
+import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.UInt32;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;
+
+import java.io.StringWriter;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,11 +19,12 @@ public class ConfigureBakerTransactionTest {
     public void shouldAddBakerKeysTest() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
 
+        BakerKeys bakerKeys = BakerKeys.createBakerKeys();
         val payload = ConfigureBakerPayload.builder()
                 .capital(CCDAmount.fromMicro("14000000000"))
                 .restakeEarnings(true)
                 .openForDelegation(0)
-                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress))
+                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, bakerKeys))
                 .metadataUrl("abc@xyz.com")
                 .transactionFeeCommission(UInt32.from(10000))
                 .bakingRewardCommission(UInt32.from(10000))
@@ -68,7 +73,7 @@ public class ConfigureBakerTransactionTest {
                 .capital(CCDAmount.fromMicro("14000000000"))
                 .restakeEarnings(true)
                 .openForDelegation(0)
-                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress))
+                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, BakerKeys.createBakerKeys()))
                 .transactionFeeCommission(UInt32.from(10000))
                 .bakingRewardCommission(UInt32.from(10000))
                 .finalizationRewardCommission(UInt32.from(100000))
@@ -92,7 +97,7 @@ public class ConfigureBakerTransactionTest {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
 
         val payload = ConfigureBakerPayload.builder()
-                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress))
+                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, BakerKeys.createBakerKeys()))
                 .build();
 
 
@@ -105,5 +110,12 @@ public class ConfigureBakerTransactionTest {
                 .build();
 
         assertEquals(554, transaction.getVersionedBytes().length);
+    }
+
+    @SneakyThrows
+    @Test
+    public void testCreateBakerCredentials() {
+        StringWriter stringWriter = new StringWriter();
+        BakerKeys.createBakerKeys().createBakerCredentials(stringWriter, BakerId.from(0));
     }
 }

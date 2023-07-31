@@ -17,5 +17,5 @@ public class ConfigureBakerKeysJniInput {
     /**
      * The baker keys that will be configured for the account
      */
-    private final BakerKeysJniOutput keys;
+    private final BakerKeys keys;
 }

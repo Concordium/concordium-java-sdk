@@ -3,6 +3,7 @@ package com.concordium.sdk.responses;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableList;
 import lombok.Data;
 import lombok.val;
@@ -14,7 +15,8 @@ import java.util.Optional;
  * Account index of the baking account.
  */
 @Data
-public class BakerId {
+@JsonSerialize(using = IdJsonSerializer.class)
+public class BakerId implements ID {
 
     /**
      * The account index of the baker.
@@ -66,5 +68,10 @@ public class BakerId {
 
     public byte[] getBytes() {
         return this.id.getBytes();
+    }
+
+    @Override
+    public long getId() {
+        return this.id.getId();
     }
 }

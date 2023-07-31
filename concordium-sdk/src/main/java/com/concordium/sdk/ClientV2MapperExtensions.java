@@ -22,11 +22,13 @@ import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ProtocolVersion;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
+import com.concordium.sdk.crypto.vrf.VRFPublicKey;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.Epoch;
@@ -346,8 +348,8 @@ interface ClientV2MapperExtensions {
                 .stakedAmount(to(stake.getStakedAmount()))
                 .bakerPoolInfo(to(stake.getPoolInfo()))
                 .bakerId(to(stake.getBakerInfo().getBakerId()))
-                .bakerAggregationVerifyKey(ED25519PublicKey.from(stake.getBakerInfo().getAggregationKey().getValue().toByteArray()))
-                .bakerElectionVerifyKey(ED25519PublicKey.from(stake.getBakerInfo().getElectionKey().getValue().toByteArray()))
+                .bakerAggregationVerifyKey(BLSPublicKey.from(stake.getBakerInfo().getAggregationKey().getValue().toByteArray()))
+                .bakerElectionVerifyKey(VRFPublicKey.from(stake.getBakerInfo().getElectionKey().getValue().toByteArray()))
                 .bakerSignatureVerifyKey(ED25519PublicKey.from(stake.getBakerInfo().getSignatureKey().getValue().toByteArray()))
                 .build();
     }
@@ -989,6 +991,7 @@ interface ClientV2MapperExtensions {
                         .type(Type.ACCOUNT_CREATION)
                         .accountCreationDetails(AccountCreationDetails.from(accountCreation))
                         .build());
+                break;
             case UPDATE:
                 val details = ChainUpdateDetails.from(blockItemSummary.getUpdate());
                 summary.details(Details

@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
 import com.concordium.sdk.types.AccountAddress;
 import lombok.val;
 import org.junit.Test;
@@ -97,7 +98,8 @@ public class TransactionFactoryTest {
     @Test
     public void testCanUpdateBakerKeysFactory() {
         AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc");
-        val builder = TransactionFactory.newUpdateBakerKeys(sender);
+        BakerKeys bakerKeys = BakerKeys.createBakerKeys();
+        val builder = TransactionFactory.newUpdateBakerKeys(sender, bakerKeys);
         assertNotNull(builder);
     }
 

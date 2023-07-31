@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElementType;
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.transactions.Memo;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
@@ -13,6 +14,7 @@ import lombok.*;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Getter
 @ToString
@@ -36,6 +38,15 @@ public final class TransferredResult implements TransactionResultEvent, Contract
      */
     private CCDAmount amount;
 
+    /**
+     * A memo if the transfer was with a memo.
+     */
+    private Memo memo;
+
+    public Optional<Memo> getMemo() {
+        return Optional.ofNullable(this.memo);
+    }
+
     @JsonCreator
     TransferredResult(@JsonProperty("to") Map<String, Object> to,
                       @JsonProperty("from") Map<String, Object> from,
@@ -49,13 +60,18 @@ public final class TransferredResult implements TransactionResultEvent, Contract
     }
 
     public static TransferredResult from(AccountTransactionEffects.AccountTransfer accountTransfer, AccountAddress sender) {
-        return TransferredResult
+        TransferredResultBuilder builder = TransferredResult
                 .builder()
                 .from(sender)
                 .to(AccountAddress.from(accountTransfer.getReceiver()))
-                .amount(CCDAmount.from(accountTransfer.getAmount()))
+                .amount(CCDAmount.from(accountTransfer.getAmount()));
+        if (accountTransfer.hasMemo()) {
+            builder.memo(Memo.from(accountTransfer.getMemo()));
+        }
+        return builder
                 .build();
     }
+
 
     @Override
     public TransactionResultEventType getType() {

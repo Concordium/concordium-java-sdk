@@ -19,7 +19,7 @@ import java.nio.ByteBuffer;
  */
 @Getter
 @EqualsAndHashCode
-public final class AccountIndex {
+public final class AccountIndex implements ID{
 
     /**
      * The account index
@@ -52,5 +52,10 @@ public final class AccountIndex {
     @Override
     public String toString() {
         return index.toString();
+    }
+
+    @Override
+    public long getId() {
+        return this.index.getValue();
     }
 }

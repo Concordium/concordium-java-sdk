@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blockitemsummary;
 
+import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
 import com.concordium.sdk.responses.transactionstatus.*;
@@ -13,6 +14,11 @@ import java.util.stream.Collectors;
 
 /**
  * Details of a transaction with a sender account.
+ *
+ * Users should always check whether the {@link AccountTransactionDetails} is {@link AccountTransactionDetails#isSuccessful()} or not.
+ * If this returns false, then one should consult the {@link AccountTransactionDetails#rejectReason} for why the transaction failed.
+ * If the transaction was successful then first check the type via {@link AccountTransactionDetails#getType()} and use the corresponding
+ * getter for getting the concrete event.
  */
 @EqualsAndHashCode
 @ToString(doNotUseGetters = true)
@@ -33,6 +39,8 @@ public class AccountTransactionDetails {
 
     /**
      * Type of the outcome.
+     * Note that the type is only set if the transaction was successfully executed
+     * i.e., {@link AccountTransactionDetails#isSuccessful()} returns true.
      */
     private final TransactionResultEventType type;
 
@@ -46,26 +54,12 @@ public class AccountTransactionDetails {
      */
     private final boolean successful;
 
-    public Optional<RejectReasonType> getRejectReason() {
-        if (!this.successful) {
-            return Optional.of(rejectReason);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The module reference if a module was deployed if the transaction
      * deployed a module.
      * Present if the transaction was a {@link DeployModule}
      */
     private final ModuleRef moduleDeployed;
-
-    public Optional<ModuleRef> getModuleDeployed() {
-        if (this.type == TransactionResultEventType.MODULE_DEPLOYED) {
-            return Optional.of(moduleDeployed);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of a contract being initialized if the transaction
@@ -74,26 +68,12 @@ public class AccountTransactionDetails {
      */
     private final ContractInitializedResult contractInitialized;
 
-    public Optional<ContractInitializedResult> getContractInitialized() {
-        if (this.type == TransactionResultEventType.CONTRACT_INITIALIZED) {
-            return Optional.of(contractInitialized);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The resulting list of events of a contract being updated if the transaction
      * updated a smart contract.
      * Present if the transaction was a {@link UpdateContract}
      */
     private final List<ContractTraceElement> contractUpdated;
-
-    public Optional<List<ContractTraceElement>> getContractUpdated() {
-        if (this.type == TransactionResultEventType.CONTRACT_UPDATED) {
-            return Optional.of(contractUpdated);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of an account transfer if the transaction
@@ -102,27 +82,11 @@ public class AccountTransactionDetails {
      */
     private final TransferredResult accountTransfer;
 
-
-    public Optional<TransferredResult> getAccountTransfer() {
-        if (this.type == TransactionResultEventType.TRANSFERRED) {
-            return Optional.of(accountTransfer);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of a baker being added to the chain.
      * Present if the transaction was a {@link ConfigureBaker}
      */
     private final BakerAddedResult bakerAdded;
-
-
-    public Optional<BakerAddedResult> getBakerAdded() {
-        if (this.type == TransactionResultEventType.BAKER_ADDED) {
-            return Optional.of(bakerAdded);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of a baker being removed from the chain.
@@ -132,26 +96,11 @@ public class AccountTransactionDetails {
     private final BakerRemovedResult bakerRemoved;
 
 
-    public Optional<BakerRemovedResult> getBakerRemoved() {
-        if (this.type == TransactionResultEventType.BAKER_REMOVED) {
-            return Optional.of(bakerRemoved);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of a baker having its stake updated.
      * Present if the transaction was a {@link ConfigureBaker} with an updated stake.
      */
     private final BakerStakeUpdated bakerStakeUpdated;
-
-
-    public Optional<BakerStakeUpdated> getBakerStakeUpdated() {
-        if (this.type == TransactionResultEventType.BAKER_STAKE_UPDATED) {
-            return Optional.of(bakerStakeUpdated);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of a baker having its restake flag updated.
@@ -159,27 +108,11 @@ public class AccountTransactionDetails {
      */
     private final BakerSetRestakeEarningsResult bakerRestakeEarningsUpdated;
 
-
-    public Optional<BakerSetRestakeEarningsResult> getBakerRestakeEarningsUpdated() {
-        if (this.type == TransactionResultEventType.BAKER_SET_RESTAKE_EARNINGS) {
-            return Optional.of(bakerRestakeEarningsUpdated);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of a baker having its keys updated.
      * Present if the transaction was a {@link ConfigureBaker} with new keys.
      */
     private final BakerKeysUpdatedResult bakerKeysUpdated;
-
-
-    public Optional<BakerKeysUpdatedResult> getBakerKeysUpdated() {
-        if (this.type == TransactionResultEventType.BAKER_KEYS_UPDATED) {
-            return Optional.of(bakerKeysUpdated);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of a transaction that is transferring CCD with a schedule.
@@ -187,37 +120,16 @@ public class AccountTransactionDetails {
      */
     private final TransferredWithScheduleResult transferredWithSchedule;
 
-    public Optional<TransferredWithScheduleResult> getTransferredWithSchedule() {
-        if (this.type == TransactionResultEventType.TRANSFERRED_WITH_SCHEDULE) {
-            return Optional.of(transferredWithSchedule);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of the sender updating keys.
      * Present if the transaction was a {@link UpdateCredentialKeysTransaction}.
      */
     private final CredentialKeysUpdatedResult credentialKeysUpdated;
 
-    public Optional<CredentialKeysUpdatedResult> getCredentialKeysUpdated() {
-        if (this.type == TransactionResultEventType.CREDENTIAL_KEYS_UPDATED) {
-            return Optional.of(credentialKeysUpdated);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of a credential being updated.
      */
     private final CredentialsUpdatedResult credentialsUpdated;
-
-    public Optional<CredentialsUpdatedResult> getCredentialsUpdated() {
-        if (this.type == TransactionResultEventType.CREDENTIALS_UPDATED) {
-            return Optional.of(credentialsUpdated);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of the sender registering data on the chain.
@@ -225,25 +137,11 @@ public class AccountTransactionDetails {
      */
     private final DataRegisteredResult dataRegistered;
 
-    public Optional<DataRegisteredResult> getDataRegistered() {
-        if (this.type == TransactionResultEventType.DATA_REGISTERED) {
-            return Optional.of(dataRegistered);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of the sender configuring baking.
      * Present if the transaction was a {@link ConfigureBaker}.
      */
     private final BakerConfigured bakerConfigured;
-
-    public Optional<BakerConfigured> getBakerConfigured() {
-        if (this.type == TransactionResultEventType.BAKER_CONFIGURED) {
-            return Optional.of(bakerConfigured);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of the sender configuring delegation.
@@ -251,25 +149,11 @@ public class AccountTransactionDetails {
      */
     private final DelegatorConfigured delegatorConfigured;
 
-    public Optional<DelegatorConfigured> getDelegatorConfigured() {
-        if (this.type == TransactionResultEventType.DELEGATION_CONFIGURED) {
-            return Optional.of(delegatorConfigured);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of the sender sending an encrypted transfer.
      * Present if the transaction was an {@link EncryptedTransfer}.
      */
     private final EncryptedTransferResult encryptedTransfer;
-
-    public Optional<EncryptedTransferResult> getEncryptedTransfer() {
-        if (this.type == TransactionResultEventType.NEW_ENCRYPTED_AMOUNT) {
-            return Optional.of(encryptedTransfer);
-        }
-        return Optional.empty();
-    }
 
     /**
      * The result of the sender adding CCD to its encrypted balance from its
@@ -278,26 +162,12 @@ public class AccountTransactionDetails {
      */
     private final EncryptedSelfAmountAddedResult addedToEncryptedBalance;
 
-    public Optional<EncryptedSelfAmountAddedResult> getAddedToEncryptedBalance() {
-        if (this.type == TransactionResultEventType.ENCRYPTED_SELF_AMOUNT_ADDED) {
-            return Optional.of(addedToEncryptedBalance);
-        }
-        return Optional.empty();
-    }
-
     /**
      * The result of the sender subtracting CCD from its encrypted balance to its
      * non-encrypted balance.
      * Present if the transaction was a {@link TransferToPublic}.
      */
     private final EncryptedAmountsRemovedResult removedFromEncryptedBalance;
-
-    public Optional<EncryptedAmountsRemovedResult> getRemovedFromEncryptedBalance() {
-        if (this.type == TransactionResultEventType.ENCRYPTED_AMOUNTS_REMOVED) {
-            return Optional.of(removedFromEncryptedBalance);
-        }
-        return Optional.empty();
-    }
 
     public static AccountTransactionDetails from(com.concordium.grpc.v2.AccountTransactionDetails tx) {
         val sender = AccountAddress.from(tx.getSender());
@@ -306,7 +176,6 @@ public class AccountTransactionDetails {
                 .sender(sender)
                 .cost(CCDAmount.from(tx.getCost()))
                 .successful(true);
-
         val effects = tx.getEffects();
         switch (effects.getEffectCase()) {
             case NONE:
@@ -315,10 +184,14 @@ public class AccountTransactionDetails {
                         .rejectReason(RejectReasonType.from(effects.getNone().getRejectReason()));
                 break;
             case MODULE_DEPLOYED:
-                detailsBuilder.moduleDeployed(ModuleRef.from(effects.getModuleDeployed().getValue().toByteArray()));
+                detailsBuilder
+                        .type(TransactionResultEventType.MODULE_DEPLOYED)
+                        .moduleDeployed(ModuleRef.from(effects.getModuleDeployed().getValue().toByteArray()));
                 break;
             case CONTRACT_INITIALIZED:
-                detailsBuilder.contractInitialized(ContractInitializedResult.from(effects.getContractInitialized()));
+                detailsBuilder
+                        .type(TransactionResultEventType.CONTRACT_INITIALIZED)
+                        .contractInitialized(ContractInitializedResult.from(effects.getContractInitialized()));
                 break;
             case CONTRACT_UPDATE_ISSUED:
                 val updateEvents = effects
@@ -327,55 +200,85 @@ public class AccountTransactionDetails {
                         .stream()
                         .map(ContractTraceElement::from)
                         .collect(Collectors.toList());
-                detailsBuilder.contractUpdated(updateEvents);
+                detailsBuilder
+                        .type(TransactionResultEventType.CONTRACT_UPDATED)
+                        .contractUpdated(updateEvents);
                 break;
             case ACCOUNT_TRANSFER:
-                if (effects.getAccountTransfer().hasMemo()) {
-                    break;
-                }
-                detailsBuilder.accountTransfer(TransferredResult.from(effects.getAccountTransfer(), sender));
+                detailsBuilder
+                        .type(TransactionResultEventType.TRANSFERRED)
+                        .accountTransfer(TransferredResult.from(effects.getAccountTransfer(), sender));
+
                 break;
             case BAKER_ADDED:
-                detailsBuilder.bakerAdded(BakerAddedResult.from(effects.getBakerAdded()));
+                detailsBuilder
+                        .type(TransactionResultEventType.BAKER_ADDED)
+                        .bakerAdded(BakerAddedResult.from(effects.getBakerAdded()));
                 break;
             case BAKER_REMOVED:
-                detailsBuilder.bakerRemoved(BakerRemovedResult.from(effects.getBakerRemoved(), sender));
+                detailsBuilder
+                        .type(TransactionResultEventType.BAKER_REMOVED)
+                        .bakerRemoved(BakerRemovedResult.from(effects.getBakerRemoved(), sender));
                 break;
             case BAKER_STAKE_UPDATED:
-                detailsBuilder.bakerStakeUpdated(BakerStakeUpdated.from(effects.getBakerStakeUpdated(), sender));
+                detailsBuilder
+                        .type(TransactionResultEventType.BAKER_STAKE_UPDATED)
+                        .bakerStakeUpdated(BakerStakeUpdated.from(effects.getBakerStakeUpdated(), sender));
                 break;
             case BAKER_RESTAKE_EARNINGS_UPDATED:
-                detailsBuilder.bakerRestakeEarningsUpdated(BakerSetRestakeEarningsResult.from(effects.getBakerRestakeEarningsUpdated(), sender));
+                detailsBuilder
+                        .type(TransactionResultEventType.BAKER_SET_RESTAKE_EARNINGS)
+                        .bakerRestakeEarningsUpdated(BakerSetRestakeEarningsResult.from(effects.getBakerRestakeEarningsUpdated(), sender));
                 break;
             case BAKER_KEYS_UPDATED:
-                detailsBuilder.bakerKeysUpdated(BakerKeysUpdatedResult.from(effects.getBakerKeysUpdated(), sender));
+                detailsBuilder
+                        .type(TransactionResultEventType.BAKER_KEYS_UPDATED)
+                        .bakerKeysUpdated(BakerKeysUpdatedResult.from(effects.getBakerKeysUpdated(), sender));
                 break;
             case ENCRYPTED_AMOUNT_TRANSFERRED:
-                detailsBuilder.encryptedTransfer(EncryptedTransferResult.from(effects.getEncryptedAmountTransferred()));
+                detailsBuilder
+                        .type(TransactionResultEventType.ENCRYPTED_TRANSFER)
+                        .encryptedTransfer(EncryptedTransferResult.from(effects.getEncryptedAmountTransferred()));
                 break;
             case TRANSFERRED_TO_ENCRYPTED:
-                detailsBuilder.addedToEncryptedBalance(EncryptedSelfAmountAddedResult.from(effects.getTransferredToEncrypted()));
+                detailsBuilder
+                        .type(TransactionResultEventType.ENCRYPTED_SELF_AMOUNT_ADDED)
+                        .addedToEncryptedBalance(EncryptedSelfAmountAddedResult.from(effects.getTransferredToEncrypted()));
                 break;
             case TRANSFERRED_TO_PUBLIC:
-                detailsBuilder.removedFromEncryptedBalance(EncryptedAmountsRemovedResult.from(effects.getTransferredToPublic().getRemoved()));
+                detailsBuilder
+                        .type(TransactionResultEventType.ENCRYPTED_AMOUNTS_REMOVED)
+                        .removedFromEncryptedBalance(EncryptedAmountsRemovedResult.from(effects.getTransferredToPublic().getRemoved()));
                 break;
             case TRANSFERRED_WITH_SCHEDULE:
-                detailsBuilder.transferredWithSchedule(TransferredWithScheduleResult.from(effects.getTransferredWithSchedule(), sender));
+                detailsBuilder
+                        .type(TransactionResultEventType.TRANSFERRED_WITH_SCHEDULE)
+                        .transferredWithSchedule(TransferredWithScheduleResult.from(effects.getTransferredWithSchedule(), sender));
                 break;
             case CREDENTIAL_KEYS_UPDATED:
-                detailsBuilder.credentialKeysUpdated(CredentialKeysUpdatedResult.from(effects.getCredentialKeysUpdated()));
+                detailsBuilder
+                        .type(TransactionResultEventType.CREDENTIAL_KEYS_UPDATED)
+                        .credentialKeysUpdated(CredentialKeysUpdatedResult.from(effects.getCredentialKeysUpdated()));
                 break;
             case CREDENTIALS_UPDATED:
-                detailsBuilder.credentialsUpdated(CredentialsUpdatedResult.from(effects.getCredentialsUpdated(), sender));
+                detailsBuilder
+                        .type(TransactionResultEventType.CREDENTIALS_UPDATED)
+                        .credentialsUpdated(CredentialsUpdatedResult.from(effects.getCredentialsUpdated(), sender));
                 break;
             case DATA_REGISTERED:
-                detailsBuilder.dataRegistered(DataRegisteredResult.from(effects.getDataRegistered()));
+                detailsBuilder
+                        .type(TransactionResultEventType.DATA_REGISTERED)
+                        .dataRegistered(DataRegisteredResult.from(effects.getDataRegistered()));
                 break;
             case BAKER_CONFIGURED:
-                detailsBuilder.bakerConfigured(BakerConfigured.from(effects.getBakerConfigured(), sender));
+                detailsBuilder
+                        .type(TransactionResultEventType.BAKER_CONFIGURED)
+                        .bakerConfigured(BakerConfigured.from(effects.getBakerConfigured(), sender));
                 break;
             case DELEGATION_CONFIGURED:
-                detailsBuilder.delegatorConfigured(DelegatorConfigured.from(effects.getDelegationConfigured(), sender));
+                detailsBuilder
+                        .type(TransactionResultEventType.DELEGATION_CONFIGURED)
+                        .delegatorConfigured(DelegatorConfigured.from(effects.getDelegationConfigured(), sender));
                 break;
             case EFFECT_NOT_SET:
                 throw new IllegalArgumentException("Unrecognized effect.");
