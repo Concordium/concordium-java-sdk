@@ -6,7 +6,7 @@
 
     <groupId>com.concordium.sdk</groupId>
     <artifactId>concordium-sdk</artifactId>
-    <version>5.0.0</version>
+    <version>5.0.1-SNAPSHOT</version>
 
     <name>concordium-sdk</name>
     <url>https://github.com/Concordium/concordium-java-sdk</url>
