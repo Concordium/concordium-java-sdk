@@ -72,12 +72,12 @@ The output will be a header file, the contents hereof must be matched appropriat
 # Usage
 The [`ClientV2`](./concordium-java-sdk/blob/main/concordium-sdk/src/main/java/com/concordium/sdk/ClientV2.java) is the main entrypoint for the SDK.
 It facilitates an API for communicating with the [node](https://github.com/Concordium/concordium-node) through the V2 API.
-The `ClientV2` must be initialized with a `Connection` which holds information of the node URL, node port and a timeout for the connection.
+The `ClientV2` must be initialized with a `Connection` which holds information of the node URL, timeout duration etc. for the connection.
 
 ## Example of instantiating the Client
 ```java
 Connection connection = Connection.newBuilder()
-                .host(${node_url})
+                .host(${node_host})
                 .port(${node_port})
                 .build();
 ClientV2 client = ClientV2.from(connection);
@@ -85,8 +85,8 @@ ClientV2 client = ClientV2.from(connection);
 
 where
 
-- `node_url`  is the url of the node
-- `node_port` is the nodes rpc port
+- `node_host`  is the host of the node e.g. `127.0.0.1`
+- `node_port` is the nodes rpc port e.g. `20000`
 
 ### Configuring the connection
 
