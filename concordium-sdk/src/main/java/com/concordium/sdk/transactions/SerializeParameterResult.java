@@ -1,16 +1,19 @@
-package com.concordium.sdk.crypto.encryptedtransfers;
+package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.JNIError;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Objects;
 
 @Data
-public class EncryptedAmountTransferJniResult {
+@ToString(doNotUseGetters = true)
+public class SerializeParameterResult {
+
     @JsonProperty("Ok")
-    private final EncryptedAmountTransferJniOutput ok;
+    private final String serializedParameter;
 
     @JsonProperty("Err")
     private final JNIError err;
@@ -18,18 +21,15 @@ public class EncryptedAmountTransferJniResult {
     private boolean isSuccess;
 
     @JsonCreator
-    EncryptedAmountTransferJniResult(
-            @JsonProperty("Ok") EncryptedAmountTransferJniOutput ok,
+    SerializeParameterResult(
+            @JsonProperty("Ok") String ok,
             @JsonProperty("Err") JNIError err
     ) {
-        this.ok = ok;
+        this.serializedParameter = ok;
         this.err = err;
         if (Objects.isNull(err)) {
             isSuccess = true;
         }
     }
 
-    public boolean isok() {
-        return isSuccess;
-    }
 }

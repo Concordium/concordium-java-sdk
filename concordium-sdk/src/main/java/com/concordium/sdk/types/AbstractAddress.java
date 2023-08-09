@@ -2,10 +2,15 @@ package com.concordium.sdk.types;
 
 import com.concordium.grpc.v2.Address;
 import com.concordium.sdk.transactions.AccountType;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -13,6 +18,7 @@ import java.util.Map;
  * Implementations are either Account - or Contract addresses.
  */
 @EqualsAndHashCode
+@JsonSerialize (using = AbstractAddress.AbstractAddressJsonSerializer.class)
 public abstract class AbstractAddress {
 
     @Getter
@@ -57,6 +63,29 @@ public abstract class AbstractAddress {
     @Override
     public String toString() {
         return this.type.toString();
+    }
+
+    public static class AbstractAddressJsonSerializer extends JsonSerializer<AbstractAddress> {
+        @Override
+        public void serialize(AbstractAddress address, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+            switch (address.getType()){
+                case ADDRESS_ACCOUNT:
+                    AccountAddress accountAddress = (AccountAddress) address;
+
+                    jsonGenerator.writeStartObject();
+
+                    jsonGenerator.writeFieldName("Account");
+
+                    jsonGenerator.writeStartArray();
+                    jsonGenerator.writeString(accountAddress.encoded());
+                    jsonGenerator.writeEndArray();
+
+                    jsonGenerator.writeEndObject();
+
+                case ADDRESS_CONTRACT:
+                    break;
+            }
+        }
     }
 
 }

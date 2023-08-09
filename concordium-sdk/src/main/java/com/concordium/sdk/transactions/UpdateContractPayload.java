@@ -60,6 +60,13 @@ public final class UpdateContractPayload {
                 Parameter.from(parameter));
     }
 
+
+
+    public static UpdateContractPayload from(@NonNull final ContractAddress contractAddress,
+                                             SchemaParameter parameter) {
+        return null;
+    }
+
     public static UpdateContractPayload from(@NonNull final CCDAmount amount,
                                              @NonNull final ContractAddress contractAddress,
                                              @NonNull final ReceiveName receiveName,

@@ -1,7 +1,6 @@
 package com.concordium.sdk.crypto.bakertransactions;
 
 import com.concordium.sdk.crypto.CryptoJniNative;
-import com.concordium.sdk.crypto.CryptoJniResultCode;
 import com.concordium.sdk.crypto.NativeResolver;
 import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.serializing.JsonMapper;
@@ -29,12 +28,11 @@ public final class ConfigureBakerKeys {
 
         if (!result.isok()) {
             throw CryptoJniException.from(
-                    result.getErr().orElse(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+                    result.getErr());
         }
 
         // return the ok field of the result object
-        return result.getOk().orElseThrow(
-                () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+        return result.getOk();
 
     }
 

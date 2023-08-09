@@ -1,6 +1,5 @@
 package com.concordium.sdk.exceptions;
 
-import com.concordium.sdk.crypto.CryptoJniResultCode;
 import lombok.Getter;
 
 /**
@@ -12,25 +11,23 @@ public final class CryptoJniException extends RuntimeException {
      * The result code of the failed cryptographic operation.
      */
     @Getter
-    private final CryptoJniResultCode code;
+    private final JNIErrorType errorType;
+    @Getter
+    private final String errorMessage;
 
-    /**
-     * Creates a new `CryptoJniException` object with the given result code.
-     *
-     * @param code the result code of the failed cryptographic operation.
-     */
-    private CryptoJniException(CryptoJniResultCode code) {
-        super(code.getErrorMessage());
-        this.code = code;
+
+    CryptoJniException(JNIError error) {
+        super(error.getErrorType() + ": " + error.getErrorMessage());
+        this.errorType = error.getErrorType();
+        this.errorMessage = error.getErrorMessage();
     }
 
     /**
-     * Creates a new `CryptoJniException` object from the given result code.
-     *
-     * @param code the result code of the failed cryptographic operation.
-     * @return a new `CryptoJniException` object.
+     * Create a new CryptoJniException from the {@link JNIError}.
+     * @param error {@link JNIError} returned from the rust layer.
+     * @return {@link CryptoJniException} matching the {@link JNIError}.
      */
-    public static CryptoJniException from(CryptoJniResultCode code) {
-        return new CryptoJniException(code);
+    public static CryptoJniException from(JNIError error) {
+        return new CryptoJniException(error);
     }
 }

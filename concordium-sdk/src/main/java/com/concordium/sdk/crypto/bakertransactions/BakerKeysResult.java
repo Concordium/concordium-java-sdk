@@ -1,12 +1,12 @@
 package com.concordium.sdk.crypto.bakertransactions;
 
-import com.concordium.sdk.crypto.CryptoJniResultCode;
+import com.concordium.sdk.exceptions.JNIError;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
 
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * Class that holds the result of generating baker keys payload
@@ -18,21 +18,26 @@ public class BakerKeysResult {
      * An optional `BakerKeysJniOutput` object, containing the output of the generate baker keys function.
      */
     @JsonProperty("Ok")
-    private final Optional<BakerKeysJniOutput> ok;
+    private final BakerKeysJniOutput ok;
 
     /**
      * An optional `CryptoJniResultCode` object, containing an error code if the generate baker keys function failed.
      */
     @JsonProperty("Err")
-    private final Optional<CryptoJniResultCode> err;
+    private final JNIError err;
+
+    private boolean isSuccess;
 
     @JsonCreator
     BakerKeysResult(
             @JsonProperty("Ok") BakerKeysJniOutput ok,
-            @JsonProperty("Err") CryptoJniResultCode err
+            @JsonProperty("Err") JNIError err
     ) {
-        this.ok = Optional.ofNullable(ok);
-        this.err = Optional.ofNullable(err);
+        this.ok = ok;
+        this.err = err;
+        if (Objects.isNull(err)) {
+            isSuccess = true;
+        }
     }
 
     /**
@@ -41,6 +46,6 @@ public class BakerKeysResult {
      * @return a boolean indicating whether the `ok` field is present.
      */
     public boolean isok() {
-        return ok.isPresent();
+        return this.isSuccess;
     }
 }

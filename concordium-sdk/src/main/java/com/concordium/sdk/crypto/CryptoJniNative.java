@@ -71,4 +71,16 @@ public class CryptoJniNative {
      */
     public static native String generateConfigureBakerKeysPayload(String input);
 
+    /**
+     * Serializes a json representation of a parameter using a schema of the module.
+     * @param parameterJson json representation of the parameter.
+     * @param contractName name of the contract.
+     * @param methodName name of the method.
+     * @param schemaBytes schema of the contract.
+     * @param schemaVersion version of the schema.
+     * @param verboseErrors whether errors are in verbose format or not.
+     * @return JSON representing (SerializedParam, ResultCode, ErrorMessage)
+     */
+    public static native String serializeParameter(String parameterJson, String contractName, String methodName, byte[] schemaBytes, int schemaVersion, boolean verboseErrors);
+
 }

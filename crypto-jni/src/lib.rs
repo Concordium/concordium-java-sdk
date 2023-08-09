@@ -1,6 +1,6 @@
 pub use concordium_base::common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
 use concordium_base::common::Serialize;
-use concordium_base::contracts_common::Amount;
+use concordium_base::contracts_common::{Amount, schema::VersionedModuleSchema};
 use concordium_base::encrypted_transfers;
 use concordium_base::encrypted_transfers::types::{
     AggregatedDecryptedAmount, EncryptedAmount, EncryptedAmountTransferData,
@@ -16,18 +16,21 @@ use concordium_base::transactions::{
 use concordium_base::{base, common::*};
 use core::slice;
 use ed25519_dalek::*;
-use jni::sys::jstring;
+use jni::sys::{jstring, jboolean, JNI_FALSE};
 use rand::thread_rng;
 use serde_json::{from_str, to_string};
 use std::convert::{From, TryFrom};
 use std::i8;
 use std::str::Utf8Error;
+use hex;
 
 use jni::{
     objects::{JClass, JString},
     sys::{jbyteArray, jint},
     JNIEnv,
 };
+
+use anyhow::{anyhow, Result};
 
 const SUCCESS: i32 = 0;
 const NATIVE_CONVERSION_ERROR: i32 = 1;
@@ -179,28 +182,83 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generatePu
 #[derive(SerdeSerialize, SerdeDeserialize)]
 enum CryptoJniResult<T> {
     Ok(T),
-    Err(jint),
+    Err(JNIError),
+}
+
+#[derive(SerdeSerialize, SerdeDeserialize)]
+#[allow(non_snake_case)]
+enum JNIErrorType {
+    ParameterSerializationError,
+    Utf8DecodeError,
+    JsonDeserializationError,
+    NativeConversionError,
+    PayloadCreationError,
+}
+
+
+#[derive(SerdeSerialize, SerdeDeserialize)]
+#[allow(non_snake_case)]
+struct JNIError {
+    errorType: JNIErrorType,
+    errorMessage: String,
+    
 }
 
 impl<T> From<serde_json::Error> for CryptoJniResult<T> {
-    fn from(_: serde_json::Error) -> Self {
-        CryptoJniResult::Err(1)
+    fn from(e: serde_json::Error) -> Self {
+        let error = JNIError {
+            errorType: JNIErrorType::JsonDeserializationError,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
     }
 }
 
 impl<T> From<Utf8Error> for CryptoJniResult<T> {
-    fn from(_: Utf8Error) -> Self {
-        CryptoJniResult::Err(2)
+    fn from(e: Utf8Error) -> Self {
+        let error = JNIError {
+            errorType: JNIErrorType::Utf8DecodeError,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
     }
 }
 
 impl<T> From<jni::errors::Error> for CryptoJniResult<T> {
-    fn from(_: jni::errors::Error) -> Self {
-        CryptoJniResult::Err(3)
+    fn from(e: jni::errors::Error) -> Self {
+        let error = JNIError {
+            errorType: JNIErrorType::NativeConversionError,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
     }
 }
 
-const PAYLOAD_CREATION_ERROR: i32 = 5;
+/**
+ * Creates errors from strings.
+ * Used when payload creation fails as no error to be passed on is generated.
+ */
+impl<T> From<&str> for CryptoJniResult<T> {
+    fn from(e: &str) -> Self {
+        let error = JNIError {
+            errorType: JNIErrorType::PayloadCreationError,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
+    }
+}
+
+impl<T> From<anyhow::Error> for CryptoJniResult<T> {
+    fn from(e: anyhow::Error) -> Self {
+        let error = JNIError {
+            errorType: JNIErrorType::ParameterSerializationError,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
+    }
+}
+
+const PAYLOAD_CREATION_ERROR: &str = "Could not create payload";
 
 impl<T: serde::Serialize> CryptoJniResult<T> {
     fn to_jstring(&self, env: &JNIEnv) -> jstring {
@@ -239,7 +297,7 @@ struct JniInput<C: Curve> {
 }
 
 type EncryptedTranfersInput = JniInput<ArCurve>;
-type Result = CryptoJniResult<SecToPubAmountTransferData<ArCurve>>;
+type EncryptedTransferResult = CryptoJniResult<SecToPubAmountTransferData<ArCurve>>;
 
 #[no_mangle]
 #[allow(non_snake_case)]
@@ -255,11 +313,11 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createSecT
         Ok(java_str) => match java_str.to_str() {
             Ok(rust_str) => match from_str(rust_str) {
                 Ok(input) => input,
-                Err(err) => return Result::from(err).to_jstring(&env),
+                Err(err) => return EncryptedTransferResult::from(err).to_jstring(&env),
             },
-            Err(err) => return Result::from(err).to_jstring(&env),
+            Err(err) => return EncryptedTransferResult::from(err).to_jstring(&env),
         },
-        Err(err) => return Result::from(err).to_jstring(&env),
+        Err(err) => return EncryptedTransferResult::from(err).to_jstring(&env),
     };
 
     let decrypted_amount = match decrypt_encrypted_amount(
@@ -267,7 +325,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createSecT
         input.sender_secret_key.clone(),
     ) {
         CryptoJniResult::Ok(amount) => amount,
-        CryptoJniResult::Err(err) => return Result::Err(err).to_jstring(&env),
+        CryptoJniResult::Err(err) => return EncryptedTransferResult::Err(err).to_jstring(&env)
     };
 
     let input_amount: AggregatedDecryptedAmount<ArCurve> = AggregatedDecryptedAmount {
@@ -290,7 +348,8 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createSecT
 
     match payload {
         Some(payload) => CryptoJniResult::Ok(payload).to_jstring(&env),
-        None => Result::Err(PAYLOAD_CREATION_ERROR).to_jstring(&env),
+        None =>
+        return EncryptedTransferResult::from(PAYLOAD_CREATION_ERROR).to_jstring(&env)
     }
 }
 
@@ -334,7 +393,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateEn
         input.sender_secret_key.clone(),
     ) {
         CryptoJniResult::Ok(amount) => amount,
-        CryptoJniResult::Err(err) => return Result::Err(err).to_jstring(&env),
+        CryptoJniResult::Err(err) => return EncryptedAmountTransferResult::Err(err).to_jstring(&env),
     };
 
     let input_amount: AggregatedDecryptedAmount<ArCurve> = AggregatedDecryptedAmount {
@@ -358,7 +417,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateEn
 
     match payload {
         Some(payload) => CryptoJniResult::Ok(payload).to_jstring(&env),
-        None => EncryptedAmountTransferResult::Err(PAYLOAD_CREATION_ERROR).to_jstring(&env),
+        None => return EncryptedAmountTransferResult::Err(JNIError { errorType: JNIErrorType::JsonDeserializationError, errorMessage: ":C".to_string() }, ).to_jstring(&env) //EncryptedAmountTransferResult::Err(JNIError::PayloadCreationError(PAYLOAD_CREATION_ERROR.to_string())).to_jstring(&env),
     }
 }
 
@@ -407,4 +466,101 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateCo
     let payload = ConfigureBakerKeysPayload::new(&input.keys, input.sender, &mut csprng);
 
     return CryptoJniResult::Ok(payload).to_jstring(&env);
+}
+
+type SerializeParamResult = CryptoJniResult<String>;
+
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeParameter(
+    env: JNIEnv,
+    _: JClass,
+    parameter: JString,
+    contractName: JString,
+    methodName: JString,
+    schemaBytes: jbyteArray,
+    schemaVersion: jint,
+    verboseErrors: jboolean,
+) -> jstring {
+
+    let schema = match env.convert_byte_array(schemaBytes) {
+        Ok(x) => x,
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+
+    let parameter: String = match env.get_string(parameter) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let contractName: String = match env.get_string(contractName) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let methodName: String = match env.get_string(methodName) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let version: Option<u8> = match schemaVersion {
+        0 => Some(0),
+        1 => Some(1),
+        2 => Some(2),
+        3 => Some(3),
+        _ => None,
+    };
+
+    let verboseErrors = verboseErrors != JNI_FALSE;
+
+    let serializedParameter = serialize_receive_contract_parameters_aux(
+        &parameter, 
+        &contractName, 
+        &methodName, 
+        &schema, 
+        &version,
+        verboseErrors
+    );
+
+
+    let result = match serializedParameter {
+        Ok(serializedParameter) => hex::encode(serializedParameter),
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        
+    };
+
+    return SerializeParamResult::Ok(result).to_jstring(&env);
+
+
+}
+
+
+#[allow(non_snake_case)]
+pub fn serialize_receive_contract_parameters_aux(
+    parameter: &str,
+    contractName: &str,
+    methodName: &str,
+    schemaBytes: &Vec<u8>,
+    schemaVersion: &Option<u8>,
+    verboseErrors: bool,
+) -> Result<Vec<u8>> {
+    
+    let module_schema = VersionedModuleSchema::new(schemaBytes, schemaVersion)?;
+    let parameter_type = module_schema.get_receive_param_schema(contractName, methodName)?;
+    let value: serde_json::Value = from_str(parameter)?;
+
+    let res = parameter_type
+        .serial_value(&value)
+        .map_err(|e| anyhow!("{}", e.display(verboseErrors)));
+    return Ok(res?);
 }
