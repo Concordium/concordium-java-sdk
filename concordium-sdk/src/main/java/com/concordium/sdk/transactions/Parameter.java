@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
+import org.apache.commons.codec.DecoderException;
 
 import java.nio.ByteBuffer;
 
@@ -48,9 +49,7 @@ public final class Parameter {
         return buffer.array();
     }
 
-    public static Parameter from(SchemaParameter param) throws JsonProcessingException {
-
-        //return from(param.toBytes());
-        return null;
+    public static Parameter from(SchemaReceiveParameter param)  {
+        return from(param.toBytes());
     }
 }

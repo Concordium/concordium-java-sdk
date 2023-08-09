@@ -1,15 +1,10 @@
 package com.concordium.sdk.requests.smartcontracts;
 
 import com.concordium.sdk.requests.BlockQuery;
-import com.concordium.sdk.transactions.CCDAmount;
-import com.concordium.sdk.transactions.Parameter;
-import com.concordium.sdk.transactions.ReceiveName;
+import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Objects;
 
@@ -62,6 +57,66 @@ public class InvokeInstanceRequest {
      */
     private Energy energy;
 
+    public static InvokeInstanceRequest from(BlockQuery blockHash,
+                                        AbstractAddress invoker,
+                                        ContractAddress instance,
+                                        CCDAmount amount,
+                                        ReceiveName entrypoint,
+                                        Parameter parameter,
+                                        Energy energy) {
+        return InvokeInstanceRequest.builder()
+                .blockHash(blockHash)
+                .invoker(invoker)
+                .instance(instance)
+                .amount(amount)
+                .entrypoint(entrypoint)
+                .parameter(parameter)
+                .energy(energy).build();
+    }
+    public static InvokeInstanceRequest from(BlockQuery blockHash,
+                                             ContractAddress instance,
+                                             CCDAmount amount,
+                                             ReceiveName entrypoint,
+                                             Parameter parameter,
+                                             Energy energy) {
+        return InvokeInstanceRequest.builder()
+                .blockHash(blockHash)
+                .instance(instance)
+                .amount(amount)
+                .entrypoint(entrypoint)
+                .parameter(parameter)
+                .energy(energy).build();
+    }
+
+    public static InvokeInstanceRequest from(BlockQuery blockHash,
+                                             AbstractAddress invoker,
+                                             ContractAddress instance,
+                                             CCDAmount amount,
+                                             SchemaReceiveParameter schemaReceiveParameter,
+                                             Energy energy) {
+        return InvokeInstanceRequest.builder()
+                .blockHash(blockHash)
+                .invoker(invoker)
+                .instance(instance)
+                .amount(amount)
+                .entrypoint(schemaReceiveParameter.getReceiveName())
+                .parameter(Parameter.from(schemaReceiveParameter))
+                .energy(energy).build();
+    }
+
+    public static InvokeInstanceRequest from(BlockQuery blockHash,
+                                             ContractAddress instance,
+                                             CCDAmount amount,
+                                             SchemaReceiveParameter schemaReceiveParameter,
+                                             Energy energy) {
+        return InvokeInstanceRequest.builder()
+                .blockHash(blockHash)
+                .instance(instance)
+                .amount(amount)
+                .entrypoint(schemaReceiveParameter.getReceiveName())
+                .parameter(Parameter.from(schemaReceiveParameter))
+                .energy(energy).build();
+    }
     public boolean hasInvoker() {
         return !Objects.isNull(this.invoker);
     }

@@ -63,8 +63,22 @@ public final class UpdateContractPayload {
 
 
     public static UpdateContractPayload from(@NonNull final ContractAddress contractAddress,
-                                             SchemaParameter parameter) {
-        return null;
+                                             SchemaReceiveParameter schemaReceiveParameter) {
+        return new UpdateContractPayload(
+                CCDAmount.fromMicro(0),
+                contractAddress,
+                schemaReceiveParameter.getReceiveName(),
+                Parameter.from(schemaReceiveParameter));
+    }
+
+    public static UpdateContractPayload from(CCDAmount amount,
+                                             @NonNull final ContractAddress contractAddress,
+                                             SchemaReceiveParameter schemaReceiveParameter) {
+        return new UpdateContractPayload(
+                amount,
+                contractAddress,
+                schemaReceiveParameter.getReceiveName(),
+                Parameter.from(schemaReceiveParameter));
     }
 
     public static UpdateContractPayload from(@NonNull final CCDAmount amount,

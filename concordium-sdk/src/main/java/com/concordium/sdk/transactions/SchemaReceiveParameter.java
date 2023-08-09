@@ -6,17 +6,20 @@ import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  * TODO comment.
  */
 @Getter
-public abstract class SchemaParameter {
+public abstract class SchemaReceiveParameter {
 
+    //static block to load native library
     static {
         NativeResolver.loadLib();
     }
@@ -31,9 +34,11 @@ public abstract class SchemaParameter {
     @JsonIgnore
     private boolean initialized; // @JsonIgnore does not work for name: 'isInitialized'
     @JsonIgnore
+    @Getter(AccessLevel.NONE)  // Does this need to be available? getBytes() should always be used for this as it checks for initialization?
+                               // Should this be stored as a String or just converted to a byte[] at once?
     private String serializedParameter;
 
-    protected SchemaParameter(Schema schema, ReceiveName receiveName) {
+    protected SchemaReceiveParameter(Schema schema, ReceiveName receiveName) {
         this.schema = schema;
         this.receiveName = receiveName;
         this.initialized = false;
@@ -56,37 +61,34 @@ public abstract class SchemaParameter {
      * TODO comment
      * @param verboseErrors
      */
-    @SneakyThrows
+
     public void initialize(boolean verboseErrors) {
-        String json = JsonMapper.INSTANCE.writeValueAsString(this);
-        System.out.println(json);
-        String method = receiveName.getMethod();
+        String methodName = receiveName.getMethod();
         String contractName = receiveName.getContractName();
         byte[] schemaBytes = schema.getSchemaBytes();
-        SchemaVersion version = schema.getVersion();
-        SerializeParameterResult result = null;
+        SchemaVersion schemaVersion = schema.getVersion();
+        SerializeParameterResult result = null; // The other classes using the jni initializes the result as null. Why ?
         try {
-            val jsonStr = CryptoJniNative.serializeParameter(json, contractName, method, schemaBytes, version.getVersion(), verboseErrors);
-            result = JsonMapper.INSTANCE.readValue(jsonStr, SerializeParameterResult.class);
+            String parameterJson = JsonMapper.INSTANCE.writeValueAsString(this);
+            val resultJson = CryptoJniNative.serializeParameter(parameterJson, contractName, methodName, schemaBytes, schemaVersion.getVersion(), verboseErrors);
+            result = JsonMapper.INSTANCE.readValue(resultJson, SerializeParameterResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(result);
         if (!result.isSuccess()) {
-            throw CryptoJniException.from(
-                    result.getErr()
-            );
+            throw CryptoJniException.from(result.getErr());
         }
-        this.initialized = true;
         serializedParameter = result.getSerializedParameter();
+        this.initialized = true;
     }
 
     /**
      * TODO comment
      * @return
      */
-    public String toBytes() throws JsonProcessingException, DecoderException {
+    @SneakyThrows // Is this okay? The hex should always be valid? maybe?
+    public byte[] toBytes() {
         if (!initialized) {throw new IllegalStateException("Must initialize parameter before passing to method");}
-        return serializedParameter;
+        return Hex.decodeHex(serializedParameter);
     }
 }
