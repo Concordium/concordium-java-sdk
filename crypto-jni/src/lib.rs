@@ -472,7 +472,7 @@ type SerializeParamResult = CryptoJniResult<String>;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeParameter(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeReceiveParameter(
     env: JNIEnv,
     _: JClass,
     parameter: JString,

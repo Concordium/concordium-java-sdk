@@ -12,11 +12,8 @@ import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
 
-/**
- * TODO comment.
- */
 @Getter
-public abstract class SchemaReceiveParameter {
+public abstract class SchemaInitParameter {
 
     //static block to load native library
     static {
@@ -29,17 +26,17 @@ public abstract class SchemaReceiveParameter {
     @JsonIgnore
     private final Schema schema;
     @JsonIgnore
-    private final ReceiveName receiveName;
+    private final InitName initName;
     @JsonIgnore
     private boolean initialized; // @JsonIgnore does not work for name: 'isInitialized'
     @JsonIgnore
-    @Getter(AccessLevel.NONE)  // Does this need to be available? getBytes() should always be used for this as it checks for initialization?
-                               // Should this be stored as a String or just converted to a byte[] at once?
+    @Getter(AccessLevel.NONE)   // Does this need to be available? getBytes() should always be used for this as it checks for initialization?
+                                // Should this be stored as a String or just converted to a byte[] at once?
     private String serializedParameter;
 
-    protected SchemaReceiveParameter(Schema schema, ReceiveName receiveName) {
+    protected SchemaInitParameter(Schema schema, InitName initName) {
         this.schema = schema;
-        this.receiveName = receiveName;
+        this.initName = initName;
         this.initialized = false;
         this.serializedParameter = "";
     }
@@ -62,14 +59,13 @@ public abstract class SchemaReceiveParameter {
      */
 
     public void initialize(boolean verboseErrors) {
-        String methodName = receiveName.getMethod();
-        String contractName = receiveName.getContractName();
+        String contractName = initName.getName();
         byte[] schemaBytes = schema.getSchemaBytes();
         SchemaVersion schemaVersion = schema.getVersion();
         SerializeParameterResult result = null; // The other classes using the jni initializes the result as null. Why ?
         try {
             String parameterJson = JsonMapper.INSTANCE.writeValueAsString(this);
-            val resultJson = CryptoJniNative.serializeReceiveParameter(parameterJson, contractName, methodName, schemaBytes, schemaVersion.getVersion(), verboseErrors);
+            val resultJson = CryptoJniNative.serializeInitParameter(parameterJson, contractName, schemaBytes, schemaVersion.getVersion(), verboseErrors);
             result = JsonMapper.INSTANCE.readValue(resultJson, SerializeParameterResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
