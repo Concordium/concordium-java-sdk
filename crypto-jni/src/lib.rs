@@ -417,7 +417,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateEn
 
     match payload {
         Some(payload) => CryptoJniResult::Ok(payload).to_jstring(&env),
-        None => return EncryptedAmountTransferResult::Err(JNIError { errorType: JNIErrorType::JsonDeserializationError, errorMessage: ":C".to_string() }, ).to_jstring(&env) //EncryptedAmountTransferResult::Err(JNIError::PayloadCreationError(PAYLOAD_CREATION_ERROR.to_string())).to_jstring(&env),
+        None => return EncryptedAmountTransferResult::from(PAYLOAD_CREATION_ERROR).to_jstring(&env)
     }
 }
 
@@ -557,6 +557,93 @@ pub fn serialize_receive_contract_parameters_aux(
     
     let module_schema = VersionedModuleSchema::new(schemaBytes, schemaVersion)?;
     let parameter_type = module_schema.get_receive_param_schema(contractName, methodName)?;
+    let value: serde_json::Value = from_str(parameter)?;
+
+    let res = parameter_type
+        .serial_value(&value)
+        .map_err(|e| anyhow!("{}", e.display(verboseErrors)));
+    return Ok(res?);
+}
+
+//// Init param
+/// 
+
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeInitParameter(
+    env: JNIEnv,
+    _: JClass,
+    parameter: JString,
+    contractName: JString,
+    schemaBytes: jbyteArray,
+    schemaVersion: jint,
+    verboseErrors: jboolean,
+) -> jstring {
+
+    let schema = match env.convert_byte_array(schemaBytes) {
+        Ok(x) => x,
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+
+    let parameter: String = match env.get_string(parameter) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let contractName: String = match env.get_string(contractName) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let version: Option<u8> = match schemaVersion {
+        0 => Some(0),
+        1 => Some(1),
+        2 => Some(2),
+        3 => Some(3),
+        _ => None,
+    };
+
+    let verboseErrors = verboseErrors != JNI_FALSE;
+
+    let serializedParameter = serialize_receive_init_parameters_aux(
+        &parameter, 
+        &contractName, 
+        &schema, 
+        &version,
+        verboseErrors
+    );
+
+
+    let result = match serializedParameter {
+        Ok(serializedParameter) => hex::encode(serializedParameter),
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        
+    };
+
+    return SerializeParamResult::Ok(result).to_jstring(&env);
+
+
+}
+
+
+#[allow(non_snake_case)]
+pub fn serialize_receive_init_parameters_aux(
+    parameter: &str,
+    contractName: &str,
+    schemaBytes: &Vec<u8>,
+    schemaVersion: &Option<u8>,
+    verboseErrors: bool,
+) -> Result<Vec<u8>> {
+    
+    let module_schema = VersionedModuleSchema::new(schemaBytes, schemaVersion)?;
+    let parameter_type = module_schema.get_init_param_schema(contractName)?;
     let value: serde_json::Value = from_str(parameter)?;
 
     let res = parameter_type

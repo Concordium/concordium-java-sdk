@@ -70,6 +70,10 @@ public final class InitContractPayload {
         return new InitContractPayload(amount, moduleRef, initName, parameter);
     }
 
+    public static InitContractPayload from(CCDAmount amount, ModuleRef moduleRef, SchemaInitParameter schemaInitParameter) {
+        return new InitContractPayload(amount, moduleRef, schemaInitParameter.getInitName(), Parameter.from(schemaInitParameter));
+    }
+
     /**
      * @return buffer bytes of InitContractPayload
      */

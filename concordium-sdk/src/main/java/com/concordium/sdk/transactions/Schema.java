@@ -25,9 +25,27 @@ public class Schema {
 
     public static Schema from(byte[] schemaBytes) {return new Schema(schemaBytes, SchemaVersion.UNKNOWN);}
 
-    public static Schema from(InputStream stream) {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
-        return null;
+    /**
+     * TODO comment
+     * taken from https://www.baeldung.com/convert-input-stream-to-array-of-bytes
+     * @param is
+     * @param version
+     * @return
+     * @throws IOException
+     */
+    public static Schema from(InputStream is, SchemaVersion version) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        int nRead;
+        byte[] data = new byte[4];
+
+        while ((nRead = is.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+
+        buffer.flush();
+        byte[] targetArray = buffer.toByteArray();
+        return from(targetArray, version);
     }
 
 

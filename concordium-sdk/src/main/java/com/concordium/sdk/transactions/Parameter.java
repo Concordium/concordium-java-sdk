@@ -27,7 +27,6 @@ public final class Parameter {
 
     @JsonCreator
     Parameter(byte[] bytes) {
-        // TODO enforce 1kb max
         this.bytes = bytes;
     }
 
@@ -35,6 +34,7 @@ public final class Parameter {
      * This function takes a byte array and returns a Parameter object.
      */
     public static Parameter from(byte[] parameter) {
+        if (parameter.length > MAX_SIZE) {throw new IllegalArgumentException("Parameter must not exceed " + MAX_SIZE + " bytes, argument size was: " + parameter.length);}
         return new Parameter(parameter);
     }
 
@@ -48,6 +48,13 @@ public final class Parameter {
         buffer.put(paramBuffer);
         return buffer.array();
     }
+
+    /**
+     * TODO comment this and below
+     * @param param
+     * @return
+     */
+    public static Parameter from(SchemaInitParameter param) {return from(param.toBytes());}
 
     public static Parameter from(SchemaReceiveParameter param)  {
         return from(param.toBytes());
