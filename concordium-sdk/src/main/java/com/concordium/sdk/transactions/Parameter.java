@@ -2,11 +2,9 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt16;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
-import org.apache.commons.codec.DecoderException;
 
 import java.nio.ByteBuffer;
 
