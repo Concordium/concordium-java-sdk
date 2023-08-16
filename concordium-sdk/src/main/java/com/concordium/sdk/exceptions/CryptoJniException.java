@@ -3,15 +3,18 @@ package com.concordium.sdk.exceptions;
 import lombok.Getter;
 
 /**
- * Represents an exception that is thrown when a cryptographic operation performed using the JNI (Java Native Interface)
- * fails. It has a field, `code`, that contains the result code of the failed operation.
+ * Represents an exception that is thrown when an operation performed using the JNI (Java Native Interface)
+ * fails.
  */
 public final class CryptoJniException extends RuntimeException {
     /**
-     * The result code of the failed cryptographic operation.
+     * The type of the failed operation.
      */
     @Getter
     private final JNIErrorType errorType;
+    /**
+     * The error message returned from the JNI.
+     */
     @Getter
     private final String errorMessage;
 

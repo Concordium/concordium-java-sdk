@@ -15,17 +15,22 @@ import java.util.Objects;
 @ToString(doNotUseGetters = true)
 public class BakerKeysResult {
     /**
-     * An optional `BakerKeysJniOutput` object, containing the output of the generate baker keys function.
+     * A {@link BakerKeysJniOutput} object, containing the output of the generate baker keys function if it succeeded.
+     * Populated iff {@link BakerKeysResult#isSuccess} is true.
      */
     @JsonProperty("Ok")
     private final BakerKeysJniOutput ok;
 
     /**
-     * An optional `CryptoJniResultCode` object, containing an error code if the generate baker keys function failed.
+     * A {@link JNIError} object, containing an error message if the generate baker keys function failed.
+     * Populated iff {@link BakerKeysResult#isSuccess} is false.
      */
     @JsonProperty("Err")
     private final JNIError err;
 
+    /**
+     * Whether the function succeeded or not.
+     */
     private boolean isSuccess;
 
     @JsonCreator
@@ -40,12 +45,4 @@ public class BakerKeysResult {
         }
     }
 
-    /**
-     * Returns a boolean indicating whether the `ok` field is present (i.e. whether the baker key was successfully generated).
-     *
-     * @return a boolean indicating whether the `ok` field is present.
-     */
-    public boolean isok() {
-        return this.isSuccess;
-    }
 }

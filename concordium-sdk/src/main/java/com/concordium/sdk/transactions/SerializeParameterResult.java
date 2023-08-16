@@ -9,18 +9,29 @@ import lombok.ToString;
 import java.util.Objects;
 
 /**
- * TODO comment
+ * Class that holds the result of serializing a parameter using the JNI.
  */
 @Data
 @ToString(doNotUseGetters = true)
 public class SerializeParameterResult {
 
+    /**
+     * The serialized parameter as hex encoded bytes if the serialize parameter function succeeded.
+     * Populated iff {@link SerializeParameterResult#isSuccess} is true.
+     */
     @JsonProperty("Ok")
     private final String serializedParameter;
 
+    /**
+     * A {@link JNIError} object, containing an error message if the serialize parameter function failed.
+     * Populated iff {@link SerializeParameterResult#isSuccess} is false.
+     */
     @JsonProperty("Err")
     private final JNIError err;
 
+    /**
+     * Whether the function succeeded or not.
+     */
     private boolean isSuccess;
 
     @JsonCreator

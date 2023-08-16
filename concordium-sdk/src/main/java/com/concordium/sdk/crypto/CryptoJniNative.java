@@ -80,7 +80,7 @@ public class CryptoJniNative {
      * @param methodName name of the method.
      * @param schemaBytes schema of the contract.
      * @param schemaVersion version of the schema.
-     * @param verboseErrors whether errors are in verbose format or not.
+     * @param verboseErrors whether errors are returned in verbose format or not.
      * @return JSON representing {@link SerializeParameterResult}
      */
     public static native String serializeReceiveParameter(String parameterJson, String contractName, String methodName, byte[] schemaBytes, int schemaVersion, boolean verboseErrors);
@@ -91,7 +91,7 @@ public class CryptoJniNative {
      * @param contractName name of the contract.
      * @param schemaBytes schema of the contract.
      * @param schemaVersion version of the schema.
-     * @param verboseErrors whether errors are in verbose format or not.
+     * @param verboseErrors whether errors are returned in verbose format or not.
      * @return JSON representing {@link SerializeParameterResult}
      */
     public static native String serializeInitParameter(String parameterJson, String contractName, byte[] schemaBytes, int schemaVersion, boolean verboseErrors);

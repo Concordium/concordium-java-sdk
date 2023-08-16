@@ -26,7 +26,7 @@ public final class ConfigureBakerKeys {
             throw new RuntimeException(e);
         }
 
-        if (!result.isok()) {
+        if (!result.isSuccess()) {
             throw CryptoJniException.from(
                     result.getErr());
         }

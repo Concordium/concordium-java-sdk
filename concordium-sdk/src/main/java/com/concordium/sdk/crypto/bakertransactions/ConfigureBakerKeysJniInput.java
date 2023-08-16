@@ -28,7 +28,7 @@ public class ConfigureBakerKeysJniInput {
     }
 
     /**
-     * Document why I am here...
+     * Wrapper for {@link AccountAddress} to ensure correct serialization.
      */
     private static class ConfigureBakerAccountAddress {
         private final AccountAddress address;

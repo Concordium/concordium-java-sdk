@@ -52,7 +52,7 @@ public final class EncryptedTransfers {
             throw new RuntimeException(e);
         }
 
-        if (!result.isok()) {
+        if (!result.isSuccess()) {
             throw CryptoJniException.from(
                     result.getErr());
         }
@@ -87,7 +87,7 @@ public final class EncryptedTransfers {
             throw new RuntimeException(e);
         }
 
-        if (!result.isok()) {
+        if (!result.isSuccess()) {
             throw CryptoJniException.from(
                     result.getErr());
         }

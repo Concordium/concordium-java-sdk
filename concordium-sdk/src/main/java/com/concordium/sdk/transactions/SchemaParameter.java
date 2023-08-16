@@ -14,11 +14,14 @@ import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Hex;
 
 /**
- * Wrapper for parameters serializable via a {@link Schema} to be used with smart contracts.
- * Must be initialized by calling {@link SchemaParameter#initialize()} before usage.
- * Implementing subclasses must be JSON serializable in accordance with the provided smart contract schema.
- * If default serialization does not work, a custom serializer should be implemented and used with annotation @JsonSerialize (using = <MyCustomSerializer>.class).
+ * Represents smart contract parameters serializable via a {@link Schema}.
+ * <p>
+ * Classes representing smart contract parameters should extend this and ensure they are JSON serializable in accordance with the provided smart contract schema.
+ * If default serialization does not work, a custom serializer should be implemented and used with annotation '@JsonSerialize(using = MyCustomSerializer.class)'.
+ * <p>
  * See TODO link example. for example.
+ * <p>
+ * Must be initialized by calling {@link SchemaParameter#initialize()} before usage.
  */
 @Getter
 public abstract class SchemaParameter {
@@ -153,7 +156,7 @@ public abstract class SchemaParameter {
      * @throws IllegalStateException if parameter is not initialized.
      * @return byte[] containing the serialized parameter.
      */
-    @SneakyThrows // Is this okay? The hex should always be valid? maybe?
+    @SneakyThrows
     public byte[] toBytes() {
         if (!initialized) {throw new IllegalStateException("Must initialize parameter before use");}
         return Hex.decodeHex(serializedParameter);

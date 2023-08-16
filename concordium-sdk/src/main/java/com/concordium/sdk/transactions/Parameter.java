@@ -49,6 +49,7 @@ public final class Parameter {
 
     /**
      * Constructs a {@link Parameter} from the provided {@link SchemaParameter}.
+     * Provided {@link SchemaParameter} must be initialized using {@link SchemaParameter#initialize()} beforehand.
      * @param param {@link SchemaParameter} to convert.
      * @return converted {@link Parameter}.
      */

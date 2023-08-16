@@ -7,7 +7,7 @@ import lombok.ToString;
 
 
 /**
- * TODO comment.
+ * Represents error values returned from the JNI. Used to instantiate {@link CryptoJniException}.
  */
 @Getter
 @ToString

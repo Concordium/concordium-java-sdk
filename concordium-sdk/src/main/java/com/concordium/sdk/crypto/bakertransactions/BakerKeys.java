@@ -24,7 +24,7 @@ public final class BakerKeys {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        if (!result.isok()) {
+        if (!result.isSuccess()) {
             throw CryptoJniException.from(
                     result.getErr());
         }
