@@ -48,13 +48,9 @@ public final class Parameter {
     }
 
     /**
-     * TODO comment this and below
-     * @param param
-     * @return
+     * Constructs a {@link Parameter} from the provided {@link SchemaParameter}.
+     * @param param {@link SchemaParameter} to convert.
+     * @return converted {@link Parameter}.
      */
-    public static Parameter from(SchemaInitParameter param) {return from(param.toBytes());}
-
-    public static Parameter from(SchemaReceiveParameter param)  {
-        return from(param.toBytes());
-    }
+    public static Parameter from(SchemaParameter param)  {return from(param.toBytes());}
 }

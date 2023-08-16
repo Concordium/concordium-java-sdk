@@ -40,7 +40,7 @@ public final class UpdateContractPayload {
     }
 
     /**
-     * > This function creates a payload for updating a contract
+     * Creates a {@link UpdateContractPayload} with amount = 0 from the given parameters.
      *
      * @param amount          The amount of CCD to be sent to the contract.
      * @param contractAddress Address of the contract instance to invoke.
@@ -61,26 +61,44 @@ public final class UpdateContractPayload {
     }
 
 
-
+    /**
+     * Creates a {@link UpdateContractPayload} with amount = 0 from the given parameters.
+     *
+     * @param contractAddress Address of the contract instance to invoke.
+     * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
+     */
     public static UpdateContractPayload from(@NonNull final ContractAddress contractAddress,
-                                             SchemaReceiveParameter schemaReceiveParameter) {
-        return new UpdateContractPayload(
-                CCDAmount.fromMicro(0),
+                                             SchemaParameter schemaParameter) {
+        if (! (schemaParameter.getType() == ParameterType.RECEIVE)) {throw new IllegalArgumentException("Parameter must be initialized with an ReceiveName");}
+        return from(CCDAmount.fromMicro(0),
                 contractAddress,
-                schemaReceiveParameter.getReceiveName(),
-                Parameter.from(schemaReceiveParameter));
+                schemaParameter.getReceiveName(),
+                Parameter.from(schemaParameter));
     }
 
+    /**
+     * Creates a {@link UpdateContractPayload} from the given parameters.
+     *
+     * @param amount The amount of CCD to be sent to the contract.
+     * @param contractAddress Address of the contract instance to invoke.
+     * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
+     */
     public static UpdateContractPayload from(CCDAmount amount,
                                              @NonNull final ContractAddress contractAddress,
-                                             SchemaReceiveParameter schemaReceiveParameter) {
-        return new UpdateContractPayload(
-                amount,
-                contractAddress,
-                schemaReceiveParameter.getReceiveName(),
-                Parameter.from(schemaReceiveParameter));
+                                             SchemaParameter schemaParameter) {
+        if (! (schemaParameter.getType() == ParameterType.RECEIVE)) {throw new IllegalArgumentException("Parameter must be initialized with an ReceiveName");}
+        return from(amount, contractAddress, schemaParameter.getReceiveName(), Parameter.from(schemaParameter));
     }
 
+    /**
+     * Creates a {@link UpdateContractPayload} with amount = 0 from the given parameters.
+     *
+     * @param amount          The amount of CCD to be sent to the contract.
+     * @param contractAddress Address of the contract instance to invoke.
+     * @param receiveName The {@link ReceiveName} of the smart contract instance to invoke.
+     * @param param       The parameter of the contract method.
+     * @return A new UpdateContractPayload object.
+     */
     public static UpdateContractPayload from(@NonNull final CCDAmount amount,
                                              @NonNull final ContractAddress contractAddress,
                                              @NonNull final ReceiveName receiveName,

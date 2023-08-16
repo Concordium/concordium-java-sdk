@@ -472,6 +472,10 @@ type SerializeParamResult = CryptoJniResult<String>;
 
 #[no_mangle]
 #[allow(non_snake_case)]
+/**
+ * The JNI wrapper for serializing receive parameters.
+ * Constructs a SerializeParamResult containg the hex encoded serialized parameter. 
+ */
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeReceiveParameter(
     env: JNIEnv,
     _: JClass,
@@ -546,6 +550,10 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeR
 
 
 #[allow(non_snake_case)]
+/**
+ * Helper method for serialize_receive_parameters.
+ * Performs the actual serialization.
+ */
 pub fn serialize_receive_contract_parameters_aux(
     parameter: &str,
     contractName: &str,
@@ -565,9 +573,10 @@ pub fn serialize_receive_contract_parameters_aux(
     return Ok(res?);
 }
 
-//// Init param
-/// 
-
+/**
+ * The JNI wrapper for serializing init parameters.
+ * Constructs a SerializeParamResult containg the hex encoded serialized parameter. 
+ */
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeInitParameter(
@@ -612,7 +621,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeI
 
     let verboseErrors = verboseErrors != JNI_FALSE;
 
-    let serializedParameter = serialize_receive_init_parameters_aux(
+    let serializedParameter = serialize_init_parameters_aux(
         &parameter, 
         &contractName, 
         &schema, 
@@ -632,9 +641,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeI
 
 }
 
-
+/**
+ * Helper method for serialize_init_parameters.
+ * Performs the actual serialization.
+ */
 #[allow(non_snake_case)]
-pub fn serialize_receive_init_parameters_aux(
+pub fn serialize_init_parameters_aux(
     parameter: &str,
     contractName: &str,
     schemaBytes: &Vec<u8>,

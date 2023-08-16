@@ -8,6 +8,9 @@ import lombok.ToString;
 
 import java.util.Objects;
 
+/**
+ * TODO comment
+ */
 @Data
 @ToString(doNotUseGetters = true)
 public class SerializeParameterResult {

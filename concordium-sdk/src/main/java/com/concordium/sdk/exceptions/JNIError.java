@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.ToString;
 
 
+/**
+ * TODO comment.
+ */
 @Getter
 @ToString
 public class JNIError {
