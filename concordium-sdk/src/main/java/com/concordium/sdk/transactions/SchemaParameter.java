@@ -15,12 +15,19 @@ import org.apache.commons.codec.binary.Hex;
 /**
  * Represents smart contract parameters serializable via a {@link Schema}.
  * <p>
- * Classes representing smart contract parameters should extend this and ensure they are JSON serializable in accordance with the provided smart contract schema.
+ * Classes representing smart contract parameters should extend this and ensure they are JSON serializable in accordance with the provided smart contract schema.<p>
+ * Fields in the extending class, that should be serialized, must be visible to the serializer.
+ * Visible fields are: <p>
+ * <ul>
+ * <li>Fields with 'getter' methods (either user-created or by @Getter annotation).</li>
+ * <li>All fields in a class annotated with '@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)'. Fields can be excluded from this with the '@JsonIgnore' annotation.</li>
+ * <li>Fields annotated with '@JsonProperty'. These have both getter and setter methods generated.</li>
+ * <li>Public fields</li>
+ * </ul>
  * If default serialization does not work, a custom serializer should be implemented and used with annotation '@JsonSerialize(using = MyCustomSerializer.class)'.
+ * See {@link com.concordium.sdk.types.AbstractAddress} for an example of a custom serializer.
  * <p>
- * See {@link com.concordium.sdk.types.AbstractAddress} for example.
- * <p>
- * Must be initialized by calling {@link SchemaParameter#initialize()} before usage.
+ * Parameter must be initialized by calling {@link SchemaParameter#initialize()} before usage.
  */
 @Getter
 public abstract class SchemaParameter {
