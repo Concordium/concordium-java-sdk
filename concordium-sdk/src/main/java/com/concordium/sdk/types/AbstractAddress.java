@@ -81,8 +81,20 @@ public abstract class AbstractAddress {
                     jsonGenerator.writeEndArray();
 
                     jsonGenerator.writeEndObject();
+                    break;
 
                 case ADDRESS_CONTRACT:
+                    ContractAddress contractAddress = (ContractAddress) address;
+
+                    jsonGenerator.writeStartObject();
+                    jsonGenerator.writeFieldName("Contract");
+                    jsonGenerator.writeStartArray();
+                    jsonGenerator.writeStartObject();
+                    jsonGenerator.writeNumberField("index", contractAddress.getIndex());
+                    jsonGenerator.writeNumberField("subindex", contractAddress.getSubIndex());
+                    jsonGenerator.writeEndObject();
+                    jsonGenerator.writeEndArray();
+                    jsonGenerator.writeEndObject();
                     break;
             }
         }

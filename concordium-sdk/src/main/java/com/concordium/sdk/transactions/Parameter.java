@@ -13,13 +13,13 @@ import java.nio.ByteBuffer;
  * The parameters are used for updating the smart contract instance.
  * i.e. calling a "receive" function exposed in the smart contract with the parameters.
  * Buffer of the parameters message.
- * In the current supported protocols the size is limited to be 1kb.
+ * In the current supported protocols the size is limited to be 64kb.
  */
 
 @Getter
 @ToString
 public final class Parameter {
-    public static final int MAX_SIZE = 1024;
+    public static final int MAX_SIZE = 65535;
     public static final Parameter EMPTY = Parameter.from(new byte[0]);
     private final byte[] bytes;
 
