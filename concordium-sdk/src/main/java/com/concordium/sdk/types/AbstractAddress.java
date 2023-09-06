@@ -2,10 +2,10 @@ package com.concordium.sdk.types;
 
 import com.concordium.grpc.v2.Address;
 import com.concordium.sdk.transactions.AccountType;
+import com.concordium.sdk.transactions.SchemaParameter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
@@ -16,9 +16,12 @@ import java.util.Map;
 /**
  * An abstract Address.
  * Implementations are either Account - or Contract addresses.
+ * <p>
+ * If used as parameter for a smart contract, the field containing the Abstract Address must be annotated: <p>
+ * '@JsonSerialize(using = AbstractAddress.AbstractAddressJsonSerializer.class)' <p>
+ * to ensure proper serialization.
  */
 @EqualsAndHashCode
-@JsonSerialize (using = AbstractAddress.AbstractAddressJsonSerializer.class)
 public abstract class AbstractAddress {
 
     @Getter
@@ -65,6 +68,10 @@ public abstract class AbstractAddress {
         return this.type.toString();
     }
 
+    /**
+     * Implements custom serialization for {@link AbstractAddress}. Should be used when creating {@link SchemaParameter} containing {@link AbstractAddress}. <p>
+     * To use, annotate field containing {@link AbstractAddress} with <p> '@JsonSerialize(using = AbstractAddress.AbstractAddressJsonSerializer.class)'
+     */
     public static class AbstractAddressJsonSerializer extends JsonSerializer<AbstractAddress> {
         @Override
         public void serialize(AbstractAddress address, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {

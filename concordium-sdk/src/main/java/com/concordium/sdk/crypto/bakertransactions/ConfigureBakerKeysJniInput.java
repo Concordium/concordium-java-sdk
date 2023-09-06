@@ -1,7 +1,6 @@
 package com.concordium.sdk.crypto.bakertransactions;
 
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,7 +13,7 @@ public class ConfigureBakerKeysJniInput {
     /**
      * The address of the account that will be configured as a baker
      */
-    private final ConfigureBakerAccountAddress sender;
+    private final AccountAddress sender;
 
     /**
      * The baker keys that will be configured for the account
@@ -23,23 +22,7 @@ public class ConfigureBakerKeysJniInput {
 
     @Builder
     public ConfigureBakerKeysJniInput(AccountAddress sender, BakerKeysJniOutput keys) {
-        this.sender = new ConfigureBakerAccountAddress(sender);
+        this.sender = sender;
         this.keys = keys;
-    }
-
-    /**
-     * Wrapper for {@link AccountAddress} to ensure correct serialization.
-     */
-    private static class ConfigureBakerAccountAddress {
-        private final AccountAddress address;
-
-        private ConfigureBakerAccountAddress(AccountAddress address) {
-            this.address = address;
-        }
-
-        @JsonValue
-        String getAddress () {
-            return this.address.encoded();
-        }
     }
 }

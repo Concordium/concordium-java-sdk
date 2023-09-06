@@ -4,8 +4,7 @@ import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.Schema;
 import com.concordium.sdk.transactions.SchemaParameter;
 import com.concordium.sdk.types.AbstractAddress;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 
 import java.util.List;
@@ -17,6 +16,7 @@ import java.util.List;
 @Getter
 public class MintParams extends SchemaParameter {
 
+    @JsonSerialize(using = AbstractAddress.AbstractAddressJsonSerializer.class)
     private final AbstractAddress owner;
     private final List<String> tokens;
 

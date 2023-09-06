@@ -6,6 +6,7 @@ import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.exceptions.JNIError;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.serializing.JsonMapper;
+import com.concordium.sdk.types.AbstractAddress;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import org.apache.commons.codec.binary.Hex;
 /**
  * Represents smart contract parameters serializable via a {@link Schema}.
  * <p>
- * Classes representing smart contract parameters should extend this and ensure they are JSON serializable in accordance with the provided smart contract schema.<p>
+ * Classes representing smart contract parameters should extend this, and ensure that they are JSON serializable in accordance with the provided smart contract schema.<p>
  * Fields in the extending class, that should be serialized, must be visible to the serializer.
  * Visible fields are: <p>
  * <ul>
@@ -25,7 +26,7 @@ import org.apache.commons.codec.binary.Hex;
  * <li>Public fields</li>
  * </ul>
  * If default serialization does not work, a custom serializer should be implemented and used with annotation '@JsonSerialize(using = MyCustomSerializer.class)'.
- * See {@link com.concordium.sdk.types.AbstractAddress} for an example of a custom serializer.
+ * See {@link AbstractAddress} for an example of a custom serializer.
  * <p>
  * Parameter must be initialized by calling {@link SchemaParameter#initialize()} before usage.
  */

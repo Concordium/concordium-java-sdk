@@ -7,7 +7,6 @@ import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -81,7 +80,7 @@ public class SerializeParameterTest {
 
     @SneakyThrows
     @Test
-    public void shouldThrowExcpetionOnInvalidParameter() {
+    public void shouldThrowExceptionOnInvalidParameter() {
         IncorrectParams incorrectParamsClass = new IncorrectParams(SCHEMA, RECEIVE_NAME);
         MintParams mintParamsWrongTokens = new MintParams(SCHEMA, RECEIVE_NAME, ACCOUNT_ADDRESS, INCORRECT_TOKENS);
         int failed = 0;
