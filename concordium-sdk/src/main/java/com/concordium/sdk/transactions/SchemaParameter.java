@@ -29,6 +29,8 @@ import org.apache.commons.codec.binary.Hex;
  * See {@link AbstractAddress} for an example of a custom serializer.
  * <p>
  * Parameter must be initialized by calling {@link SchemaParameter#initialize()} before usage.
+ * <p>
+ * For functions not expecting parameters use {@link Parameter#EMPTY} instead.
  */
 @Getter
 public abstract class SchemaParameter {

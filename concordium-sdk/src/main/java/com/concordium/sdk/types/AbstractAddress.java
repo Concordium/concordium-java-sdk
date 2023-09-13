@@ -75,35 +75,22 @@ public abstract class AbstractAddress {
     public static class AbstractAddressJsonSerializer extends JsonSerializer<AbstractAddress> {
         @Override
         public void serialize(AbstractAddress address, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+            jsonGenerator.writeStartObject();
             switch (address.getType()){
                 case ADDRESS_ACCOUNT:
-                    AccountAddress accountAddress = (AccountAddress) address;
-
-                    jsonGenerator.writeStartObject();
-
                     jsonGenerator.writeFieldName("Account");
-
-                    jsonGenerator.writeStartArray();
-                    jsonGenerator.writeString(accountAddress.encoded());
-                    jsonGenerator.writeEndArray();
-
-                    jsonGenerator.writeEndObject();
                     break;
 
                 case ADDRESS_CONTRACT:
-                    ContractAddress contractAddress = (ContractAddress) address;
-
-                    jsonGenerator.writeStartObject();
                     jsonGenerator.writeFieldName("Contract");
-                    jsonGenerator.writeStartArray();
-                    jsonGenerator.writeStartObject();
-                    jsonGenerator.writeNumberField("index", contractAddress.getIndex());
-                    jsonGenerator.writeNumberField("subindex", contractAddress.getSubIndex());
-                    jsonGenerator.writeEndObject();
-                    jsonGenerator.writeEndArray();
-                    jsonGenerator.writeEndObject();
                     break;
             }
+            jsonGenerator.writeStartArray();
+
+            jsonGenerator.writeObject(address);
+            jsonGenerator.writeEndArray();
+
+            jsonGenerator.writeEndObject();
         }
     }
 
