@@ -31,6 +31,14 @@ fn init<S: HasStateApi>(
     Ok(State {})
 }
 
+// 
+#[derive(Serialize, SchemaType)]
+#[concordium(transparent)]
+struct ListParam (
+    Vec<ContractAddress>
+);
+
+
 #[derive(Serialize, SchemaType)]
 struct AbstractAddressContainer {
     /// The amount of tokens to unwrap.
@@ -47,6 +55,21 @@ struct AccountAddressContainer {
 struct ContractAddressContainer {
     /// The amount of tokens to unwrap.
     address:   ContractAddress,
+}
+
+/// Takes ListParam as parameter for ensuring correct serialization of ListParam
+#[receive(
+    contract = "java_sdk_schema_unit_test",
+    name = "list_param_test",
+    parameter = "ListParam",
+    error = "Error",
+    mutable
+)]
+fn list_param_test<S: HasStateApi>(
+    ctx: &impl HasReceiveContext,
+    _host: &mut impl HasHost<State, StateApiType = S>,
+) -> Result<(), Error> {
+    Ok(())
 }
 
 /// Takes AddressContainer as parameter for ensuring correct serialization of Address

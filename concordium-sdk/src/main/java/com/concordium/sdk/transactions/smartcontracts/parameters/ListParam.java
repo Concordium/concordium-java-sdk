@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Wrapper for passing lists as smart contract parameters.
- * Contents of the list must be serializable according to the provided {@link Schema}.
+ * Wrapper for passing lists as smart contract parameters.<p>
+ * Contents of the list must be serializable according to the provided {@link Schema}.<p>
  */
 @Getter
 @JsonSerialize(using = ListParam.ListParamSerializer.class)

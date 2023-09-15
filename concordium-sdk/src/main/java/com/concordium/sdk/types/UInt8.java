@@ -1,11 +1,18 @@
 package com.concordium.sdk.types;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
 
+import java.io.IOException;
+
 @EqualsAndHashCode
 @Getter
+@JsonSerialize(using = UInt8.UInt8Serializer.class)
 public class UInt8 {
 
     private final int value;
@@ -38,5 +45,13 @@ public class UInt8 {
         return new UInt8(b & 0xff);
     }
 
+    @Override
     public String toString() {return String.valueOf(value);}
+
+    public static class UInt8Serializer extends JsonSerializer<UInt8> {
+        @Override
+        public void serialize(UInt8 uInt8, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
+            jsonGenerator.writeNumber(uInt8.getValue());
+        }
+    }
 }

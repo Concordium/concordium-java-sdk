@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 
 /**
  * This test ensures correct serialization of {@link SchemaParameter}.<p>
- * Specifically custom serialization of {@link com.concordium.sdk.types.AbstractAddress} is tested.<p>
  * Uses {@link MintParams} to model 'MintParams' in the <a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-nft/src/lib.rs">cis2-nft example</a>
  */
 public class SerializeParameterTest {
