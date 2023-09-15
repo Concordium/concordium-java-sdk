@@ -16,12 +16,15 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.fail;
 
+/**
+ * Ensures correct serialization of {@link AbstractAddress} when annotated correctly.
+ */
 public class AbstractAddressTest {
     static Schema SCHEMA;
 
     static {
         try {
-            SCHEMA = Schema.from(Files.readAllBytes(Paths.get("./src/test/java/com/concordium/sdk/smartcontract/schema-unit-test.schema.bin")));
+            SCHEMA = Schema.from(Files.readAllBytes(Paths.get("./src/test/java/com/concordium/sdk/smartcontract/unit-test.schema.bin")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -31,7 +34,7 @@ public class AbstractAddressTest {
     public void shouldSerializeWithAccountAddress() {
         ReceiveName receiveName = ReceiveName.from("java_sdk_schema_unit_test", "abstract_address_test");
         AccountAddress address = AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P");
-        AbstractAddressTest.AbstractAddressContainer abstractAddressContainer = new AbstractAddressTest.AbstractAddressContainer(SCHEMA, receiveName, address);
+        AbstractAddressParameter abstractAddressContainer = new AbstractAddressParameter(SCHEMA, receiveName, address);
         try {
             abstractAddressContainer.initialize();
         } catch (Exception e) {
@@ -43,7 +46,7 @@ public class AbstractAddressTest {
     public void shouldSerializeWithContractAddress() {
         ReceiveName receiveName = ReceiveName.from("java_sdk_schema_unit_test", "abstract_address_test");
         ContractAddress address = ContractAddress.from(1, 0);
-        AbstractAddressTest.AbstractAddressContainer abstractAddressContainer = new AbstractAddressTest.AbstractAddressContainer(SCHEMA, receiveName, address);
+        AbstractAddressParameter abstractAddressContainer = new AbstractAddressParameter(SCHEMA, receiveName, address);
         try {
             abstractAddressContainer.initialize();
         } catch (Exception e) {
@@ -52,12 +55,12 @@ public class AbstractAddressTest {
     }
 
     @Getter
-    private static class AbstractAddressContainer extends SchemaParameter {
+    private static class AbstractAddressParameter extends SchemaParameter {
 
         @JsonSerialize(using = AbstractAddress.AbstractAddressJsonSerializer.class)
-        private AbstractAddress address;
+        private final AbstractAddress address;
 
-        public AbstractAddressContainer(Schema schema, ReceiveName receiveName, AbstractAddress address) {
+        public AbstractAddressParameter(Schema schema, ReceiveName receiveName, AbstractAddress address) {
             super(schema, receiveName);
             this.address = address;
         }

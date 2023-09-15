@@ -22,20 +22,20 @@ public class ContractAddressTest {
 
     static {
         try {
-            SCHEMA = Schema.from(Files.readAllBytes(Paths.get("./src/test/java/com/concordium/sdk/smartcontract/schema-unit-test.schema.bin")));
+            SCHEMA = Schema.from(Files.readAllBytes(Paths.get("./src/test/java/com/concordium/sdk/smartcontract/unit-test.schema.bin")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
     @Test
     public void shouldSerialize() {
-        ReceiveName receiveName = ReceiveName.from("java_sdk_schema_unit_test","contract_address_test" );
+        ReceiveName receiveName = ReceiveName.from("java_sdk_schema_unit_test", "contract_address_test");
         ContractAddress contractAddress = ContractAddress.from(1, 0);
-        ContractAddressContainer contractAddressContainer = new ContractAddressContainer(SCHEMA, receiveName, contractAddress);
+        ContractAddressParameter contractAddressContainer = new ContractAddressParameter(SCHEMA, receiveName, contractAddress);
         try {
             contractAddressContainer.initialize();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             fail();
         }
     }
@@ -44,11 +44,11 @@ public class ContractAddressTest {
      * Parameter containing only a ContractAddress. Is to ensure proper serialization of ContractAddress.
      */
     @Getter
-    public static class ContractAddressContainer extends SchemaParameter {
+    public static class ContractAddressParameter extends SchemaParameter {
 
         private final ContractAddress address;
 
-        public ContractAddressContainer(Schema schema, ReceiveName receiveName, ContractAddress contractAddress) {
+        public ContractAddressParameter(Schema schema, ReceiveName receiveName, ContractAddress contractAddress) {
             super(schema, receiveName);
             this.address = contractAddress;
         }

@@ -14,36 +14,39 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.fail;
 
+/**
+ * Ensures correct serialization of {@link AccountAddress}.
+ */
 public class AccountAddressTest {
     static Schema SCHEMA;
 
     static {
         try {
-            SCHEMA = Schema.from(Files.readAllBytes(Paths.get("./src/test/java/com/concordium/sdk/smartcontract/schema-unit-test.schema.bin")));
+            SCHEMA = Schema.from(Files.readAllBytes(Paths.get("./src/test/java/com/concordium/sdk/smartcontract/unit-test.schema.bin")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
     @SneakyThrows
     @Test
     public void shouldSerialize() {
-        ReceiveName receiveName = ReceiveName.from("java_sdk_schema_unit_test","account_address_test" );
-        AccountAddress address =AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P");
-        AccountAddressTest.AccountAddressContainer accountAddressContainer = new AccountAddressTest.AccountAddressContainer(SCHEMA, receiveName, address);
+        ReceiveName receiveName = ReceiveName.from("java_sdk_schema_unit_test", "account_address_test");
+        AccountAddress address = AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P");
+        AccountAddressParameter accountAddressContainer = new AccountAddressParameter(SCHEMA, receiveName, address);
         try {
             accountAddressContainer.initialize();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             fail();
         }
     }
 
     @Getter
-    private static class AccountAddressContainer extends SchemaParameter {
+    private static class AccountAddressParameter extends SchemaParameter {
 
-        private AccountAddress address;
+        private final AccountAddress address;
 
-        public AccountAddressContainer(Schema schema, ReceiveName receiveName, AccountAddress address) {
+        public AccountAddressParameter(Schema schema, ReceiveName receiveName, AccountAddress address) {
             super(schema, receiveName);
             this.address = address;
         }
