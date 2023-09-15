@@ -1,4 +1,4 @@
-package com.concordium.sdk.transactions;
+package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.crypto.CryptoJniNative;
 import com.concordium.sdk.crypto.NativeResolver;
@@ -6,6 +6,7 @@ import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.exceptions.JNIError;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.serializing.JsonMapper;
+import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AbstractAddress;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;

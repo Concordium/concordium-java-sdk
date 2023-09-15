@@ -1,8 +1,8 @@
 package com.concordium.sdk.smartcontract;
 
 import com.concordium.sdk.transactions.ReceiveName;
-import com.concordium.sdk.transactions.Schema;
-import com.concordium.sdk.transactions.SchemaParameter;
+import com.concordium.sdk.transactions.smartcontracts.Schema;
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.AbstractAddress;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;

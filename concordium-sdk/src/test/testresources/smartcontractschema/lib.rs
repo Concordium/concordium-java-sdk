@@ -49,11 +49,26 @@ struct ContractAddressContainer {
     address:   ContractAddress,
 }
 
-/// Takes Address as parameter for ensuring correct serialization of Address
+/// Takes AddressContainer as parameter for ensuring correct serialization of Address
+#[receive(
+    contract = "java_sdk_schema_unit_test",
+    name = "abstract_address_container_test",
+    parameter = "AbstractAddressContainer",
+    error = "Error",
+    mutable
+)]
+fn abstract_address_container_test<S: HasStateApi>(
+    ctx: &impl HasReceiveContext,
+    _host: &mut impl HasHost<State, StateApiType = S>,
+) -> Result<(), Error> {
+    Ok(())
+}
+
+/// Takes Address as parameter for ensuring correct serialization of Address when passed directly
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "abstract_address_test",
-    parameter = "AbstractAddressContainer",
+    parameter = "Address",
     error = "Error",
     mutable
 )]
@@ -64,11 +79,25 @@ fn abstract_address_test<S: HasStateApi>(
     Ok(())
 }
 
-/// Takes a ContractAddress as parameter for ensuring correct serialization of ContractAddress
+/// Takes a ContractAddressContainer as parameter for ensuring correct serialization of ContractAddress
+#[receive(
+    contract = "java_sdk_schema_unit_test",
+    name = "contract_address_container_test",
+    parameter = "ContractAddressContainer",
+    error = "Error",
+    mutable
+)]
+fn contract_address_container_test<S: HasStateApi>(
+    ctx: &impl HasReceiveContext,
+    _host: &mut impl HasHost<State, StateApiType = S>,
+) -> Result<(), Error> {
+    Ok(())
+}
+/// Takes Address as parameter for ensuring correct serialization of Address when passed directly
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "contract_address_test",
-    parameter = "ContractAddressContainer",
+    parameter = "ContractAddress",
     error = "Error",
     mutable
 )]
@@ -79,11 +108,26 @@ fn contract_address_test<S: HasStateApi>(
     Ok(())
 }
 
-/// Takes an AccountAddress as parameter for ensuring correct serialization of AccountAddress
+/// Takes an AccountAddressContainer as parameter for ensuring correct serialization of AccountAddress
+#[receive(
+    contract = "java_sdk_schema_unit_test",
+    name = "account_address_container_test",
+    parameter = "AccountAddressContainer",
+    error = "Error",
+    mutable
+)]
+fn account_address_container_test<S: HasStateApi>(
+    ctx: &impl HasReceiveContext,
+    _host: &mut impl HasHost<State, StateApiType = S>,
+) -> Result<(), Error> {
+    Ok(())
+}
+
+/// Takes Address as parameter for ensuring correct serialization of Address when passed directly
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "account_address_test",
-    parameter = "AccountAddressContainer",
+    parameter = "AccountAddress",
     error = "Error",
     mutable
 )]
@@ -92,30 +136,6 @@ fn account_address_test<S: HasStateApi>(
     _host: &mut impl HasHost<State, StateApiType = S>,
 ) -> Result<(), Error> {
     Ok(())
-}
-
-/// Receive function. The input parameter is the boolean variable `throw_error`.
-///  If `throw_error == true`, the receive function will throw a custom error.
-///  If `throw_error == false`, the receive function executes successfully.
-#[receive(
-    contract = "java_sdk_schema_unit_test",
-    name = "receive",
-    parameter = "bool",
-    error = "Error",
-    mutable
-)]
-fn receive<S: HasStateApi>(
-    ctx: &impl HasReceiveContext,
-    _host: &mut impl HasHost<State, StateApiType = S>,
-) -> Result<(), Error> {
-    // Your code
-
-    let throw_error = ctx.parameter_cursor().get()?; // Returns Error::ParseError on failure
-    if throw_error {
-        Err(Error::YourError)
-    } else {
-        Ok(())
-    }
 }
 
 /// View function that returns the content of the state.

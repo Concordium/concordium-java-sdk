@@ -41,8 +41,14 @@ public class UInt8Test {
     public void testSerializeDeserialize() {
         val expected = UInt8.from("250");
         val bytes = expected.getBytes();
-        val deserialized = UInt8.from(bytes);
+        val deserialized = UInt8.from(bytes[0]);
         assertEquals(expected, deserialized);
         assertNotEquals(expected, UInt8.from("42"));
+    }
+
+    @Test
+    public void testFromSignedByte() {
+        UInt8 from = UInt8.from((byte)-32);
+        assertEquals(UInt8.from(224), from);
     }
 }

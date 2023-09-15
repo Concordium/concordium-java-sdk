@@ -2,7 +2,8 @@ package com.concordium.sdk.smartcontract;
 
 import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.transactions.ReceiveName;
-import com.concordium.sdk.transactions.Schema;
+import com.concordium.sdk.transactions.smartcontracts.Schema;
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
 import lombok.SneakyThrows;
@@ -18,7 +19,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * This test ensures correct serialization of {@link com.concordium.sdk.transactions.SchemaParameter}.<p>
+ * This test ensures correct serialization of {@link SchemaParameter}.<p>
  * Specifically custom serialization of {@link com.concordium.sdk.types.AbstractAddress} is tested.<p>
  * Uses {@link MintParams} to model 'MintParams' in the <a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-nft/src/lib.rs">cis2-nft example</a>
  */
@@ -50,7 +51,7 @@ public class SerializeParameterTest {
         INCORRECT_TOKENS.add("2");
         INCORRECT_TOKENS.add("321");
         try {
-            SCHEMA = Schema.from(Files.readAllBytes(Paths.get("./src/test/java/com/concordium/sdk/smartcontract/cis2-nft.schema.bin")));
+            SCHEMA = Schema.from(Files.readAllBytes(Paths.get("./src/test/testresources/smartcontractschema/cis2-nft.schema.bin")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

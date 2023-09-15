@@ -1,4 +1,4 @@
-package com.concordium.sdk.transactions;
+package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.exceptions.JNIError;
 import com.fasterxml.jackson.annotation.JsonCreator;

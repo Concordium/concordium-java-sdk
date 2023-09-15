@@ -2,7 +2,7 @@ package com.concordium.sdk.types;
 
 import com.concordium.grpc.v2.Address;
 import com.concordium.sdk.transactions.AccountType;
-import com.concordium.sdk.transactions.SchemaParameter;
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;

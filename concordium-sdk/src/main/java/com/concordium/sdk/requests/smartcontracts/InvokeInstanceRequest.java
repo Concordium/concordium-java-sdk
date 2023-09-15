@@ -2,6 +2,8 @@ package com.concordium.sdk.requests.smartcontracts;
 
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.smartcontracts.ParameterType;
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
 import lombok.*;

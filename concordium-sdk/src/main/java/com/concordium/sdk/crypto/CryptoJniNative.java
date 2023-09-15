@@ -1,6 +1,6 @@
 package com.concordium.sdk.crypto;
 
-import com.concordium.sdk.transactions.SerializeParameterResult;
+import com.concordium.sdk.transactions.smartcontracts.SerializeParameterResult;
 
 public class CryptoJniNative {
 

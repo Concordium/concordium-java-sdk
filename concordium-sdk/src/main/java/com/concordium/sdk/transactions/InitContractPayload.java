@@ -1,6 +1,8 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.transactions.smartcontracts.ParameterType;
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.UInt16;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;

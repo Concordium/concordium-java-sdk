@@ -4,14 +4,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
 
-import java.nio.ByteBuffer;
-
 @EqualsAndHashCode
 @Getter
 public class UInt8 {
 
-    public static final int BYTES = Byte.BYTES;
-    final int value;
+    private final int value;
 
     private UInt8(int value) {
         this.value = value;
@@ -37,16 +34,8 @@ public class UInt8 {
         return new UInt8(value);
     }
 
-    public static UInt8 from(byte[] valueBytes) {
-        val buffer = ByteBuffer.allocate(Byte.BYTES);
-        buffer.put(valueBytes);
-        return new UInt8(buffer.get(0) & 0xff);
-    }
-
-    public static UInt8 fromBytes(ByteBuffer source) {
-        byte[] valueBytes = new byte[1];
-        source.get(valueBytes);
-        return UInt8.from(valueBytes);
+    public static UInt8 from(byte b) {
+        return new UInt8(b & 0xff);
     }
 
     public String toString() {return String.valueOf(value);}

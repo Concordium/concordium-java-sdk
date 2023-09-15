@@ -1,5 +1,7 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.transactions.smartcontracts.ParameterType;
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.ContractAddress;
 import lombok.*;
 

@@ -1,8 +1,10 @@
 package com.concordium.sdk.smartcontract;
 
 import com.concordium.sdk.transactions.ReceiveName;
-import com.concordium.sdk.transactions.Schema;
-import com.concordium.sdk.transactions.SchemaParameter;
+import com.concordium.sdk.transactions.smartcontracts.Schema;
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
+import com.concordium.sdk.transactions.smartcontracts.parameters.ContractAddressParam;
+import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
 import lombok.Getter;
 import org.junit.Test;
@@ -15,24 +17,28 @@ import static org.junit.Assert.fail;
 
 /**
  * Ensures correct serialization of {@link ContractAddress}.
+ * First test ensures correct serialization of parameters containing {@link AccountAddress}.
+ * Last tests ensures correct serialization when {@link ContractAddress} is passed directly as a parameter using the wrapper {@link ContractAddressParam}.
  */
 public class ContractAddressTest {
 
     static Schema SCHEMA;
 
+    static String CONTRACT_NAME = "java_sdk_schema_unit_test";
+
     static {
         try {
-            SCHEMA = Schema.from(Files.readAllBytes(Paths.get("./src/test/java/com/concordium/sdk/smartcontract/unit-test.schema.bin")));
+            SCHEMA = Schema.from(Files.readAllBytes(Paths.get("./src/test/testresources/smartcontractschema/unit-test.schema.bin")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Test
-    public void shouldSerialize() {
-        ReceiveName receiveName = ReceiveName.from("java_sdk_schema_unit_test", "contract_address_test");
+    public void shouldSerializeContainer() {
+        ReceiveName receiveName = ReceiveName.from(CONTRACT_NAME, "contract_address_container_test");
         ContractAddress contractAddress = ContractAddress.from(1, 0);
-        ContractAddressParameter contractAddressContainer = new ContractAddressParameter(SCHEMA, receiveName, contractAddress);
+        ContractAddressContainer contractAddressContainer = new ContractAddressContainer(SCHEMA, receiveName, contractAddress);
         try {
             contractAddressContainer.initialize();
         } catch (Exception e) {
@@ -40,15 +46,28 @@ public class ContractAddressTest {
         }
     }
 
+    @Test
+    public void shouldSerialize() {
+        ReceiveName receiveName = ReceiveName.from(CONTRACT_NAME, "contract_address_test");
+        ContractAddress contractAddress = ContractAddress.from(1, 0);
+        ContractAddressParam contractAddressParam = new ContractAddressParam(SCHEMA, receiveName, contractAddress);
+        try {
+            contractAddressParam.initialize();
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+
     /**
-     * Parameter containing only a ContractAddress. Is to ensure proper serialization of ContractAddress.
+     * Parameter containing only a {@link ContractAddress}.
      */
     @Getter
-    public static class ContractAddressParameter extends SchemaParameter {
+    public static class ContractAddressContainer extends SchemaParameter {
 
         private final ContractAddress address;
 
-        public ContractAddressParameter(Schema schema, ReceiveName receiveName, ContractAddress contractAddress) {
+        public ContractAddressContainer(Schema schema, ReceiveName receiveName, ContractAddress contractAddress) {
             super(schema, receiveName);
             this.address = contractAddress;
         }
