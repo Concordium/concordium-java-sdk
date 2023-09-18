@@ -7,6 +7,7 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.transactions.Hash;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
+import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
@@ -18,6 +19,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
@@ -86,7 +89,7 @@ public class ClientV2GetAnonymityRevokersTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel);
+        client = new ClientV2(10000, channel, Optional.empty());
     }
 
     @Test

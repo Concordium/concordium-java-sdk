@@ -22,6 +22,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static com.concordium.sdk.ClientV2MapperExtensions.to;
 import static com.concordium.sdk.ClientV2MapperExtensions.toTransactionHash;
 import static org.junit.Assert.assertEquals;
@@ -134,7 +136,7 @@ public class ClientV2GetBlockItemStatusTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel);
+        client = new ClientV2(10000, channel, Optional.empty());
     }
 
     @Test
