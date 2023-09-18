@@ -15,6 +15,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.ArgumentMatchers.any;
@@ -188,7 +190,7 @@ public class ClientV2GetConsensusStatusTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel);
+        client = new ClientV2(10000, channel, Optional.empty());
     }
 
 

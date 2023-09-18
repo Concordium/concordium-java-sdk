@@ -20,6 +20,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.*;
@@ -92,7 +94,7 @@ public class ClientV2GetElectionInfoTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel);
+        client = new ClientV2(10000, channel, Optional.empty());
     }
 
     @Test
