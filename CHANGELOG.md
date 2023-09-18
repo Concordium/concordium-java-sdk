@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+
+## 5.0.1
+
 - Fix a bug that caused custom http headers to be set for `ClientV2`.
 
 ## 5.0.0
