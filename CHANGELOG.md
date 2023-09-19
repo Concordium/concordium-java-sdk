@@ -2,6 +2,9 @@
 
 ## Unreleased changes
 
+## 5.0.2
+- Remove an unused import from `ClientV2` which could make compilation fail on some jdks.
+
 ## 5.0.1
 
 - Fix a bug that caused custom http headers to be set for `ClientV2`.
