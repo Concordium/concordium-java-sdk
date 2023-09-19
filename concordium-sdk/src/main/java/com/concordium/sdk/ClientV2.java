@@ -39,7 +39,6 @@ import com.concordium.sdk.types.ContractAddress;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
-import jdk.nashorn.internal.runtime.options.Option;
 import lombok.val;
 
 import java.io.File;
