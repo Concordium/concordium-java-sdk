@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Getter
 @JsonSerialize(using = ListParam.ListParamSerializer.class)
-public class ListParam extends SchemaParameter {
+public abstract class ListParam extends SchemaParameter {
 
     private final List<?> list;
 

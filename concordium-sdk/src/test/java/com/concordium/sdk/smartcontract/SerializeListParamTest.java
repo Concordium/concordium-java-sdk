@@ -37,11 +37,17 @@ public class SerializeListParamTest {
         List<ContractAddress> list = new ArrayList<>();
         list.add(ContractAddress.from(1, 0));
         list.add(ContractAddress.from(2, 0));
-        SchemaParameter parameter = new ListParam(SCHEMA, receiveName, list);
+        SchemaParameter parameter = new ContractListParam(SCHEMA, receiveName, list);
         try {
             parameter.initialize(true);
         } catch (Exception e) {
             fail();
+        }
+    }
+
+    private static class ContractListParam extends ListParam {
+        public ContractListParam(Schema schema, ReceiveName receiveName, List<ContractAddress> list) {
+            super(schema, receiveName, list);
         }
     }
 }
