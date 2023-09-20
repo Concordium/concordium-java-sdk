@@ -20,11 +20,6 @@ public final class Transfer extends Payload {
         this.payload = TransferPayload.from(receiver, amount);
     }
 
-    @Override
-    public PayloadType getType() {
-        return PayloadType.TRANSFER;
-    }
-
     public static Transfer fromBytes(ByteBuffer source) {
         val receiver = AccountAddress.fromBytes(source);
         val amount = CCDAmount.fromBytes(source);
@@ -32,7 +27,7 @@ public final class Transfer extends Payload {
     }
 
     @Override
-    UInt64 getTransactionTypeCost() {
+    protected UInt64 getTransactionTypeCost() {
         return BASE_ENERGY_COST;
     }
 
@@ -42,7 +37,7 @@ public final class Transfer extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    public byte[] getRawPayloadBytes() {
         return payload.getBytes();
     }
 

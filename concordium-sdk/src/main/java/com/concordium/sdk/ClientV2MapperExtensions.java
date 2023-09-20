@@ -657,9 +657,8 @@ interface ClientV2MapperExtensions {
             }
             case UPDATE_CONTRACT:
                 final UpdateContractPayload updateContractPayload = to(payload.getUpdateContract());
-                return UpdateContractTransaction
-                        .builderBlockItem()
-                        .header(to(transaction.getHeader(), updateContractPayload.getBytes().length))
+                return UpdateContractTransaction.builderAccountTransactionBlockItem()
+                        .header(to(transaction.getHeader(), updateContractPayload.getRawPayloadBytes().length))
                         .signature(to(transaction.getSignature()))
                         .payload(updateContractPayload)
                         .build();
@@ -693,7 +692,7 @@ interface ClientV2MapperExtensions {
                         .builderAccountTransactionBlockItem()
                         .header(to(transaction.getHeader(), rawPayloadBytes.length))
                         .signature(to(transaction.getSignature()))
-                        .payloadBytes(rawPayloadBytes)
+                        .payload(RawPayload.from(rawPayloadBytes))
                         .build();
             default:
             case PAYLOAD_NOT_SET:
@@ -701,7 +700,7 @@ interface ClientV2MapperExtensions {
                         .builderAccountTransactionBlockItem()
                         .header(to(transaction.getHeader(), 0))
                         .signature(to(transaction.getSignature()))
-                        .payloadBytes(new byte[0])
+                        .payload(RawPayload.from(new byte[0]))
                         .build();
         }
     }
@@ -872,7 +871,7 @@ interface ClientV2MapperExtensions {
                 .setAccountTransaction(com.concordium.grpc.v2.AccountTransaction.newBuilder()
                         .setHeader(to(accountTransaction.getHeader()))
                         .setPayload(AccountTransactionPayload.newBuilder()
-                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayloadBytes()))
+                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayload().getRawPayloadBytes()))
                                 .build())
                         .setSignature(to(accountTransaction.getSignature()))
                         .build())

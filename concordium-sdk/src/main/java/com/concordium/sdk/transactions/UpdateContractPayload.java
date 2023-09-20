@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.ContractAddress;
+import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
 import java.nio.ByteBuffer;
@@ -10,8 +11,8 @@ import java.nio.ByteBuffer;
  */
 @ToString
 @Getter
-@EqualsAndHashCode
-public final class UpdateContractPayload {
+@EqualsAndHashCode(callSuper = true)
+public final class UpdateContractPayload extends Payload {
     /**
      * Send the given amount of CCD to the smart contract.
      */
@@ -67,7 +68,23 @@ public final class UpdateContractPayload {
         return new UpdateContractPayload(amount, contractAddress, receiveName, param);
     }
 
-    public byte[] getBytes() {
+    /**
+     * Returns null as the cost is unknown before
+     * executing the transaction.
+     * @return null
+     */
+    @Override
+    protected UInt64 getTransactionTypeCost() {
+        return null;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.UPDATE_SMART_CONTRACT_INSTANCE;
+    }
+
+    @Override
+    public byte[] getRawPayloadBytes() {
         val amountBytes = amount.getBytes();
         val contractAddressBytes = contractAddress.getBytes();
         val receiveNameBytes = receiveName.getBytes();

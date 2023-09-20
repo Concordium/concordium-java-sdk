@@ -36,16 +36,8 @@ public final class UpdateContract extends Payload {
         return new UpdateContract(payload, maxEnergyCost);
     }
 
-    /**
-     * This function returns the type of the payload, which is UPDATE.
-     */
     @Override
-    public PayloadType getType() {
-        return PayloadType.UPDATE;
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
+    protected UInt64 getTransactionTypeCost() {
         return this.maxEnergyCost;
     }
 
@@ -55,7 +47,7 @@ public final class UpdateContract extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    public byte[] getRawPayloadBytes() {
         return payload.getBytes();
     }
 }

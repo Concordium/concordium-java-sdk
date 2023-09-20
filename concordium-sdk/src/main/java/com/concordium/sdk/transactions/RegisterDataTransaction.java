@@ -24,8 +24,7 @@ public class RegisterDataTransaction extends AccountTransaction {
             final @NonNull Data payload) {
         super(header,
                 signature,
-                TransactionType.REGISTER_DATA,
-                payload.getBytes());
+                RegisterData.createNew(payload));
     }
 
     /**

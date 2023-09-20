@@ -2,6 +2,9 @@ package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.crypto.SHA256;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.transactions.Payload;
+import com.concordium.sdk.transactions.TransactionType;
+import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,9 +17,9 @@ import java.util.Arrays;
  * A compiled Smart Contract Module in WASM with source and version.
  */
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString
-public class WasmModule {
+public class WasmModule extends Payload {
 
     private static final long MAX_SIZE_V0 = 65536; // 64 kb
     private static final long MAX_SIZE_V1 = 8 * 65536; // 512 kb
@@ -102,5 +105,20 @@ public class WasmModule {
         buffer.put(moduleSourceBytes);
 
         return buffer.array();
+    }
+
+    @Override
+    protected UInt64 getTransactionTypeCost() {
+        return null;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.DEPLOY_MODULE;
+    }
+
+    @Override
+    public byte[] getRawPayloadBytes() {
+        return getBytes();
     }
 }

@@ -12,22 +12,14 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 
 @EqualsAndHashCode
-abstract class Payload {
+public abstract class Payload {
     TransactionHeader header;
     TransactionSignature signature;
-
-    PayloadType type;
 
     BlockItem toBlockItem() {
         return new AccountTransaction(signature, header, this);
     }
 
-    /**
-     * Get the {@link PayloadType}
-     *
-     * @return the type of the {@link Payload}
-     */
-    public abstract PayloadType getType();
 
     /**
      * Get the bytes representation of the payload
@@ -35,7 +27,7 @@ abstract class Payload {
      * @return byte[]
      */
     final byte[] getBytes() {
-        val payloadBytes = getTransactionPayloadBytes();
+        val payloadBytes = getRawPayloadBytes();
         val buffer = ByteBuffer.allocate(TransactionType.BYTES + payloadBytes.length);
         buffer.put(getTransactionType().getValue());
         buffer.put(payloadBytes);
@@ -43,7 +35,7 @@ abstract class Payload {
         return buffer.array();
     }
 
-    abstract UInt64 getTransactionTypeCost();
+    protected abstract UInt64 getTransactionTypeCost();
 
     final AccountTransaction toAccountTransaction() {
         return new AccountTransaction(signature, header, this);
@@ -110,24 +102,6 @@ abstract class Payload {
 
     public abstract TransactionType getTransactionType();
 
-    public abstract byte[] getTransactionPayloadBytes();
-
-    public enum PayloadType {
-        TRANSFER,
-        TRANSFER_WITH_MEMO,
-        REGISTER_DATA,
-        INIT_CONTRACT,
-        DEPLOY_MODULE,
-        UPDATE,
-        TRANSFER_WITH_SCHEDULE,
-        TRANSFER_WITH_SCHEDULE_AND_MEMO,
-        UPDATE_CREDENTIAL_KEYS,
-        TRANSFER_TO_PUBLIC,
-        TRANSFER_TO_ENCRYPTED,
-        ENCRYPTED_TRANSFER,
-        ENCRYPTED_TRANSFER_WITH_MEMO,
-        CONFIGURE_BAKER,
-        CONFIGURE_DELEGATION,
-    }
+    public abstract byte[] getRawPayloadBytes();
 
 }

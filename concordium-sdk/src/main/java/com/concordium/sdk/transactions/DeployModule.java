@@ -32,16 +32,8 @@ public class DeployModule extends Payload {
         return new DeployModule(module, maxEnergyCost);
     }
 
-    /**
-     * This function returns the type of payload that this class represents.
-     */
     @Override
-    public PayloadType getType() {
-        return PayloadType.DEPLOY_MODULE;
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
+    protected UInt64 getTransactionTypeCost() {
         return this.maxEnergyCost;
     }
 
@@ -51,7 +43,7 @@ public class DeployModule extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    public byte[] getRawPayloadBytes() {
         return module.getBytes();
     }
 }

@@ -40,4 +40,13 @@ public enum TransactionType {
     TransactionType(byte type) {
         this.value = type;
     }
+
+    public static TransactionType parse(byte type) {
+        for (TransactionType transactionType : values()) {
+            if (transactionType.value == type) {
+                return transactionType;
+            }
+        }
+        throw new IllegalArgumentException("Unknown transaction type tag");
+    }
 }

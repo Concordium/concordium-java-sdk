@@ -33,11 +33,11 @@ public class InitContractTransaction extends AccountTransaction {
     private InitContractTransaction(
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
-            final @NonNull InitContractPayload payload) {
+            final @NonNull InitContractPayload payload,
+            final @NonNull UInt64 maxEnergyCost) {
         super(header,
                 signature,
-                TransactionType.INITIALIZE_SMART_CONTRACT_INSTANCE,
-                payload.getBytes());
+                InitContract.createNew(payload, maxEnergyCost));
     }
 
     /**
@@ -81,9 +81,10 @@ public class InitContractTransaction extends AccountTransaction {
     public static InitContractTransaction from(
             final TransactionHeader header,
             final TransactionSignature signature,
-            final InitContractPayload payload) {
+            final InitContractPayload payload,
+            final UInt64 maxEnergyCost) {
         try {
-            return new InitContractTransaction(header, signature, payload);
+            return new InitContractTransaction(header, signature, payload, maxEnergyCost);
         } catch (NullPointerException ex) {
             throw TransactionCreationException.from(ex);
         }

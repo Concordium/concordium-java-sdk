@@ -25,7 +25,7 @@ public class AccountTransaction extends BlockItem {
     /**
      * Account Transaction Payload Serialized to bytes.
      */
-    private final byte[] payloadBytes;
+    private final Payload payload;
 
     AccountTransaction(
             @NonNull final AccountAddress sender,
@@ -46,22 +46,11 @@ public class AccountTransaction extends BlockItem {
             @NonNull final TransactionSignature signature,
             @NonNull final TransactionHeader header,
             @NonNull final Payload payload) {
-        this(header, signature, payload.getTransactionType(), payload.getTransactionPayloadBytes());
+        this(header, signature, payload);
     }
 
     AccountTransaction(Payload payload) {
-        this(payload.header, payload.signature, payload.getTransactionType(), payload.getTransactionPayloadBytes());
-    }
-
-    AccountTransaction(
-            @NonNull final TransactionHeader header,
-            @NonNull final TransactionSignature signature,
-            @NonNull final TransactionType transactionType,
-            final byte @NonNull [] payloadBytes) {
-        super(BlockItemType.ACCOUNT_TRANSACTION);
-        this.header = header;
-        this.signature = signature;
-        this.payloadBytes = concat(new byte[]{transactionType.getValue()}, payloadBytes);
+        this(payload.header, payload.signature, payload);
     }
 
     @Builder(
@@ -70,12 +59,13 @@ public class AccountTransaction extends BlockItem {
     AccountTransaction(
             @NonNull final TransactionHeader header,
             @NonNull final TransactionSignature signature,
-            final byte @NonNull [] payloadBytes) {
+            @NonNull final Payload payload) {
         super(BlockItemType.ACCOUNT_TRANSACTION);
         this.header = header;
         this.signature = signature;
-        this.payloadBytes = payloadBytes;
+        this.payload = payload;
     }
+
 
     /**
      * Sender of this Transaction.
@@ -103,7 +93,7 @@ public class AccountTransaction extends BlockItem {
     }
 
     final byte[] getBlockItemBytes() {
-        return concat(signature.getBytes(), header.getBytes(), getPayloadBytes());
+        return concat(signature.getBytes(), header.getBytes(), getPayload().getBytes());
     }
 
     public static AccountTransaction fromBytes(ByteBuffer source) {

@@ -23,7 +23,7 @@ public class TransferTransaction extends AccountTransaction {
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
             final @NonNull TransferPayload payload) {
-        super(header, signature, TransactionType.SIMPLE_TRANSFER, payload.getBytes());
+        super(header, signature, Transfer.createNew(payload.getReceiver(), payload.getAmount()));
     }
 
     @Builder(builderClassName = "TransferTransactionBuilder")

@@ -31,12 +31,7 @@ public final class EncryptedTransfer extends Payload {
     }
 
     @Override
-    public PayloadType getType() {
-        return PayloadType.ENCRYPTED_TRANSFER;
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
+    protected UInt64 getTransactionTypeCost() {
         return TransactionTypeCost.ENCRYPTED_TRANSFER.getValue();
     }
 
@@ -46,7 +41,7 @@ public final class EncryptedTransfer extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    public byte[] getRawPayloadBytes() {
         val toAddress = receiver.getBytes();
         byte[] dataBytes = data.getBytes();
         val buffer = ByteBuffer.allocate(toAddress.length + dataBytes.length);

@@ -23,16 +23,6 @@ public class UpdateContractTransaction extends AccountTransaction {
         super(sender, nonce, expiry, signer, UpdateContract.createNew(payload, maxEnergyCost));
     }
 
-    private UpdateContractTransaction(
-            final @NonNull TransactionHeader header,
-            final @NonNull TransactionSignature signature,
-            final @NonNull UpdateContractPayload payload) {
-        super(header,
-                signature,
-                TransactionType.DEPLOY_MODULE,
-                payload.getBytes());
-    }
-
     /**
      * Creates a new instance of {@link UpdateContractTransaction}.
      *
@@ -69,16 +59,18 @@ public class UpdateContractTransaction extends AccountTransaction {
      * @param payload   {@link UpdateContractPayload} Payload for this transaction.
      * @throws TransactionCreationException On failure to create the Transaction from input params.
      *                                      Ex when any of the input param is NULL.
-     */
+
     @Builder(builderMethodName = "builderBlockItem", builderClassName = "UpdateContractBlockItemBuilder")
     public static UpdateContractTransaction from(
             final TransactionHeader header,
             final TransactionSignature signature,
-            final UpdateContractPayload payload) {
+            final UpdateContractPayload payload,
+            final UInt64 maxEnergyCost) {
         try {
-            return new UpdateContractTransaction(header, signature, payload);
+            return new UpdateContractTransaction(payload, header.getSender(), AccountNonce.from(header.getAccountNonce()), Expiry.from(header.getExpiry().getValue()), signature, maxEnergyCost);
         } catch (NullPointerException nullPointerException) {
             throw TransactionCreationException.from(nullPointerException);
         }
     }
+     */
 }

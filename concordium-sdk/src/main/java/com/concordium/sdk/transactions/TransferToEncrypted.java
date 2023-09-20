@@ -23,16 +23,9 @@ public final class TransferToEncrypted extends Payload {
         this.amount = amount;
     }
 
-    /**
-     * This is a method that returns the type of the payload
-     */
-    @Override
-    public PayloadType getType() {
-        return PayloadType.TRANSFER_TO_ENCRYPTED;
-    }
 
     @Override
-    UInt64 getTransactionTypeCost() {
+    protected UInt64 getTransactionTypeCost() {
         return TransactionTypeCost.TRANSFER_TO_ENCRYPTED.getValue();
     }
 
@@ -42,7 +35,7 @@ public final class TransferToEncrypted extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    public byte[] getRawPayloadBytes() {
         return amount.getBytes();
     }
 

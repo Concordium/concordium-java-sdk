@@ -23,12 +23,7 @@ public final class ConfigureDelegation extends Payload {
     private final ConfigureDelegationPayload payload;
 
     @Override
-    public PayloadType getType() {
-        return PayloadType.CONFIGURE_DELEGATION;
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
+    protected UInt64 getTransactionTypeCost() {
         return TransactionTypeCost.CONFIGURE_DELEGATION.getValue();
     }
 
@@ -38,7 +33,7 @@ public final class ConfigureDelegation extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    public byte[] getRawPayloadBytes() {
         return payload.getBytes();
     }
 

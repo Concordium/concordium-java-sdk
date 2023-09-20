@@ -23,7 +23,7 @@ public class TransferWithMemoTransaction extends AccountTransaction {
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
             final @NonNull TransferWithMemoPayload payload) {
-        super(header, signature, TransactionType.TRANSFER_WITH_MEMO, payload.getBytes());
+        super(header, signature, TransferWithMemo.createNew(payload.getReceiver(), payload.getAmount(), payload.getMemo()));
     }
 
     /**

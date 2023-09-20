@@ -26,8 +26,9 @@ public class DeployModuleTransaction extends AccountTransaction {
     private DeployModuleTransaction(
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
-            final @NonNull WasmModule payload) {
-        super(header, signature, TransactionType.DEPLOY_MODULE, payload.getBytes());
+            final @NonNull WasmModule payload,
+            final @NonNull UInt64 maxEnergyCost) {
+        super(header, signature, DeployModule.createNew(payload, maxEnergyCost));
     }
 
     /**
@@ -70,9 +71,10 @@ public class DeployModuleTransaction extends AccountTransaction {
     static DeployModuleTransaction from(
             final TransactionHeader header,
             final TransactionSignature signature,
-            final WasmModule payload) {
+            final WasmModule payload,
+            final UInt64 maxEnergyCost) {
         try {
-            return new DeployModuleTransaction(header, signature, payload);
+            return new DeployModuleTransaction(header, signature, payload, maxEnergyCost);
         } catch (NullPointerException nullPointerException) {
             throw TransactionCreationException.from(nullPointerException);
         }

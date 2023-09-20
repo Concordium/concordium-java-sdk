@@ -18,12 +18,7 @@ public final class EncryptedTransferWithMemo extends Payload {
     }
 
     @Override
-    public PayloadType getType() {
-        return PayloadType.ENCRYPTED_TRANSFER_WITH_MEMO;
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
+    protected UInt64 getTransactionTypeCost() {
         return TransactionTypeCost.ENCRYPTED_TRANSFER_WITH_MEMO.getValue();
     }
 
@@ -33,7 +28,7 @@ public final class EncryptedTransferWithMemo extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    public byte[] getRawPayloadBytes() {
         return payload.getBytes();
     }
 

@@ -38,16 +38,8 @@ public final class TransferToPublic extends Payload {
     private final SecToPubAmountTransferProof proof;
 
 
-    /**
-     * This function returns the type of the payload.
-     */
     @Override
-    public PayloadType getType() {
-        return PayloadType.TRANSFER_TO_PUBLIC;
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
+    protected UInt64 getTransactionTypeCost() {
         return TransactionTypeCost.TRANSFER_TO_PUBLIC.getValue();
     }
 
@@ -57,7 +49,7 @@ public final class TransferToPublic extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    public byte[] getRawPayloadBytes() {
         val proofBytes = this.proof.getBytes();
         val remainingAmountBytes = this.remainingAmount.getBytes();
         val buffer = ByteBuffer.allocate(remainingAmountBytes.length
