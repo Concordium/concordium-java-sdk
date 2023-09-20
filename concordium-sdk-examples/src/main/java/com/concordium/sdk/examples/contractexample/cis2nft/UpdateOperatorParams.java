@@ -6,8 +6,8 @@ import com.concordium.sdk.transactions.smartcontracts.parameters.ListParam;
 
 import java.util.List;
 
-public class NftUpdateOperatorParams extends ListParam {
-    public NftUpdateOperatorParams(Schema cis2nftSchema, ReceiveName updateOperatorReceiveName, List<UpdateOperator> updateOperatorList) {
+public class UpdateOperatorParams extends ListParam {
+    public UpdateOperatorParams(Schema cis2nftSchema, ReceiveName updateOperatorReceiveName, List<UpdateOperator> updateOperatorList) {
         super(cis2nftSchema, updateOperatorReceiveName, updateOperatorList);
     }
 }

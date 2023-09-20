@@ -6,8 +6,8 @@ import com.concordium.sdk.transactions.smartcontracts.parameters.ListParam;
 
 import java.util.List;
 
-public class NftOperatorOfQueryParams extends ListParam {
-    public NftOperatorOfQueryParams(Schema cis2nftSchema, ReceiveName operatorOfReceiveName, List<OperatorOfQuery> operatorOfQueries) {
-        super(cis2nftSchema, operatorOfReceiveName, operatorOfQueries);
+public class SupportsQueryParams extends ListParam {
+    public SupportsQueryParams(Schema cis2nftSchema, ReceiveName supportsReceiveName, List<String> identifiers) {
+        super(cis2nftSchema, supportsReceiveName, identifiers);
     }
 }

@@ -57,7 +57,7 @@ public class Cis2NftExample {
         List<UpdateOperator> updateOperatorList = new ArrayList<>();
         updateOperatorList.add(update1);
         updateOperatorList.add(update2);
-        SchemaParameter updateOperatorsParams = new NftUpdateOperatorParams(cis2nftSchema, updateOperatorReceiveName, updateOperatorList);
+        SchemaParameter updateOperatorsParams = new UpdateOperatorParams(cis2nftSchema, updateOperatorReceiveName, updateOperatorList);
         updateOperatorsParams.initialize(true);
 
 
@@ -69,7 +69,7 @@ public class Cis2NftExample {
         List<OperatorOfQuery> operatorOfQueries = new ArrayList<>();
         operatorOfQueries.add(operatorOfQuery1);
         operatorOfQueries.add(operatorOfQuery2);
-        SchemaParameter operatorOfQueryParams = new NftOperatorOfQueryParams(cis2nftSchema, operatorOfReceiveName, operatorOfQueries);
+        SchemaParameter operatorOfQueryParams = new OperatorOfQueryParams(cis2nftSchema, operatorOfReceiveName, operatorOfQueries);
         operatorOfQueryParams.initialize(true);
 
 
@@ -103,7 +103,7 @@ public class Cis2NftExample {
         List<String> identifiers = new ArrayList<>();
         identifiers.add(standardIdentifier1);
         identifiers.add(standardIdentifier2);
-        SchemaParameter supportsQueryParams = new NftSupportsQueryParams(cis2nftSchema, supportsReceiveName, identifiers);
+        SchemaParameter supportsQueryParams = new SupportsQueryParams(cis2nftSchema, supportsReceiveName, identifiers);
         supportsQueryParams.initialize(true);
 
         // Initialize SetImplementorsParams
