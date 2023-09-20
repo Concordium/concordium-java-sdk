@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
 /**
  * Ensures correct serialization of {@link ListParam}.
  */
-public class ListParamTest {
+public class SerializeListParamTest {
 
     static Schema SCHEMA;
     static String CONTRACT_NAME = "java_sdk_schema_unit_test";

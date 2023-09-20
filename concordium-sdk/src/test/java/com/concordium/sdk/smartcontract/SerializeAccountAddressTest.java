@@ -19,7 +19,7 @@ import static org.junit.Assert.fail;
  * First test ensures correct serialization of parameters containing {@link AccountAddress}.
  * Last tests ensures correct serialization when {@link AccountAddress} is passed directly as a parameter using the wrapper {@link AccountAddressParam}.
  */
-public class AccountAddressTest {
+public class SerializeAccountAddressTest {
     static Schema SCHEMA;
 
     static String CONTRACT_NAME = "java_sdk_schema_unit_test";

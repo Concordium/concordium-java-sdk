@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
  * First test ensures correct serialization of parameters containing {@link AccountAddress}.
  * Last tests ensures correct serialization when {@link ContractAddress} is passed directly as a parameter using the wrapper {@link ContractAddressParam}.
  */
-public class ContractAddressTest {
+public class SerializeContractAddressTest {
 
     static Schema SCHEMA;
 

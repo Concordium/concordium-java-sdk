@@ -22,14 +22,14 @@ import java.util.List;
 @JsonSerialize(using = ListParam.ListParamSerializer.class)
 public class ListParam extends SchemaParameter {
 
-    private final List<Object> list;
+    private final List<?> list;
 
-    public ListParam(Schema schema, InitName initName, List list) {
+    public ListParam(Schema schema, InitName initName, List<?> list) {
         super(schema, initName);
         this.list = list;
     }
 
-    public ListParam(Schema schema, ReceiveName receiveName, List list) {
+    public ListParam(Schema schema, ReceiveName receiveName, List<?> list) {
         super(schema, receiveName);
         this.list = list;
     }

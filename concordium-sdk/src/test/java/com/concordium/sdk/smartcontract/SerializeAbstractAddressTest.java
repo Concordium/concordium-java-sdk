@@ -22,7 +22,7 @@ import static org.junit.Assert.fail;
  * First 2 tests ensures correct serialization of parameters containing {@link AbstractAddress}.
  * Last 2 tests ensures correct serialization when {@link AbstractAddress} is passed directly as a parameter using the wrapper {@link AddressParam}.
  */
-public class AbstractAddressTest {
+public class SerializeAbstractAddressTest {
     static Schema SCHEMA;
     static String CONTRACT_NAME = "java_sdk_schema_unit_test";
 
