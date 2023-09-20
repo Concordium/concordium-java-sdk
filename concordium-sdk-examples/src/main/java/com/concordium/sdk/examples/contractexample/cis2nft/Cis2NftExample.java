@@ -4,7 +4,6 @@ import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.smartcontracts.Schema;
 import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.transactions.smartcontracts.SchemaVersion;
-import com.concordium.sdk.transactions.smartcontracts.parameters.ListParam;
 import com.concordium.sdk.types.*;
 import lombok.SneakyThrows;
 
@@ -46,7 +45,7 @@ public class Cis2NftExample {
         NftTransfer transfer = new NftTransfer(tokenId, amount, from, to, data);
         List<NftTransfer> transfers = new ArrayList<>();
         transfers.add(transfer);
-        SchemaParameter transferParameter = new ListParam(cis2nftSchema, nftTransferReceiveName, transfers);
+        SchemaParameter transferParameter = new NftTransferParam(cis2nftSchema, nftTransferReceiveName, transfers);
         transferParameter.initialize(true);
 
 
@@ -58,7 +57,7 @@ public class Cis2NftExample {
         List<UpdateOperator> updateOperatorList = new ArrayList<>();
         updateOperatorList.add(update1);
         updateOperatorList.add(update2);
-        SchemaParameter updateOperatorsParams = new ListParam(cis2nftSchema, updateOperatorReceiveName, updateOperatorList);
+        SchemaParameter updateOperatorsParams = new NftUpdateOperatorParams(cis2nftSchema, updateOperatorReceiveName, updateOperatorList);
         updateOperatorsParams.initialize(true);
 
 
@@ -70,7 +69,7 @@ public class Cis2NftExample {
         List<OperatorOfQuery> operatorOfQueries = new ArrayList<>();
         operatorOfQueries.add(operatorOfQuery1);
         operatorOfQueries.add(operatorOfQuery2);
-        SchemaParameter operatorOfQueryParams = new ListParam(cis2nftSchema, operatorOfReceiveName, operatorOfQueries);
+        SchemaParameter operatorOfQueryParams = new NftOperatorOfQueryParams(cis2nftSchema, operatorOfReceiveName, operatorOfQueries);
         operatorOfQueryParams.initialize(true);
 
 
@@ -82,7 +81,7 @@ public class Cis2NftExample {
         List<NftBalanceOfQuery> balanceOfQueries = new ArrayList<>();
         balanceOfQueries.add(balanceOfQuery1);
         balanceOfQueries.add(balanceOfQuery2);
-        SchemaParameter contractBalanceOfQueryParams = new ListParam(cis2nftSchema, balanceOfReceiveName, balanceOfQueries);
+        SchemaParameter contractBalanceOfQueryParams = new NftBalanceOfQueryParams(cis2nftSchema, balanceOfReceiveName, balanceOfQueries);
         contractBalanceOfQueryParams.initialize(true);
 
         // Initialize ContractTokenMetadataQueryParams
@@ -104,7 +103,7 @@ public class Cis2NftExample {
         List<String> identifiers = new ArrayList<>();
         identifiers.add(standardIdentifier1);
         identifiers.add(standardIdentifier2);
-        SchemaParameter supportsQueryParams = new ListParam(cis2nftSchema, supportsReceiveName, identifiers);
+        SchemaParameter supportsQueryParams = new NftSupportsQueryParams(cis2nftSchema, supportsReceiveName, identifiers);
         supportsQueryParams.initialize(true);
 
         // Initialize SetImplementorsParams
