@@ -5,13 +5,12 @@ import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
-import lombok.EqualsAndHashCode;
 import lombok.val;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Objects;
 
-@EqualsAndHashCode
 public abstract class Payload {
     TransactionHeader header;
     TransactionSignature signature;
@@ -20,6 +19,19 @@ public abstract class Payload {
         return new AccountTransaction(signature, header, this);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Payload) {
+            return Arrays.equals(this.getBytes(), ((Payload) obj).getBytes());
+        }
+        return false;
+    }
 
     /**
      * Get the bytes representation of the payload

@@ -2,9 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.AccountAddress;
 import lombok.*;
-
 import java.nio.ByteBuffer;
-
 import static com.google.common.primitives.Bytes.concat;
 
 @Getter

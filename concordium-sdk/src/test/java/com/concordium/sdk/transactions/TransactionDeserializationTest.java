@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TransactionDeserializationTest {
 
-    private static BlockItem bi = Transfer.createNew(
+    private static final BlockItem bi = Transfer.createNew(
                     AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"),
                     CCDAmount.fromMicro(17))
             .withHeader(TransactionHeader
@@ -32,9 +32,21 @@ public class TransactionDeserializationTest {
             ).toBlockItem();
 
     @Test
-    public void deserializeSignature() {
-        BlockItem deserializedBlockItem = BlockItem.fromVersionedBytes(ByteBuffer.wrap(bi.getVersionedBytes()));
-        assertEquals(bi, deserializedBlockItem);
-        System.out.println(deserializedBlockItem);
+    public void deserializeBlockItem() {
+        ByteBuffer serializedBi = ByteBuffer.wrap(bi.getVersionedBytes());
+        BlockItem deserializedBlockItem = BlockItem.fromVersionedBytes(serializedBi);
+        assertEquals("Block items should match", bi, deserializedBlockItem);
+        if(deserializedBlockItem.getBlockItemType() == BlockItemType.ACCOUNT_TRANSACTION) {
+            AccountTransaction accountTransaction = (AccountTransaction)deserializedBlockItem;
+            TransactionType transactionType = accountTransaction.getPayload().getTransactionType();
+            if(transactionType == TransactionType.SIMPLE_TRANSFER) {
+                Transfer payload = (Transfer) accountTransaction.getPayload();
+                assertEquals(payload.getPayload().getAmount(), CCDAmount.fromMicro(17));
+            }else {
+                throw new RuntimeException("Should be a simple transfer");
+            }
+        } else {
+            throw new RuntimeException("Should be an account transaction");
+        }
     }
 }

@@ -37,7 +37,7 @@ public class UpdateContractTest {
                                         ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
                         )
                 );
-        val transferBytesLength = transfer.getBytes().length;
+        val transferBytesLength = transfer.getRawPayloadBytes().length;
         assertEquals(42, transferBytesLength);
 
         val transferDataToSign = transfer.getDataToSign();

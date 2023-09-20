@@ -21,6 +21,6 @@ public class UpdateContractPayloadTest {
                 "mint",
                 emptyArray);
 
-        assertArrayEquals(EXPECTED_UPDATE_CONTRACT_PAYLOAD_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(payload.getBytes()));
+        assertArrayEquals(EXPECTED_UPDATE_CONTRACT_PAYLOAD_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(payload.getRawPayloadBytes()));
     }
 }
