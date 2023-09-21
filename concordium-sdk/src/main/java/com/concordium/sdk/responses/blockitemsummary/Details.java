@@ -38,14 +38,14 @@ public class Details {
     private final ChainUpdateDetails chainUpdateDetails;
 
     public static Details newAccountTransaction(com.concordium.grpc.v2.AccountTransactionDetails accountTransaction) {
-        return Details.builder().accountTransactionDetails(AccountTransactionDetails.from(accountTransaction)).build();
+        return Details.builder().type(Type.ACCOUNT_TRANSACTION).accountTransactionDetails(AccountTransactionDetails.from(accountTransaction)).build();
     }
 
     public static Details newAcountCreation(com.concordium.grpc.v2.AccountCreationDetails accountCreation) {
-        return Details.builder().accountCreationDetails(AccountCreationDetails.from(accountCreation)).build();
+        return Details.builder().type(Type.ACCOUNT_TRANSACTION).accountCreationDetails(AccountCreationDetails.from(accountCreation)).build();
     }
 
     public static Details newChainUpdate(UpdateDetails update) {
-        return Details.builder().chainUpdateDetails(ChainUpdateDetails.from(update)).build();
+        return Details.builder().type(Type.CHAIN_UPDATE).chainUpdateDetails(ChainUpdateDetails.from(update)).build();
     }
 }

@@ -65,7 +65,7 @@ public class CCDAmount {
 
     @Override
     public String toString() {
-        return (DecimalFormat.getNumberInstance().format(value.getValue() / 1000000) + " CCD");
+        return this.getValue().toString() + " micro CCD";
     }
 
     @JsonValue
