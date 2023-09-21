@@ -35,7 +35,7 @@ public final class TransferToEncrypted extends Payload {
     }
 
     @Override
-    public byte[] getRawPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         return amount.getBytes();
     }
 

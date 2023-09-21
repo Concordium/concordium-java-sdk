@@ -20,15 +20,15 @@ public class DeployModuleTransaction extends AccountTransaction {
             @NonNull final TransactionSigner signer,
             @NonNull final WasmModule module,
             @NonNull final UInt64 maxEnergyCost) {
-        super(sender, nonce, expiry, signer, DeployModule.createNew(module, maxEnergyCost));
+        super(sender, nonce, expiry, signer, DeployModule.createNew(module).withMaxEnergyCost(maxEnergyCost));
     }
 
     private DeployModuleTransaction(
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
-            final @NonNull WasmModule payload,
+            final @NonNull DeployModule payload,
             final @NonNull UInt64 maxEnergyCost) {
-        super(header, signature, DeployModule.createNew(payload, maxEnergyCost));
+        super(header, signature, payload.withMaxEnergyCost(maxEnergyCost));
     }
 
     /**
@@ -71,7 +71,7 @@ public class DeployModuleTransaction extends AccountTransaction {
     static DeployModuleTransaction from(
             final TransactionHeader header,
             final TransactionSignature signature,
-            final WasmModule payload,
+            final DeployModule payload,
             final UInt64 maxEnergyCost) {
         try {
             return new DeployModuleTransaction(header, signature, payload, maxEnergyCost);

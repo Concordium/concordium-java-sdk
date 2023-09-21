@@ -41,7 +41,7 @@ public final class EncryptedTransfer extends Payload {
     }
 
     @Override
-    public byte[] getRawPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         val toAddress = receiver.getBytes();
         byte[] dataBytes = data.getBytes();
         val buffer = ByteBuffer.allocate(toAddress.length + dataBytes.length);

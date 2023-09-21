@@ -8,7 +8,7 @@ import lombok.ToString;
 import java.util.Arrays;
 
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class RawPayload extends Payload {
 
     /**

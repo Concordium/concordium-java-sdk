@@ -41,7 +41,7 @@ public final class InitContract extends Payload {
     }
 
     @Override
-    public byte[] getRawPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         return payload.getBytes();
     }
 }

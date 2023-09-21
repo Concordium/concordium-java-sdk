@@ -138,7 +138,8 @@ public class ClientV2GetItemsTest {
             .builderBlockItem()
             .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED)
             .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
-            .payload(WasmModule.from(MODULE_V0_BYTES, WasmModuleVersion.V0))
+            .payload(DeployModule.builder().module(WasmModule.from(MODULE_V0_BYTES, WasmModuleVersion.V0)).build().withMaxEnergyCost(UInt64.from(ACCOUNT_TRANSACTION_ENERGY)))
+            .maxEnergyCost(UInt64.from(ACCOUNT_TRANSACTION_ENERGY))
             .build();
     private static final CredentialDeploymentTransaction CREDENTIAL_DEPLOYMENT_EXPECTED = CredentialDeploymentTransaction
             .builderBlockItem()
@@ -215,6 +216,7 @@ public class ClientV2GetItemsTest {
                         moduleRef,
                         initName,
                         parameter))
+                .maxEnergyCost(ACCOUNT_TRANSACTION_HEADER_EXPECTED.getMaxEnergyCost())
                 .build();
 
         assertEquals(expected, mapped);
@@ -243,7 +245,7 @@ public class ClientV2GetItemsTest {
         val expected = UpdateContractTransaction.builderAccountTransactionBlockItem()
                 .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(46)).build())
                 .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
-                .payload(com.concordium.sdk.transactions.UpdateContractPayload.from(amount,
+                .payload(UpdateContract.from(amount,
                         com.concordium.sdk.types.ContractAddress.from(1, 0),
                         "contract",
                         "method",
@@ -330,8 +332,6 @@ public class ClientV2GetItemsTest {
         assertEquals(expected, mapped);
     }
 
-    /**
-     *
 
     @Test
     public void shouldMapRawTransaction() {
@@ -346,7 +346,7 @@ public class ClientV2GetItemsTest {
                 .builderAccountTransactionBlockItem()
                 .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(3)).build())
                 .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
-                .payload(payloadBytes)
+                .payload(RawPayload.from(payloadBytes))
                 .build();
 
         assertEquals(expected, mapped);
@@ -361,13 +361,12 @@ public class ClientV2GetItemsTest {
                 .builderAccountTransactionBlockItem()
                 .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(0)).build())
                 .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
-                .payloadBytes(new byte[0])
+                .payload(RawPayload.from(new byte[0]))
                 .build();
 
         assertEquals(expected, mapped);
     }
 
-     */
 
     @Test
     public void shouldMapModuleV1() {

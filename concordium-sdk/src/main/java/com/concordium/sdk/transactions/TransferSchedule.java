@@ -45,7 +45,7 @@ public class TransferSchedule extends Payload {
     }
 
     @Override
-    public byte[] getRawPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         val scheduleLen = amount.length;
         val scheduleBufferSize = UInt64.BYTES * scheduleLen * 2;
 

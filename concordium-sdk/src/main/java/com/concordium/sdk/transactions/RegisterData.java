@@ -39,7 +39,7 @@ public final class RegisterData extends Payload {
     }
 
     @Override
-    public byte[] getRawPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         return data.getBytes();
     }
 

@@ -51,7 +51,7 @@ public final class TransferScheduleWithMemo extends Payload {
     }
 
     @Override
-    public byte[] getRawPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         val schedule_len = amount.length;
         val schedule_buffer_size = UInt64.BYTES * schedule_len * 2;
         val buffer = ByteBuffer.allocate(

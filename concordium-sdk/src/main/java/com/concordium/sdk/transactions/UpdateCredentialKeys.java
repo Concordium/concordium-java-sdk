@@ -53,7 +53,7 @@ public final class UpdateCredentialKeys extends Payload {
     }
 
     @Override
-    public byte[] getRawPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         val credentialRegistrationIdBytes = credentialRegistrationID.getRegId();
         val keysBytes = keys.getBytes();
         val buffer = ByteBuffer.allocate(credentialRegistrationIdBytes.length + keysBytes.length);

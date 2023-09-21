@@ -22,7 +22,7 @@ public class DeployModuleTest {
     public void testDeployVersionedModule() {
         val module = WasmModule.from(
                 Files.readAllBytes(Paths.get("src/test/java/com/concordium/sdk/binaries/module.wasm.v1")));
-        val payload = DeployModule.createNew(module, UInt64.from(6000))
+        val payload = DeployModule.createNew(module).withMaxEnergyCost(UInt64.from(6000))
                 .withHeader(TransactionHeader
                         .builder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -44,7 +44,7 @@ public class DeployModuleTest {
         val module = WasmModule.from(
                 Files.readAllBytes(Paths.get("src/test/java/com/concordium/sdk/binaries/module.wasm")),
                 WasmModuleVersion.V0);
-        val payload = DeployModule.createNew(module, UInt64.from(6000))
+        val payload = DeployModule.createNew(module).withMaxEnergyCost(UInt64.from(6000))
                 .withHeader(TransactionHeader
                         .builder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))

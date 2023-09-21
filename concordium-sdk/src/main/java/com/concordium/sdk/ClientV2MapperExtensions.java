@@ -75,8 +75,8 @@ import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.Signature;
 import com.concordium.sdk.transactions.TransferPayload;
 import com.concordium.sdk.transactions.TransferWithMemoPayload;
-import com.concordium.sdk.transactions.UpdateContractPayload;
 import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.UpdateContract;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
 import com.concordium.sdk.types.Timestamp;
@@ -644,7 +644,8 @@ interface ClientV2MapperExtensions {
                         .builderBlockItem()
                         .header(to(transaction.getHeader(), deployModulePayload.getBytes().length))
                         .signature(to(transaction.getSignature()))
-                        .payload(deployModulePayload)
+                        .payload(DeployModule.builder().module(deployModulePayload).build())
+                        .maxEnergyCost(UInt64.from(transaction.getHeader().getEnergyAmount().getValue()))
                         .build();
             }
             case INIT_CONTRACT: {
@@ -653,10 +654,11 @@ interface ClientV2MapperExtensions {
                         .header(to(transaction.getHeader(), initContractPayload.getBytes().length))
                         .signature(to(transaction.getSignature()))
                         .payload(initContractPayload)
+                        .maxEnergyCost(UInt64.from(transaction.getHeader().getEnergyAmount().getValue()))
                         .build();
             }
             case UPDATE_CONTRACT:
-                final UpdateContractPayload updateContractPayload = to(payload.getUpdateContract());
+                final UpdateContract updateContractPayload = to(payload.getUpdateContract());
                 return UpdateContractTransaction.builderAccountTransactionBlockItem()
                         .header(to(transaction.getHeader(), updateContractPayload.getRawPayloadBytes().length))
                         .signature(to(transaction.getSignature()))
@@ -719,8 +721,8 @@ interface ClientV2MapperExtensions {
         return Data.from(registerData.getValue().toByteArray());
     }
 
-    static UpdateContractPayload to(com.concordium.grpc.v2.UpdateContractPayload updateContract) {
-        return UpdateContractPayload.from(
+    static UpdateContract to(com.concordium.grpc.v2.UpdateContractPayload updateContract) {
+        return UpdateContract.from(
                 to(updateContract.getAmount()),
                 to(updateContract.getAddress()),
                 ReceiveName.parse(updateContract.getReceiveName().getValue()),
@@ -871,7 +873,7 @@ interface ClientV2MapperExtensions {
                 .setAccountTransaction(com.concordium.grpc.v2.AccountTransaction.newBuilder()
                         .setHeader(to(accountTransaction.getHeader()))
                         .setPayload(AccountTransactionPayload.newBuilder()
-                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayload().getRawPayloadBytes()))
+                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayload().getBytes()))
                                 .build())
                         .setSignature(to(accountTransaction.getSignature()))
                         .build())

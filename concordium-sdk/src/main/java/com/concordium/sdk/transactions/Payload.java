@@ -34,11 +34,13 @@ public abstract class Payload {
     }
 
     /**
-     * Get the bytes representation of the payload
+     * Get the serialized payload.
+     * The actual payload is prepended with a tag (a byte) which
+     * indicates the {@link TransactionType}
      *
-     * @return byte[]
+     * @return the serialized payload (including the type tag).
      */
-    final byte[] getBytes() {
+    public final byte[] getBytes() {
         val payloadBytes = getRawPayloadBytes();
         val buffer = ByteBuffer.allocate(TransactionType.BYTES + payloadBytes.length);
         buffer.put(getTransactionType().getValue());
@@ -114,6 +116,11 @@ public abstract class Payload {
 
     public abstract TransactionType getTransactionType();
 
-    public abstract byte[] getRawPayloadBytes();
+    /**
+     * This must return the raw payload i.e., the
+     * payload only. The tag will be prepended by {@link Payload#getBytes()}
+     * @return the raw serialized payload.
+     */
+    protected abstract byte[] getRawPayloadBytes();
 
 }

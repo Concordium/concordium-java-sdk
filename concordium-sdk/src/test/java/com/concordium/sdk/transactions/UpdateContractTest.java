@@ -21,8 +21,8 @@ public class UpdateContractTest {
     @Test
     public void updateContractTest() {
         byte[] emptyArray = new byte[0];
-        val transfer = UpdateContract.createNew(
-                        UpdateContractPayload.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray), UInt64.from(3000))
+        val tx =
+                        UpdateContract.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray).withMaxEnergyCost(UInt64.from(3000))
                 .withHeader(TransactionHeader
                         .builder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -37,12 +37,12 @@ public class UpdateContractTest {
                                         ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
                         )
                 );
-        val transferBytesLength = transfer.getRawPayloadBytes().length;
-        assertEquals(42, transferBytesLength);
+        val txLength = tx.getBytes().length;
+        assertEquals(42, txLength);
 
-        val transferDataToSign = transfer.getDataToSign();
+        val transferDataToSign = tx.getDataToSign();
         assertEquals("02b15fc092aa1e63035a18cb1b4f62a9d2a6186bdb6147f85525bcb8771ab5b7", Hex.encodeHexString(transferDataToSign));
-        val blockItem = transfer.toAccountTransaction();
+        val blockItem = tx.toAccountTransaction();
 
         val blockItemBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));

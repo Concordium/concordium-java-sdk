@@ -25,6 +25,14 @@ public class AccountTransaction extends BlockItem {
      */
     private final Payload payload;
 
+    /**
+     * Constructor serializing an account transaction
+     * @param sender sender of the transaction
+     * @param nonce account nonce
+     * @param expiry the expiry of the transaction
+     * @param signer the {@link Signer} of the transaction
+     * @param payload the payload of the transaction
+     */
     AccountTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final AccountNonce nonce,
@@ -40,6 +48,12 @@ public class AccountTransaction extends BlockItem {
                 .signWith(signer));
     }
 
+    /**
+     * Constructor for deserializing a transaction
+     * @param signature the signature
+     * @param header the header
+     * @param payload the payload
+     */
     public AccountTransaction(
             @NonNull final TransactionSignature signature,
             @NonNull final TransactionHeader header,

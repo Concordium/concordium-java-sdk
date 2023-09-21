@@ -49,7 +49,7 @@ public final class TransferToPublic extends Payload {
     }
 
     @Override
-    public byte[] getRawPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         val proofBytes = this.proof.getBytes();
         val remainingAmountBytes = this.remainingAmount.getBytes();
         val buffer = ByteBuffer.allocate(remainingAmountBytes.length

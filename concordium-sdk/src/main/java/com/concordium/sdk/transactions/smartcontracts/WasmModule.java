@@ -17,9 +17,9 @@ import java.util.Arrays;
  * A compiled Smart Contract Module in WASM with source and version.
  */
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @ToString
-public class WasmModule extends Payload {
+public class WasmModule {
 
     private static final long MAX_SIZE_V0 = 65536; // 64 kb
     private static final long MAX_SIZE_V1 = 8 * 65536; // 512 kb
@@ -90,7 +90,7 @@ public class WasmModule extends Payload {
      * @return the identifier of the Module.
      */
     public ModuleRef getIdentifier() {
-        return ModuleRef.from(SHA256.hash(this.getBytes()));
+        return ModuleRef.from(SHA256.hash(this.source.getBytes()));
     }
 
     /**
@@ -107,18 +107,4 @@ public class WasmModule extends Payload {
         return buffer.array();
     }
 
-    @Override
-    protected UInt64 getTransactionTypeCost() {
-        return null;
-    }
-
-    @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.DEPLOY_MODULE;
-    }
-
-    @Override
-    public byte[] getRawPayloadBytes() {
-        return getBytes();
-    }
 }

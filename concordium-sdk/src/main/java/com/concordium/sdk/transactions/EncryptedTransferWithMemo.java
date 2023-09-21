@@ -28,7 +28,7 @@ public final class EncryptedTransferWithMemo extends Payload {
     }
 
     @Override
-    public byte[] getRawPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         return payload.getBytes();
     }
 
