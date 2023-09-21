@@ -2,6 +2,11 @@
 
 ## Unreleased changes
 
+## 5.1.0
+- Fixed a regression that made it harder to deserialize transactions from bytes.
+- toString on CCD amount now displays the amount as micro CCD.
+- Fix bug where `Details` type was not correctly set when querying status of a block item.
+
 ## 5.0.2
 - Remove an unused import from `ClientV2` which could make compilation fail on some jdks.
 

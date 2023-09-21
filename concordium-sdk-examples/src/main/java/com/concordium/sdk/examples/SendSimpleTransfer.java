@@ -17,7 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
-@Command(name = "GetBlocks", mixinStandardHelpOptions = true)
+@Command(name = "SendSimpleTransfer", mixinStandardHelpOptions = true)
 public class SendSimpleTransfer implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},

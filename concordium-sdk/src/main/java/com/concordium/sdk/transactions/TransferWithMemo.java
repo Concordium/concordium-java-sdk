@@ -26,11 +26,6 @@ public class TransferWithMemo extends Payload {
         return new TransferWithMemo(receiver, amount, memo);
     }
 
-    @Override
-    public PayloadType getType() {
-        return PayloadType.TRANSFER_WITH_MEMO;
-    }
-
     public static TransferWithMemo fromBytes(ByteBuffer source) {
         val receiver = AccountAddress.fromBytes(source);
         val memo = Memo.fromBytes(source);
@@ -39,17 +34,12 @@ public class TransferWithMemo extends Payload {
     }
 
     @Override
-    UInt64 getTransactionTypeCost() {
-        return TransactionTypeCost.TRANSFER_WITH_MEMO.getValue();
-    }
-
-    @Override
     public TransactionType getTransactionType() {
         return TransactionType.TRANSFER_WITH_MEMO;
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         return payload.getBytes();
     }
 }

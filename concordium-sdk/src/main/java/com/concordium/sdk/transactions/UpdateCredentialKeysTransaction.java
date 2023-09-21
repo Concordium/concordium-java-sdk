@@ -4,6 +4,7 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.UInt16;
+import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
 /**
@@ -24,7 +25,7 @@ public class UpdateCredentialKeysTransaction extends AccountTransaction {
         super(sender, nonce, expiry, signer, UpdateCredentialKeys.createNew(
                 credentialRegistrationID,
                 keys,
-                numExistingCredentials));
+                numExistingCredentials), UInt64.from(500L * numExistingCredentials.getValue() + 100L * keys.getKeys().size()));
     }
 
     /**

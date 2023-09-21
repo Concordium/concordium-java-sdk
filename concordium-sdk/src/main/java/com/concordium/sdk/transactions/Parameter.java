@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt16;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
@@ -18,6 +19,7 @@ import java.nio.ByteBuffer;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 public final class Parameter {
     public static final Parameter EMPTY = Parameter.from(new byte[0]);
     private final byte[] bytes;

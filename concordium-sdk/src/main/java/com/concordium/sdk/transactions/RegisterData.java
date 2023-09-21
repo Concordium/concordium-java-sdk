@@ -23,19 +23,9 @@ public final class RegisterData extends Payload {
         return new RegisterData(data);
     }
 
-    @Override
-    public PayloadType getType() {
-        return PayloadType.REGISTER_DATA;
-    }
-
     public static RegisterData fromBytes(ByteBuffer source) {
         val data = Data.fromBytes(source);
         return new RegisterData(data);
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
-        return BASE_ENERGY_COST;
     }
 
     @Override
@@ -44,9 +34,8 @@ public final class RegisterData extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         return data.getBytes();
     }
 
-    private final static UInt64 BASE_ENERGY_COST = UInt64.from(300);
 }

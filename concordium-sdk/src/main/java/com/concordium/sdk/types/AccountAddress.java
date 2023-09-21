@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public final class AccountAddress extends AbstractAddress {
     public static final int BYTES = 32;
     private final static int VERSION = 1;

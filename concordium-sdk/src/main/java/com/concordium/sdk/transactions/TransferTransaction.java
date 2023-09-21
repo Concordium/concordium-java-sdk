@@ -16,14 +16,14 @@ public class TransferTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
-        super(sender, nonce, expiry, signer, Transfer.createNew(receiver, amount));
+        super(sender, nonce, expiry, signer, Transfer.createNew(receiver, amount), TransactionTypeCost.TRANSFER_BASE_COST.getValue());
     }
 
     private TransferTransaction(
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
             final @NonNull TransferPayload payload) {
-        super(header, signature, TransactionType.SIMPLE_TRANSFER, payload.getBytes());
+        super(header, signature, Transfer.createNew(payload.getReceiver(), payload.getAmount()));
     }
 
     @Builder(builderClassName = "TransferTransactionBuilder")

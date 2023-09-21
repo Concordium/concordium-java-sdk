@@ -34,11 +34,28 @@ public class TransactionHeader {
      * @param expiry       A Unix timestamp indicating when the transaction should expire.
      */
     @Builder
-    TransactionHeader(AccountAddress sender, Nonce accountNonce, UInt64 expiry) {
+    TransactionHeader(@NonNull AccountAddress sender, @NonNull Nonce accountNonce, @NonNull UInt64 expiry) {
         this.sender = sender;
         this.accountNonce = accountNonce;
         this.expiry = expiry;
-        this.maxEnergyCost = UInt64.from(0); // dummy value used for calculating the energy cost.
+        this.maxEnergyCost = UInt64.from(0); // dummy value will be overwritten when calculating the cost of the transaction.
+    }
+
+    /**
+     * Builder for constructing headers where the allowed maximum energy to spend is
+     * set directly in the header as opposed to being calculated.
+     * This is the case for transactions that operate on smart contracts.
+     * @param sender the sender of the transaction
+     * @param accountNonce the nonce of the sender account
+     * @param expiry the expiry of the transaction
+     * @param maxEnergyCost the maximum allowed energy to spend on this transaction.
+     */
+    @Builder(builderMethodName = "explicitMaxEnergyBuilder", builderClassName = "TransactionHeaderExplicitMaxEnergyBuilder")
+    TransactionHeader(@NonNull AccountAddress sender, @NonNull Nonce accountNonce, @NonNull UInt64 expiry, @NonNull UInt64 maxEnergyCost) {
+        this.sender = sender;
+        this.accountNonce = accountNonce;
+        this.expiry = expiry;
+        this.maxEnergyCost = maxEnergyCost;
     }
 
     private TransactionHeader(@NonNull final AccountAddress sender,

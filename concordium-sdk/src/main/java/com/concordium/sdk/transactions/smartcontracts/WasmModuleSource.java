@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
  * Compiled source in of the WASM Module.
  */
 @EqualsAndHashCode
-class WasmModuleSource {
+public class WasmModuleSource {
 
     /**
      * The raw bytes of the WasmModule.
@@ -27,7 +27,7 @@ class WasmModuleSource {
     }
 
     /**
-     * Get the raw bytes of the wasm module.
+     * Get the serialized bytes of the module.
      *
      * @return the module source bytes.
      */

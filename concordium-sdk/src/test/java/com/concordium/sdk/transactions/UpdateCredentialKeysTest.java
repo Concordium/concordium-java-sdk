@@ -31,32 +31,29 @@ public class UpdateCredentialKeysTest {
         CredentialRegistrationId regId = CredentialRegistrationId.fromBytes(new byte[]{-90, 67, -42, 8, 42, -113, -128, 70, 15, -1, 39, -13, -1, 39, -2, -37, -3, -58, 0, 57, 82, 116, 2, -72, 24, -113, -56, 69, -88, 73, 66, -117, 84, -124, -56, 42, 21, -119, -54, -73, 96, 76, 26, 43, -23, 120, -61, -100});
         CredentialPublicKeys credentialPublicKeys = CredentialPublicKeys.from(keys, 1);
 
-        val transfer = UpdateCredentialKeys.createNew(
-                        regId,
-                        credentialPublicKeys,
-                        UInt16.from(5))
-                .withHeader(TransactionHeader
-                        .builder()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .accountNonce(Nonce.from(525))
-                        .expiry(UInt64.from(1669466666))
-                        .build())
-                .signWith(
-                        TransactionSigner.from(
-                                SignerEntry.from(Index.from(0), Index.from(0),
-                                        ED25519SecretKey.from("7100071c835a0a35e86dccba7ee9d10b89e36d1e596771cdc8ee36a17f7abbf2")),
-                                SignerEntry.from(Index.from(0), Index.from(1),
-                                        ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
-                        )
-                );
+        UpdateCredentialKeysTransaction tx = TransactionFactory.newUpdateCredentialKeys()
+                .credentialRegistrationID(regId)
+                .keys(credentialPublicKeys)
+                .numExistingCredentials(UInt16.from(5))
+                .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
+                .nonce(AccountNonce.from(525))
+                .expiry(Expiry.from(1669466666))
+                .signer(TransactionSigner.from(
+                        SignerEntry.from(Index.from(0), Index.from(0),
+                                ED25519SecretKey.from("7100071c835a0a35e86dccba7ee9d10b89e36d1e596771cdc8ee36a17f7abbf2")),
+                        SignerEntry.from(Index.from(0), Index.from(1),
+                                ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
+                ))
+                .build();
+        val payload = tx.getPayload();
 
-        val transferBytesLength = transfer.getBytes().length;
+        val transferBytesLength = payload.getBytes().length;
         assertEquals(85, transferBytesLength);
 
-        val transferSignData = transfer.getDataToSign();
+        val transferSignData = payload.getDataToSign();
         assertEquals("4bc4ba29186577608baabc97c1f9df9cc37014aaa66f0dc300b91540fe4a2098", Hex.encodeHexString(transferSignData));
 
-        val blockItem = transfer.toAccountTransaction();
+        val blockItem = payload.toAccountTransaction();
 
         val blockItemBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_UPDATE_CREDENTIAL_KEYS_BLOCK_ITEM_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));
