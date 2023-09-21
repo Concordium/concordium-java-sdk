@@ -31,6 +31,7 @@ import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -333,7 +334,7 @@ public class ClientV2GetItemsTest {
 
     @Test
     public void shouldMapRawTransaction() {
-        final byte[] payloadBytes = new byte[]{11, 11, 11};
+        final byte[] payloadBytes = new byte[]{3, 11, 11};
 
         val mapped = to(ACCOUNT_TRANSACTION_DEPLOY_MODULE_V0.toBuilder()
                 .setPayload(AccountTransactionPayload.newBuilder()
@@ -350,19 +351,15 @@ public class ClientV2GetItemsTest {
         assertEquals(expected, mapped);
     }
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
     @Test
-    public void shouldMapPayloadNotSetTransaction() {
-        val mapped = to(ACCOUNT_TRANSACTION_DEPLOY_MODULE_V0.toBuilder()
+    public void shouldNotMapWhenPayloadTagNotSet() {
+        AccountTransaction.Builder toOverwritePayload = ACCOUNT_TRANSACTION_DEPLOY_MODULE_V0.toBuilder();
+        expectedException.expect(IllegalArgumentException.class);
+        to(toOverwritePayload
                 .setPayload(AccountTransactionPayload.newBuilder().build())
                 .build());
-        val expected = com.concordium.sdk.transactions.AccountTransaction
-                .builderAccountTransactionBlockItem()
-                .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(0)).build())
-                .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
-                .payload(RawPayload.from(new byte[0]))
-                .build();
-
-        assertEquals(expected, mapped);
     }
 
 

@@ -696,12 +696,7 @@ interface ClientV2MapperExtensions {
                         .build();
             default:
             case PAYLOAD_NOT_SET:
-                return com.concordium.sdk.transactions.AccountTransaction
-                        .builderAccountTransactionBlockItem()
-                        .header(to(transaction.getHeader(), 0))
-                        .signature(to(transaction.getSignature()))
-                        .payload(RawPayload.from(new byte[0]))
-                        .build();
+                throw new IllegalArgumentException("Cannot parse account transaction as payload tag was not set.");
         }
     }
 
