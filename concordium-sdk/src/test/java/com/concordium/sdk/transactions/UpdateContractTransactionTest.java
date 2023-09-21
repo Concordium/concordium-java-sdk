@@ -19,14 +19,15 @@ public class UpdateContractTransactionTest {
     @Test
     @SneakyThrows
     public void testUpdateContractTransaction() {
+        UpdateContract payload = UpdateContract.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray);
         UpdateContractTransaction transaction = UpdateContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(AccountNonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
-                .payload(UpdateContract.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
-                .maxEnergyCost(UInt64.from(10000))
+                .payload(payload)
+                .maxEnergyCost(Payload.calculateEnergyCost(2, payload.getBytes().length, UInt64.from(10000)))
                 .build();
         assertEquals("ac20e2a4be17d4e85bfbbbdc430b249517cfc634eaa57baa7df6cd42d711d94c", transaction.getHash().asHex());
         assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));

@@ -62,7 +62,11 @@ public abstract class Payload {
     }
 
     /**
-     * Sets the signature and energy cost. Uses provided {@link TransactionSignature}.
+     * Sets the signature and compute energy cost.
+     * Note that this only computes and sets the energy cost if it hasn't already been set.
+     * The energy cost is already set for smart contract transactions as the energy cost
+     * cannot be computed before the transaction is executed.
+     * Uses provided {@link TransactionSignature}.
      *
      * @param signer {@link TransactionSigner}
      * @return {@link Payload} with {@link Payload#signature} and {@link Payload#header} energy cost set.
@@ -72,12 +76,16 @@ public abstract class Payload {
         if (Objects.isNull(this.header)) {
             throw TransactionCreationException.from(new IllegalStateException("TransactionHeader must be set before signing"));
         }
-        this.header.setMaxEnergyCost(
-                calculateEnergyCost(
-                        signer.size(),
-                        getBytes().length,
-                        getTransactionTypeCost()
-                ));
+        // Compute and set the max energy cost if it can be computed,
+        // otherwise rely on the energy cost set already.
+        if (!(this instanceof PayloadUnknownCost)) {
+            this.header.setMaxEnergyCost(
+                    calculateEnergyCost(
+                            signer.size(),
+                            getBytes().length,
+                            getTransactionTypeCost()
+                    ));
+        }
         try {
             this.signature = signer.sign(getDataToSign());
         } catch (ED25519Exception e) {
@@ -105,7 +113,17 @@ public abstract class Payload {
     private final static int EXPIRY_SIZE = 8;
     private final static int TRANSACTION_HEADER_SIZE = ADDRESS_SIZE + NONCE_SIZE + ENERGY_SIZE + PAYLOAD_SIZE + EXPIRY_SIZE;
 
-    private static UInt64 calculateEnergyCost(int noOfSignatures,
+    /**
+     * Calculate the total energy cost of a transaction.
+     * This can only be used for non-smart contract transactions as
+     * it is not possible to deduce the cost of such one before it has
+     * been executed.
+     * @param noOfSignatures number of signatures in the transaction
+     * @param payloadSize size of the payload
+     * @param transactionSpecificCost cost of the specific transaction type.
+     * @return the computed cost.
+     */
+    public static UInt64 calculateEnergyCost(int noOfSignatures,
                                               int payloadSize,
                                               UInt64 transactionSpecificCost) {
         return UInt64.from((long)

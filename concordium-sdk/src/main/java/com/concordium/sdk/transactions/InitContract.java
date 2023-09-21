@@ -12,27 +12,20 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString
-public final class InitContract extends Payload {
+public final class InitContract extends PayloadUnknownCost {
 
     /**
      * Payload to initialize a smart contract.
      */
     private final InitContractPayload payload;
 
-    private final UInt64 maxEnergyCost;
 
-    private InitContract(InitContractPayload payload, UInt64 maxEnergyCost) {
+    private InitContract(InitContractPayload payload) {
         this.payload = payload;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
-    static InitContract createNew(InitContractPayload payload, UInt64 maxEnergyCost) {
-        return new InitContract(payload, maxEnergyCost);
-    }
-
-    @Override
-    protected UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+    static InitContract createNew(InitContractPayload payload) {
+        return new InitContract(payload);
     }
 
     @Override

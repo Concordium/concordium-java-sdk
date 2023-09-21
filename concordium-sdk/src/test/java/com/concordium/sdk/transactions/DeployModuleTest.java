@@ -22,19 +22,20 @@ public class DeployModuleTest {
     public void testDeployVersionedModule() {
         val module = WasmModule.from(
                 Files.readAllBytes(Paths.get("src/test/java/com/concordium/sdk/binaries/module.wasm.v1")));
-        val payload = DeployModule.createNew(module).withMaxEnergyCost(UInt64.from(6000))
+        val payload = DeployModule.createNew(module)
                 .withHeader(TransactionHeader
-                        .builder()
+                        .explicitMaxEnergyBuilder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .accountNonce(Nonce.from(78910))
                         .expiry(UInt64.from(123456))
+                        .maxEnergyCost(UInt64.from(6000))
                         .build())
                 .signWith(getValidSigner());
 
         assertEquals(87146, payload.getBytes().length);
-        assertEquals("5654319dff40a71f183104f8faf126be3dfc242918820381a9ac27838d89e72f",
+        assertEquals("3357c9fe9a91ceb3b4189792a2a79b2c3ce495f3d16bdf745967b2761bfa033d",
                 Hex.encodeHexString(payload.getDataToSign()));
-        assertEquals("f1ca38ef26bd82515bb4be98b497fa2a33d3474fab27d001c54ac09219c5873f",
+        assertEquals("d6ec6b4df96e318df0cffcbc20cb8613b79ff564b3d130f2cd7502550478c78a",
                 payload.toAccountTransaction().getHash().asHex());
     }
 
@@ -44,19 +45,20 @@ public class DeployModuleTest {
         val module = WasmModule.from(
                 Files.readAllBytes(Paths.get("src/test/java/com/concordium/sdk/binaries/module.wasm")),
                 WasmModuleVersion.V0);
-        val payload = DeployModule.createNew(module).withMaxEnergyCost(UInt64.from(6000))
+        val payload = DeployModule.createNew(module)
                 .withHeader(TransactionHeader
-                        .builder()
+                        .explicitMaxEnergyBuilder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .accountNonce(Nonce.from(78910))
                         .expiry(UInt64.from(123456))
+                        .maxEnergyCost(UInt64.from(6000))
                         .build())
                 .signWith(getValidSigner());
 
         assertEquals(41541, payload.getBytes().length);
-        assertEquals("f010b82e89fda27e785b3804e3a5cf474ee7601836f0daf355b67c5577d81c3a",
+        assertEquals("8511703a46003dd6214b51bdb80507aec26d942236bf2b01a91911d044cfe96e",
                 Hex.encodeHexString(payload.getDataToSign()));
-        assertEquals("5da6812f05b77f85f86b76f058a3328afba3a6888b66bbb6f27703a68bb201ec",
+        assertEquals("5959be8bbb0214632d4303a9164722a928ee188105e087f2912c4e2ac5fbef8b",
                 payload.toAccountTransaction().getHash().asHex());
     }
 }

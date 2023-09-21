@@ -1,6 +1,10 @@
 # Changelog
 
 ## Unreleased changes
+- Fixed a regression such that transactions can be safely deserialized from bytes.
+- Fixed a bug which caused the maximum energy allowed to spend for a smart contract transaction
+  to be set higher than what a user set explicitly. Before this fix then the cost of signature 
+  verification was added to what the user provided as the maximum energy allowed to spend.
 
 ## 5.0.2
 - Remove an unused import from `ClientV2` which could make compilation fail on some jdks.

@@ -18,17 +18,15 @@ public class DeployModuleTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer,
-            @NonNull final WasmModule module,
-            @NonNull final UInt64 maxEnergyCost) {
-        super(sender, nonce, expiry, signer, DeployModule.createNew(module).withMaxEnergyCost(maxEnergyCost));
+            @NonNull final WasmModule module) {
+        super(sender, nonce, expiry, signer, DeployModule.createNew(module));
     }
 
     private DeployModuleTransaction(
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
-            final @NonNull DeployModule payload,
-            final @NonNull UInt64 maxEnergyCost) {
-        super(header, signature, payload.withMaxEnergyCost(maxEnergyCost));
+            final @NonNull DeployModule payload) {
+        super(header, signature, payload);
     }
 
     /**
@@ -50,7 +48,7 @@ public class DeployModuleTransaction extends AccountTransaction {
                                                final WasmModule module,
                                                final UInt64 maxEnergyCost) {
         try {
-            return new DeployModuleTransaction(sender, nonce, expiry, signer, module, maxEnergyCost);
+            return new DeployModuleTransaction(sender, nonce, expiry, signer, module);
         } catch (NullPointerException nullPointerException) {
             throw TransactionCreationException.from(nullPointerException);
         }
@@ -71,10 +69,9 @@ public class DeployModuleTransaction extends AccountTransaction {
     static DeployModuleTransaction from(
             final TransactionHeader header,
             final TransactionSignature signature,
-            final DeployModule payload,
-            final UInt64 maxEnergyCost) {
+            final DeployModule payload) {
         try {
-            return new DeployModuleTransaction(header, signature, payload, maxEnergyCost);
+            return new DeployModuleTransaction(header, signature, payload);
         } catch (NullPointerException nullPointerException) {
             throw TransactionCreationException.from(nullPointerException);
         }

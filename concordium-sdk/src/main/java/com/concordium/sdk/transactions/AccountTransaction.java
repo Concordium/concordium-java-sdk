@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.UInt64;
 import lombok.*;
 import java.nio.ByteBuffer;
 import static com.google.common.primitives.Bytes.concat;
@@ -27,6 +28,9 @@ public class AccountTransaction extends BlockItem {
 
     /**
      * Constructor serializing an account transaction
+     * This constructor should be used when the cost of the transaction
+     * is known beforehand. This is the case for all transactions except smart contract
+     * related ones.
      * @param sender sender of the transaction
      * @param nonce account nonce
      * @param expiry the expiry of the transaction
@@ -44,6 +48,34 @@ public class AccountTransaction extends BlockItem {
                         .sender(sender)
                         .accountNonce(nonce.getNonce())
                         .expiry(expiry.getValue())
+                        .build())
+                .signWith(signer));
+    }
+
+    /**
+     * Constructor serializing an account transaction
+     * This constructor is used when creating transactions that operate
+     * on smart contracts.
+     * @param sender sender of the transaction
+     * @param nonce account nonce
+     * @param expiry the expiry of the transaction
+     * @param signer the {@link Signer} of the transaction
+     * @param payload the payload of the transaction
+     * @param maxEnergyCost the max energy cost allowed for this transaction.
+     */
+    AccountTransaction(
+            @NonNull final AccountAddress sender,
+            @NonNull final AccountNonce nonce,
+            @NonNull final Expiry expiry,
+            @NonNull final TransactionSigner signer,
+            @NonNull final Payload payload,
+            @NonNull UInt64 maxEnergyCost) {
+        this(payload
+                .withHeader(TransactionHeader.explicitMaxEnergyBuilder()
+                        .sender(sender)
+                        .accountNonce(nonce.getNonce())
+                        .expiry(expiry.getValue())
+                        .maxEnergyCost(maxEnergyCost)
                         .build())
                 .signWith(signer));
     }

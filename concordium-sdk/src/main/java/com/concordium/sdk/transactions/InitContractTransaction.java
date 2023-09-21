@@ -27,17 +27,16 @@ public class InitContractTransaction extends AccountTransaction {
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer,
             @NonNull final UInt64 maxEnergyCost) {
-        super(sender, nonce, expiry, signer, InitContract.createNew(payload, maxEnergyCost));
+        super(sender, nonce, expiry, signer, InitContract.createNew(payload), maxEnergyCost);
     }
 
     private InitContractTransaction(
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
-            final @NonNull InitContractPayload payload,
-            final @NonNull UInt64 maxEnergyCost) {
+            final @NonNull InitContractPayload payload) {
         super(header,
                 signature,
-                InitContract.createNew(payload, maxEnergyCost));
+                InitContract.createNew(payload));
     }
 
     /**
@@ -46,7 +45,6 @@ public class InitContractTransaction extends AccountTransaction {
      * @param nonce         Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
      * @param expiry        {@link Expiry} of this transaction.
      * @param signer        {@link Signer} of this transaction.
-     * @param maxEnergyCost Allowed energy for the transaction.
      * @return Initialized {@link InitContractTransaction}.
      * @throws TransactionCreationException On failure to create the Transaction from input params.
      *                                      Ex when any of the input param is NULL.
@@ -81,10 +79,9 @@ public class InitContractTransaction extends AccountTransaction {
     public static InitContractTransaction from(
             final TransactionHeader header,
             final TransactionSignature signature,
-            final InitContractPayload payload,
-            final UInt64 maxEnergyCost) {
+            final InitContractPayload payload) {
         try {
-            return new InitContractTransaction(header, signature, payload, maxEnergyCost);
+            return new InitContractTransaction(header, signature, payload);
         } catch (NullPointerException ex) {
             throw TransactionCreationException.from(ex);
         }

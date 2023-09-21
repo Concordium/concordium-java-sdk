@@ -138,8 +138,7 @@ public class ClientV2GetItemsTest {
             .builderBlockItem()
             .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED)
             .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
-            .payload(DeployModule.builder().module(WasmModule.from(MODULE_V0_BYTES, WasmModuleVersion.V0)).build().withMaxEnergyCost(UInt64.from(ACCOUNT_TRANSACTION_ENERGY)))
-            .maxEnergyCost(UInt64.from(ACCOUNT_TRANSACTION_ENERGY))
+            .payload(DeployModule.builder().module(WasmModule.from(MODULE_V0_BYTES, WasmModuleVersion.V0)).build())
             .build();
     private static final CredentialDeploymentTransaction CREDENTIAL_DEPLOYMENT_EXPECTED = CredentialDeploymentTransaction
             .builderBlockItem()
@@ -216,7 +215,6 @@ public class ClientV2GetItemsTest {
                         moduleRef,
                         initName,
                         parameter))
-                .maxEnergyCost(ACCOUNT_TRANSACTION_HEADER_EXPECTED.getMaxEnergyCost())
                 .build();
 
         assertEquals(expected, mapped);

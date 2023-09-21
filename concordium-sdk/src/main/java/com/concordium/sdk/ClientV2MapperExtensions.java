@@ -645,7 +645,6 @@ interface ClientV2MapperExtensions {
                         .header(to(transaction.getHeader(), deployModulePayload.getBytes().length))
                         .signature(to(transaction.getSignature()))
                         .payload(DeployModule.builder().module(deployModulePayload).build())
-                        .maxEnergyCost(UInt64.from(transaction.getHeader().getEnergyAmount().getValue()))
                         .build();
             }
             case INIT_CONTRACT: {
@@ -654,7 +653,6 @@ interface ClientV2MapperExtensions {
                         .header(to(transaction.getHeader(), initContractPayload.getBytes().length))
                         .signature(to(transaction.getSignature()))
                         .payload(initContractPayload)
-                        .maxEnergyCost(UInt64.from(transaction.getHeader().getEnergyAmount().getValue()))
                         .build();
             }
             case UPDATE_CONTRACT:

@@ -21,13 +21,15 @@ public class UpdateContractTest {
     @Test
     public void updateContractTest() {
         byte[] emptyArray = new byte[0];
+        UpdateContract payload = UpdateContract.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray);
         val tx =
-                        UpdateContract.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray).withMaxEnergyCost(UInt64.from(3000))
+                        payload
                 .withHeader(TransactionHeader
-                        .builder()
+                        .explicitMaxEnergyBuilder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .accountNonce(Nonce.from(78910))
                         .expiry(UInt64.from(123456))
+                        .maxEnergyCost(Payload.calculateEnergyCost(2, payload.getBytes().length, UInt64.from(3000)))
                         .build())
                 .signWith(
                         TransactionSigner.from(

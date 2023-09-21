@@ -20,7 +20,7 @@ public class UpdateContractTransaction extends AccountTransaction {
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer,
             @NonNull final UInt64 maxEnergyCost) {
-        super(sender, nonce, expiry, signer, payload.withMaxEnergyCost(maxEnergyCost));
+        super(sender, nonce, expiry, signer, payload, maxEnergyCost);
     }
 
     /**
@@ -31,7 +31,7 @@ public class UpdateContractTransaction extends AccountTransaction {
      * @param nonce         Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
      * @param expiry        {@link Expiry} of this transaction.
      * @param signer        {@link Signer} of this transaction.
-     * @param maxEnergyCost Allowed energy of the transaction.
+     * @param maxEnergyCost the maximum energy allowed to spend on this transaction.
      * @throws TransactionCreationException On failure to create the Transaction from input params.
      *                                      Ex when any of the input param is NULL.
      */
@@ -50,27 +50,4 @@ public class UpdateContractTransaction extends AccountTransaction {
         }
     }
 
-    /**
-     * Creates a new instance of {@link UpdateContractTransaction}.
-     * Using {@link TransactionHeader}, {@link TransactionSignature} and Payload {@link UpdateContract}.
-     *
-     * @param header    {@link TransactionHeader}.
-     * @param signature {@link TransactionSignature}.
-     * @param payload   {@link UpdateContract} Payload for this transaction.
-     * @throws TransactionCreationException On failure to create the Transaction from input params.
-     *                                      Ex when any of the input param is NULL.
-
-    @Builder(builderMethodName = "builderBlockItem", builderClassName = "UpdateContractBlockItemBuilder")
-    public static UpdateContractTransaction from(
-            final TransactionHeader header,
-            final TransactionSignature signature,
-            final UpdateContractPayload payload,
-            final UInt64 maxEnergyCost) {
-        try {
-            return new UpdateContractTransaction(payload, header.getSender(), AccountNonce.from(header.getAccountNonce()), Expiry.from(header.getExpiry().getValue()), signature, maxEnergyCost);
-        } catch (NullPointerException nullPointerException) {
-            throw TransactionCreationException.from(nullPointerException);
-        }
-    }
-     */
 }

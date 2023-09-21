@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 @ToString
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public final class UpdateContract extends Payload {
+public final class UpdateContract extends PayloadUnknownCost {
     /**
      * Send the given amount of CCD to the smart contract.
      */
@@ -30,7 +30,6 @@ public final class UpdateContract extends Payload {
      */
     private final Parameter param;
 
-    private UInt64 maxEnergyCost;
 
     private UpdateContract(@NonNull final CCDAmount amount,
                            @NonNull final ContractAddress contractAddress,
@@ -68,16 +67,6 @@ public final class UpdateContract extends Payload {
                                       @NonNull final ReceiveName receiveName,
                                       @NonNull final Parameter param) {
         return new UpdateContract(amount, contractAddress, receiveName, param);
-    }
-
-    public UpdateContract withMaxEnergyCost(UInt64 maxEnergyCost) {
-        this.maxEnergyCost = maxEnergyCost;
-        return this;
-    }
-
-    @Override
-    protected UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
     }
 
     @Override
