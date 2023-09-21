@@ -27,7 +27,7 @@ public class UpdateContractTransactionTest {
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)
-                .maxEnergyCost(Payload.calculateEnergyCost(2, payload.getBytes().length, UInt64.from(10000)))
+                .maxEnergyCost(UInt64.from(10302))
                 .build();
         assertEquals("ac20e2a4be17d4e85bfbbbdc430b249517cfc634eaa57baa7df6cd42d711d94c", transaction.getHash().asHex());
         assertArrayEquals(EXPECTED_BLOCK_ITEM_UPDATE_CONTRACT_TRANSACTION_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(transaction.getVersionedBytes()));

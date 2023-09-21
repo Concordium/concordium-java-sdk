@@ -36,7 +36,7 @@ public class InitContractTest {
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .accountNonce(Nonce.from(78910))
                 .expiry(UInt64.from(123456))
-                .maxEnergyCost(Payload.calculateEnergyCost(2, payload.getBytes().length, UInt64.from(3000)))
+                .maxEnergyCost(UInt64.from(3318))
                 .build();
         val transfer = payload
                 .withHeader(header)
