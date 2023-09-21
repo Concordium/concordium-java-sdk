@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.concordium.sdk</groupId>
             <artifactId>concordium-sdk</artifactId>
-            <version>5.1.0</version>
+            <version>5.1.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
