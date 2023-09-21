@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 @ToString
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public final class UpdateContract extends PayloadUnknownCost {
+public final class UpdateContract extends Payload {
     /**
      * Send the given amount of CCD to the smart contract.
      */

@@ -28,34 +28,6 @@ public class AccountTransaction extends BlockItem {
 
     /**
      * Constructor serializing an account transaction
-     * This constructor should be used when the cost of the transaction
-     * is known beforehand. This is the case for all transactions except smart contract
-     * related ones.
-     * @param sender sender of the transaction
-     * @param nonce account nonce
-     * @param expiry the expiry of the transaction
-     * @param signer the {@link Signer} of the transaction
-     * @param payload the payload of the transaction
-     */
-    AccountTransaction(
-            @NonNull final AccountAddress sender,
-            @NonNull final AccountNonce nonce,
-            @NonNull final Expiry expiry,
-            @NonNull final TransactionSigner signer,
-            @NonNull final Payload payload) {
-        this(payload
-                .withHeader(TransactionHeader.builder()
-                        .sender(sender)
-                        .accountNonce(nonce.getNonce())
-                        .expiry(expiry.getValue())
-                        .build())
-                .signWith(signer));
-    }
-
-    /**
-     * Constructor serializing an account transaction
-     * This constructor is used when creating transactions that operate
-     * on smart contracts.
      * @param sender sender of the transaction
      * @param nonce account nonce
      * @param expiry the expiry of the transaction

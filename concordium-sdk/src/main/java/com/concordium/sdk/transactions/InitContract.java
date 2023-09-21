@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString
-public final class InitContract extends PayloadUnknownCost {
+public final class InitContract extends Payload {
 
     /**
      * Payload to initialize a smart contract.

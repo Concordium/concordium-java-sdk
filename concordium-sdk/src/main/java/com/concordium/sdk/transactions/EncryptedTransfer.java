@@ -31,11 +31,6 @@ public final class EncryptedTransfer extends Payload {
     }
 
     @Override
-    protected UInt64 getTransactionTypeCost() {
-        return TransactionTypeCost.ENCRYPTED_TRANSFER.getValue();
-    }
-
-    @Override
     public TransactionType getTransactionType() {
         return TransactionType.ENCRYPTED_TRANSFER;
     }

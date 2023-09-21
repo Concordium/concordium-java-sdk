@@ -15,7 +15,7 @@ public class RegisterDataTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
-        super(sender, nonce, expiry, signer, RegisterData.createNew(data));
+        super(sender, nonce, expiry, signer, RegisterData.createNew(data), TransactionTypeCost.REGISTER_DATA.getValue());
     }
 
     private RegisterDataTransaction(

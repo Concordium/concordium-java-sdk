@@ -35,7 +35,7 @@ public class DeployModuleTransactionTest {
                 .module(WasmModule.from(moduleSource, WasmModuleVersion.V1))
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
-        assertEquals("d9e270a0dfb55828c383f19f32477ffa8cb50d58e2176ff5b5cabc74fbcc287e", transaction.getHash().asHex());
+        assertEquals("f38797f92f533a28635627eaf3e088b96bf00a3324d07e13360eabfa891e0cb1", transaction.getHash().asHex());
     }
 
     @Test(expected = TransactionCreationException.class)

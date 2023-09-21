@@ -21,7 +21,7 @@ public abstract class Payload {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) {
+        if (this == obj) {
             return true;
         }
         if (obj == null) {
@@ -49,8 +49,6 @@ public abstract class Payload {
         return buffer.array();
     }
 
-    protected abstract UInt64 getTransactionTypeCost();
-
     final AccountTransaction toAccountTransaction() {
         return new AccountTransaction(signature, header, this);
     }
@@ -63,9 +61,8 @@ public abstract class Payload {
 
     /**
      * Sets the signature and compute energy cost.
-     * Note that this only computes and sets the energy cost if it hasn't already been set.
-     * The energy cost is already set for smart contract transactions as the energy cost
-     * cannot be computed before the transaction is executed.
+     * For transactions where the max energy has been explicitly set (smart contract transactions)
+     * then the administrative signature checking cost is being added.
      * Uses provided {@link TransactionSignature}.
      *
      * @param signer {@link TransactionSigner}
@@ -76,16 +73,13 @@ public abstract class Payload {
         if (Objects.isNull(this.header)) {
             throw TransactionCreationException.from(new IllegalStateException("TransactionHeader must be set before signing"));
         }
-        // Compute and set the max energy cost if it can be computed,
-        // otherwise rely on the energy cost set already.
-        if (!(this instanceof PayloadUnknownCost)) {
-            this.header.setMaxEnergyCost(
-                    calculateEnergyCost(
-                            signer.size(),
-                            getBytes().length,
-                            getTransactionTypeCost()
-                    ));
-        }
+
+        this.header.setMaxEnergyCost(
+                calculateEnergyCost(
+                        signer.size(),
+                        getBytes().length,
+                        header.getMaxEnergyCost()
+                ));
         try {
             this.signature = signer.sign(getDataToSign());
         } catch (ED25519Exception e) {
@@ -118,8 +112,9 @@ public abstract class Payload {
      * This can only be used for non-smart contract transactions as
      * it is not possible to deduce the cost of such one before it has
      * been executed.
-     * @param noOfSignatures number of signatures in the transaction
-     * @param payloadSize size of the payload
+     *
+     * @param noOfSignatures          number of signatures in the transaction
+     * @param payloadSize             size of the payload
      * @param transactionSpecificCost cost of the specific transaction type.
      * @return the computed cost.
      */
@@ -137,6 +132,7 @@ public abstract class Payload {
     /**
      * This must return the raw payload i.e., the
      * payload only. The tag will be prepended by {@link Payload#getBytes()}
+     *
      * @return the raw serialized payload.
      */
     protected abstract byte[] getRawPayloadBytes();

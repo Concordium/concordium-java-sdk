@@ -25,37 +25,34 @@ public class InitContractTest {
     @SneakyThrows
     @Test
     public void testInitContract() {
-        InitContract payload = InitContract.createNew(
-                InitContractPayload.from(
-                        0,
-                        moduleRef.getBytes(),
-                        "init_CIS2-NFT",
-                        new byte[0]));
-        TransactionHeader header = TransactionHeader
-                .explicitMaxEnergyBuilder()
-                .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .accountNonce(Nonce.from(78910))
-                .expiry(UInt64.from(123456))
-                .maxEnergyCost(UInt64.from(3318))
-                .build();
-        val transfer = payload
-                .withHeader(header)
-                .signWith(
-                        TransactionSigner.from(
-                                SignerEntry.from(Index.from(0), Index.from(0),
-                                        ED25519SecretKey.from("7100071c835a0a35e86dccba7ee9d10b89e36d1e596771cdc8ee36a17f7abbf2")),
-                                SignerEntry.from(Index.from(0), Index.from(1),
-                                        ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
-                        )
-                );
+        val initPayload = InitContractPayload.from(
+                0,
+                moduleRef.getBytes(),
+                "init_CIS2-NFT",
+                new byte[0]);
 
-        val transferBytesLength = transfer.getBytes().length;
+        val tx = TransactionFactory.newInitContract()
+                .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
+                .nonce(AccountNonce.from(78910))
+                .expiry(Expiry.from(123456))
+                .maxEnergyCost(UInt64.from(3000))
+                .payload(initPayload)
+                .signer(TransactionSigner.from(
+                        SignerEntry.from(Index.from(0), Index.from(0),
+                                ED25519SecretKey.from("7100071c835a0a35e86dccba7ee9d10b89e36d1e596771cdc8ee36a17f7abbf2")),
+                        SignerEntry.from(Index.from(0), Index.from(1),
+                                ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
+                ))
+                .build();
+        val payload = tx.getPayload();
+
+        val transferBytesLength = payload.getBytes().length;
         assertEquals(58, transferBytesLength);
 
-        val transferSignData = transfer.getDataToSign();
+        val transferSignData = payload.getDataToSign();
         assertEquals("2786cf40125041fece64a1ed27b0cf6d7c0a5274ae8e2a850279fa324149e06f", Hex.encodeHexString(transferSignData));
 
-        val blockItem = transfer.toAccountTransaction();
+        val blockItem = payload.toAccountTransaction();
 
         val blockItemBytes = blockItem.getBytes();
         assertArrayEquals(EXPECTED_INIT_CONTRACT_BLOCK_ITEM_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));

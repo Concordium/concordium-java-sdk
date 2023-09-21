@@ -16,7 +16,7 @@ public class TransferWithMemoTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
-        super(sender, nonce, expiry, signer, TransferWithMemo.createNew(receiver, amount, memo));
+        super(sender, nonce, expiry, signer, TransferWithMemo.createNew(receiver, amount, memo), TransactionTypeCost.TRANSFER_WITH_MEMO.getValue());
     }
 
     private TransferWithMemoTransaction(

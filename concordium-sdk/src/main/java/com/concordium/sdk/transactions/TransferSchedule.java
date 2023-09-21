@@ -59,11 +59,4 @@ public class TransferSchedule extends Payload {
 
         return buffer.array();
     }
-
-    @Override
-    protected UInt64 getTransactionTypeCost() {
-        UInt16 scheduleLen = UInt16.from(amount.length);
-        val maxEnergyCost = UInt64.from(scheduleLen.getValue()).getValue() * (300 + 64);
-        return UInt64.from(maxEnergyCost);
-    }
 }

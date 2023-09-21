@@ -29,11 +29,6 @@ public final class RegisterData extends Payload {
     }
 
     @Override
-    protected UInt64 getTransactionTypeCost() {
-        return BASE_ENERGY_COST;
-    }
-
-    @Override
     public TransactionType getTransactionType() {
         return TransactionType.REGISTER_DATA;
     }
@@ -43,5 +38,4 @@ public final class RegisterData extends Payload {
         return data.getBytes();
     }
 
-    private final static UInt64 BASE_ENERGY_COST = UInt64.from(300);
 }

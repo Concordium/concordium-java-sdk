@@ -9,7 +9,7 @@ import lombok.NonNull;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class DeployModule extends PayloadUnknownCost {
+public class DeployModule extends Payload {
     /**
      * A compiled Smart Contract Module in WASM with source and version.
      */

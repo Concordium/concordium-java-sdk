@@ -27,15 +27,6 @@ public class RawPayload extends Payload {
         return new RawPayload(rawPayloadBytes);
     }
 
-    /**
-     * Returns null as the type cost is unknown for
-     * a raw payload.
-     */
-    @Override
-    protected UInt64 getTransactionTypeCost() {
-        return null;
-    }
-
     @Override
     public TransactionType getTransactionType() {
         return TransactionType.parse(this.rawBytes[0]);

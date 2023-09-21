@@ -41,13 +41,6 @@ public final class UpdateCredentialKeys extends Payload {
     }
 
     @Override
-    protected UInt64 getTransactionTypeCost() {
-        val numCredKeys = keys.getKeys().size();
-        val maxEnergyCost = UInt64.from(500 * numExistingCredentials.getValue() + 100 * numCredKeys);
-        return maxEnergyCost;
-    }
-
-    @Override
     public TransactionType getTransactionType() {
         return TransactionType.UPDATE_CREDENTIAL_KEYS;
     }

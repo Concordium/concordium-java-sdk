@@ -37,12 +37,6 @@ public final class TransferToPublic extends Payload {
      */
     private final SecToPubAmountTransferProof proof;
 
-
-    @Override
-    protected UInt64 getTransactionTypeCost() {
-        return TransactionTypeCost.TRANSFER_TO_PUBLIC.getValue();
-    }
-
     @Override
     public TransactionType getTransactionType() {
         return TransactionType.TRANSFER_TO_PUBLIC;

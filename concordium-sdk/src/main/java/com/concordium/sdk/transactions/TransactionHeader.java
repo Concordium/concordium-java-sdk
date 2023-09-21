@@ -38,7 +38,7 @@ public class TransactionHeader {
         this.sender = sender;
         this.accountNonce = accountNonce;
         this.expiry = expiry;
-        this.maxEnergyCost = UInt64.from(0); // dummy value used for calculating the energy cost.
+        this.maxEnergyCost = UInt64.from(0); // dummy value will be overwritten when calculating the cost of the transaction.
     }
 
     /**

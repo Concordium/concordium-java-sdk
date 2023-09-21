@@ -18,8 +18,9 @@ public class DeployModuleTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer,
-            @NonNull final WasmModule module) {
-        super(sender, nonce, expiry, signer, DeployModule.createNew(module));
+            @NonNull final WasmModule module,
+            @NonNull final UInt64 maxEnergyCost) {
+        super(sender, nonce, expiry, signer, DeployModule.createNew(module), maxEnergyCost);
     }
 
     private DeployModuleTransaction(
@@ -48,7 +49,7 @@ public class DeployModuleTransaction extends AccountTransaction {
                                                final WasmModule module,
                                                final UInt64 maxEnergyCost) {
         try {
-            return new DeployModuleTransaction(sender, nonce, expiry, signer, module);
+            return new DeployModuleTransaction(sender, nonce, expiry, signer, module, maxEnergyCost);
         } catch (NullPointerException nullPointerException) {
             throw TransactionCreationException.from(nullPointerException);
         }

@@ -21,18 +21,6 @@ public final class ConfigureBaker extends Payload {
      */
     private final ConfigureBakerPayload payload;
 
-    /**
-     * Get the cost of the transaction based on the keys with proofs
-     *
-     * @return UInt64
-     */
-    @Override
-    protected UInt64 getTransactionTypeCost() {
-        if (this.payload.getKeysWithProofs() != null)
-            return TransactionTypeCost.CONFIGURE_BAKER_WITH_PROOFS.getValue();
-        else
-            return TransactionTypeCost.CONFIGURE_BAKER.getValue();
-    }
 
     @Override
     public TransactionType getTransactionType() {

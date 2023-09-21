@@ -27,11 +27,6 @@ public final class Transfer extends Payload {
     }
 
     @Override
-    protected UInt64 getTransactionTypeCost() {
-        return BASE_ENERGY_COST;
-    }
-
-    @Override
     public TransactionType getTransactionType() {
         return TransactionType.SIMPLE_TRANSFER;
     }
@@ -45,5 +40,4 @@ public final class Transfer extends Payload {
         return new Transfer(receiver, amount);
     }
 
-    private final static UInt64 BASE_ENERGY_COST = UInt64.from(300);
 }

@@ -34,11 +34,6 @@ public class TransferWithMemo extends Payload {
     }
 
     @Override
-    protected UInt64 getTransactionTypeCost() {
-        return TransactionTypeCost.TRANSFER_WITH_MEMO.getValue();
-    }
-
-    @Override
     public TransactionType getTransactionType() {
         return TransactionType.TRANSFER_WITH_MEMO;
     }

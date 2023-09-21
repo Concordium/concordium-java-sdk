@@ -16,7 +16,7 @@ public class TransferTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
-        super(sender, nonce, expiry, signer, Transfer.createNew(receiver, amount));
+        super(sender, nonce, expiry, signer, Transfer.createNew(receiver, amount), TransactionTypeCost.TRANSFER_BASE_COST.getValue());
     }
 
     private TransferTransaction(
