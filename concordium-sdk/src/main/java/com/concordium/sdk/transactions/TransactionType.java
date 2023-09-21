@@ -47,6 +47,6 @@ public enum TransactionType {
                 return transactionType;
             }
         }
-        throw new IllegalArgumentException("Unknown transaction type tag");
+        throw new IllegalArgumentException("Unknown transaction type tag: " + type);
     }
 }

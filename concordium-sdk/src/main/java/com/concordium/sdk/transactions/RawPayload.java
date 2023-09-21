@@ -23,7 +23,18 @@ public class RawPayload extends Payload {
     }
 
 
-    public static Payload from(byte[] rawPayloadBytes) {
+    /**
+     * Create a raw payload from the provided bytes
+     * @param rawPayloadBytes the raw bytes of the payload
+     * @throws IllegalArgumentException if the provided bytes does not contain a tag or if the tag cannot be parsed successfully.
+     * @return a {@link RawPayload} where only the tag is parsed.
+     */
+    public static RawPayload from(byte[] rawPayloadBytes) {
+        //try parse the tag
+        if(rawPayloadBytes.length < 1) {
+            throw new IllegalArgumentException("The provided bytes does not even contain a tag, so it cannot be a valid payload.");
+        }
+        TransactionType.parse(rawPayloadBytes[0]);
         return new RawPayload(rawPayloadBytes);
     }
 
