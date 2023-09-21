@@ -22,15 +22,15 @@ public class DeployModuleTest {
     public void testDeployVersionedModule() {
         val module = WasmModule.from(
                 Files.readAllBytes(Paths.get("src/test/java/com/concordium/sdk/binaries/module.wasm.v1")));
-        val payload = DeployModule.createNew(module)
-                .withHeader(TransactionHeader
-                        .explicitMaxEnergyBuilder()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .accountNonce(Nonce.from(78910))
-                        .expiry(UInt64.from(123456))
-                        .maxEnergyCost(UInt64.from(6000))
-                        .build())
-                .signWith(getValidSigner());
+        DeployModuleTransaction tx = TransactionFactory.newDeployModule()
+                .module(module)
+                .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
+                .nonce(AccountNonce.from(78910))
+                .expiry(Expiry.from(123456))
+                .maxEnergyCost(UInt64.from(6000))
+                .signer(getValidSigner())
+                .build();
+        val payload = tx.getPayload();
 
         assertEquals(87146, payload.getBytes().length);
         assertEquals("5654319dff40a71f183104f8faf126be3dfc242918820381a9ac27838d89e72f",
@@ -45,15 +45,15 @@ public class DeployModuleTest {
         val module = WasmModule.from(
                 Files.readAllBytes(Paths.get("src/test/java/com/concordium/sdk/binaries/module.wasm")),
                 WasmModuleVersion.V0);
-        val payload = DeployModule.createNew(module)
-                .withHeader(TransactionHeader
-                        .explicitMaxEnergyBuilder()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .accountNonce(Nonce.from(78910))
-                        .expiry(UInt64.from(123456))
-                        .maxEnergyCost(UInt64.from(6000))
-                        .build())
-                .signWith(getValidSigner());
+        DeployModuleTransaction tx = TransactionFactory.newDeployModule()
+                .module(module)
+                .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
+                .nonce(AccountNonce.from(78910))
+                .expiry(Expiry.from(123456))
+                .maxEnergyCost(UInt64.from(6000))
+                .signer(getValidSigner())
+                .build();
+        val payload = tx.getPayload();
 
         assertEquals(41541, payload.getBytes().length);
         assertEquals("f010b82e89fda27e785b3804e3a5cf474ee7601836f0daf355b67c5577d81c3a",
