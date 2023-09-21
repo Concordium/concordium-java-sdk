@@ -1,7 +1,9 @@
 # Changelog
 
 ## Unreleased changes
-- Fixed a regression such that transactions can be safely deserialized from bytes.
+
+## 5.1.0
+- Fixed a regression that made it harder to deserialize transactions from bytes.
 - toString on CCD amount now displays the amount as micro CCD.
 - Fix bug where `Details` type was not correctly set when querying status of a block item.
 
