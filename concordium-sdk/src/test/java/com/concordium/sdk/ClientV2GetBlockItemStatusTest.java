@@ -5,6 +5,7 @@ import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
 import com.concordium.sdk.responses.blockitemsummary.Details;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
+import com.concordium.sdk.responses.blockitemsummary.Type;
 import com.concordium.sdk.responses.transactionstatus.Status;
 import com.concordium.sdk.responses.transactionstatus.TransactionResultEventType;
 import com.concordium.sdk.responses.transactionstatus.TransferredResult;
@@ -90,6 +91,7 @@ public class ClientV2GetBlockItemStatusTest {
             .transactionHash(Hash.from(TRANSACTION_HASH))
             .details(Details
                     .builder()
+                    .type(Type.ACCOUNT_TRANSACTION)
                     .accountTransactionDetails(com.concordium.sdk.responses.blockitemsummary.AccountTransactionDetails
                             .builder()
                             .successful(true)
