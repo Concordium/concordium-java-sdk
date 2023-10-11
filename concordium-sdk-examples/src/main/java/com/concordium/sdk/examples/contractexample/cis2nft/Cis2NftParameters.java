@@ -136,19 +136,5 @@ public class Cis2NftParameters {
         setImplementorsParams.initialize();
         return setImplementorsParams;
     }
-    @SneakyThrows
-    public static void main(String[] args) {
-        Schema schema = Schema.from(Files.readAllBytes(Paths.get("./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.schema.bin")), SchemaVersion.V3);
-        ReceiveName setImplementorsReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "setImplementors");
-        List<ContractAddress> implementors = new ArrayList<>();
-        String identifier = "IdentifierID";
-        implementors.add(CONTRACT_ADDRESS_1);
-        implementors.add(CONTRACT_ADDRESS_2);
-        SchemaParameter setImplementorsParams = new SetImplementorsParams(schema, setImplementorsReceiveName, identifier, implementors);
-        setImplementorsParams.initialize();
-
-    }
-
-
 
 }
