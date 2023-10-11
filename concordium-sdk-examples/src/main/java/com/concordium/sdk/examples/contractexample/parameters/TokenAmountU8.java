@@ -1,4 +1,4 @@
-package com.concordium.sdk.examples.contractexample.cis2nft;
+package com.concordium.sdk.examples.contractexample.parameters;
 
 import com.concordium.sdk.types.UInt8;
 import com.fasterxml.jackson.core.JsonGenerator;

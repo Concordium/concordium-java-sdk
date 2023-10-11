@@ -1,4 +1,4 @@
-package com.concordium.sdk.examples.contractexample.cis2nft;
+package com.concordium.sdk.examples.contractexample.parameters;
 
 import com.concordium.sdk.types.UInt32;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -21,10 +21,14 @@ public class TokenIdU32 implements TokenId {
     }
 
     public static TokenIdU32 from(int value) {
-        //if (Integer.toString(value).length() % 2 != 0) {throw new IllegalArgumentException("TokenIdU32 must be odd number of digits");}
         return new TokenIdU32(UInt32.from(value));
     }
 
+    public static TokenIdU32 from(String value) {
+        return new TokenIdU32(UInt32.from(value));
+    }
+
+    //TokenIdU32 is serialized as a hex of the uint32 value
     public static class TokenIdU32Serializer extends JsonSerializer<TokenIdU32> {
         @Override
         public void serialize(TokenIdU32 value, JsonGenerator gen, SerializerProvider serializers) throws IOException {

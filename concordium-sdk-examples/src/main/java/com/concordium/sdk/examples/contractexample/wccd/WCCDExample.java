@@ -1,6 +1,6 @@
 package com.concordium.sdk.examples.contractexample.wccd;
 
-import com.concordium.sdk.examples.contractexample.cis2nft.Receiver;
+import com.concordium.sdk.examples.contractexample.parameters.*;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.ReceiveName;

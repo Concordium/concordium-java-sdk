@@ -1,4 +1,4 @@
-package com.concordium.sdk.examples.contractexample.cis2nft;
+package com.concordium.sdk.examples.contractexample.parameters;
 
 /**
  * Tagging interface for identifying token amounts
