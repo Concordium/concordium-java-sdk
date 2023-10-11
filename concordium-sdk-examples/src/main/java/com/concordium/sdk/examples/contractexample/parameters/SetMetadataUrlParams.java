@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Represents the parameter '<a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-wccd/src/lib.rs#L172">SetMetadataUrlParams</a>' used in the cis2-wCCD contract
+ */
 @Getter
 public class SetMetadataUrlParams extends SchemaParameter {
 

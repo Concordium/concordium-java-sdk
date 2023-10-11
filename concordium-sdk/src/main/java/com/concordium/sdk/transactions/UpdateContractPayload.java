@@ -71,7 +71,7 @@ public final class UpdateContractPayload {
      */
     public static UpdateContractPayload from(@NonNull final ContractAddress contractAddress,
                                              SchemaParameter schemaParameter) {
-        if (! (schemaParameter.getType() == ParameterType.RECEIVE)) {throw new IllegalArgumentException("Parameter must be initialized with an ReceiveName");}
+        if (! (schemaParameter.getType() == ParameterType.RECEIVE)) {throw new IllegalArgumentException("Parameter must be initialized with a ReceiveName");}
         return from(CCDAmount.fromMicro(0),
                 contractAddress,
                 schemaParameter.getReceiveName(),
@@ -88,7 +88,7 @@ public final class UpdateContractPayload {
     public static UpdateContractPayload from(CCDAmount amount,
                                              @NonNull final ContractAddress contractAddress,
                                              SchemaParameter schemaParameter) {
-        if (! (schemaParameter.getType() == ParameterType.RECEIVE)) {throw new IllegalArgumentException("Parameter must be initialized with an ReceiveName");}
+        if (! (schemaParameter.getType() == ParameterType.RECEIVE)) {throw new IllegalArgumentException("Parameter must be initialized with a ReceiveName");}
         return from(amount, contractAddress, schemaParameter.getReceiveName(), Parameter.from(schemaParameter));
     }
 

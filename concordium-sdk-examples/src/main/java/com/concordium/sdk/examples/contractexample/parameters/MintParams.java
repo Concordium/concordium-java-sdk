@@ -10,7 +10,7 @@ import lombok.Getter;
 import java.util.List;
 
 /**
- * Represents the parameter 'MintParams' in the <a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-nft/src/lib.rs">cis2-nft example</a>
+ * Represents the parameter 'MintParams' in the <a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-nft/src/lib.rs#L49">cis2-nft example</a>
  * Used with contract function 'mint' which mints a number of tokens to a given {@link AbstractAddress}.
  */
 @Getter

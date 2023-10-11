@@ -11,6 +11,9 @@ import lombok.Getter;
 
 import java.io.IOException;
 
+/**
+ * Represents a '<a href = "https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/concordium-cis2/src/lib.rs#L1017">Receiver</a>' used in {@link Transfer}.
+ */
 @JsonSerialize(using = Receiver.ReceiverSerializer.class)
 @Getter
 public class Receiver {

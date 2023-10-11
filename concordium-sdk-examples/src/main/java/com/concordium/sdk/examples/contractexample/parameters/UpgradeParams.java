@@ -12,6 +12,9 @@ import org.apache.commons.codec.binary.Hex;
 
 import java.io.IOException;
 
+/**
+ * Represents the parameter '<a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-wccd/src/lib.rs#L150">UpgradeParams</a>' used in the cis2-wCCD contract
+ */
 @Getter
 public class UpgradeParams extends SchemaParameter {
 

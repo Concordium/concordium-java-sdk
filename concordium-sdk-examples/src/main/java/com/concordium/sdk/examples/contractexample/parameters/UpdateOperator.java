@@ -11,6 +11,9 @@ import lombok.Getter;
 
 import java.io.IOException;
 
+/**
+ * Represents a '<a href = "https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/concordium-cis2/src/lib.rs#L1120">UpdateOperator</a>' used in different smart contracts
+ */
 @Getter
 @AllArgsConstructor
 public class UpdateOperator {

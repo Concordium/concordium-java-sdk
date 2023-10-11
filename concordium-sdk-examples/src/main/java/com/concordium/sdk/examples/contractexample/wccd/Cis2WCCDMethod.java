@@ -1,5 +1,8 @@
 package com.concordium.sdk.examples.contractexample.wccd;
 
+/**
+ * Represents the different possible methods able to be run by {@link Cis2WCCD}
+ */
 public enum Cis2WCCDMethod {
     INIT,
     WRAP,

@@ -3,7 +3,6 @@ package com.concordium.sdk.examples.contractexample.wccd;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
-import com.concordium.sdk.examples.contractexample.cis2nft.Cis2NftParameters;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
@@ -20,7 +19,7 @@ import java.util.concurrent.Callable;
 
 /**
  * Calls different methods on a <a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-wccd/src/lib.rs">cis2-wCCD smart contract</a> deployed on the chain.
- * See {@link Cis2NftParameters} for how to create and initialize custom smart contract parameters.
+ * See {@link Cis2WCCDParameters} for how to create and initialize custom smart contract parameters.
  * TODO what values should user replace
  */
 @CommandLine.Command(name = "Cis2WCCD", mixinStandardHelpOptions = true)

@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Helper class for creating and initializing parameters being used in {@link Cis2WCCD}.
+ */
 public class Cis2WCCDParameters {
     private static final AccountAddress ACCOUNT_ADDRESS = AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P");
     private static final ContractAddress CONTRACT_ADDRESS_1 = ContractAddress.from(1, 0);

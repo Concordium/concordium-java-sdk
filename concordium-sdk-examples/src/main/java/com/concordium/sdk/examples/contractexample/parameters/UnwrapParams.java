@@ -11,6 +11,9 @@ import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * Represents the parameter '<a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-wccd/src/lib.rs#L102">UnwrapParams</a>' used in the cis2-wCCD contract
+ */
 @Getter
 public class UnwrapParams extends SchemaParameter {
 

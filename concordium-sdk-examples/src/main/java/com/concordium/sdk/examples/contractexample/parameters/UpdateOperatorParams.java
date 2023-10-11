@@ -6,6 +6,9 @@ import com.concordium.sdk.transactions.smartcontracts.parameters.ListParam;
 
 import java.util.List;
 
+/**
+ * Wrapper class for {@link ListParam} using {@link UpdateOperator}.
+ */
 public class UpdateOperatorParams extends ListParam {
     public UpdateOperatorParams(Schema cis2nftSchema, ReceiveName updateOperatorReceiveName, List<UpdateOperator> updateOperatorList) {
         super(cis2nftSchema, updateOperatorReceiveName, updateOperatorList);

@@ -9,6 +9,10 @@ import lombok.Getter;
 
 import java.util.List;
 
+
+/**
+ * Represents a '<a href = "https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/concordium-cis2/src/lib.rs#L1073">Transfer</a>' used in different smart contracts
+ */
 @Getter
 @AllArgsConstructor
 public class Transfer<T extends TokenId, A extends TokenAmount> {
