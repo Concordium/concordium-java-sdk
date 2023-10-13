@@ -8,6 +8,7 @@ import lombok.Data;
  * Configure the account as a baker. Only valid for protocol version 4 and up.
  */
 @Data
+@Builder
 public class ConfigureBakerKeysJniInput {
 
     /**
@@ -19,10 +20,4 @@ public class ConfigureBakerKeysJniInput {
      * The baker keys that will be configured for the account
      */
     private final BakerKeysJniOutput keys;
-
-    @Builder
-    public ConfigureBakerKeysJniInput(AccountAddress sender, BakerKeysJniOutput keys) {
-        this.sender = sender;
-        this.keys = keys;
-    }
 }

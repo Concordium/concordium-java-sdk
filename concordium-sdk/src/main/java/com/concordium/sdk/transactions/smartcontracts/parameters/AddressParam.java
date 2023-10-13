@@ -32,7 +32,6 @@ public class AddressParam extends SchemaParameter {
         this.address = address;
     }
 
-
     public static class AddressParamSerializer extends JsonSerializer<AddressParam> {
         @Override
         public void serialize(AddressParam addressParam, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {

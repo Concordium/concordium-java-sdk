@@ -79,7 +79,7 @@ public final class InitContractPayload {
      * @param schemaParameter {@link SchemaParameter} message to invoke the initialization method with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
      */
     public static InitContractPayload from(CCDAmount amount, ModuleRef moduleRef, SchemaParameter schemaParameter) {
-        if (! (schemaParameter.getType() == ParameterType.INIT)) {throw new IllegalArgumentException("SchemaParameter must be initialized with an InitName");}
+        if (! (schemaParameter.getType() == ParameterType.INIT)) {throw new IllegalArgumentException("SchemaParameter for InitContractPayload must be initialized with an InitName");}
         return new InitContractPayload(amount, moduleRef, schemaParameter.getInitName(), Parameter.from(schemaParameter));
     }
 

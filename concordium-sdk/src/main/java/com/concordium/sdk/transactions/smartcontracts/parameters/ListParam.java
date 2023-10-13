@@ -16,12 +16,16 @@ import java.util.List;
 
 /**
  * Wrapper for passing lists as smart contract parameters.<p>
- * Contents of the list must be serializable according to the provided {@link Schema}.<p>
+ * Classes extending {@link ListParam} are serializable as smart contract parameters.
+ * Contents of the list must be serializable according to the provided {@link Schema}.
  */
 @Getter
 @JsonSerialize(using = ListParam.ListParamSerializer.class)
 public abstract class ListParam extends SchemaParameter {
 
+    /**
+     * The actual parameter to be serialized. Extending classes should specify the contents of the list.
+     */
     private final List<?> list;
 
     public ListParam(Schema schema, InitName initName, List<?> list) {

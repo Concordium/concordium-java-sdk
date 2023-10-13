@@ -9,11 +9,11 @@ import com.concordium.sdk.transactions.UpdateContractPayload;
  */
 public enum ParameterType {
     /**
-     * The parameter is to be used with {@link InitContractPayload}.
+     * A Parameter for {@link InitContractPayload}.
      */
     INIT,
     /**
-     * The parameter is to be used with {@link UpdateContractPayload} or {@link InvokeInstanceRequest}.
+     * A Parameter for {@link UpdateContractPayload} or {@link InvokeInstanceRequest}.
      */
     RECEIVE
 }

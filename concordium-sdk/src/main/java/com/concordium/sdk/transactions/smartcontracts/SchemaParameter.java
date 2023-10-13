@@ -124,6 +124,7 @@ public abstract class SchemaParameter {
      * @param verboseErrors whether to return errors in a verbose format or not. Defaults to false if omitted.
      * @throws CryptoJniException if the serialization could not be performed.
      */
+    // Should never get thrown assuming the parameter is serialized correctly by the rust layer
     @SneakyThrows(org.apache.commons.codec.DecoderException.class)
     public void initialize(boolean verboseErrors) {
         byte[] schemaBytes = schema.getSchemaBytes();
@@ -148,8 +149,7 @@ public abstract class SchemaParameter {
     private SerializeParameterResult getSerializeParameterResult(boolean verboseErrors, byte[] schemaBytes, SchemaVersion schemaVersion) {
         SerializeParameterResult result;
         String parameterJson = JsonMapper.INSTANCE.writeValueAsString(this);
-        String resultJson;
-        resultJson = serializeUsingJNI(verboseErrors, schemaBytes, schemaVersion, parameterJson);
+        String resultJson = serializeUsingJNI(verboseErrors, schemaBytes, schemaVersion, parameterJson);
         result = JsonMapper.INSTANCE.readValue(resultJson, SerializeParameterResult.class);
         return result;
     }
@@ -184,7 +184,7 @@ public abstract class SchemaParameter {
      */
     public byte[] toBytes() {
         if (!initialized) {
-            throw new IllegalStateException("Must initialize parameter before use");
+            throw new IllegalStateException("Must initialize SchemaParameter before use");
         }
         return serializedParameter;
     }

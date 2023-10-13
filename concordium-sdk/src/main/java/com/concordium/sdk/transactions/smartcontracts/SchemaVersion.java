@@ -3,7 +3,7 @@ package com.concordium.sdk.transactions.smartcontracts;
 import lombok.Getter;
 
 /**
- * TODO comment. Where are the versions coming from (link?)
+ * The <a href="https://docs.rs/concordium-contracts-common/latest/concordium_contracts_common/schema/index.html#">version</a> of the {@link Schema}.
  */
 @Getter
 public enum SchemaVersion {

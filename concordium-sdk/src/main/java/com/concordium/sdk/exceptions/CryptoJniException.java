@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 public final class CryptoJniException extends RuntimeException {
     /**
-     * The type of the failed operation.
+     * The type of the error.
      */
     @Getter
     private final JNIErrorType errorType;

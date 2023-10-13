@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.util.Objects;
 
 /**
- * Class that holds the result of serializing a parameter using the JNI.
+ * Represents the result of serializing a parameter using the JNI.
  */
 @Data
 @ToString(doNotUseGetters = true)

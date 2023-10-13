@@ -3,6 +3,8 @@ package com.concordium.sdk.examples.contractexample.wccd;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
+import com.concordium.sdk.requests.AccountQuery;
+import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
@@ -20,19 +22,19 @@ import java.util.concurrent.Callable;
 /**
  * Calls different methods on a <a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-wccd/src/lib.rs">cis2-wCCD smart contract</a> deployed on the chain.
  * See {@link Cis2WCCDParameters} for how to create and initialize custom smart contract parameters.
- * TODO what values should user replace
+ * SENDER_ADDRESS, MODULE_REF, CONTRACT_ADDRESS and the key in SIGNER are dummy values and should be replaced
  */
 @CommandLine.Command(name = "Cis2WCCD", mixinStandardHelpOptions = true)
 public class Cis2WCCD implements Callable<Integer> {
-    private static final String SENDER_ADDRESS = "3WZE6etUvVp1eyhEtTxqZrQaanTAZnZCHEmZmDyCbCwxnmQuPE"; //  TODO dummy address
-    private static final String PATH_TO_MODULE = "./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.wasm.v1";
+    private static final String SENDER_ADDRESS = "3WZE6etUvVp1eyhEtTxqZrQaanTAZnZCHEmZmDyCbCwxnmQuPE"; //  Dummy address
+    private static final ModuleRef MODULE_REF = ModuleRef.from("247a7ac6efd2e46f72fd18741a6d1a0254ec14f95639df37079a576b2033873e"); // Dummy module ref
     private static final ContractAddress CONTRACT_ADDRESS = ContractAddress.from(1, 0); // Dummy contract address
 
     private static final Expiry EXPIRY = Expiry.createNew().addMinutes(5);
 
     private static final TransactionSigner SIGNER = TransactionSigner.from(
             SignerEntry.from(Index.from(0), Index.from(0), // TODO dummy key
-                    ED25519SecretKey.from("56f60de843790c308dac2d59a5eec9f6b1649513f827e5a13d7038accfe31784"))
+                    ED25519SecretKey.from("56f60de843790c308dac2d59a5eec9f6b1649513f827e5a13d7038accfe31784")) // Dummy key
     );
 
     @CommandLine.Option(
@@ -62,9 +64,7 @@ public class Cis2WCCD implements Callable<Integer> {
                 .timeout(timeout)
                 .build();
         var client = ClientV2.from(connection);
-        //Nonce nonce = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(AccountAddress.from(SENDER_ADDRESS))).getAccountNonce();
-        Nonce nonce = Nonce.from(1);
-
+        Nonce nonce = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(AccountAddress.from(SENDER_ADDRESS))).getAccountNonce();
         switch (this.methodName) {
             case INIT:
                 handleInit(client, nonce);
@@ -126,9 +126,8 @@ public class Cis2WCCD implements Callable<Integer> {
     }
 
     private void handleInit(ClientV2 client, Nonce nonce) {
-        ModuleRef ref = null;
         InitName initName = InitName.from("init_cis2_wCCD");
-        InitContractPayload payload = InitContractPayload.from(CCDAmount.fromMicro(0), ref, initName, Parameter.EMPTY);
+        InitContractPayload payload = InitContractPayload.from(CCDAmount.fromMicro(0), MODULE_REF, initName, Parameter.EMPTY);
         InitContractTransaction initContractTransaction = TransactionFactory.newInitContract()
                 .sender(AccountAddress.from(SENDER_ADDRESS))
                 .payload(payload)
@@ -137,13 +136,11 @@ public class Cis2WCCD implements Callable<Integer> {
                 .signer(SIGNER)
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
-        //Hash txHash = client.sendTransaction(initContractTransaction);
-        //System.out.println("Submitted transaction for " + this.methodName  + " with hash: " + txHash);
-        //sleep();
-        //Hash blockHash = client.getBlockItemStatus(txHash).getFinalizedBlockItem().get().getBlockHash();
-        //System.out.println("Transaction finalized in block with hash: " + blockHash);
-        System.out.println(this.methodName);
-
+        Hash txHash = client.sendTransaction(initContractTransaction);
+        System.out.println("Submitted transaction for " + this.methodName  + " with hash: " + txHash);
+        sleep();
+        Hash blockHash = client.getBlockItemStatus(txHash).getFinalizedBlockItem().get().getBlockHash();
+        System.out.println("Transaction finalized in block with hash: " + blockHash);
     }
 
     private void handleMethod(ClientV2 client, Nonce nonce, SchemaParameter parameter) {
@@ -156,16 +153,13 @@ public class Cis2WCCD implements Callable<Integer> {
                 .signer(SIGNER)
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
-        //Hash txHash = client.sendTransaction(transaction);
-        //System.out.println("Submitted transaction for " + this.methodName  + " with hash: " + txHash);
-        //sleep();
-        //Hash blockHash = client.getBlockItemStatus(txHash).getFinalizedBlockItem().get().getBlockHash();
-        //System.out.println("Transaction finalized in block with hash: " + blockHash);
-        System.out.println(this.methodName);
-
-
-
+        Hash txHash = client.sendTransaction(transaction);
+        System.out.println("Submitted transaction for " + this.methodName  + " with hash: " + txHash);
+        sleep();
+        Hash blockHash = client.getBlockItemStatus(txHash).getFinalizedBlockItem().get().getBlockHash();
+        System.out.println("Transaction finalized in block with hash: " + blockHash);
     }
+
     @SneakyThrows
     private void sleep() {
         for (int i = 0; i < 200; i++) {
@@ -176,6 +170,7 @@ public class Cis2WCCD implements Callable<Integer> {
             Thread.sleep(30);
         }
     }
+
     public static void main(String[] args) {
         int exitCode = new CommandLine(new Cis2WCCD()).execute(args);
         System.exit(exitCode);

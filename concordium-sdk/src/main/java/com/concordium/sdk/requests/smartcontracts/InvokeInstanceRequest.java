@@ -132,7 +132,7 @@ public class InvokeInstanceRequest {
                                              CCDAmount amount,
                                              SchemaParameter schemaParameter,
                                              Energy energy) {
-        if (! (schemaParameter.getType() == ParameterType.RECEIVE)) {throw new IllegalArgumentException("Parameter must be initialized with an ReceiveName");}
+        if (! (schemaParameter.getType() == ParameterType.RECEIVE)) {throw new IllegalArgumentException("SchemaParameter for InvokeInstanceRequest must be initialized with an ReceiveName");}
         return from(blockHash, invoker, instance, amount, schemaParameter.getReceiveName(), Parameter.from(schemaParameter), energy);
     }
 
@@ -151,7 +151,7 @@ public class InvokeInstanceRequest {
                                              CCDAmount amount,
                                              SchemaParameter schemaParameter,
                                              Energy energy) {
-        if (! (schemaParameter.getType() == ParameterType.RECEIVE)) {throw new IllegalArgumentException("Parameter must be initialized with an ReceiveName");}
+        if (! (schemaParameter.getType() == ParameterType.RECEIVE)) {throw new IllegalArgumentException("SchemaParameter for InvokeInstanceRequest must be initialized with an ReceiveName");}
         return from(blockHash, instance, amount, schemaParameter.getReceiveName(), Parameter.from(schemaParameter), energy);
     }
     public boolean hasInvoker() {

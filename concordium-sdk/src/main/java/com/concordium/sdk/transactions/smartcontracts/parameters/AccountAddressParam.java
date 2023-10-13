@@ -19,6 +19,7 @@ import java.io.IOException;
 @Getter
 @JsonSerialize(using = AccountAddressParam.AccountAddressParamSerializer.class)
 public class AccountAddressParam extends SchemaParameter {
+
     private final AccountAddress accountAddress;
 
     public AccountAddressParam(Schema schema, InitName initName, AccountAddress accountAddress) {
