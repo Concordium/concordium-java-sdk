@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for GRPC V2 `GetBakerRewardPeriodInfo` for getting all the bakers in the reward period of a block.
 
 ## 5.1.0
 - Fixed a regression that made it harder to deserialize transactions from bytes.
