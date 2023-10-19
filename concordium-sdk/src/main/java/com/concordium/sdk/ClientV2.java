@@ -11,6 +11,7 @@ import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.DelegatorInfo;
 import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
 import com.concordium.sdk.responses.*;
+import com.concordium.sdk.responses.bakersrewardperiod.BakerRewardPeriodInfo;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blockitemstatus.BlockItemStatus;
@@ -84,8 +85,9 @@ public final class ClientV2 {
 
     /**
      * Construct a new client
-     * @param timeout The timeout in milliseconds.
-     * @param channel the underlying grpc channel.
+     *
+     * @param timeout     The timeout in milliseconds.
+     * @param channel     the underlying grpc channel.
      * @param credentials Optionally extra headers.
      */
     ClientV2(final int timeout, final ManagedChannel channel, final Optional<Credentials> credentials) {
@@ -773,6 +775,24 @@ public final class ClientV2 {
 
         val grpcResponse = this.server().invokeInstance(grpcRequest.build());
         return InvokeInstanceResult.parse(grpcResponse);
+    }
+
+    /**
+     * Get all bakers in the reward period of a block.
+     * This endpoint is only supported for protocol version 6 and onwards.
+     * If the protocol does not support the endpoint then an 'UNIMPLEMENTED' exception is thrown
+     *
+     * @param input The block to query.
+     *
+     * @return {@link ImmutableList} with the {@link BakerRewardPeriodInfo} of all the bakers in the block.
+     */
+    public ImmutableList<BakerRewardPeriodInfo> getBakersRewardPeriod(BlockQuery input) {
+        val response = this.server().getBakersRewardPeriod(to(input));
+        val periodInfos = new ImmutableList.Builder<BakerRewardPeriodInfo>();
+        response.forEachRemaining(
+                info -> periodInfos.add(BakerRewardPeriodInfo.from(info))
+        );
+        return periodInfos.build();
     }
 
     /**
