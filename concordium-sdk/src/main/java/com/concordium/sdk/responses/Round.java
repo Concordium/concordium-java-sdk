@@ -29,4 +29,8 @@ public class Round {
     public static Round from(long round) {
         return new Round(UInt64.from(round));
     }
+
+    public static Round from(com.concordium.grpc.v2.Round round) {
+        return from(round.getValue());
+    }
 }
