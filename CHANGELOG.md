@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for GRPC V2 `GetBlockCertificates` for retrieving certificates for a block supporting ConcordiumBFT
 
 ## 5.1.0
 - Fixed a regression that made it harder to deserialize transactions from bytes.
