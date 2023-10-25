@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.poolstatus;
 
+import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
@@ -45,4 +46,9 @@ public class CurrentPaydayStatus {
      * The effective delegated capital to the pool for the current reward period.
      */
     private final CCDAmount delegatedCapital;
+
+    /**
+     * The commission rates that apply for the current reward period.
+     */
+    private final CommissionRates commissionRates;
 }

@@ -1240,6 +1240,7 @@ interface ClientV2MapperExtensions {
                 .finalizationLive(currentPaydayInfo.getFinalizationLive())
                 .lotteryPower(currentPaydayInfo.getLotteryPower())
                 .transactionFeesEarned(to(currentPaydayInfo.getTransactionFeesEarned()))
+                .commissionRates(CommissionRates.from(currentPaydayInfo.getCommissionRates()))
                 .build();
     }
 
