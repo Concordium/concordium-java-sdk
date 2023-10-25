@@ -1,4 +1,5 @@
 # Changelog
+- Extended `CurrentPaydayStatus` with `CommissionRates` that apply for the current reward period.
 
 ## Unreleased changes
 
