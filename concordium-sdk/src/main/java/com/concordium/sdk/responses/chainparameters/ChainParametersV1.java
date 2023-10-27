@@ -1,12 +1,14 @@
 package com.concordium.sdk.responses.chainparameters;
 
 import com.concordium.sdk.Range;
+import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -115,7 +117,8 @@ public class ChainParametersV1 extends ChainParameters {
             @JsonProperty("passiveBakingCommission") double passiveBakingCommission,
             @JsonProperty("leverageBound") Fraction leverageBound,
             @JsonProperty("passiveFinalizationCommission") double passiveFinalizationCommission,
-            @JsonProperty("capitalBound") double capitalBound
+            @JsonProperty("capitalBound") double capitalBound,
+            @JsonProperty("foundationAccountIndex") AccountIndex foundationAccountIndex
     ) {
         this.mintDistribution = (MintDistributionCpV1) rewardParameters.getMintDistribution();
         this.gasRewards = rewardParameters.getGasRewards();

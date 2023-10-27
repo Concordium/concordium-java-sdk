@@ -26,7 +26,7 @@ public abstract class BlockItem implements Transaction {
      * Get the serialized bytes for this {@link BlockItem}.
      * Which is a concatenation of {@link BlockItemType#getByte()} + {@link BlockItem#getBlockItemBytes()}
      *
-     * @return
+     * @return serialized block item prepended with the type of the block item, see {@link BlockItemType}
      */
     final public byte[] getBytes() {
         return concat(new byte[]{blockItemType.getByte()}, getBlockItemBytes());

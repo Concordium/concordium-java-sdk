@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
 /**
@@ -18,8 +19,9 @@ public class ConfigureBakerTransaction extends AccountTransaction {
             @NonNull final AccountAddress sender,
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
-            @NonNull final TransactionSigner signer) {
-        super(sender, nonce, expiry, signer, ConfigureBaker.createNew(payload));
+            @NonNull final TransactionSigner signer,
+            @NonNull final UInt64 cost) {
+        super(sender, nonce, expiry, signer, ConfigureBaker.createNew(payload), cost);
     }
 
     /**
@@ -41,9 +43,17 @@ public class ConfigureBakerTransaction extends AccountTransaction {
                                                  final Expiry expiry,
                                                  final TransactionSigner signer) {
         try {
-            return new ConfigureBakerTransaction(payload, sender, nonce, expiry, signer);
+
+            return new ConfigureBakerTransaction(payload, sender, nonce, expiry, signer, getCost(payload));
         } catch (NullPointerException nullPointerException) {
             throw TransactionCreationException.from(nullPointerException);
         }
+    }
+
+    private static UInt64 getCost(ConfigureBakerPayload payload) {
+        if (payload.getKeysWithProofs() != null)
+            return TransactionTypeCost.CONFIGURE_BAKER_WITH_PROOFS.getValue();
+        else
+            return TransactionTypeCost.CONFIGURE_BAKER.getValue();
     }
 }

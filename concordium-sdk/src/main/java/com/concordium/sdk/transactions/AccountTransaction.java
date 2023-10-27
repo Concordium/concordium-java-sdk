@@ -1,10 +1,9 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.UInt64;
 import lombok.*;
-
 import java.nio.ByteBuffer;
-
 import static com.google.common.primitives.Bytes.concat;
 
 @Getter
@@ -25,43 +24,49 @@ public class AccountTransaction extends BlockItem {
     /**
      * Account Transaction Payload Serialized to bytes.
      */
-    private final byte[] payloadBytes;
+    private final Payload payload;
 
+    /**
+     * Constructor serializing an account transaction
+     * @param sender sender of the transaction
+     * @param nonce account nonce
+     * @param expiry the expiry of the transaction
+     * @param signer the {@link Signer} of the transaction
+     * @param payload the payload of the transaction
+     * @param maxEnergyCost the max energy cost allowed for this transaction.
+     */
     AccountTransaction(
             @NonNull final AccountAddress sender,
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer,
-            @NonNull final Payload payload) {
+            @NonNull final Payload payload,
+            @NonNull UInt64 maxEnergyCost) {
         this(payload
-                .withHeader(TransactionHeader.builder()
+                .withHeader(TransactionHeader.explicitMaxEnergyBuilder()
                         .sender(sender)
                         .accountNonce(nonce.getNonce())
                         .expiry(expiry.getValue())
+                        .maxEnergyCost(maxEnergyCost)
                         .build())
                 .signWith(signer));
     }
 
+    /**
+     * Constructor for deserializing a transaction
+     * @param signature the signature
+     * @param header the header
+     * @param payload the payload
+     */
     public AccountTransaction(
             @NonNull final TransactionSignature signature,
             @NonNull final TransactionHeader header,
             @NonNull final Payload payload) {
-        this(header, signature, payload.getTransactionType(), payload.getTransactionPayloadBytes());
+        this(header, signature, payload);
     }
 
     AccountTransaction(Payload payload) {
-        this(payload.header, payload.signature, payload.getTransactionType(), payload.getTransactionPayloadBytes());
-    }
-
-    AccountTransaction(
-            @NonNull final TransactionHeader header,
-            @NonNull final TransactionSignature signature,
-            @NonNull final TransactionType transactionType,
-            final byte @NonNull [] payloadBytes) {
-        super(BlockItemType.ACCOUNT_TRANSACTION);
-        this.header = header;
-        this.signature = signature;
-        this.payloadBytes = concat(new byte[]{transactionType.getValue()}, payloadBytes);
+        this(payload.header, payload.signature, payload);
     }
 
     @Builder(
@@ -70,12 +75,13 @@ public class AccountTransaction extends BlockItem {
     AccountTransaction(
             @NonNull final TransactionHeader header,
             @NonNull final TransactionSignature signature,
-            final byte @NonNull [] payloadBytes) {
+            @NonNull final Payload payload) {
         super(BlockItemType.ACCOUNT_TRANSACTION);
         this.header = header;
         this.signature = signature;
-        this.payloadBytes = payloadBytes;
+        this.payload = payload;
     }
+
 
     /**
      * Sender of this Transaction.
@@ -103,7 +109,7 @@ public class AccountTransaction extends BlockItem {
     }
 
     final byte[] getBlockItemBytes() {
-        return concat(signature.getBytes(), header.getBytes(), getPayloadBytes());
+        return concat(signature.getBytes(), header.getBytes(), getPayload().getBytes());
     }
 
     public static AccountTransaction fromBytes(ByteBuffer source) {

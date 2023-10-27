@@ -1,7 +1,11 @@
 package com.concordium.sdk.crypto.ed25519;
 
+import com.concordium.sdk.crypto.RawKey;
+import com.concordium.sdk.crypto.KeyJsonSerializer;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.transactions.Signer;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.codec.DecoderException;
@@ -9,7 +13,8 @@ import org.apache.commons.codec.binary.Hex;
 
 @Getter
 @EqualsAndHashCode
-public final class ED25519SecretKey implements Signer {
+@JsonSerialize(using = KeyJsonSerializer.class)
+public final class ED25519SecretKey implements Signer, RawKey {
 
     private final byte[] bytes;
 
@@ -17,6 +22,7 @@ public final class ED25519SecretKey implements Signer {
         this.bytes = bytes;
     }
 
+    @JsonCreator
     public static ED25519SecretKey from(String hexKey) {
         try {
             return new ED25519SecretKey(Hex.decodeHex(hexKey));
@@ -59,5 +65,10 @@ public final class ED25519SecretKey implements Signer {
      */
     public static ED25519SecretKey createNew() {
         return ED25519.makeSecretKey();
+    }
+
+    @Override
+    public byte[] getRawBytes() {
+        return this.bytes;
     }
 }

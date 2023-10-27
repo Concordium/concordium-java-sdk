@@ -76,16 +76,26 @@ public final class ClientV2 {
 
     public static ClientV2 from(final Connection connection) throws ClientInitializationException {
         try {
-            return new ClientV2(connection.getTimeout(), connection.newChannel());
+            return new ClientV2(connection.getTimeout(), connection.newChannel(), Optional.ofNullable(connection.getCredentials()));
         } catch (IOException e) {
             throw ClientInitializationException.from(e);
         }
     }
 
-    ClientV2(final int timeout, final ManagedChannel channel) {
+    /**
+     * Construct a new client
+     * @param timeout The timeout in milliseconds.
+     * @param channel the underlying grpc channel.
+     * @param credentials Optionally extra headers.
+     */
+    ClientV2(final int timeout, final ManagedChannel channel, final Optional<Credentials> credentials) {
         this.timeout = timeout;
         this.channel = channel;
-        this.blockingStub = QueriesGrpc.newBlockingStub(channel);
+        if (credentials.isPresent()) {
+            this.blockingStub = QueriesGrpc.newBlockingStub(channel).withCallCredentials(credentials.get().getCallCredentials());
+        } else {
+            this.blockingStub = QueriesGrpc.newBlockingStub(channel);
+        }
     }
 
     /**

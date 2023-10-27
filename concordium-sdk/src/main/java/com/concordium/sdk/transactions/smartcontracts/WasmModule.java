@@ -2,6 +2,9 @@ package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.crypto.SHA256;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.transactions.Payload;
+import com.concordium.sdk.transactions.TransactionType;
+import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -87,7 +90,7 @@ public class WasmModule {
      * @return the identifier of the Module.
      */
     public ModuleRef getIdentifier() {
-        return ModuleRef.from(SHA256.hash(this.getBytes()));
+        return ModuleRef.from(SHA256.hash(this.source.getBytes()));
     }
 
     /**
@@ -103,4 +106,5 @@ public class WasmModule {
 
         return buffer.array();
     }
+
 }

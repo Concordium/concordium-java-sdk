@@ -18,7 +18,7 @@ public class ConfigureDelegationTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
-        super(sender, nonce, expiry, signer, ConfigureDelegation.createNew(payload));
+        super(sender, nonce, expiry, signer, ConfigureDelegation.createNew(payload), TransactionTypeCost.CONFIGURE_DELEGATION.getValue());
     }
 
     /**

@@ -17,7 +17,15 @@ import java.util.Optional;
 @EqualsAndHashCode
 @ToString(doNotUseGetters = true)
 public class EncryptedTransferResult {
+
+    /**
+     * Event on the sender account.
+     */
     private final EncryptedAmountsRemovedResult sender;
+
+    /**
+     * Event on the receiver account.
+     */
     private final NewEncryptedAmountResult receiver;
 
     /**

@@ -22,11 +22,13 @@ import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ProtocolVersion;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
+import com.concordium.sdk.crypto.vrf.VRFPublicKey;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.Epoch;
@@ -73,8 +75,8 @@ import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.Signature;
 import com.concordium.sdk.transactions.TransferPayload;
 import com.concordium.sdk.transactions.TransferWithMemoPayload;
-import com.concordium.sdk.transactions.UpdateContractPayload;
 import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.UpdateContract;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
 import com.concordium.sdk.types.Timestamp;
@@ -346,8 +348,8 @@ interface ClientV2MapperExtensions {
                 .stakedAmount(to(stake.getStakedAmount()))
                 .bakerPoolInfo(to(stake.getPoolInfo()))
                 .bakerId(to(stake.getBakerInfo().getBakerId()))
-                .bakerAggregationVerifyKey(ED25519PublicKey.from(stake.getBakerInfo().getAggregationKey().getValue().toByteArray()))
-                .bakerElectionVerifyKey(ED25519PublicKey.from(stake.getBakerInfo().getElectionKey().getValue().toByteArray()))
+                .bakerAggregationVerifyKey(BLSPublicKey.from(stake.getBakerInfo().getAggregationKey().getValue().toByteArray()))
+                .bakerElectionVerifyKey(VRFPublicKey.from(stake.getBakerInfo().getElectionKey().getValue().toByteArray()))
                 .bakerSignatureVerifyKey(ED25519PublicKey.from(stake.getBakerInfo().getSignatureKey().getValue().toByteArray()))
                 .build();
     }
@@ -642,7 +644,7 @@ interface ClientV2MapperExtensions {
                         .builderBlockItem()
                         .header(to(transaction.getHeader(), deployModulePayload.getBytes().length))
                         .signature(to(transaction.getSignature()))
-                        .payload(deployModulePayload)
+                        .payload(DeployModule.builder().module(deployModulePayload).build())
                         .build();
             }
             case INIT_CONTRACT: {
@@ -654,10 +656,9 @@ interface ClientV2MapperExtensions {
                         .build();
             }
             case UPDATE_CONTRACT:
-                final UpdateContractPayload updateContractPayload = to(payload.getUpdateContract());
-                return UpdateContractTransaction
-                        .builderBlockItem()
-                        .header(to(transaction.getHeader(), updateContractPayload.getBytes().length))
+                final UpdateContract updateContractPayload = to(payload.getUpdateContract());
+                return UpdateContractTransaction.builderAccountTransactionBlockItem()
+                        .header(to(transaction.getHeader(), updateContractPayload.getRawPayloadBytes().length))
                         .signature(to(transaction.getSignature()))
                         .payload(updateContractPayload)
                         .build();
@@ -691,16 +692,11 @@ interface ClientV2MapperExtensions {
                         .builderAccountTransactionBlockItem()
                         .header(to(transaction.getHeader(), rawPayloadBytes.length))
                         .signature(to(transaction.getSignature()))
-                        .payloadBytes(rawPayloadBytes)
+                        .payload(RawPayload.from(rawPayloadBytes))
                         .build();
             default:
             case PAYLOAD_NOT_SET:
-                return com.concordium.sdk.transactions.AccountTransaction
-                        .builderAccountTransactionBlockItem()
-                        .header(to(transaction.getHeader(), 0))
-                        .signature(to(transaction.getSignature()))
-                        .payloadBytes(new byte[0])
-                        .build();
+                throw new IllegalArgumentException("Cannot parse account transaction as payload tag was not set.");
         }
     }
 
@@ -718,8 +714,8 @@ interface ClientV2MapperExtensions {
         return Data.from(registerData.getValue().toByteArray());
     }
 
-    static UpdateContractPayload to(com.concordium.grpc.v2.UpdateContractPayload updateContract) {
-        return UpdateContractPayload.from(
+    static UpdateContract to(com.concordium.grpc.v2.UpdateContractPayload updateContract) {
+        return UpdateContract.from(
                 to(updateContract.getAmount()),
                 to(updateContract.getAddress()),
                 ReceiveName.parse(updateContract.getReceiveName().getValue()),
@@ -870,7 +866,7 @@ interface ClientV2MapperExtensions {
                 .setAccountTransaction(com.concordium.grpc.v2.AccountTransaction.newBuilder()
                         .setHeader(to(accountTransaction.getHeader()))
                         .setPayload(AccountTransactionPayload.newBuilder()
-                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayloadBytes()))
+                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayload().getBytes()))
                                 .build())
                         .setSignature(to(accountTransaction.getSignature()))
                         .build())
@@ -989,6 +985,7 @@ interface ClientV2MapperExtensions {
                         .type(Type.ACCOUNT_CREATION)
                         .accountCreationDetails(AccountCreationDetails.from(accountCreation))
                         .build());
+                break;
             case UPDATE:
                 val details = ChainUpdateDetails.from(blockItemSummary.getUpdate());
                 summary.details(Details

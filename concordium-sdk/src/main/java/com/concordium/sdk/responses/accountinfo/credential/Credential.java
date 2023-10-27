@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
 import lombok.*;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.google.common.collect.ImmutableMap.copyOf;
 
@@ -54,10 +56,10 @@ public final class Credential {
      * The public keys for the credential including its `threshold`.
      */
     private final CredentialPublicKeys credentialPublicKeys;
+
     /**
      * Anonymity revocation data associated with this credential.
      */
-
     private final Map<Index, ArData> arData;
 
     public ImmutableMap<Index, ArData> getArData() {
@@ -83,7 +85,7 @@ public final class Credential {
         this.policy = policy;
         this.commitments = commitments;
         this.credentialPublicKeys = credentialPublicKeys;
-        this.arData = copyOf(arData);
+        this.arData = arData;
     }
 
     @JsonCreator
@@ -97,6 +99,11 @@ public final class Credential {
         this.policy = value.getContents().getPolicy();
         this.commitments = value.getContents().getCommitments();
         this.credentialPublicKeys = value.getContents().getCredentialPublicKeys();
-        this.arData = copyOf(value.getContents().getArData());
+        if (Objects.isNull(value.getContents().getArData())) {
+            this.arData = Collections.emptyMap();
+        } else {
+            this.arData = copyOf(value.getContents().getArData());
+
+        }
     }
 }

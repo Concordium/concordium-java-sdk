@@ -5,7 +5,9 @@ import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
 import com.concordium.sdk.responses.blockitemsummary.Details;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
+import com.concordium.sdk.responses.blockitemsummary.Type;
 import com.concordium.sdk.responses.transactionstatus.Status;
+import com.concordium.sdk.responses.transactionstatus.TransactionResultEventType;
 import com.concordium.sdk.responses.transactionstatus.TransferredResult;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Hash;
@@ -20,6 +22,8 @@ import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.Optional;
 
 import static com.concordium.sdk.ClientV2MapperExtensions.to;
 import static com.concordium.sdk.ClientV2MapperExtensions.toTransactionHash;
@@ -87,9 +91,11 @@ public class ClientV2GetBlockItemStatusTest {
             .transactionHash(Hash.from(TRANSACTION_HASH))
             .details(Details
                     .builder()
+                    .type(Type.ACCOUNT_TRANSACTION)
                     .accountTransactionDetails(com.concordium.sdk.responses.blockitemsummary.AccountTransactionDetails
                             .builder()
                             .successful(true)
+                            .type(TransactionResultEventType.TRANSFERRED)
                             .sender(AccountAddress.from(SENDER_ADDRESS))
                             .cost(CCDAmount.fromMicro(TRANSACTION_COST))
                             .accountTransfer(TransferredResult
@@ -132,7 +138,7 @@ public class ClientV2GetBlockItemStatusTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel);
+        client = new ClientV2(10000, channel, Optional.empty());
     }
 
     @Test

@@ -1,9 +1,12 @@
 package com.concordium.sdk.crypto.ed25519;
 
 import com.concordium.grpc.v2.BakerSignatureVerifyKey;
+import com.concordium.sdk.crypto.RawKey;
+import com.concordium.sdk.crypto.KeyJsonSerializer;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -14,7 +17,8 @@ import static java.util.Arrays.copyOf;
 
 @Getter
 @EqualsAndHashCode
-public final class ED25519PublicKey {
+@JsonSerialize(using = KeyJsonSerializer.class)
+public final class ED25519PublicKey implements RawKey {
     private final byte[] bytes;
 
     private ED25519PublicKey(byte[] bytes) {
@@ -80,5 +84,10 @@ public final class ED25519PublicKey {
     @JsonValue
     public String toString() {
         return Hex.encodeHexString(this.getBytes());
+    }
+
+    @Override
+    public byte[] getRawBytes() {
+        return this.bytes;
     }
 }

@@ -5,45 +5,49 @@ import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
-import lombok.EqualsAndHashCode;
 import lombok.val;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Objects;
 
-@EqualsAndHashCode
-abstract class Payload {
+public abstract class Payload {
     TransactionHeader header;
     TransactionSignature signature;
-
-    PayloadType type;
 
     BlockItem toBlockItem() {
         return new AccountTransaction(signature, header, this);
     }
 
-    /**
-     * Get the {@link PayloadType}
-     *
-     * @return the type of the {@link Payload}
-     */
-    public abstract PayloadType getType();
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Payload) {
+            return Arrays.equals(this.getBytes(), ((Payload) obj).getBytes());
+        }
+        return false;
+    }
 
     /**
-     * Get the bytes representation of the payload
+     * Get the serialized payload.
+     * The actual payload is prepended with a tag (a byte) which
+     * indicates the {@link TransactionType}
      *
-     * @return byte[]
+     * @return the serialized payload (including the type tag).
      */
-    final byte[] getBytes() {
-        val payloadBytes = getTransactionPayloadBytes();
+    public final byte[] getBytes() {
+        val payloadBytes = getRawPayloadBytes();
         val buffer = ByteBuffer.allocate(TransactionType.BYTES + payloadBytes.length);
         buffer.put(getTransactionType().getValue());
         buffer.put(payloadBytes);
 
         return buffer.array();
     }
-
-    abstract UInt64 getTransactionTypeCost();
 
     final AccountTransaction toAccountTransaction() {
         return new AccountTransaction(signature, header, this);
@@ -56,7 +60,10 @@ abstract class Payload {
     }
 
     /**
-     * Sets the signature and energy cost. Uses provided {@link TransactionSignature}.
+     * Sets the signature and compute energy cost.
+     * For transactions where the max energy has been explicitly set (smart contract transactions)
+     * then the administrative signature checking cost is being added.
+     * Uses provided {@link TransactionSignature}.
      *
      * @param signer {@link TransactionSigner}
      * @return {@link Payload} with {@link Payload#signature} and {@link Payload#header} energy cost set.
@@ -66,11 +73,12 @@ abstract class Payload {
         if (Objects.isNull(this.header)) {
             throw TransactionCreationException.from(new IllegalStateException("TransactionHeader must be set before signing"));
         }
+
         this.header.setMaxEnergyCost(
                 calculateEnergyCost(
                         signer.size(),
                         getBytes().length,
-                        getTransactionTypeCost()
+                        header.getMaxEnergyCost()
                 ));
         try {
             this.signature = signer.sign(getDataToSign());
@@ -99,6 +107,17 @@ abstract class Payload {
     private final static int EXPIRY_SIZE = 8;
     private final static int TRANSACTION_HEADER_SIZE = ADDRESS_SIZE + NONCE_SIZE + ENERGY_SIZE + PAYLOAD_SIZE + EXPIRY_SIZE;
 
+    /**
+     * Calculate the total energy cost of a transaction.
+     * This can only be used for non-smart contract transactions as
+     * it is not possible to deduce the cost of such one before it has
+     * been executed.
+     *
+     * @param noOfSignatures          number of signatures in the transaction
+     * @param payloadSize             size of the payload
+     * @param transactionSpecificCost cost of the specific transaction type.
+     * @return the computed cost.
+     */
     private static UInt64 calculateEnergyCost(int noOfSignatures,
                                               int payloadSize,
                                               UInt64 transactionSpecificCost) {
@@ -110,24 +129,12 @@ abstract class Payload {
 
     public abstract TransactionType getTransactionType();
 
-    public abstract byte[] getTransactionPayloadBytes();
-
-    public enum PayloadType {
-        TRANSFER,
-        TRANSFER_WITH_MEMO,
-        REGISTER_DATA,
-        INIT_CONTRACT,
-        DEPLOY_MODULE,
-        UPDATE,
-        TRANSFER_WITH_SCHEDULE,
-        TRANSFER_WITH_SCHEDULE_AND_MEMO,
-        UPDATE_CREDENTIAL_KEYS,
-        TRANSFER_TO_PUBLIC,
-        TRANSFER_TO_ENCRYPTED,
-        ENCRYPTED_TRANSFER,
-        ENCRYPTED_TRANSFER_WITH_MEMO,
-        CONFIGURE_BAKER,
-        CONFIGURE_DELEGATION,
-    }
+    /**
+     * This must return the raw payload i.e., the
+     * payload only. The tag will be prepended by {@link Payload#getBytes()}
+     *
+     * @return the raw serialized payload.
+     */
+    protected abstract byte[] getRawPayloadBytes();
 
 }

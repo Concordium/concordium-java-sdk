@@ -19,28 +19,13 @@ public final class InitContract extends Payload {
      */
     private final InitContractPayload payload;
 
-    private final UInt64 maxEnergyCost;
 
-    private InitContract(InitContractPayload payload, UInt64 maxEnergyCost) {
+    private InitContract(InitContractPayload payload) {
         this.payload = payload;
-        this.maxEnergyCost = maxEnergyCost;
     }
 
-    static InitContract createNew(InitContractPayload payload, UInt64 maxEnergyCost) {
-        return new InitContract(payload, maxEnergyCost);
-    }
-
-    /**
-     * This function returns the type of the payload.
-     */
-    @Override
-    public PayloadType getType() {
-        return PayloadType.INIT_CONTRACT;
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+    static InitContract createNew(InitContractPayload payload) {
+        return new InitContract(payload);
     }
 
     @Override
@@ -49,7 +34,7 @@ public final class InitContract extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         return payload.getBytes();
     }
 }

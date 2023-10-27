@@ -18,7 +18,7 @@ public class TransferToEncryptedTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
-        super(sender, nonce, expiry, signer, TransferToEncrypted.createNew(amount));
+        super(sender, nonce, expiry, signer, TransferToEncrypted.createNew(amount), TransactionTypeCost.TRANSFER_TO_ENCRYPTED.getValue());
     }
 
     /**

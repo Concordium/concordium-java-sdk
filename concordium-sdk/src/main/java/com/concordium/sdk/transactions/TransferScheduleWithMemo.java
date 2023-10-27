@@ -44,14 +44,6 @@ public final class TransferScheduleWithMemo extends Payload {
     }
 
     /**
-     * This is a method that returns the type of the payload.
-     */
-    @Override
-    public PayloadType getType() {
-        return PayloadType.TRANSFER_WITH_SCHEDULE_AND_MEMO;
-    }
-
-    /**
      * This function returns the transaction type of this transaction.
      */
     public TransactionType getTransactionType() {
@@ -59,7 +51,7 @@ public final class TransferScheduleWithMemo extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         val schedule_len = amount.length;
         val schedule_buffer_size = UInt64.BYTES * schedule_len * 2;
         val buffer = ByteBuffer.allocate(
@@ -76,12 +68,5 @@ public final class TransferScheduleWithMemo extends Payload {
         }
 
         return buffer.array();
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
-        UInt16 scheduleLen = UInt16.from(amount.length);
-        val maxEnergyCost = UInt64.from(scheduleLen.getValue()).getValue() * (300 + 64);
-        return UInt64.from(maxEnergyCost);
     }
 }

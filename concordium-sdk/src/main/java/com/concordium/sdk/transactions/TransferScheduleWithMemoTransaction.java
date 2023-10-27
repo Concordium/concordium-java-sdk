@@ -3,6 +3,8 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.UInt16;
+import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
 /**
@@ -20,11 +22,18 @@ public class TransferScheduleWithMemoTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
-        super(sender, nonce, expiry, signer, TransferScheduleWithMemo.createNew(to, schedule, memo));
+        super(sender, nonce, expiry, signer, TransferScheduleWithMemo.createNew(to, schedule, memo), getCost(schedule));
 
         if (schedule.length > 255) {
             throw TransactionCreationException.from(new IllegalArgumentException("Schedule size can be maximum 255"));
         }
+    }
+
+
+    private static UInt64 getCost(@NonNull Schedule[] schedule) {
+        UInt16 scheduleLen = UInt16.from(schedule.length);
+        val maxEnergyCost = UInt64.from(scheduleLen.getValue()).getValue() * (300 + 64);
+        return UInt64.from(maxEnergyCost);
     }
 
     /**

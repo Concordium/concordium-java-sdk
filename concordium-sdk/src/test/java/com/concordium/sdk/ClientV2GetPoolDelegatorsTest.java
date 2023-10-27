@@ -134,7 +134,7 @@ public class ClientV2GetPoolDelegatorsTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel);
+        client = new ClientV2(10000, channel,Optional.empty());
     }
 
     @Test

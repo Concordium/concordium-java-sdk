@@ -31,8 +31,11 @@ import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static com.concordium.sdk.ClientV2MapperExtensions.to;
 import static org.junit.Assert.assertEquals;
@@ -136,7 +139,7 @@ public class ClientV2GetItemsTest {
             .builderBlockItem()
             .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED)
             .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
-            .payload(WasmModule.from(MODULE_V0_BYTES, WasmModuleVersion.V0))
+            .payload(DeployModule.builder().module(WasmModule.from(MODULE_V0_BYTES, WasmModuleVersion.V0)).build())
             .build();
     private static final CredentialDeploymentTransaction CREDENTIAL_DEPLOYMENT_EXPECTED = CredentialDeploymentTransaction
             .builderBlockItem()
@@ -169,7 +172,7 @@ public class ClientV2GetItemsTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel);
+        client = new ClientV2(10000, channel, Optional.empty());
     }
 
     @Test
@@ -238,10 +241,10 @@ public class ClientV2GetItemsTest {
                                 .build())
                         .build())
                 .build());
-        val expected = UpdateContractTransaction.builderBlockItem()
+        val expected = UpdateContractTransaction.builderAccountTransactionBlockItem()
                 .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(46)).build())
                 .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
-                .payload(com.concordium.sdk.transactions.UpdateContractPayload.from(amount,
+                .payload(UpdateContract.from(amount,
                         com.concordium.sdk.types.ContractAddress.from(1, 0),
                         "contract",
                         "method",
@@ -328,9 +331,10 @@ public class ClientV2GetItemsTest {
         assertEquals(expected, mapped);
     }
 
+
     @Test
     public void shouldMapRawTransaction() {
-        final byte[] payloadBytes = new byte[]{11, 11, 11};
+        final byte[] payloadBytes = new byte[]{3, 11, 11};
 
         val mapped = to(ACCOUNT_TRANSACTION_DEPLOY_MODULE_V0.toBuilder()
                 .setPayload(AccountTransactionPayload.newBuilder()
@@ -341,26 +345,23 @@ public class ClientV2GetItemsTest {
                 .builderAccountTransactionBlockItem()
                 .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(3)).build())
                 .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
-                .payloadBytes(payloadBytes)
+                .payload(RawPayload.from(payloadBytes))
                 .build();
 
         assertEquals(expected, mapped);
     }
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
     @Test
-    public void shouldMapPayloadNotSetTransaction() {
-        val mapped = to(ACCOUNT_TRANSACTION_DEPLOY_MODULE_V0.toBuilder()
+    public void shouldNotMapWhenPayloadTagNotSet() {
+        AccountTransaction.Builder toOverwritePayload = ACCOUNT_TRANSACTION_DEPLOY_MODULE_V0.toBuilder();
+        expectedException.expect(IllegalArgumentException.class);
+        to(toOverwritePayload
                 .setPayload(AccountTransactionPayload.newBuilder().build())
                 .build());
-        val expected = com.concordium.sdk.transactions.AccountTransaction
-                .builderAccountTransactionBlockItem()
-                .header(ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(0)).build())
-                .signature(ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED)
-                .payloadBytes(new byte[0])
-                .build();
-
-        assertEquals(expected, mapped);
     }
+
 
     @Test
     public void shouldMapModuleV1() {

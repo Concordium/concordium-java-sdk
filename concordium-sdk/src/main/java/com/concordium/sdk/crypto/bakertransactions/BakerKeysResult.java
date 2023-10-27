@@ -19,7 +19,7 @@ public class BakerKeysResult {
      * Populated iff {@link BakerKeysResult#isSuccess} is true.
      */
     @JsonProperty("Ok")
-    private final BakerKeysJniOutput ok;
+    private final BakerKeys ok;
 
     /**
      * A {@link JNIError} object, containing an error message if the generate baker keys function failed.
@@ -35,7 +35,7 @@ public class BakerKeysResult {
 
     @JsonCreator
     BakerKeysResult(
-            @JsonProperty("Ok") BakerKeysJniOutput ok,
+            @JsonProperty("Ok") BakerKeys ok,
             @JsonProperty("Err") JNIError err
     ) {
         this.ok = ok;

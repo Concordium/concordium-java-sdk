@@ -21,7 +21,7 @@ public class EncryptedTransferWithMemoTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
-        super(sender, nonce, expiry, signer, EncryptedTransferWithMemo.createNew(data, receiver, memo));
+        super(sender, nonce, expiry, signer, EncryptedTransferWithMemo.createNew(data, receiver, memo), TransactionTypeCost.ENCRYPTED_TRANSFER_WITH_MEMO.getValue());
     }
 
     /**

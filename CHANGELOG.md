@@ -1,6 +1,23 @@
 # Changelog
 
 ## Unreleased changes
+
+## 5.1.0
+- Fixed a regression that made it harder to deserialize transactions from bytes.
+- toString on CCD amount now displays the amount as micro CCD.
+- Fix bug where `Details` type was not correctly set when querying status of a block item.
+
+## 5.0.2
+- Remove an unused import from `ClientV2` which could make compilation fail on some jdks.
+
+## 5.0.1
+
+- Fix a bug that caused custom http headers to be set for `ClientV2`.
+
+## 5.0.0
+
+- Added typing for baker keys and moved `createBakerKeys` to `BakerKeys`. Likewise the `TransactionFactory.newUpdateBakerKeys` takes in
+  the generated baker keys.
 - Added support for `getBlockTransactionEvents` for retrieving events emitted by transactions.
 - Added support for `InvokeInstance` for executing a smart contract instance locally.
 - Removed `Account` instead one should simply use `AccountAddress`.

@@ -32,7 +32,7 @@ public class TransferToPublicTransaction extends AccountTransaction {
                 remainingAmount,
                 transferAmount,
                 index,
-                proof));
+                proof), TransactionTypeCost.TRANSFER_TO_PUBLIC.getValue());
     }
 
     /**

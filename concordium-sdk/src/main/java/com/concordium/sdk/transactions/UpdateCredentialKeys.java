@@ -40,28 +40,13 @@ public final class UpdateCredentialKeys extends Payload {
         this.numExistingCredentials = numExistingCredentials;
     }
 
-    /**
-     * This function returns the type of the payload.
-     */
-    @Override
-    public PayloadType getType() {
-        return PayloadType.UPDATE_CREDENTIAL_KEYS;
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
-        val numCredKeys = keys.getKeys().size();
-        val maxEnergyCost = UInt64.from(500 * numExistingCredentials.getValue() + 100 * numCredKeys);
-        return maxEnergyCost;
-    }
-
     @Override
     public TransactionType getTransactionType() {
         return TransactionType.UPDATE_CREDENTIAL_KEYS;
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
+    protected byte[] getRawPayloadBytes() {
         val credentialRegistrationIdBytes = credentialRegistrationID.getRegId();
         val keysBytes = keys.getBytes();
         val buffer = ByteBuffer.allocate(credentialRegistrationIdBytes.length + keysBytes.length);

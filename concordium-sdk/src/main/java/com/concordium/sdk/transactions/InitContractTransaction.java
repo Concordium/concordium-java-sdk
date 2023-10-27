@@ -27,7 +27,7 @@ public class InitContractTransaction extends AccountTransaction {
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer,
             @NonNull final UInt64 maxEnergyCost) {
-        super(sender, nonce, expiry, signer, InitContract.createNew(payload, maxEnergyCost));
+        super(sender, nonce, expiry, signer, InitContract.createNew(payload), maxEnergyCost);
     }
 
     private InitContractTransaction(
@@ -36,8 +36,7 @@ public class InitContractTransaction extends AccountTransaction {
             final @NonNull InitContractPayload payload) {
         super(header,
                 signature,
-                TransactionType.INITIALIZE_SMART_CONTRACT_INSTANCE,
-                payload.getBytes());
+                InitContract.createNew(payload));
     }
 
     /**
@@ -46,7 +45,6 @@ public class InitContractTransaction extends AccountTransaction {
      * @param nonce         Account {@link com.concordium.sdk.types.Nonce} Of the Sender Account.
      * @param expiry        {@link Expiry} of this transaction.
      * @param signer        {@link Signer} of this transaction.
-     * @param maxEnergyCost Allowed energy for the transaction.
      * @return Initialized {@link InitContractTransaction}.
      * @throws TransactionCreationException On failure to create the Transaction from input params.
      *                                      Ex when any of the input param is NULL.

@@ -8,9 +8,11 @@ import com.concordium.grpc.v2.CredentialPublicKeys;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
+import com.concordium.sdk.crypto.vrf.VRFPublicKey;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.accountinfo.*;
@@ -266,8 +268,8 @@ public class ClientV2GetAccountInfoTest {
                     .restakeEarnings(RESTAKE_EARNINGS)
                     .pendingChange(PENDING_CHANGE)
                     .bakerId(com.concordium.sdk.responses.BakerId.from(BAKER_ID))
-                    .bakerAggregationVerifyKey(ED25519PublicKey.from(BAKER_AGGREGATION_KEY))
-                    .bakerElectionVerifyKey(ED25519PublicKey.from(BAKER_ELECTION_VERIFY_KEY))
+                    .bakerAggregationVerifyKey(BLSPublicKey.from(BAKER_AGGREGATION_KEY))
+                    .bakerElectionVerifyKey(VRFPublicKey.from(BAKER_ELECTION_VERIFY_KEY))
                     .bakerSignatureVerifyKey(ED25519PublicKey.from(BAKER_SIGNATURE_VERIFY_KEY))
                     .bakerPoolInfo(com.concordium.sdk.responses.accountinfo.BakerPoolInfo.builder()
                             .metadataUrl(BAKER_POOL_URL)
@@ -317,7 +319,7 @@ public class ClientV2GetAccountInfoTest {
                 .forName(serverName).directExecutor().addService(serviceImpl).build().start());
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
-        client = new ClientV2(10000, channel);
+        client = new ClientV2(10000, channel, Optional.empty());
     }
 
     @Test

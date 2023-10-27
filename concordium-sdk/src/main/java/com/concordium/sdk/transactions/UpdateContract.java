@@ -1,52 +1,72 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.UInt64;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
+
+import java.nio.ByteBuffer;
 
 /**
- * Update a new smart contract instance.
+ * The payload for updating a smart contract.
  */
+@ToString
 @Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString
 public final class UpdateContract extends Payload {
-
     /**
-     * The payload for updating a smart contract.
+     * Send the given amount of CCD to the smart contract.
      */
-    private final UpdateContractPayload payload;
+    private final CCDAmount amount;
+    /**
+     * Address of the contract instance to invoke.
+     */
+    private final ContractAddress contractAddress;
+    /**
+     * Name of the method to invoke on the contract.
+     */
+    private final ReceiveName receiveName;
+    /**
+     * Message to send to the contract instance
+     */
+    private final Parameter param;
 
-    private final UInt64 maxEnergyCost;
 
-    public UpdateContract(UpdateContractPayload payload, UInt64 maxEnergyCost) {
-        this.payload = payload;
-        this.maxEnergyCost = maxEnergyCost;
+    private UpdateContract(@NonNull final CCDAmount amount,
+                           @NonNull final ContractAddress contractAddress,
+                           @NonNull final ReceiveName receiveName,
+                           @NonNull final Parameter param) {
+        this.amount = amount;
+        this.contractAddress = contractAddress;
+        this.receiveName = receiveName;
+        this.param = param;
     }
 
     /**
-     * Create a new UpdateContract object with the given payload and maximum energy cost.
+     * > This function creates a payload for updating a contract
      *
-     * @param payload       The payload of the transaction.
-     * @param maxEnergyCost The maximum amount of energy that can be consumed by the transaction.
-     * @return A new instance of the UpdateContract class.
+     * @param amount          The amount of CCD to be sent to the contract.
+     * @param contractAddress Address of the contract instance to invoke.
+     * @param contractName    Name of the contract to update.
+     * @param method          Name of the method to invoke on the contract
+     * @param parameter       The parameter of the contract method.
+     * @return A new UpdateContractPayload object.
      */
-    static UpdateContract createNew(UpdateContractPayload payload, UInt64 maxEnergyCost) {
-        return new UpdateContract(payload, maxEnergyCost);
+    public static UpdateContract from(final long amount,
+                                      @NonNull final ContractAddress contractAddress,
+                                      @NonNull final String contractName,
+                                      @NonNull final String method,
+                                      final byte @NonNull [] parameter) {
+        return from(CCDAmount.fromMicro(amount),
+                contractAddress,
+                ReceiveName.from(contractName, method),
+                Parameter.from(parameter));
     }
 
-    /**
-     * This function returns the type of the payload, which is UPDATE.
-     */
-    @Override
-    public PayloadType getType() {
-        return PayloadType.UPDATE;
-    }
-
-    @Override
-    UInt64 getTransactionTypeCost() {
-        return this.maxEnergyCost;
+    public static UpdateContract from(@NonNull final CCDAmount amount,
+                                      @NonNull final ContractAddress contractAddress,
+                                      @NonNull final ReceiveName receiveName,
+                                      @NonNull final Parameter param) {
+        return new UpdateContract(amount, contractAddress, receiveName, param);
     }
 
     @Override
@@ -55,7 +75,21 @@ public final class UpdateContract extends Payload {
     }
 
     @Override
-    public byte[] getTransactionPayloadBytes() {
-        return payload.getBytes();
+    public byte[] getRawPayloadBytes() {
+        val amountBytes = amount.getBytes();
+        val contractAddressBytes = contractAddress.getBytes();
+        val receiveNameBytes = receiveName.getBytes();
+        val paramBytes = param.getBytes();
+
+        val buffer = ByteBuffer.allocate(contractAddressBytes.length
+                + amountBytes.length
+                + receiveNameBytes.length
+                + paramBytes.length);
+        buffer.put(amountBytes);
+        buffer.put(contractAddressBytes);
+        buffer.put(receiveNameBytes);
+        buffer.put(paramBytes);
+
+        return buffer.array();
     }
 }

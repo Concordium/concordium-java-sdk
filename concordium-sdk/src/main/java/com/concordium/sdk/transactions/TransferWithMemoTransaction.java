@@ -16,14 +16,14 @@ public class TransferWithMemoTransaction extends AccountTransaction {
             @NonNull final AccountNonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
-        super(sender, nonce, expiry, signer, TransferWithMemo.createNew(receiver, amount, memo));
+        super(sender, nonce, expiry, signer, TransferWithMemo.createNew(receiver, amount, memo), TransactionTypeCost.TRANSFER_WITH_MEMO.getValue());
     }
 
     private TransferWithMemoTransaction(
             final @NonNull TransactionHeader header,
             final @NonNull TransactionSignature signature,
             final @NonNull TransferWithMemoPayload payload) {
-        super(header, signature, TransactionType.TRANSFER_WITH_MEMO, payload.getBytes());
+        super(header, signature, TransferWithMemo.createNew(payload.getReceiver(), payload.getAmount(), payload.getMemo()));
     }
 
     /**

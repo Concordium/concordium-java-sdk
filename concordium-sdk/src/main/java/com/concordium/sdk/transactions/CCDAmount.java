@@ -23,8 +23,22 @@ public class CCDAmount {
         this.value = value;
     }
 
+    /**
+     * Create an CCDAmount based on the input (treated as micro CCD)
+     * @param val micro ccd
+     * @return the amount
+     */
     public static CCDAmount fromMicro(long val) {
         return new CCDAmount(UInt64.from(val));
+    }
+
+    /**
+     * Create an CCDAmount based on the input
+     * @param val micro ccd
+     * @return the amount
+     */
+    public static CCDAmount from(long val) {
+        return CCDAmount.fromMicro(val * 1000000);
     }
 
     public static CCDAmount fromMicro(String val) {
@@ -51,7 +65,7 @@ public class CCDAmount {
 
     @Override
     public String toString() {
-        return (DecimalFormat.getNumberInstance().format(value.getValue() / 1000000) + " CCD");
+        return this.getValue().toString() + " micro CCD";
     }
 
     @JsonValue

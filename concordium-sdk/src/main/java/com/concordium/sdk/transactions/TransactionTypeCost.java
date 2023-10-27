@@ -44,8 +44,17 @@ public enum TransactionTypeCost {
     /**
      * Constant representing the cost of Transfer With Memo.
      */
-    TRANSFER_WITH_MEMO(300);
+    TRANSFER_WITH_MEMO(300),
 
+    /**
+     * Base cost for registering data on the chain.
+     */
+    REGISTER_DATA(300),
+
+    /**
+     * Base cost for a basic transfer.
+     */
+    TRANSFER_BASE_COST(300);
     /**
      * The cost of the transaction
      */
