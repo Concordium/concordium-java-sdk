@@ -1,7 +1,7 @@
 # Changelog
-- Extended `CurrentPaydayStatus` with `CommissionRates` that apply for the current reward period.
 
 ## Unreleased changes
+- Extended `CurrentPaydayStatus` with `CommissionRates` that apply for the current reward period. Requires at least node version 6.1.
 
 ## 5.1.0
 - Fixed a regression that made it harder to deserialize transactions from bytes.
