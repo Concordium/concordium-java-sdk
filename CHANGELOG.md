@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+- Implemented custom serialization of `AbstractAddress` and added class `ListParam` for conveniently using lists of objects, `AbstractAddress`, `ContractAddress` and `AccountAddress` as smart contract parameters.
+- Added support for creating and serializing smart contract parameters using the abstract class `SchemaParameter` and a provided `Schema`.
 
 ## 5.1.0
 - Fixed a regression that made it harder to deserialize transactions from bytes.
