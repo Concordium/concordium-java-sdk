@@ -14,15 +14,12 @@ import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.Baker;
 import com.concordium.sdk.serializing.JsonMapper;
-import com.concordium.sdk.transactions.TransactionFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
-import java.io.IOException;
 import java.io.Writer;
 
 @Jacksonized

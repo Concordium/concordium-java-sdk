@@ -2,7 +2,7 @@ package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.transactions.InitContractPayload;
-import com.concordium.sdk.transactions.UpdateContractPayload;
+import com.concordium.sdk.transactions.UpdateContract;
 
 /**
  * The possible variants of {@link SchemaParameter}.
@@ -13,7 +13,7 @@ public enum ParameterType {
      */
     INIT,
     /**
-     * A Parameter for {@link UpdateContractPayload} or {@link InvokeInstanceRequest}.
+     * A Parameter for {@link UpdateContract} or {@link InvokeInstanceRequest}.
      */
     RECEIVE
 }

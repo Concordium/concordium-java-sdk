@@ -129,7 +129,7 @@ public class Cis2Nft implements Callable<Integer> {
     }
 
     private void handleMethod(ClientV2 client, Nonce nonce, SchemaParameter parameter) {
-        UpdateContractPayload payload = UpdateContractPayload.from(CONTRACT_ADDRESS, parameter);
+        UpdateContract payload = UpdateContract.from(CONTRACT_ADDRESS, parameter);
         UpdateContractTransaction transaction = TransactionFactory.newUpdateContract()
                 .sender(AccountAddress.from(SENDER_ADDRESS))
                 .payload(payload)

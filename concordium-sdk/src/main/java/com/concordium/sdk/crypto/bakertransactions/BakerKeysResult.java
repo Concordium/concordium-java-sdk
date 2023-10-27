@@ -15,7 +15,7 @@ import java.util.Objects;
 @ToString(doNotUseGetters = true)
 public class BakerKeysResult {
     /**
-     * A {@link BakerKeysJniOutput} object, containing the output of the generate baker keys function if it succeeded.
+     * A {@link BakerKeys} object, containing the output of the generate baker keys function if it succeeded.
      * Populated iff {@link BakerKeysResult#isSuccess} is true.
      */
     @JsonProperty("Ok")
