@@ -1,6 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.crypto.BLSSignature;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.Epoch;
@@ -100,7 +101,7 @@ public class ClientV2GetBlockCertificatesTest {
                     .round(Round.from(ROUND_1))
                     .epoch(Epoch.from(EPOCH_1))
                     .aggregateSignature(com.concordium.sdk.responses.blockcertificates.QuorumSignature
-                            .builder().value(QUORUM_SIG_1)
+                            .builder().value(BLSSignature.from(QUORUM_SIG_1))
                             .build())
                     .signatories(CLIENT_BAKER_ID_LIST_1)
                     .build();
@@ -110,7 +111,7 @@ public class ClientV2GetBlockCertificatesTest {
                     .round(Round.from(ROUND_2))
                     .epoch(Epoch.from(EPOCH_2))
                     .aggregateSignature(com.concordium.sdk.responses.blockcertificates.QuorumSignature
-                            .builder().value(QUORUM_SIG_2)
+                            .builder().value(BLSSignature.from(QUORUM_SIG_2))
                             .build())
                     .signatories(CLIENT_BAKER_ID_LIST_2)
                     .build();
@@ -122,7 +123,7 @@ public class ClientV2GetBlockCertificatesTest {
                     .qcRoundsFirstEpoch(CLIENT_FINALIZER_ROUND_LIST_1)
                     .qcRoundsSecondEpoch(CLIENT_FINALIZER_ROUND_LIST_2)
                     .aggregateSignature(com.concordium.sdk.responses.blockcertificates.TimeoutSignature
-                            .builder().value(TIMEOUT_SIG_1)
+                            .builder().value(BLSSignature.from(TIMEOUT_SIG_1))
                             .build())
                     .build();
 
@@ -131,7 +132,7 @@ public class ClientV2GetBlockCertificatesTest {
                     .finalizedQc(CLIENT_QUORUM_CERTIFICATE_1)
                     .successorQc(CLIENT_QUORUM_CERTIFICATE_2)
                     .successorProof(com.concordium.sdk.responses.blockcertificates.SuccessorProof
-                            .builder().value(SUCCESSOR_PROOF_1).build())
+                            .builder().value(Hash.from(SUCCESSOR_PROOF_1)).build())
                     .build();
     // Client Block Certificates
     private static final com.concordium.sdk.responses.blockcertificates.BlockCertificates CLIENT_BLOCK_CERT_WITH_QUORUM =

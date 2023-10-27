@@ -14,7 +14,6 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-
 public class EpochFinalizationEntry {
     /**
      * The quorum certificate for the finalized block.

@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blockcertificates;
 
+import com.concordium.sdk.crypto.BLSSignature;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,9 +16,9 @@ import lombok.ToString;
 public class QuorumSignature {
 
     /**
-     * The bytes representing the raw aggregate signature. The bytes have a fixed length of 48 bytes.
+     * The aggregate {@link BLSSignature}.
      */
-    private final byte[] value;
+    private final BLSSignature value;
 
     /**
      * Parses {@link com.concordium.grpc.v2.QuorumSignature} to {@link QuorumSignature}.
@@ -25,6 +26,8 @@ public class QuorumSignature {
      * @return parsed {@link QuorumSignature}.
      */
     public static QuorumSignature from(com.concordium.grpc.v2.QuorumSignature sig) {
-        return QuorumSignature.builder().value(sig.getValue().toByteArray()).build();
+        return QuorumSignature.builder()
+                .value(BLSSignature.from(sig.getValue().toByteArray()))
+                .build();
     }
 }

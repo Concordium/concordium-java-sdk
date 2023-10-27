@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blockcertificates;
 
+import com.concordium.sdk.transactions.Hash;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,9 +17,9 @@ import lombok.ToString;
 @ToString
 public class SuccessorProof {
     /**
-     * The proof represented as raw bytes. The bytes have a fixed length of 32 bytes.
+     * The proof.
      */
-    private final byte[] value;
+    private final Hash value;
 
     /**
      * Parses {@link com.concordium.grpc.v2.SuccessorProof} to {@link SuccessorProof}.
@@ -26,6 +27,6 @@ public class SuccessorProof {
      * @return parsed {@link SuccessorProof}.
      */
     public static SuccessorProof from(com.concordium.grpc.v2.SuccessorProof proof) {
-        return SuccessorProof.builder().value(proof.getValue().toByteArray()).build();
+        return SuccessorProof.builder().value(Hash.from(proof.getValue().toByteArray())).build();
     }
 }

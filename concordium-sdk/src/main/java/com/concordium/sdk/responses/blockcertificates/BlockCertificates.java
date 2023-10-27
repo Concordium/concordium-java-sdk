@@ -1,11 +1,13 @@
 package com.concordium.sdk.responses.blockcertificates;
 
+import com.concordium.sdk.responses.Round;
 import lombok.*;
 
 import java.util.Optional;
 
 /**
  * Certificates for a block for protocols supporting ConcordiumBFT.
+ * ConcordiumBFT progresses to a new {@link Round} either via a {@link QuorumCertificate} or a {@link TimeoutCertificate} for a particular round.
  */
 @EqualsAndHashCode
 @Builder

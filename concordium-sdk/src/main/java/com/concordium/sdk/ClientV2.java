@@ -778,7 +778,7 @@ public final class ClientV2 {
 
     /**
      * Retrieves the {@link BlockCertificates} for a given block.
-     * Note that, if the block being pointed to is not a product of ConcordiumBFT, then a INVALID_ARGUMENT exception will be thrown.
+     * Note that, if the block being pointed to is not a product of ConcordiumBFT, i.e. created before protocol version 6, then a INVALID_ARGUMENT exception will be thrown.
      * If the endpoint is not enabled by the node, then an 'UNIMPLEMENTED' exception will be thrown.
      * @param block The block to query
      * @return {@link BlockCertificates} of the block.
