@@ -3,6 +3,7 @@
 ## Unreleased changes
 - Added support for GRPC V2 `GetBakerRewardPeriodInfo` for getting all the bakers in the reward period of a block. Only available when querying a node with version at least 6.1.
 - Added support for GRPC V2 `GetBlockCertificates` for retrieving certificates for a block supporting ConcordiumBF, i.e. a node with at least version 6.1.
+- Extended `CurrentPaydayStatus` with `CommissionRates` that apply for the current reward period. Requires at least node version 6.1.
 
 ## 5.1.0
 - Fixed a regression that made it harder to deserialize transactions from bytes.
