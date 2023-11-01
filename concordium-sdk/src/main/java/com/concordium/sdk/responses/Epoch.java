@@ -25,4 +25,8 @@ public class Epoch {
     public static Epoch from(long x) {
         return new Epoch(UInt64.from(x));
     }
+
+    public static Epoch from(com.concordium.grpc.v2.Epoch epoch) {
+        return from(epoch.getValue());
+    }
 }

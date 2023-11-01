@@ -13,6 +13,7 @@ import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
 import com.concordium.sdk.responses.*;
 import com.concordium.sdk.responses.bakersrewardperiod.BakerRewardPeriodInfo;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.blockcertificates.BlockCertificates;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blockitemstatus.BlockItemStatus;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
@@ -793,6 +794,18 @@ public final class ClientV2 {
                 info -> periodInfos.add(BakerRewardPeriodInfo.from(info))
         );
         return periodInfos.build();
+    }
+
+    /**
+     * Retrieves the {@link BlockCertificates} for a given block.
+     * Note that, if the block being pointed to is not a product of ConcordiumBFT, i.e. created before protocol version 6, then a INVALID_ARGUMENT exception will be thrown.
+     * If the endpoint is not enabled by the node, then an 'UNIMPLEMENTED' exception will be thrown.
+     * @param block The block to query
+     * @return {@link BlockCertificates} of the block.
+     */
+    public BlockCertificates getBlockCertificates(BlockQuery block) {
+        val res = this.server().getBlockCertificates(to(block));
+        return BlockCertificates.from(res);
     }
 
     /**
