@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased changes
-- Added support for GRPC V2 `GetBakerRewardPeriodInfo` for getting all the bakers in the reward period of a block.
+- Added support for GRPC V2 `GetBakerRewardPeriodInfo` for getting all the bakers in the reward period of a block. Only available when querying a node with version at least 6.1.
 
 ## 5.1.0
 - Fixed a regression that made it harder to deserialize transactions from bytes.
