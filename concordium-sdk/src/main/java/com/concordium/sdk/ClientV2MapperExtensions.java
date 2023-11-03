@@ -31,6 +31,7 @@ import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.crypto.vrf.VRFPublicKey;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
+import com.concordium.sdk.requests.EpochQuery;
 import com.concordium.sdk.responses.Epoch;
 import com.concordium.sdk.responses.Round;
 import com.concordium.sdk.responses.TimeoutParameters;
@@ -1644,5 +1645,23 @@ interface ClientV2MapperExtensions {
         return com.concordium.grpc.v2.Parameter.newBuilder()
                 .setValue(ByteString.copyFrom(parameter.getBytes()))
                 .build();
+    }
+
+    static EpochRequest to(EpochQuery query) {
+        switch (query.getType()) {
+            case BLOCK_HASH:
+                return EpochRequest.newBuilder()
+                        .setBlockHash(to(query.getBlockHashInput())).build();
+            case RELATIVE_EPOCH:
+                return EpochRequest.newBuilder()
+                        .setRelativeEpoch(
+                                EpochRequest.RelativeEpoch.newBuilder()
+                                        .setGenesisIndex(GenesisIndex.newBuilder().setValue(query.getGenesisIndex()).build())
+                                        .setEpoch(com.concordium.grpc.v2.Epoch.newBuilder().setValue(query.getEpoch().getValue().getValue()).build())
+                                        .build()
+                        ).build();
+            default:
+                throw new IllegalArgumentException("Unexpected EpochQuery");
+        }
     }
 }
