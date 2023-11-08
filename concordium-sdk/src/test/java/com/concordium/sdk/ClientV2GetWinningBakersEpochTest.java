@@ -95,7 +95,7 @@ public class ClientV2GetWinningBakersEpochTest {
     }
 
     @Test
-    public void getModuleList() {
+    public void getWinningBakersEpoch() {
         var query = EpochQuery.BLOCK_HASH(BlockQuery.BEST);
         var res = client.getWinningBakersEpoch(query);
 
