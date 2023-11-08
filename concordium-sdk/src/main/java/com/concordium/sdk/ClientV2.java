@@ -793,8 +793,6 @@ public final class ClientV2 {
 
     /**
      * Get the projected earliest time at which a particular baker will be required to bake a block. <p>
-     * If the current consensus version is 0, then an 'UNIMPLEMENTED' exception will be thrown, as the endpoint
-     * is only supported by consensus version 1.<p>
      *
      * If the baker is not a baker for the current reward period, this returns a timestamp at the
      * start of the next reward period. <p>
@@ -810,6 +808,8 @@ public final class ClientV2 {
      * Note that in some circumstances the returned timestamp can be in the past, especially at the end of an epoch.
      * @param bakerId id of the baker to query.
      * @return {@link Timestamp} as described in the method documentation.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}:
+     * <ul><li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the current consensus version is 0, as the endpoint is only supported by consensus version 1.</ul>
      */
     public Timestamp getBakerEarliestWinTime(BakerId bakerId) {
         val res = this.server().getBakerEarliestWinTime(to(bakerId));
@@ -817,17 +817,17 @@ public final class ClientV2 {
     }
 
     /**
-     * Get the block hash of the first finalized block in a specified epoch. <p>
-     * The following error cases are possible:
-     * <ul>
-     * <li> 'NOT_FOUND' if the query specifies an unknown block.
-     * <li> 'UNAVAILABLE' if the query is for an epoch that is not finalized in the current genesis index, or is for a future genesis index.
-     * <li> 'INVALID_ARGUMENT' if the query is for an epoch with no finalized blocks for a past genesis index.
-     * <li> 'INVALID_ARGUMENT' if the input {@link EpochQuery} is malformed.
-     * <li> 'UNIMPLEMENTED' if the endpoint is disabled on the node.
-     * </ul>
+     * Get the block hash of the first finalized block in a specified epoch.
+     *
      * @param epochQuery {@link EpochQuery} representing the specific epoch to query.
      * @return {@link Hash} of the first finalized block in the epoch.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
+     * <li> {@link io.grpc.Status#NOT_FOUND} if the query specifies an unknown block.
+     * <li> {@link io.grpc.Status#UNAVAILABLE} if the query is for an epoch that is not finalized in the current genesis index, or is for a future genesis index.
+     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for an epoch with no finalized blocks for a past genesis index.
+     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the input {@link EpochQuery} is malformed.
+     * <li> {@link io.grpc.Status#UNIMPLEMENTED} if the endpoint is disabled on the node.
+     * </ul>
      */
     public Hash getFirstBlockEpoch(EpochQuery epochQuery) {
         val res = this.server().getFirstBlockEpoch(to(epochQuery));
@@ -837,18 +837,17 @@ public final class ClientV2 {
     /**
      * Get the list of bakers that won the lottery in a particular historical epoch (i.e. the last finalized block is in a later epoch). <p>
      * This lists the winners for each round in the epoch, starting from the round after the last block in the previous epoch, running to the round before the first block in the next epoch. <p>
-     * It also indicates if a block in each round was included in the finalized chain. <p>
-     * The following error cases are possible:
-     * <ul>
-     * <li> 'NOT_FOUND' if the query specifies an unknown block.
-     * <li> 'UNAVAILABLE' if the query is for an epoch that is not finalized in the current genesis index, or is for a future genesis index.
-     * <li> 'INVALID_ARGUMENT' if the query is for an epoch that is not finalized for a past genesis index.
-     * <li> 'INVALID_ARGUMENT' if the query is for a genesis index at consensus version 0.
-     * <li> 'INVALID_ARGUMENT' if the input {@link EpochQuery} is malformed.
-     * <li> 'UNIMPLEMENTED' if the endpoint is disabled on the node.
-     * </ul>
+     * It also indicates if a block in each round was included in the finalized chain.
      * @param epochQuery {@link EpochQuery} representing the specific epoch to query.
      * @return {@link ImmutableList} of bakers that won the lottery in the specified epoch.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
+     * <li> {@link io.grpc.Status#NOT_FOUND} if the query specifies an unknown block.
+     * <li> {@link io.grpc.Status#UNAVAILABLE} if the query is for an epoch that is not finalized in the current genesis index, or is for a future genesis index.
+     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for an epoch that is not finalized for a past genesis index.
+     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for a genesis index at consensus version 0.
+     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the input {@link EpochQuery} is malformed.
+     * <li> {@link io.grpc.Status#UNIMPLEMENTED} if the endpoint is disabled on the node.
+     * </ul>
      */
     public ImmutableList<WinningBaker> getWinningBakersEpoch(EpochQuery epochQuery) {
         val res = this.server().getWinningBakersEpoch(to(epochQuery));
