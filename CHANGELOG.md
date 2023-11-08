@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+- Added support for GRPC V2 `GetBakerRewardPeriodInfo` for getting all the bakers in the reward period of a block. Only available when querying a node with version at least 6.1.
+- Added support for GRPC V2 `GetBlockCertificates` for retrieving certificates for a block supporting ConcordiumBF, i.e. a node with at least version 6.1.
+- Extended `CurrentPaydayStatus` with `CommissionRates` that apply for the current reward period. Requires at least node version 6.1.
 - Implemented custom serialization of `AbstractAddress` and added class `ListParam` for conveniently using lists of objects, `AbstractAddress`, `ContractAddress` and `AccountAddress` as smart contract parameters.
 - Added support for creating and serializing smart contract parameters using the abstract class `SchemaParameter` and a provided `Schema`.
 
