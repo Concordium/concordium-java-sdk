@@ -24,7 +24,7 @@ public class SerializeParameterResult {
 
     /**
      * A {@link JNIError} object, containing an error message if the serialize parameter function failed.
-     * Populated iff {@link SerializeParameterResult#isSuccess} is false.
+     * Populated if and only if {@link SerializeParameterResult#isSuccess} is false.
      */
     @JsonProperty("Err")
     private final JNIError err;
