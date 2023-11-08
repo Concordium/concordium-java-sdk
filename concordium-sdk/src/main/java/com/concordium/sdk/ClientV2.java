@@ -784,11 +784,11 @@ public final class ClientV2 {
     /**
      * Get all bakers in the reward period of a block.
      * This endpoint is only supported for protocol version 6 and onwards.
-     * If the protocol does not support the endpoint then an 'UNIMPLEMENTED' exception is thrown
      *
      * @param input The block to query.
-     *
      * @return {@link ImmutableList} with the {@link BakerRewardPeriodInfo} of all the bakers in the block.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}:
+     * <ul><li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the protocol does not support the endpoint.</ul>
      */
     public ImmutableList<BakerRewardPeriodInfo> getBakersRewardPeriod(BlockQuery input) {
         val response = this.server().getBakersRewardPeriod(to(input));
@@ -801,10 +801,13 @@ public final class ClientV2 {
 
     /**
      * Retrieves the {@link BlockCertificates} for a given block.
-     * Note that, if the block being pointed to is not a product of ConcordiumBFT, i.e. created before protocol version 6, then a INVALID_ARGUMENT exception will be thrown.
-     * If the endpoint is not enabled by the node, then an 'UNIMPLEMENTED' exception will be thrown.
+     *
      * @param block The block to query
      * @return {@link BlockCertificates} of the block.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}:<ul>
+     * <li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the endpoint is not enabled by the node.
+     * <li>{@link io.grpc.Status.Code#INVALID_ARGUMENT} if the block being pointed to is not a product of ConcordiumBFT, i.e. created before protocol version 6.
+     * </ul>
      */
     public BlockCertificates getBlockCertificates(BlockQuery block) {
         val res = this.server().getBlockCertificates(to(block));
