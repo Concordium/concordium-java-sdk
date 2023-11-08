@@ -17,7 +17,7 @@ public class SerializeParameterResult {
 
     /**
      * The serialized parameter as hex encoded bytes if the serialize parameter function succeeded.
-     * Populated iff {@link SerializeParameterResult#isSuccess} is true.
+     * Populated if and only if {@link SerializeParameterResult#isSuccess} is true.
      */
     @JsonProperty("Ok")
     private final String serializedParameter;
@@ -30,7 +30,7 @@ public class SerializeParameterResult {
     private final JNIError err;
 
     /**
-     * Whether the function succeeded or not.
+     * Whether the serialization of the parameter succeeded or not.
      */
     private boolean isSuccess;
 
