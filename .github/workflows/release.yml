@@ -99,7 +99,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        #token: ${{ secrets.CONCORDIUM_CI }}
         submodules: recursive
         
     - name: Setup JDK 8
