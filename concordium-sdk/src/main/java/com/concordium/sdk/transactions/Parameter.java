@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.responses.ProtocolVersion;
 import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.UInt16;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -15,7 +16,8 @@ import java.nio.ByteBuffer;
  * The parameters are used for updating the smart contract instance.
  * i.e. calling a "receive" function exposed in the smart contract with the parameters.
  * Buffer of the parameters message.
- * In the current supported protocols the size is limited to be 64kb.
+ * For protocol versions below {@link ProtocolVersion#V5} the size is limited to 1kb.
+ * From protocol version {@link ProtocolVersion#V5} and onwards the size is limited to be 64kb.
  */
 
 @Getter

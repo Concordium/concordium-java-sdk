@@ -4,7 +4,11 @@ import com.concordium.grpc.v2.BlockHash;
 import com.concordium.grpc.v2.TransactionHash;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableList;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,12 +16,14 @@ import lombok.val;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
  * A common hash (SHA256) used on the chain.
  */
 @EqualsAndHashCode
+@JsonSerialize(using = Hash.HashSerializer.class)
 public class Hash {
     @Getter
     private final byte[] bytes;
@@ -69,4 +75,10 @@ public class Hash {
         return this.asHex();
     }
 
+    public static class HashSerializer extends JsonSerializer<Hash> {
+        @Override
+        public void serialize(Hash value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+            gen.writeString(value.asHex());
+        }
+    }
 }

@@ -1,6 +1,8 @@
 package com.concordium.sdk.examples.contractexample.parameters;
 
 import com.concordium.sdk.types.AbstractAddress;
+import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -19,6 +21,11 @@ import java.io.IOException;
 public class UpdateOperator {
 
     private OperatorUpdate update;
+    /**
+     * The address which is either added or removed as an operator. An {@link AbstractAddress} is either an {@link AccountAddress} or a {@link ContractAddress}.
+     * Fields of smart contract parameters containing {@link AbstractAddress} must be annotated with '@JsonSerialize(using = AbstractAddress.AbstractAddressJsonSerializer.class)'
+     * to ensure correct serialization.
+     */
     @JsonSerialize(using = AbstractAddress.AbstractAddressJsonSerializer.class)
     private AbstractAddress operator;
 

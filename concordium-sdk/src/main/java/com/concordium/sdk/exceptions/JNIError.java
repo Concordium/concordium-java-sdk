@@ -12,8 +12,13 @@ import lombok.ToString;
 @Getter
 @ToString
 public class JNIError {
-
+    /**
+     * The error message returned from the JNI.
+     */
     private final String errorMessage;
+    /**
+     * The type of the error.
+     */
     private final JNIErrorType errorType;
 
     @JsonCreator

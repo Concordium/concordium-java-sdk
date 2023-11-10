@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * Wrapper class for {@link ListParam} enforcing the correct Token id for cis2-nft contract.
  */
-public class NftMetaDataQuery extends ListParam {
-    public NftMetaDataQuery(Schema cis2nftSchema, ReceiveName tokenMetadataReceiveName, List<TokenIdU32> tokensForMetadataQuery) {
+public class NftTokenMetaDataQueryParams extends ListParam {
+    public NftTokenMetaDataQueryParams(Schema cis2nftSchema, ReceiveName tokenMetadataReceiveName, List<TokenIdU32> tokensForMetadataQuery) {
         super(cis2nftSchema, tokenMetadataReceiveName, tokensForMetadataQuery);
     }
 }

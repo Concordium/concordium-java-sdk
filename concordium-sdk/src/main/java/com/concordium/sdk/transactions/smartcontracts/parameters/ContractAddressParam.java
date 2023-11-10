@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions.smartcontracts.parameters;
 
 import com.concordium.sdk.transactions.InitName;
+import com.concordium.sdk.transactions.Parameter;
 import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.smartcontracts.Schema;
 import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
@@ -15,6 +16,8 @@ import java.io.IOException;
 
 /**
  * Wrapper class allowing {@link ContractAddress} to be passed directly as a smart contract parameter.
+ * This is needed, as smart contract parameters must be either a {@link Parameter} or extend {@link SchemaParameter}.
+ * The custom serialization just serializes the {@link ContractAddress} contained within, i.e. the serialized version of this class is exactly equal to the serialized version of {@link ContractAddress}.
  */
 @Getter
 @JsonSerialize(using = ContractAddressParam.ContractAddressParamSerializer.class)

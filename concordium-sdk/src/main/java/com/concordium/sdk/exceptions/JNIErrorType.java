@@ -3,7 +3,7 @@ package com.concordium.sdk.exceptions;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Represents the different types of possible errors when performing operations using the JNI.
+ * Represents the different types of possible errors when performing operations using the JNI. Should match the errors defined in the rust code in crypto-jni.
  */
 public enum JNIErrorType {
     @JsonProperty("ParameterSerializationError")

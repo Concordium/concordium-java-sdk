@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions.smartcontracts;
 
+import com.concordium.grpc.v2.UpdateContractPayload;
 import com.concordium.sdk.crypto.CryptoJniNative;
 import com.concordium.sdk.crypto.NativeResolver;
 import com.concordium.sdk.exceptions.CryptoJniException;
@@ -48,18 +49,18 @@ public abstract class SchemaParameter {
     private final Schema schema;
     /**
      * {@link InitName} containing the name of the contract to be initialized with the parameter.
-     * Populated iff type is {@link ParameterType#INIT}
+     * Populated if and only if type is {@link ParameterType#INIT}
      */
     @JsonIgnore
     private final InitName initName;
     /**
      * {@link ReceiveName} containing the name of the contract and method to be updated/invoked with the parameter.
-     * Populated iff type is {@link ParameterType#RECEIVE}.
+     * Populated if and only if type is {@link ParameterType#RECEIVE}.
      */
     @JsonIgnore
     private final ReceiveName receiveName;
     /**
-     * Whether the parameter has been initialized. Parameter should always be initialized with {@link SchemaParameter#initialize()} before being used to create initialize/update/invoke requests.
+     * Whether the parameter has been initialized. Parameter should always be initialized with {@link SchemaParameter#initialize()} before being used to create initialize/update/invoke transactions/requests.
      */
     @JsonIgnore
     private boolean initialized;
@@ -138,7 +139,7 @@ public abstract class SchemaParameter {
     }
 
     /**
-     * Helper method for {@link SchemaParameter#initialize()}. Json serializes the parameter, performs the JNI call and deserializes the resulting json to {@link SerializeParameterResult}.
+     * Helper method for {@link SchemaParameter#initialize()}. Performs the JNI call and deserializes the resulting json to {@link SerializeParameterResult}.
      *
      * @param verboseErrors whether to return verbose errors.
      * @param schemaBytes   byte[] containing the schema.
@@ -148,8 +149,7 @@ public abstract class SchemaParameter {
     @SneakyThrows
     private SerializeParameterResult getSerializeParameterResult(boolean verboseErrors, byte[] schemaBytes, SchemaVersion schemaVersion) {
         SerializeParameterResult result;
-        String parameterJson = JsonMapper.INSTANCE.writeValueAsString(this);
-        String resultJson = serializeUsingJNI(verboseErrors, schemaBytes, schemaVersion, parameterJson);
+        String resultJson = serializeUsingJNI(verboseErrors, schemaBytes, schemaVersion);
         result = JsonMapper.INSTANCE.readValue(resultJson, SerializeParameterResult.class);
         return result;
     }
@@ -160,18 +160,14 @@ public abstract class SchemaParameter {
      * @param verboseErrors whether to return verbose errors.
      * @param schemaBytes   byte[] containing the schema.
      * @param schemaVersion version of the schema.
-     * @param parameterJson the parameter serialized as json.
      * @return json representing a {@link SerializeParameterResult}.
      */
-    private String serializeUsingJNI(boolean verboseErrors, byte[] schemaBytes, SchemaVersion schemaVersion, String parameterJson) {
+    private String serializeUsingJNI(boolean verboseErrors, byte[] schemaBytes, SchemaVersion schemaVersion) {
         String resultJson;
         if (this.type == ParameterType.INIT) {
-            String contractName = initName.getName();
-            resultJson = CryptoJniNative.serializeInitParameter(parameterJson, contractName, schemaBytes, schemaVersion.getVersion(), verboseErrors);
+            resultJson = CryptoJniNative.serializeInitParameter(this, initName, schemaBytes, schemaVersion, verboseErrors);
         } else {
-            String contractName = receiveName.getContractName();
-            String methodName = receiveName.getMethod();
-            resultJson = CryptoJniNative.serializeReceiveParameter(parameterJson, contractName, methodName, schemaBytes, schemaVersion.getVersion(), verboseErrors);
+            resultJson = CryptoJniNative.serializeReceiveParameter(this, receiveName, schemaBytes, schemaVersion, verboseErrors);
         }
         return resultJson;
     }
@@ -187,5 +183,14 @@ public abstract class SchemaParameter {
             throw new IllegalStateException("Must initialize SchemaParameter before use");
         }
         return serializedParameter;
+    }
+
+    /**
+     * Returns the JSON representation of the parameter. This is the excactly what is sent to the rust layer for serialization when {@link SchemaParameter#initialize()} is called.
+     * @return the JSON representation of the parameter.
+     */
+    @SneakyThrows
+    public String toJson() {
+        return JsonMapper.INSTANCE.writeValueAsString(this);
     }
 }

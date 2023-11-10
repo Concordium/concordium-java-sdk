@@ -4,7 +4,8 @@ import lombok.Getter;
 
 /**
  * The <a href="https://docs.rs/concordium-contracts-common/latest/concordium_contracts_common/schema/index.html#">version</a> of the {@link Schema}.
- */
+ * If this is updated, the corresponding code in the rust layer must also be updated accordingly to ensure correct deserialization.
+  */
 @Getter
 public enum SchemaVersion {
     V0(0),

@@ -15,16 +15,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Helper class for creating and initializing parameters being used in {@link Cis2Nft}.
+ * Helper class for creating and initializing parameters being used in {@link Cis2Nft} representing a <a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-nft/src/lib.rs">cis2-nft contract</a>.
+ * All values are dummy values and should be replaced to get valid results.
  */
 public class Cis2NftParameters {
 
     private static final AccountAddress ACCOUNT_ADDRESS = AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P");
     private static  final ContractAddress CONTRACT_ADDRESS_1 = ContractAddress.from(1, 0);
     private static final ContractAddress CONTRACT_ADDRESS_2 = ContractAddress.from(2, 0);
-
     private static final String CIS_2_NFT_CONTRACT_NAME = "cis2_nft";
 
+    /**
+     * Generates and initializes {@link MintParams} for the 'mint' method of a cis2-nft contract.
+     * @return initialized {@link MintParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateMintParams() {
         Schema schema = Schema.from(Files.readAllBytes(Paths.get("./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.schema.bin")), SchemaVersion.V3);
@@ -38,6 +42,10 @@ public class Cis2NftParameters {
         return mintParameter;
     }
 
+    /**
+     * Generates and initializes {@link NftTransferParam} for the 'transfer' method of a cis2-nft contract.
+     * @return initialized {@link NftTransferParam}.
+     */
     @SneakyThrows
     public static SchemaParameter generateTransferParams() {
         Schema schema = Schema.from(Files.readAllBytes(Paths.get("./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.schema.bin")), SchemaVersion.V3);
@@ -54,10 +62,13 @@ public class Cis2NftParameters {
         transfers.add(transfer);
         SchemaParameter transferParameter = new NftTransferParam(schema, nftTransferReceiveName, transfers);
         transferParameter.initialize(true);
-
         return transferParameter;
     }
 
+    /**
+     * Generates and initializes {@link UpdateOperatorParams} for the 'updateOperator' method of a cis2-nft contract.
+     * @return initialized {@link UpdateOperatorParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateUpdateOperatorParams() {
         Schema schema = Schema.from(Files.readAllBytes(Paths.get("./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.schema.bin")), SchemaVersion.V3);
@@ -69,11 +80,15 @@ public class Cis2NftParameters {
         updateOperatorList.add(update2);
         SchemaParameter updateOperatorsParams = new UpdateOperatorParams(schema, updateOperatorReceiveName, updateOperatorList);
         updateOperatorsParams.initialize(true);
-
         return updateOperatorsParams;
     }
 
-    public static SchemaParameter generateOperatorOfParams() throws IOException {
+    /**
+     * Generates and initializes {@link OperatorOfQueryParams} for the 'operatorOf' method of a cis2-nft contract.
+     * @return initialized {@link OperatorOfQueryParams}.
+     */
+    @SneakyThrows
+    public static SchemaParameter generateOperatorOfParams() {
         Schema schema = Schema.from(Files.readAllBytes(Paths.get("./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.schema.bin")), SchemaVersion.V3);
         ReceiveName operatorOfReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "operatorOf");
         OperatorOfQuery operatorOfQuery1 = new OperatorOfQuery(ACCOUNT_ADDRESS, CONTRACT_ADDRESS_1);
@@ -86,7 +101,12 @@ public class Cis2NftParameters {
         return operatorOfQueryParams;
     }
 
-    public static SchemaParameter generateBalanceOfParams() throws IOException {
+    /**
+     * Generates and initializes {@link NftBalanceOfQueryParams} for the 'balanceOf' method of a cis2-nft contract.
+     * @return initialized {@link NftBalanceOfQueryParams}.
+     */
+    @SneakyThrows
+    public static SchemaParameter generateBalanceOfParams() {
         Schema schema = Schema.from(Files.readAllBytes(Paths.get("./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.schema.bin")), SchemaVersion.V3);
         ReceiveName balanceOfReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "balanceOf");
         NftBalanceOfQuery balanceOfQuery1 = new NftBalanceOfQuery(TokenIdU32.from(22222), ACCOUNT_ADDRESS);
@@ -99,7 +119,12 @@ public class Cis2NftParameters {
         return contractBalanceOfQueryParams;
     }
 
-    public static SchemaParameter generateTokenMetadataParams() throws IOException {
+    /**
+     * Generates and initializes {@link NftTokenMetaDataQueryParams} for the 'tokenMetadata' method of a cis2-nft contract.
+     * @return initialized {@link NftTokenMetaDataQueryParams}.
+     */
+    @SneakyThrows
+    public static SchemaParameter generateTokenMetadataParams() {
         Schema schema = Schema.from(Files.readAllBytes(Paths.get("./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.schema.bin")), SchemaVersion.V3);
         ReceiveName tokenMetadataReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "tokenMetadata");
         TokenIdU32 token1 = TokenIdU32.from(21);
@@ -107,12 +132,17 @@ public class Cis2NftParameters {
         List<TokenIdU32> tokensForMetadataQuery = new ArrayList<>();
         tokensForMetadataQuery.add(token1);
         tokensForMetadataQuery.add(token2);
-        SchemaParameter nftMetaDataQuery = new NftMetaDataQuery(schema, tokenMetadataReceiveName, tokensForMetadataQuery);
+        SchemaParameter nftMetaDataQuery = new NftTokenMetaDataQueryParams(schema, tokenMetadataReceiveName, tokensForMetadataQuery);
         nftMetaDataQuery.initialize(true);
         return nftMetaDataQuery;
     }
 
-    public static SchemaParameter generateSupportsParameter() throws IOException {
+    /**
+     * Generates and initializes {@link SupportsQueryParams} for the 'supports' method of a cis2-nft contract.
+     * @return initialized {@link SupportsQueryParams}.
+     */
+    @SneakyThrows
+    public static SchemaParameter generateSupportsParameter() {
         Schema schema = Schema.from(Files.readAllBytes(Paths.get("./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.schema.bin")), SchemaVersion.V3);
         ReceiveName supportsReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "supports");
         String standardIdentifier1 = "identifier1";
@@ -125,7 +155,12 @@ public class Cis2NftParameters {
         return supportsQueryParams;
     }
 
-    public static SchemaParameter generateSetImplementorsParams() throws IOException {
+    /**
+     * Generates and initializes {@link SetImplementorsParams} for the 'setImplementors' method of a cis2-nft contract.
+     * @return initialized {@link SetImplementorsParams}.
+     */
+    @SneakyThrows
+    public static SchemaParameter generateSetImplementorsParams() {
         Schema schema = Schema.from(Files.readAllBytes(Paths.get("./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.schema.bin")), SchemaVersion.V3);
         ReceiveName setImplementorsReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "setImplementors");
         List<ContractAddress> implementors = new ArrayList<>();

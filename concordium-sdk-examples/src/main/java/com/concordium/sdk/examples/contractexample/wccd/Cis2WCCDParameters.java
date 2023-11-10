@@ -2,6 +2,7 @@ package com.concordium.sdk.examples.contractexample.wccd;
 
 import com.concordium.sdk.examples.contractexample.parameters.*;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.smartcontracts.Schema;
@@ -22,7 +23,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Helper class for creating and initializing parameters being used in {@link Cis2WCCD}.
+ * Helper class for creating and initializing parameters being used in {@link Cis2WCCD} representing a <a href="https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/examples/cis2-wccd/src/lib.rs">cis2-wCCD contract</a>.
+ * All values are dummy values and should be replaced to get valid results.
  */
 public class Cis2WCCDParameters {
     private static final AccountAddress ACCOUNT_ADDRESS = AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P");
@@ -168,7 +170,7 @@ public class Cis2WCCDParameters {
         TokenIdUnit token = new TokenIdUnit();
         List<TokenIdUnit> tokensForMetadataQuery = new ArrayList<>();
         tokensForMetadataQuery.add(token);
-        SchemaParameter wccdMetadataQuery = new WCCDMetadataQuery(cis2wccdSchema, tokenMetadataReceiveName, tokensForMetadataQuery);
+        SchemaParameter wccdMetadataQuery = new WCCDTokenMetadataQueryParams(cis2wccdSchema, tokenMetadataReceiveName, tokensForMetadataQuery);
         wccdMetadataQuery.initialize(true);
         return wccdMetadataQuery;
     }
@@ -206,10 +208,19 @@ public class Cis2WCCDParameters {
         ReceiveName upgradeReceiveName = ReceiveName.from(CONTRACT_NAME, "upgrade");
         ModuleRef upgradeModuleRef = ModuleRef.from("67d568433bd72e4326241f262213d77f446db8ba03dfba351ae35c1b2e7e5109");
         SchemaParameter migrate = generateWrapParams();
-        SchemaParameter upgradeParams = new UpgradeParams(cis2wccdSchema, upgradeReceiveName, upgradeModuleRef.toString(), migrate);
+        SchemaParameter upgradeParams = new UpgradeParams(cis2wccdSchema, upgradeReceiveName, upgradeModuleRef, migrate);
         upgradeParams.initialize(true);
         return upgradeParams;
     }
 
+    @SneakyThrows
+    public static void main(String[] args) {
+        Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
+        ReceiveName upgradeReceiveName = ReceiveName.from("CONTRACT_NAME", "upgrade");
+        ModuleRef upgradeModuleRef = ModuleRef.from("67d568433bd72e4326241f262213d77f446db8ba03dfba351ae35c1b2e7e5109");
+        SchemaParameter migrate = generateWrapParams();
+        SchemaParameter upgradeParams = new UpgradeParams(cis2wccdSchema, upgradeReceiveName, upgradeModuleRef, migrate);
+        upgradeParams.initialize(true);
+    }
 
 }

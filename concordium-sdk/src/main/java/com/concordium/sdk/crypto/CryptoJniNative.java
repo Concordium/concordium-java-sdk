@@ -1,6 +1,12 @@
 package com.concordium.sdk.crypto;
 
+import com.concordium.sdk.exceptions.JNIError;
+import com.concordium.sdk.transactions.InitName;
+import com.concordium.sdk.transactions.ReceiveName;
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
+import com.concordium.sdk.transactions.smartcontracts.SchemaVersion;
 import com.concordium.sdk.transactions.smartcontracts.SerializeParameterResult;
+import lombok.SneakyThrows;
 
 public class CryptoJniNative {
 
@@ -74,26 +80,34 @@ public class CryptoJniNative {
     public static native String generateConfigureBakerKeysPayload(String input);
 
     /**
-     * Serializes json representation of a parameter for a receive function using a schema of the module.
-     * @param parameterJson json representation of the parameter.
-     * @param contractName name of the contract.
-     * @param methodName name of the method.
+     * Serializes a parameter for a receive function using a schema of the module.
+     * @param parameter the parameter.
+     * @param receiveName the name of the contract and the method.
      * @param schemaBytes schema of the contract.
      * @param schemaVersion version of the schema.
      * @param verboseErrors whether errors are returned in verbose format or not.
-     * @return JSON representing {@link SerializeParameterResult}
+     * @return JSON representing {@link SerializeParameterResult}. If the serialization was successful, the field 'serializedParameter' contains the serialized parameter as hex encoded bytes.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
      */
-    public static native String serializeReceiveParameter(String parameterJson, String contractName, String methodName, byte[] schemaBytes, int schemaVersion, boolean verboseErrors);
+    @SneakyThrows
+    public static String serializeReceiveParameter(SchemaParameter parameter, ReceiveName receiveName, byte[] schemaBytes, SchemaVersion schemaVersion, boolean verboseErrors) {
+        return serializeReceiveParameter(parameter.toJson(), receiveName.getContractName(), receiveName.getMethod(), schemaBytes, schemaVersion.getVersion(), verboseErrors);
+    }
+    private static native String serializeReceiveParameter(String parameterJson, String contractName, String methodName, byte[] schemaBytes, int schemaVersion, boolean verboseErrors);
 
     /**
-     * Serializes json representation of a parameter for an init function using a schema of the module.
-     * @param parameterJson json representation of the parameter.
-     * @param contractName name of the contract.
+     * Serializes a parameter for an init function using a schema of the module.
+     * @param parameter the parameter.
+     * @param initName name of the contract.
      * @param schemaBytes schema of the contract.
      * @param schemaVersion version of the schema.
      * @param verboseErrors whether errors are returned in verbose format or not.
-     * @return JSON representing {@link SerializeParameterResult}
+     * @return JSON representing {@link SerializeParameterResult}. If the serialization was successful, the field 'serializedParameter' contains the serialized parameter as hex encoded bytes.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
      */
-    public static native String serializeInitParameter(String parameterJson, String contractName, byte[] schemaBytes, int schemaVersion, boolean verboseErrors);
+    public static String serializeInitParameter(SchemaParameter parameter, InitName initName, byte[] schemaBytes, SchemaVersion schemaVersion, boolean verboseErrors) {
+        return serializeInitParameter(parameter.toJson(), initName.getName(), schemaBytes, schemaVersion.getVersion(), verboseErrors);
+    }
+    private static native String serializeInitParameter(String parameterJson, String contractName, byte[] schemaBytes, int schemaVersion, boolean verboseErrors);
 
 }
