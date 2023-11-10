@@ -15,9 +15,17 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class WinningBaker {
-
+    /**
+     * The round number.
+     */
     private final Round round;
+    /**
+     * The baker that won the round.
+     */
     private final BakerId winner;
+    /**
+     * True if the baker produced a block in this round on the finalized chain, and False otherwise.
+     */
     private final boolean present;
 
     /**

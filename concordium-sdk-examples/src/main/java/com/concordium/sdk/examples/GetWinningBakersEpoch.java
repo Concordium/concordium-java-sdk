@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 
 /**
  * Creates a {@link ClientV2} from the specified connection ("http://localhost:20002" if not specified).
- * Retrieves and prints the {@link WinningBaker}s for the Epoch 2 at genesis index 5.
+ * Retrieves and prints the {@link WinningBaker}s for the first finalized block for specified Epoch at the specified genesis index (Epoch 2 at genesis index 5 if not specified).
  */
 @CommandLine.Command(name = "GetWinningBakersEpoch", mixinStandardHelpOptions = true)
 public class GetWinningBakersEpoch implements Callable<Integer> {
@@ -21,6 +21,18 @@ public class GetWinningBakersEpoch implements Callable<Integer> {
             description = "GRPC interface of the node.",
             defaultValue = "http://localhost:20002")
     private String endpoint;
+
+    @CommandLine.Option(
+            names = {"--genesisIndex"},
+            description = "Genesis index to query at",
+            defaultValue = "5")
+    private int genesisIndex;
+
+    @CommandLine.Option(
+            names = {"--epoch"},
+            description = "Epoch index to query",
+            defaultValue = "5")
+    private int epoch;
 
     @Override
     public Integer call() throws Exception {
@@ -31,7 +43,7 @@ public class GetWinningBakersEpoch implements Callable<Integer> {
                 .build();
 
         ClientV2 client = ClientV2.from(connection);
-        client.getWinningBakersEpoch(EpochQuery.RELATIVE_EPOCH(5, Epoch.from(2)))
+        client.getWinningBakersEpoch(EpochQuery.RELATIVE_EPOCH(genesisIndex, Epoch.from(epoch)))
                 .forEach(System.out::println);
 
         return 0;
