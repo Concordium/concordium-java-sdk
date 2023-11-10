@@ -182,12 +182,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generatePu
 #[derive(SerdeSerialize, SerdeDeserialize)]
 enum CryptoJniResult<T> {
     Ok(T),
-    Err(JNIError),
+    Err(JNIErrorResponse),
 }
 
 #[derive(SerdeSerialize, SerdeDeserialize)]
 #[allow(non_snake_case)]
-enum JNIErrorType {
+enum JNIErrorResponseType {
     ParameterSerializationError,
     Utf8DecodeError,
     JsonDeserializationError,
@@ -198,16 +198,16 @@ enum JNIErrorType {
 
 #[derive(SerdeSerialize, SerdeDeserialize)]
 #[allow(non_snake_case)]
-struct JNIError {
-    errorType: JNIErrorType,
+struct JNIErrorResponse {
+    errorType: JNIErrorResponseType,
     errorMessage: String,
     
 }
 
 impl<T> From<serde_json::Error> for CryptoJniResult<T> {
     fn from(e: serde_json::Error) -> Self {
-        let error = JNIError {
-            errorType: JNIErrorType::JsonDeserializationError,
+        let error = JNIErrorResponse {
+            errorType: JNIErrorResponseType::JsonDeserializationError,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -216,8 +216,8 @@ impl<T> From<serde_json::Error> for CryptoJniResult<T> {
 
 impl<T> From<Utf8Error> for CryptoJniResult<T> {
     fn from(e: Utf8Error) -> Self {
-        let error = JNIError {
-            errorType: JNIErrorType::Utf8DecodeError,
+        let error = JNIErrorResponse {
+            errorType: JNIErrorResponseType::Utf8DecodeError,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -226,8 +226,8 @@ impl<T> From<Utf8Error> for CryptoJniResult<T> {
 
 impl<T> From<jni::errors::Error> for CryptoJniResult<T> {
     fn from(e: jni::errors::Error) -> Self {
-        let error = JNIError {
-            errorType: JNIErrorType::NativeConversionError,
+        let error = JNIErrorResponse {
+            errorType: JNIErrorResponseType::NativeConversionError,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -240,8 +240,8 @@ impl<T> From<jni::errors::Error> for CryptoJniResult<T> {
  */
 impl<T> From<&str> for CryptoJniResult<T> {
     fn from(e: &str) -> Self {
-        let error = JNIError {
-            errorType: JNIErrorType::PayloadCreationError,
+        let error = JNIErrorResponse {
+            errorType: JNIErrorResponseType::PayloadCreationError,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -250,8 +250,8 @@ impl<T> From<&str> for CryptoJniResult<T> {
 
 impl<T> From<anyhow::Error> for CryptoJniResult<T> {
     fn from(e: anyhow::Error) -> Self {
-        let error = JNIError {
-            errorType: JNIErrorType::ParameterSerializationError,
+        let error = JNIErrorResponse {
+            errorType: JNIErrorResponseType::ParameterSerializationError,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -472,9 +472,17 @@ type SerializeParamResult = CryptoJniResult<String>;
 
 #[no_mangle]
 #[allow(non_snake_case)]
+/// The JNI wrapper for serializing receive parameters.
 /**
- * The JNI wrapper for serializing receive parameters.
- * Constructs a SerializeParamResult containg the hex encoded serialized parameter. 
+ * The `parameter` parameter must be a properly initalized `java.lang.String` that is non-null. The parameter must be valid JSON according to the provided schema.
+ * The `contractName` parameter must be a properly initalized `java.lang.String` that is non-null.
+ * The `methodName` parameter must be a properly initalized `java.lang.String` that is non-null.
+ * The `schemaBytes` parameter must be a properly initalized `byte[]` containing bytes representing a valid schema. The schema must match the provided `contractName` and `methodName`.
+ * The `schemaVersion` must be a integer representing a valid `com.concordium.sdk.transactions.smartcontracts.SchemaVersion`.
+ */
+/// If serialization fails returns a SerializeParamResult containing a JNIError detailing what went wrong. 
+/**
+ *  Returns a SerializeParamResult containg the hex encoded serialized parameter. 
  */
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeReceiveParameter(
     env: JNIEnv,
@@ -573,9 +581,16 @@ pub fn serialize_receive_contract_parameters_aux(
     return Ok(res?);
 }
 
+/// The JNI wrapper for serializing init parameters.
 /**
- * The JNI wrapper for serializing init parameters.
- * Constructs a SerializeParamResult containg the hex encoded serialized parameter. 
+ * The `parameter` parameter must be a properly initalized `java.lang.String` that is non-null. The parameter must be valid JSON according to the provided schema.
+ * The `contractName` parameter must be a properly initalized `java.lang.String` that is non-null.
+ * The `schemaBytes` parameter must be a properly initalized `byte[]` containing bytes representing a valid schema. The schema must match the provided `contractName`.
+ * The `schemaVersion` must be a integer representing a valid `com.concordium.sdk.transactions.smartcontracts.SchemaVersion`.
+ */
+/// If serialization fails returns a SerializeParamResult containing a JNIError detailing what went wrong. 
+/**
+ *  Returns a SerializeParamResult containg the hex encoded serialized parameter. 
  */
 #[no_mangle]
 #[allow(non_snake_case)]
