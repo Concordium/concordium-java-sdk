@@ -28,18 +28,6 @@ import java.util.concurrent.Callable;
  */
 @CommandLine.Command(name = "Cis2Nft", mixinStandardHelpOptions = true)
 public class Cis2Nft implements Callable<Integer> {
-
-    private static final String SENDER_ADDRESS = "3WZE6etUvVp1eyhEtTxqZrQaanTAZnZCHEmZmDyCbCwxnmQuPE"; //  Dummy address
-    private static final ModuleRef MODULE_REF = ModuleRef.from("247a7ac6efd2e46f72fd18741a6d1a0254ec14f95639df37079a576b2033873e"); // Dummy module ref
-    private static final ContractAddress CONTRACT_ADDRESS = ContractAddress.from(1, 0); // Dummy contract address
-
-    private static final Expiry EXPIRY = Expiry.createNew().addMinutes(5);
-
-    private static final TransactionSigner SIGNER = TransactionSigner.from(
-            SignerEntry.from(Index.from(0), Index.from(0),
-                    ED25519SecretKey.from("56f60de843790c308dac2d59a5eec9f6b1649513f827e5a13d7038accfe31784")) // Dummy key
-    );
-
     @CommandLine.Option(
             names = {"-m", "--method"},
             required = true,
@@ -57,7 +45,14 @@ public class Cis2Nft implements Callable<Integer> {
             description = "GRPC request timeout in milliseconds.",
             defaultValue = "100000")
     private int timeout;
-
+    private static final String SENDER_ADDRESS = "3WZE6etUvVp1eyhEtTxqZrQaanTAZnZCHEmZmDyCbCwxnmQuPE"; //  Dummy address
+    private static final ModuleRef MODULE_REF = ModuleRef.from("247a7ac6efd2e46f72fd18741a6d1a0254ec14f95639df37079a576b2033873e"); // Dummy module ref
+    private static final ContractAddress CONTRACT_ADDRESS = ContractAddress.from(1, 0); // Dummy contract address
+    private static final Expiry EXPIRY = Expiry.createNew().addMinutes(5);
+    private static final TransactionSigner SIGNER = TransactionSigner.from(
+            SignerEntry.from(Index.from(0), Index.from(0),
+                    ED25519SecretKey.from("56f60de843790c308dac2d59a5eec9f6b1649513f827e5a13d7038accfe31784")) // Dummy key
+    );
 
     @Override
     public Integer call() throws IOException, ClientInitializationException {
@@ -122,7 +117,7 @@ public class Cis2Nft implements Callable<Integer> {
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         Hash txHash = client.sendTransaction(initContractTransaction);
-        System.out.println("Submitted transaction for " + this.methodName  + " with hash: " + txHash);
+        System.out.println("Submitted transaction for " + this.methodName + " with hash: " + txHash);
         FinalizedBlockItem finalizedTransaction = client.waitUntilFinalized(txHash, timeout);
         System.out.println("Transaction finalized in block with hash: " + finalizedTransaction.getBlockHash());
     }
@@ -138,7 +133,7 @@ public class Cis2Nft implements Callable<Integer> {
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
         Hash txHash = client.sendTransaction(transaction);
-        System.out.println("Submitted transaction for " + this.methodName  + " with hash: " + txHash);
+        System.out.println("Submitted transaction for " + this.methodName + " with hash: " + txHash);
         FinalizedBlockItem finalizedTransaction = client.waitUntilFinalized(txHash, timeout);
         System.out.println("Transaction finalized in block with hash: " + finalizedTransaction.getBlockHash());
     }

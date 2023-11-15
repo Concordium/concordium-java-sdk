@@ -2,7 +2,6 @@ package com.concordium.sdk.examples.contractexample.wccd;
 
 import com.concordium.sdk.examples.contractexample.parameters.*;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.smartcontracts.Schema;
@@ -31,14 +30,16 @@ public class Cis2WCCDParameters {
     private static final ContractAddress CONTRACT_ADDRESS_1 = ContractAddress.from(1, 0);
     private static final ContractAddress CONTRACT_ADDRESS_2 = ContractAddress.from(2, 0);
     private static final String CONTRACT_NAME = "cis2_wCCD";
-
     private static final Path SCHEMA_PATH = Paths.get("./src/main/java/com/concordium/sdk/examples/contractexample/wccd/cis2-wccd.schema.bin");
+
+    /**
+     * Generates and initializes {@link WrapParams} for the 'wrap' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link WrapParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateWrapParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
-
-        // Initialize WrapParams
-
         ReceiveName wrapReceiveName = ReceiveName.from(CONTRACT_NAME, "wrap");
         Receiver wrapReceiver = new Receiver(ACCOUNT_ADDRESS);
         List<UInt8> wrapData = new ArrayList<>();
@@ -49,11 +50,14 @@ public class Cis2WCCDParameters {
         return wrapParams;
     }
 
+    /**
+     * Generates and initializes {@link UnwrapParams} for the 'unwrap' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link UnwrapParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateUnwrapParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
-        // Initialize UnwrapParams
-
         ReceiveName unwrapReceiveName = ReceiveName.from(CONTRACT_NAME, "unwrap");
         String unwrapAmount = "2"; // TokenAmountU64
         Receiver unwrapReceiver = new Receiver(CONTRACT_ADDRESS_2, "test");
@@ -65,33 +69,42 @@ public class Cis2WCCDParameters {
         return unwrapParams;
     }
 
+    /**
+     * Generates and initializes {@link AddressParam} for the 'updateAdmin' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link AddressParam}.
+     */
     @SneakyThrows
     public static SchemaParameter generateUpdateAdminParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
-
-        // Initialize Address as UpdateAdminParam
         ReceiveName updateAdmninReceiveName = ReceiveName.from(CONTRACT_NAME, "updateAdmin");
         AddressParam updateAdminParam = new AddressParam(cis2wccdSchema, updateAdmninReceiveName, CONTRACT_ADDRESS_1);
         updateAdminParam.initialize(true);
         return updateAdminParam;
     }
 
+    /**
+     * Generates and initializes {@link SetPausedParams} for the 'setPaused' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link SetPausedParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateSetPausedParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
-
-        // Initialize SetPausedParams
         ReceiveName setPausedReceiveName = ReceiveName.from(CONTRACT_NAME, "setPaused");
         SetPausedParams setPausedParams = new SetPausedParams(cis2wccdSchema, setPausedReceiveName, true);
         setPausedParams.initialize(true);
         return setPausedParams;
     }
 
+    /**
+     * Generates and initializes {@link SetMetadataUrlParams} for the 'setMetadataUrl' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link SetMetadataUrlParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateSetMetadataUrlParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
-
-        // Initialize SetMetadataUrlParams
         ReceiveName setMetadataUrlReceiveName = ReceiveName.from(CONTRACT_NAME, "setMetadataUrl");
         String metadataUrl = "https://github.com/Concordium/concordium-contracts-common/blob/9d1f254e52a6bc730e4f8d92e353096cebe02f0a/concordium-contracts-common/src/types.rs";
         Hash hash = Hash.from("688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6");
@@ -100,6 +113,11 @@ public class Cis2WCCDParameters {
         return setMetadataUrlParams;
     }
 
+    /**
+     * Generates and initializes {@link WCCDTransferParam} for the 'transfer' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link WCCDTransferParam}.
+     */
     @SneakyThrows
     public static SchemaParameter generateTransferParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
@@ -116,10 +134,14 @@ public class Cis2WCCDParameters {
         transfers.add(transfer);
         SchemaParameter transferParameter = new WCCDTransferParam(cis2wccdSchema, nftTransferReceiveName, transfers);
         transferParameter.initialize(true);
-
         return transferParameter;
     }
 
+    /**
+     * Generates and initializes {@link UpdateOperatorParams} for the 'updateOperator' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link UpdateOperatorParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateUpdateOperatorParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
@@ -135,6 +157,11 @@ public class Cis2WCCDParameters {
         return updateOperatorsParams;
     }
 
+    /**
+     * Generates and initializes {@link WCCDBalanceOfQueryParams} for the 'balanceOf' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link WCCDBalanceOfQueryParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateBalanceOfParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
@@ -149,6 +176,11 @@ public class Cis2WCCDParameters {
         return contractBalanceOfQueryParams;
     }
 
+    /**
+     * Generates and initializes {@link OperatorOfQueryParams} for the 'operatorOf' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link OperatorOfQueryParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateOperatorOfParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
@@ -163,6 +195,11 @@ public class Cis2WCCDParameters {
         return operatorOfQueryParams;
     }
 
+    /**
+     * Generates and initializes {@link WCCDTokenMetadataQueryParams} for the 'tokenMetadata' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link WCCDTokenMetadataQueryParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateTokenMetadataParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
@@ -175,6 +212,11 @@ public class Cis2WCCDParameters {
         return wccdMetadataQuery;
     }
 
+    /**
+     * Generates and initializes {@link SupportsQueryParams} for the 'supports' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link SupportsQueryParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateSupportsParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
@@ -189,6 +231,11 @@ public class Cis2WCCDParameters {
         return supportsQueryParams;
     }
 
+    /**
+     * Generates and initializes {@link SetImplementorsParams} for the 'setImplementors' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link SetImplementorsParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateSetImplementorsParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
@@ -202,6 +249,11 @@ public class Cis2WCCDParameters {
         return setImplementorsParams;
     }
 
+    /**
+     * Generates and initializes {@link UpgradeParams} for the 'upgrade' method of a cis2-wCCD contract.
+     *
+     * @return initialized {@link UpgradeParams}.
+     */
     @SneakyThrows
     public static SchemaParameter generateUpgradeParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);

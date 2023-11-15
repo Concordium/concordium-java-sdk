@@ -900,7 +900,8 @@ public final class ClientV2 {
         }
         Iterator<BlockIdentifier> finalizedBlockStream = this.getFinalizedBlocks(timeoutMillis);
         while (finalizedBlockStream.hasNext()) {
-            finalizedBlockStream.next(); // We check if the transaction is finalized every time a new block is finalized.
+            finalizedBlockStream.next();
+            // We check if the transaction is finalized every time a new block is finalized.
             BlockItemStatus newStatus = this.getBlockItemStatus(transactionHash);
             if (newStatus.getStatus() == Status.FINALIZED) {
                 return newStatus.getFinalizedBlockItem().get();
