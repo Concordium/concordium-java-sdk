@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 /**
- * Creates a {@link ClientV2} from the specified connection ("http://localhost:20001" if not specified).
+ * Creates a {@link ClientV2} from the specified connection ("http://localhost:20000" if not specified).
  * Retrieves and prints the {@link PeerInfo} of connected Peers.
  */
 @CommandLine.Command(name = "GetPeersInfo", mixinStandardHelpOptions = true)
