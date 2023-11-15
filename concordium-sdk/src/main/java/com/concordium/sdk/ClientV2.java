@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
+import com.concordium.sdk.requests.EpochQuery;
 import com.concordium.sdk.requests.dumpstart.DumpRequest;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.responses.AccountIndex;
@@ -32,12 +33,14 @@ import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.smartcontracts.InvokeInstanceResult;
+import com.concordium.sdk.responses.winningbaker.WinningBaker;
 import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
+import com.concordium.sdk.types.Timestamp;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
@@ -781,11 +784,11 @@ public final class ClientV2 {
     /**
      * Get all bakers in the reward period of a block.
      * This endpoint is only supported for protocol version 6 and onwards.
-     * If the protocol does not support the endpoint then an 'UNIMPLEMENTED' exception is thrown
      *
      * @param input The block to query.
-     *
      * @return {@link ImmutableList} with the {@link BakerRewardPeriodInfo} of all the bakers in the block.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}:
+     * <ul><li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the protocol does not support the endpoint.</ul>
      */
     public ImmutableList<BakerRewardPeriodInfo> getBakersRewardPeriod(BlockQuery input) {
         val response = this.server().getBakersRewardPeriod(to(input));
@@ -798,14 +801,84 @@ public final class ClientV2 {
 
     /**
      * Retrieves the {@link BlockCertificates} for a given block.
-     * Note that, if the block being pointed to is not a product of ConcordiumBFT, i.e. created before protocol version 6, then a INVALID_ARGUMENT exception will be thrown.
-     * If the endpoint is not enabled by the node, then an 'UNIMPLEMENTED' exception will be thrown.
+     *
      * @param block The block to query
      * @return {@link BlockCertificates} of the block.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}:<ul>
+     * <li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the endpoint is not enabled by the node.
+     * <li>{@link io.grpc.Status.Code#INVALID_ARGUMENT} if the block being pointed to is not a product of ConcordiumBFT, i.e. created before protocol version 6.
+     * </ul>
      */
     public BlockCertificates getBlockCertificates(BlockQuery block) {
         val res = this.server().getBlockCertificates(to(block));
         return BlockCertificates.from(res);
+    }
+
+    /**
+     * Get the projected earliest time at which a particular baker will be required to bake a block. <p>
+     *
+     * If the baker is not a baker for the current reward period, this returns a timestamp at the
+     * start of the next reward period. <p>
+     * If the baker is a baker for the current reward period, the
+     * earliest win time is projected from the current round forward, assuming that each round after
+     * the last finalized round will take the minimum block time. (If blocks take longer, or timeouts
+     * occur, the actual time may be later, and the reported time in subsequent queries may reflect
+     * this.) <p>
+     * At the end of an epoch (or if the baker is not projected to bake before the end of the
+     * epoch) the earliest win time for a (current) baker will be projected as the start of the next
+     * epoch. This is because the seed for the leader election is updated at the epoch boundary, and
+     * so the winners cannot be predicted beyond that. <p>
+     * Note that in some circumstances the returned timestamp can be in the past, especially at the end of an epoch.
+     * @param bakerId id of the baker to query.
+     * @return {@link Timestamp} as described in the method documentation.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}:
+     * <ul><li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the current consensus version is 0, as the endpoint is only supported by consensus version 1.</ul>
+     */
+    public Timestamp getBakerEarliestWinTime(BakerId bakerId) {
+        val res = this.server().getBakerEarliestWinTime(to(bakerId));
+        return Timestamp.from(res);
+    }
+
+    /**
+     * Get the block hash of the first finalized block in a specified epoch.
+     *
+     * @param epochQuery {@link EpochQuery} representing the specific epoch to query.
+     * @return {@link Hash} of the first finalized block in the epoch.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
+     * <li> {@link io.grpc.Status#NOT_FOUND} if the query specifies an unknown block.
+     * <li> {@link io.grpc.Status#UNAVAILABLE} if the query is for an epoch that is not finalized in the current genesis index, or is for a future genesis index.
+     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for an epoch with no finalized blocks for a past genesis index.
+     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the input {@link EpochQuery} is malformed.
+     * <li> {@link io.grpc.Status#UNIMPLEMENTED} if the endpoint is disabled on the node.
+     * </ul>
+     */
+    public Hash getFirstBlockEpoch(EpochQuery epochQuery) {
+        val res = this.server().getFirstBlockEpoch(to(epochQuery));
+        return Hash.from(res);
+    }
+
+    /**
+     * Get the list of bakers that won the lottery in a particular historical epoch (i.e. the last finalized block is in a later epoch). <p>
+     * This lists the winners for each round in the epoch, starting from the round after the last block in the previous epoch, running to the round before the first block in the next epoch. <p>
+     * It also indicates if a block in each round was included in the finalized chain.
+     * @param epochQuery {@link EpochQuery} representing the specific epoch to query.
+     * @return {@link ImmutableList} of bakers that won the lottery in the specified epoch.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
+     * <li> {@link io.grpc.Status#NOT_FOUND} if the query specifies an unknown block.
+     * <li> {@link io.grpc.Status#UNAVAILABLE} if the query is for an epoch that is not finalized in the current genesis index, or is for a future genesis index.
+     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for an epoch that is not finalized for a past genesis index.
+     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for a genesis index at consensus version 0.
+     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the input {@link EpochQuery} is malformed.
+     * <li> {@link io.grpc.Status#UNIMPLEMENTED} if the endpoint is disabled on the node.
+     * </ul>
+     */
+    public ImmutableList<WinningBaker> getWinningBakersEpoch(EpochQuery epochQuery) {
+        val res = this.server().getWinningBakersEpoch(to(epochQuery));
+        val winners = new ImmutableList.Builder<WinningBaker>();
+        res.forEachRemaining(
+                winner -> winners.add(WinningBaker.parse(winner))
+        );
+        return winners.build();
     }
 
     /**
