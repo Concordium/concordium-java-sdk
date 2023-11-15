@@ -10,6 +10,9 @@ import lombok.val;
 
 import java.io.IOException;
 
+/**
+ * An unsigned byte
+ */
 @EqualsAndHashCode
 @Getter
 @JsonSerialize(using = UInt8.UInt8Serializer.class)

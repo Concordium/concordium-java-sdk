@@ -213,14 +213,4 @@ public class Cis2WCCDParameters {
         return upgradeParams;
     }
 
-    @SneakyThrows
-    public static void main(String[] args) {
-        Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
-        ReceiveName upgradeReceiveName = ReceiveName.from("CONTRACT_NAME", "upgrade");
-        ModuleRef upgradeModuleRef = ModuleRef.from("67d568433bd72e4326241f262213d77f446db8ba03dfba351ae35c1b2e7e5109");
-        SchemaParameter migrate = generateWrapParams();
-        SchemaParameter upgradeParams = new UpgradeParams(cis2wccdSchema, upgradeReceiveName, upgradeModuleRef, migrate);
-        upgradeParams.initialize(true);
-    }
-
 }
