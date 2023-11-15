@@ -3,10 +3,10 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.responses.nodeinfo.ConsensusState;
 import com.concordium.sdk.responses.nodeinfo.PeerType;
-import com.concordium.sdk.responses.nodeinfov2.BakerConsensusInfo;
-import com.concordium.sdk.responses.nodeinfov2.BakingCommitteeStatus;
-import com.concordium.sdk.responses.nodeinfov2.NetworkInfo;
-import com.concordium.sdk.responses.nodeinfov2.Node;
+import com.concordium.sdk.responses.nodeinfo.BakerConsensusInfo;
+import com.concordium.sdk.responses.nodeinfo.BakingCommitteeStatus;
+import com.concordium.sdk.responses.nodeinfo.NetworkInfo;
+import com.concordium.sdk.responses.nodeinfo.Node;
 import com.concordium.sdk.types.UInt64;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 
 /**
  * The test asserts that {@link ClientV2#getNodeInfo()}
- * correctly converts the {@link NodeInfo} returned by the server to {@link com.concordium.sdk.responses.nodeinfov2.NodeInfo}.
+ * correctly converts the {@link NodeInfo} returned by the server to {@link com.concordium.sdk.responses.nodeinfo.NodeInfo}.
  */
 public class ClientV2GetNodeInfoTest {
 
@@ -76,7 +76,7 @@ public class ClientV2GetNodeInfoTest {
             .setNetworkInfo(GRPC_NETWORK_INFO);
 
     // Builder for clientside NodeInfo with "standard" fields set
-    private static final com.concordium.sdk.responses.nodeinfov2.NodeInfo.NodeInfoBuilder CLIENT_BUILDER = com.concordium.sdk.responses.nodeinfov2.NodeInfo.builder()
+    private static final com.concordium.sdk.responses.nodeinfo.NodeInfo.NodeInfoBuilder CLIENT_BUILDER = com.concordium.sdk.responses.nodeinfo.NodeInfo.builder()
             .peerVersion(PEER_VERSION)
             .localTime(com.concordium.sdk.types.Timestamp.newMillis(LOCAL_TIME))
             .peerUptime(java.time.Duration.ofMillis(PEER_UPTIME))
@@ -172,29 +172,29 @@ public class ClientV2GetNodeInfoTest {
             .build();
 
     // "Standard" node info for a real node that is active in committee and is a finalizer.
-    private static final com.concordium.sdk.responses.nodeinfov2.NodeInfo CLIENT_FINALIZER_NODE_INFO = CLIENT_BUILDER
+    private static final com.concordium.sdk.responses.nodeinfo.NodeInfo CLIENT_FINALIZER_NODE_INFO = CLIENT_BUILDER
             .node(CLIENT_FINALIZER_NODE)
             .peerType(PeerType.NODE)
             .build();
 
     // Node info for BOOTSTRAPPER node
-    private static final com.concordium.sdk.responses.nodeinfov2.NodeInfo CLIENT_BOOTSTRAPPER_NODE_INFO = CLIENT_BUILDER
+    private static final com.concordium.sdk.responses.nodeinfo.NodeInfo CLIENT_BOOTSTRAPPER_NODE_INFO = CLIENT_BUILDER
             .node(CLIENT_BOOTSTRAPPER_NODE)
             .peerType(PeerType.BOOTSTRAPPER)
             .build();
 
     // Node info for baker node that is active in committee and not finalizer
-    private static final com.concordium.sdk.responses.nodeinfov2.NodeInfo CLIENT_BAKER_NODE_INFO = CLIENT_BUILDER
+    private static final com.concordium.sdk.responses.nodeinfo.NodeInfo CLIENT_BAKER_NODE_INFO = CLIENT_BUILDER
             .node(CLIENT_BAKER_NODE)
             .peerType(PeerType.NODE)
             .build();
 
-    private static final com.concordium.sdk.responses.nodeinfov2.NodeInfo CLIENT_PASSIVE_COMMITTEE_NODE_INFO = CLIENT_BUILDER
+    private static final com.concordium.sdk.responses.nodeinfo.NodeInfo CLIENT_PASSIVE_COMMITTEE_NODE_INFO = CLIENT_BUILDER
             .node(CLIENT_PASSIVE_COMMITTEE_NODE)
             .peerType(PeerType.NODE)
             .build();
 
-    private static final com.concordium.sdk.responses.nodeinfov2.NodeInfo CLIENT_PASSIVE_NODE_INFO = CLIENT_BUILDER
+    private static final com.concordium.sdk.responses.nodeinfo.NodeInfo CLIENT_PASSIVE_NODE_INFO = CLIENT_BUILDER
             .node(CLIENT_PASSIVE_NODE)
             .peerType(PeerType.NODE)
             .build();

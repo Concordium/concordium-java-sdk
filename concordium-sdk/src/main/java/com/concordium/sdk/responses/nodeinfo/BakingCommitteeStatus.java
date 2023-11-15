@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.nodeinfov2;
+package com.concordium.sdk.responses.nodeinfo;
 
 /**
  * Represents committee state of a node configured with baker keys

@@ -1,112 +1,99 @@
 package com.concordium.sdk.responses.nodeinfo;
 
 import com.concordium.sdk.types.Timestamp;
-import concordium.ConcordiumP2PRpc;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-/**
- * Node Information.
- */
-@Builder
-@Getter
-@ToString
+import java.time.Duration;
+
 @EqualsAndHashCode
+@Builder
+@ToString
 public class NodeInfo {
-    /**
-     * Node Id.
-     */
-    private final String nodeId;
 
     /**
-     * Current local time of the node.
+     * The version of the node
      */
+    @Getter
+    private final String peerVersion;
+
+    /**
+     * Local time of the node
+     */
+    @Getter
     private final Timestamp localTime;
 
     /**
-     * Type of Peer. Bootstrapper Or Node.
+     * Duration the node has been alive
      */
+    @Getter
+    private final Duration peerUptime;
+
+    /**
+     * Information related to the p2p protocol
+     */
+    @Getter
+    private final NetworkInfo networkInfo;
+
+    private final Node node;
+
+    /**
+     * Type of Peer. Bootstrapper or Node
+     */
+    @Getter
     private final PeerType peerType;
 
     /**
-     * Type of Peer Consensus Status.
-     */
-    private final ConsensusState consensusState;
-
-    /**
-     * Type of Peer Consensus Status in Baking Committee.
-     */
-    private final BakingStatus bakingStatus;
-
-    /**
-     * Committee details. This will only be populated if {@link NodeInfo#bakingStatus}
-     * is {@link BakingStatus#ACTIVE_IN_COMMITTEE}.
-     */
-    private final BakingCommitteeDetails committeeDetails;
-
-    /**
-     * Parses {@link concordium.ConcordiumP2PRpc.NodeInfoResponse} to {@link NodeInfo}.
+     * Gets the Consensus info for a node configured with baker keys
+     * {@link ConsensusState} of the node must be {@link ConsensusState#ACTIVE}
      *
-     * @param value {@link concordium.ConcordiumP2PRpc.NodeInfoResponse}.
-     * @return Parsed {@link NodeInfo}.
+     * @return {@link BakerConsensusInfo} of node configured with baker keys
      */
-    public static NodeInfo parse(ConcordiumP2PRpc.NodeInfoResponse value) {
-        val builder = NodeInfo.builder()
-                .nodeId(value.getNodeId().getValue())
-                .localTime(Timestamp.newMillis(value.getCurrentLocaltime()))
-                .peerType(parsePeerType(value))
-                .consensusState(parseConsensusState(value))
-                .bakingStatus(parseBakingStatus(value))
-                .committeeDetails(BakingCommitteeDetails.parse(value));
-
-        return builder.build();
-    }
-
-    private static PeerType parsePeerType(ConcordiumP2PRpc.NodeInfoResponse value) {
-        switch (value.getPeerType()) {
-            case "Bootstrapper":
-                return PeerType.BOOTSTRAPPER;
-            case "Node":
-                return PeerType.NODE;
-            default:
-                throw new IllegalArgumentException(
-                        String.format("Invalid 'PeerType': %s", value.getPeerType()));
+    public BakerConsensusInfo getBakerInfo() {
+        if (!this.getConsensusStatus().equals(ConsensusState.ACTIVE)) {
+            throw new IllegalStateException("Node is not ACTIVE but was: " + this.getConsensusStatus());
         }
-    }
-
-    private static BakingStatus parseBakingStatus(ConcordiumP2PRpc.NodeInfoResponse value) {
-        switch (value.getConsensusBakerCommittee()) {
-            case ACTIVE_IN_COMMITTEE:
-                return BakingStatus.ACTIVE_IN_COMMITTEE;
-            case NOT_IN_COMMITTEE:
-                return BakingStatus.NOT_IN_COMMITTEE;
-            case ADDED_BUT_NOT_ACTIVE_IN_COMMITTEE:
-                return BakingStatus.ADDED_BUT_NOT_ACTIVE_IN_COMMITTEE;
-            case ADDED_BUT_WRONG_KEYS:
-                return BakingStatus.ADDED_BUT_WRONG_KEYS;
-            default:
-            case UNRECOGNIZED:
-                throw new IllegalArgumentException(String.format(
-                        "Invalid value of Consensus Baker Committee : %d",
-                        value.getConsensusBakerCommittee().getNumber()));
-        }
+        return node.getBakerInfo();
     }
 
     /**
-     * Parses {@link ConsensusState} from input {@link concordium.ConcordiumP2PRpc.NodeInfoResponse}.
+     * Gets the Consensus Status of the node.
      *
-     * @param value input {@link concordium.ConcordiumP2PRpc.NodeInfoResponse}.
-     * @return Parsed {@link ConsensusState}.
+     * @return {@link ConsensusState} of the node.
      */
-    private static ConsensusState parseConsensusState(ConcordiumP2PRpc.NodeInfoResponse value) {
-        if (!value.getConsensusRunning()) {
-            return ConsensusState.NOT_RUNNING;
-        }
+    public ConsensusState getConsensusStatus() {
+        return node.getConsensusState();
+    }
 
-        if (!value.getConsensusBakerRunning()) {
-            return ConsensusState.PASSIVE;
-        }
+    /**
+     * Parses {@link com.concordium.grpc.v2.NodeInfo.Node} to {@link NodeInfo}
+     *
+     * @param nodeInfo {@link  com.concordium.grpc.v2.NodeInfo} returned from the Grpc API
+     * @return Parsed {@link NodeInfo}
+     */
+    public static NodeInfo parse(com.concordium.grpc.v2.NodeInfo nodeInfo) {
+        return getStandardNodeInfoBuilder(nodeInfo)
+                .node(Node.parseNodeInfo(nodeInfo))
+                .build();
 
-        return ConsensusState.ACTIVE;
+    }
+
+
+    /**
+     * Helper method for parse method. Creates a {@link NodeInfoBuilder} and sets fields that are always available
+     *
+     * @param nodeInfo {@link com.concordium.grpc.v2.NodeInfo} returned from the Grpc API
+     * @return {@link NodeInfoBuilder} with peerVersion, localTime, peerUptime, networkInfo and peerType configured
+     */
+    private static NodeInfoBuilder getStandardNodeInfoBuilder(com.concordium.grpc.v2.NodeInfo nodeInfo) {
+        return NodeInfo.builder()
+                .peerVersion(nodeInfo.getPeerVersion())
+                .localTime(Timestamp.from(nodeInfo.getLocalTime()))
+                .peerUptime(java.time.Duration.ofMillis(nodeInfo.getPeerUptime().getValue()))
+                .networkInfo(NetworkInfo.parse(nodeInfo.getNetworkInfo()))
+                .peerType((nodeInfo.hasNode() ? PeerType.NODE : PeerType.BOOTSTRAPPER));
     }
 
 }
