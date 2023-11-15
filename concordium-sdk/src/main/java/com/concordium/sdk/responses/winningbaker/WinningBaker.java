@@ -24,7 +24,7 @@ public class WinningBaker {
      */
     private final BakerId winner;
     /**
-     * True if the baker produced a block in this round on the finalized chain, and False otherwise.
+     * True if the block is present on the finalized chain.
      */
     private final boolean present;
 
