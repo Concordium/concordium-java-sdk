@@ -13,8 +13,8 @@ import lombok.Getter;
 import java.io.IOException;
 
 /**
- * The receiving address for a {@link Transfer}, similar to the {@link AbstractAddress} type, but contains extra information when the receiver address is a {@link ContractAddress}.
- * Represents a '<a href = "https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/concordium-cis2/src/lib.rs#L1017">Receiver</a>' used in {@link Transfer}.
+ * The receiving address for a {@link Cis2Transfer}, similar to the {@link AbstractAddress} type, but contains extra information when the receiver address is a {@link ContractAddress}.
+ * Represents a '<a href = "https://github.com/Concordium/concordium-rust-smart-contracts/blob/main/concordium-cis2/src/lib.rs#L1017">Receiver</a>' used in {@link Cis2Transfer}.
  */
 @JsonSerialize(using = Receiver.ReceiverSerializer.class)
 @Getter

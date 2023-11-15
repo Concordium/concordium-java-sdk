@@ -134,7 +134,7 @@ public class InvokeInstanceRequest {
                                              SchemaParameter schemaParameter,
                                              Energy energy) {
         if (!(schemaParameter.getType() == ParameterType.RECEIVE)) {
-            throw new IllegalArgumentException("SchemaParameter for InvokeInstanceRequest must be initialized with an ReceiveName");
+            throw new IllegalArgumentException("Cannot initialize smart contract with InvokeInstance. SchemaParameter for InvokeInstanceRequest must be initialized with a ReceiveName");
         }
         return from(blockHash, invoker, instance, amount, schemaParameter.getReceiveName(), Parameter.from(schemaParameter), energy);
     }
@@ -155,7 +155,7 @@ public class InvokeInstanceRequest {
                                              SchemaParameter schemaParameter,
                                              Energy energy) {
         if (!(schemaParameter.getType() == ParameterType.RECEIVE)) {
-            throw new IllegalArgumentException("SchemaParameter for InvokeInstanceRequest must be initialized with an ReceiveName");
+            throw new IllegalArgumentException("Cannot initialize smart contract with InvokeInstance. SchemaParameter for InvokeInstanceRequest must be initialized with a ReceiveName");
         }
         return from(blockHash, instance, amount, schemaParameter.getReceiveName(), Parameter.from(schemaParameter), energy);
     }

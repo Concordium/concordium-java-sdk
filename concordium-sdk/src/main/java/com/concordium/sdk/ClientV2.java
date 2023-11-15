@@ -16,6 +16,7 @@ import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockcertificates.BlockCertificates;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blockitemstatus.BlockItemStatus;
+import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
@@ -32,6 +33,7 @@ import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.smartcontracts.InvokeInstanceResult;
+import com.concordium.sdk.responses.transactionstatus.Status;
 import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.transactions.*;
@@ -806,6 +808,32 @@ public final class ClientV2 {
     public BlockCertificates getBlockCertificates(BlockQuery block) {
         val res = this.server().getBlockCertificates(to(block));
         return BlockCertificates.from(res);
+    }
+
+    /**
+     * Waits until a given transaction is finalized and returns the corresponding {@link FinalizedBlockItem}.
+     * @param transactionHash the {@link Hash} of the transaction to wait for.
+     * @param timeoutMillis the number of milliseconds to wait before throwing an exception.
+     * @return {@link FinalizedBlockItem} of the transaction.
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
+     * <li> {@link io.grpc.Status#DEADLINE_EXCEEDED} if the timeout is exceeded.
+     * <li> {@link io.grpc.Status#NOT_FOUND} if the transaction is not known to the node.
+     * </ul>
+     */
+    public FinalizedBlockItem waitUntilFinalized(Hash transactionHash, int timeoutMillis) {
+        BlockItemStatus status = this.getBlockItemStatus(transactionHash);
+        if (status.getStatus() == Status.FINALIZED) {
+            return status.getFinalizedBlockItem().get();
+        }
+        Iterator<BlockIdentifier> finalizedBlockStream = this.getFinalizedBlocks(timeoutMillis);
+        while (finalizedBlockStream.hasNext()) {
+            finalizedBlockStream.next(); // We check if the transaction is finalized every time a new block is finalized.
+            BlockItemStatus newStatus = this.getBlockItemStatus(transactionHash);
+            if (newStatus.getStatus() == Status.FINALIZED) {
+                return newStatus.getFinalizedBlockItem().get();
+            }
+        }
+        throw new IllegalStateException("No more finalized blocks"); // This should never happen as finalized blocks keep being streamed.
     }
 
     /**

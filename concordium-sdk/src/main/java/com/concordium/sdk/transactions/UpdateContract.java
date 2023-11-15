@@ -88,7 +88,7 @@ public final class UpdateContract extends Payload {
     public static UpdateContract from(@NonNull final ContractAddress contractAddress,
                                       SchemaParameter schemaParameter) {
         if (!(schemaParameter.getType() == ParameterType.RECEIVE)) {
-            throw new IllegalArgumentException("SchemaParameter for UpdateContractPayload must be initialized with a ReceiveName");
+            throw new IllegalArgumentException("Cannot initialize smart contract with UpdateContractTransaction. SchemaParameter for UpdateContract must be initialized with a ReceiveName");
         }
         return from(CCDAmount.fromMicro(0),
                 contractAddress,
@@ -107,7 +107,7 @@ public final class UpdateContract extends Payload {
                                       @NonNull final ContractAddress contractAddress,
                                       SchemaParameter schemaParameter) {
         if (!(schemaParameter.getType() == ParameterType.RECEIVE)) {
-            throw new IllegalArgumentException("SchemaParameter for UpdateContractPayload must be initialized with a ReceiveName");
+            throw new IllegalArgumentException("Cannot initialize smart contract with UpdateContractTransaction. SchemaParameter for UpdateContract must be initialized with a ReceiveName");
         }
         return from(amount, contractAddress, schemaParameter.getReceiveName(), Parameter.from(schemaParameter));
     }

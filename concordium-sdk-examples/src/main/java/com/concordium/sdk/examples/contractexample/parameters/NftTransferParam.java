@@ -7,7 +7,7 @@ import com.concordium.sdk.transactions.smartcontracts.parameters.ListParam;
 import java.util.List;
 
 /**
- * Wrapper class for {@link ListParam} enforcing the correct {@link Transfer} id for cis2-nft contract.
+ * Wrapper class for {@link ListParam} enforcing the correct {@link Cis2Transfer} id for cis2-nft contract.
  */
 public class NftTransferParam extends ListParam {
     public NftTransferParam(Schema cis2nftSchema, ReceiveName nftTransferReceiveName, List<NftTransfer> transfers) {

@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-public class Transfer<T extends TokenId, A extends TokenAmount> {
+public class Cis2Transfer<T extends TokenId, A extends TokenAmount> {
     /**
      * The ID of the token being transferred.
      * Field names must match field names in corresponding rust struct, therefore the annotation.
