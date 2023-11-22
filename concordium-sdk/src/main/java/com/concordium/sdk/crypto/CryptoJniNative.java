@@ -85,7 +85,7 @@ public class CryptoJniNative {
      * @param receiveName the name of the contract and the method.
      * @param schemaBytes schema of the contract.
      * @param schemaVersion version of the schema.
-     * @param verboseErrors whether errors are returned in verbose format or not.
+     * @param verboseErrors whether errors are returned in verbose format or not, can be useful when debugging why serialization fails.
      * @return JSON representing {@link SerializeParameterResult}. If the serialization was successful, the field 'serializedParameter' contains the serialized parameter as hex encoded bytes.
      * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
      */
@@ -101,7 +101,7 @@ public class CryptoJniNative {
      * @param initName name of the contract.
      * @param schemaBytes schema of the contract.
      * @param schemaVersion version of the schema.
-     * @param verboseErrors whether errors are returned in verbose format or not.
+     * @param verboseErrors whether errors are returned in verbose format or not, can be useful when debugging why serialization fails.
      * @return JSON representing {@link SerializeParameterResult}. If the serialization was successful, the field 'serializedParameter' contains the serialized parameter as hex encoded bytes.
      * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
      */

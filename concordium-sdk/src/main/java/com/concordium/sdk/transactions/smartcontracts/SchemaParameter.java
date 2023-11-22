@@ -122,7 +122,7 @@ public abstract class SchemaParameter {
     /**
      * Initializes the parameter by ensuring serialization is performed correctly. This is required before the parameter is used.
      *
-     * @param verboseErrors whether to return errors in a verbose format or not. Defaults to false if omitted.
+     * @param verboseErrors whether to return errors in a verbose format or not, can be useful when debugging why serialization fails. Defaults to false if omitted.
      * @throws CryptoJniException if the serialization could not be performed.
      */
     // Should never get thrown assuming the parameter is serialized correctly by the rust layer

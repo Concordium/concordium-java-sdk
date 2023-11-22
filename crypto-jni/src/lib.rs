@@ -472,13 +472,14 @@ type SerializeParamResult = CryptoJniResult<String>;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-/// The JNI wrapper for serializing receive parameters.
+/// The JNI wrapper for serializing ia parameter for a recieve function according to a specified Schema.
 /**
- * The `parameter` parameter must be a properly initalized `java.lang.String` that is non-null. The parameter must be valid JSON according to the provided schema.
- * The `contractName` parameter must be a properly initalized `java.lang.String` that is non-null.
- * The `methodName` parameter must be a properly initalized `java.lang.String` that is non-null.
- * The `schemaBytes` parameter must be a properly initalized `byte[]` containing bytes representing a valid schema. The schema must match the provided `contractName` and `methodName`.
- * The `schemaVersion` must be a integer representing a valid `com.concordium.sdk.transactions.smartcontracts.SchemaVersion`.
+ * `parameter` The parameter to serialize. `parameter` must be a properly initalized `java.lang.String` that is non-null. The parameter must be valid JSON according to the provided schema.
+ * `contractName` The name of the contract. `contractName` must be a properly initalized `java.lang.String` that is non-null.
+ * `methodName` The name of the method. `methodName` must be a properly initalized `java.lang.String` that is non-null.
+ * `schemaBytes` The bytes of the schema. `schemaBytes` must be a properly initalized `byte[]` containing bytes representing a valid schema. The schema must match the provided `contractName`.
+ * `schemaVersion` The version of the Schema. `schemaVersion` must be an integer representing a valid `com.concordium.sdk.transactions.smartcontracts.SchemaVersion`.
+ * `verboseErrors` Whether errors are returned in verbose format or not, can be useful when debugging why serialization fails.
  */
 /// If serialization fails returns a SerializeParamResult containing a JNIError detailing what went wrong. 
 /**
@@ -540,7 +541,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeR
         &contractName, 
         &methodName, 
         &schema, 
-        &version,
+        version,
         verboseErrors
     );
 
@@ -567,11 +568,11 @@ pub fn serialize_receive_contract_parameters_aux(
     contractName: &str,
     methodName: &str,
     schemaBytes: &Vec<u8>,
-    schemaVersion: &Option<u8>,
+    schemaVersion: Option<u8>,
     verboseErrors: bool,
 ) -> Result<Vec<u8>> {
     
-    let module_schema = VersionedModuleSchema::new(schemaBytes, schemaVersion)?;
+    let module_schema = VersionedModuleSchema::new(schemaBytes, &schemaVersion)?;
     let parameter_type = module_schema.get_receive_param_schema(contractName, methodName)?;
     let value: serde_json::Value = from_str(parameter)?;
 
@@ -581,12 +582,13 @@ pub fn serialize_receive_contract_parameters_aux(
     return Ok(res?);
 }
 
-/// The JNI wrapper for serializing init parameters.
+/// The JNI wrapper for serializing a parameter for an init function according to a specified Schema.
 /**
- * The `parameter` parameter must be a properly initalized `java.lang.String` that is non-null. The parameter must be valid JSON according to the provided schema.
- * The `contractName` parameter must be a properly initalized `java.lang.String` that is non-null.
- * The `schemaBytes` parameter must be a properly initalized `byte[]` containing bytes representing a valid schema. The schema must match the provided `contractName`.
- * The `schemaVersion` must be a integer representing a valid `com.concordium.sdk.transactions.smartcontracts.SchemaVersion`.
+ * `parameter` The parameter to serialize. `parameter` must be a properly initalized `java.lang.String` that is non-null. The parameter must be valid JSON according to the provided schema.
+ * `contractName` The name of the contract. `contractName` must be a properly initalized `java.lang.String` that is non-null.
+ * `schemaBytes` The bytes of the schema. `schemaBytes` must be a properly initalized `byte[]` containing bytes representing a valid schema. The schema must match the provided `contractName`.
+ * `schemaVersion` The version of the Schema. `schemaVersion` must be an integer representing a valid `com.concordium.sdk.transactions.smartcontracts.SchemaVersion`.
+ * `verboseErrors` Whether errors are returned in verbose format or not, can be useful when debugging why serialization fails.
  */
 /// If serialization fails returns a SerializeParamResult containing a JNIError detailing what went wrong. 
 /**
@@ -640,7 +642,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeI
         &parameter, 
         &contractName, 
         &schema, 
-        &version,
+        version,
         verboseErrors
     );
 
@@ -665,11 +667,11 @@ pub fn serialize_init_parameters_aux(
     parameter: &str,
     contractName: &str,
     schemaBytes: &Vec<u8>,
-    schemaVersion: &Option<u8>,
+    schemaVersion: Option<u8>,
     verboseErrors: bool,
 ) -> Result<Vec<u8>> {
     
-    let module_schema = VersionedModuleSchema::new(schemaBytes, schemaVersion)?;
+    let module_schema = VersionedModuleSchema::new(schemaBytes, &schemaVersion)?;
     let parameter_type = module_schema.get_init_param_schema(contractName)?;
     let value: serde_json::Value = from_str(parameter)?;
 
