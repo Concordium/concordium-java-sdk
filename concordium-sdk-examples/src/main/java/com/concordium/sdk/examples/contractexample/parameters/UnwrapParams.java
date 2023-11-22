@@ -37,11 +37,11 @@ public class UnwrapParams extends SchemaParameter {
     /**
      * If the {@link Receiver} is a {@link AccountType#ADDRESS_CONTRACT} the unwrapped CCD together with these additional data bytes are sent to the function entrypoint specified in the {@link Receiver}.
      */
-    private final List<UInt8> data;
+    private final UInt8[] data;
 
 
 
-    public UnwrapParams(Schema schema, ReceiveName receiveName, String amount, AbstractAddress owner, Receiver receiver, List<UInt8> data) {
+    public UnwrapParams(Schema schema, ReceiveName receiveName, String amount, AbstractAddress owner, Receiver receiver, UInt8[] data) {
         super(schema, receiveName);
         this.amount = amount;
         this.owner = owner;

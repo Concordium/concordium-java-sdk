@@ -70,7 +70,7 @@ public class InvokeInstanceRequest {
      * @param amount     Amount to invoke the smart contract instance with.
      * @param entrypoint The {@link ReceiveName} of the smart contract instance to invoke.
      * @param parameter  The parameter bytes to include in the invocation of the entrypoint.
-     * @param energy     The amount of energy to allow for execution. This cannot exceed `100_000_000_000`.
+     * @param energy     The amount of energy to allow for execution.
      */
     public static InvokeInstanceRequest from(BlockQuery blockHash,
                                              AbstractAddress invoker,
@@ -98,7 +98,7 @@ public class InvokeInstanceRequest {
      * @param amount     Amount to invoke the smart contract instance with.
      * @param entrypoint The {@link ReceiveName} of the smart contract instance to invoke.
      * @param parameter  The parameter bytes to include in the invocation of the entrypoint.
-     * @param energy     The amount of energy to allow for execution. This cannot exceed `100_000_000_000`.
+     * @param energy     The amount of energy to allow for execution.
      */
     public static InvokeInstanceRequest from(BlockQuery blockHash,
                                              ContractAddress instance,
@@ -125,7 +125,7 @@ public class InvokeInstanceRequest {
      * @param instance        Address of the contract instance to invoke.
      * @param amount          Amount to invoke the smart contract instance with.
      * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
-     * @param energy          The amount of energy to allow for execution. This cannot exceed `100_000_000_000`.
+     * @param energy          The amount of energy to allow for execution.
      */
     public static InvokeInstanceRequest from(BlockQuery blockHash,
                                              AbstractAddress invoker,
@@ -147,7 +147,7 @@ public class InvokeInstanceRequest {
      * @param instance        Address of the contract instance to invoke.
      * @param amount          Amount to invoke the smart contract instance with.
      * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
-     * @param energy          The amount of energy to allow for execution. This cannot exceed `100_000_000_000`.
+     * @param energy          The amount of energy to allow for execution.
      */
     public static InvokeInstanceRequest from(BlockQuery blockHash,
                                              ContractAddress instance,

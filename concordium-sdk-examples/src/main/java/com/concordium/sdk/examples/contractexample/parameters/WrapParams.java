@@ -15,10 +15,10 @@ import java.util.List;
 public class WrapParams extends SchemaParameter {
 
     private final Receiver to;
-    private final List<UInt8> data;
+    private final UInt8[] data;
 
 
-    public WrapParams(Schema schema, ReceiveName receiveName, Receiver to, List<UInt8> data) {
+    public WrapParams(Schema schema, ReceiveName receiveName, Receiver to, UInt8[] data) {
         super(schema, receiveName);
         this.to = to;
         this.data = data;

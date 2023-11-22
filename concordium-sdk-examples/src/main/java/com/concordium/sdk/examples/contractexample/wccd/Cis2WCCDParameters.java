@@ -2,6 +2,7 @@ package com.concordium.sdk.examples.contractexample.wccd;
 
 import com.concordium.sdk.examples.contractexample.parameters.*;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.smartcontracts.Schema;
@@ -42,9 +43,7 @@ public class Cis2WCCDParameters {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
         ReceiveName wrapReceiveName = ReceiveName.from(CONTRACT_NAME, "wrap");
         Receiver wrapReceiver = new Receiver(ACCOUNT_ADDRESS);
-        List<UInt8> wrapData = new ArrayList<>();
-        wrapData.add(UInt8.from(1));
-        wrapData.add(UInt8.from(42));
+        UInt8[] wrapData = new UInt8[]{UInt8.from(1), UInt8.from(42)};
         WrapParams wrapParams = new WrapParams(cis2wccdSchema, wrapReceiveName, wrapReceiver, wrapData);
         wrapParams.initialize(true);
         return wrapParams;
@@ -61,9 +60,7 @@ public class Cis2WCCDParameters {
         ReceiveName unwrapReceiveName = ReceiveName.from(CONTRACT_NAME, "unwrap");
         String unwrapAmount = "2"; // TokenAmountU64
         Receiver unwrapReceiver = new Receiver(CONTRACT_ADDRESS_2, "test");
-        List<UInt8> unwrapData = new ArrayList<>();
-        unwrapData.add(UInt8.from(1));
-        unwrapData.add(UInt8.from(42));
+        UInt8[] unwrapData = new UInt8[]{UInt8.from(1),UInt8.from(42)};
         UnwrapParams unwrapParams = new UnwrapParams(cis2wccdSchema, unwrapReceiveName, unwrapAmount, ACCOUNT_ADDRESS, unwrapReceiver, unwrapData);
         unwrapParams.initialize(true);
         return unwrapParams;
@@ -166,8 +163,8 @@ public class Cis2WCCDParameters {
     public static SchemaParameter generateBalanceOfParams() {
         Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
         ReceiveName balanceOfReceiveName = ReceiveName.from(CONTRACT_NAME, "balanceOf");
-        WCCDBalanceOfQuery balanceOfQuery1 = new WCCDBalanceOfQuery(new TokenIdUnit(), ACCOUNT_ADDRESS);
-        WCCDBalanceOfQuery balanceOfQuery2 = new WCCDBalanceOfQuery(new TokenIdUnit(), CONTRACT_ADDRESS_1);
+        WCCDBalanceOfQuery balanceOfQuery1 = new WCCDBalanceOfQuery(ACCOUNT_ADDRESS);
+        WCCDBalanceOfQuery balanceOfQuery2 = new WCCDBalanceOfQuery(CONTRACT_ADDRESS_1);
         List<WCCDBalanceOfQuery> balanceOfQueries = new ArrayList<>();
         balanceOfQueries.add(balanceOfQuery1);
         balanceOfQueries.add(balanceOfQuery2);
@@ -263,6 +260,16 @@ public class Cis2WCCDParameters {
         SchemaParameter upgradeParams = new UpgradeParams(cis2wccdSchema, upgradeReceiveName, upgradeModuleRef, migrate);
         upgradeParams.initialize(true);
         return upgradeParams;
+    }
+
+    @SneakyThrows
+    public static void main(String[] args) {
+        Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
+        ReceiveName wrapReceiveName = ReceiveName.from(CONTRACT_NAME, "wrap");
+        Receiver wrapReceiver = new Receiver(ACCOUNT_ADDRESS);
+        UInt8[] wrapData = new UInt8[]{UInt8.from(1), UInt8.from(42)};
+        WrapParams wrapParams = new WrapParams(cis2wccdSchema, wrapReceiveName, wrapReceiver, wrapData);
+        wrapParams.initialize(true);
     }
 
 }

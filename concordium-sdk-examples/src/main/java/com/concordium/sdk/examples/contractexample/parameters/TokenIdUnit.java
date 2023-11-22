@@ -22,7 +22,7 @@ public class TokenIdUnit implements TokenId {
     public static class TokenIdUnitSerializer extends JsonSerializer<TokenIdUnit> {
         @Override
         public void serialize(TokenIdUnit value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-            gen.writeString(Hex.encodeHexString(new byte[]{value.id}));
+            gen.writeString("");
         }
     }
 }

@@ -186,7 +186,7 @@ public abstract class SchemaParameter {
     }
 
     /**
-     * Returns the JSON representation of the parameter. This is the excactly what is sent to the rust layer for serialization when {@link SchemaParameter#initialize()} is called.
+     * Returns the JSON representation of the parameter. This is the exactly what is sent to the rust layer for serialization when {@link SchemaParameter#initialize()} is called.
      * @return the JSON representation of the parameter.
      */
     @SneakyThrows

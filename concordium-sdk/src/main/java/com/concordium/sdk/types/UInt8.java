@@ -26,7 +26,7 @@ public class UInt8 {
 
     public byte[] getBytes() {
         val bytes = new byte[1];
-        bytes[0] = (byte) (value & 0xff);
+        bytes[0] = (byte) (value);
         return bytes;
     }
 

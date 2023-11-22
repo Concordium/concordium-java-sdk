@@ -16,7 +16,7 @@ import lombok.Getter;
 public class OperatorOfQuery {
 
     /**
-     * The ID of the token for which to query the balance of. An {@link AbstractAddress} is either an {@link AccountAddress} or a {@link ContractAddress}.
+     * An {@link AbstractAddress} is either an {@link AccountAddress} or a {@link ContractAddress}.
      * Fields of smart contract parameters containing {@link AbstractAddress} must be annotated with '@JsonSerialize(using = AbstractAddress.AbstractAddressJsonSerializer.class)'
      * to ensure correct serialization.
      */
