@@ -76,7 +76,7 @@ public final class InitContractPayload {
      * Create a new instance of {@link InitContractPayload} from the given parameters.
      *
      * @param amount          CCD amount to deposit.
-     * @param moduleRef       HAsh of the smart contract module reference.
+     * @param moduleRef       Hash of the smart contract module reference.
      * @param schemaParameter {@link SchemaParameter} message to invoke the initialization method with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
      */
     public static InitContractPayload from(CCDAmount amount, ModuleRef moduleRef, SchemaParameter schemaParameter) {

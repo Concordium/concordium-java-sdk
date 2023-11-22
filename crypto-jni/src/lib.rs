@@ -23,13 +23,11 @@ use std::convert::{From, TryFrom};
 use std::i8;
 use std::str::Utf8Error;
 use hex;
-
 use jni::{
     objects::{JClass, JString},
     sys::{jbyteArray, jint},
     JNIEnv,
 };
-
 use anyhow::{anyhow, Result};
 
 const SUCCESS: i32 = 0;
