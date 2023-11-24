@@ -11,7 +11,7 @@ import lombok.val;
 import java.io.IOException;
 
 /**
- * An unsigned byte
+ * An unsigned byte. Used in the smart contract examples to ensure proper json serialization.
  */
 @EqualsAndHashCode
 @Getter
