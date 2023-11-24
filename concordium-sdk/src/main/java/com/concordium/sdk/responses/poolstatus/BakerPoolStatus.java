@@ -15,7 +15,7 @@ import java.util.Optional;
 @Jacksonized
 @Builder
 @EqualsAndHashCode(callSuper = false)
-public class BakerPoolStatus extends PoolStatus {
+public class BakerPoolStatus {
 
     private final PoolType poolType = PoolType.BAKER_POOL;
 
