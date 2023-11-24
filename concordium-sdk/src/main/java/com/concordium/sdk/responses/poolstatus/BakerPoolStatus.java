@@ -7,12 +7,10 @@ import com.concordium.sdk.types.AccountAddress;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.extern.jackson.Jacksonized;
 
 import java.util.Optional;
 
 @Data
-@Jacksonized
 @Builder
 @EqualsAndHashCode(callSuper = false)
 public class BakerPoolStatus {
