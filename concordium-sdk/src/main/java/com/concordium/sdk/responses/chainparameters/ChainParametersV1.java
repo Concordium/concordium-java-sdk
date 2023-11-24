@@ -1,14 +1,10 @@
 package com.concordium.sdk.responses.chainparameters;
 
 import com.concordium.sdk.Range;
-import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -97,65 +93,6 @@ public class ChainParametersV1 extends ChainParameters {
      * Level 2 are allowed to do chain parameter updates.
      */
     private final AuthorizationsV0 level2Keys;
-
-    @JsonCreator
-    ChainParametersV1(
-            @JsonProperty("rewardParameters") RewardParameters rewardParameters,
-            @JsonProperty("microGTUPerEuro") Fraction microCCDPerEuro,
-            @JsonProperty("accountCreationLimit") int accountCreationLimit,
-            @JsonProperty("electionDifficulty") double electionDifficulty,
-            @JsonProperty("euroPerEnergy") Fraction euroPerEnergy,
-            @JsonProperty("mintPerPayday") double mintPerPayday,
-            @JsonProperty("poolOwnerCooldown") long poolOwnerCooldown,
-            @JsonProperty("rewardPeriodLength") long rewardPeriodLength,
-            @JsonProperty("delegatorCooldown") long delegatorCooldown,
-            @JsonProperty("passiveTransactionCommission") double passiveTransactionCommission,
-            @JsonProperty("bakingCommissionRange") Range bakingCommissionRange,
-            @JsonProperty("finalizationCommissionRange") Range finalizationCommissionRange,
-            @JsonProperty("transactionCommissionRange") Range transactionCommissionRange,
-            @JsonProperty("minimumEquityCapital") CCDAmount minimumEquityCapital,
-            @JsonProperty("passiveBakingCommission") double passiveBakingCommission,
-            @JsonProperty("leverageBound") Fraction leverageBound,
-            @JsonProperty("passiveFinalizationCommission") double passiveFinalizationCommission,
-            @JsonProperty("capitalBound") double capitalBound,
-            @JsonProperty("foundationAccountIndex") AccountIndex foundationAccountIndex
-    ) {
-        this.mintDistribution = (MintDistributionCpV1) rewardParameters.getMintDistribution();
-        this.gasRewards = rewardParameters.getGasRewards();
-        this.transactionFeeDistribution = rewardParameters.getTransactionFeeDistribution();
-        this.microCCDPerEuro = microCCDPerEuro;
-        this.credentialsPerBlockLimit = accountCreationLimit;
-        this.electionDifficulty = electionDifficulty;
-        this.euroPerEnergy = euroPerEnergy;
-        this.cooldownParameters = CooldownParametersCpv1
-                .builder()
-                .delegatorCooldown(delegatorCooldown)
-                .poolOwnerCooldown(poolOwnerCooldown)
-                .build();
-        this.timeParameters = TimeParameters
-                .builder()
-                .mintPerPayday(mintPerPayday)
-                .rewardPeriodLength(rewardPeriodLength)
-                .build();
-        this.poolParameters = PoolParameters
-                .builder()
-                .passiveTransactionCommission(passiveTransactionCommission)
-                .bakingCommissionRange(bakingCommissionRange)
-                .finalizationCommissionRange(finalizationCommissionRange)
-                .transactionCommissionRange(transactionCommissionRange)
-                .minimumEquityCapital(minimumEquityCapital)
-                .passiveBakingCommission(passiveBakingCommission)
-                .leverageBound(leverageBound)
-                .passiveFinalizationCommission(passiveFinalizationCommission)
-                .capitalBound(capitalBound)
-                .build();
-        // these are not returned by the json api
-        this.foundationAccount = null;
-        this.rootKeys = null;
-        this.level1Keys = null;
-        this.level2Keys = null;
-
-    }
 
     public static ChainParametersV1 from(com.concordium.grpc.v2.ChainParametersV1 v1Params) {
         return ChainParametersV1
