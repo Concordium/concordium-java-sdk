@@ -22,13 +22,11 @@ import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ProtocolVersion;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
-import com.concordium.sdk.crypto.vrf.VRFPublicKey;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.EpochQuery;
@@ -41,6 +39,7 @@ import com.concordium.sdk.responses.accountinfo.CommissionRates;
 import com.concordium.sdk.responses.accountinfo.*;
 import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
+import com.concordium.sdk.responses.bakersrewardperiod.BakerInfo;
 import com.concordium.sdk.responses.blockitemsummary.AccountCreationDetails;
 import com.concordium.sdk.responses.blockitemsummary.*;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
@@ -348,10 +347,7 @@ interface ClientV2MapperExtensions {
                 .restakeEarnings(stake.getRestakeEarnings())
                 .stakedAmount(to(stake.getStakedAmount()))
                 .bakerPoolInfo(to(stake.getPoolInfo()))
-                .bakerId(to(stake.getBakerInfo().getBakerId()))
-                .bakerAggregationVerifyKey(BLSPublicKey.from(stake.getBakerInfo().getAggregationKey().getValue().toByteArray()))
-                .bakerElectionVerifyKey(VRFPublicKey.from(stake.getBakerInfo().getElectionKey().getValue().toByteArray()))
-                .bakerSignatureVerifyKey(ED25519PublicKey.from(stake.getBakerInfo().getSignatureKey().getValue().toByteArray()))
+                .bakerInfo(BakerInfo.from(stake.getBakerInfo()))
                 .build();
     }
 
