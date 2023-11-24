@@ -1,7 +1,6 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.transactions.CCDAmount;
@@ -94,7 +93,7 @@ public class ClientV2GetRewardsOverviewTest {
 
 
     @Test
-    public void getTokenomicsInfo() throws BlockNotFoundException {
+    public void getTokenomicsInfo() {
         var res = client.getRewardStatus(BlockQuery.BEST);
 
         verify(serviceImpl).getTokenomicsInfo(any(BlockHashInput.class), any(StreamObserver.class));

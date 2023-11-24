@@ -2,7 +2,6 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;
 import com.google.common.collect.ImmutableList;
@@ -64,7 +63,7 @@ public class ClientV2GetBakerListTest {
     }
 
     @Test
-    public void getBakerList() throws BlockNotFoundException {
+    public void getBakerList() {
         var bakerList = client.getBakerList(BlockQuery.BEST);
 
         verify(serviceImpl).getBakerList(eq(BEST_BLOCK), any(StreamObserver.class));
