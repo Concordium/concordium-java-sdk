@@ -808,7 +808,7 @@ interface ClientV2MapperExtensions {
 
     // Convert a ProtocolVersion object to the corresponding com.concordium.sdk.responses.ProtocolVersion object
     static com.concordium.sdk.responses.ProtocolVersion to(ProtocolVersion protocolVersion) {
-        return com.concordium.sdk.responses.ProtocolVersion.forValue(protocolVersion.getNumber() + 1);
+        return com.concordium.sdk.responses.ProtocolVersion.parse(protocolVersion);
     }
 
     // Convert a ConsensusInfo object to a ConsensusStatus object
