@@ -2,8 +2,6 @@ package com.concordium.sdk.responses.blocksummary.specialoutcomes;
 
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,16 +31,4 @@ public final class Mint extends SpecialOutcome {
      * The account to which the platform development charge is paid.
      */
     private final AccountAddress foundationAccount;
-
-    @JsonCreator
-    Mint(
-            @JsonProperty("mintBakingReward") CCDAmount mintBakingReward,
-            @JsonProperty("mintFinalizationReward") CCDAmount mintFinalizationReward,
-            @JsonProperty("mintPlatformDevelopmentCharge") CCDAmount mintPlatformDevelopmentCharge,
-            @JsonProperty("foundationAccount") AccountAddress foundationAccount) {
-        this.mintBakingReward = mintBakingReward;
-        this.mintFinalizationReward = mintFinalizationReward;
-        this.mintPlatformDevelopmentCharge = mintPlatformDevelopmentCharge;
-        this.foundationAccount = foundationAccount;
-    }
 }

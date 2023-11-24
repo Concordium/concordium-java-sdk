@@ -2,7 +2,6 @@ package com.concordium.sdk.responses.blocksummary.specialoutcomes;
 
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.CCDAmount;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -50,21 +49,4 @@ public final class BlockAccrueReward extends SpecialOutcome {
      * The baker of the block, who will receive the award.
      */
     private final AccountIndex bakerId;
-
-    BlockAccrueReward(
-            @JsonProperty("transactionFees") CCDAmount transactionFees,
-            @JsonProperty("oldGASAccount") CCDAmount oldGASAccount,
-            @JsonProperty("newGASAccount") CCDAmount newGASAccount,
-            @JsonProperty("bakerReward") CCDAmount bakerReward,
-            @JsonProperty("passiveReward") CCDAmount passiveReward,
-            @JsonProperty("foundationCharge") CCDAmount foundationCharge,
-            @JsonProperty("bakerId") AccountIndex bakerId) {
-        this.transactionFees = transactionFees;
-        this.oldGASAccount = oldGASAccount;
-        this.newGASAccount = newGASAccount;
-        this.bakerReward = bakerReward;
-        this.passiveReward = passiveReward;
-        this.foundationCharge = foundationCharge;
-        this.bakerId = bakerId;
-    }
 }
