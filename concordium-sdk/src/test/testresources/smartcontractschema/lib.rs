@@ -2,22 +2,11 @@
 
 //! # A Concordium V1 smart contract. This contract is only for genereating a schema to test serialization of `SchemaParameter` and is never meant to be excecuted, hence the dummy state/error/init.
 use concordium_std::*;
-use core::fmt::Debug;
 
 /// Your smart contract state.
 #[derive(Serialize, SchemaType)]
 pub struct State {
     // Dummy state.
-}
-
-/// Dummy errors
-#[derive(Debug, PartialEq, Eq, Reject, Serial, SchemaType)]
-enum Error {
-    /// Failed parsing the parameter.
-    #[from(ParseError)]
-    ParseParams,
-    /// Your error
-    YourError,
 }
 
 /// Dummy init functions
@@ -31,13 +20,11 @@ fn init<S: HasStateApi>(
     Ok(State {})
 }
 
-
 #[derive(Serialize, SchemaType)]
 #[concordium(transparent)]
 struct ListParam (
     Vec<ContractAddress>
 );
-
 
 #[derive(Serialize, SchemaType)]
 struct AbstractAddressContainer {
@@ -54,18 +41,19 @@ struct ContractAddressContainer {
     address:   ContractAddress,
 }
 
+// The `ParseError` in the following result types is never thrown, as the functions only exist to generate a schema for serialization of SC parameters.
+
 /// Takes ListParam as parameter for ensuring correct serialization of ListParam
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "list_param_test",
     parameter = "ListParam",
-    error = "Error",
     mutable
 )]
 fn list_param_test<S: HasStateApi>(
     ctx: &impl HasReceiveContext,
     _host: &mut impl HasHost<State, StateApiType = S>,
-) -> Result<(), Error> {
+) -> Result<(), ParseError> {
     Ok(())
 }
 
@@ -74,13 +62,12 @@ fn list_param_test<S: HasStateApi>(
     contract = "java_sdk_schema_unit_test",
     name = "abstract_address_container_test",
     parameter = "AbstractAddressContainer",
-    error = "Error",
     mutable
 )]
 fn abstract_address_container_test<S: HasStateApi>(
     ctx: &impl HasReceiveContext,
     _host: &mut impl HasHost<State, StateApiType = S>,
-) -> Result<(), Error> {
+) -> Result<(), ParseError> {
     Ok(())
 }
 
@@ -89,13 +76,12 @@ fn abstract_address_container_test<S: HasStateApi>(
     contract = "java_sdk_schema_unit_test",
     name = "abstract_address_test",
     parameter = "Address",
-    error = "Error",
     mutable
 )]
 fn abstract_address_test<S: HasStateApi>(
     ctx: &impl HasReceiveContext,
     _host: &mut impl HasHost<State, StateApiType = S>,
-) -> Result<(), Error> {
+) -> Result<(), ParseError> {
     Ok(())
 }
 
@@ -104,27 +90,26 @@ fn abstract_address_test<S: HasStateApi>(
     contract = "java_sdk_schema_unit_test",
     name = "contract_address_container_test",
     parameter = "ContractAddressContainer",
-    error = "Error",
     mutable
 )]
 fn contract_address_container_test<S: HasStateApi>(
     ctx: &impl HasReceiveContext,
     _host: &mut impl HasHost<State, StateApiType = S>,
-) -> Result<(), Error> {
+) -> Result<(), ParseError> {
     Ok(())
 }
+
 /// Takes Address as parameter for ensuring correct serialization of Address when passed directly
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "contract_address_test",
     parameter = "ContractAddress",
-    error = "Error",
     mutable
 )]
 fn contract_address_test<S: HasStateApi>(
     ctx: &impl HasReceiveContext,
     _host: &mut impl HasHost<State, StateApiType = S>,
-) -> Result<(), Error> {
+) -> Result<(), ParseError> {
     Ok(())
 }
 
@@ -133,13 +118,12 @@ fn contract_address_test<S: HasStateApi>(
     contract = "java_sdk_schema_unit_test",
     name = "account_address_container_test",
     parameter = "AccountAddressContainer",
-    error = "Error",
     mutable
 )]
 fn account_address_container_test<S: HasStateApi>(
     ctx: &impl HasReceiveContext,
     _host: &mut impl HasHost<State, StateApiType = S>,
-) -> Result<(), Error> {
+) -> Result<(), ParseError> {
     Ok(())
 }
 
@@ -148,13 +132,11 @@ fn account_address_container_test<S: HasStateApi>(
     contract = "java_sdk_schema_unit_test",
     name = "account_address_test",
     parameter = "AccountAddress",
-    error = "Error",
     mutable
 )]
 fn account_address_test<S: HasStateApi>(
     ctx: &impl HasReceiveContext,
     _host: &mut impl HasHost<State, StateApiType = S>,
-) -> Result<(), Error> {
+) -> Result<(), ParseError> {
     Ok(())
 }
-
