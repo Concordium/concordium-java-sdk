@@ -1,7 +1,6 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt16;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -29,7 +28,6 @@ public final class ReceiveName {
      */
     private final String method;
 
-    @JsonCreator
     ReceiveName(String contractName, String method) {
         this.contractName = contractName;
         this.method = method;
