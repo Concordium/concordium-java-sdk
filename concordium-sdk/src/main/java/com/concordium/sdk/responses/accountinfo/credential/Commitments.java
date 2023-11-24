@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.accountinfo.credential;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import lombok.*;
@@ -24,16 +23,13 @@ public final class Commitments {
     /**
      * Commitment to the PRF key.
      */
-    @JsonProperty("cmmPrf")
     private final Commitment cmmPrf;
 
     /**
      * Commitment to the counter used to generate the credential registration id.
      */
-    @JsonProperty("cmmCredCounter")
     private final Commitment cmmCredCounter;
 
-    @JsonProperty("cmmIdCredSecSharingCoeff")
     @Singular(value = "cmmIdCredSecSharingCoeffItem")
     private final List<Commitment> cmmIdCredSecSharingCoeff;
 
@@ -49,7 +45,6 @@ public final class Commitments {
     /**
      * Commitments to the attributes which have not been revealed in the policy.
      */
-    @JsonProperty("cmmAttributes")
     @Singular
     private final Map<AttributeType, Commitment> cmmAttributes;
 
@@ -64,6 +59,5 @@ public final class Commitments {
      * Commitment to the `max_accounts` value, which determines the maximum number
      * of credentials that may be created from the identity object.
      */
-    @JsonProperty("cmmMaxAccounts")
     private final Commitment cmmMaxAccounts;
 }
