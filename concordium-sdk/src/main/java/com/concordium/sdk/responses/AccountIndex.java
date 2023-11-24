@@ -3,7 +3,6 @@ package com.concordium.sdk.responses;
 import com.concordium.grpc.v2.DelegatorId;
 import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
@@ -28,11 +27,6 @@ public final class AccountIndex implements ID{
 
     AccountIndex(UInt64 index) {
         this.index = index;
-    }
-
-    @JsonCreator
-    AccountIndex(long index) {
-        this.index = UInt64.from(index);
     }
 
     public static AccountIndex from(long index) {
