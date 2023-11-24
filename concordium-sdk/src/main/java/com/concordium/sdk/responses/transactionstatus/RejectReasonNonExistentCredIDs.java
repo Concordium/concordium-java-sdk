@@ -1,29 +1,20 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.transactions.CredentialRegistrationId;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A credential id that was to be removed is not part of the account.
  */
 @ToString
+@Builder
 public class RejectReasonNonExistentCredIDs extends RejectReason {
     @Getter
     private final List<CredentialRegistrationId> ids;
-
-    @JsonCreator
-    RejectReasonNonExistentCredIDs(@JsonProperty("contents") List<String> ids) {
-        this.ids = new ArrayList<>();
-        for (String id : ids) {
-            this.ids.add(CredentialRegistrationId.from(id));
-        }
-    }
 
     @Override
     public RejectReasonType getType() {

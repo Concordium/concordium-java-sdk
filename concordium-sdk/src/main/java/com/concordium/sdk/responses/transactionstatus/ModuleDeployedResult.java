@@ -1,29 +1,21 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.ToString;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  * A module was deployed on chain.
  */
 @Getter
 @ToString
+@Builder
 public final class ModuleDeployedResult implements TransactionResultEvent {
 
     /**
      * The reference to the module.
      */
     private final byte[] reference;
-
-    @SneakyThrows
-    @JsonCreator
-    public ModuleDeployedResult(@JsonProperty("contents") String reference) {
-        this.reference = Hex.decodeHex(reference);
-    }
 
     @Override
     public TransactionResultEventType getType() {
