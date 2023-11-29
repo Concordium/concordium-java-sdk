@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.accountinfo.credential;
 
 import lombok.EqualsAndHashCode;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
 import java.util.Arrays;
@@ -20,6 +21,13 @@ public class EncIdPubShare {
 
     public byte[] getValue() {
         return copyOf(value, value.length);
+    }
+    public static EncIdPubShare from(final String hex) {
+        try {
+            return new EncIdPubShare(Hex.decodeHex(hex));
+        } catch (DecoderException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     public static EncIdPubShare from(final byte[] bytes) {
