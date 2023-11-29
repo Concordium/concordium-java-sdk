@@ -55,9 +55,7 @@ public class Cis2NftParameters {
         TokenAmountU8 amount = TokenAmountU8.from(1);
         AbstractAddress from = CONTRACT_ADDRESS_1;
         Receiver to = new Receiver(CONTRACT_ADDRESS_2, "mint");
-        List<UInt8> data = new ArrayList<>();
-        data.add(UInt8.from(123));
-        data.add(UInt8.from(23));
+        byte[] data = new byte[]{123, -23};
         NftTransfer transfer = new NftTransfer(tokenId, amount, from, to, data);
         List<NftTransfer> transfers = new ArrayList<>();
         transfers.add(transfer);

@@ -3,13 +3,10 @@ package com.concordium.sdk.examples.contractexample.parameters;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
-import com.concordium.sdk.types.UInt8;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.List;
 
 
 /**
@@ -41,9 +38,11 @@ public class Cis2Transfer<T extends TokenId, A extends TokenAmount> {
      */
     private Receiver to;
     /**
-     * Additional data to include in the transfer. Can be used for additional arguments
+     * Additional data to include in the transfer. Can be used for additional arguments.
+     * Must be serialized as a json array of unsigned bytes. This serialization is implemented in {@link UInt8ByteArrrayJsonSerializer}.
      */
-    private List<UInt8> data;
+    @JsonSerialize(using = UInt8ByteArrrayJsonSerializer.class)
+    private byte[] data;
 
 
 }
