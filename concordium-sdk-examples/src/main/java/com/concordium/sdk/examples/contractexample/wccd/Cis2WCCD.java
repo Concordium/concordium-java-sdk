@@ -17,6 +17,7 @@ import lombok.var;
 import picocli.CommandLine;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 /**
@@ -141,8 +142,8 @@ public class Cis2WCCD implements Callable<Integer> {
                 .build();
         Hash txHash = client.sendTransaction(initContractTransaction);
         System.out.println("Submitted transaction for " + this.methodName + " with hash: " + txHash);
-        FinalizedBlockItem finalizedTransaction = client.waitUntilFinalized(txHash, wait);
-        System.out.println("Transaction finalized in block with hash: " + finalizedTransaction.getBlockHash());
+        Optional<FinalizedBlockItem> finalizedTransaction = client.waitUntilFinalized(txHash, wait);
+        finalizedTransaction.ifPresent(finalizedBlockItem -> System.out.println("Transaction finalized in block with hash: " + finalizedBlockItem.getBlockHash()));
     }
 
     private void handleMethod(ClientV2 client, Nonce nonce, SchemaParameter parameter) {
@@ -157,8 +158,8 @@ public class Cis2WCCD implements Callable<Integer> {
                 .build();
         Hash txHash = client.sendTransaction(transaction);
         System.out.println("Submitted transaction for " + this.methodName + " with hash: " + txHash);
-        FinalizedBlockItem finalizedTransaction = client.waitUntilFinalized(txHash, wait);
-        System.out.println("Transaction finalized in block with hash: " + finalizedTransaction.getBlockHash());
+        Optional<FinalizedBlockItem> finalizedTransaction = client.waitUntilFinalized(txHash, wait);
+        finalizedTransaction.ifPresent(finalizedBlockItem -> System.out.println("Transaction finalized in block with hash: " + finalizedBlockItem.getBlockHash()));
     }
 
 
