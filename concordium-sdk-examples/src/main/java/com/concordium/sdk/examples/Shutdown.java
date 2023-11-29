@@ -2,7 +2,6 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -29,7 +28,7 @@ public class Shutdown implements Callable<Integer> {
     }
 
     @Override
-    public Integer call() throws ClientInitializationException, MalformedURLException, BlockNotFoundException {
+    public Integer call() throws ClientInitializationException, MalformedURLException {
         URL endpointUrl = new URL(this.endpoint);
         Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())

@@ -2,7 +2,6 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
@@ -25,7 +24,7 @@ public class GetCryptographicParameters implements Callable<Integer> {
     private String endpoint;
 
     @Override
-    public Integer call() throws MalformedURLException, ClientInitializationException, BlockNotFoundException {
+    public Integer call() throws MalformedURLException, ClientInitializationException {
         var endpointUrl = new URL(this.endpoint);
 
         Connection connection = Connection.newBuilder()
