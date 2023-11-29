@@ -34,7 +34,6 @@ import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.smartcontracts.InvokeInstanceResult;
-import com.concordium.sdk.responses.transactionstatus.Status;
 import com.concordium.sdk.responses.winningbaker.WinningBaker;
 import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.BlockItem;
@@ -46,6 +45,7 @@ import com.concordium.sdk.types.Timestamp;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
+import io.grpc.Status;
 import lombok.val;
 
 import java.io.File;
@@ -888,79 +888,63 @@ public final class ClientV2 {
     }
 
     /**
-     * Waits until a given transaction is finalized and returns the corresponding {@link FinalizedBlockItem}.
-     * If the transaction is unknown to the node, or not finalized, the client starts listening for newly finalized blocks,
-     * and returns the corresponding {@link FinalizedBlockItem} once the transaction is finalized.
+     * Waits until a given transaction is finalized and returns the corresponding {@link Optional<FinalizedBlockItem>}.
+     * If the transaction is unknown to the node or not finalized, the client starts listening for newly finalized blocks,
+     * and returns the corresponding {@link Optional<FinalizedBlockItem>} once the transaction is finalized.
      * @param transactionHash the {@link Hash} of the transaction to wait for.
      * @param timeoutMillis the number of milliseconds to listen for newly finalized blocks.
-     * @return {@link FinalizedBlockItem} of the transaction.
-     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
-     * <li> {@link io.grpc.Status#NOT_FOUND} if the transaction is not known to the node when the timeout is exceeded.
-     * <li> {@link io.grpc.Status#DEADLINE_EXCEEDED} if the transaction is not finalized when the timeout is exceeded.
-     * </ul>
+     * @return {@link Optional<FinalizedBlockItem>} of the transaction if it was finalized before exceeding the timeout, Empty otherwise.
      */
-    public FinalizedBlockItem waitUntilFinalized(Hash transactionHash, int timeoutMillis) {
-        try {
-            BlockItemStatus status = this.getBlockItemStatus(transactionHash);
-            if (status.getFinalizedBlockItem().isPresent()) {
-                return status.getFinalizedBlockItem().get();
-            }
-        } catch (io.grpc.StatusRuntimeException e) {
-            // If the transaction is not found we wait for it.
-            ignoreExceptionIfCode(e, io.grpc.Status.Code.NOT_FOUND);
+    public Optional<FinalizedBlockItem> waitUntilFinalized(Hash transactionHash, int timeoutMillis) {
+        Optional<FinalizedBlockItem> maybeStatus = getFinalizedTransaction(transactionHash);
+        // if it's finalized return it.
+        if (maybeStatus.isPresent()) {
+            return maybeStatus;
         }
-        return listenForFinalizedTransaction(transactionHash, timeoutMillis);
-    }
-
-    /**
-     * Helper function for {@link ClientV2#waitUntilFinalized(Hash, int)}. Listens for finalized blocks and returns the {@link FinalizedBlockItem} of the transaction when available.
-     * Keeps listening even if the transaction is unknown to the node.
-     * @param transactionHash the {@link Hash} of the transaction to wait for.
-     * @param timeoutMillis the number of milliseconds to listen for newly finalized blocks.
-     * @return {@link FinalizedBlockItem} of the transaction.
-     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
-     * <li> {@link io.grpc.Status#NOT_FOUND} if the transaction is not known to the node when the timeout is exceeded.
-     * <li> {@link io.grpc.Status#DEADLINE_EXCEEDED} if the transaction is not finalized when the timeout is exceeded.
-     * </ul>
-     */
-    private FinalizedBlockItem listenForFinalizedTransaction(Hash transactionHash, int timeoutMillis) {
-        io.grpc.StatusRuntimeException notFound = null;
+        // check newly finalized blocks until we time out
+        Optional<FinalizedBlockItem> result = Optional.empty();
         try {
             Iterator<BlockIdentifier> finalizedBlockStream = this.getFinalizedBlocks(timeoutMillis);
             while (finalizedBlockStream.hasNext()) {
                 finalizedBlockStream.next();
-                // We check if the transaction is finalized every time a new block is finalized.
-                try {
-                    BlockItemStatus newStatus = this.getBlockItemStatus(transactionHash);
-                    if (newStatus.getFinalizedBlockItem().isPresent()) {
-                        return newStatus.getFinalizedBlockItem().get();
-                    }
-                } catch (io.grpc.StatusRuntimeException e) {
-                    ignoreExceptionIfCode(e, io.grpc.Status.Code.NOT_FOUND);
-                    notFound = e; // If the transaction is still not found after the timeout is exceeded, we throw this exception.
+                Optional<FinalizedBlockItem> finalizedBlockItem = getFinalizedTransaction(transactionHash);
+                if (finalizedBlockItem.isPresent()) {
+                    // the transaction is included in a finalized block, break and return the finalized status.
+                    result = finalizedBlockItem;
+                    break;
                 }
             }
         } catch (io.grpc.StatusRuntimeException e) {
-            ignoreExceptionIfCode(e, io.grpc.Status.Code.DEADLINE_EXCEEDED);
-            if (notFound != null ) { // The block was not found.
-                throw notFound;
+            // we timed out. Return empty to indicate that the transaction could not be found.
+            if (e.getStatus().getCode().equals(Status.Code.DEADLINE_EXCEEDED)) {
+                return Optional.empty();
             }
             throw e;
         }
-        throw new IllegalStateException("No more finalized blocks"); // This should never happen as finalized blocks keep being streamed.
+        return result;
     }
 
     /**
-     * Helper method for allowing {@link io.grpc.StatusRuntimeException} with specified {@link io.grpc.Status.Code} without throwing the exception.
-     * @param e the {@link io.grpc.StatusRuntimeException}.
-     * @param code the {@link io.grpc.Status.Code} to allow.
-     * @throws io.grpc.StatusRuntimeException if the code of the exception does not match the provided code.
+     * Helper function for {@link ClientV2#waitUntilFinalized(Hash, int)}. Retrieves the {@link Optional<FinalizedBlockItem>} of the transaction if it is finalized.
+     * @param transactionHash the {@link Hash} of the transaction to wait for.
+     * @return {@link Optional<FinalizedBlockItem>} of the transaction if it is finalized, Empty otherwise.
      */
-    private void ignoreExceptionIfCode(io.grpc.StatusRuntimeException e, io.grpc.Status.Code code) {
-        if (e.getStatus().getCode().equals(code)) {
-            return;
+    private Optional<FinalizedBlockItem> getFinalizedTransaction(Hash transactionHash) {
+        try {
+            BlockItemStatus status = this.getBlockItemStatus(transactionHash);
+            if (status.getFinalizedBlockItem().isPresent()) {
+                return Optional.of(status.getFinalizedBlockItem().get());
+            }
+            // Only return a finalized transaction.
+            return Optional.empty();
+        } catch (io.grpc.StatusRuntimeException e) {
+            // If the transaction is not found then return empty.
+            if (e.getStatus().getCode().equals(Status.Code.NOT_FOUND)) {
+                return Optional.empty();
+            }
+            // report back any other exceptions.
+            throw e;
         }
-        throw e;
     }
 
     /**
