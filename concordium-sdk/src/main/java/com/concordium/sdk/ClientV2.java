@@ -902,7 +902,7 @@ public final class ClientV2 {
     public FinalizedBlockItem waitUntilFinalized(Hash transactionHash, int timeoutMillis) {
         try {
             BlockItemStatus status = this.getBlockItemStatus(transactionHash);
-            if (status.getStatus() == Status.FINALIZED) {
+            if (status.getFinalizedBlockItem().isPresent()) {
                 return status.getFinalizedBlockItem().get();
             }
         } catch (io.grpc.StatusRuntimeException e) {
@@ -932,7 +932,7 @@ public final class ClientV2 {
                 // We check if the transaction is finalized every time a new block is finalized.
                 try {
                     BlockItemStatus newStatus = this.getBlockItemStatus(transactionHash);
-                    if (newStatus.getStatus() == Status.FINALIZED) {
+                    if (newStatus.getFinalizedBlockItem().isPresent()) {
                         return newStatus.getFinalizedBlockItem().get();
                     }
                 } catch (io.grpc.StatusRuntimeException e) {
