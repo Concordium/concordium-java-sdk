@@ -43,7 +43,7 @@ struct ContractAddressContainer {
 
 // The `ParseError` in the following result types is never thrown, as the functions only exist to generate a schema for serialization of SC parameters.
 
-/// Takes ListParam as parameter for ensuring correct serialization of ListParam
+/// Takes [`ListParam`] as parameter for ensuring correct serialization of the java class ListParam.
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "list_param_test",
@@ -57,7 +57,7 @@ fn list_param_test<S: HasStateApi>(
     Ok(())
 }
 
-/// Takes AddressContainer as parameter for ensuring correct serialization of Address
+/// Takes [`AbstractAddressContainer`] as parameter for ensuring correct serialization of the java class AbstractAddress when used inside other parameters.
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "abstract_address_container_test",
@@ -71,7 +71,7 @@ fn abstract_address_container_test<S: HasStateApi>(
     Ok(())
 }
 
-/// Takes Address as parameter for ensuring correct serialization of Address when passed directly
+/// Takes [`Address`] as parameter for ensuring correct serialization of the java class AbstractAddressParam for passing AbstractAddress directly as a parameter.
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "abstract_address_test",
@@ -85,7 +85,7 @@ fn abstract_address_test<S: HasStateApi>(
     Ok(())
 }
 
-/// Takes a ContractAddressContainer as parameter for ensuring correct serialization of ContractAddress
+/// Takes a [`ContractAddressContainer`] as parameter for ensuring correct serialization of the java class ContractAddress when used inside other parameters.
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "contract_address_container_test",
@@ -99,7 +99,7 @@ fn contract_address_container_test<S: HasStateApi>(
     Ok(())
 }
 
-/// Takes Address as parameter for ensuring correct serialization of Address when passed directly
+/// Takes [`ContractAddress`] as parameter for ensuring correct serialization of the java class ContractAddressParam for passing ContractAddress directly as a parameter.
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "contract_address_test",
@@ -113,7 +113,7 @@ fn contract_address_test<S: HasStateApi>(
     Ok(())
 }
 
-/// Takes an AccountAddressContainer as parameter for ensuring correct serialization of AccountAddress
+/// Takes an [`AccountAddressContainer`] as parameter for ensuring correct serialization of the java class AccountAddress when used inside other parameters.
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "account_address_container_test",
@@ -127,7 +127,7 @@ fn account_address_container_test<S: HasStateApi>(
     Ok(())
 }
 
-/// Takes Address as parameter for ensuring correct serialization of Address when passed directly
+/// Takes [`AccoountAddress`] as parameter for ensuring correct serialization of the java class AccountAddressParam for passing AccountAddress directly as a parameter.
 #[receive(
     contract = "java_sdk_schema_unit_test",
     name = "account_address_test",
