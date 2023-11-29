@@ -43,6 +43,12 @@ public class Cis2WCCD implements Callable<Integer> {
             description = "GRPC request timeout in milliseconds.",
             defaultValue = "100000")
     private int timeout;
+
+    @CommandLine.Option(
+            names = {"--wait"},
+            description = "How long to wait for transaction finalization.",
+            defaultValue = "100000")
+    private int wait;
     private static final String SENDER_ADDRESS = "3WZE6etUvVp1eyhEtTxqZrQaanTAZnZCHEmZmDyCbCwxnmQuPE"; //  Dummy address
     private static final ModuleRef MODULE_REF = ModuleRef.from("247a7ac6efd2e46f72fd18741a6d1a0254ec14f95639df37079a576b2033873e"); // Dummy module ref
     private static final ContractAddress CONTRACT_ADDRESS = ContractAddress.from(1, 0); // Dummy contract address
@@ -135,7 +141,7 @@ public class Cis2WCCD implements Callable<Integer> {
                 .build();
         Hash txHash = client.sendTransaction(initContractTransaction);
         System.out.println("Submitted transaction for " + this.methodName + " with hash: " + txHash);
-        FinalizedBlockItem finalizedTransaction = client.waitUntilFinalized(txHash, timeout);
+        FinalizedBlockItem finalizedTransaction = client.waitUntilFinalized(txHash, wait);
         System.out.println("Transaction finalized in block with hash: " + finalizedTransaction.getBlockHash());
     }
 
@@ -151,7 +157,7 @@ public class Cis2WCCD implements Callable<Integer> {
                 .build();
         Hash txHash = client.sendTransaction(transaction);
         System.out.println("Submitted transaction for " + this.methodName + " with hash: " + txHash);
-        FinalizedBlockItem finalizedTransaction = client.waitUntilFinalized(txHash, timeout);
+        FinalizedBlockItem finalizedTransaction = client.waitUntilFinalized(txHash, wait);
         System.out.println("Transaction finalized in block with hash: " + finalizedTransaction.getBlockHash());
     }
 
