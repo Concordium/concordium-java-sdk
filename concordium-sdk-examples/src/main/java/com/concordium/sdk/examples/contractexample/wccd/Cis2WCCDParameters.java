@@ -262,14 +262,4 @@ public class Cis2WCCDParameters {
         return upgradeParams;
     }
 
-    @SneakyThrows
-    public static void main(String[] args) {
-        Schema cis2wccdSchema = Schema.from(Files.readAllBytes(SCHEMA_PATH), SchemaVersion.V3);
-        ReceiveName wrapReceiveName = ReceiveName.from(CONTRACT_NAME, "wrap");
-        Receiver wrapReceiver = new Receiver(ACCOUNT_ADDRESS);
-        UInt8[] wrapData = new UInt8[]{UInt8.from(1), UInt8.from(42)};
-        WrapParams wrapParams = new WrapParams(cis2wccdSchema, wrapReceiveName, wrapReceiver, wrapData);
-        wrapParams.initialize(true);
-    }
-
 }

@@ -11,6 +11,9 @@ import lombok.Getter;
 @Getter
 public class IncorrectParams extends SchemaParameter {
 
+    /**
+     * Has no special meaning, just some value that does not adhere to the {@link Schema} provided in the test.
+     */
     private final int value;
 
     protected IncorrectParams(Schema schema, ReceiveName receiveName) {

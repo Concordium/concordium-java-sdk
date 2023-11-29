@@ -889,12 +889,14 @@ public final class ClientV2 {
 
     /**
      * Waits until a given transaction is finalized and returns the corresponding {@link FinalizedBlockItem}.
+     * If the transaction is unknown to the node, or not finalized, the client starts listening for newly finalized blocks,
+     * and returns the corresponding {@link FinalizedBlockItem} once the transaction is finalized.
      * @param transactionHash the {@link Hash} of the transaction to wait for.
-     * @param timeoutMillis the number of milliseconds to wait before throwing an exception.
+     * @param timeoutMillis the number of milliseconds to listen for newly finalized blocks.
      * @return {@link FinalizedBlockItem} of the transaction.
      * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
-     * <li> {@link io.grpc.Status#NOT_FOUND} if the transaction is not known to the node after the timeout is exceeded.
-     * <li> {@link io.grpc.Status#DEADLINE_EXCEEDED} if the transaction is not finalized after the timeout is exceeded.
+     * <li> {@link io.grpc.Status#NOT_FOUND} if the transaction is not known to the node when the timeout is exceeded.
+     * <li> {@link io.grpc.Status#DEADLINE_EXCEEDED} if the transaction is not finalized when the timeout is exceeded.
      * </ul>
      */
     public FinalizedBlockItem waitUntilFinalized(Hash transactionHash, int timeoutMillis) {
@@ -912,12 +914,13 @@ public final class ClientV2 {
 
     /**
      * Helper function for {@link ClientV2#waitUntilFinalized(Hash, int)}. Listens for finalized blocks and returns the {@link FinalizedBlockItem} of the transaction when available.
+     * Keeps listening even if the transaction is unknown to the node.
      * @param transactionHash the {@link Hash} of the transaction to wait for.
-     * @param timeoutMillis the number of milliseconds to wait before throwing an exception.
+     * @param timeoutMillis the number of milliseconds to listen for newly finalized blocks.
      * @return {@link FinalizedBlockItem} of the transaction.
      * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
-     * <li> {@link io.grpc.Status#NOT_FOUND} if the transaction is not known to the node after the timeout is exceeded.
-     * <li> {@link io.grpc.Status#DEADLINE_EXCEEDED} if the transaction is not finalized after the timeout is exceeded.
+     * <li> {@link io.grpc.Status#NOT_FOUND} if the transaction is not known to the node when the timeout is exceeded.
+     * <li> {@link io.grpc.Status#DEADLINE_EXCEEDED} if the transaction is not finalized when the timeout is exceeded.
      * </ul>
      */
     private FinalizedBlockItem listenForFinalizedTransaction(Hash transactionHash, int timeoutMillis) {
