@@ -14,7 +14,13 @@ public enum SchemaVersion {
     V3(3),
     UNKNOWN(-1);
 
+    /**
+     * The default Schema Version. Used when instantiating {@link Schema} if no specific version is provided.
+     */
+    public static final SchemaVersion DEFAULT = V3;
+
     private final int version;
+
     SchemaVersion(int version) {
         this.version = version;
     }

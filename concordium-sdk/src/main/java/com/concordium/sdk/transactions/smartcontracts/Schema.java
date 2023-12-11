@@ -29,7 +29,7 @@ public class Schema {
     }
 
     /**
-     * Creates a {@link Schema} from the provided bytes and {@link SchemaVersion}.
+     * Creates a {@link Schema} from the provided bytes and {@link SchemaVersion}. If no version is provided, {@link SchemaVersion#DEFAULT} is used.
      * @param schemaBytes the bytes of the schema.
      * @param version the version of the schema.
      * @return {@link Schema} containing the provided bytes.
@@ -39,9 +39,9 @@ public class Schema {
     }
 
     /**
-     * Creates a schema from the provided bytes.
+     * Creates a schema from the provided bytes. If no version is provided, {@link SchemaVersion#DEFAULT} is used.
      * @param schemaBytes the bytes of the schema.
      * @return {@link Schema} containing the provided bytes.
      */
-    public static Schema from(byte[] schemaBytes) {return new Schema(schemaBytes, SchemaVersion.UNKNOWN);}
+    public static Schema from(byte[] schemaBytes) {return new Schema(schemaBytes, SchemaVersion.DEFAULT);}
 }
