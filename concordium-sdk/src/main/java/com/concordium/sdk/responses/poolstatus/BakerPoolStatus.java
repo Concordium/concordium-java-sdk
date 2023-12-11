@@ -15,8 +15,6 @@ import java.util.Optional;
 @EqualsAndHashCode(callSuper = false)
 public class BakerPoolStatus {
 
-    private final PoolType poolType = PoolType.BAKER_POOL;
-
     /**
      * "The 'BakerId' of the pool owner.
      */
