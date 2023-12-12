@@ -4,8 +4,6 @@
 name: Release
 
 on:
-  release:
-    types: [published]
   workflow_dispatch: # allow manual trigger
 
 env:
