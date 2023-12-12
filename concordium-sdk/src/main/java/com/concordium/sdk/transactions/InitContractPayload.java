@@ -1,6 +1,8 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.transactions.smartcontracts.ParameterType;
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -68,6 +70,20 @@ public final class InitContractPayload {
      */
     public static InitContractPayload from(CCDAmount amount, ModuleRef moduleRef, InitName initName, Parameter parameter) {
         return new InitContractPayload(amount, moduleRef, initName, parameter);
+    }
+
+    /**
+     * Create a new instance of {@link InitContractPayload} from the given parameters.
+     *
+     * @param amount          CCD amount to deposit.
+     * @param moduleRef       Hash of the smart contract module reference.
+     * @param schemaParameter {@link SchemaParameter} message to invoke the initialization method with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
+     */
+    public static InitContractPayload from(CCDAmount amount, ModuleRef moduleRef, SchemaParameter schemaParameter) {
+        if (!(schemaParameter.getType() == ParameterType.INIT)) {
+            throw new IllegalArgumentException("SchemaParameter for InitContractPayload must be initialized with an InitName");
+        }
+        return new InitContractPayload(amount, moduleRef, schemaParameter.getInitName(), Parameter.from(schemaParameter));
     }
 
     /**

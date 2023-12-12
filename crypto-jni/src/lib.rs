@@ -1,32 +1,32 @@
+use anyhow::{anyhow, Result};
 pub use concordium_base::common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
-use concordium_base::common::Serialize;
-use concordium_base::contracts_common::Amount;
-use concordium_base::encrypted_transfers;
-use concordium_base::encrypted_transfers::types::{
-    AggregatedDecryptedAmount, EncryptedAmount, EncryptedAmountTransferData,
-    IndexedEncryptedAmount, SecToPubAmountTransferData,
+use concordium_base::{
+    base,
+    common::{Serialize, *},
+    contracts_common::{schema::VersionedModuleSchema, Amount},
+    encrypted_transfers,
+    encrypted_transfers::types::{
+        AggregatedDecryptedAmount, EncryptedAmount, EncryptedAmountTransferData,
+        IndexedEncryptedAmount, SecToPubAmountTransferData,
+    },
+    id,
+    id::{constants::ArCurve, curve_arithmetic::Curve, elgamal, types::GlobalContext},
+    transactions::{AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload},
 };
-use concordium_base::id;
-use concordium_base::id::curve_arithmetic::Curve;
-use concordium_base::id::elgamal;
-use concordium_base::id::{constants::ArCurve, types::GlobalContext};
-use concordium_base::transactions::{
-    AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload,
-};
-use concordium_base::{base, common::*};
 use core::slice;
 use ed25519_dalek::*;
-use jni::sys::jstring;
-use rand::thread_rng;
-use serde_json::{from_str, to_string};
-use std::convert::{From, TryFrom};
-use std::i8;
-use std::str::Utf8Error;
 
 use jni::{
     objects::{JClass, JString},
-    sys::{jbyteArray, jint},
+    sys::{jboolean, jbyteArray, jint, jstring, JNI_FALSE},
     JNIEnv,
+};
+use rand::thread_rng;
+use serde_json::{from_str, to_string};
+use std::{
+    convert::{From, TryFrom},
+    i8,
+    str::Utf8Error,
 };
 
 const SUCCESS: i32 = 0;
@@ -179,28 +179,79 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generatePu
 #[derive(SerdeSerialize, SerdeDeserialize)]
 enum CryptoJniResult<T> {
     Ok(T),
-    Err(jint),
+    Err(JNIErrorResponse),
+}
+
+#[derive(SerdeSerialize, SerdeDeserialize)]
+#[allow(non_snake_case)]
+enum JNIErrorResponseType {
+    ParameterSerialization,
+    Utf8Decode,
+    JsonDeserialization,
+    NativeConversion,
+    PayloadCreation,
+}
+
+#[derive(SerdeSerialize, SerdeDeserialize)]
+#[allow(non_snake_case)]
+struct JNIErrorResponse {
+    errorType:    JNIErrorResponseType,
+    errorMessage: String,
 }
 
 impl<T> From<serde_json::Error> for CryptoJniResult<T> {
-    fn from(_: serde_json::Error) -> Self {
-        CryptoJniResult::Err(1)
+    fn from(e: serde_json::Error) -> Self {
+        let error = JNIErrorResponse {
+            errorType:    JNIErrorResponseType::JsonDeserialization,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
     }
 }
 
 impl<T> From<Utf8Error> for CryptoJniResult<T> {
-    fn from(_: Utf8Error) -> Self {
-        CryptoJniResult::Err(2)
+    fn from(e: Utf8Error) -> Self {
+        let error = JNIErrorResponse {
+            errorType:    JNIErrorResponseType::Utf8Decode,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
     }
 }
 
 impl<T> From<jni::errors::Error> for CryptoJniResult<T> {
-    fn from(_: jni::errors::Error) -> Self {
-        CryptoJniResult::Err(3)
+    fn from(e: jni::errors::Error) -> Self {
+        let error = JNIErrorResponse {
+            errorType:    JNIErrorResponseType::NativeConversion,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
     }
 }
 
-const PAYLOAD_CREATION_ERROR: i32 = 5;
+/// Creates errors from strings. Used when payload creation fails as no error to
+/// be passed on is generated.
+impl<T> From<&str> for CryptoJniResult<T> {
+    fn from(e: &str) -> Self {
+        let error = JNIErrorResponse {
+            errorType:    JNIErrorResponseType::PayloadCreation,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
+    }
+}
+
+impl<T> From<anyhow::Error> for CryptoJniResult<T> {
+    fn from(e: anyhow::Error) -> Self {
+        let error = JNIErrorResponse {
+            errorType:    JNIErrorResponseType::ParameterSerialization,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
+    }
+}
+
+const PAYLOAD_CREATION_ERROR: &str = "Could not create payload";
 
 impl<T: serde::Serialize> CryptoJniResult<T> {
     fn to_jstring(&self, env: &JNIEnv) -> jstring {
@@ -232,14 +283,14 @@ fn decrypt_encrypted_amount(
 #[serde(bound(serialize = "C: Curve", deserialize = "C: Curve"))]
 #[serde(rename_all = "camelCase")]
 struct JniInput<C: Curve> {
-    global: GlobalContext<C>,
-    amount: Amount,
-    sender_secret_key: elgamal::SecretKey<C>,
+    global:                 GlobalContext<C>,
+    amount:                 Amount,
+    sender_secret_key:      elgamal::SecretKey<C>,
     input_encrypted_amount: IndexedEncryptedAmount<C>,
 }
 
 type EncryptedTranfersInput = JniInput<ArCurve>;
-type Result = CryptoJniResult<SecToPubAmountTransferData<ArCurve>>;
+type EncryptedTransferResult = CryptoJniResult<SecToPubAmountTransferData<ArCurve>>;
 
 #[no_mangle]
 #[allow(non_snake_case)]
@@ -255,11 +306,11 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createSecT
         Ok(java_str) => match java_str.to_str() {
             Ok(rust_str) => match from_str(rust_str) {
                 Ok(input) => input,
-                Err(err) => return Result::from(err).to_jstring(&env),
+                Err(err) => return EncryptedTransferResult::from(err).to_jstring(&env),
             },
-            Err(err) => return Result::from(err).to_jstring(&env),
+            Err(err) => return EncryptedTransferResult::from(err).to_jstring(&env),
         },
-        Err(err) => return Result::from(err).to_jstring(&env),
+        Err(err) => return EncryptedTransferResult::from(err).to_jstring(&env),
     };
 
     let decrypted_amount = match decrypt_encrypted_amount(
@@ -267,15 +318,15 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createSecT
         input.sender_secret_key.clone(),
     ) {
         CryptoJniResult::Ok(amount) => amount,
-        CryptoJniResult::Err(err) => return Result::Err(err).to_jstring(&env),
+        CryptoJniResult::Err(err) => return EncryptedTransferResult::Err(err).to_jstring(&env),
     };
 
     let input_amount: AggregatedDecryptedAmount<ArCurve> = AggregatedDecryptedAmount {
         agg_encrypted_amount: input.input_encrypted_amount.encrypted_chunks,
-        agg_index: encrypted_transfers::types::EncryptedAmountAggIndex {
+        agg_index:            encrypted_transfers::types::EncryptedAmountAggIndex {
             index: input.input_encrypted_amount.index.index,
         },
-        agg_amount: decrypted_amount,
+        agg_amount:           decrypted_amount,
     };
 
     let mut csprng = thread_rng();
@@ -290,7 +341,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createSecT
 
     match payload {
         Some(payload) => CryptoJniResult::Ok(payload).to_jstring(&env),
-        None => Result::Err(PAYLOAD_CREATION_ERROR).to_jstring(&env),
+        None => EncryptedTransferResult::from(PAYLOAD_CREATION_ERROR).to_jstring(&env),
     }
 }
 
@@ -298,10 +349,10 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createSecT
 #[serde(bound(serialize = "C: Curve", deserialize = "C: Curve"))]
 #[serde(rename_all = "camelCase")]
 struct TransferJniInput<C: Curve> {
-    global: GlobalContext<C>,
-    receiver_public_key: elgamal::PublicKey<C>,
-    sender_secret_key: elgamal::SecretKey<C>,
-    amount_to_send: Amount,
+    global:                 GlobalContext<C>,
+    receiver_public_key:    elgamal::PublicKey<C>,
+    sender_secret_key:      elgamal::SecretKey<C>,
+    amount_to_send:         Amount,
     input_encrypted_amount: IndexedEncryptedAmount<C>,
 }
 
@@ -334,15 +385,17 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateEn
         input.sender_secret_key.clone(),
     ) {
         CryptoJniResult::Ok(amount) => amount,
-        CryptoJniResult::Err(err) => return Result::Err(err).to_jstring(&env),
+        CryptoJniResult::Err(err) => {
+            return EncryptedAmountTransferResult::Err(err).to_jstring(&env)
+        }
     };
 
     let input_amount: AggregatedDecryptedAmount<ArCurve> = AggregatedDecryptedAmount {
         agg_encrypted_amount: input.input_encrypted_amount.encrypted_chunks,
-        agg_index: encrypted_transfers::types::EncryptedAmountAggIndex {
+        agg_index:            encrypted_transfers::types::EncryptedAmountAggIndex {
             index: input.input_encrypted_amount.index.index,
         },
-        agg_amount: decrypted_amount,
+        agg_amount:           decrypted_amount,
     };
 
     let mut csprng = thread_rng();
@@ -358,7 +411,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateEn
 
     match payload {
         Some(payload) => CryptoJniResult::Ok(payload).to_jstring(&env),
-        None => EncryptedAmountTransferResult::Err(PAYLOAD_CREATION_ERROR).to_jstring(&env),
+        None => EncryptedAmountTransferResult::from(PAYLOAD_CREATION_ERROR).to_jstring(&env),
     }
 }
 
@@ -370,14 +423,14 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateBa
 ) -> jstring {
     let mut csprng = thread_rng();
     let payload = base::BakerKeyPairs::generate(&mut csprng);
-    return CryptoJniResult::Ok(payload).to_jstring(&env);
+    CryptoJniResult::Ok(payload).to_jstring(&env)
 }
 
 #[derive(Serialize, SerdeSerialize, SerdeDeserialize)]
 #[serde(rename_all = "camelCase")]
 struct AddBakerPayloadInput {
     pub sender: AccountAddress,
-    pub keys: base::BakerKeyPairs,
+    pub keys:   base::BakerKeyPairs,
 }
 
 type AddBakerResult = CryptoJniResult<BakerKeysPayload<AddBakerKeysMarker>>;
@@ -406,5 +459,209 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateCo
 
     let payload = ConfigureBakerKeysPayload::new(&input.keys, input.sender, &mut csprng);
 
-    return CryptoJniResult::Ok(payload).to_jstring(&env);
+    CryptoJniResult::Ok(payload).to_jstring(&env)
+}
+
+type SerializeParamResult = CryptoJniResult<String>;
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for serializing ia parameter for a receive function
+/// according to a specified Schema. Returns a SerializeParamResult containg the
+/// hex encoded serialized parameter.
+///
+/// - `parameter` is the parameter to serialize and must be a properly
+///   initalized `java.lang.String` that is non-null. The parameter must be
+///   valid JSON according to the provided schema.
+/// - `contractName` is the name of the contract and must be a properly
+///   initalized `java.lang.String` that is non-null.
+/// - `methodName` is the name of the method and must be a properly initalized
+///   `java.lang.String` that is non-null.
+/// - `schemaBytes` is the bytes of the schema and must be a properly initalized
+///   `byte[]` containing bytes representing a valid schema. The schema must
+///   match the provided `contractName`.
+/// - `schemaVersion` is the version of the Schema and must be an integer
+///   representing a valid
+///   `com.concordium.sdk.transactions.smartcontracts.SchemaVersion`.
+/// - `verboseErrors`, whether errors are returned in verbose format or not, can
+///   be useful when debugging why serialization fails.
+///
+/// If serialization fails returns a SerializeParamResult containing a JNIError
+/// detailing what went wrong.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeReceiveParameter(
+    env: JNIEnv,
+    _: JClass,
+    parameter: JString,
+    contractName: JString,
+    methodName: JString,
+    schemaBytes: jbyteArray,
+    schemaVersion: jint,
+    verboseErrors: jboolean,
+) -> jstring {
+    let schema = match env.convert_byte_array(schemaBytes) {
+        Ok(x) => x,
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let parameter: String = match env.get_string(parameter) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let contractName: String = match env.get_string(contractName) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let methodName: String = match env.get_string(methodName) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let version: Option<u8> = match schemaVersion {
+        0 => Some(0),
+        1 => Some(1),
+        2 => Some(2),
+        3 => Some(3),
+        _ => None,
+    };
+
+    let verboseErrors = verboseErrors != JNI_FALSE;
+
+    let serializedParameter = serialize_receive_contract_parameters_aux(
+        &parameter,
+        &contractName,
+        &methodName,
+        &schema,
+        version,
+        verboseErrors,
+    );
+
+    let result = match serializedParameter {
+        Ok(serializedParameter) => hex::encode(serializedParameter),
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    SerializeParamResult::Ok(result).to_jstring(&env)
+}
+
+#[allow(non_snake_case)]
+/// Helper method for serialize_receive_parameters. Performs the actual
+/// serialization.
+pub fn serialize_receive_contract_parameters_aux(
+    parameter: &str,
+    contractName: &str,
+    methodName: &str,
+    schemaBytes: &[u8],
+    schemaVersion: Option<u8>,
+    verboseErrors: bool,
+) -> Result<Vec<u8>> {
+    let module_schema = VersionedModuleSchema::new(schemaBytes, &schemaVersion)?;
+    let parameter_type = module_schema.get_receive_param_schema(contractName, methodName)?;
+    let value: serde_json::Value = from_str(parameter)?;
+
+    parameter_type
+        .serial_value(&value)
+        .map_err(|e| anyhow!("{}", e.display(verboseErrors)))
+}
+
+/// The JNI wrapper for serializing a parameter for an init function according
+/// to a specified Schema. Returns a SerializeParamResult containg the hex
+/// encoded serialized parameter.
+///
+/// - `parameter` is the parameter to serialize and must be a properly
+///   initalized `java.lang.String` that is non-null. The parameter must be
+///   valid JSON according to the provided schema.
+/// - `contractName` is the name of the contract and must be a properly
+///   initalized `java.lang.String` that is non-null.
+/// - `schemaBytes` is the bytes of the schema and must be a properly initalized
+///   `byte[]` containing bytes representing a valid schema. The schema must
+///   match the provided `contractName`.
+/// - `schemaVersion` is the version of the Schema and must be an integer
+///   representing a valid
+///   `com.concordium.sdk.transactions.smartcontracts.SchemaVersion`.
+/// - `verboseErrors`, whether errors are returned in verbose format or not, can
+///   be useful when debugging why serialization fails.
+///
+/// If serialization fails returns a SerializeParamResult containing a JNIError
+/// detailing what went wrong.
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeInitParameter(
+    env: JNIEnv,
+    _: JClass,
+    parameter: JString,
+    contractName: JString,
+    schemaBytes: jbyteArray,
+    schemaVersion: jint,
+    verboseErrors: jboolean,
+) -> jstring {
+    let schema = match env.convert_byte_array(schemaBytes) {
+        Ok(x) => x,
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let parameter: String = match env.get_string(parameter) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let contractName: String = match env.get_string(contractName) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let version: Option<u8> = match schemaVersion {
+        0 => Some(0),
+        1 => Some(1),
+        2 => Some(2),
+        3 => Some(3),
+        _ => None,
+    };
+
+    let verboseErrors = verboseErrors != JNI_FALSE;
+
+    let serializedParameter =
+        serialize_init_parameters_aux(&parameter, &contractName, &schema, version, verboseErrors);
+
+    let result = match serializedParameter {
+        Ok(serializedParameter) => hex::encode(serializedParameter),
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    SerializeParamResult::Ok(result).to_jstring(&env)
+}
+
+/// Helper method for serialize_init_parameters. Performs the actual
+/// serialization.
+#[allow(non_snake_case)]
+pub fn serialize_init_parameters_aux(
+    parameter: &str,
+    contractName: &str,
+    schemaBytes: &[u8],
+    schemaVersion: Option<u8>,
+    verboseErrors: bool,
+) -> Result<Vec<u8>> {
+    let module_schema = VersionedModuleSchema::new(schemaBytes, &schemaVersion)?;
+    let parameter_type = module_schema.get_init_param_schema(contractName)?;
+    let value: serde_json::Value = from_str(parameter)?;
+
+    parameter_type
+        .serial_value(&value)
+        .map_err(|e| anyhow!("{}", e.display(verboseErrors)))
 }

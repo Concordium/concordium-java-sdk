@@ -645,7 +645,7 @@ public class TransferToPublicTest {
                         .signer(TransactionTestHelper.getValidSigner())
                         .build();
             } catch (CryptoJniException ex) {
-                Assert.assertNotNull(ex.getCode().getErrorMessage());
+                Assert.assertNotNull(ex.getErrorMessage());
                 continue;
             }
 

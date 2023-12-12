@@ -1,7 +1,6 @@
 package com.concordium.sdk.crypto.encryptedtransfers;
 
 import com.concordium.sdk.crypto.CryptoJniNative;
-import com.concordium.sdk.crypto.CryptoJniResultCode;
 import com.concordium.sdk.crypto.NativeResolver;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
@@ -53,13 +52,12 @@ public final class EncryptedTransfers {
             throw new RuntimeException(e);
         }
 
-        if (!result.isok()) {
+        if (!result.isSuccess()) {
             throw CryptoJniException.from(
-                    result.getErr().orElse(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+                    result.getErr());
         }
 
-        return result.getOk().orElseThrow(
-                () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+        return result.getOk();
     }
 
 
@@ -89,13 +87,12 @@ public final class EncryptedTransfers {
             throw new RuntimeException(e);
         }
 
-        if (!result.isok()) {
+        if (!result.isSuccess()) {
             throw CryptoJniException.from(
-                    result.getErr().orElse(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+                    result.getErr());
         }
 
-        return result.getOk().orElseThrow(
-                () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+        return result.getOk();
 
     }
 

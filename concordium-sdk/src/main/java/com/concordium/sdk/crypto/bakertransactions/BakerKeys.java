@@ -1,7 +1,6 @@
 package com.concordium.sdk.crypto.bakertransactions;
 
 import com.concordium.sdk.crypto.CryptoJniNative;
-import com.concordium.sdk.crypto.CryptoJniResultCode;
 import com.concordium.sdk.crypto.NativeResolver;
 import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.crypto.bls.BLSSecretKey;
@@ -15,15 +14,12 @@ import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.accountinfo.Baker;
 import com.concordium.sdk.serializing.JsonMapper;
-import com.concordium.sdk.transactions.TransactionFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
-import java.io.IOException;
 import java.io.Writer;
 
 @Jacksonized
@@ -74,13 +70,12 @@ public final class BakerKeys {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        if (!result.isok()) {
+        if (!result.isSuccess()) {
             throw CryptoJniException.from(
-                    result.getErr().orElse(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+                    result.getErr());
         }
 
-        return result.getOk().orElseThrow(
-                () -> CryptoJniException.from(CryptoJniResultCode.ERROR_UNKNOWN_RESULT_CODE));
+        return result.getOk();
 
     }
 

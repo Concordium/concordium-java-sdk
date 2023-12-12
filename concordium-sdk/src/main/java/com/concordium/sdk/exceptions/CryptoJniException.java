@@ -1,36 +1,36 @@
 package com.concordium.sdk.exceptions;
 
-import com.concordium.sdk.crypto.CryptoJniResultCode;
 import lombok.Getter;
 
 /**
- * Represents an exception that is thrown when a cryptographic operation performed using the JNI (Java Native Interface)
- * fails. It has a field, `code`, that contains the result code of the failed operation.
+ * Represents an exception that is thrown when an operation performed using the JNI (Java Native Interface)
+ * fails.
  */
 public final class CryptoJniException extends RuntimeException {
     /**
-     * The result code of the failed cryptographic operation.
+     * The type of the error.
      */
     @Getter
-    private final CryptoJniResultCode code;
-
+    private final JNIErrorType errorType;
     /**
-     * Creates a new `CryptoJniException` object with the given result code.
-     *
-     * @param code the result code of the failed cryptographic operation.
+     * The error message returned from the JNI.
      */
-    private CryptoJniException(CryptoJniResultCode code) {
-        super(code.getErrorMessage());
-        this.code = code;
+    @Getter
+    private final String errorMessage;
+
+
+    CryptoJniException(JNIError error) {
+        super(error.getErrorType() + ": " + error.getErrorMessage());
+        this.errorType = error.getErrorType();
+        this.errorMessage = error.getErrorMessage();
     }
 
     /**
-     * Creates a new `CryptoJniException` object from the given result code.
-     *
-     * @param code the result code of the failed cryptographic operation.
-     * @return a new `CryptoJniException` object.
+     * Create a new CryptoJniException from the {@link JNIError}.
+     * @param error {@link JNIError} returned from the rust layer.
+     * @return {@link CryptoJniException} matching the {@link JNIError}.
      */
-    public static CryptoJniException from(CryptoJniResultCode code) {
-        return new CryptoJniException(code);
+    public static CryptoJniException from(JNIError error) {
+        return new CryptoJniException(error);
     }
 }

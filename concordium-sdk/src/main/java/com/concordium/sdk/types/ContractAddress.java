@@ -4,11 +4,16 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.AccountType;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableList;
 import concordium.ConcordiumP2PRpc;
 import lombok.*;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,13 +21,14 @@ import java.util.Optional;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
+@JsonSerialize(using = ContractAddress.ContractAddressSerializer.class)
 public final class ContractAddress extends AbstractAddress {
-
-    @JsonProperty("subindex")
-    private final long subIndex;
 
     @JsonProperty("index")
     private final long index;
+
+    @JsonProperty("subindex")
+    private final long subIndex;
 
     @JsonCreator
     @Builder
@@ -71,5 +77,18 @@ public final class ContractAddress extends AbstractAddress {
         buffer.putLong(this.getIndex());
         buffer.putLong(this.getSubIndex());
         return buffer.array();
+    }
+
+    static class ContractAddressSerializer extends JsonSerializer<ContractAddress> {
+        @Override
+        public void serialize(ContractAddress o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+
+            jsonGenerator.writeStartObject();
+
+            jsonGenerator.writeNumberField("index", o.getIndex());
+            jsonGenerator.writeNumberField("subindex", o.getSubIndex());
+
+            jsonGenerator.writeEndObject();
+        }
     }
 }

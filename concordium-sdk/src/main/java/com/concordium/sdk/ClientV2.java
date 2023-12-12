@@ -17,6 +17,7 @@ import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockcertificates.BlockCertificates;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blockitemstatus.BlockItemStatus;
+import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
@@ -44,6 +45,7 @@ import com.concordium.sdk.types.Timestamp;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
+import io.grpc.Status;
 import lombok.val;
 
 import java.io.File;
@@ -138,6 +140,7 @@ public final class ClientV2 {
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
      * @return {@link Iterator<BlockIdentifier>}
+     *
      */
     public Iterator<BlockIdentifier> getFinalizedBlocks(int timeoutMillis) {
         val grpcOutput = this.server(timeoutMillis)
@@ -306,6 +309,9 @@ public final class ClientV2 {
      *
      * @param transactionHash The transaction {@link Hash}
      * @return The {@link BlockItemStatus}
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
+     * <li> {@link io.grpc.Status#NOT_FOUND} if the transaction is not known to the node.
+     * </ul>
      */
     public BlockItemStatus getBlockItemStatus(Hash transactionHash) {
         val grpcOutput = this.server()
@@ -879,6 +885,66 @@ public final class ClientV2 {
                 winner -> winners.add(WinningBaker.parse(winner))
         );
         return winners.build();
+    }
+
+    /**
+     * Waits until a given transaction is finalized and returns the corresponding {@link Optional<FinalizedBlockItem>}.
+     * If the transaction is unknown to the node or not finalized, the client starts listening for newly finalized blocks,
+     * and returns the corresponding {@link Optional<FinalizedBlockItem>} once the transaction is finalized.
+     * @param transactionHash the {@link Hash} of the transaction to wait for.
+     * @param timeoutMillis the number of milliseconds to listen for newly finalized blocks.
+     * @return {@link Optional<FinalizedBlockItem>} of the transaction if it was finalized before exceeding the timeout, Empty otherwise.
+     */
+    public Optional<FinalizedBlockItem> waitUntilFinalized(Hash transactionHash, int timeoutMillis) {
+        Optional<FinalizedBlockItem> maybeStatus = getFinalizedTransaction(transactionHash);
+        // if it's finalized return it.
+        if (maybeStatus.isPresent()) {
+            return maybeStatus;
+        }
+        // check newly finalized blocks until we time out
+        Optional<FinalizedBlockItem> result = Optional.empty();
+        try {
+            Iterator<BlockIdentifier> finalizedBlockStream = this.getFinalizedBlocks(timeoutMillis);
+            while (finalizedBlockStream.hasNext()) {
+                finalizedBlockStream.next();
+                Optional<FinalizedBlockItem> finalizedBlockItem = getFinalizedTransaction(transactionHash);
+                if (finalizedBlockItem.isPresent()) {
+                    // the transaction is included in a finalized block, break and return the finalized status.
+                    result = finalizedBlockItem;
+                    break;
+                }
+            }
+        } catch (io.grpc.StatusRuntimeException e) {
+            // we timed out. Return empty to indicate that the transaction could not be found.
+            if (e.getStatus().getCode().equals(Status.Code.DEADLINE_EXCEEDED)) {
+                return Optional.empty();
+            }
+            throw e;
+        }
+        return result;
+    }
+
+    /**
+     * Helper function for {@link ClientV2#waitUntilFinalized(Hash, int)}. Retrieves the {@link Optional<FinalizedBlockItem>} of the transaction if it is finalized.
+     * @param transactionHash the {@link Hash} of the transaction to wait for.
+     * @return {@link Optional<FinalizedBlockItem>} of the transaction if it is finalized, Empty otherwise.
+     */
+    private Optional<FinalizedBlockItem> getFinalizedTransaction(Hash transactionHash) {
+        try {
+            BlockItemStatus status = this.getBlockItemStatus(transactionHash);
+            if (status.getFinalizedBlockItem().isPresent()) {
+                return Optional.of(status.getFinalizedBlockItem().get());
+            }
+            // Only return a finalized transaction.
+            return Optional.empty();
+        } catch (io.grpc.StatusRuntimeException e) {
+            // If the transaction is not found then return empty.
+            if (e.getStatus().getCode().equals(Status.Code.NOT_FOUND)) {
+                return Optional.empty();
+            }
+            // report back any other exceptions.
+            throw e;
+        }
     }
 
     /**

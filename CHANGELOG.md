@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Added method `waitUntilFinalized` for waiting until a given transaction is finalized.
 - Removed deprecated V1 API from the SDK. Consumers of the (now removed) `getBlockSummary` endpoint should refer to `GetBlockTransactionEvents`, `GetBlockSpecialEvents` and `GetBlockPendingUpdates`.
 - Added support for GRPC V2 `GetWinningBakersEpoch` for getting a list of bakers that won the lottery in a particular historical epoch. Only available when querying a node with version at least 6.1.
 - Added support for GRPC V2 `GetFirstBlockEpoch` for getting the block hash of the first finalized block in a specified epoch. Only available when querying a node with version at least 6.1.
@@ -8,6 +9,8 @@
 - Added support for GRPC V2 `GetBakerRewardPeriodInfo` for getting all the bakers in the reward period of a block. Only available when querying a node with version at least 6.1.
 - Added support for GRPC V2 `GetBlockCertificates` for retrieving certificates for a block supporting ConcordiumBF, i.e. a node with at least version 6.1.
 - Extended `CurrentPaydayStatus` with `CommissionRates` that apply for the current reward period. Requires at least node version 6.1.
+- Implemented custom JSON serialization of `AbstractAddress` to enable `AbstractAddress` as a smart contract parameter, and added class `ListParam` for conveniently using lists of objects, `AbstractAddress`, `ContractAddress` and `AccountAddress` as smart contract parameters.
+- Added support for creating and serializing smart contract parameters using the abstract class `SchemaParameter` and a provided `Schema`.
 
 ## 5.1.0
 - Fixed a regression that made it harder to deserialize transactions from bytes.

@@ -29,11 +29,11 @@ public class ClientV2ImportWalletTest {
 
     @Test
     public void importBrowserWallet() throws IOException {
-        assertEquals(EXPECTED_BROWSER_TRANSACTION_SIGNER, TransactionSigner.from(new File("./src/test/java/com/concordium/sdk/walletexports/browserWallet.json")));
+        assertEquals(EXPECTED_BROWSER_TRANSACTION_SIGNER, TransactionSigner.from(new File("./src/test/testresources/walletexports/browserWallet.json")));
     }
 
     @Test
     public void importGenesisWallet() throws IOException {
-        assertEquals(EXPECTED_GENESIS_TRANSACTION_SIGNER, TransactionSigner.from(new File("./src/test/java/com/concordium/sdk/walletexports/genesisWallet.json")));
+        assertEquals(EXPECTED_GENESIS_TRANSACTION_SIGNER, TransactionSigner.from(new File("./src/test/testresources/walletexports/genesisWallet.json")));
     }
 }

@@ -1,7 +1,8 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.transactions.smartcontracts.ParameterType;
+import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.ContractAddress;
-import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
 import java.nio.ByteBuffer;
@@ -62,11 +63,53 @@ public final class UpdateContract extends Payload {
                 Parameter.from(parameter));
     }
 
+    /**
+     * Creates a {@link UpdateContract} from the given parameters.
+     *
+     * @param amount          The amount of CCD to be sent to the contract.
+     * @param contractAddress Address of the contract instance to invoke.
+     * @param receiveName The {@link ReceiveName} of the smart contract instance to invoke.
+     * @param param       The parameter of the contract method.
+     * @return A new UpdateContractPayload object.
+     */
     public static UpdateContract from(@NonNull final CCDAmount amount,
                                       @NonNull final ContractAddress contractAddress,
                                       @NonNull final ReceiveName receiveName,
                                       @NonNull final Parameter param) {
         return new UpdateContract(amount, contractAddress, receiveName, param);
+    }
+
+    /**
+     * Creates a {@link UpdateContract} with amount = 0 from the given parameters.
+     *
+     * @param contractAddress Address of the contract instance to invoke.
+     * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
+     */
+    public static UpdateContract from(@NonNull final ContractAddress contractAddress,
+                                      SchemaParameter schemaParameter) {
+        if (!(schemaParameter.getType() == ParameterType.RECEIVE)) {
+            throw new IllegalArgumentException("Cannot initialize smart contract with UpdateContractTransaction. SchemaParameter for UpdateContract must be initialized with a ReceiveName");
+        }
+        return from(CCDAmount.fromMicro(0),
+                contractAddress,
+                schemaParameter.getReceiveName(),
+                Parameter.from(schemaParameter));
+    }
+
+    /**
+     * Creates a {@link UpdateContract} from the given parameters.
+     *
+     * @param amount          The amount of CCD to be sent to the contract.
+     * @param contractAddress Address of the contract instance to invoke.
+     * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
+     */
+    public static UpdateContract from(CCDAmount amount,
+                                      @NonNull final ContractAddress contractAddress,
+                                      SchemaParameter schemaParameter) {
+        if (!(schemaParameter.getType() == ParameterType.RECEIVE)) {
+            throw new IllegalArgumentException("Cannot initialize smart contract with UpdateContractTransaction. SchemaParameter for UpdateContract must be initialized with a ReceiveName");
+        }
+        return from(amount, contractAddress, schemaParameter.getReceiveName(), Parameter.from(schemaParameter));
     }
 
     @Override
