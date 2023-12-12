@@ -7,6 +7,7 @@ import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.*;
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -23,6 +24,17 @@ public class Cis2NftParameters {
     private static final String CIS_2_NFT_CONTRACT_NAME = "cis2_nft";
 
     private static final String SCHEMA_PATH = "./src/main/java/com/concordium/sdk/examples/contractexample/cis2nft/cis2-nft.schema.bin";
+
+    private static final Schema SCHEMA;
+
+    static {
+        try {
+            SCHEMA = Schema.from(Files.readAllBytes(Paths.get(SCHEMA_PATH)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Generates and initializes {@link MintParams} for the 'mint' method of a cis2-nft contract.
      *
@@ -30,13 +42,12 @@ public class Cis2NftParameters {
      */
     @SneakyThrows
     public static SchemaParameter generateMintParams() {
-        Schema schema = Schema.from(Files.readAllBytes(Paths.get(SCHEMA_PATH)));
         ReceiveName mintParamsReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "mint");
         List<TokenIdU32> tokens = new ArrayList<>();
         tokens.add(TokenIdU32.from(2));
         tokens.add(TokenIdU32.from(22));
         tokens.add(TokenIdU32.from(2132));
-        SchemaParameter mintParameter = new MintParams(schema, mintParamsReceiveName, ACCOUNT_ADDRESS, tokens);
+        SchemaParameter mintParameter = new MintParams(SCHEMA, mintParamsReceiveName, ACCOUNT_ADDRESS, tokens);
         mintParameter.initialize(true);
         return mintParameter;
     }
@@ -48,7 +59,6 @@ public class Cis2NftParameters {
      */
     @SneakyThrows
     public static SchemaParameter generateTransferParams() {
-        Schema schema = Schema.from(Files.readAllBytes(Paths.get(SCHEMA_PATH)));
         ReceiveName nftTransferReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "transfer");
         TokenIdU32 tokenId = TokenIdU32.from(12);
         TokenAmountU8 amount = TokenAmountU8.from(1);
@@ -58,7 +68,7 @@ public class Cis2NftParameters {
         NftTransfer transfer = new NftTransfer(tokenId, amount, from, to, data);
         List<NftTransfer> transfers = new ArrayList<>();
         transfers.add(transfer);
-        SchemaParameter transferParameter = new NftTransferParam(schema, nftTransferReceiveName, transfers);
+        SchemaParameter transferParameter = new NftTransferParam(SCHEMA, nftTransferReceiveName, transfers);
         transferParameter.initialize(true);
         return transferParameter;
     }
@@ -70,14 +80,13 @@ public class Cis2NftParameters {
      */
     @SneakyThrows
     public static SchemaParameter generateUpdateOperatorParams() {
-        Schema schema = Schema.from(Files.readAllBytes(Paths.get(SCHEMA_PATH)));
         ReceiveName updateOperatorReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "updateOperator");
         UpdateOperator update1 = new UpdateOperator(UpdateOperator.OperatorUpdate.ADD, ACCOUNT_ADDRESS);
         UpdateOperator update2 = new UpdateOperator(UpdateOperator.OperatorUpdate.REMOVE, CONTRACT_ADDRESS_1);
         List<UpdateOperator> updateOperatorList = new ArrayList<>();
         updateOperatorList.add(update1);
         updateOperatorList.add(update2);
-        SchemaParameter updateOperatorsParams = new UpdateOperatorParams(schema, updateOperatorReceiveName, updateOperatorList);
+        SchemaParameter updateOperatorsParams = new UpdateOperatorParams(SCHEMA, updateOperatorReceiveName, updateOperatorList);
         updateOperatorsParams.initialize(true);
         return updateOperatorsParams;
     }
@@ -89,14 +98,13 @@ public class Cis2NftParameters {
      */
     @SneakyThrows
     public static SchemaParameter generateOperatorOfParams() {
-        Schema schema = Schema.from(Files.readAllBytes(Paths.get(SCHEMA_PATH)));
         ReceiveName operatorOfReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "operatorOf");
         OperatorOfQuery operatorOfQuery1 = new OperatorOfQuery(ACCOUNT_ADDRESS, CONTRACT_ADDRESS_1);
         OperatorOfQuery operatorOfQuery2 = new OperatorOfQuery(CONTRACT_ADDRESS_1, CONTRACT_ADDRESS_2);
         List<OperatorOfQuery> operatorOfQueries = new ArrayList<>();
         operatorOfQueries.add(operatorOfQuery1);
         operatorOfQueries.add(operatorOfQuery2);
-        SchemaParameter operatorOfQueryParams = new OperatorOfQueryParams(schema, operatorOfReceiveName, operatorOfQueries);
+        SchemaParameter operatorOfQueryParams = new OperatorOfQueryParams(SCHEMA, operatorOfReceiveName, operatorOfQueries);
         operatorOfQueryParams.initialize(true);
         return operatorOfQueryParams;
     }
@@ -108,14 +116,13 @@ public class Cis2NftParameters {
      */
     @SneakyThrows
     public static SchemaParameter generateBalanceOfParams() {
-        Schema schema = Schema.from(Files.readAllBytes(Paths.get(SCHEMA_PATH)));
         ReceiveName balanceOfReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "balanceOf");
         NftBalanceOfQuery balanceOfQuery1 = new NftBalanceOfQuery(TokenIdU32.from(22222), ACCOUNT_ADDRESS);
         NftBalanceOfQuery balanceOfQuery2 = new NftBalanceOfQuery(TokenIdU32.from(42), CONTRACT_ADDRESS_1);
         List<NftBalanceOfQuery> balanceOfQueries = new ArrayList<>();
         balanceOfQueries.add(balanceOfQuery1);
         balanceOfQueries.add(balanceOfQuery2);
-        SchemaParameter contractBalanceOfQueryParams = new NftBalanceOfQueryParams(schema, balanceOfReceiveName, balanceOfQueries);
+        SchemaParameter contractBalanceOfQueryParams = new NftBalanceOfQueryParams(SCHEMA, balanceOfReceiveName, balanceOfQueries);
         contractBalanceOfQueryParams.initialize(true);
         return contractBalanceOfQueryParams;
     }
@@ -127,14 +134,13 @@ public class Cis2NftParameters {
      */
     @SneakyThrows
     public static SchemaParameter generateTokenMetadataParams() {
-        Schema schema = Schema.from(Files.readAllBytes(Paths.get(SCHEMA_PATH)));
         ReceiveName tokenMetadataReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "tokenMetadata");
         TokenIdU32 token1 = TokenIdU32.from(21);
         TokenIdU32 token2 = TokenIdU32.from(22);
         List<TokenIdU32> tokensForMetadataQuery = new ArrayList<>();
         tokensForMetadataQuery.add(token1);
         tokensForMetadataQuery.add(token2);
-        SchemaParameter nftMetaDataQuery = new NftTokenMetaDataQueryParams(schema, tokenMetadataReceiveName, tokensForMetadataQuery);
+        SchemaParameter nftMetaDataQuery = new NftTokenMetaDataQueryParams(SCHEMA, tokenMetadataReceiveName, tokensForMetadataQuery);
         nftMetaDataQuery.initialize(true);
         return nftMetaDataQuery;
     }
@@ -146,14 +152,13 @@ public class Cis2NftParameters {
      */
     @SneakyThrows
     public static SchemaParameter generateSupportsParameter() {
-        Schema schema = Schema.from(Files.readAllBytes(Paths.get(SCHEMA_PATH)));
         ReceiveName supportsReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "supports");
         String standardIdentifier1 = "identifier1";
         String standardIdentifier2 = "identifier2";
         List<String> identifiers = new ArrayList<>();
         identifiers.add(standardIdentifier1);
         identifiers.add(standardIdentifier2);
-        SchemaParameter supportsQueryParams = new SupportsQueryParams(schema, supportsReceiveName, identifiers);
+        SchemaParameter supportsQueryParams = new SupportsQueryParams(SCHEMA, supportsReceiveName, identifiers);
         supportsQueryParams.initialize(true);
         return supportsQueryParams;
     }
@@ -165,13 +170,12 @@ public class Cis2NftParameters {
      */
     @SneakyThrows
     public static SchemaParameter generateSetImplementorsParams() {
-        Schema schema = Schema.from(Files.readAllBytes(Paths.get(SCHEMA_PATH)));
         ReceiveName setImplementorsReceiveName = ReceiveName.from(CIS_2_NFT_CONTRACT_NAME, "setImplementors");
         List<ContractAddress> implementors = new ArrayList<>();
         String identifier = "IdentifierID";
         implementors.add(CONTRACT_ADDRESS_1);
         implementors.add(CONTRACT_ADDRESS_2);
-        SchemaParameter setImplementorsParams = new SetImplementorsParams(schema, setImplementorsReceiveName, identifier, implementors);
+        SchemaParameter setImplementorsParams = new SetImplementorsParams(SCHEMA, setImplementorsReceiveName, identifier, implementors);
         setImplementorsParams.initialize();
         return setImplementorsParams;
     }
