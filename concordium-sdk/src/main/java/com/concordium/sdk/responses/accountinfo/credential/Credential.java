@@ -2,14 +2,10 @@ package com.concordium.sdk.responses.accountinfo.credential;
 
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.transactions.Index;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
 import lombok.*;
 
-import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.google.common.collect.ImmutableMap.copyOf;
 
@@ -88,22 +84,4 @@ public final class Credential {
         this.arData = arData;
     }
 
-    @JsonCreator
-    Credential(@JsonProperty("v") int version,
-               @JsonProperty("value") Value value) {
-        this.version = version;
-        this.type = value.getType();
-        this.ipIdentity = value.getContents().getIpIdentity();
-        this.revocationThreshold = value.getContents().getRevocationThreshold();
-        this.credId = value.getContents().getRegistrationId();
-        this.policy = value.getContents().getPolicy();
-        this.commitments = value.getContents().getCommitments();
-        this.credentialPublicKeys = value.getContents().getCredentialPublicKeys();
-        if (Objects.isNull(value.getContents().getArData())) {
-            this.arData = Collections.emptyMap();
-        } else {
-            this.arData = copyOf(value.getContents().getArData());
-
-        }
-    }
 }

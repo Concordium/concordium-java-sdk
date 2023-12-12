@@ -74,18 +74,6 @@ public final class Connection {
     }
 
     /**
-     * A connection builder to use with the {@link Client}
-     * I.e. the GRPCv1 API.
-     *
-     * @return the {@link ValidatingConnectionBuilder}
-     * @deprecated since version 5.0.0, instead use {@link Connection#newBuilder()}
-     */
-    @Deprecated
-    public static Connection.ConnectionBuilder builder() {
-        return new Connection.ValidatingConnectionBuilder();
-    }
-
-    /**
      * A connection builder to use with the {@link ClientV2}
      * I.e. the GRPCv2 API.
      *

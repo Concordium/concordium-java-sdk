@@ -3,7 +3,6 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.ContractAddress;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.google.common.collect.ImmutableList;
 import io.grpc.ManagedChannel;
@@ -62,7 +61,7 @@ public class ClientV2GetInstanceListTest {
     }
 
     @Test
-    public void getInstanceList() throws BlockNotFoundException {
+    public void getInstanceList() {
         var instanceList = client.getInstanceList(BlockQuery.BEST);
 
         verify(serviceImpl).getInstanceList(eq(BEST_BLOCK), any(StreamObserver.class));

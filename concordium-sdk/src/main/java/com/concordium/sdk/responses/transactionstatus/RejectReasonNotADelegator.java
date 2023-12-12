@@ -1,8 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -11,13 +10,9 @@ import lombok.ToString;
  */
 @ToString
 @Getter
+@Builder
 public class RejectReasonNotADelegator extends RejectReason {
     private final AccountAddress accountAddress;
-
-    @JsonCreator
-    RejectReasonNotADelegator(@JsonProperty("contents") AccountAddress accountAddress) {
-        this.accountAddress = accountAddress;
-    }
 
     @Override
     public RejectReasonType getType() {

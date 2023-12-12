@@ -2,8 +2,6 @@ package com.concordium.sdk.responses.chainparameters;
 
 import com.concordium.grpc.v2.MintDistributionCpv1;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,13 +21,6 @@ public class MintDistributionCpV1 extends MintDistribution {
      * The fraction of newly created CCD allocated to finalization rewards.
      */
     private final double finalizationReward;
-
-    @JsonCreator
-    public MintDistributionCpV1(@JsonProperty("bakingReward") double bakingReward,
-                                @JsonProperty("finalizationReward") double finalizationReward) {
-        this.bakingReward = bakingReward;
-        this.finalizationReward = finalizationReward;
-    }
 
     public static MintDistributionCpV1 from(MintDistributionCpv1 update) {
         return MintDistributionCpV1

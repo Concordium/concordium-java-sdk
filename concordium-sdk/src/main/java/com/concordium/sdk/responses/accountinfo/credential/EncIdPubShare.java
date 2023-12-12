@@ -1,7 +1,5 @@
 package com.concordium.sdk.responses.accountinfo.credential;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -24,8 +22,6 @@ public class EncIdPubShare {
     public byte[] getValue() {
         return copyOf(value, value.length);
     }
-
-    @JsonCreator
     public static EncIdPubShare from(final String hex) {
         try {
             return new EncIdPubShare(Hex.decodeHex(hex));
@@ -39,7 +35,6 @@ public class EncIdPubShare {
     }
 
     @Override
-    @JsonValue
     public String toString() {
         return Hex.encodeHexString(value);
     }

@@ -7,17 +7,13 @@ import com.concordium.sdk.types.AccountAddress;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.extern.jackson.Jacksonized;
 
 import java.util.Optional;
 
 @Data
-@Jacksonized
 @Builder
 @EqualsAndHashCode(callSuper = false)
-public class BakerPoolStatus extends PoolStatus {
-
-    private final PoolType poolType = PoolType.BAKER_POOL;
+public class BakerPoolStatus {
 
     /**
      * "The 'BakerId' of the pool owner.

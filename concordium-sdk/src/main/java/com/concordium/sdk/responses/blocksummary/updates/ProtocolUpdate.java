@@ -1,10 +1,7 @@
 package com.concordium.sdk.responses.blocksummary.updates;
 
 import com.concordium.sdk.transactions.Hash;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.apache.commons.codec.binary.Hex;
 
 import java.util.Arrays;
 
@@ -35,18 +32,6 @@ public class ProtocolUpdate {
      * A URL of a document describing the update
      */
     private final String specificationURL;
-
-    @SneakyThrows
-    @JsonCreator
-    ProtocolUpdate(@JsonProperty("specificationHash") Hash specificationHash,
-                   @JsonProperty("specificationAuxiliaryData") String specificationAuxiliaryData,
-                   @JsonProperty("message") String message,
-                   @JsonProperty("specificationURL") String specificationURL) {
-        this.specificationHash = specificationHash;
-        this.specificationAuxiliaryData = Hex.decodeHex(specificationAuxiliaryData);
-        this.message = message;
-        this.specificationURL = specificationURL;
-    }
 
     @Builder
     ProtocolUpdate(Hash specificationHash,

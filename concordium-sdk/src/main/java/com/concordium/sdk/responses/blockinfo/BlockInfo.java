@@ -1,13 +1,9 @@
 package com.concordium.sdk.responses.blockinfo;
 
 import com.concordium.sdk.responses.*;
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt64;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -144,7 +140,6 @@ public class BlockInfo extends BlockIdentifier {
     /**
      * Hash of the Block.
      */
-    @JsonProperty("blockHash")
     public Hash getBlockHash() {
         return super.getBlockHash();
     }
@@ -152,59 +147,9 @@ public class BlockInfo extends BlockIdentifier {
     /**
      * Absolute Block Height.
      */
-    @JsonProperty("blockHeight")
     public UInt64 getBlockHeight() {
         return super.getBlockHeight();
     }
 
-
-    @JsonCreator
-    BlockInfo(
-            @JsonProperty("blockHash") final Hash blockHash,
-            @JsonProperty("blockHeight") final UInt64 blockHeight,
-            @JsonProperty("transactionEnergyCost") final Integer transactionEnergyCost,
-            @JsonProperty("blockBaker") final long blockBaker,
-            @JsonProperty("blockStateHash") final Hash blockStateHash,
-            @JsonProperty("blockSlotTime") final Timestamp blockTime,
-            @JsonProperty("blockParent") final Hash blockParent,
-            @JsonProperty("blockReceiveTime") final Timestamp blockReceiveTime,
-            @JsonProperty("genesisIndex") final Integer genesisIndex,
-            @JsonProperty("blockSlot") final Integer blockSlot,
-            @JsonProperty("finalized") final Boolean finalized,
-            @JsonProperty("eraBlockHeight") final Integer eraBlockHeight,
-            @JsonProperty("blockLastFinalized") final Hash blockLastFinalized,
-            @JsonProperty("transactionsSize") final Integer transactionsSize,
-            @JsonProperty("transactionCount") final Integer transactionCount,
-            @JsonProperty("blockArriveTime") final Timestamp blockArriveTime) {
-        super(blockHash, blockHeight);
-        this.transactionEnergyCost = transactionEnergyCost;
-        this.blockBaker = BakerId.from(blockBaker);
-        this.blockStateHash = blockStateHash;
-        this.blockTime = blockTime;
-        this.blockParent = blockParent;
-        this.blockReceiveTime = blockReceiveTime;
-        this.genesisIndex = genesisIndex;
-        this.blockSlot = blockSlot;
-        this.finalized = finalized;
-        this.eraBlockHeight = eraBlockHeight;
-        this.blockLastFinalized = blockLastFinalized;
-        this.transactionsSize = transactionsSize;
-        this.transactionCount = transactionCount;
-        this.blockArriveTime = blockArriveTime;
-        // these fields are simply null as json parsing is only
-        // used for grpcv1 api and that is deprecated (I.e. the Client)
-        // Instead one should use ClientV2 which leverages the newer API of the node.
-        this.round = null;
-        this.protocolVersion = null;
-        this.epoch = null;
-    }
-
-    public static BlockInfo fromJson(String blockInfoJsonString) {
-        try {
-            return JsonMapper.INSTANCE.readValue(blockInfoJsonString, BlockInfo.class);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse BlockInfo JSON", e);
-        }
-    }
 
 }

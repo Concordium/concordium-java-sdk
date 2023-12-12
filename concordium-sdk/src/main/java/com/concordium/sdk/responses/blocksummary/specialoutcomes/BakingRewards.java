@@ -1,8 +1,6 @@
 package com.concordium.sdk.responses.blocksummary.specialoutcomes;
 
 import com.concordium.sdk.transactions.CCDAmount;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,12 +27,4 @@ public final class BakingRewards extends SpecialOutcome {
      * The remaining balance of the baker reward account.
      */
     private final CCDAmount remainder;
-
-    @JsonCreator
-    BakingRewards(
-            @JsonProperty("bakerRewards") List<Reward> bakerRewards,
-            @JsonProperty("remainder") CCDAmount remainder) {
-        this.bakerRewards = bakerRewards;
-        this.remainder = remainder;
-    }
 }

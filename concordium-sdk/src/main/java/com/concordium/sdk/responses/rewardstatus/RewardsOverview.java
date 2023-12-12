@@ -1,23 +1,15 @@
 package com.concordium.sdk.responses.rewardstatus;
 
 import com.concordium.sdk.responses.ProtocolVersion;
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.Timestamp;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import concordium.ConcordiumP2PRpc;
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.jackson.Jacksonized;
-import lombok.val;
-
-import java.util.Optional;
 
 /**
  * Information about total amount of CCD and the state of various administrative accounts.
  */
 @Data
-@Jacksonized
 @Builder
 public class RewardsOverview {
 
@@ -70,13 +62,4 @@ public class RewardsOverview {
      * The total capital put up as stake by bakers and delegators
      */
     private final CCDAmount totalStakedCapital;
-
-    public static Optional<RewardsOverview> fromJson(ConcordiumP2PRpc.JsonResponse res) {
-        try {
-            val ret = JsonMapper.INSTANCE.readValue(res.getValue(), RewardsOverview.class);
-            return Optional.ofNullable(ret);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse RewardsOverview JSON", e);
-        }
-    }
 }

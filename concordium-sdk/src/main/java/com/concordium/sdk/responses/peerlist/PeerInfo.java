@@ -4,20 +4,33 @@ import com.concordium.grpc.v2.PeersInfo;
 import com.concordium.sdk.responses.nodeinfo.PeerType;
 import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.ImmutableList;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
-import lombok.val;
+import lombok.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder
+@ToString
+@EqualsAndHashCode
+@Builder
 @Getter
-public class PeerInfo extends Peer {
+public class PeerInfo {
+
+    /**
+     * The self-chosen identifier of the peer.
+     */
+    private final String nodeId;
+    /**
+     * The port of the peer
+     */
+    private final UInt16 port;
+    /**
+     * The ip address of the peer
+     */
+    private final InetAddress ipAddress;
+    /**
+     * The catchup status of the peer
+     */
+    private final PeerCatchupStatus catchupStatus;
 
     /**
      * Network statistics of the Peer
@@ -28,7 +41,6 @@ public class PeerInfo extends Peer {
      * Type of the peer.
      */
     private PeerType peerType;
-
 
     /**
      * Parses {@link PeersInfo} to an {@link ImmutableList} of {@link PeerInfo}

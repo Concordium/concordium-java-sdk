@@ -1,7 +1,6 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
 import com.concordium.sdk.responses.blockitemsummary.Details;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
@@ -142,7 +141,7 @@ public class ClientV2GetBlockItemStatusTest {
     }
 
     @Test
-    public void getBlockItemStatus() throws BlockNotFoundException {
+    public void getBlockItemStatus() {
         var res = client.getBlockItemStatus(
                 Hash.from("1ea074f0e12e18684f2d6bbf2039c6db32d2fd5c28e6ba74c8e92f36e88b"));
 

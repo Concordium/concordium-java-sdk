@@ -6,15 +6,10 @@ import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.smartcontracts.ContractVersion;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.ContractAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.protobuf.ByteString;
 import lombok.*;
-import org.apache.commons.codec.binary.Hex;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -57,29 +52,6 @@ public final class ContractInitializedResult implements TransactionResultEvent {
      * The contract version of the contract that was initialized.
      */
     private final ContractVersion version;
-
-    @JsonCreator
-    @SneakyThrows
-    ContractInitializedResult(@JsonProperty("ref") ModuleRef modRef,
-                              @JsonProperty("address") ContractAddress address,
-                              @JsonProperty("amount") String amount,
-                              @JsonProperty("initName") String initName,
-                              @JsonProperty("events") List<String> events,
-                              @JsonProperty("contractVersion") ContractVersion version) {
-        this.ref = modRef;
-        this.address = address;
-        if (!Objects.isNull(amount)) {
-            this.amount = CCDAmount.fromMicro(amount);
-        }
-        this.initName = initName;
-        val list = new ArrayList<byte[]>();
-        for (String event : events) {
-            list.add(Hex.decodeHex(event));
-        }
-        this.events = list;
-        this.version = version;
-    }
-
     public static ContractInitializedResult from(ContractInitializedEvent contractInitialized) {
         val events = contractInitialized.getEventsList()
                 .stream()
@@ -96,7 +68,6 @@ public final class ContractInitializedResult implements TransactionResultEvent {
                 .events(events)
                 .build();
     }
-
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.CONTRACT_INITIALIZED;

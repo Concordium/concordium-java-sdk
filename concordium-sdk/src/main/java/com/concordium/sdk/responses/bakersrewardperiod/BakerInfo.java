@@ -4,7 +4,6 @@ import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.vrf.VRFPublicKey;
 import com.concordium.sdk.responses.BakerId;
-import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

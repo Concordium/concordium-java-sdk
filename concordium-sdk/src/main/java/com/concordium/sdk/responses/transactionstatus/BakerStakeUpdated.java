@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.AccountTransactionEffects;
-import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
@@ -19,11 +18,6 @@ import lombok.val;
 @Getter
 @ToString
 public abstract class BakerStakeUpdated extends AbstractBakerResult {
-
-    BakerStakeUpdated(AccountIndex bakerId, AccountAddress account) {
-        super(bakerId, account);
-    }
-
     public static BakerStakeUpdated from(AccountTransactionEffects.BakerStakeUpdated bakerStakeUpdated, AccountAddress account) {
         val update = bakerStakeUpdated.getUpdate();
         if (update.getIncreased()) {

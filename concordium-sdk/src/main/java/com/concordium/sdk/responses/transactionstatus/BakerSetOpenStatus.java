@@ -1,11 +1,8 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.grpc.v2.BakerEvent;
-import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -24,14 +21,6 @@ public class BakerSetOpenStatus extends AbstractBakerResult {
      * The updated {@link OpenStatus} for the baker.
      */
     private final OpenStatus openStatus;
-
-    @JsonCreator
-    BakerSetOpenStatus(@JsonProperty("bakerId") AccountIndex bakerId,
-                       @JsonProperty("account") AccountAddress bakerAccount,
-                       @JsonProperty("openStatus") OpenStatus openStatus) {
-        super(bakerId, bakerAccount);
-        this.openStatus = openStatus;
-    }
 
     public static BakerSetOpenStatus from(BakerEvent.BakerSetOpenStatus bakerSetOpenStatus, AccountAddress sender) {
         return BakerSetOpenStatus

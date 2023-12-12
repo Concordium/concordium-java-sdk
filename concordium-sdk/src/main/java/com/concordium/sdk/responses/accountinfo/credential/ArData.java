@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.accountinfo.credential;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
@@ -18,6 +17,5 @@ public final class ArData {
     /**
      * Share of the encryption of IdCredPub.
      */
-    @JsonProperty("encIdCredPubShare")
     private final EncIdPubShare encIdCredPubShare;
 }

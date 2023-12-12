@@ -1,11 +1,8 @@
 package com.concordium.sdk.examples;
 
-import com.concordium.grpc.v2.BlockItemStatus;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.responses.transactionstatus.TransactionStatus;
 import com.concordium.sdk.transactions.Hash;
 import lombok.val;
 import lombok.var;
@@ -30,7 +27,7 @@ public class GetBlockItemStatus implements Callable<Integer> {
     private final Hash blockTransactionHashSuccess = Hash.from("1ea074f0e12e18684f2d6bbf2039c6db32d2fd5c28e6ba74c8e92f36e88b1901");
 
     @Override
-    public Integer call() throws MalformedURLException, ClientInitializationException, BlockNotFoundException {
+    public Integer call() throws MalformedURLException, ClientInitializationException {
         var endpointUrl = new URL(this.endpoint);
 
         Connection connection = Connection.newBuilder()

@@ -2,13 +2,9 @@ package com.concordium.sdk.responses;
 
 import com.concordium.grpc.v2.Ratio;
 import com.concordium.sdk.types.UInt64;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.val;
 
 /**
  * A fraction
@@ -28,8 +24,7 @@ public class Fraction {
      */
     private final UInt64 denominator;
 
-    @JsonCreator
-    public Fraction(@JsonProperty("numerator") UInt64 numerator, @JsonProperty("denominator") UInt64 denominator) {
+    public Fraction(UInt64 numerator, UInt64 denominator) {
         this.numerator = numerator;
         this.denominator = denominator;
     }

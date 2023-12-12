@@ -3,27 +3,20 @@ package com.concordium.sdk.responses.consensusstatus;
 import com.concordium.sdk.responses.Epoch;
 import com.concordium.sdk.responses.ProtocolVersion;
 import com.concordium.sdk.responses.Round;
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.Timestamp;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.extern.jackson.Jacksonized;
 
 import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
  * Summary of the current state of consensus.
  */
 @ToString(doNotUseGetters = true)
-@Jacksonized
 @Builder
 @EqualsAndHashCode
 public final class ConsensusStatus {
@@ -34,21 +27,18 @@ public final class ConsensusStatus {
      * block among the blocks the node knows about.
      */
     @Getter
-    @JsonProperty("bestBlock")
     private Hash bestBlock;
 
     /**
      * Hash of the genesis block.
      */
     @Getter
-    @JsonProperty("genesisBlock")
     private Hash genesisBlock;
 
     /**
      * Time of the genesis block.
      */
     @Getter
-    @JsonProperty("genesisTime")
     private final Timestamp genesisTime;
 
     /**
@@ -57,7 +47,6 @@ public final class ConsensusStatus {
      * From protocol version 6 and onwards the consensus protocol
      * uses the concept of rounds.
      */
-    @JsonProperty("slotDuration")
     private final Duration slotDuration;
 
     /**
@@ -81,14 +70,12 @@ public final class ConsensusStatus {
      * Duration of an epoch.
      */
     @Getter
-    @JsonProperty("epochDuration")
     private final java.time.Duration epochDuration;
 
     /**
      * Hash of the most recent finalized block.
      */
     @Getter
-    @JsonProperty("lastFinalizedBlock")
     private Hash lastFinalizedBlock;
 
     /**
@@ -96,41 +83,26 @@ public final class ConsensusStatus {
      * See {@link ConsensusStatus#bestBlock}
      */
     @Getter
-    @JsonProperty("bestBlockHeight")
     private final long bestBlockHeight;
 
     /**
      * The absolute height of the most recent finalized block.
      */
     @Getter
-    @JsonProperty("lastFinalizedBlockHeight")
     private final long lastFinalizedBlockHeight;
 
     /**
      * The number of blocks received.
      */
     @Getter
-    @JsonProperty("blocksReceivedCount")
     private final int blocksReceivedCount;
 
     /**
      * Last time a block was received and added to the nodes tree.
      * Note. The time is node local.
      */
-    @JsonProperty("blockLastReceivedTime")
-    private final OffsetDateTime blockLastReceivedTimeString;
-
+    @Getter
     private Timestamp blockLastReceivedTime;
-
-    public Timestamp getBlockLastReceivedTime() {
-        if (Objects.isNull(this.blockLastReceivedTimeString)) {
-            return blockLastReceivedTime;
-        }
-        // in this case we parsed it from json, so convert it and save it for
-        // future use.
-        this.blockLastReceivedTime = new Timestamp(this.blockLastReceivedTimeString);
-        return this.blockLastReceivedTime;
-    }
 
     /**
      * Exponential moving average of block receive latency (in seconds), i.e.
@@ -138,7 +110,6 @@ public final class ConsensusStatus {
      * received.
      */
     @Getter
-    @JsonProperty("blockReceiveLatencyEMA")
     private final double blockReceiveLatencyEMA;
 
     /**
@@ -146,7 +117,6 @@ public final class ConsensusStatus {
      * receiving blocks (in seconds).
      */
     @Getter
-    @JsonProperty("blockReceiveLatencyEMSD")
     private final double blockReceiveLatencyEMSD;
 
     /**
@@ -154,7 +124,6 @@ public final class ConsensusStatus {
      * seconds).
      */
     @Getter
-    @JsonProperty("blockReceivePeriodEMA")
     private final double blockReceivePeriodEMA;
 
     /**
@@ -162,7 +131,6 @@ public final class ConsensusStatus {
      * receiving blocks (in seconds).
      */
     @Getter
-    @JsonProperty("blockReceivePeriodEMSD")
     private final double blockReceivePeriodEMSD;
 
     /**
@@ -172,34 +140,19 @@ public final class ConsensusStatus {
      * produces count towards this, but are not received.
      */
     @Getter
-    @JsonProperty("blocksVerifiedCount")
     private final int blocksVerifiedCount;
 
     /**
      * The time (local time of the node) that a block last arrived, i.e., was
      * verified and added to the node's tree.
      */
-    @JsonProperty("blockLastArrivedTime")
-    private final OffsetDateTime blockLastArrivedTimeString;
-
+    @Getter
     private Timestamp blockLastArrivedTime;
-
-    public Timestamp getBlockLastArrivedTime() {
-        if (Objects.isNull(this.blockLastArrivedTimeString)) {
-            return blockLastArrivedTime;
-        }
-        // in this case we parsed it from json, so convert it and save it for
-        // future use.
-        this.blockLastArrivedTime = new Timestamp(this.blockLastArrivedTimeString);
-        return this.blockLastArrivedTime;
-    }
-
 
     /**
      * The exponential moving average of the time between a block's nominal
      * time, and the time at which it is verified.
      */
-    @JsonProperty("blockArriveLatencyEMA")
     @Getter
     private final double blockArriveLatencyEMA;
     /**
@@ -207,14 +160,12 @@ public final class ConsensusStatus {
      * (in seconds), i.e. the time between a block's nominal time, and
      * the time at which is received.
      */
-    @JsonProperty("blockArriveLatencyEMSD")
     @Getter
     private final double blockArriveLatencyEMSD;
     /**
      * Exponential moving average of the time between receiving blocks (in
      * seconds).
      */
-    @JsonProperty("blockArrivePeriodEMA")
     @Getter
     private final double blockArrivePeriodEMA;
     /**
@@ -222,52 +173,36 @@ public final class ConsensusStatus {
      * finalizations. Will be `None` if there are no finalizations yet
      * since the node start.
      */
-    @JsonProperty("blockArrivePeriodEMSD")
     @Getter
     private final double blockArrivePeriodEMSD;
     /**
      * Exponential moving average of the number of
      * transactions per block.
      */
-    @JsonProperty("transactionsPerBlockEMA")
     @Getter
     private final double transactionsPerBlockEMA;
     /**
      * Exponential moving average standard deviation of the number of
      * transactions per block.
      */
-    @JsonProperty("transactionsPerBlockEMSD")
     @Getter
     private final double transactionsPerBlockEMSD;
     /**
      * The number of completed finalizations.
      */
-    @JsonProperty("finalizationCount")
     @Getter
     private final int finalizationCount;
     /**
      * Time at which a block last became finalized. Note that this is the local
      * time of the node at the time the block was finalized.
      */
-    @JsonProperty("lastFinalizedTime")
-    private final OffsetDateTime lastFinalizedTimeString;
+    @Getter
     private Timestamp lastFinalizedTime;
-
-    public Timestamp getLastFinalizedTime() {
-        if (Objects.isNull(this.lastFinalizedTimeString)) {
-            return lastFinalizedTime;
-        }
-        // in this case we parsed it from json, so convert it and save it for
-        // future use.
-        this.lastFinalizedTime = new Timestamp(this.lastFinalizedTimeString);
-        return this.lastFinalizedTime;
-    }
 
     /**
      * Exponential moving average of the time between finalizations. Will be
      * `0` if there are no finalizations yet since the node start.
      */
-    @JsonProperty("finalizationPeriodEMA")
     @Getter
     private final double finalizationPeriodEMA;
     /**
@@ -275,13 +210,11 @@ public final class ConsensusStatus {
      * finalizations. Will be `0` if there are no finalizations yet
      * since the node start.
      */
-    @JsonProperty("finalizationPeriodEMSD")
     @Getter
     private final double finalizationPeriodEMSD;
     /**
      * The current active protocol version.
      */
-    @JsonProperty("protocolVersion")
     @Getter
     private final ProtocolVersion protocolVersion;
     /**
@@ -290,7 +223,6 @@ public final class ConsensusStatus {
      * specified in the previous field, but it always increments the genesis
      * index.
      */
-    @JsonProperty("genesisIndex")
     @Getter
     private final int genesisIndex;
     /**
@@ -298,26 +230,13 @@ public final class ConsensusStatus {
      * protocol update. Initially this is equal to
      * {@link ConsensusStatus#genesisBlock}.
      */
-    @JsonProperty("currentEraGenesisBlock")
     @Getter
     private final Hash currentEraGenesisBlock;
     /**
      * Time when the current era started.
      */
-    @JsonProperty("currentEraGenesisTime")
-    private final OffsetDateTime currentEraGenesisTimeString;
-
+    @Getter
     private Timestamp currentEraGenesisTime;
-
-    public Timestamp getCurrentEraGenesisTime() {
-        if (Objects.isNull(this.currentEraGenesisTimeString)) {
-            return currentEraGenesisTime;
-        }
-        // in this case we parsed it from json, so convert it and save it for
-        // future use.
-        this.currentEraGenesisTime = new Timestamp(this.currentEraGenesisTimeString);
-        return this.currentEraGenesisTime;
-    }
 
     /**
      * The current duration to wait before a round times out.
@@ -408,15 +327,6 @@ public final class ConsensusStatus {
                 return Optional.of(triggerBlockTime);
         }
         throw new IllegalStateException("Unrecognized protocol version");
-    }
-
-
-    public static ConsensusStatus fromJson(String json) {
-        try {
-            return JsonMapper.INSTANCE.readValue(json, ConsensusStatus.class);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse ConsensusStatus JSON", e);
-        }
     }
 
 }

@@ -8,12 +8,8 @@ import com.concordium.sdk.transactions.Memo;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @Getter
@@ -45,18 +41,6 @@ public final class TransferredResult implements TransactionResultEvent, Contract
 
     public Optional<Memo> getMemo() {
         return Optional.ofNullable(this.memo);
-    }
-
-    @JsonCreator
-    TransferredResult(@JsonProperty("to") Map<String, Object> to,
-                      @JsonProperty("from") Map<String, Object> from,
-                      @JsonProperty("amount") String amount) {
-
-        this.to = AbstractAddress.parseAccount(to);
-        this.from = AbstractAddress.parseAccount(from);
-        if (!Objects.isNull(amount)) {
-            this.amount = CCDAmount.fromMicro(amount);
-        }
     }
 
     public static TransferredResult from(AccountTransactionEffects.AccountTransfer accountTransfer, AccountAddress sender) {

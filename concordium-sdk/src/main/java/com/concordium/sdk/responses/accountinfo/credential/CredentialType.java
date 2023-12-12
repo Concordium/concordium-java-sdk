@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.accountinfo.credential;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * CredentialType
@@ -9,8 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Subsequent credentials created for the identity has type {@link CredentialType#NORMAL}
  */
 public enum CredentialType {
-    @JsonProperty("initial")
     INITIAL,
-    @JsonProperty("normal")
     NORMAL
 }

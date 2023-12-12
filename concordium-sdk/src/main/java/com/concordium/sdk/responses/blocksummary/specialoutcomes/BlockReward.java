@@ -2,7 +2,6 @@ package com.concordium.sdk.responses.blocksummary.specialoutcomes;
 
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -52,21 +51,4 @@ public final class BlockReward extends SpecialOutcome {
      * The foundation account.
      */
     private final AccountAddress foundationAccount;
-
-    BlockReward(
-            @JsonProperty("transactionFees") CCDAmount transactionFees,
-            @JsonProperty("oldGASAccount") CCDAmount oldGASAccount,
-            @JsonProperty("newGASAccount") CCDAmount newGASAccount,
-            @JsonProperty("bakerReward") CCDAmount bakerReward,
-            @JsonProperty("foundationCharge") CCDAmount foundationCharge,
-            @JsonProperty("baker") AccountAddress baker,
-            @JsonProperty("foundationAccount") AccountAddress foundationAccount) {
-        this.transactionFees = transactionFees;
-        this.oldGASAccount = oldGASAccount;
-        this.newGASAccount = newGASAccount;
-        this.bakerReward = bakerReward;
-        this.foundationCharge = foundationCharge;
-        this.baker = baker;
-        this.foundationAccount = foundationAccount;
-    }
 }

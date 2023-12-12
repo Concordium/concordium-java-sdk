@@ -2,13 +2,10 @@ package com.concordium.sdk.responses.blocksummary.updates.keys;
 
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.exceptions.ED25519Exception;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
 import java.util.Arrays;
@@ -29,17 +26,6 @@ public final class VerificationKey {
      * The scheme
      */
     private final SigningScheme schemeId;
-
-    @JsonCreator
-    VerificationKey(@JsonProperty("verifyKey") String verifyKey,
-                    @JsonProperty("schemeId") SigningScheme schemeId) {
-        try {
-            this.verifyKey = Hex.decodeHex(verifyKey);
-            this.schemeId = schemeId;
-        } catch (DecoderException e) {
-            throw new IllegalArgumentException("The verification key is not properly HEX encoded.", e);
-        }
-    }
 
     @Builder
     VerificationKey(final byte[] verifyKey, final SigningScheme signingScheme) {
