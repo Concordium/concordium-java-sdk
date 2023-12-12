@@ -1,6 +1,5 @@
 package com.concordium.sdk.types;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -20,11 +19,6 @@ public class Nonce {
 
     private Nonce(UInt64 value) {
         this.value = value;
-    }
-
-    @JsonCreator
-    Nonce(long nonce) {
-        this.value = UInt64.from(nonce);
     }
 
     public static Nonce from(long value) {

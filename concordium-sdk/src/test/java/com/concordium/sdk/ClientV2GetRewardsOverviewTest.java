@@ -1,7 +1,6 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.transactions.CCDAmount;
@@ -34,7 +33,7 @@ public class ClientV2GetRewardsOverviewTest {
     private static final long NEXT_PAYDAY_TIME = 1669115119500L;
     private static final int MANTISSA = 231;
     private static final int EXPONENT = 4;
-    private static final int PROTOCOL_VERSION = 4;
+    private static final int PROTOCOL_VERSION = 4; // Corresponds to protocol version 5
 
 
     private static final TokenomicsInfo GRPC_TOKENOMICS_INFO = TokenomicsInfo.newBuilder()
@@ -48,7 +47,7 @@ public class ClientV2GetRewardsOverviewTest {
                     .setNextPaydayTime(Timestamp.newBuilder().setValue(NEXT_PAYDAY_TIME).build())
                     .setNextPaydayMintRate(MintRate.newBuilder().setMantissa(MANTISSA).setExponent(EXPONENT).build())
                     .setTotalStakedCapital(Amount.newBuilder().setValue(STAKED_CAPITAL).build())
-                    .setProtocolVersion(ProtocolVersion.valueOf(PROTOCOL_VERSION))
+                    .setProtocolVersion(ProtocolVersion.forNumber(PROTOCOL_VERSION))
                     .build())
             .build();
 
@@ -59,7 +58,7 @@ public class ClientV2GetRewardsOverviewTest {
             .gasAccount(CCDAmount.fromMicro(GAS_AMOUNT))
             .nextPaydayTime(com.concordium.sdk.types.Timestamp.newMillis(NEXT_PAYDAY_TIME))
             .nextPaydayMintRate((double) MANTISSA * Math.pow(10, -1 * EXPONENT))
-            .protocolVersion(com.concordium.sdk.responses.ProtocolVersion.forValue(PROTOCOL_VERSION + 1))
+            .protocolVersion(com.concordium.sdk.responses.ProtocolVersion.V5)
             .totalAmount(CCDAmount.fromMicro(TOTAL_AMOUNT))
             .totalEncryptedAmount(CCDAmount.fromMicro(TOTAL_ENCRYPTED_AMOUNT))
             .totalStakedCapital(CCDAmount.fromMicro(STAKED_CAPITAL))
@@ -94,7 +93,7 @@ public class ClientV2GetRewardsOverviewTest {
 
 
     @Test
-    public void getTokenomicsInfo() throws BlockNotFoundException {
+    public void getTokenomicsInfo() {
         var res = client.getRewardStatus(BlockQuery.BEST);
 
         verify(serviceImpl).getTokenomicsInfo(any(BlockHashInput.class), any(StreamObserver.class));

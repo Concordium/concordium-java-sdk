@@ -1,12 +1,10 @@
 package com.concordium.sdk.responses.chainparameters;
 
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.extern.jackson.Jacksonized;
 
 import java.util.Optional;
 
@@ -16,27 +14,23 @@ import java.util.Optional;
 @ToString
 @EqualsAndHashCode
 @Builder
-@Jacksonized
 public final class GasRewards {
 
     /**
      * Fraction paid for including an update transaction in a block.
      */
-    @JsonProperty("chainUpdate")
     @Getter
     private final double chainUpdate;
 
     /**
      * Fraction paid for including each account creation transaction in a block.
      */
-    @JsonProperty("accountCreation")
     @Getter
     private final double accountCreation;
 
     /**
      * The fraction paid to the baker.
      */
-    @JsonProperty("baker")
     @Getter
     private final double baker;
 
@@ -44,7 +38,6 @@ public final class GasRewards {
      * Fraction paid for including a finalization proof in a block.
      * Only present in protocol version 6 and onwards.
      */
-    @JsonProperty("finalizationProof")
     private final double finalizationProof;
 
     public Optional<Double> getFinalizationProof() {

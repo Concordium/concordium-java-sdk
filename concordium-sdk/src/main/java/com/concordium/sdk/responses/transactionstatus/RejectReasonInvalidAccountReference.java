@@ -1,8 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -10,14 +9,10 @@ import lombok.ToString;
  * Account does not exist
  */
 @ToString
+@Builder
 public class RejectReasonInvalidAccountReference extends RejectReason {
     @Getter
     private final AccountAddress address;
-
-    @JsonCreator
-    RejectReasonInvalidAccountReference(@JsonProperty("contents") AccountAddress address) {
-        this.address = address;
-    }
 
     @Override
     public RejectReasonType getType() {

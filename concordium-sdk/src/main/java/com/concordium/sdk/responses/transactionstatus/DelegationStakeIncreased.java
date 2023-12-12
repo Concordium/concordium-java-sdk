@@ -4,8 +4,6 @@ import com.concordium.grpc.v2.DelegationEvent;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -24,14 +22,6 @@ public class DelegationStakeIncreased extends AbstractDelegatorResult {
      * The new stake
      */
     private final CCDAmount newStake;
-
-    @JsonCreator
-    DelegationStakeIncreased(@JsonProperty("delegatorId") AccountIndex delegatorId,
-                             @JsonProperty("account") AccountAddress delegatorAddress,
-                             @JsonProperty("newStake") CCDAmount newStake) {
-        super(delegatorId, delegatorAddress);
-        this.newStake = newStake;
-    }
 
     public static DelegationStakeIncreased from(DelegationEvent.DelegationStakeIncreased delegationStakeIncreased, AccountAddress address) {
         return DelegationStakeIncreased

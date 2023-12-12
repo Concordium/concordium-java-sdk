@@ -1,8 +1,6 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.types.Nonce;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,14 +17,6 @@ public final class AccountNonce {
     private AccountNonce(Nonce value, boolean allFinal) {
         this.nonce = value;
         this.allFinal = allFinal;
-    }
-
-    public static AccountNonce fromJson(String accountInfoJsonString) {
-        try {
-            return JsonMapper.INSTANCE.readValue(accountInfoJsonString, AccountNonce.class);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Could not parse AccountNonce JSON", e);
-        }
     }
 
     /**

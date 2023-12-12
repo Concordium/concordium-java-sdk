@@ -4,7 +4,6 @@ package com.concordium.sdk;
 import com.concordium.grpc.v2.AncestorsRequest;
 import com.concordium.grpc.v2.Empty;
 import com.concordium.grpc.v2.QueriesGrpc;
-import com.concordium.sdk.exceptions.BlockNotFoundException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.transactions.Hash;
 import com.google.common.collect.ImmutableList;
@@ -75,7 +74,7 @@ public class ClientV2GetAncestorsTest {
 
 
     @Test
-    public void getAncestors() throws BlockNotFoundException {
+    public void getAncestors() {
         var ancestors = client.getAncestors(BlockQuery.BEST, 1);
 
 

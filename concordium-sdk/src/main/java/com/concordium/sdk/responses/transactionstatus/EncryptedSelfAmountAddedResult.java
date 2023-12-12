@@ -4,8 +4,6 @@ import com.concordium.grpc.v2.EncryptedSelfAmountAddedEvent;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.EncryptedAmount;
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 /**
@@ -20,15 +18,6 @@ public final class EncryptedSelfAmountAddedResult implements TransactionResultEv
     private final CCDAmount amount;
     private final AccountAddress account;
     private final EncryptedAmount newAmount;
-
-    @JsonCreator
-    EncryptedSelfAmountAddedResult(@JsonProperty("amount") String amount,
-                                   @JsonProperty("account") AccountAddress account,
-                                   @JsonProperty("newAmount") String newAmount) {
-        this.amount = CCDAmount.fromMicro(amount);
-        this.account = account;
-        this.newAmount = EncryptedAmount.from(newAmount);
-    }
 
     public static EncryptedSelfAmountAddedResult from(EncryptedSelfAmountAddedEvent added) {
         return EncryptedSelfAmountAddedResult

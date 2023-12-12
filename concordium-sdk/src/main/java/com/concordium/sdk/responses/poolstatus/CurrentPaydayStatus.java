@@ -5,10 +5,8 @@ import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.jackson.Jacksonized;
 
 @Data
-@Jacksonized
 @Builder
 public class CurrentPaydayStatus {
 

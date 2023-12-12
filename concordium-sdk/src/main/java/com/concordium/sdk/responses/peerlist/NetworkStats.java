@@ -28,7 +28,7 @@ public class NetworkStats {
      */
     private UInt64 packetsReceived;
     /**
-     * The connection latenct (i.e., ping time) in milliseconds
+     * The connection latency (i.e., ping time) in milliseconds
      */
     private UInt64 latency;
 

@@ -4,8 +4,6 @@ import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElementType;
 import com.concordium.sdk.types.ContractAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -39,16 +37,6 @@ public final class UpgradedResult implements TransactionResultEvent, ContractTra
      * A reference to the new module.
      */
     private final ModuleRef to;
-
-    @JsonCreator
-    public UpgradedResult(
-            @JsonProperty("address") ContractAddress contractAddress,
-            @JsonProperty("from") ModuleRef from,
-            @JsonProperty("to") ModuleRef to) {
-        this.contractAddress = contractAddress;
-        this.from = from;
-        this.to = to;
-    }
 
     public static UpgradedResult from(com.concordium.grpc.v2.ContractTraceElement.Upgraded upgraded) {
         return UpgradedResult

@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import lombok.extern.jackson.Jacksonized;
 
 import java.nio.ByteBuffer;
 
@@ -16,19 +15,16 @@ import java.nio.ByteBuffer;
  * Target of delegation.
  */
 @Data
-@Jacksonized
 @Builder
 @EqualsAndHashCode
 public class DelegationTarget {
     /**
      * Type of delegation
      */
-    @JsonProperty("delegateType")
     private final DelegationType type;
     /**
      * Specific baker id to delegate.
      */
-    @JsonProperty("bakerId")
     private final BakerId bakerId;
 
     private DelegationTarget(DelegationType type, BakerId bakerId) {

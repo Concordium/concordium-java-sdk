@@ -3,8 +3,6 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.transactions.Memo;
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
@@ -29,16 +27,6 @@ public final class TransferredWithScheduleResult implements TransactionResultEve
      */
     private Optional<Memo> getMemo() {
         return Optional.ofNullable(memo);
-    }
-
-    @JsonCreator
-    TransferredWithScheduleResult(@JsonProperty("amount") List<TransferRelease> releases, // list of tuples
-                                  @JsonProperty("to") AccountAddress to,
-                                  @JsonProperty("from") AccountAddress from) {
-        this.releases = releases;
-        this.to = to;
-        this.from = from;
-        this.memo = null;
     }
 
     public static TransferredWithScheduleResult from(AccountTransactionEffects.TransferredWithSchedule transferredWithSchedule, AccountAddress sender) {

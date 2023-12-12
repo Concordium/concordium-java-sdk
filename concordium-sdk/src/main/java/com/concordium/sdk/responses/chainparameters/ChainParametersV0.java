@@ -1,12 +1,9 @@
 package com.concordium.sdk.responses.chainparameters;
 
-import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 /**
@@ -88,32 +85,6 @@ public class ChainParametersV0 extends ChainParameters {
      * Level 2 are allowed to do chain parameter updates.
      */
     private final AuthorizationsV0 level2Keys;
-
-    @JsonCreator
-    ChainParametersV0(
-            @JsonProperty("rewardParameters") RewardParameters rewardParameters,
-            @JsonProperty("microGTUPerEuro") Fraction microCCDPerEuro,
-            @JsonProperty("accountCreationLimit") int accountCreationLimit,
-            @JsonProperty("electionDifficulty") double electionDifficulty,
-            @JsonProperty("euroPerEnergy") Fraction euroPerEnergy,
-            @JsonProperty("minimumThresholdForBaking") CCDAmount bakerStakeThreshold,
-            @JsonProperty("bakerCooldownEpochs") long bakerCooldownEpochs,
-            @JsonProperty("foundationAccountIndex") AccountIndex foundationAccountIndex) {
-        this.euroPerEnergy = euroPerEnergy;
-        this.microCCDPerEuro = microCCDPerEuro;
-        this.credentialsPerBlockLimit = accountCreationLimit;
-        this.electionDifficulty = electionDifficulty;
-        this.minimumThresholdForBaking = bakerStakeThreshold;
-        this.bakerCooldownEpochs = CooldownInEpochs.from(bakerCooldownEpochs);
-        this.gasRewards = rewardParameters.getGasRewards();
-        this.mintDistribution = (MintDistributionCpV0) rewardParameters.getMintDistribution();
-        this.transactionFeeDistribution = rewardParameters.getTransactionFeeDistribution();
-        // these are not returned in the grpcv1 api.
-        this.foundationAccount = null;
-        this.rootKeys = null;
-        this.level1Keys = null;
-        this.level2Keys = null;
-    }
 
     public static ChainParametersV0 from(com.concordium.grpc.v2.ChainParametersV0 v0Params) {
         return com.concordium.sdk.responses.chainparameters.ChainParametersV0

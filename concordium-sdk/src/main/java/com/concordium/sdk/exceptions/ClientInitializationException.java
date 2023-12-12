@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.io.IOException;
 
 /**
- * Wrapper for checked exceptions that can occur when creating a {@link com.concordium.sdk.Client}.
+ * Wrapper for checked exceptions that can occur when creating a {@link com.concordium.sdk.ClientV2}.
  */
 public class ClientInitializationException extends Exception {
     /**

@@ -2,15 +2,8 @@ package com.concordium.sdk.responses.blocksummary.updates.queues;
 
 import com.concordium.grpc.v2.ArInfo;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.types.UInt32;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.common.collect.ImmutableList;
 import lombok.*;
-
-import java.util.Optional;
 
 /**
  * Anonymity revoker info
@@ -30,22 +23,11 @@ public final class AnonymityRevokerInfo {
     private final Description description;
 
     private final ElgamalPublicKey anonymityRevokerPublicKey;
-
-    @JsonCreator
     @Builder
-    public AnonymityRevokerInfo(@JsonProperty("arIdentity") int arIdentity, @JsonProperty("arDescription") Description description, @JsonProperty("arPublicKey") ElgamalPublicKey arPublicKey) {
+    public AnonymityRevokerInfo(int arIdentity, Description description, ElgamalPublicKey arPublicKey) {
         this.arIdentity = UInt32.from(arIdentity);
         this.description = description;
         this.anonymityRevokerPublicKey = arPublicKey;
-    }
-
-    public static Optional<ImmutableList<AnonymityRevokerInfo>> fromJsonArray(String jsonValue) {
-        try {
-            val parsed = JsonMapper.INSTANCE.readValue(jsonValue, AnonymityRevokerInfo[].class);
-            return Optional.ofNullable(parsed).map(ImmutableList::copyOf);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse Anonymity Revoker JSON", e);
-        }
     }
 
     public static AnonymityRevokerInfo from(ArInfo ar) {

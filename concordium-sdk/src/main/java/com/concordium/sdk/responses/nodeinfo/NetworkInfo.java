@@ -1,4 +1,4 @@
-package com.concordium.sdk.responses.nodeinfov2;
+package com.concordium.sdk.responses.nodeinfo;
 
 import com.concordium.grpc.v2.NodeInfo;
 import com.concordium.sdk.types.UInt64;

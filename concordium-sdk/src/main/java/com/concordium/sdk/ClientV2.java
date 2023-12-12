@@ -28,7 +28,7 @@ import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.election.ElectionInfo;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
-import com.concordium.sdk.responses.nodeinfov2.NodeInfo;
+import com.concordium.sdk.responses.nodeinfo.NodeInfo;
 import com.concordium.sdk.responses.peerlist.PeerInfo;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
@@ -289,7 +289,7 @@ public final class ClientV2 {
     /**
      * Retrieves the next {@link AccountNonce} for an account.
      * This is the {@link AccountNonce} to use for future transactions
-     * E.g. when using {@link Client#sendTransaction(Transaction)}
+     * E.g. when using {@link ClientV2#sendTransaction(AccountTransaction)}
      * When this function is queried with a non-existent account it will report the next available account nonce to be 1 and all transactions as finalized.
      *
      * @param address The {@link AccountAddress}

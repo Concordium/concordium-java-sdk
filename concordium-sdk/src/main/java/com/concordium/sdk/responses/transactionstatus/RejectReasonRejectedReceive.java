@@ -1,8 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.types.ContractAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -11,6 +10,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
+@Builder
 public class RejectReasonRejectedReceive extends RejectReason {
     /**
      * The reject reason
@@ -28,17 +28,6 @@ public class RejectReasonRejectedReceive extends RejectReason {
      * The parameter the it was called with.
      */
     private final String parameter;
-
-    @JsonCreator
-    RejectReasonRejectedReceive(@JsonProperty("rejectReason") int rejectReason,
-                                @JsonProperty("contractAddress") ContractAddress contractAddress,
-                                @JsonProperty("receiveName") String receiveName,
-                                @JsonProperty("parameter") String parameter) {
-        this.rejectReason = rejectReason;
-        this.contractAddress = contractAddress;
-        this.receiveName = receiveName;
-        this.parameter = parameter;
-    }
 
     @Override
     public RejectReasonType getType() {

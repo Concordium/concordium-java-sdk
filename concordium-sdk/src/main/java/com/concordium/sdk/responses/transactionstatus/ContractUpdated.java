@@ -8,16 +8,10 @@ import com.concordium.sdk.responses.smartcontracts.ContractVersion;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.ContractAddress;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.protobuf.ByteString;
 import lombok.*;
-import org.apache.commons.codec.binary.Hex;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -66,31 +60,6 @@ public class ContractUpdated implements TransactionResultEvent, ContractTraceEle
      * The contract version.
      */
     private final ContractVersion version;
-
-    @SneakyThrows
-    @JsonCreator
-    ContractUpdated(@JsonProperty("amount") String amount,
-                    @JsonProperty("instigator") Map<String, Object> instigator,
-                    @JsonProperty("address") Map<String, Object> address,
-                    @JsonProperty("receiveName") String receiveName,
-                    @JsonProperty("events") List<String> events,
-                    @JsonProperty("message") String message,
-                    @JsonProperty("contractVersion") ContractVersion version) {
-        this.instigator = AbstractAddress.parseAccount(instigator);
-        this.address = (ContractAddress) AbstractAddress.parseAccount(address);
-        this.receiveName = receiveName;
-        this.events = new ArrayList<>();
-        for (String event : events) {
-            this.events.add(Hex.decodeHex(event));
-        }
-        this.message = Hex.decodeHex(message);
-        if (!Objects.isNull(amount)) {
-            this.amount = CCDAmount.fromMicro(amount);
-        }
-        this.version = version;
-    }
-
-
     @Override
     public TransactionResultEventType getType() {
         return TransactionResultEventType.CONTRACT_UPDATED;
