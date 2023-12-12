@@ -14,6 +14,7 @@ The [pom.xml](../concordium-sdk-examples/pom.xml) in [examples](../concordium-sd
 
 1. Commit and push this new version.
 1. Publish a release via Github (the tagged version and the $VERSION just set should be the same)
+1. Invoke the `Release` workflow on the newly released tag
 1. Set a new `SNAPSHOT` version via:
 
 ```
@@ -23,7 +24,9 @@ where `$VERSION` is the just released version.
 The [pom.xml](../concordium-sdk-examples/pom.xml) in [examples](../concordium-sdk-examples) should also be changed to use this new snapshot version
 1. Commit and push the `SNAPSHOT` version.
 
-Publishing the release invokes the `Release` workflow. The `Release` workflow generates and attaches the following to the release.
+## Release workflow
+
+Invoking the `Release` workflow generates and attaches the following to the release.
 1. A jar of the compiled SDK including native dependencies for windows, ubuntu and macos.
 2. A jar-with-dependencies containing all of the above as well as all maven dependencies.
 3. A jar with javadoc that can be imported to the users IDE to add documentation.
