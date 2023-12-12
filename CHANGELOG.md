@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+
+## 6.0.0
 - Added method `waitUntilFinalized` for waiting until a given transaction is finalized.
 - Removed deprecated V1 API from the SDK. Consumers of the (now removed) `getBlockSummary` endpoint should refer to `GetBlockTransactionEvents`, `GetBlockSpecialEvents` and `GetBlockPendingUpdates`.
 - Added support for GRPC V2 `GetWinningBakersEpoch` for getting a list of bakers that won the lottery in a particular historical epoch. Only available when querying a node with version at least 6.1.
