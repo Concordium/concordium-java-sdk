@@ -470,7 +470,7 @@ type SerializeParamResult = CryptoJniResult<String>;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-/// The JNI wrapper for serializing ia parameter for a recieve function according to a specified Schema.
+/// The JNI wrapper for serializing ia parameter for a receive function according to a specified Schema.
 /**
  * `parameter` The parameter to serialize. `parameter` must be a properly initalized `java.lang.String` that is non-null. The parameter must be valid JSON according to the provided schema.
  * `contractName` The name of the contract. `contractName` must be a properly initalized `java.lang.String` that is non-null.
@@ -652,8 +652,6 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeI
     };
 
     return SerializeParamResult::Ok(result).to_jstring(&env);
-
-
 }
 
 /**
@@ -673,8 +671,7 @@ pub fn serialize_init_parameters_aux(
     let parameter_type = module_schema.get_init_param_schema(contractName)?;
     let value: serde_json::Value = from_str(parameter)?;
 
-    let res = parameter_type
+    parameter_type
         .serial_value(&value)
-        .map_err(|e| anyhow!("{}", e.display(verboseErrors)));
-    return Ok(res?);
+        .map_err(|e| anyhow!("{}", e.display(verboseErrors)))
 }
