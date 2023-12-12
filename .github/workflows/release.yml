@@ -92,6 +92,7 @@ jobs:
     needs: [build-native-ubuntu, build-native-macos, build-native-windows]
     # Use fixed OS version because we install packages on the system.
     runs-on: ubuntu-22.04
+    environment: release
     
     if: ${{ !github.event.pull_request.draft }}
 
