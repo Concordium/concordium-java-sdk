@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableList;
-import concordium.ConcordiumP2PRpc;
 import lombok.*;
 
 import java.io.IOException;
@@ -51,19 +50,19 @@ public final class ContractAddress extends AbstractAddress {
         }
     }
 
-    public static Optional<ImmutableList<ContractAddress>> toList(ConcordiumP2PRpc.JsonResponse res) {
-        try {
-            val array = JsonMapper.INSTANCE.readValue(res.getValue(), ContractAddress[].class);
+    // public static Optional<ImmutableList<ContractAddress>> toList(ConcordiumP2PRpc.JsonResponse res) {
+    //     try {
+    //         val array = JsonMapper.INSTANCE.readValue(res.getValue(), ContractAddress[].class);
 
-            if (Objects.isNull(array)) {
-                return Optional.empty();
-            }
+    //         if (Objects.isNull(array)) {
+    //             return Optional.empty();
+    //         }
 
-            return Optional.of(ImmutableList.copyOf(array));
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse ContractAddress Array JSON", e);
-        }
-    }
+    //         return Optional.of(ImmutableList.copyOf(array));
+    //     } catch (JsonProcessingException e) {
+    //         throw new IllegalArgumentException("Cannot parse ContractAddress Array JSON", e);
+    //     }
+    // }
 
     public static ContractAddress from(long index, long subIndex) {
         return ContractAddress.builder()

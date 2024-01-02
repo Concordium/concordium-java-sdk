@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableList;
-import concordium.ConcordiumP2PRpc;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
@@ -125,18 +124,18 @@ public final class AccountAddress extends AbstractAddress {
         return AccountAddress.from(addressBytes);
     }
 
-    public static Optional<ImmutableList<AccountAddress>> toList(ConcordiumP2PRpc.JsonResponse res) {
-        try {
-            val array = JsonMapper.INSTANCE.readValue(res.getValue(), AccountAddress[].class);
-            if (Objects.isNull(array)) {
-                return Optional.empty();
-            }
+    // public static Optional<ImmutableList<AccountAddress>> toList(ConcordiumP2PRpc.JsonResponse res) {
+    //     try {
+    //         val array = JsonMapper.INSTANCE.readValue(res.getValue(), AccountAddress[].class);
+    //         if (Objects.isNull(array)) {
+    //             return Optional.empty();
+    //         }
 
-            return Optional.of(ImmutableList.copyOf(array));
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Cannot parse AccountInfo Array JSON", e);
-        }
-    }
+    //         return Optional.of(ImmutableList.copyOf(array));
+    //     } catch (JsonProcessingException e) {
+    //         throw new IllegalArgumentException("Cannot parse AccountInfo Array JSON", e);
+    //     }
+    // }
 
     @JsonCreator
     AccountAddress(String encodedAddress) {

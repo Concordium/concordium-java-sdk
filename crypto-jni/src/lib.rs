@@ -28,6 +28,7 @@ use std::{
     i8,
     str::Utf8Error,
 };
+use wallet_library::wallet::get_account_signing_key_aux;
 
 const SUCCESS: i32 = 0;
 const NATIVE_CONVERSION_ERROR: i32 = 1;
@@ -664,4 +665,36 @@ pub fn serialize_init_parameters_aux(
     parameter_type
         .serial_value(&value)
         .map_err(|e| anyhow!("{}", e.display(verboseErrors)))
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `get_account_signing_key` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccountSigningKey(
+    env: JNIEnv,
+    _: JClass,
+    seedAsHex: JString,
+    netAsStr: JString,
+    identityProviderIndex: jint,
+    identityIndex: jint,
+    credentialCounter: jint,
+) -> jstring {
+    let seed: String = match env.get_string(seedAsHex) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let net: String = match env.get_string(netAsStr) {
+        Ok(java_str) => match java_str.to_str() {
+            Ok(rust_str) => String::from(rust_str),
+            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+        },
+        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    };
+
+    let account_signing_key = get_account_signing_key_aux(seed, &net, identityProviderIndex as u32, identityIndex as u32, credentialCounter as u32).unwrap();
+    CryptoJniResult::Ok(account_signing_key).to_jstring(&env)
 }

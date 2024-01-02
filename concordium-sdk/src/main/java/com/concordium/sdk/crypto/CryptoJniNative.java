@@ -110,4 +110,5 @@ public class CryptoJniNative {
     }
     private static native String serializeInitParameter(String parameterJson, String contractName, byte[] schemaBytes, int schemaVersion, boolean verboseErrors);
 
+    public static native String getAccountSigningKey(String seedAsHex, String netAsStr, int identityProviderIndex, int identityIndex, int credentialCounter);
 }

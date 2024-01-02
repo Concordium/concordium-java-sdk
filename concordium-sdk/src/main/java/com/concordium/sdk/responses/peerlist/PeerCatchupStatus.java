@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.peerlist;
 
 import com.concordium.grpc.v2.PeersInfo;
-import concordium.ConcordiumP2PRpc;
 
 /**
  * Represents Catchup Status of a Node.
@@ -34,26 +33,6 @@ public enum PeerCatchupStatus {
         this.value = value;
     }
 
-    /**
-     * Parses the input {@link ConcordiumP2PRpc.PeerElement.CatchupStatus}.
-     *
-     * @param catchupStatus input {@link ConcordiumP2PRpc.PeerElement.CatchupStatus}.
-     * @return Parsed {@link PeerCatchupStatus}.
-     */
-    public static PeerCatchupStatus parse(ConcordiumP2PRpc.PeerElement.CatchupStatus catchupStatus) {
-        switch (catchupStatus) {
-            case UPTODATE:
-                return PeerCatchupStatus.UP_TO_DATE;
-            case PENDING:
-                return PeerCatchupStatus.PENDING;
-            case CATCHINGUP:
-                return PeerCatchupStatus.CATCHING_UP;
-            default:
-                throw new IllegalArgumentException(String.format(
-                        "Invalid catchup status received: %d",
-                        catchupStatus.getNumber()));
-        }
-    }
 
     /**
      * Parses the input {@link com.concordium.grpc.v2.PeersInfo.Peer.CatchupStatus}.
