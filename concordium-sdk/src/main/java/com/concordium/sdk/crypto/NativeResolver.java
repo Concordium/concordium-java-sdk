@@ -19,7 +19,25 @@ public class NativeResolver {
     public static void loadLib() {
         if (!LOADED) {
             try {
-                System.loadLibrary("crypto_jni");
+                val os = NativeResolver.OS.from(System.getProperty("os.name"));
+                if (os == OS.ANDROID) {
+                    System.loadLibrary(BASE_LIB_NAME);
+                } else {
+                    val libName = os.getPrefix() + BASE_LIB_NAME + os.getExtension();
+                    val libPath = "/native/" + libName;
+
+                    val resourceAsStream = NativeResolver.class.getResourceAsStream(libPath);
+                    if (Objects.isNull(resourceAsStream)) {
+                        throw new RuntimeException("FAILED LOADING LIB");
+                    }
+                    val tempLib = File.createTempFile(getRandomPrefix(), libName + os.getExtension());
+                    tempLib.deleteOnExit();
+
+                    try (FileOutputStream fos = new FileOutputStream(tempLib)) {
+                        IOUtils.copy(resourceAsStream, fos);
+                    }
+                    System.load(tempLib.getAbsolutePath());
+                }
                 LOADED = true;
             } catch (Exception e) {
                 throw new IllegalStateException("Could not load native dependencies", e);
@@ -36,7 +54,8 @@ public class NativeResolver {
     enum OS {
         MACOS,
         LINUX,
-        WINDOWS;
+        WINDOWS,
+        ANDROID;
 
         static OS from(String osString) {
             val lowerCased = osString.toLowerCase(Locale.ROOT);
@@ -51,6 +70,10 @@ public class NativeResolver {
             val isLinux = lowerCased.contains("linux");
             if (isLinux) {
                 return LINUX;
+            }
+            val isAndroid = lowerCased.contains("android");
+            if (isAndroid) {
+                return ANDROID;
             }
             throw new RuntimeException("Unsupported OS: " + osString);
         }
