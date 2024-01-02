@@ -53,18 +53,19 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
-
+        <sourceDirectory>../concordium-sdk/src/main/java</sourceDirectory>
         <plugins>
                     <plugin>
                         <groupId>com.simpligility.maven.plugins</groupId>
                         <artifactId>android-maven-plugin</artifactId>
                         <version>4.6.0</version>
                         <configuration>
-                            <androidManifestFile>${project.basedir}/src/main/AndroidManifest.xml</androidManifestFile>
+                            <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
                             <attachSources>true</attachSources>
                             <manifest>
                                 <debuggable>true</debuggable>
                             </manifest>
+
                             <!-- Where the native files are located; in the future we should use src/main/libs -->
                             <nativeLibrariesDirectory>${project.basedir}/native</nativeLibrariesDirectory>
                         </configuration>

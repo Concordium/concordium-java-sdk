@@ -19,10 +19,10 @@ public class NativeResolver {
     public static void loadLib() {
         if (!LOADED) {
             try {
-                val os = NativeResolver.OS.from(System.getProperty("os.name"));
-                if (os == OS.ANDROID) {
+                if (NativeResolver.isAndroid()) {
                     System.loadLibrary(BASE_LIB_NAME);
                 } else {
+                    val os = NativeResolver.OS.from(System.getProperty("os.name"));
                     val libName = os.getPrefix() + BASE_LIB_NAME + os.getExtension();
                     val libPath = "/native/" + libName;
 
@@ -45,6 +45,10 @@ public class NativeResolver {
         }
     }
 
+    private static boolean isAndroid() {
+        return System.getProperty("java.runtime.name").equals("Android Runtime");
+    }
+
     private static String getRandomPrefix() {
         val buffer = new byte[6];
         random.nextBytes(buffer);
@@ -54,8 +58,7 @@ public class NativeResolver {
     enum OS {
         MACOS,
         LINUX,
-        WINDOWS,
-        ANDROID;
+        WINDOWS;
 
         static OS from(String osString) {
             val lowerCased = osString.toLowerCase(Locale.ROOT);
@@ -70,10 +73,6 @@ public class NativeResolver {
             val isLinux = lowerCased.contains("linux");
             if (isLinux) {
                 return LINUX;
-            }
-            val isAndroid = lowerCased.contains("android");
-            if (isAndroid) {
-                return ANDROID;
             }
             throw new RuntimeException("Unsupported OS: " + osString);
         }
