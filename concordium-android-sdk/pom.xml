@@ -108,6 +108,8 @@
                             <includeDependenciesInDescriptorSet>true</includeDependenciesInDescriptorSet>
                             <protoSourceRoot>${project.basedir}/../concordium-base/concordium-grpc-api/
                             </protoSourceRoot>
+                            <attachProtoSources>false</attachProtoSources>
+                            <checkStaleness>true</checkStaleness>
                         </configuration>
                         <executions>
                             <execution>

@@ -26,11 +26,11 @@ all:
 	cp $(PATH_CRYPTO_TARGET)release/crypto_jni.dll $(PATH_JAVA_NATIVE_RESOURCES)
 endif
 
-MIN_VER := "29"
+MIN_ANDROID_VER := "29"
 
 define android-command
 	mkdir -p $(PATH_ANDROID_NATIVE_RESOURCES)$(2)
-	cd $(PATH_CRYPTO) && cargo ndk --target $(1) --platform $(MIN_VER) -- build --release
+	cd $(PATH_CRYPTO) && cargo ndk --target $(1) --platform $(MIN_ANDROID_VER) -- build --release
 	cp $(PATH_CRYPTO_TARGET)$(1)/release/libcrypto_jni.so $(PATH_ANDROID_NATIVE_RESOURCES)$(2)/
 endef
 
