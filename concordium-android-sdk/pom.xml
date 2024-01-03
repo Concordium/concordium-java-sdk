@@ -144,8 +144,6 @@
                     <manifest>
                         <debuggable>true</debuggable>
                     </manifest>
-
-                    <!-- Where the native files are located; in the future we should use src/main/libs -->
                     <nativeLibrariesDirectory>${project.basedir}/native</nativeLibrariesDirectory>
                 </configuration>
                 <dependencies>
