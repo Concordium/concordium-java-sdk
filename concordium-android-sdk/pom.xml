@@ -5,19 +5,17 @@
     <parent>
         <groupId>com.concordium.sdk</groupId>
         <artifactId>concordium-sdk-base</artifactId>
-        <version>5.1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>concordium-android-sdk</artifactId>
     <groupId>com.concordium.sdk</groupId>
-    <version>${revision}</version>
-   <packaging>aar</packaging>
+    <packaging>aar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.concordium.sdk</groupId>
             <artifactId>concordium-sdk</artifactId>
-            <version>5.1.1-SNAPSHOT</version>
+            <version>6.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
@@ -136,29 +134,29 @@
             </extension>
         </extensions>
         <plugins>
-                    <plugin>
-                        <groupId>com.simpligility.maven.plugins</groupId>
-                        <artifactId>android-maven-plugin</artifactId>
-                        <version>4.6.0</version>
-                        <configuration>
-                            <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-                            <attachSources>true</attachSources>
-                            <manifest>
-                                <debuggable>true</debuggable>
-                            </manifest>
+            <plugin>
+                <groupId>com.simpligility.maven.plugins</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <version>4.6.0</version>
+                <configuration>
+                    <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+                    <attachSources>true</attachSources>
+                    <manifest>
+                        <debuggable>true</debuggable>
+                    </manifest>
 
-                            <!-- Where the native files are located; in the future we should use src/main/libs -->
-                            <nativeLibrariesDirectory>${project.basedir}/native</nativeLibrariesDirectory>
-                        </configuration>
-					              <dependencies>
-						                <dependency>
-							                  <groupId>javax.xml.bind</groupId>
-							                  <artifactId>jaxb-api</artifactId>
-							                  <version>2.3.1</version>
-						                </dependency>
-					              </dependencies>
-                        <extensions>true</extensions>
-                    </plugin>
+                    <!-- Where the native files are located; in the future we should use src/main/libs -->
+                    <nativeLibrariesDirectory>${project.basedir}/native</nativeLibrariesDirectory>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>javax.xml.bind</groupId>
+                        <artifactId>jaxb-api</artifactId>
+                        <version>2.3.1</version>
+                    </dependency>
+                </dependencies>
+                <extensions>true</extensions>
+            </plugin>
         </plugins>
     </build>
 
