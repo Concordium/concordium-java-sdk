@@ -111,4 +111,10 @@ public class CryptoJniNative {
     private static native String serializeInitParameter(String parameterJson, String contractName, byte[] schemaBytes, int schemaVersion, boolean verboseErrors);
 
     public static native String getAccountSigningKey(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex, long credentialCounter);
+    public static native String getAccountPublicKey(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex, long credentialCounter);
+    public static native String getIdCredSec(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex);
+    public static native String getPrfKey(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex);
+    public static native String getCredentialId(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex, long credentialCounter, String commitmentKey);
+    public static native String getSignatureBlindingRandomness(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex);
+    public static native String getAttributeCommitmentRandomness(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex, long credentialCounter, int attribute);
 }

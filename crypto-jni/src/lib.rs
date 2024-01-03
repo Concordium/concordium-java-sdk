@@ -28,7 +28,11 @@ use std::{
     i8,
     str::Utf8Error,
 };
-use wallet_library::wallet::get_account_signing_key_aux;
+use wallet_library::wallet::{
+    get_account_public_key_aux, get_account_signing_key_aux,
+    get_attribute_commitment_randomness_aux, get_credential_id_aux, get_id_cred_sec_aux,
+    get_prf_key_aux, get_signature_blinding_randomness_aux,
+};
 
 const SUCCESS: i32 = 0;
 const NATIVE_CONVERSION_ERROR: i32 = 1;
@@ -727,4 +731,217 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccount
     .unwrap();
 
     CryptoJniResult::Ok(account_signing_key).to_jstring(&env)
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `get_account_public_key` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccountPublicKey(
+    env: JNIEnv,
+    _: JClass,
+    seedAsHex: JString,
+    netAsStr: JString,
+    identityProviderIndex: jlong,
+    identityIndex: jlong,
+    credentialCounter: jlong,
+) -> jstring {
+    let seed = match get_string(env, seedAsHex) {
+        Ok(s) => s,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let net = match get_string(env, netAsStr) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    // We use as u32 here which is unsafe, but we ensure that only u32 values
+    // are provided from the Java
+    let account_public_key = get_account_public_key_aux(
+        seed,
+        &net,
+        identityProviderIndex as u32,
+        identityIndex as u32,
+        credentialCounter as u32,
+    )
+    .unwrap();
+
+    CryptoJniResult::Ok(account_public_key).to_jstring(&env)
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `get_account_public_key` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getIdCredSec(
+    env: JNIEnv,
+    _: JClass,
+    seedAsHex: JString,
+    netAsStr: JString,
+    identityProviderIndex: jlong,
+    identityIndex: jlong,
+) -> jstring {
+    let seed = match get_string(env, seedAsHex) {
+        Ok(s) => s,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let net = match get_string(env, netAsStr) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    // We use as u32 here which is unsafe, but we ensure that only u32 values
+    // are provided from the Java
+    let account_public_key = get_id_cred_sec_aux(
+        seed,
+        &net,
+        identityProviderIndex as u32,
+        identityIndex as u32,
+    )
+    .unwrap();
+
+    CryptoJniResult::Ok(account_public_key).to_jstring(&env)
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `get_account_public_key` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getPrfKey(
+    env: JNIEnv,
+    _: JClass,
+    seedAsHex: JString,
+    netAsStr: JString,
+    identityProviderIndex: jlong,
+    identityIndex: jlong,
+) -> jstring {
+    let seed = match get_string(env, seedAsHex) {
+        Ok(s) => s,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let net = match get_string(env, netAsStr) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    // We use as u32 here which is unsafe, but we ensure that only u32 values
+    // are provided from the Java
+    let account_public_key = get_prf_key_aux(
+        seed,
+        &net,
+        identityProviderIndex as u32,
+        identityIndex as u32,
+    )
+    .unwrap();
+
+    CryptoJniResult::Ok(account_public_key).to_jstring(&env)
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `get_account_public_key` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getCredentialId(
+    env: JNIEnv,
+    _: JClass,
+    seedAsHex: JString,
+    netAsStr: JString,
+    identityProviderIndex: jlong,
+    identityIndex: jlong,
+    credentialCounter: jlong,
+    onChainCommitmentKey: JString,
+) -> jstring {
+    let seed = match get_string(env, seedAsHex) {
+        Ok(s) => s,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let net = match get_string(env, netAsStr) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let commitmentKey = match get_string(env, onChainCommitmentKey) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let credential_id = get_credential_id_aux(
+        seed,
+        &net,
+        identityProviderIndex as u32,
+        identityIndex as u32,
+        credentialCounter as u8,
+        &commitmentKey,
+    )
+    .unwrap();
+
+    CryptoJniResult::Ok(credential_id).to_jstring(&env)
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `get_account_public_key` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getSignatureBlindingRandomness(
+    env: JNIEnv,
+    _: JClass,
+    seedAsHex: JString,
+    netAsStr: JString,
+    identityProviderIndex: jlong,
+    identityIndex: jlong,
+) -> jstring {
+    let seed = match get_string(env, seedAsHex) {
+        Ok(s) => s,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let net = match get_string(env, netAsStr) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let blinding_randomness = get_signature_blinding_randomness_aux(
+        seed,
+        &net,
+        identityProviderIndex as u32,
+        identityIndex as u32,
+    )
+    .unwrap();
+
+    CryptoJniResult::Ok(blinding_randomness).to_jstring(&env)
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `get_account_public_key` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAttributeCommitmentRandomness(
+    env: JNIEnv,
+    _: JClass,
+    seedAsHex: JString,
+    netAsStr: JString,
+    identityProviderIndex: jlong,
+    identityIndex: jlong,
+    credentialCounter: jlong,
+    attribute: jint,
+) -> jstring {
+    let seed = match get_string(env, seedAsHex) {
+        Ok(s) => s,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let net = match get_string(env, netAsStr) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let attribute_commitment_randomness = get_attribute_commitment_randomness_aux(
+        seed,
+        &net,
+        identityProviderIndex as u32,
+        identityIndex as u32,
+        credentialCounter as u32,
+        attribute as u8,
+    )
+    .unwrap();
+
+    CryptoJniResult::Ok(attribute_commitment_randomness).to_jstring(&env)
 }

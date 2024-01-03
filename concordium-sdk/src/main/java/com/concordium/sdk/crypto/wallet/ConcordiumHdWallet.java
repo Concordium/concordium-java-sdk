@@ -12,6 +12,7 @@ import org.bitcoinj.crypto.MnemonicException;
 import com.concordium.sdk.HexadecimalValidator;
 import com.concordium.sdk.crypto.CryptoJniNative;
 import com.concordium.sdk.crypto.NativeResolver;
+import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.crypto.wallet.wordlists.English;
 import com.concordium.sdk.exceptions.CryptoJniException;
@@ -129,5 +130,69 @@ public class ConcordiumHdWallet {
 
 
         return ED25519SecretKey.from(signingKey);
+    }
+
+    public ED25519PublicKey getAccountPublicKey(long identityProviderIndex, long identityIndex, long credentialCounter) {
+        checkU32(identityProviderIndex, identityIndex, credentialCounter);
+
+        String signingKey = getKeyResult((String seedAsHex, String network) -> {
+            return CryptoJniNative.getAccountPublicKey(seedAsHex, network, identityProviderIndex, identityIndex, credentialCounter);
+        });
+
+
+        return ED25519PublicKey.from(signingKey);
+    }
+
+    public String getIdCredSec(long identityProviderIndex, long identityIndex) {
+        checkU32(identityProviderIndex, identityIndex);
+
+        String idCredSec = getKeyResult((String seedAsHex, String network) -> {
+            return CryptoJniNative.getIdCredSec(seedAsHex, network, identityProviderIndex, identityIndex);
+        });
+
+        return idCredSec;
+    }
+
+    public String getPrfKey(long identityProviderIndex, long identityIndex) {
+        checkU32(identityProviderIndex, identityIndex);
+
+        String prfKey = getKeyResult((String seedAsHex, String network) -> {
+            return CryptoJniNative.getPrfKey(seedAsHex, network, identityProviderIndex, identityIndex);
+        });
+
+        return prfKey;
+    }
+
+    public String getCredentialId(long identityProviderIndex, long identityIndex, long credentialCounter, String commitmentKey) {
+        // TODO Credential counter has to be u8 here. Check that.
+        checkU32(identityProviderIndex, identityIndex, credentialCounter);
+
+        String credentialId = getKeyResult((String seedAsHex, String network) -> {
+            return CryptoJniNative.getCredentialId(seedAsHex, network, identityProviderIndex, identityIndex, credentialCounter, commitmentKey);
+        });
+
+        return credentialId;
+    }
+
+    public String getSignatureBlindingRandomness(long identityProviderIndex, long identityIndex) {
+        // TODO Credential counter has to be u8 here. Check that.
+        checkU32(identityProviderIndex, identityIndex);
+
+        String blindingRandomness = getKeyResult((String seedAsHex, String network) -> {
+            return CryptoJniNative.getSignatureBlindingRandomness(seedAsHex, network, identityProviderIndex, identityIndex);
+        });
+
+        return blindingRandomness;
+    }
+
+    public String getAttributeCommitmentRandomness(long identityProviderIndex, long identityIndex, long credentialCounter, int attribute) {
+        // TODO Credential counter has to be u8 here. Check that.
+        checkU32(identityProviderIndex, identityIndex);
+
+        String attributeCommitmentRandomness = getKeyResult((String seedAsHex, String network) -> {
+            return CryptoJniNative.getAttributeCommitmentRandomness(seedAsHex, network, identityProviderIndex, identityIndex, credentialCounter, attribute);
+        });
+
+        return attributeCommitmentRandomness;
     }
 }

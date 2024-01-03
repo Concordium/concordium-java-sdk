@@ -1,14 +1,19 @@
 package com.concordium.sdk.crypto.wallet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.crypto.MnemonicException.MnemonicLengthException;
 import org.junit.Test;
-import org.apache.commons.codec.binary.Hex;
 
+import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
+import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
+
+import org.apache.commons.codec.binary.Hex;
 
 public class ConcordiumHdWalletTest {
     
@@ -78,5 +83,72 @@ public class ConcordiumHdWalletTest {
 
         wallet.getAccountSigningKey(-1, 55, 7);
     }
-}
 
+    @Test
+    public void testMainnetPublicKey() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+
+        byte[] signingKeyBytes = wallet.getAccountPublicKey(1, 341, 9).getRawBytes();
+
+        assertEquals("d54aab7218fc683cbd4d822f7c2b4e7406c41ae08913012fab0fa992fa008e98", new String(Hex.encodeHex(signingKeyBytes)));
+    }
+
+    @Test
+    public void testMainnetPublicAndSigningKeyMatch() throws UnsupportedEncodingException {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+
+        ED25519SecretKey signingKey = wallet.getAccountSigningKey(0, 0, 0);
+        ED25519PublicKey publicKey = wallet.getAccountPublicKey(0, 0, 0);
+
+        byte[] message = "abcd1234abcd5678".getBytes("UTF-8");
+
+        byte[] signature = signingKey.sign(message);
+
+        assertTrue(publicKey.verify(message, signature));
+    }
+
+    @Test
+    public void testMainnetIdCredSec() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+
+        String idCredSec = wallet.getIdCredSec(2, 115);
+
+        assertEquals("33b9d19b2496f59ed853eb93b9d374482d2e03dd0a12e7807929d6ee54781bb1", idCredSec);
+    }
+
+    @Test
+    public void testMainnetPrfKey() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+
+        String prfKey = wallet.getPrfKey(3, 35);
+
+        assertEquals("4409e2e4acffeae641456b5f7406ecf3e1e8bd3472e2df67a9f1e8574f211bc5", prfKey);
+    }
+
+    @Test
+    public void testMainnetCredentialId() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+
+        String credentialId = wallet.getCredentialId(10, 50, 5, "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c5a8d45e64b6f917c540eee16c970c3d4b7f3caf48a7746284878e2ace21c82ea44bf84609834625be1f309988ac523fac");
+
+        assertEquals("8a3a87f3f38a7a507d1e85dc02a92b8bcaa859f5cf56accb3c1bc7c40e1789b4933875a38dd4c0646ca3e940a02c42d8", credentialId);
+    }
+
+    @Test
+    public void testMainnetBlindingRandomness() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+
+        String blindingRandomness = wallet.getSignatureBlindingRandomness(4, 5713);
+
+        assertEquals("1e3633af2b1dbe5600becfea0324bae1f4fa29f90bdf419f6fba1ff520cb3167", blindingRandomness);
+    }
+
+    @Test
+    public void testMainnetAttributeCommitmentRandomness() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+
+        String attributeCommitmentRandomness = wallet.getAttributeCommitmentRandomness(5, 0, 4, 0);
+
+        assertEquals("6ef6ba6490fa37cd517d2b89a12b77edf756f89df5e6f5597440630cd4580b8f", attributeCommitmentRandomness);
+    }
+}
