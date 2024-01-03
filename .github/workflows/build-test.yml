@@ -65,7 +65,7 @@ jobs:
     - name: Setup Rust
       uses: actions-rs/toolchain@v1
       with:
-        toolchain: 1.62
+        toolchain: 1.69
     - name: Create native dependencies
       run: make
     - name: Cache cargo dependencies and targets
@@ -79,13 +79,15 @@ jobs:
         key: ${{ runner.os }}-${{ env.dummy }}-rust-java-deps-${{ hashFiles('**/Cargo.toml', '**/Cargo.lock', '**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-${{ env.dummy }}-rust-java-deps
+    - name: Initialize Parent Pom
+      run: mvn install -N
     - name: Build and test sdk
       run: cd concordium-sdk && mvn --batch-mode --update-snapshots install
     - name: Build and test examples
       run: cd concordium-sdk-examples && mvn --batch-mode --update-snapshots install
   build-android:
     # Use fixed OS version because we install packages on the system.
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - name: Checkout
@@ -101,7 +103,7 @@ jobs:
     - name: Setup Rust
       uses: actions-rs/toolchain@v1
       with:
-        toolchain: 1.62
+        toolchain: 1.69
     - name: Create native dependencies
       run: make add-android-targets && make android
     - name: Build android sdk
