@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ConcordiumHdWallet {
 
-    //static block to load native library
+    // Static block to load native library.
     static {
         NativeResolver.loadLib();
     }
@@ -39,21 +39,25 @@ public class ConcordiumHdWallet {
     }
 
     /**
-     * Create a Concordium hierachical deterministic wallet from a space separated seed phrase.
+     * Create a Concordium hierachical deterministic wallet from a space separated
+     * seed phrase.
+     * 
      * @param seedPhrase
      * @param network
      * @return
      * @throws IOException
      * @throws MnemonicException
      */
-    public static ConcordiumHdWallet fromSeedPhrase(String seedPhrase, Network network) throws IOException, MnemonicException {
+    public static ConcordiumHdWallet fromSeedPhrase(String seedPhrase, Network network)
+            throws IOException, MnemonicException {
         List<String> split = Arrays.asList(seedPhrase.split(" "));
         return fromSeedPhrase(split, network);
     }
 
     private static final String BIP39_ENGLISH_SHA256 = "ad90bf3beb7b0eb7e5acd74727dc0da96e0a280a258354e7293fb7e211ac03db";
 
-    public static ConcordiumHdWallet fromSeedPhrase(List<String> seedPhrase, Network network) throws IOException, MnemonicException {
+    public static ConcordiumHdWallet fromSeedPhrase(List<String> seedPhrase, Network network)
+            throws IOException, MnemonicException {
         // Validate whether the input seed phrase is valid or not.
         StringBuilder builder = new StringBuilder(English.wordlist);
         InputStream in = new ByteArrayInputStream(builder.toString().getBytes("UTF-8"));
@@ -72,7 +76,8 @@ public class ConcordiumHdWallet {
 
     public static ConcordiumHdWallet fromHex(String seedAsHex, Network network) {
         if (seedAsHex.length() != 128) {
-            throw new IllegalArgumentException("The provided seed " + seedAsHex + " is invalid as its length was not 128.");
+            throw new IllegalArgumentException(
+                    "The provided seed " + seedAsHex + " is invalid as its length was not 128.");
         } else if (!HexadecimalValidator.isHexadecimal(seedAsHex)) {
             throw new IllegalArgumentException("The provided seed " + seedAsHex + " is not a valid hexadecimal string");
         }
@@ -80,10 +85,27 @@ public class ConcordiumHdWallet {
         return new ConcordiumHdWallet(seedAsHex, network);
     }
 
-    public String getAccountSigningKey(int identityProviderIndex, int identityIndex, int credentialCounter) {
+    private static long MAX_U32 = 4294967295l;
+
+    /**
+     * Validates that any provided value is a valid uint32.
+     * @param values the list of values to validate as being uint32.
+     */
+    private void checkU32(long ...values) {
+        for (long value : values) {
+            if (value > MAX_U32 || value < 0) {
+                throw new IllegalArgumentException("The value must be a valid uint32 value but was " + value);
+            }
+        }
+    }
+
+    public String getAccountSigningKey(long identityProviderIndex, long identityIndex, long credentialCounter) {
+        checkU32(identityProviderIndex, identityIndex, credentialCounter);
+
         KeyResult result = null;
         try {
-            String jsonStr = CryptoJniNative.getAccountSigningKey(this.seedAsHex, this.network.getValue(), identityProviderIndex, identityIndex, credentialCounter);
+            String jsonStr = CryptoJniNative.getAccountSigningKey(this.seedAsHex, this.network.getValue(),
+                    identityProviderIndex, identityIndex, credentialCounter);
             result = JsonMapper.INSTANCE.readValue(jsonStr, KeyResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -92,7 +114,7 @@ public class ConcordiumHdWallet {
         if (!result.isSuccess()) {
             throw CryptoJniException.from(result.getErr());
         }
-        
+
         return result.getOk();
     }
 }

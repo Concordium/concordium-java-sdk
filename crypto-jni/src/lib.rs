@@ -18,7 +18,7 @@ use ed25519_dalek::*;
 
 use jni::{
     objects::{JClass, JString},
-    sys::{jboolean, jbyteArray, jint, jstring, JNI_FALSE},
+    sys::{jboolean, jbyteArray, jint, jlong, jstring, JNI_FALSE},
     JNIEnv,
 };
 use rand::thread_rng;
@@ -667,6 +667,32 @@ pub fn serialize_init_parameters_aux(
         .map_err(|e| anyhow!("{}", e.display(verboseErrors)))
 }
 
+fn get_string(env: JNIEnv, java_string: JString) -> Result<String, JNIErrorResponse> {
+    let java_str = match env.get_string(java_string) {
+        Ok(s) => s,
+        Err(err) => {
+            return Err(JNIErrorResponse {
+                errorMessage: err.to_string(),
+                errorType:    JNIErrorResponseType::ParameterSerialization,
+            })
+        }
+    };
+
+    let rust_str = match java_str.to_str() {
+        Ok(s) => s,
+        Err(err) => {
+            return Err(JNIErrorResponse {
+                errorMessage: err.to_string(),
+                errorType:    JNIErrorResponseType::Utf8Decode,
+            })
+        }
+    };
+
+    Ok(rust_str.to_string())
+}
+
+type AccountSigningKeyResult = CryptoJniResult<String>;
+
 #[no_mangle]
 #[allow(non_snake_case)]
 /// The JNI wrapper for the `get_account_signing_key` method.
@@ -675,26 +701,30 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccount
     _: JClass,
     seedAsHex: JString,
     netAsStr: JString,
-    identityProviderIndex: jint,
-    identityIndex: jint,
-    credentialCounter: jint,
+    identityProviderIndex: jlong,
+    identityIndex: jlong,
+    credentialCounter: jlong,
 ) -> jstring {
-    let seed: String = match env.get_string(seedAsHex) {
-        Ok(java_str) => match java_str.to_str() {
-            Ok(rust_str) => String::from(rust_str),
-            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
-        },
-        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    let seed = match get_string(env, seedAsHex) {
+        Ok(s) => s,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
     };
 
-    let net: String = match env.get_string(netAsStr) {
-        Ok(java_str) => match java_str.to_str() {
-            Ok(rust_str) => String::from(rust_str),
-            Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
-        },
-        Err(err) => return SerializeParamResult::from(err).to_jstring(&env),
+    let net = match get_string(env, netAsStr) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
     };
 
-    let account_signing_key = get_account_signing_key_aux(seed, &net, identityProviderIndex as u32, identityIndex as u32, credentialCounter as u32).unwrap();
+    // We use as u32 here which is unsafe, but we ensure that only u32 values
+    // are provided from the Java
+    let account_signing_key = get_account_signing_key_aux(
+        seed,
+        &net,
+        identityProviderIndex as u32,
+        identityIndex as u32,
+        credentialCounter as u32,
+    )
+    .unwrap();
+
     CryptoJniResult::Ok(account_signing_key).to_jstring(&env)
 }

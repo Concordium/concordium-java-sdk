@@ -62,5 +62,19 @@ public class ConcordiumHdWalletTest {
 
         assertEquals("e4d1693c86eb9438feb9cbc3d561fbd9299e3a8b3a676eb2483b135f8dbf6eb1", signingKey);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMainnetSigningKeyFailsIfU32OutOfBounds() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+
+        wallet.getAccountSigningKey(4294967296l, 55, 7);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMainnetSigningKeyFailsIfNegativeIndex() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+
+        wallet.getAccountSigningKey(-1, 55, 7);
+    }
 }
 
