@@ -12,6 +12,7 @@ import org.bitcoinj.crypto.MnemonicException;
 import com.concordium.sdk.HexadecimalValidator;
 import com.concordium.sdk.crypto.CryptoJniNative;
 import com.concordium.sdk.crypto.NativeResolver;
+import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.crypto.wallet.wordlists.English;
 import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.serializing.JsonMapper;
@@ -99,7 +100,7 @@ public class ConcordiumHdWallet {
         }
     }
 
-    public String getAccountSigningKey(long identityProviderIndex, long identityIndex, long credentialCounter) {
+    public ED25519SecretKey getAccountSigningKey(long identityProviderIndex, long identityIndex, long credentialCounter) {
         checkU32(identityProviderIndex, identityIndex, credentialCounter);
 
         KeyResult result = null;
@@ -115,6 +116,6 @@ public class ConcordiumHdWallet {
             throw CryptoJniException.from(result.getErr());
         }
 
-        return result.getOk();
+        return ED25519SecretKey.from(result.getOk());
     }
 }

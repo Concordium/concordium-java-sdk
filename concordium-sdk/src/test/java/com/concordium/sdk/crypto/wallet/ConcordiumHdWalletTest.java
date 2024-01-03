@@ -7,6 +7,8 @@ import java.io.IOException;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.crypto.MnemonicException.MnemonicLengthException;
 import org.junit.Test;
+import org.apache.commons.codec.binary.Hex;
+
 
 public class ConcordiumHdWalletTest {
     
@@ -58,9 +60,9 @@ public class ConcordiumHdWalletTest {
     public void testMainnetSigningKey() {
         ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
 
-        String signingKey = wallet.getAccountSigningKey(0, 55, 7);
+        byte[] signingKeyBytes = wallet.getAccountSigningKey(0, 55, 7).getRawBytes();
 
-        assertEquals("e4d1693c86eb9438feb9cbc3d561fbd9299e3a8b3a676eb2483b135f8dbf6eb1", signingKey);
+        assertEquals("e4d1693c86eb9438feb9cbc3d561fbd9299e3a8b3a676eb2483b135f8dbf6eb1", new String(Hex.encodeHex(signingKeyBytes)));
     }
 
     @Test(expected = IllegalArgumentException.class)
