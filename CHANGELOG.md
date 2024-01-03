@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+ - Purge remaining usages of V1 GRPC API.
 
 ## 6.0.0
 - Added method `waitUntilFinalized` for waiting until a given transaction is finalized.
