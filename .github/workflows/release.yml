@@ -86,6 +86,30 @@ jobs:
           name: windows-library
           path: crypto-jni\target\release\crypto_jni.dll
 
+  build-aar-library:
+    runs-on: ubuntu-22.04
+    steps:
+    # Setup rust
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.69
+    # Checkout the code
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Make android native depencies
+      run: make add-android-targets && make android
+    # Builds and tests the sdk
+    - name: Build and test android sdk
+      run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install
+    - name: Upload aar
+      uses: actions/upload-artifact@master
+      with:
+        name: concordium-android-sdk.aar
+        path: ./concordium-android-sdk/target/concordium-android-sdk.aar
+
   build-and-release-jar:
     needs: [build-native-ubuntu, build-native-macos, build-native-windows]
     # Use fixed OS version because we install packages on the system.
@@ -125,6 +149,12 @@ jobs:
         name: windows-library
         path: concordium-sdk/native
 
+    - name: Download aar library
+      uses: actions/download-artifact@master
+      with:
+        name: concordium-android-sdk.aar
+        path: concordium-android-sdk/target
+
     # Builds and tests the sdk. Delomboks code and generates a javadoc jar from the delombok'ed code
     - name: Build and test sdk
       run: cd concordium-sdk && mvn --batch-mode --update-snapshots install && mvn lombok:delombok -f pom.xml && mvn javadoc:jar -f pom.xml
@@ -133,7 +163,9 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: concordium-sdk/target/*.jar
+        files: |
+          concordium-sdk/target/*.jar
+          concordium-android-sdk/target/concordium-android-sdk.aar
 
     - name: Deploy javadoc
       uses: MathieuSoysal/Javadoc-publisher.yml@v2.4.0

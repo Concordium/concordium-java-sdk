@@ -5,11 +5,18 @@
     <parent>
         <groupId>com.concordium.sdk</groupId>
         <artifactId>concordium-sdk-base</artifactId>
+        <version>6.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>concordium-android-sdk</artifactId>
     <groupId>com.concordium.sdk</groupId>
     <packaging>aar</packaging>
+
+    <properties>
+        <project.java.version>1.8</project.java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
 
     <dependencies>
         <dependency>
