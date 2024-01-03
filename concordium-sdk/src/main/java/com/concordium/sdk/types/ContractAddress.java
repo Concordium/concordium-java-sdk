@@ -9,14 +9,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.collect.ImmutableList;
-import concordium.ConcordiumP2PRpc;
 import lombok.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Objects;
-import java.util.Optional;
 
 @Getter
 @ToString

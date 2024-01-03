@@ -1,19 +1,15 @@
 package com.concordium.sdk.types;
 
 import com.concordium.sdk.crypto.SHA256;
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.AccountType;
 import com.concordium.sdk.transactions.Base58;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.collect.ImmutableList;
-import concordium.ConcordiumP2PRpc;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
@@ -23,7 +19,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 
 
 @EqualsAndHashCode(callSuper = true)
