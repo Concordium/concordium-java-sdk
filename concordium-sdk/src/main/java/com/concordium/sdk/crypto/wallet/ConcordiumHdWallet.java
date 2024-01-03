@@ -100,13 +100,14 @@ public class ConcordiumHdWallet {
         }
     }
 
-    public ED25519SecretKey getAccountSigningKey(long identityProviderIndex, long identityIndex, long credentialCounter) {
-        checkU32(identityProviderIndex, identityIndex, credentialCounter);
-
+    public interface ExtractKey {
+        String getKey(String seedAsHex, String network);
+     }
+    
+    private String getKeyResult(ExtractKey extractor) {
         KeyResult result = null;
         try {
-            String jsonStr = CryptoJniNative.getAccountSigningKey(this.seedAsHex, this.network.getValue(),
-                    identityProviderIndex, identityIndex, credentialCounter);
+            String jsonStr = extractor.getKey(this.seedAsHex, this.network.getValue());
             result = JsonMapper.INSTANCE.readValue(jsonStr, KeyResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -116,6 +117,17 @@ public class ConcordiumHdWallet {
             throw CryptoJniException.from(result.getErr());
         }
 
-        return ED25519SecretKey.from(result.getOk());
+        return result.getOk();
+    }
+
+    public ED25519SecretKey getAccountSigningKey(long identityProviderIndex, long identityIndex, long credentialCounter) {
+        checkU32(identityProviderIndex, identityIndex, credentialCounter);
+
+        String signingKey = getKeyResult((String seedAsHex, String network) -> {
+            return CryptoJniNative.getAccountSigningKey(seedAsHex, network, identityProviderIndex, identityIndex, credentialCounter);
+        });
+
+
+        return ED25519SecretKey.from(signingKey);
     }
 }
