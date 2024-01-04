@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
+import com.concordium.sdk.types.ContractAddress;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -150,5 +151,34 @@ public class ConcordiumHdWalletTest {
         String attributeCommitmentRandomness = wallet.getAttributeCommitmentRandomness(5, 0, 4, 0);
 
         assertEquals("6ef6ba6490fa37cd517d2b89a12b77edf756f89df5e6f5597440630cd4580b8f", attributeCommitmentRandomness);
+    }
+
+    @Test
+    public void testMainnetVerifiableCredentialSigningKey() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ContractAddress issuer = new ContractAddress(2, 1);
+
+        ED25519SecretKey verifiableCredentialSigningKey = wallet.getVerifiableCredentialSigningKey(issuer, 1);
+
+        assertEquals("670d904509ce09372deb784e702d4951d4e24437ad3879188d71ae6db51f3301", Hex.encodeHexString(verifiableCredentialSigningKey.getRawBytes()));
+    }
+
+    @Test
+    public void testMainnetVerifiableCredentialPublicKey() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ContractAddress issuer = new ContractAddress(1232, 3);
+
+        ED25519PublicKey verifiableCredentialPublicKey = wallet.getVerifiableCredentialPublicKey(issuer, 341);
+
+        assertEquals("16afdb3cb3568b5ad8f9a0fa3c741b065642de8c53e58f7920bf449e63ff2bf9", Hex.encodeHexString(verifiableCredentialPublicKey.getRawBytes()));
+    }
+
+    @Test
+    public void testMainnetVerifiableCredentialBackupEncryptionKey() {
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+
+        String verifiableCredentialBackupEncryptionKey = wallet.getVerifiableCredentialBackupEncryptionKey();
+
+        assertEquals("5032086037b639f116642752460bf2e2b89d7278fe55511c028b194ba77192a1", verifiableCredentialBackupEncryptionKey);
     }
 }

@@ -117,4 +117,7 @@ public class CryptoJniNative {
     public static native String getCredentialId(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex, long credentialCounter, String commitmentKey);
     public static native String getSignatureBlindingRandomness(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex);
     public static native String getAttributeCommitmentRandomness(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex, long credentialCounter, int attribute);
+    public static native String getVerifiableCredentialSigningKey(String seedAsHex, String netAsStr, long issuerIndex, long issuerSubindex, long verifiableCredentialIndex);
+    public static native String getVerifiableCredentialPublicKey(String seedAsHex, String netAsStr, long issuerIndex, long issuerSubindex, long verifiableCredentialIndex);
+    public static native String getVerifiableCredentialBackupEncryptionKey(String seedAsHex, String netAsStr);
 }

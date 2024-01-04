@@ -17,6 +17,7 @@ import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.crypto.wallet.wordlists.English;
 import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.serializing.JsonMapper;
+import com.concordium.sdk.types.ContractAddress;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ConcordiumHdWallet {
@@ -194,5 +195,32 @@ public class ConcordiumHdWallet {
         });
 
         return attributeCommitmentRandomness;
+    }
+
+    public ED25519SecretKey getVerifiableCredentialSigningKey(ContractAddress issuer, long verifiableCredentialIndex) {
+        checkU32(verifiableCredentialIndex);
+
+        String verifiableCredentialSigningKey = getKeyResult((String seedAsHex, String network) -> {
+            return CryptoJniNative.getVerifiableCredentialSigningKey(seedAsHex, network, issuer.getIndex(), issuer.getSubIndex(), verifiableCredentialIndex);
+        });
+
+        return ED25519SecretKey.from(verifiableCredentialSigningKey);
+    }
+
+    public ED25519PublicKey getVerifiableCredentialPublicKey(ContractAddress issuer, long verifiableCredentialIndex) {
+        checkU32(verifiableCredentialIndex);
+
+        String verifiableCredentialPublicKey = getKeyResult((String seedAsHex, String network) -> {
+            return CryptoJniNative.getVerifiableCredentialPublicKey(seedAsHex, network, issuer.getIndex(), issuer.getSubIndex(), verifiableCredentialIndex);
+        });
+
+        return ED25519PublicKey.from(verifiableCredentialPublicKey);
+    }
+
+    public String getVerifiableCredentialBackupEncryptionKey() {
+        String verifiableCredentialEncryptionKey = getKeyResult((String seedAsHex, String network) -> {
+            return CryptoJniNative.getVerifiableCredentialBackupEncryptionKey(seedAsHex, network);
+        });
+        return verifiableCredentialEncryptionKey;
     }
 }

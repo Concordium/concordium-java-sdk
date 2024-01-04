@@ -32,6 +32,8 @@ use wallet_library::wallet::{
     get_account_public_key_aux, get_account_signing_key_aux,
     get_attribute_commitment_randomness_aux, get_credential_id_aux, get_id_cred_sec_aux,
     get_prf_key_aux, get_signature_blinding_randomness_aux,
+    get_verifiable_credential_backup_encryption_key_aux, get_verifiable_credential_public_key_aux,
+    get_verifiable_credential_signing_key_aux,
 };
 
 const SUCCESS: i32 = 0;
@@ -944,4 +946,97 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAttribu
     .unwrap();
 
     CryptoJniResult::Ok(attribute_commitment_randomness).to_jstring(&env)
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `get_account_public_key` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifiableCredentialSigningKey(
+    env: JNIEnv,
+    _: JClass,
+    seedAsHex: JString,
+    netAsStr: JString,
+    issuerIndex: jlong,
+    issuerSubindex: jlong,
+    verifiableCredentialIndex: jlong,
+) -> jstring {
+    let seed = match get_string(env, seedAsHex) {
+        Ok(s) => s,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let net = match get_string(env, netAsStr) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let verifiable_credential_signing_key = get_verifiable_credential_signing_key_aux(
+        seed,
+        &net,
+        issuerIndex as u64,
+        issuerSubindex as u64,
+        verifiableCredentialIndex as u32,
+    )
+    .unwrap();
+
+    CryptoJniResult::Ok(verifiable_credential_signing_key).to_jstring(&env)
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `get_account_public_key` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifiableCredentialPublicKey(
+    env: JNIEnv,
+    _: JClass,
+    seedAsHex: JString,
+    netAsStr: JString,
+    issuerIndex: jlong,
+    issuerSubindex: jlong,
+    verifiableCredentialIndex: jlong,
+) -> jstring {
+    let seed = match get_string(env, seedAsHex) {
+        Ok(s) => s,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let net = match get_string(env, netAsStr) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let verifiable_credential_public_key = get_verifiable_credential_public_key_aux(
+        seed,
+        &net,
+        issuerIndex as u64,
+        issuerSubindex as u64,
+        verifiableCredentialIndex as u32,
+    )
+    .unwrap();
+
+    CryptoJniResult::Ok(verifiable_credential_public_key).to_jstring(&env)
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+/// The JNI wrapper for the `get_account_public_key` method.
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifiableCredentialBackupEncryptionKey(
+    env: JNIEnv,
+    _: JClass,
+    seedAsHex: JString,
+    netAsStr: JString,
+) -> jstring {
+    let seed = match get_string(env, seedAsHex) {
+        Ok(s) => s,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let net = match get_string(env, netAsStr) {
+        Ok(n) => n,
+        Err(err) => return AccountSigningKeyResult::Err(err).to_jstring(&env),
+    };
+
+    let verifiable_credential_backup_encryption_key =
+        get_verifiable_credential_backup_encryption_key_aux(seed, &net).unwrap();
+
+    CryptoJniResult::Ok(verifiable_credential_backup_encryption_key).to_jstring(&env)
 }
