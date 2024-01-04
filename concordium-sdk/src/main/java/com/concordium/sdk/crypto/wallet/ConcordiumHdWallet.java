@@ -42,12 +42,12 @@ public class ConcordiumHdWallet {
     }
 
     /**
-     * Create a Concordium hierachical deterministic wallet from a space separated
-     * seed phrase.
-     * 
-     * @param seedPhrase
-     * @param network
-     * @return
+     * Create a Concordium hierarchical deterministic wallet from a space separated
+     * seed phrase. It is in general safer to use the method that takes a list of strings
+     * as input as it is less error prone than using this method.
+     * @param seedPhrase the seed phrase with words separated by a single space
+     * @param network the network the wallet is for
+     * @return a wallet that can derive required Concordium wallet keys
      * @throws IOException
      * @throws MnemonicException
      */
@@ -57,13 +57,20 @@ public class ConcordiumHdWallet {
         return fromSeedPhrase(split, network);
     }
 
-    private static final String BIP39_ENGLISH_SHA256 = "ad90bf3beb7b0eb7e5acd74727dc0da96e0a280a258354e7293fb7e211ac03db";
-
-    public static ConcordiumHdWallet fromSeedPhrase(List<String> seedPhrase, Network network)
-            throws IOException, MnemonicException {
+    /**
+     * Create a Concordium hierarchical deterministic wallet from a seed phrase
+     * provided as a list of strings.
+     * @param seedPhrase the seed phrase with words separated by a single space
+     * @param network the network the wallet is for
+     * @return a wallet that can derive required Concordium wallet keys
+     * @throws IOException
+     * @throws MnemonicException
+     */
+    public static ConcordiumHdWallet fromSeedPhrase(List<String> seedPhrase, Network network) throws IOException, MnemonicException {
         // Validate whether the input seed phrase is valid or not.
         StringBuilder builder = new StringBuilder(English.wordlist);
         InputStream in = new ByteArrayInputStream(builder.toString().getBytes("UTF-8"));
+        String BIP39_ENGLISH_SHA256 = "ad90bf3beb7b0eb7e5acd74727dc0da96e0a280a258354e7293fb7e211ac03db";
         MnemonicCode mnemonicCode = new MnemonicCode(in, BIP39_ENGLISH_SHA256);
 
         // This throws an exception if the seed phrase is not valid.
@@ -77,6 +84,12 @@ public class ConcordiumHdWallet {
         return new ConcordiumHdWallet(sb.toString(), network);
     }
 
+    /**
+     * Create a Concordium hierarchical deterministic wallet from a seed.
+     * @param seedAsHex the seed encoded as a hex string. Must be 128 characters.
+     * @param network the network the wallet is for.
+     * @return a wallet that can derive required Concordium wallet keys
+     */
     public static ConcordiumHdWallet fromHex(String seedAsHex, Network network) {
         if (seedAsHex.length() != 128) {
             throw new IllegalArgumentException(
@@ -122,6 +135,13 @@ public class ConcordiumHdWallet {
         return result.getOk();
     }
 
+    /**
+     * Derives an account signing key. This is the key used to sign account transactions.
+     * @param identityProviderIndex the index of the identity provider. Must be a u32.
+     * @param identityIndex the index of the identity. Must be a u32.
+     * @param credentialCounter the credential number that the signing key is for. Must be a u32.
+     * @return an account signing key.
+     */
     public ED25519SecretKey getAccountSigningKey(long identityProviderIndex, long identityIndex, long credentialCounter) {
         checkU32(identityProviderIndex, identityIndex, credentialCounter);
 
@@ -129,19 +149,24 @@ public class ConcordiumHdWallet {
             return CryptoJniNative.getAccountSigningKey(seedAsHex, network, identityProviderIndex, identityIndex, credentialCounter);
         });
 
-
         return ED25519SecretKey.from(signingKey);
     }
 
+    /**
+     * Derives an account public key.
+     * @param identityProviderIndex the index of the identity provider. Must be a u32.
+     * @param identityIndex the index of the identity. Must be a u32.
+     * @param credentialCounter the credential number that the public key is for. Must be a u32.
+     * @return an account public key.
+     */
     public ED25519PublicKey getAccountPublicKey(long identityProviderIndex, long identityIndex, long credentialCounter) {
         checkU32(identityProviderIndex, identityIndex, credentialCounter);
 
-        String signingKey = getKeyResult((String seedAsHex, String network) -> {
+        String publicKey = getKeyResult((String seedAsHex, String network) -> {
             return CryptoJniNative.getAccountPublicKey(seedAsHex, network, identityProviderIndex, identityIndex, credentialCounter);
         });
 
-
-        return ED25519PublicKey.from(signingKey);
+        return ED25519PublicKey.from(publicKey);
     }
 
     public String getIdCredSec(long identityProviderIndex, long identityIndex) {

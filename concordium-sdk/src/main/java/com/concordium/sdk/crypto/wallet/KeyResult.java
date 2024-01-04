@@ -34,5 +34,4 @@ public class KeyResult {
             isSuccess = true;
         }
     }
-
 }
