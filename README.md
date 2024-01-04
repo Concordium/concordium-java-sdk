@@ -16,7 +16,7 @@ The Concordium Java SDK provides an interface to communicating with a Concordium
 # Build and usage
 To build the native library and put it into the correct folders all one has to do the following:
 
-1. Clone this repositry and remember to update submodules, for example when cloning via
+1. Clone this repository and remember to update git submodules, for example when cloning via
 ```bash
 git clone https://github.com/Concordium/concordium-java-sdk.git --recurse-submodules
 ```
@@ -71,7 +71,7 @@ The output will be a header file, the contents hereof must be matched appropriat
 ## Android
 To build the android AAR package, one has to do the following:
 
-1. Clone this repositry and remember to update submodules, for example when cloning via
+1. Clone this repository and remember to update git submodules, for example when cloning via
 ```bash
 git clone https://github.com/Concordium/concordium-java-sdk.git --recurse-submodules
 ```
