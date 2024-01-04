@@ -27,7 +27,7 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Make ubuntu native depencies
+    - name: Make ubuntu native dependencies
       run: make
 
     - name: Upload linux library
@@ -52,7 +52,7 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Make macos native depencies
+    - name: Make macos native dependencies
       run: make
       
     - name: Upload macos library
@@ -77,7 +77,7 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Make windows native depencies
+    - name: Make windows native dependencies
       run: cd crypto-jni && cargo build --release
       
     - name: Upload windows library
@@ -99,7 +99,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: recursive
-    - name: Make android native depencies
+    - name: Make android native dependencies
       run: make add-android-targets && make android
     # Builds and tests the sdk
     - name: Build and test android sdk
