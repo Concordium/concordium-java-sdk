@@ -1,7 +1,6 @@
 package com.concordium.sdk.responses.peerlist;
 
 import com.concordium.grpc.v2.PeersInfo;
-
 /**
  * Represents Catchup Status of a Node.
  */
@@ -32,7 +31,6 @@ public enum PeerCatchupStatus {
     PeerCatchupStatus(int value) {
         this.value = value;
     }
-
 
     /**
      * Parses the input {@link com.concordium.grpc.v2.PeersInfo.Peer.CatchupStatus}.
