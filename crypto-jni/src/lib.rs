@@ -895,7 +895,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getCredent
     netAsStr: JString,
     identityProviderIndex: jlong,
     identityIndex: jlong,
-    credentialCounter: jlong,
+    credentialCounter: jint,
     onChainCommitmentKey: JString,
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {

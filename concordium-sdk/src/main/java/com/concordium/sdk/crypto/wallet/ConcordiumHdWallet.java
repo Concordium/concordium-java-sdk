@@ -101,21 +101,39 @@ public class ConcordiumHdWallet {
         return new ConcordiumHdWallet(seedAsHex, network);
     }
 
-    private static long MAX_U32 = 4294967295l;
+    private enum UnsignedIntegerType {
+        U8,
+        U32,
+        U64;
+    }
 
-    /**
-     * Validates that any provided value is a valid uint32.
-     * @param values the list of values to validate as being uint32.
-     */
-    private void checkU32(long ...values) {
+    private void checkUnsignedIntegerValues(UnsignedIntegerType type, long ...values) {
+        long maxValue;
+        switch (type) {
+            case U8: 
+                maxValue = 255;
+                break;
+            case U32:
+                maxValue = 4294967295l;
+                break;
+            case U64:
+                // Note that a long does not allow for a full u64 as it is a i64.
+                // The types in the SDK would need to be updated to fully accomodate a u64,
+                // and at that point this should also be changed.
+                maxValue = Long.MAX_VALUE;
+                break;
+            default:
+                throw new IllegalArgumentException("Uknown unsigned integer type was provided");
+        }
+
         for (long value : values) {
-            if (value > MAX_U32 || value < 0) {
-                throw new IllegalArgumentException("The value must be a valid uint32 value but was " + value);
+            if (value > maxValue || value < 0) {
+                throw new IllegalArgumentException("The value " + value + " is not a valid " + type);
             }
         }
     }
 
-    public interface ExtractKey {
+    private interface ExtractKey {
         String getKey(String seedAsHex, String network);
      }
     
@@ -143,7 +161,7 @@ public class ConcordiumHdWallet {
      * @return an account signing key.
      */
     public ED25519SecretKey getAccountSigningKey(long identityProviderIndex, long identityIndex, long credentialCounter) {
-        checkU32(identityProviderIndex, identityIndex, credentialCounter);
+        checkUnsignedIntegerValues(UnsignedIntegerType.U32, identityProviderIndex, identityIndex, credentialCounter);
 
         String signingKey = getKeyResult((String seedAsHex, String network) -> {
             return CryptoJniNative.getAccountSigningKey(seedAsHex, network, identityProviderIndex, identityIndex, credentialCounter);
@@ -153,14 +171,14 @@ public class ConcordiumHdWallet {
     }
 
     /**
-     * Derives an account public key.
+     * Derives an account public key. This is the public key that matches the account signing key.
      * @param identityProviderIndex the index of the identity provider. Must be a u32.
      * @param identityIndex the index of the identity. Must be a u32.
      * @param credentialCounter the credential number that the public key is for. Must be a u32.
      * @return an account public key.
      */
     public ED25519PublicKey getAccountPublicKey(long identityProviderIndex, long identityIndex, long credentialCounter) {
-        checkU32(identityProviderIndex, identityIndex, credentialCounter);
+        checkUnsignedIntegerValues(UnsignedIntegerType.U32, identityProviderIndex, identityIndex, credentialCounter);
 
         String publicKey = getKeyResult((String seedAsHex, String network) -> {
             return CryptoJniNative.getAccountPublicKey(seedAsHex, network, identityProviderIndex, identityIndex, credentialCounter);
@@ -169,8 +187,14 @@ public class ConcordiumHdWallet {
         return ED25519PublicKey.from(publicKey);
     }
 
+    /**
+     * Derives id cred sec for a specific identity.
+     * @param identityProviderIndex the index of the identity provider. Must be a u32.
+     * @param identityIndex the index of the identity. Must be a u32.
+     * @return id cred sec encoded as a hex string
+     */
     public String getIdCredSec(long identityProviderIndex, long identityIndex) {
-        checkU32(identityProviderIndex, identityIndex);
+        checkUnsignedIntegerValues(UnsignedIntegerType.U32, identityProviderIndex, identityIndex);
 
         String idCredSec = getKeyResult((String seedAsHex, String network) -> {
             return CryptoJniNative.getIdCredSec(seedAsHex, network, identityProviderIndex, identityIndex);
@@ -179,8 +203,14 @@ public class ConcordiumHdWallet {
         return idCredSec;
     }
 
+    /**
+     * Derives the PRF key for a specific identity.
+     * @param identityProviderIndex the index of the identity provider. Must be a u32.
+     * @param identityIndex the index of the identity. Must be a u32.
+     * @return a PRF key encoded as a hex string
+     */
     public String getPrfKey(long identityProviderIndex, long identityIndex) {
-        checkU32(identityProviderIndex, identityIndex);
+        checkUnsignedIntegerValues(UnsignedIntegerType.U32, identityProviderIndex, identityIndex);
 
         String prfKey = getKeyResult((String seedAsHex, String network) -> {
             return CryptoJniNative.getPrfKey(seedAsHex, network, identityProviderIndex, identityIndex);
@@ -189,9 +219,18 @@ public class ConcordiumHdWallet {
         return prfKey;
     }
 
-    public String getCredentialId(long identityProviderIndex, long identityIndex, long credentialCounter, String commitmentKey) {
-        // TODO Credential counter has to be u8 here. Check that.
-        checkU32(identityProviderIndex, identityIndex, credentialCounter);
+    /**
+     * Gets the credential ID for a specific credential defined by the identity provider index,
+     * identity index and the credential counter.
+     * @param identityProviderIndex the index of the identity provider. Must be a u32.
+     * @param identityIndex the index of the identity. Must be a u32.
+     * @param credentialCounter the credential number of the credential to get the id for. Must be a u8.
+     * @param commitmentKey the on chain commitment key. This value can be retrieved from a node through its gRPC interface.
+     * @return the credential id
+     */
+    public String getCredentialId(long identityProviderIndex, long identityIndex, int credentialCounter, String commitmentKey) {
+        checkUnsignedIntegerValues(UnsignedIntegerType.U32, identityProviderIndex, identityIndex);
+        checkUnsignedIntegerValues(UnsignedIntegerType.U8, credentialCounter);
 
         String credentialId = getKeyResult((String seedAsHex, String network) -> {
             return CryptoJniNative.getCredentialId(seedAsHex, network, identityProviderIndex, identityIndex, credentialCounter, commitmentKey);
@@ -200,9 +239,14 @@ public class ConcordiumHdWallet {
         return credentialId;
     }
 
+    /**
+     * Derives the signature blinding randomness for a specific identity.
+     * @param identityProviderIndex the index of the identity provider. Must be a u32.
+     * @param identityIndex the index of the identity. Must be a u32.
+     * @return the signature blinding randomness as a hex encoded string
+     */
     public String getSignatureBlindingRandomness(long identityProviderIndex, long identityIndex) {
-        // TODO Credential counter has to be u8 here. Check that.
-        checkU32(identityProviderIndex, identityIndex);
+        checkUnsignedIntegerValues(UnsignedIntegerType.U32, identityProviderIndex, identityIndex);
 
         String blindingRandomness = getKeyResult((String seedAsHex, String network) -> {
             return CryptoJniNative.getSignatureBlindingRandomness(seedAsHex, network, identityProviderIndex, identityIndex);
@@ -211,9 +255,17 @@ public class ConcordiumHdWallet {
         return blindingRandomness;
     }
 
+    /**
+     * Derives the attribute commitment randomness for a specific attribute.
+     * @param identityProviderIndex the index of the identity provider. Must be a u32.
+     * @param identityIndex the index of the identity. Must be a u32.
+     * @param credentialCounter the credential number that the attribute is randomness is for. Must be a u32.
+     * @param attribute the attribute key index. Must be a u8.
+     * @return the signature blinding randomness as a hex encoded string
+     */
     public String getAttributeCommitmentRandomness(long identityProviderIndex, long identityIndex, long credentialCounter, int attribute) {
-        // TODO Credential counter has to be u8 here. Check that.
-        checkU32(identityProviderIndex, identityIndex);
+        checkUnsignedIntegerValues(UnsignedIntegerType.U32, identityProviderIndex, identityIndex, credentialCounter);
+        checkUnsignedIntegerValues(UnsignedIntegerType.U8, attribute);
 
         String attributeCommitmentRandomness = getKeyResult((String seedAsHex, String network) -> {
             return CryptoJniNative.getAttributeCommitmentRandomness(seedAsHex, network, identityProviderIndex, identityIndex, credentialCounter, attribute);
@@ -222,26 +274,52 @@ public class ConcordiumHdWallet {
         return attributeCommitmentRandomness;
     }
 
+    /**
+     * Derives a verifiable credential signing key.
+     * @param issuer the verifiable credential issuer contract
+     * @param verifiableCredentialIndex the index of the verifiable credential to derive a signing key for
+     * @return a verifiable credential signing key
+     */
     public ED25519SecretKey getVerifiableCredentialSigningKey(ContractAddress issuer, long verifiableCredentialIndex) {
-        checkU32(verifiableCredentialIndex);
+        long index = issuer.getIndex();
+        long subindex = issuer.getSubIndex();
+
+        checkUnsignedIntegerValues(UnsignedIntegerType.U64, index, subindex);
+        checkUnsignedIntegerValues(UnsignedIntegerType.U32, verifiableCredentialIndex);
 
         String verifiableCredentialSigningKey = getKeyResult((String seedAsHex, String network) -> {
-            return CryptoJniNative.getVerifiableCredentialSigningKey(seedAsHex, network, issuer.getIndex(), issuer.getSubIndex(), verifiableCredentialIndex);
+            return CryptoJniNative.getVerifiableCredentialSigningKey(seedAsHex, network, index, subindex, verifiableCredentialIndex);
         });
 
         return ED25519SecretKey.from(verifiableCredentialSigningKey);
     }
 
+    /**
+     * Derives a verifiable credential public key.
+     * @param issuer the verifiable credential issuer contract
+     * @param verifiableCredentialIndex the index of the verifiable credential to derive a public key for
+     * @return a verifiable credential public key
+     */
     public ED25519PublicKey getVerifiableCredentialPublicKey(ContractAddress issuer, long verifiableCredentialIndex) {
-        checkU32(verifiableCredentialIndex);
+        long index = issuer.getIndex();
+        long subindex = issuer.getSubIndex();
+
+        checkUnsignedIntegerValues(UnsignedIntegerType.U64, index, subindex);
+        checkUnsignedIntegerValues(UnsignedIntegerType.U32, verifiableCredentialIndex);
 
         String verifiableCredentialPublicKey = getKeyResult((String seedAsHex, String network) -> {
-            return CryptoJniNative.getVerifiableCredentialPublicKey(seedAsHex, network, issuer.getIndex(), issuer.getSubIndex(), verifiableCredentialIndex);
+            return CryptoJniNative.getVerifiableCredentialPublicKey(seedAsHex, network, index, subindex, verifiableCredentialIndex);
         });
 
         return ED25519PublicKey.from(verifiableCredentialPublicKey);
     }
 
+    /**
+     * Derives the verifiable credential backup encryption key. This key should be used to encrypt
+     * the backup file of verifiable credentials. The key is derived from the seed phrase so that
+     * a user can access the backup file when only holding the seed phrase.
+     * @return the verifiable credential backup encryption key
+     */
     public String getVerifiableCredentialBackupEncryptionKey() {
         String verifiableCredentialEncryptionKey = getKeyResult((String seedAsHex, String network) -> {
             return CryptoJniNative.getVerifiableCredentialBackupEncryptionKey(seedAsHex, network);
