@@ -14,7 +14,6 @@ import com.concordium.sdk.crypto.CryptoJniNative;
 import com.concordium.sdk.crypto.NativeResolver;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
-import com.concordium.sdk.crypto.wallet.wordlists.English;
 import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.types.ContractAddress;
@@ -68,7 +67,7 @@ public class ConcordiumHdWallet {
      */
     public static ConcordiumHdWallet fromSeedPhrase(List<String> seedPhrase, Network network) throws IOException, MnemonicException {
         // Validate whether the input seed phrase is valid or not.
-        StringBuilder builder = new StringBuilder(English.wordlist);
+        StringBuilder builder = new StringBuilder(WordLists.ENGLISH);
         InputStream in = new ByteArrayInputStream(builder.toString().getBytes("UTF-8"));
         String BIP39_ENGLISH_SHA256 = "ad90bf3beb7b0eb7e5acd74727dc0da96e0a280a258354e7293fb7e211ac03db";
         MnemonicCode mnemonicCode = new MnemonicCode(in, BIP39_ENGLISH_SHA256);
@@ -135,7 +134,7 @@ public class ConcordiumHdWallet {
 
     private interface ExtractKey {
         String getKey(String seedAsHex, String network);
-     }
+    }
     
     private String getKeyResult(ExtractKey extractor) {
         KeyResult result = null;

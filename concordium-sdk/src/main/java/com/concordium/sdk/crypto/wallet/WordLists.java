@@ -1,12 +1,13 @@
-package com.concordium.sdk.crypto.wallet.wordlists;
+package com.concordium.sdk.crypto.wallet;
 
-/**
- * The English BIP39 wordlist as taken from https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt.
- * This wordlist is in code as it is supplied as a resource file in the BIP39 library we are using,
- * which does not work out of the box on Android.
- */
-public class English {
-    public static String wordlist = "abandon\n" + //
+public class WordLists {
+    /*
+     * The English BIP39 wordlist as taken from
+     * https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt.
+     * This wordlist is in code as it is supplied as a resource file in the BIP39
+     * library we are using, which does not work out of the box on Android.
+     */
+    public static String ENGLISH = "abandon\n" + //
             "ability\n" + //
             "able\n" + //
             "about\n" + //
