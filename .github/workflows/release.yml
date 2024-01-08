@@ -1,4 +1,5 @@
 # Workflow for release a jar file with all native dependencies embedded.
+# The Workflow also releases a AAR file with the native dependencies build for Android.
 # The workflow runs whenever a release is published.
 
 name: Release
@@ -111,7 +112,7 @@ jobs:
         path: ./concordium-android-sdk/target/concordium-android-sdk.aar
 
   build-and-release-jar:
-    needs: [build-native-ubuntu, build-native-macos, build-native-windows]
+    needs: [build-native-ubuntu, build-native-macos, build-native-windows, build-aar-library]
     # Use fixed OS version because we install packages on the system.
     runs-on: ubuntu-22.04
     environment: release

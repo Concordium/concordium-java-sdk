@@ -26,7 +26,7 @@ all:
 	cp $(PATH_CRYPTO_TARGET)release/crypto_jni.dll $(PATH_JAVA_NATIVE_RESOURCES)
 endif
 
-MIN_ANDROID_VER := "27"
+MIN_ANDROID_VER := "26"
 
 define android-command
 	mkdir -p $(PATH_ANDROID_NATIVE_RESOURCES)$(2)
