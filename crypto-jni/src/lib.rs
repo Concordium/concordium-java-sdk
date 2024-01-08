@@ -28,12 +28,15 @@ use std::{
     i8,
     str::Utf8Error,
 };
-use wallet_library::wallet::{
-    get_account_public_key_aux, get_account_signing_key_aux,
-    get_attribute_commitment_randomness_aux, get_credential_id_aux, get_id_cred_sec_aux,
-    get_prf_key_aux, get_signature_blinding_randomness_aux,
-    get_verifiable_credential_backup_encryption_key_aux, get_verifiable_credential_public_key_aux,
-    get_verifiable_credential_signing_key_aux,
+use wallet_library::{
+    identity::create_id_request_with_keys_v1_aux,
+    wallet::{
+        get_account_public_key_aux, get_account_signing_key_aux,
+        get_attribute_commitment_randomness_aux, get_credential_id_aux, get_id_cred_sec_aux,
+        get_prf_key_aux, get_signature_blinding_randomness_aux,
+        get_verifiable_credential_backup_encryption_key_aux,
+        get_verifiable_credential_public_key_aux, get_verifiable_credential_signing_key_aux,
+    },
 };
 
 const SUCCESS: i32 = 0;
@@ -1113,4 +1116,33 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifia
         };
 
     CryptoJniResult::Ok(verifiable_credential_backup_encryption_key).to_jstring(&env)
+}
+
+/// The JNI wrapper for creating an identity creation request.
+/// * `input` - the JSON string of
+///   [`wallet_library::identity::IdRequestInputWithKeys`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIdRequestWithKeysV1(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+    };
+
+    let id_request_input: wallet_library::identity::IdRequestInputWithKeys =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return KeyResult::from(err).to_jstring(&env),
+        };
+
+    let request = match create_id_request_with_keys_v1_aux(id_request_input) {
+        Ok(r) => r,
+        Err(err) => return KeyResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(request).to_jstring(&env)
 }

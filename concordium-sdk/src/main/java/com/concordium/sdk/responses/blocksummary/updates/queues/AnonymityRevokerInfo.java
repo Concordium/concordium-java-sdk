@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.ArInfo;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.types.UInt32;
 import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Anonymity revoker info
@@ -24,6 +25,7 @@ public final class AnonymityRevokerInfo {
 
     private final ElgamalPublicKey anonymityRevokerPublicKey;
     @Builder
+    @Jacksonized
     public AnonymityRevokerInfo(int arIdentity, Description description, ElgamalPublicKey arPublicKey) {
         this.arIdentity = UInt32.from(arIdentity);
         this.description = description;

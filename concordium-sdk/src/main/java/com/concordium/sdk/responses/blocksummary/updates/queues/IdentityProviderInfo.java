@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Identity provider info
@@ -23,6 +24,7 @@ public final class IdentityProviderInfo {
     private final PSPublicKey ipVerifyKey;
 
     @Builder
+    @Jacksonized
     public IdentityProviderInfo(int ipIdentity,
                                 Description description,
                                 ED25519PublicKey ipCdiVerifyKey,
