@@ -1,12 +1,12 @@
 package com.concordium.sdk.crypto.wallet;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@Builder
 public class IdentityRequestInput {
 
     private IdentityRequestCommon common;    

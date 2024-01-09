@@ -1,5 +1,7 @@
 package com.concordium.sdk.crypto.wallet;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -12,7 +14,6 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.serializing.JsonMapper;
-import com.concordium.sdk.types.UInt32;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
@@ -27,52 +28,48 @@ public class IdentityTest {
     }
 
     private CryptographicParameters getCryptographicParameters() throws Exception {
-        return JsonMapper.INSTANCE.readValue(readFile("./src/test/testresources/wallet/global.json", Charset.forName("UTF-8")), CryptographicParameters.class);
+        return JsonMapper.INSTANCE.readValue(
+                readFile("./src/test/testresources/wallet/global.json", Charset.forName("UTF-8")),
+                CryptographicParameters.class);
     }
 
-    private IdentityProviderInfo gIdentityProviderInfo() throws Exception {
-        return JsonMapper.INSTANCE.readValue(readFile("./src/test/testresources/wallet/ip_info.json", Charset.forName("UTF-8")), IdentityProviderInfo.class);
+    private IdentityProviderInfo getIdentityProviderInfo() throws Exception {
+        return JsonMapper.INSTANCE.readValue(
+                readFile("./src/test/testresources/wallet/ip_info.json", Charset.forName("UTF-8")),
+                IdentityProviderInfo.class);
     }
 
     private Map<String, AnonymityRevokerInfo> getAnonymityRevokerInfos() throws Exception {
-        MapType mapType = TypeFactory.defaultInstance().constructMapType(Map.class, String.class, AnonymityRevokerInfo.class);
-        return JsonMapper.INSTANCE.readValue(readFile("./src/test/testresources/wallet/ars_infos.json", Charset.forName("UTF-8")), mapType);
+        MapType mapType = TypeFactory.defaultInstance().constructMapType(Map.class, String.class,
+                AnonymityRevokerInfo.class);
+        return JsonMapper.INSTANCE.readValue(
+                readFile("./src/test/testresources/wallet/ars_infos.json", Charset.forName("UTF-8")), mapType);
     }
 
     @Test
     public void testCreatingIdentityRequest() throws Exception {
-        IdentityRequestInput input = new IdentityRequestInput();
-
-        IdentityRequestCommon common = new IdentityRequestCommon();
-        common.setGlobalContext(getCryptographicParameters());
-        common.setIpInfo(gIdentityProviderInfo());
-        common.setArsInfos(getAnonymityRevokerInfos());
-        common.setArThreshold(2);
-        input.setCommon(common);
+        IdentityRequestCommon common = IdentityRequestCommon.builder()
+                .globalContext(getCryptographicParameters())
+                .ipInfo(getIdentityProviderInfo())
+                .arsInfos(getAnonymityRevokerInfos())
+                .arThreshold(2).build();
 
         ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Testnet);
         String idCredSec = wallet.getIdCredSec(0, 0);
         String prfKey = wallet.getPrfKey(0, 0);
         String blindingRandomness = wallet.getSignatureBlindingRandomness(0, 0);
-    
-        input.setIdCredSec(idCredSec);
-        input.setPrfKey(prfKey);
-        input.setBlindingRandomness(blindingRandomness);
 
-        UInt32 test = UInt32.from(51);
-        System.out.println(test);
-
-        Map<String, AnonymityRevokerInfo> infos = getAnonymityRevokerInfos();
-        System.out.println(JsonMapper.INSTANCE.writeValueAsString(infos));
-
-
-
+        IdentityRequestInput input = IdentityRequestInput.builder()
+                .common(common)
+                .idCredSec(idCredSec)
+                .prfKey(prfKey)
+                .blindingRandomness(blindingRandomness)
+                .build();
 
         String result = Identity.createIdentityRequest(input);
 
-    
-
-    
+        assertTrue(result.contains(
+                "\"idCredPub\":\"b23e360b21cb8baad1fb1f9a593d1115fc678cb9b7c1a5b5631f82e088092d79d34b6a6c8520c06c41002a666adf792f\""));
     }
 
 }
