@@ -4,10 +4,13 @@ import com.concordium.grpc.v2.IpInfo;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
 import com.concordium.sdk.types.UInt32;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Identity provider info
@@ -18,12 +21,15 @@ import lombok.ToString;
 public final class IdentityProviderInfo {
 
     private final UInt32 ipIdentity;
+    @JsonProperty("ipDescription")
     private final Description description;
     private final ED25519PublicKey ipCdiVerifyKey;
     private final PSPublicKey ipVerifyKey;
 
     @Builder
+    @Jacksonized
     public IdentityProviderInfo(int ipIdentity,
+                                @JsonProperty("ipDescription")
                                 Description description,
                                 ED25519PublicKey ipCdiVerifyKey,
                                 PSPublicKey ipVerifyKey) {
