@@ -11,8 +11,6 @@ public class Identity {
         StringResult result = null;
         try {
             String jsonStr = CryptoJniNative.createIdRequestWithKeysV1(JsonMapper.INSTANCE.writeValueAsString(input));
-
-            // TODO Do not use key result, or re-name it to StringResult or something more generic.
             result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
         } catch (JsonProcessingException e) { 
             throw new RuntimeException(e);
