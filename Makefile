@@ -26,7 +26,7 @@ all:
 	cp $(PATH_CRYPTO_TARGET)release/crypto_jni.dll $(PATH_JAVA_NATIVE_RESOURCES)
 endif
 
-MIN_ANDROID_VER := "29"
+MIN_ANDROID_VER := "26"
 
 define android-command
 	mkdir -p $(PATH_ANDROID_NATIVE_RESOURCES)$(2)
@@ -35,6 +35,7 @@ define android-command
 endef
 
 add-android-targets:
+	cargo install --version 3.4.0 cargo-ndk --locked
 	rustup target add aarch64-linux-android
 	rustup target add armv7-linux-androideabi
 	rustup target add i686-linux-android

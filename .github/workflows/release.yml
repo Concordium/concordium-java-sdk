@@ -1,4 +1,5 @@
 # Workflow for release a jar file with all native dependencies embedded.
+# The Workflow also releases a AAR file with the native dependencies build for Android.
 # The workflow runs whenever a release is published.
 
 name: Release
@@ -27,7 +28,7 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Make ubuntu native depencies
+    - name: Make ubuntu native dependencies
       run: make
 
     - name: Upload linux library
@@ -52,7 +53,7 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Make macos native depencies
+    - name: Make macos native dependencies
       run: make
       
     - name: Upload macos library
@@ -77,7 +78,7 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Make windows native depencies
+    - name: Make windows native dependencies
       run: cd crypto-jni && cargo build --release
       
     - name: Upload windows library
@@ -99,7 +100,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: recursive
-    - name: Make android native depencies
+    - name: Make android native dependencies
       run: make add-android-targets && make android
     # Builds and tests the sdk
     - name: Build and test android sdk
@@ -111,7 +112,7 @@ jobs:
         path: ./concordium-android-sdk/target/concordium-android-sdk.aar
 
   build-and-release-jar:
-    needs: [build-native-ubuntu, build-native-macos, build-native-windows]
+    needs: [build-native-ubuntu, build-native-macos, build-native-windows, build-aar-library]
     # Use fixed OS version because we install packages on the system.
     runs-on: ubuntu-22.04
     environment: release

@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+ - Purge remaining usages of V1 GRPC API.
 
 - Added support for android through an AAR artifact.
 

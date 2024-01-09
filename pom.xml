@@ -11,5 +11,6 @@
     <modules>
         <module>concordium-sdk</module>
         <module>concordium-android-sdk</module>
+        <module>concordium-sdk-examples</module>
     </modules>
 </project>
