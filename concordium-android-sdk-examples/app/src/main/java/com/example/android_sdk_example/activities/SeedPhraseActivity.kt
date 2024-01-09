@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
@@ -21,12 +22,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import cash.z.ecc.android.bip39.Mnemonics
 import com.example.android_sdk_example.ui.theme.AndroidsdkexampleTheme
 
 // TODO Check SeedPhrase is Valid
+import cash.z.ecc.android.bip39.Mnemonics.MnemonicCode
 
 class SeedPhraseActivity : ComponentActivity() {
     fun submit(phrase: String, ed: SharedPreferences.Editor) {
+
         // Save seed phrase in SharedPreferences
         ed.putString("seed_phrase", phrase)
         ed.commit()
@@ -49,9 +53,20 @@ class SeedPhraseActivity : ComponentActivity() {
     }
 }
 
+fun validatePhrase(phrase: String): Boolean {
+    println("Checking Phrase")
+    return try {
+        MnemonicCode(phrase.toCharArray()).validate()
+        true;
+    } catch (e: Exception) {
+        false;
+    }
+}
+
 @Composable
 fun SeedPhraseView(onSubmit: (phrase: String) -> Unit) {
     var phrase by remember { mutableStateOf("") }
+    var validPhrase = remember(phrase) { validatePhrase(phrase) }
 
     AndroidsdkexampleTheme {
         Column {
@@ -60,7 +75,7 @@ fun SeedPhraseView(onSubmit: (phrase: String) -> Unit) {
                 onValueChange = { phrase = it },
                 label = { Text("Enter your seed phrase") }
             )
-            Button(onClick = { onSubmit(phrase) }) {
+            Button(onClick = { onSubmit(phrase) }, enabled = validPhrase) {
                 Text(text = "Submit")
             }
         }
