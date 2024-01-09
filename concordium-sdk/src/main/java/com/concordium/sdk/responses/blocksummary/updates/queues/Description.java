@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.blocksummary.updates.queues;
 
 import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * A description contains meta information about an {@link IdentityProviderInfo}
@@ -10,10 +11,9 @@ import lombok.*;
 @EqualsAndHashCode
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Jacksonized
 public class Description {
-    private String name;
-    private String url;
-    private String description;
+    private final String name;
+    private final String url;
+    private final String description;
 }
