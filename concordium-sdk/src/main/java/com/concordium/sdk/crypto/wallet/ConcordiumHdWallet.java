@@ -137,10 +137,10 @@ public class ConcordiumHdWallet {
     }
     
     private String getKeyResult(ExtractKey extractor) {
-        KeyResult result = null;
+        StringResult result = null;
         try {
             String jsonStr = extractor.getKey(this.seedAsHex, this.network.getValue());
-            result = JsonMapper.INSTANCE.readValue(jsonStr, KeyResult.class);
+            result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
