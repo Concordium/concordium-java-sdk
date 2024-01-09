@@ -41,12 +41,14 @@ class SeedPhraseActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val mPrefs = getSharedPreferences(localClassName, MODE_PRIVATE)
+        val mPrefs = getSharedPreferences("EXAMPLE", MODE_PRIVATE)
+        val seedPhrase = mPrefs.getString("seed_phrase", "");
+
         setContent {
             AndroidsdkexampleTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    SeedPhraseView(onSubmit = { submit(it, mPrefs.edit()) })
+                    SeedPhraseView(seedPhrase ?: "", onSubmit = { submit(it, mPrefs.edit()) })
                 }
             }
         }
@@ -54,7 +56,6 @@ class SeedPhraseActivity : ComponentActivity() {
 }
 
 fun validatePhrase(phrase: String): Boolean {
-    println("Checking Phrase")
     return try {
         MnemonicCode(phrase.toCharArray()).validate()
         true;
@@ -64,8 +65,8 @@ fun validatePhrase(phrase: String): Boolean {
 }
 
 @Composable
-fun SeedPhraseView(onSubmit: (phrase: String) -> Unit) {
-    var phrase by remember { mutableStateOf("") }
+fun SeedPhraseView(initialPhrase: String, onSubmit: (phrase: String) -> Unit) {
+    var phrase by remember { mutableStateOf<String>(initialPhrase) }
     var validPhrase = remember(phrase) { validatePhrase(phrase) }
 
     AndroidsdkexampleTheme {
@@ -86,5 +87,5 @@ fun SeedPhraseView(onSubmit: (phrase: String) -> Unit) {
 @Composable
 fun SeedPhraseActivityPreview() {
     val context = LocalContext.current
-    SeedPhraseView(onSubmit = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() })
+    SeedPhraseView("",onSubmit = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() })
 }

@@ -52,6 +52,7 @@ dependencies {
     implementation("io.grpc:grpc-protobuf:1.40.1")
     implementation("io.grpc:grpc-stub:1.60.0")
     implementation(files("libs/concordium-android-sdk.aar"))
+    implementation("androidx.browser:browser:1.7.0")
     compileOnly("org.apache.tomcat:annotations-api:6.0.53") // necessary for Java 9+
     implementation ("com.fasterxml.jackson.core:jackson-core:2.10.1")
     implementation ("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1")
@@ -78,4 +79,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("cash.z.ecc.android:kotlin-bip39:1.0.7")
+    implementation("commons-codec:commons-codec:1.16.0")
+    implementation("org.bitcoinj:bitcoinj-core:0.16.2") {
+        exclude(group="com.google.protobuf")
+    }
 }

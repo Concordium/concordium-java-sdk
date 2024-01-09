@@ -38,7 +38,7 @@ class IdentityActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val mPrefs = getSharedPreferences(localClassName, ComponentActivity.MODE_PRIVATE)
+        val mPrefs = getSharedPreferences("EXAMPLE", ComponentActivity.MODE_PRIVATE)
         val seedPhrase = mPrefs.getString("seed_phrase", "");
         val identity = getIdentity()
 

@@ -74,7 +74,7 @@ class AccountActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val mPrefs = getSharedPreferences(localClassName, ComponentActivity.MODE_PRIVATE)
+        val mPrefs = getSharedPreferences("EXAMPLE", ComponentActivity.MODE_PRIVATE)
         val address = mPrefs.getString("account_address", "");
         // val seedPhrase = mPrefs.getString("seed_phrase", "");
         val privateKey = "key" // TODO get actual key with SeedPhrase

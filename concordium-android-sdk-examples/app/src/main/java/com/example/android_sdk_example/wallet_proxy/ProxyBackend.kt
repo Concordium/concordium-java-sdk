@@ -1,5 +1,6 @@
 package com.example.android_sdk_example.wallet_proxy
 
+import com.concordium.sdk.responses.blocksummary.updates.queues.Description
 import java.io.Serializable
 import retrofit2.Call
 import retrofit2.http.*
@@ -40,25 +41,13 @@ data class IdentityProviderMetaData(
 
 data class IdentityProviderInfo(
     val ipIdentity: Int,
-    val ipDescription: IdentityProviderDescription,
+    val ipDescription: Description,
     val ipVerifyKey: String,
     val ipCdiVerifyKey: String
-) : Serializable
-
-data class IdentityProviderDescription(
-    val description: String,
-    val name: String,
-    val url: String
 ) : Serializable
 
 data class ArsInfo(
     val arIdentity: Int,
     val arPublicKey: String,
-    val arDescription: ArDescription
-) : Serializable
-
-data class ArDescription(
-    val url: String,
-    val name: String,
-    val description: String
+    val arDescription: Description
 ) : Serializable
