@@ -123,4 +123,6 @@ public class CryptoJniNative {
     
     public static native String createIdentityRequestV1(String input);
     public static native String createIdentityRecoveryRequest(String input);
+
+    public static native String createUnsignedCredentialV1(String input);
 }

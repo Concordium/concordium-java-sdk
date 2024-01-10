@@ -29,6 +29,7 @@ use std::{
     str::Utf8Error,
 };
 use wallet_library::{
+    credential::create_unsigned_credential_v1_aux,
     identity::{create_identity_object_request_v1_aux, create_identity_recovery_request_aux},
     wallet::{
         get_account_public_key_aux, get_account_signing_key_aux,
@@ -1169,6 +1170,35 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIden
         };
 
     let request = match create_identity_recovery_request_aux(id_recovery_request_input) {
+        Ok(r) => r,
+        Err(err) => return KeyResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(request).to_jstring(&env)
+}
+
+/// The JNI wrapper for creating a credential deployment transaction.
+/// * `input` - the JSON string of
+///   [`wallet_library::credential::UnsignedCredentialInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createUnsignedCredentialV1(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+    };
+
+    let unsigned_credential_input: wallet_library::credential::UnsignedCredentialInput =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return KeyResult::from(err).to_jstring(&env),
+        };
+
+    let request = match create_unsigned_credential_v1_aux(unsigned_credential_input) {
         Ok(r) => r,
         Err(err) => return KeyResult::from(err).to_jstring(&env),
     };

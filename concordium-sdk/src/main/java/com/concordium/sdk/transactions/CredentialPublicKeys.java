@@ -1,6 +1,8 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
@@ -50,6 +52,7 @@ public class CredentialPublicKeys {
         return buffer.array();
     }
 
+    @JsonIgnore
     public byte[] getBytes() {
         val keysLenBytes = keys.keySet().size();
         int keyBufferSize = TransactionType.BYTES;
