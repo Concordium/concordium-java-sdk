@@ -27,8 +27,19 @@
         </activity>
         <activity android:name="com.example.android_sdk_example.activities.AccountActivity" />
         <activity android:name="com.example.android_sdk_example.activities.IdentityActivity" />
-        <activity android:name="com.example.android_sdk_example.activities.IssueIdentityActivity" />
         <activity android:name="com.example.android_sdk_example.activities.SeedPhraseActivity" />
+        <activity android:name="com.example.android_sdk_example.activities.IssueIdentityActivity"
+            android:exported="true">
+            <intent-filter android:label="schemefilter">
+            <action android:name="android.intent.action.VIEW" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data
+                android:host="identity-issuer"
+                android:scheme="concordiumwallet-example" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

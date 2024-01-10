@@ -1,6 +1,8 @@
 package com.example.android_sdk_example.activities
 
 import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -56,6 +58,8 @@ import kotlinx.coroutines.launch
 import org.bitcoinj.crypto.MnemonicCode
 
 class IssueIdentityActivity : ComponentActivity() {
+    val CALLBACK_URL = "concordiumwallet-example://identity-issuer/callback"
+
     @OptIn(ExperimentalStdlibApi::class)
     private fun createRequest(seed: String, provider: IdentityProvider, global: CryptographicParameters): String {
 
@@ -108,7 +112,6 @@ class IssueIdentityActivity : ComponentActivity() {
         val request = createRequest(seed, provider, global)
         val baseUrl = provider.metadata.issuanceStart
         val delimiter = if (baseUrl.contains('?')) "&" else "?"
-        val CALLBACK_URL = "concordiumwallet-example://identity-issuer/callback"
         val url = "${baseUrl}${delimiter}response_type=code&redirect_uri=$CALLBACK_URL&scope=identity&state=$request"
         launchChromeCustomTab(url)
         return
@@ -120,7 +123,11 @@ class IssueIdentityActivity : ComponentActivity() {
         val seedPhrase = mPrefs.getString("seed_phrase", "");
         val global = ConcordiumClientService.getClient().getCryptographicParameters(BlockQuery.BEST);
 
-        println("1" + seedPhrase)
+        intent.data?.let {
+            println(it)
+            handleCodeUri(it)
+        }
+
         setContent {
             AndroidsdkexampleTheme {
                 // A surface container using the 'background' color from the theme
@@ -129,6 +136,30 @@ class IssueIdentityActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun handleCodeUri(uri: Uri) {
+        if (uri.toString().startsWith(CALLBACK_URL)) {
+            val fragment = uri.fragment
+            val fragmentParts = fragment?.split("=")
+            if (!fragmentParts.isNullOrEmpty() && fragmentParts[0] == "code_uri") {
+                val ed = getSharedPreferences("EXAMPLE", MODE_PRIVATE).edit();
+                val codeUri = uri.toString().split("#code_uri=").last();
+                ed.putString("identity_url", codeUri);
+                ed.commit()
+
+            } else if (!fragmentParts.isNullOrEmpty() && fragmentParts[0] == "token") {
+                val identity = fragmentParts[1]
+                // TODO Handle this case?
+            } else if (!fragmentParts.isNullOrEmpty() && fragmentParts[0] == "error") {
+                Toast.makeText(this,"Identity creation failed: " + fragmentParts[1], Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.data?.let { handleCodeUri(it) }
     }
 }
 
