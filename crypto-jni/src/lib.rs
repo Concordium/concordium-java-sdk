@@ -29,7 +29,7 @@ use std::{
     str::Utf8Error,
 };
 use wallet_library::{
-    identity::create_identity_object_request_v1_aux,
+    identity::{create_identity_object_request_v1_aux, create_identity_recovery_request_aux},
     wallet::{
         get_account_public_key_aux, get_account_signing_key_aux,
         get_attribute_commitment_randomness_aux, get_credential_id_aux, get_id_cred_sec_aux,
@@ -1120,7 +1120,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifia
 
 /// The JNI wrapper for creating an identity creation request.
 /// * `input` - the JSON string of
-///   [`wallet_library::identity::IdRequestInputWithKeys`]
+///   [`wallet_library::identity::IdentityObjectRequestInput`]
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIdentityRequestV1(
@@ -1140,6 +1140,35 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIden
         };
 
     let request = match create_identity_object_request_v1_aux(id_request_input) {
+        Ok(r) => r,
+        Err(err) => return KeyResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(request).to_jstring(&env)
+}
+
+/// The JNI wrapper for creating an identity recovery request.
+/// * `input` - the JSON string of
+///   [`wallet_library::identity::IdentityRecoveryRequestInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIdentityRecoveryRequest(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+    };
+
+    let id_recovery_request_input: wallet_library::identity::IdentityRecoveryRequestInput =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return KeyResult::from(err).to_jstring(&env),
+        };
+
+    let request = match create_identity_recovery_request_aux(id_recovery_request_input) {
         Ok(r) => r,
         Err(err) => return KeyResult::from(err).to_jstring(&env),
     };

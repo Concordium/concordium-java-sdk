@@ -24,4 +24,3 @@ public class IdentityRequestInput {
     private String blindingRandomness;
 
 }
-
