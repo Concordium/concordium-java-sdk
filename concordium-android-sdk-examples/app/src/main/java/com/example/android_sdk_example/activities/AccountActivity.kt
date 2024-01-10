@@ -23,8 +23,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.concordium.sdk.ClientV2
+import cash.z.ecc.android.bip39.Mnemonics
+import cash.z.ecc.android.bip39.toSeed
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey
+import com.concordium.sdk.crypto.wallet.ConcordiumHdWallet
+import com.concordium.sdk.crypto.wallet.Network
 import com.concordium.sdk.requests.AccountQuery
 import com.concordium.sdk.requests.BlockQuery
 import com.concordium.sdk.transactions.AccountNonce
@@ -36,13 +39,13 @@ import com.concordium.sdk.transactions.TransactionFactory
 import com.concordium.sdk.transactions.TransactionSigner
 import com.concordium.sdk.types.AccountAddress
 import com.example.android_sdk_example.ConcordiumClientService
+import com.example.android_sdk_example.Storage
 import com.example.android_sdk_example.ui.theme.AndroidsdkexampleTheme
-import java.security.PrivateKey
 
 
 class AccountActivity : ComponentActivity() {
 
-    private fun sendTransfer(senderAddress: String, receiverAddress: String, microCCDAmount: Long, privateKey: String): String {
+    private fun sendTransfer(senderAddress: String, receiverAddress: String, microCCDAmount: Long, privateKey: ED25519SecretKey): String {
         val sender = AccountAddress.from(senderAddress)
         val receiver = AccountAddress.from(receiverAddress)
         val amount = CCDAmount.fromMicro(microCCDAmount)
@@ -51,8 +54,7 @@ class AccountActivity : ComponentActivity() {
         val signer: TransactionSigner = TransactionSigner.from(
             SignerEntry.from(
                 Index.from(0), Index.from(0),
-                ED25519SecretKey
-                    .from(privateKey)
+                privateKey
             )
         )
 
@@ -72,12 +74,16 @@ class AccountActivity : ComponentActivity() {
         return transactionHash.asHex()
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val mPrefs = getSharedPreferences("EXAMPLE", ComponentActivity.MODE_PRIVATE)
-        val address = mPrefs.getString("account_address", "");
-        // val seedPhrase = mPrefs.getString("seed_phrase", "");
-        val privateKey = "key" // TODO get actual key with SeedPhrase
+        val storage = Storage(getSharedPreferences("EXAMPLE", ComponentActivity.MODE_PRIVATE))
+        val address = storage.accountAddress.get()
+        val seedPhrase = storage.seedPhrase.get()
+        val providerIndex = storage.identityProviderIndex.get()
+        val seedAsHex = Mnemonics.MnemonicCode(seedPhrase!!.toCharArray()).toSeed().toHexString()
+        val wallet: ConcordiumHdWallet = ConcordiumHdWallet.fromHex(seedAsHex, Network.Mainnet)
+        val privateKey = wallet.getAccountSigningKey(providerIndex?.toLong()!!, 0, 0)
 
         setContent {
             AndroidsdkexampleTheme {

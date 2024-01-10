@@ -1,27 +1,18 @@
 package com.example.android_sdk_example.activities
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
 import cash.z.ecc.android.bip39.Mnemonics
 import cash.z.ecc.android.bip39.toSeed
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey
@@ -46,25 +36,22 @@ import com.concordium.sdk.crypto.wallet.Network
 import com.concordium.sdk.requests.BlockQuery
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo
-import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo.IdentityProviderInfoBuilder
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters
 import com.example.android_sdk_example.ConcordiumClientService
 import com.example.android_sdk_example.ConcordiumWalletProxyService
+import com.example.android_sdk_example.Storage
+import com.example.android_sdk_example.ui.Menu
 import com.example.android_sdk_example.ui.theme.AndroidsdkexampleTheme
 import com.example.android_sdk_example.wallet_proxy.IdentityProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.bitcoinj.crypto.MnemonicCode
 
 class IssueIdentityActivity : ComponentActivity() {
     val CALLBACK_URL = "concordiumwallet-example://identity-issuer/callback"
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun createRequest(seed: String, provider: IdentityProvider, global: CryptographicParameters): String {
-
-        println("test")
-        println(seed)
         val ipInfo = IdentityProviderInfo.builder()
             .ipIdentity(provider.ipInfo.ipIdentity)
             .ipVerifyKey(PSPublicKey.from(provider.ipInfo.ipVerifyKey))
@@ -86,11 +73,13 @@ class IssueIdentityActivity : ComponentActivity() {
             .arThreshold(2).build()
 
         val seedAsHex = Mnemonics.MnemonicCode(seed.toCharArray()).toSeed().toHexString()
-        println(seedAsHex)
         val wallet: ConcordiumHdWallet = ConcordiumHdWallet.fromHex(seedAsHex, Network.Mainnet)
-        val idCredSec: String = wallet.getIdCredSec(0, 0)
-        val prfKey: String = wallet.getPrfKey(0, 0)
-        val blindingRandomness: String = wallet.getSignatureBlindingRandomness(0, 0)
+        val providerIndex: Long = provider.ipInfo.ipIdentity.toLong()
+        // In a real wallet this would not be hardcoded, to allow multiple identities from the same provider
+        val identityIndex: Long = 0
+        val idCredSec: String = wallet.getIdCredSec(providerIndex, identityIndex)
+        val prfKey: String = wallet.getPrfKey(providerIndex, identityIndex)
+        val blindingRandomness: String = wallet.getSignatureBlindingRandomness(providerIndex, identityIndex)
 
         val input: IdentityRequestInput = IdentityRequestInput.builder()
             .common(common)
@@ -107,47 +96,50 @@ class IssueIdentityActivity : ComponentActivity() {
         customTabsIntent.launchUrl(this, Uri.parse(url))
     }
 
-    private fun submit(seed: String, provider: IdentityProvider, global: CryptographicParameters) {
-        // TODO: Create identity request
-        val request = createRequest(seed, provider, global)
+    private fun getIssuanceUrl(provider: IdentityProvider, request: String): String {
         val baseUrl = provider.metadata.issuanceStart
         val delimiter = if (baseUrl.contains('?')) "&" else "?"
-        val url = "${baseUrl}${delimiter}response_type=code&redirect_uri=$CALLBACK_URL&scope=identity&state=$request"
+        return "${baseUrl}${delimiter}response_type=code&redirect_uri=$CALLBACK_URL&scope=identity&state=$request"
+    }
+
+    private fun submit(seed: String, provider: IdentityProvider, global: CryptographicParameters, storage: Storage) {
+        val request = createRequest(seed, provider, global)
+        val url = getIssuanceUrl(provider, request)
         launchChromeCustomTab(url)
-        return
+        storage.identityProviderIndex.set(provider.ipInfo.ipIdentity.toString())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val mPrefs = getSharedPreferences("EXAMPLE", ComponentActivity.MODE_PRIVATE)
-        val seedPhrase = mPrefs.getString("seed_phrase", "");
+        val storage = Storage(getSharedPreferences("EXAMPLE", MODE_PRIVATE))
+        val seedPhrase = storage.seedPhrase.get()
         val global = ConcordiumClientService.getClient().getCryptographicParameters(BlockQuery.BEST);
 
         intent.data?.let {
             println(it)
-            handleCodeUri(it)
+            handleCodeUri(it, storage)
         }
 
         setContent {
             AndroidsdkexampleTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    IssueIdentityView(onSubmit = { provider -> seedPhrase?.let { submit(it, provider, global) }})
+                    IssueIdentityView(onSubmit = { provider -> seedPhrase?.let { submit(it, provider, global, storage) }})
                 }
             }
         }
     }
 
-    private fun handleCodeUri(uri: Uri) {
+    private fun handleCodeUri(uri: Uri, storage: Storage) {
         if (uri.toString().startsWith(CALLBACK_URL)) {
             val fragment = uri.fragment
             val fragmentParts = fragment?.split("=")
             if (!fragmentParts.isNullOrEmpty() && fragmentParts[0] == "code_uri") {
-                val ed = getSharedPreferences("EXAMPLE", MODE_PRIVATE).edit();
                 val codeUri = uri.toString().split("#code_uri=").last();
-                ed.putString("identity_url", codeUri);
-                ed.commit()
-
+                storage.identityUrl.set(codeUri)
+                val myIntent = Intent(this, IdentityActivity::class.java)
+                myIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(myIntent);
             } else if (!fragmentParts.isNullOrEmpty() && fragmentParts[0] == "token") {
                 val identity = fragmentParts[1]
                 // TODO Handle this case?
@@ -159,7 +151,8 @@ class IssueIdentityActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?.data?.let { handleCodeUri(it) }
+        val storage = Storage(getSharedPreferences("EXAMPLE", MODE_PRIVATE))
+        intent?.data?.let { handleCodeUri(it, storage) }
     }
 }
 
@@ -167,11 +160,9 @@ fun getProviderName(provider: IdentityProvider): String {
     return provider.ipInfo.ipDescription.name
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IssueIdentityView(onSubmit: (provider: IdentityProvider) -> Unit) {
     var provider by remember { mutableStateOf<IdentityProvider?>(null) }
-    var expanded by remember { mutableStateOf(false) }
     val providers = remember {
         mutableStateListOf<IdentityProvider>()
     }
@@ -186,42 +177,12 @@ fun IssueIdentityView(onSubmit: (provider: IdentityProvider) -> Unit) {
     }
 
     AndroidsdkexampleTheme {
+        Menu(providers, provider, ::getProviderName, { provider = it })
         Column {
-            ExposedDropdownMenuBox (
-            expanded = expanded,
-                onExpandedChange = { expanded = !expanded },
-                ) {
-                provider?.let {
-                    TextField(
-                        value = getProviderName(it),
-                        onValueChange = {},
-                        readOnly = true,
-                        enabled = false,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
-                    )
-                }
-
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    providers.forEach { item ->
-                        DropdownMenuItem(
-                            text = { Text(text = getProviderName(item)) },
-                            onClick = {
-                                expanded = false
-                                provider = item
-                            },
-                        )
-                    }
-                }
-
-        }
             Button(onClick = { provider?.let { onSubmit(it) } }) {
                 Text(text = "Submit")
             }
-    }
+        }
     }
 }
 

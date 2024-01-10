@@ -27,13 +27,12 @@ import com.example.android_sdk_example.ui.theme.AndroidsdkexampleTheme
 
 // TODO Check SeedPhrase is Valid
 import cash.z.ecc.android.bip39.Mnemonics.MnemonicCode
+import com.example.android_sdk_example.Storage
 
 class SeedPhraseActivity : ComponentActivity() {
-    fun submit(phrase: String, ed: SharedPreferences.Editor) {
-
+    fun submit(phrase: String, storage: Storage) {
         // Save seed phrase in SharedPreferences
-        ed.putString("seed_phrase", phrase)
-        ed.commit()
+        storage.seedPhrase.set(phrase)
         // Go to identity issuance
         val myIntent = Intent(this, IssueIdentityActivity::class.java)
         startActivity(myIntent);
@@ -41,14 +40,14 @@ class SeedPhraseActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val mPrefs = getSharedPreferences("EXAMPLE", MODE_PRIVATE)
-        val seedPhrase = mPrefs.getString("seed_phrase", "");
+        val storage = Storage(getSharedPreferences("EXAMPLE", MODE_PRIVATE))
+        val seedPhrase = storage.seedPhrase.get()
 
         setContent {
             AndroidsdkexampleTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    SeedPhraseView(seedPhrase ?: "", onSubmit = { submit(it, mPrefs.edit()) })
+                    SeedPhraseView(seedPhrase ?: "", onSubmit = { submit(it, storage) })
                 }
             }
         }
