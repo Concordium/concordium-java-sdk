@@ -10,7 +10,7 @@ public class Identity {
     public static String createIdentityRequest(IdentityRequestInput input) {
         StringResult result = null;
         try {
-            String jsonStr = CryptoJniNative.createIdRequestWithKeysV1(JsonMapper.INSTANCE.writeValueAsString(input));
+            String jsonStr = CryptoJniNative.createIdentityRequestV1(JsonMapper.INSTANCE.writeValueAsString(input));
             result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
         } catch (JsonProcessingException e) { 
             throw new RuntimeException(e);

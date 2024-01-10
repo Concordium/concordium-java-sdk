@@ -29,7 +29,7 @@ use std::{
     str::Utf8Error,
 };
 use wallet_library::{
-    identity::create_id_request_with_keys_v1_aux,
+    identity::create_identity_object_request_v1_aux,
     wallet::{
         get_account_public_key_aux, get_account_signing_key_aux,
         get_attribute_commitment_randomness_aux, get_credential_id_aux, get_id_cred_sec_aux,
@@ -1123,7 +1123,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifia
 ///   [`wallet_library::identity::IdRequestInputWithKeys`]
 #[no_mangle]
 #[allow(non_snake_case)]
-pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIdRequestWithKeysV1(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIdentityRequestV1(
     env: JNIEnv,
     _: JClass,
     input: JString,
@@ -1133,13 +1133,13 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIdRe
         Err(err) => return KeyResult::Err(err).to_jstring(&env),
     };
 
-    let id_request_input: wallet_library::identity::IdRequestInputWithKeys =
+    let id_request_input: wallet_library::identity::IdentityObjectRequestInput =
         match serde_json::from_str(&input_string) {
             Ok(req) => req,
             Err(err) => return KeyResult::from(err).to_jstring(&env),
         };
 
-    let request = match create_id_request_with_keys_v1_aux(id_request_input) {
+    let request = match create_identity_object_request_v1_aux(id_request_input) {
         Ok(r) => r,
         Err(err) => return KeyResult::from(err).to_jstring(&env),
     };

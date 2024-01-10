@@ -48,19 +48,16 @@ public class IdentityTest {
 
     @Test
     public void testCreatingIdentityRequest() throws Exception {
-        IdentityRequestCommon common = IdentityRequestCommon.builder()
-                .globalContext(getCryptographicParameters())
-                .ipInfo(getIdentityProviderInfo())
-                .arsInfos(getAnonymityRevokerInfos())
-                .arThreshold(2).build();
-
         ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Testnet);
         String idCredSec = wallet.getIdCredSec(0, 0);
         String prfKey = wallet.getPrfKey(0, 0);
         String blindingRandomness = wallet.getSignatureBlindingRandomness(0, 0);
 
         IdentityRequestInput input = IdentityRequestInput.builder()
-                .common(common)
+                .globalContext(getCryptographicParameters())
+                .ipInfo(getIdentityProviderInfo())
+                .arsInfos(getAnonymityRevokerInfos())
+                .arThreshold(2)        
                 .idCredSec(idCredSec)
                 .prfKey(prfKey)
                 .blindingRandomness(blindingRandomness)
