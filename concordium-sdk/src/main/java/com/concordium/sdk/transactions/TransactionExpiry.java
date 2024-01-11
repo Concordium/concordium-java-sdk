@@ -21,4 +21,8 @@ public class TransactionExpiry {
     public static TransactionExpiry fromBytes(ByteBuffer source) {
         return new TransactionExpiry(UInt64.fromBytes(source));
     }
+
+    public static TransactionExpiry fromLong(long source) {
+        return new TransactionExpiry(UInt64.from(source));
+    }
 }

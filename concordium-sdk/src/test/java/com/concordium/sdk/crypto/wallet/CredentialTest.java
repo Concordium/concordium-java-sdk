@@ -11,6 +11,9 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.concordium.sdk.crypto.bls.BLSSecretKey;
+import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
+import com.concordium.sdk.crypto.wallet.credential.UnsignedCredentialDeploymentInfo;
+import com.concordium.sdk.crypto.wallet.credential.UnsignedCredentialDeploymentInfoWithRandomness;
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
@@ -19,6 +22,8 @@ import com.concordium.sdk.responses.cryptographicparameters.CryptographicParamet
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.CredentialPublicKeys;
 import com.concordium.sdk.transactions.Index;
+import com.concordium.sdk.transactions.TransactionExpiry;
+import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
@@ -80,10 +85,22 @@ public class CredentialTest {
             .revealedAttributes(Collections.emptyList())
             .build();
 
+            UnsignedCredentialDeploymentInfoWithRandomness result = Credential.createUnsignedCredential(input);
 
-        // System.out.println(JsonMapper.INSTANCE.writeValueAsString(input));
-        String result = Credential.createUnsignedCredential(input);
 
-        System.out.println(result);
+            System.out.println();
+            System.out.println();
+            System.out.println();
+        System.out.println(result.getUnsignedCdi().getIpIdentity());
+        System.out.println(result.getUnsignedCdi().getCredId());
+        System.out.println(result.getUnsignedCdi().getPolicy().getCreatedAt());
+        System.out.println(result.getUnsignedCdi().getProofs().getChallenge());
+        System.out.println(result.getUnsignedCdi().getCredentialPublicKeys().getThreshold());
+        System.out.println(result.getUnsignedCdi().getCredentialPublicKeys().getKeys().get(Index.from(0)));
+
+        //Credential.getCredentialDeploymentSignDigest(new CredentialDeploymentDetails(result, TransactionExpiry.fromLong(0)));
+
+
+
     }
 }

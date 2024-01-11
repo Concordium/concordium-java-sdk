@@ -4,11 +4,14 @@ import com.concordium.grpc.v2.BakerSignatureVerifyKey;
 import com.concordium.sdk.crypto.RawKey;
 import com.concordium.sdk.crypto.KeyJsonSerializer;
 import com.concordium.sdk.exceptions.ED25519Exception;
+import com.concordium.sdk.responses.accountinfo.credential.VerificationScheme;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -17,9 +20,13 @@ import static java.util.Arrays.copyOf;
 
 @Getter
 @EqualsAndHashCode
+@NoArgsConstructor
 @JsonSerialize(using = KeyJsonSerializer.class)
 public final class ED25519PublicKey implements RawKey {
-    private final byte[] bytes;
+    private byte[] bytes;
+
+    private final VerificationScheme schemeId = VerificationScheme.Ed25519;
+
 
     private ED25519PublicKey(byte[] bytes) {
         this.bytes = bytes;
