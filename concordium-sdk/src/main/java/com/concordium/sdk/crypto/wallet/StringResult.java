@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Data
 @ToString(doNotUseGetters = true)
-public class KeyResult {
+public class StringResult {
     
     @JsonProperty("Ok")
     private final String ok;
@@ -24,7 +24,7 @@ public class KeyResult {
     private boolean isSuccess;
 
     @JsonCreator
-    KeyResult(
+    StringResult(
             @JsonProperty("Ok") String ok,
             @JsonProperty("Err") JNIError err
     ) {

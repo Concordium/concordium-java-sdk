@@ -121,5 +121,6 @@ public class CryptoJniNative {
     public static native String getVerifiableCredentialPublicKey(String seedAsHex, String netAsStr, long issuerIndex, long issuerSubindex, long verifiableCredentialIndex);
     public static native String getVerifiableCredentialBackupEncryptionKey(String seedAsHex, String netAsStr);
     
-    public static native String createIdRequestWithKeysV1(String input);
+    public static native String createIdentityRequestV1(String input);
+    public static native String createIdentityRecoveryRequest(String input);
 }
