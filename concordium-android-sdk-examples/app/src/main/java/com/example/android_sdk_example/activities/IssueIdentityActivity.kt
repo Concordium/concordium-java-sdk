@@ -30,7 +30,6 @@ import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey
 import com.concordium.sdk.crypto.wallet.ConcordiumHdWallet
 import com.concordium.sdk.crypto.wallet.Identity.createIdentityRequest
-import com.concordium.sdk.crypto.wallet.IdentityRequestCommon
 import com.concordium.sdk.crypto.wallet.IdentityRequestInput
 import com.concordium.sdk.crypto.wallet.Network
 import com.concordium.sdk.requests.BlockQuery
@@ -66,23 +65,20 @@ class IssueIdentityActivity : ComponentActivity() {
                 .description(v.arDescription)
                 .build() }
 
-        val common: IdentityRequestCommon = IdentityRequestCommon.builder()
-            .globalContext(global)
-            .ipInfo(ipInfo)
-            .arsInfos(arsInfos)
-            .arThreshold(2).build()
-
         val seedAsHex = Mnemonics.MnemonicCode(seed.toCharArray()).toSeed().toHexString()
         val wallet: ConcordiumHdWallet = ConcordiumHdWallet.fromHex(seedAsHex, Network.Mainnet)
         val providerIndex: Long = provider.ipInfo.ipIdentity.toLong()
         // In a real wallet this would not be hardcoded, to allow multiple identities from the same provider
-        val identityIndex: Long = 0
+        val identityIndex: Long = 1
         val idCredSec: String = wallet.getIdCredSec(providerIndex, identityIndex)
         val prfKey: String = wallet.getPrfKey(providerIndex, identityIndex)
         val blindingRandomness: String = wallet.getSignatureBlindingRandomness(providerIndex, identityIndex)
 
         val input: IdentityRequestInput = IdentityRequestInput.builder()
-            .common(common)
+            .globalContext(global)
+            .ipInfo(ipInfo)
+            .arsInfos(arsInfos)
+            .arThreshold(2)
             .idCredSec(idCredSec)
             .prfKey(prfKey)
             .blindingRandomness(blindingRandomness)
@@ -114,6 +110,7 @@ class IssueIdentityActivity : ComponentActivity() {
         val storage = Storage(getSharedPreferences("EXAMPLE", MODE_PRIVATE))
         val seedPhrase = storage.seedPhrase.get()
         val global = ConcordiumClientService.getClient().getCryptographicParameters(BlockQuery.BEST);
+        storage.identityProviderIndex.set("0")
 
         intent.data?.let {
             println(it)
@@ -137,7 +134,7 @@ class IssueIdentityActivity : ComponentActivity() {
             if (!fragmentParts.isNullOrEmpty() && fragmentParts[0] == "code_uri") {
                 val codeUri = uri.toString().split("#code_uri=").last();
                 storage.identityUrl.set(codeUri)
-                val myIntent = Intent(this, IdentityActivity::class.java)
+                val myIntent = Intent(this, IdentityConfirmationActivity::class.java)
                 myIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(myIntent);
             } else if (!fragmentParts.isNullOrEmpty() && fragmentParts[0] == "token") {
@@ -177,8 +174,8 @@ fun IssueIdentityView(onSubmit: (provider: IdentityProvider) -> Unit) {
     }
 
     AndroidsdkexampleTheme {
-        Menu(providers, provider, ::getProviderName, { provider = it })
         Column {
+            Menu(providers, provider, ::getProviderName, { provider = it })
             Button(onClick = { provider?.let { onSubmit(it) } }) {
                 Text(text = "Submit")
             }

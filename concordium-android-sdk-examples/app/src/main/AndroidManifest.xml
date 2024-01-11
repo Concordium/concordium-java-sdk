@@ -40,6 +40,8 @@
                 android:scheme="concordiumwallet-example" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.android_sdk_example.activities.RecoverIdentityActivity" />
+        <activity android:name="com.example.android_sdk_example.activities.IdentityConfirmationActivity" />
     </application>
 
 </manifest>

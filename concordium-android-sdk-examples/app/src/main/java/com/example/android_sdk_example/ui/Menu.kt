@@ -7,13 +7,15 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <Option> Menu(options: List<Option>, initialOption: Option?, display: (option: Option) -> String, onClick: (chosen: Option) -> Unit) {
+fun <Option> Menu(options: Iterable<Option>, initialOption: Option?, display: (option: Option) -> String, onClick: (chosen: Option) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(

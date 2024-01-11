@@ -1,5 +1,7 @@
 package com.example.android_sdk_example.wallet_proxy
 
+import com.concordium.sdk.crypto.ed25519.ED25519PublicKey
+import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey
 import com.concordium.sdk.responses.blocksummary.updates.queues.Description
 import java.io.Serializable
 import retrofit2.Call
@@ -12,9 +14,6 @@ interface ProxyBackend {
     // Identity Provider
     @GET("v1/ip_info")
     fun getIdentityProviderInfo(): Call<ArrayList<IdentityProvider>>
-
-    @GET
-    fun checkIdentityProvider(@Url url: String): Call<String>
 }
 
 data class SubmissionData(
@@ -25,7 +24,17 @@ data class IdentityProvider(
     val ipInfo: IdentityProviderInfo,
     val arsInfos: Map<String, ArsInfo>,
     val metadata: IdentityProviderMetaData
-) : Serializable
+) : Serializable {
+    fun toIdentityProviderInfo(): com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo {
+        val ipInfo = com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo.builder()
+            .ipIdentity(this.ipInfo.ipIdentity)
+            .ipVerifyKey(PSPublicKey.from(this.ipInfo.ipVerifyKey))
+            .ipCdiVerifyKey(ED25519PublicKey.from(this.ipInfo.ipCdiVerifyKey))
+            .description(this.ipInfo.ipDescription)
+            .build()
+        return ipInfo
+    }
+}
 
 data class IdentityProviderMetaData(
     val icon: String,

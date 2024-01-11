@@ -1,5 +1,6 @@
 package com.example.android_sdk_example.identity_object
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.delay
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -11,12 +12,15 @@ class IdentityFetcherService {
     data class IdentityResponse(
         val status: Status,
         val token: IdentityWrapper?,
-        val detail: String,
+        val detail: String?,
     ) {
-        enum class Status(value: String) {
-            DONE("done"),
-            PENDING("pending"),
-            ERROR("token"),
+        enum class Status() {
+            @SerializedName("done")
+            DONE,
+            @SerializedName("pending")
+            PENDING,
+            @SerializedName("error")
+            ERROR,
         }
     }
 
@@ -30,23 +34,29 @@ class IdentityFetcherService {
     interface IdentityProviderBackend {
         @GET
         fun getIdentity(@Url url: String): Call<IdentityResponse>
+        @GET
+        fun recoverIdentity(@Url url: String): Call<VersionedIdentity>
     }
 
-    fun getIdentity(identityUrl: String): IdentityObject? {
+    fun initializeBackend() :IdentityProviderBackend {
         val retrofit =
             Retrofit.Builder()
                 .baseUrl("http://dummy.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-        val backend = retrofit.create(IdentityProviderBackend::class.java)
+        return retrofit.create(IdentityProviderBackend::class.java)
+    }
 
+    fun getIdentity(identityUrl: String): IdentityObject? {
+        val backend = initializeBackend()
         val response = backend.getIdentity(identityUrl).execute()
         if (response.isSuccessful) {
-            response.body()?.let{
-                when (it.status) {
+            response.body()?.let {
+                println(it.status)
+                when (it?.status) {
                     IdentityResponse.Status.DONE -> return it.token!!.identityObject.value
                     IdentityResponse.Status.PENDING -> return null
-                    IdentityResponse.Status.ERROR -> throw Exception(it.detail)
+                    else -> throw Exception(it.detail ?: "Unknown error")
                 }
             }
         }
@@ -62,5 +72,14 @@ class IdentityFetcherService {
             // Try again after retryDelay
             delay(retryDelay)
         }
+    }
+
+    fun getFromRecovery(recoveryUrl: String): IdentityObject {
+        val backend = initializeBackend()
+        val response = backend.recoverIdentity(recoveryUrl).execute()
+        if (response.isSuccessful) {
+            response.body()?.let { return it.value }
+        }
+        throw Exception(response.message())
     }
 }

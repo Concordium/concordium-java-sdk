@@ -29,6 +29,7 @@ import com.concordium.sdk.types.AccountAddress
 import com.example.android_sdk_example.activities.AccountActivity
 import com.example.android_sdk_example.activities.IdentityActivity
 import com.example.android_sdk_example.activities.IssueIdentityActivity
+import com.example.android_sdk_example.activities.RecoverIdentityActivity
 import com.example.android_sdk_example.activities.SeedPhraseActivity
 import com.example.android_sdk_example.ui.theme.AndroidsdkexampleTheme
 
@@ -55,6 +56,9 @@ class MainActivity : ComponentActivity() {
                         }
                         Button(onClick = { gotoActivity(IssueIdentityActivity::class.java) }) {
                             Text(text = "Go to Identity issuance view")
+                        }
+                        Button(onClick = { gotoActivity(RecoverIdentityActivity::class.java) }) {
+                            Text(text = "Go to Identity recovery view")
                         }
                         Button(onClick = { gotoActivity(IdentityActivity::class.java) }) {
                             Text(text = "Go to Identity view")
