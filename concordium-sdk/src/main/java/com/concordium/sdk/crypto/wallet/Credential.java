@@ -1,9 +1,15 @@
 package com.concordium.sdk.crypto.wallet;
 
+import java.util.List;
+
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+
 import com.concordium.sdk.crypto.CryptoJniNative;
 import com.concordium.sdk.crypto.NativeResolver;
+import com.concordium.sdk.crypto.SHA256;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
-import com.concordium.sdk.crypto.wallet.credential.UnsignedCredentialDeploymentInfo;
+import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentSerializationContext;
 import com.concordium.sdk.crypto.wallet.credential.UnsignedCredentialDeploymentInfoWithRandomness;
 import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.serializing.JsonMapper;
@@ -30,18 +36,15 @@ public class Credential {
             throw CryptoJniException.from(result.getErr());
         }
 
-        System.out.println(result.getOk());
-
         return JsonMapper.INSTANCE.readValue(result.getOk(), UnsignedCredentialDeploymentInfoWithRandomness.class);
     }
 
-    public static UnsignedCredentialDeploymentInfo getCredentialDeploymentSignDigest(CredentialDeploymentDetails credentialDeploymentDetails) throws JsonMappingException, JsonProcessingException {
+    public static byte[] serializeCredentialDeployment(CredentialDeploymentDetails credentialDeploymentDetails) throws JsonMappingException, JsonProcessingException, DecoderException {
         StringResult result = null;
         try {
-            System.out.println(JsonMapper.INSTANCE.writeValueAsString(credentialDeploymentDetails));
             String jsonStr = CryptoJniNative.serializeCredentialDeployment(JsonMapper.INSTANCE.writeValueAsString(credentialDeploymentDetails));
             result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
-        } catch (JsonProcessingException e) { 
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
@@ -49,7 +52,29 @@ public class Credential {
             throw CryptoJniException.from(result.getErr());
         }
 
-        return JsonMapper.INSTANCE.readValue(result.getOk(), UnsignedCredentialDeploymentInfo.class);
+        return Hex.decodeHex(result.getOk());
+    }
+
+    public static byte[] getCredentialDeploymentSignDigest(CredentialDeploymentDetails credentialDeploymentDetails) throws JsonMappingException, JsonProcessingException, DecoderException {
+        byte[] serializedCredentialDeploy = serializeCredentialDeployment(credentialDeploymentDetails);
+        System.out.println(Hex.encodeHexString(serializedCredentialDeploy));
+        return SHA256.hash(serializedCredentialDeploy);
+    }
+
+    public static byte[] serializeCredentialDeploymentPayload(CredentialDeploymentSerializationContext context) throws DecoderException {
+        StringResult result = null;
+        try {
+            String jsonStr = CryptoJniNative.serializeCredentialDeploymentForSubmission(JsonMapper.INSTANCE.writeValueAsString(context));
+            result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (!result.isSuccess()) {
+            throw CryptoJniException.from(result.getErr());
+        }
+
+        return Hex.decodeHex(result.getOk());
     }
 
 }

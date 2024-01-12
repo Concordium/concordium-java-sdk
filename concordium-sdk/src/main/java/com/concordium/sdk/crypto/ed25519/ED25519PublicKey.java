@@ -25,9 +25,6 @@ import static java.util.Arrays.copyOf;
 public final class ED25519PublicKey implements RawKey {
     private byte[] bytes;
 
-    private final VerificationScheme schemeId = VerificationScheme.Ed25519;
-
-
     private ED25519PublicKey(byte[] bytes) {
         this.bytes = bytes;
     }

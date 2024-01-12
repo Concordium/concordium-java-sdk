@@ -126,4 +126,5 @@ public class CryptoJniNative {
 
     public static native String createUnsignedCredentialV1(String input);
     public static native String serializeCredentialDeployment(String input);
+    public static native String serializeCredentialDeploymentForSubmission(String input);
 }

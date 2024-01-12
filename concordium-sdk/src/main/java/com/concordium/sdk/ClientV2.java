@@ -231,6 +231,13 @@ public final class ClientV2 {
         return to(grpcOutput);
     }
 
+    public Hash sendCredentialDeploymentTransaction(TransactionExpiry expiry, byte[] rawPayload) {
+        val req = ClientV2MapperExtensions.to(expiry, rawPayload);
+        val grpcOutput = this.server().sendBlockItem(req);
+
+        return to(grpcOutput);
+    }
+
     /**
      * Gets all the Identity Providers at the end of the block pointed by {@link BlockQuery}.
      *

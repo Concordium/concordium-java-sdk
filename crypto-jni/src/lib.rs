@@ -2,7 +2,7 @@ use anyhow::{anyhow, Result};
 pub use concordium_base::common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
 use concordium_base::{
     base,
-    common::{Serialize, *, types::TransactionTime},
+    common::{Serialize, *, types::{TransactionTime, KeyIndex}},
     contracts_common::{schema::VersionedModuleSchema, Amount},
     encrypted_transfers,
     encrypted_transfers::types::{
@@ -10,7 +10,7 @@ use concordium_base::{
         IndexedEncryptedAmount, SecToPubAmountTransferData,
     },
     id,
-id::{constants::{ArCurve, AttributeKind, IpPairing}, curve_arithmetic::Curve, elgamal, types::{GlobalContext, UnsignedCredentialDeploymentInfo}},
+id::{constants::{ArCurve, AttributeKind, IpPairing}, curve_arithmetic::Curve, elgamal, types::{GlobalContext, UnsignedCredentialDeploymentInfo, AccountCredential, CredentialDeploymentInfo, AccountOwnershipSignature, AccountOwnershipProof, CredDeploymentProofs}},
     transactions::{AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload},
 };
 use core::slice;
@@ -24,9 +24,9 @@ use jni::{
 use rand::thread_rng;
 use serde_json::{from_str, to_string};
 use std::{
-    convert::{From, TryFrom},
+    convert::{From, TryFrom, TryInto},
     i8,
-    str::Utf8Error,
+    str::Utf8Error, collections::BTreeMap,
 };
 use wallet_library::{
     credential::create_unsigned_credential_v1_aux,
@@ -1236,75 +1236,117 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeC
         };
 
     let mut credential_deployment_bytes = Vec::<u8>::new();
-    credential_deployment_details.unsignedCdi.serial(&mut credential_deployment_bytes);
+    credential_deployment_details.unsignedCdi.values.serial(&mut credential_deployment_bytes);
+    credential_deployment_details.unsignedCdi.proofs.serial(&mut credential_deployment_bytes);
+    
+    // New account byte
+    credential_deployment_bytes.push(0);
+
+    // Expiry
     credential_deployment_details.expiry.serial(&mut credential_deployment_bytes);
+
     let test = hex::encode(&credential_deployment_bytes);
 
     CryptoJniResult::Ok(test).to_jstring(&env)
 }
 
-// const serializedCredentialValues = serializeCredentialDeploymentValues(
-//     credentialDeployment.unsignedCdi
-// );
-// const serializedIdOwnershipProofs = serializeIdOwnershipProofs(
-//     credentialDeployment.unsignedCdi.proofs
-// );
-// const newAccountByte = encodeWord8(0);
-// return sha256([
-//     serializedCredentialValues,
-//     serializedIdOwnershipProofs,
-//     newAccountByte,
-//     encodeWord64(credentialDeployment.expiry.expiryEpochSeconds),
-// ]);
 
-// fn serialize_credential_deployment_payload_aux(
-//     signatures: Vec<String>,
-//     unsigned_info: &str,
-// ) -> Result<Vec<u8>> {
-//     let cdi = get_credential_deployment_info(signatures, unsigned_info)?;
-
-//     let acc_cred = AccountCredential::Normal { cdi };
-
-//     let mut acc_cred_ser = Vec::<u8>::new();
-//     acc_cred.serial(&mut acc_cred_ser);
-
-//     Ok(acc_cred_ser)
-// }
-
-// fn get_credential_deployment_info(
-//     signatures: Vec<String>,
-//     unsigned_info: &str,
-// ) -> Result<CredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>> {
-//     let v: SerdeValue = from_str(unsigned_info)?;
-//     let values: CredentialDeploymentValues<ArCurve, AttributeKind> =
-//         from_str(unsigned_info)?;
-//     let proofs: IdOwnershipProofs<IpPairing, ArCurve> =
-//         try_get(&v, "proofs")?;
-//     let unsigned_credential_info = UnsignedCredentialDeploymentInfo::<
-//         IpPairing,
-//         ArCurve,
-//         AttributeKind,
-//     > {
-//         values,
-//         proofs,
-//     };
-
-//     let signature_map = build_signature_map(&signatures);
-//     let proof_acc_sk = AccountOwnershipProof {
-//         sigs: signature_map,
-//     };
-
-//     let cdp = CredDeploymentProofs {
-//         id_proofs: unsigned_credential_info.proofs,
-//         proof_acc_sk,
-//     };
-
-//     let cdi = CredentialDeploymentInfo {
-//         values: unsigned_credential_info.values,
-//         proofs: cdp,
-//     };
-
-//     Ok(cdi)
-// }
+#[derive(SerdeSerialize, SerdeDeserialize)]
+#[allow(non_snake_case)]
+struct CredentialDeploymentSerializationContext {
+    unsignedCdi: UnsignedCredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>,
+    signatures: Vec<String>,
+}
 
 
+/// The JNI wrapper for getting the serialized bytes of a credential deployment transaction
+/// payload, i.e. the bytes of which should be hashed and signed before sending the transaction.
+/// * `input` - the JSON string of
+///   [`wallet_library::credential::UnsignedCredentialInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeCredentialDeploymentForSubmission(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+    };
+
+    let context: CredentialDeploymentSerializationContext =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return KeyResult::from(err).to_jstring(&env),
+        };
+
+    let result = match serialize_credential_deployment_payload_aux(context.signatures, context.unsignedCdi) {
+        Ok(r) => r,
+        Err(err) => return KeyResult::from(err).to_jstring(&env),
+    };
+
+    let test = hex::encode(&result);
+    CryptoJniResult::Ok(test).to_jstring(&env)
+}
+
+fn serialize_credential_deployment_payload_aux(
+    signatures: Vec<String>,
+    unsigned_cdi: UnsignedCredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>,
+) -> Result<Vec<u8>> {
+    let cdi = get_credential_deployment_info(signatures, unsigned_cdi)?;
+
+    let acc_cred = AccountCredential::Normal { cdi };
+
+    let mut acc_cred_ser = Vec::<u8>::new();
+    acc_cred.serial(&mut acc_cred_ser);
+
+    Ok(acc_cred_ser)
+}
+
+fn get_credential_deployment_info(
+    signatures: Vec<String>,
+    unsigned_cdi: UnsignedCredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>,
+) -> Result<CredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>> {
+    let values = unsigned_cdi.values;
+    let proofs = unsigned_cdi.proofs;
+
+    let unsigned_credential_info = UnsignedCredentialDeploymentInfo::<
+        IpPairing,
+        ArCurve,
+        AttributeKind,
+    > {
+        values,
+        proofs,
+    };
+
+    let signature_map = build_signature_map(&signatures);
+    let proof_acc_sk = AccountOwnershipProof {
+        sigs: signature_map,
+    };
+
+    let cdp = CredDeploymentProofs {
+        id_proofs: unsigned_credential_info.proofs,
+        proof_acc_sk,
+    };
+
+    let cdi = CredentialDeploymentInfo {
+        values: unsigned_credential_info.values,
+        proofs: cdp,
+    };
+
+    Ok(cdi)
+}
+
+fn build_signature_map(signatures: &[String]) -> BTreeMap<KeyIndex, AccountOwnershipSignature> {
+    signatures
+        .iter()
+        .enumerate()
+        .map(|(index, key)| {
+            (
+                KeyIndex(index.try_into().unwrap()),
+                base16_decode_string(key).unwrap(),
+            )
+        })
+        .collect()
+}

@@ -1,16 +1,22 @@
 package com.concordium.sdk.responses.accountinfo.credential;
 
+import com.concordium.sdk.types.UInt32;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.google.common.collect.ImmutableMap;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import java.io.IOException;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import static com.google.common.collect.ImmutableMap.copyOf;
@@ -30,6 +36,7 @@ public final class Policy {
      * The year and month when the identity object from which the credential is derived was created.
      */
     @JsonDeserialize(using = Policy.YearMonthDeserializer.class)
+    @JsonSerialize(using = Policy.YearMonthSerializer.class)
     private YearMonth createdAt;
 
     /**
@@ -37,6 +44,7 @@ public final class Policy {
      * expires an account can no longer be created from the credential.
      */
     @JsonDeserialize(using = Policy.YearMonthDeserializer.class)
+    @JsonSerialize(using = Policy.YearMonthSerializer.class)
     private YearMonth validTo;
 
     @Singular
@@ -59,6 +67,28 @@ public final class Policy {
             String year = yearMonth.subSequence(0, 4).toString();
             String month = yearMonth.substring(4, 6).toString();
             return YearMonth.parse(year + "-" + month);
+        }
+    }
+
+    /**
+     * A custom Jackson serializer is provided that makes the UInt32 JSON serialization
+     * compatible with the JSON format expected by the Rust libraries.
+     */
+    static class YearMonthSerializer extends StdSerializer<YearMonth> {
+
+        public YearMonthSerializer() {
+            this(null);
+        }
+
+        public YearMonthSerializer(Class<YearMonth> t) {
+            super(t);
+        }
+
+        @Override
+        public void serialize(
+                YearMonth yearMonth, JsonGenerator jgen, SerializerProvider provider)
+                throws IOException, JsonProcessingException {
+            jgen.writeString(yearMonth.format(DateTimeFormatter.ofPattern(FORMAT)));
         }
     }
 }

@@ -1,15 +1,23 @@
 package com.concordium.sdk.types;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 @Getter
 @EqualsAndHashCode
+@JsonSerialize(using = UInt64.UInt64Serializer.class)
 public final class UInt64 implements Comparable<UInt64> {
     public static final int BYTES = Long.BYTES;
 
@@ -64,5 +72,28 @@ public final class UInt64 implements Comparable<UInt64> {
     @Override
     public int compareTo(UInt64 other) {
         return Long.compareUnsigned(this.value, other.value);
+    }
+
+        /**
+     * A custom Jackson serializer is provided that makes the UInt32 JSON serialization
+     * compatible with the JSON format expected by the Rust libraries.
+     */
+    static class UInt64Serializer extends StdSerializer<UInt64> {
+
+        public UInt64Serializer() {
+            this(null);
+        }
+
+        public UInt64Serializer(Class<UInt64> t) {
+            super(t);
+        }
+
+        @Override
+        public void serialize(
+                UInt64 uint, JsonGenerator jgen, SerializerProvider provider)
+                throws IOException, JsonProcessingException {
+
+            jgen.writeNumber(uint.getValue());
+        }
     }
 }

@@ -14,7 +14,7 @@ public class UnsignedCredentialDeploymentInfo {
     private CredentialPublicKeys credentialPublicKeys;
     private Policy policy;
     private String credId;
-    private int threshold;
+    private int revocationThreshold;
     private Map<String, ChainArData> arData;
     private IdOwnershipProofs proofs;
 }
