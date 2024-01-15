@@ -1,7 +1,5 @@
 package com.concordium.sdk.crypto.wallet;
 
-import java.util.List;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
@@ -57,7 +55,6 @@ public class Credential {
 
     public static byte[] getCredentialDeploymentSignDigest(CredentialDeploymentDetails credentialDeploymentDetails) throws JsonMappingException, JsonProcessingException, DecoderException {
         byte[] serializedCredentialDeploy = serializeCredentialDeployment(credentialDeploymentDetails);
-        System.out.println(Hex.encodeHexString(serializedCredentialDeploy));
         return SHA256.hash(serializedCredentialDeploy);
     }
 

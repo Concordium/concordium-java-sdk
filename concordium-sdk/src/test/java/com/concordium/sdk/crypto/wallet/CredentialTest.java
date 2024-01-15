@@ -69,12 +69,15 @@ public class CredentialTest {
                 readFile("./src/test/testresources/wallet/id_object_test.json", Charset.forName("UTF-8")),
                 IdentityObject.class);    }
 
+    // seed phrase 
     // private static String TEST_SEED = "efa5e27326f8fa0902e647b52449bf335b7b605adc387015ec903f41d95080eb71361cbc7fb78721dcd4f3926a337340aa1406df83332c44c1cdcfe100603860";
-    private static String TEST_SEED = "8ca871b924afd59f2db6e7d91bb5751f56f8b73561a768e103038f84e731e3c810b52bffea10cb578a1ee01c67c6b95d7ef38a118ee3326997d24a490d2eb211";
+
+    private static String TEST_SEED = "3b7baf8bedbd0fdd1ae63460b7dd2383514ba314f98db26e0c40a42767728af3d0feef99375b4ec3fc77d933fa6069b6592deeab6e414010494940c21d3779c8";
+    // art holiday tip between ivory tool manage solid spawn domain such want drama burger observe funny birth juice purse element plate since menu inflict
 
     @Test
     public void createUnsignedCredential() throws Exception {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Testnet);
 
         CredentialPublicKeys credentialPublicKeys = CredentialPublicKeys.from(Collections.singletonMap(Index.from(0), wallet.getAccountPublicKey(0, 0, 0)), 1);
         Map<AttributeType, String> attributeRandomness = new HashMap<>();
@@ -98,7 +101,7 @@ public class CredentialTest {
 
         UnsignedCredentialDeploymentInfoWithRandomness result = Credential.createUnsignedCredential(input);
 
-        TransactionExpiry expiry = TransactionExpiry.fromLong(1705077126998l);
+        TransactionExpiry expiry = TransactionExpiry.fromLong(new Date().getTime() + 360);
 
         byte[] credentialDeploymentSignDigest = Credential.getCredentialDeploymentSignDigest(new CredentialDeploymentDetails(result.getUnsignedCdi(), expiry));
         ED25519SecretKey signingKey = wallet.getAccountSigningKey(0, 0, 0);
@@ -106,13 +109,11 @@ public class CredentialTest {
         
         assertTrue(credentialPublicKeys.getKeys().get(Index.from(0)).verify(credentialDeploymentSignDigest, signature));
 
-        System.out.println(Hex.encodeHexString(signature));
         CredentialDeploymentSerializationContext context = new CredentialDeploymentSerializationContext(result.getUnsignedCdi(), Collections.singletonList(Hex.encodeHexString(signature)));
         byte[] credentialPayload = Credential.serializeCredentialDeploymentPayload(context);
 
         Connection connection = Connection.builder().timeout(10000).host("grpc.testnet.concordium.com").port(20000).useTLS(TLSConfig.auto()).build();
         ClientV2 client = ClientV2.from(connection);
-
 
         client.sendCredentialDeploymentTransaction(expiry, credentialPayload);
     }

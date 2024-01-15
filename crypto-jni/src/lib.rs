@@ -1235,18 +1235,24 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeC
             Err(err) => return KeyResult::from(err).to_jstring(&env),
         };
 
+    let mut result = Vec::<u8>::new();
+
     let mut credential_deployment_bytes = Vec::<u8>::new();
     credential_deployment_details.unsignedCdi.values.serial(&mut credential_deployment_bytes);
-    credential_deployment_details.unsignedCdi.proofs.serial(&mut credential_deployment_bytes);
-    
-    // New account byte
-    credential_deployment_bytes.push(0);
+
+    let mut cred_proofs = Vec::<u8>::new();
+    credential_deployment_details.unsignedCdi.proofs.serial(&mut cred_proofs);
 
     // Expiry
-    credential_deployment_details.expiry.serial(&mut credential_deployment_bytes);
+    let mut expiry_bytes = Vec::<u8>::new();
+    credential_deployment_details.expiry.seconds.serial(&mut expiry_bytes);
 
-    let test = hex::encode(&credential_deployment_bytes);
+    result.append(&mut credential_deployment_bytes);
+    result.append(&mut cred_proofs);
+    result.push(0);
+    result.append(&mut expiry_bytes);
 
+    let test = hex::encode(&result);
     CryptoJniResult::Ok(test).to_jstring(&env)
 }
 
