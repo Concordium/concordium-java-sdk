@@ -1,8 +1,8 @@
 package com.concordium.sdk.crypto.wallet;
 
 public enum Network {
-    Mainnet,
-    Testnet;
+    MAINNET,
+    TESTNET;
 
     public String getValue() {
         switch (this.ordinal()) {
