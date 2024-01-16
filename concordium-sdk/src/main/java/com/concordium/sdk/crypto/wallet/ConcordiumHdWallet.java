@@ -70,6 +70,8 @@ public class ConcordiumHdWallet {
         // Validate whether the input seed phrase is valid or not.
         StringBuilder builder = new StringBuilder(WordLists.ENGLISH);
         InputStream in = new ByteArrayInputStream(builder.toString().getBytes("UTF-8"));
+
+        // This hash is taken from MnemonicCode.BIP39_ENGLISH_SHA256, where it is private.
         String BIP39_ENGLISH_SHA256 = "ad90bf3beb7b0eb7e5acd74727dc0da96e0a280a258354e7293fb7e211ac03db";
         MnemonicCode mnemonicCode = new MnemonicCode(in, BIP39_ENGLISH_SHA256);
 
