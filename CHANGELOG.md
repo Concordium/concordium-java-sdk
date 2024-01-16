@@ -3,6 +3,8 @@
 ## Unreleased changes
  - Purge remaining usages of V1 GRPC API.
 
+- Added support for android through an AAR artifact.
+
 ## 6.0.0
 - Added method `waitUntilFinalized` for waiting until a given transaction is finalized.
 - Removed deprecated V1 API from the SDK. Consumers of the (now removed) `getBlockSummary` endpoint should refer to `GetBlockTransactionEvents`, `GetBlockSpecialEvents` and `GetBlockPendingUpdates`.

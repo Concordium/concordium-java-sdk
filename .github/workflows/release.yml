@@ -1,4 +1,5 @@
 # Workflow for release a jar file with all native dependencies embedded.
+# The Workflow also releases a AAR file with the native dependencies build for Android.
 # The workflow runs whenever a release is published.
 
 name: Release
@@ -27,7 +28,7 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Make ubuntu native depencies
+    - name: Make ubuntu native dependencies
       run: make
 
     - name: Upload linux library
@@ -52,7 +53,7 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Make macos native depencies
+    - name: Make macos native dependencies
       run: make
       
     - name: Upload macos library
@@ -77,7 +78,7 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Make windows native depencies
+    - name: Make windows native dependencies
       run: cd crypto-jni && cargo build --release
       
     - name: Upload windows library
@@ -86,8 +87,32 @@ jobs:
           name: windows-library
           path: crypto-jni\target\release\crypto_jni.dll
 
+  build-aar-library:
+    runs-on: ubuntu-22.04
+    steps:
+    # Setup rust
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.69
+    # Checkout the code
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Make android native dependencies
+      run: make add-android-targets && make android
+    # Builds and tests the sdk
+    - name: Build and test android sdk
+      run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install
+    - name: Upload aar
+      uses: actions/upload-artifact@master
+      with:
+        name: concordium-android-sdk.aar
+        path: ./concordium-android-sdk/target/concordium-android-sdk.aar
+
   build-and-release-jar:
-    needs: [build-native-ubuntu, build-native-macos, build-native-windows]
+    needs: [build-native-ubuntu, build-native-macos, build-native-windows, build-aar-library]
     # Use fixed OS version because we install packages on the system.
     runs-on: ubuntu-22.04
     environment: release
@@ -125,6 +150,12 @@ jobs:
         name: windows-library
         path: concordium-sdk/native
 
+    - name: Download aar library
+      uses: actions/download-artifact@master
+      with:
+        name: concordium-android-sdk.aar
+        path: concordium-android-sdk/target
+
     # Builds and tests the sdk. Delomboks code and generates a javadoc jar from the delombok'ed code
     - name: Build and test sdk
       run: cd concordium-sdk && mvn --batch-mode --update-snapshots install && mvn lombok:delombok -f pom.xml && mvn javadoc:jar -f pom.xml
@@ -133,7 +164,9 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: concordium-sdk/target/*.jar
+        files: |
+          concordium-sdk/target/*.jar
+          concordium-android-sdk/target/concordium-android-sdk.aar
 
     - name: Deploy javadoc
       uses: MathieuSoysal/Javadoc-publisher.yml@v2.4.0

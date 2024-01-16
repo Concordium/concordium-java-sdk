@@ -16,7 +16,7 @@ The Concordium Java SDK provides an interface to communicating with a Concordium
 # Build and usage
 To build the native library and put it into the correct folders all one has to do the following:
 
-1. Clone this repositry and remember to update submodules, for example when cloning via
+1. Clone this repository and remember to update git submodules, for example when cloning via
 ```bash
 git clone https://github.com/Concordium/concordium-java-sdk.git --recurse-submodules
 ```
@@ -68,6 +68,38 @@ One can create a new header file by using the command: `javac -h . ED25519.java`
 
 The output will be a header file, the contents hereof must be matched appropriately as described in the [documentation](https://docs.rs/jni/0.19.0/jni/) into the [lib.rs](crypto-jni/src/lib.rs) rust source file.
 
+## Android
+To build the android AAR package, one has to do the following:
+
+1. Clone this repository and remember to update git submodules, for example when cloning via
+```bash
+git clone https://github.com/Concordium/concordium-java-sdk.git --recurse-submodules
+```
+2. Set the ANDROID_HOME environment variable to the path to your Android SDK installation.
+3. Run `make add-android-targets` from the root of this repository.
+4. Run `make android` from the root of this repository.
+5. Run `mvn install` from the root of the [concordium-android-sdk](./concordium-android-sdk) folder.
+
+`make add-android-targets` adds the rust targets that the native libraries will be built for.
+`make android` builds the native libraries for various targets using cargo-ndk.
+And the final step builds the aar file `concordium-android-sdk.aar` in the [target](./concordium-android-sdk/target)  folder, which can be used in android projects.
+Note that this uses the [Android Maven Plugin](http://simpligility.github.io/android-maven-plugin/), which is what requires the Android SDK, the specific version can be seen in its documentation.
+
+For the library to work on android, the following packages must be added to the project (Shown in the gradle style)
+```gradle
+dependencies {
+    // gRPC
+    implementation 'io.grpc:grpc-okhttp:1.60.0'
+    implementation 'io.grpc:grpc-protobuf:1.40.1'
+    implementation 'io.grpc:grpc-stub:1.60.0'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.1'
+}
+```
+
+Note that the minimum android SDK version for this package is 26.
 
 # Usage
 The [`ClientV2`](./concordium-java-sdk/blob/main/concordium-sdk/src/main/java/com/concordium/sdk/ClientV2.java) is the main entrypoint for the SDK.

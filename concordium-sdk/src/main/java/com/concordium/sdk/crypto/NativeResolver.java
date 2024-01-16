@@ -19,26 +19,34 @@ public class NativeResolver {
     public static void loadLib() {
         if (!LOADED) {
             try {
-                val os = NativeResolver.OS.from(System.getProperty("os.name"));
-                val libName = os.getPrefix() + BASE_LIB_NAME + os.getExtension();
-                val libPath = "/native/" + libName;
+                if (NativeResolver.isAndroid()) {
+                    System.loadLibrary(BASE_LIB_NAME);
+                } else {
+                    val os = NativeResolver.OS.from(System.getProperty("os.name"));
+                    val libName = os.getPrefix() + BASE_LIB_NAME + os.getExtension();
+                    val libPath = "/native/" + libName;
 
-                val resourceAsStream = NativeResolver.class.getResourceAsStream(libPath);
-                if (Objects.isNull(resourceAsStream)) {
-                    throw new RuntimeException("FAILED LOADING LIB");
-                }
-                val tempLib = File.createTempFile(getRandomPrefix(), libName + os.getExtension());
-                tempLib.deleteOnExit();
+                    val resourceAsStream = NativeResolver.class.getResourceAsStream(libPath);
+                    if (Objects.isNull(resourceAsStream)) {
+                        throw new RuntimeException("FAILED LOADING LIB");
+                    }
+                    val tempLib = File.createTempFile(getRandomPrefix(), libName + os.getExtension());
+                    tempLib.deleteOnExit();
 
-                try (FileOutputStream fos = new FileOutputStream(tempLib)) {
-                    IOUtils.copy(resourceAsStream, fos);
+                    try (FileOutputStream fos = new FileOutputStream(tempLib)) {
+                        IOUtils.copy(resourceAsStream, fos);
+                    }
+                    System.load(tempLib.getAbsolutePath());
                 }
-                System.load(tempLib.getAbsolutePath());
                 LOADED = true;
             } catch (Exception e) {
                 throw new IllegalStateException("Could not load native dependencies", e);
             }
         }
+    }
+
+    private static boolean isAndroid() {
+        return System.getProperty("java.runtime.name").equals("Android Runtime");
     }
 
     private static String getRandomPrefix() {
