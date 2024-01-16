@@ -7,6 +7,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Identity {
 
+    /**
+     * Creates an identity request that is to be sent to an identity provider when
+     * creating a new identity.
+     * @param input the input required to generate an identity request
+     * @return an identity request serialized as JSON
+     */
     public static String createIdentityRequest(IdentityRequestInput input) {
         StringResult result = null;
         try {
@@ -20,6 +26,6 @@ public class Identity {
             throw CryptoJniException.from(result.getErr());
         }
 
-        return result.getOk();
+        return result.getResult();
     }
 }

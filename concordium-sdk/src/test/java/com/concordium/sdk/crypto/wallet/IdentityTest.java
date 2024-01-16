@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.concordium.sdk.crypto.bls.BLSSecretKey;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
@@ -48,16 +49,16 @@ public class IdentityTest {
 
     @Test
     public void testCreatingIdentityRequest() throws Exception {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Testnet);
-        String idCredSec = wallet.getIdCredSec(0, 0);
-        String prfKey = wallet.getPrfKey(0, 0);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.TESTNET);
+        BLSSecretKey idCredSec = wallet.getIdCredSec(0, 0);
+        BLSSecretKey prfKey = wallet.getPrfKey(0, 0);
         String blindingRandomness = wallet.getSignatureBlindingRandomness(0, 0);
 
         IdentityRequestInput input = IdentityRequestInput.builder()
                 .globalContext(getCryptographicParameters())
                 .ipInfo(getIdentityProviderInfo())
                 .arsInfos(getAnonymityRevokerInfos())
-                .arThreshold(2)        
+                .arThreshold(2)
                 .idCredSec(idCredSec)
                 .prfKey(prfKey)
                 .blindingRandomness(blindingRandomness)
