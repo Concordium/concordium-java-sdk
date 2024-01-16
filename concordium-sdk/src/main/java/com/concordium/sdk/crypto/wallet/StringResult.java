@@ -10,10 +10,10 @@ import java.util.Objects;
 
 @Data
 @ToString(doNotUseGetters = true)
-public class KeyResult {
+public class StringResult {
     
     @JsonProperty("Ok")
-    private final String ok;
+    private final String result;
 
     @JsonProperty("Err")
     private final JNIError err;
@@ -24,11 +24,11 @@ public class KeyResult {
     private boolean isSuccess;
 
     @JsonCreator
-    KeyResult(
+    StringResult(
             @JsonProperty("Ok") String ok,
             @JsonProperty("Err") JNIError err
     ) {
-        this.ok = ok;
+        this.result = ok;
         this.err = err;
         if (Objects.isNull(err)) {
             isSuccess = true;

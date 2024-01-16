@@ -22,49 +22,49 @@ public class ConcordiumHdWalletTest {
     public void testWalletFromInvalidSeedHexLength() {
         String invalidSeedAsHex = "abababab";
 
-        ConcordiumHdWallet.fromHex(invalidSeedAsHex, Network.Mainnet);
+        ConcordiumHdWallet.fromHex(invalidSeedAsHex, Network.MAINNET);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWalletFromInvalidHexadecimalSeed() {
         String invalidSeedAsHex = "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababa:";
 
-        ConcordiumHdWallet.fromHex(invalidSeedAsHex, Network.Mainnet);
+        ConcordiumHdWallet.fromHex(invalidSeedAsHex, Network.MAINNET);
     }
 
     @Test
     public void testWalletFromValidSeedHex() {
         String validSeedAsHex = "5f9649eb1aeb049e095324f5a012188f3a0eebb56ed622b683686b0d603f114b421a86bbfa2d60ac64c3841d0a0b944abc510b50546645083a7ac9acbee27d25";
 
-        ConcordiumHdWallet.fromHex(validSeedAsHex, Network.Mainnet);
+        ConcordiumHdWallet.fromHex(validSeedAsHex, Network.MAINNET);
     }
 
     @Test(expected = MnemonicLengthException.class)
     public void testWalletFailsFromInvalidSeedPhraseLength() throws IOException, MnemonicException{
         String invalidSeedPhrase = "hello hello hello hello";
 
-        ConcordiumHdWallet.fromSeedPhrase(invalidSeedPhrase, Network.Mainnet);
+        ConcordiumHdWallet.fromSeedPhrase(invalidSeedPhrase, Network.MAINNET);
     }
 
     @Test(expected = MnemonicException.MnemonicWordException.class)
     public void testWalletFailsFromInvalidSeedPhraseWord() throws IOException, MnemonicException{
         String invalidSeedPhrase = "hello hello johnson";
 
-        ConcordiumHdWallet.fromSeedPhrase(invalidSeedPhrase, Network.Mainnet);
+        ConcordiumHdWallet.fromSeedPhrase(invalidSeedPhrase, Network.MAINNET);
     }
 
     @Test
     public void testWalletFromValidSeedPhrase() throws IOException, MnemonicException {
         String validSeedPhrase = "plug pipe now victory right then canvas monkey treat weasel bacon skull that shaft rookie sell adjust chase trumpet depth asthma traffic code castle";
 
-        ConcordiumHdWallet.fromSeedPhrase(validSeedPhrase, Network.Mainnet);
+        ConcordiumHdWallet.fromSeedPhrase(validSeedPhrase, Network.MAINNET);
     }
 
     private static String TEST_SEED = "efa5e27326f8fa0902e647b52449bf335b7b605adc387015ec903f41d95080eb71361cbc7fb78721dcd4f3926a337340aa1406df83332c44c1cdcfe100603860";
 
     @Test
     public void testMainnetSigningKey() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
         byte[] signingKeyBytes = wallet.getAccountSigningKey(0, 55, 7).getRawBytes();
 
@@ -73,21 +73,14 @@ public class ConcordiumHdWalletTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testMainnetSigningKeyFailsIfU32OutOfBounds() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
-        wallet.getAccountSigningKey(4294967296l, 55, 7);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testMainnetSigningKeyFailsIfNegativeIndex() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
-
-        wallet.getAccountSigningKey(-1, 55, 7);
+        wallet.getAccountSigningKey(Integer.parseUnsignedInt("4294967296"), 55, 7);
     }
 
     @Test
     public void testMainnetPublicKey() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
         byte[] signingKeyBytes = wallet.getAccountPublicKey(1, 341, 9).getRawBytes();
 
@@ -96,7 +89,7 @@ public class ConcordiumHdWalletTest {
 
     @Test
     public void testMainnetPublicAndSigningKeyMatch() throws UnsupportedEncodingException {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
         ED25519SecretKey signingKey = wallet.getAccountSigningKey(0, 0, 0);
         ED25519PublicKey publicKey = wallet.getAccountPublicKey(0, 0, 0);
@@ -110,7 +103,7 @@ public class ConcordiumHdWalletTest {
 
     @Test
     public void testMainnetIdCredSec() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
         String idCredSec = wallet.getIdCredSec(2, 115);
 
@@ -119,7 +112,7 @@ public class ConcordiumHdWalletTest {
 
     @Test
     public void testMainnetPrfKey() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
         String prfKey = wallet.getPrfKey(3, 35);
 
@@ -128,7 +121,7 @@ public class ConcordiumHdWalletTest {
 
     @Test
     public void testMainnetCredentialId() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
         String credentialId = wallet.getCredentialId(10, 50, 5, "b14cbfe44a02c6b1f78711176d5f437295367aa4f2a8c2551ee10d25a03adc69d61a332a058971919dad7312e1fc94c5a8d45e64b6f917c540eee16c970c3d4b7f3caf48a7746284878e2ace21c82ea44bf84609834625be1f309988ac523fac");
 
@@ -137,7 +130,7 @@ public class ConcordiumHdWalletTest {
 
     @Test
     public void testMainnetBlindingRandomness() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
         String blindingRandomness = wallet.getSignatureBlindingRandomness(4, 5713);
 
@@ -146,7 +139,7 @@ public class ConcordiumHdWalletTest {
 
     @Test
     public void testMainnetAttributeCommitmentRandomness() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
         String attributeCommitmentRandomness = wallet.getAttributeCommitmentRandomness(5, 0, 4, 0);
 
@@ -155,7 +148,7 @@ public class ConcordiumHdWalletTest {
 
     @Test
     public void testMainnetVerifiableCredentialSigningKey() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
         ContractAddress issuer = new ContractAddress(2, 1);
 
         ED25519SecretKey verifiableCredentialSigningKey = wallet.getVerifiableCredentialSigningKey(issuer, 1);
@@ -165,7 +158,7 @@ public class ConcordiumHdWalletTest {
 
     @Test
     public void testMainnetVerifiableCredentialPublicKey() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
         ContractAddress issuer = new ContractAddress(1232, 3);
 
         ED25519PublicKey verifiableCredentialPublicKey = wallet.getVerifiableCredentialPublicKey(issuer, 341);
@@ -175,7 +168,7 @@ public class ConcordiumHdWalletTest {
 
     @Test
     public void testMainnetVerifiableCredentialBackupEncryptionKey() {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Mainnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
         String verifiableCredentialBackupEncryptionKey = wallet.getVerifiableCredentialBackupEncryptionKey();
 

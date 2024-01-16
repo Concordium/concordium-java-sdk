@@ -8,7 +8,7 @@ public class NetworkTest {
 
     @Test
     public void testMainnetNetworkValue() {
-        Network mainnet = Network.Mainnet;
+        Network mainnet = Network.MAINNET;
 
         String mainnetValue = mainnet.getValue();
 
@@ -17,7 +17,7 @@ public class NetworkTest {
 
     @Test
     public void testTestnetNetworkValue() {
-        Network testnet = Network.Testnet;
+        Network testnet = Network.TESTNET;
 
         String testnetValue = testnet.getValue();
 
