@@ -4,13 +4,13 @@
 In order to release the code, do the following.
 
 
-1. Bump the version to the new desired version by invoking ([from the root of the java sdk](../concordium-sdk/))
+1. Bump the version to the new desired version by invoking ([from the root of the repository](../))
 ```
 mvn versions:set -DnewVersion=$VERSION
 ```
 where `$VERSION` is in the following format: `x.y.z`
-This should set the desired version in the [pom.xml](../concordium-sdk/pom.xml).
-The [pom.xml](../concordium-sdk-examples/pom.xml) in [examples](../concordium-sdk-examples) should also be changed to use this new version
+This should set the desired version in the various [pom.xml](../pom.xml) files, including the [pom.xml](../concordium-sdk/pom.xml) in [concordium-sdk](../concordium-sdk) and the [pom.xml](../concordium-android-sdk/pom.xml) in [concordium-android-sdk/](../concordium-android-sdk).
+This should change the [pom.xml](../concordium-sdk-examples/pom.xml) in [examples](../concordium-sdk-examples) to use this new version.
 
 1. Commit and push this new version.
 1. Publish a release via Github (the tagged version and the $VERSION just set should be the same)
@@ -21,7 +21,7 @@ The [pom.xml](../concordium-sdk-examples/pom.xml) in [examples](../concordium-sd
 mvn versions:set -DnewVersion=$VERSION-SNAPSHOT
 ```
 where `$VERSION` is the just released version.
-The [pom.xml](../concordium-sdk-examples/pom.xml) in [examples](../concordium-sdk-examples) should also be changed to use this new snapshot version
+This should also change the [pom.xml](../concordium-sdk-examples/pom.xml) in [examples](../concordium-sdk-examples) to use this new version.
 1. Commit and push the `SNAPSHOT` version.
 
 ## Release workflow
