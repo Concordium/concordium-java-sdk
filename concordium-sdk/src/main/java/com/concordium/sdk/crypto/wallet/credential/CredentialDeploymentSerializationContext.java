@@ -4,10 +4,14 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 
 @Getter
 @AllArgsConstructor
 public class CredentialDeploymentSerializationContext {
-    private UnsignedCredentialDeploymentInfo unsignedCdi;
-    private List<String> signatures;
+    @NonNull
+    private final UnsignedCredentialDeploymentInfo unsignedCdi;
+
+    @NonNull
+    private final List<String> signatures;
 }

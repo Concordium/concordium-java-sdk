@@ -13,21 +13,42 @@ import com.concordium.sdk.transactions.CredentialPublicKeys;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 
 @Builder
 @Getter
 public class UnsignedCredentialInput {
     
+    @NonNull
     private IdentityProviderInfo ipInfo;
+
+    @NonNull
     private CryptographicParameters globalContext;
+
+    @NonNull
     private Map<String, AnonymityRevokerInfo> arsInfos;
+
+    @NonNull
     private IdentityObject idObject;
+
+    @NonNull
     private List<AttributeType> revealedAttributes;
+
     private int credNumber;
+
+    @NonNull
     private BLSSecretKey idCredSec;
+
+    @NonNull
     private BLSSecretKey prfKey;
+
+    @NonNull
     private String blindingRandomness;
+
+    @NonNull
     private Map<AttributeType, String> attributeRandomness;
+
+    @NonNull
     private CredentialPublicKeys credentialPublicKeys;
     
 }

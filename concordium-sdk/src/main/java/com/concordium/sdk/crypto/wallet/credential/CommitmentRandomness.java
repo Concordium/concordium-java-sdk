@@ -5,8 +5,10 @@ import java.util.Map;
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class CommitmentRandomness {
     
     private String idCredSecRand;

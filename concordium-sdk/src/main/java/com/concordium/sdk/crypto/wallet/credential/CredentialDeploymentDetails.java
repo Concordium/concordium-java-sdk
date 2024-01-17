@@ -5,14 +5,17 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 
 @Getter
 @AllArgsConstructor
 public class CredentialDeploymentDetails {
 
-    private UnsignedCredentialDeploymentInfo unsignedCdi;
+    @NonNull
+    private final UnsignedCredentialDeploymentInfo unsignedCdi;
     
+    @NonNull
     @JsonUnwrapped
-    private TransactionExpiry expiry;
+    private final TransactionExpiry expiry;
     
 }

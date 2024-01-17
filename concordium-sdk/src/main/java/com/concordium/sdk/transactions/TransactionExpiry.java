@@ -31,6 +31,10 @@ public class TransactionExpiry {
         return new TransactionExpiry(UInt64.fromBytes(source));
     }
 
+    /**
+     * Construct a {@link TransactionExpiry} from a long. Note that as the value
+     * goes into a {@link UInt64} that it will be interpreted as an unsigned UInt64.
+     */
     public static TransactionExpiry fromLong(long source) {
         return new TransactionExpiry(UInt64.from(source));
     }

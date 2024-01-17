@@ -2,7 +2,10 @@ use anyhow::{anyhow, Result};
 pub use concordium_base::common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
 use concordium_base::{
     base,
-    common::{Serialize, *, types::{TransactionTime, KeyIndex}},
+    common::{
+        types::{KeyIndex, TransactionTime},
+        Serialize, *,
+    },
     contracts_common::{schema::VersionedModuleSchema, Amount},
     encrypted_transfers,
     encrypted_transfers::types::{
@@ -10,7 +13,16 @@ use concordium_base::{
         IndexedEncryptedAmount, SecToPubAmountTransferData,
     },
     id,
-id::{constants::{ArCurve, AttributeKind, IpPairing}, curve_arithmetic::Curve, elgamal, types::{GlobalContext, UnsignedCredentialDeploymentInfo, AccountCredential, CredentialDeploymentInfo, AccountOwnershipSignature, AccountOwnershipProof, CredDeploymentProofs}},
+    id::{
+        constants::{ArCurve, AttributeKind, IpPairing},
+        curve_arithmetic::Curve,
+        elgamal,
+        types::{
+            AccountCredential, AccountOwnershipProof, AccountOwnershipSignature,
+            CredDeploymentProofs, CredentialDeploymentInfo, GlobalContext,
+            UnsignedCredentialDeploymentInfo,
+        },
+    },
     transactions::{AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload},
 };
 use core::slice;
@@ -24,9 +36,10 @@ use jni::{
 use rand::thread_rng;
 use serde_json::{from_str, to_string};
 use std::{
+    collections::BTreeMap,
     convert::{From, TryFrom, TryInto},
     i8,
-    str::Utf8Error, collections::BTreeMap,
+    str::Utf8Error,
 };
 use wallet_library::{
     credential::create_unsigned_credential_v1_aux,
@@ -1195,18 +1208,18 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createUnsi
 ) -> jstring {
     let input_string = match get_string(env, input) {
         Ok(s) => s,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let unsigned_credential_input: wallet_library::credential::UnsignedCredentialInput =
         match serde_json::from_str(&input_string) {
             Ok(req) => req,
-            Err(err) => return KeyResult::from(err).to_jstring(&env),
+            Err(err) => return StringResult::from(err).to_jstring(&env),
         };
 
     let request = match create_unsigned_credential_v1_aux(unsigned_credential_input) {
         Ok(r) => r,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(request).to_jstring(&env)
@@ -1215,12 +1228,13 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createUnsi
 #[derive(SerdeSerialize, SerdeDeserialize)]
 #[allow(non_snake_case)]
 struct CredentialDeploymentDetails {
-    expiry: TransactionTime,
+    expiry:      TransactionTime,
     unsignedCdi: UnsignedCredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>,
 }
 
-/// The JNI wrapper for getting the serialized bytes of a credential deployment transaction
-/// payload, i.e. the bytes of which should be hashed and signed before sending the transaction.
+/// The JNI wrapper for getting the serialized bytes of a credential deployment
+/// transaction payload, i.e. the bytes of which should be hashed and signed
+/// before sending the transaction.
 /// * `input` - the JSON string of
 ///   [`wallet_library::credential::UnsignedCredentialInput`]
 #[no_mangle]
@@ -1232,47 +1246,55 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeC
 ) -> jstring {
     let input_string = match get_string(env, input) {
         Ok(s) => s,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let credential_deployment_details: CredentialDeploymentDetails =
         match serde_json::from_str(&input_string) {
             Ok(req) => req,
-            Err(err) => return KeyResult::from(err).to_jstring(&env),
+            Err(err) => return StringResult::from(err).to_jstring(&env),
         };
 
     let mut result = Vec::<u8>::new();
 
     let mut credential_deployment_bytes = Vec::<u8>::new();
-    credential_deployment_details.unsignedCdi.values.serial(&mut credential_deployment_bytes);
+    credential_deployment_details
+        .unsignedCdi
+        .values
+        .serial(&mut credential_deployment_bytes);
 
     let mut cred_proofs = Vec::<u8>::new();
-    credential_deployment_details.unsignedCdi.proofs.serial(&mut cred_proofs);
+    credential_deployment_details
+        .unsignedCdi
+        .proofs
+        .serial(&mut cred_proofs);
 
     // Expiry
     let mut expiry_bytes = Vec::<u8>::new();
-    credential_deployment_details.expiry.seconds.serial(&mut expiry_bytes);
+    credential_deployment_details
+        .expiry
+        .seconds
+        .serial(&mut expiry_bytes);
 
     result.append(&mut credential_deployment_bytes);
     result.append(&mut cred_proofs);
     result.push(0);
     result.append(&mut expiry_bytes);
 
-    let test = hex::encode(&result);
+    let test = hex::encode(result);
     CryptoJniResult::Ok(test).to_jstring(&env)
 }
-
 
 #[derive(SerdeSerialize, SerdeDeserialize)]
 #[allow(non_snake_case)]
 struct CredentialDeploymentSerializationContext {
     unsignedCdi: UnsignedCredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>,
-    signatures: Vec<String>,
+    signatures:  Vec<String>,
 }
 
-
-/// The JNI wrapper for getting the serialized bytes of a credential deployment transaction
-/// payload, i.e. the bytes of which should be hashed and signed before sending the transaction.
+/// The JNI wrapper for getting the serialized bytes of a credential deployment
+/// transaction payload, i.e. the bytes of which should be hashed and signed
+/// before sending the transaction.
 /// * `input` - the JSON string of
 ///   [`wallet_library::credential::UnsignedCredentialInput`]
 #[no_mangle]
@@ -1284,21 +1306,24 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeC
 ) -> jstring {
     let input_string = match get_string(env, input) {
         Ok(s) => s,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let context: CredentialDeploymentSerializationContext =
         match serde_json::from_str(&input_string) {
             Ok(req) => req,
-            Err(err) => return KeyResult::from(err).to_jstring(&env),
+            Err(err) => return StringResult::from(err).to_jstring(&env),
         };
 
-    let result = match serialize_credential_deployment_payload_aux(context.signatures, context.unsignedCdi) {
+    let result = match serialize_credential_deployment_payload_aux(
+        context.signatures,
+        context.unsignedCdi,
+    ) {
         Ok(r) => r,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
-    let test = hex::encode(&result);
+    let test = hex::encode(result);
     CryptoJniResult::Ok(test).to_jstring(&env)
 }
 
@@ -1323,14 +1348,8 @@ fn get_credential_deployment_info(
     let values = unsigned_cdi.values;
     let proofs = unsigned_cdi.proofs;
 
-    let unsigned_credential_info = UnsignedCredentialDeploymentInfo::<
-        IpPairing,
-        ArCurve,
-        AttributeKind,
-    > {
-        values,
-        proofs,
-    };
+    let unsigned_credential_info =
+        UnsignedCredentialDeploymentInfo::<IpPairing, ArCurve, AttributeKind> { values, proofs };
 
     let signature_map = build_signature_map(&signatures);
     let proof_acc_sk = AccountOwnershipProof {

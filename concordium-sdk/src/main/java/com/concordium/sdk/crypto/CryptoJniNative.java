@@ -4,6 +4,9 @@ import com.concordium.sdk.crypto.wallet.IdentityRecoveryRequestInput;
 import com.concordium.sdk.crypto.wallet.IdentityRequestInput;
 import com.concordium.sdk.crypto.wallet.Network;
 import com.concordium.sdk.crypto.wallet.StringResult;
+import com.concordium.sdk.crypto.wallet.UnsignedCredentialInput;
+import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
+import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentSerializationContext;
 import com.concordium.sdk.exceptions.JNIError;
 import com.concordium.sdk.transactions.InitName;
 import com.concordium.sdk.transactions.ReceiveName;
@@ -279,7 +282,30 @@ public class CryptoJniNative {
      */
     public static native String createIdentityRecoveryRequest(String input);
 
+    /**
+     * Creates an unsigned credential.
+     * @param input {@link UnsignedCredentialInput} serialized as JSON.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the unsigned credential as JSON.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
     public static native String createUnsignedCredentialV1(String input);
+
+    /**
+     * Serializes a credential deployment. The digest of this serialization is the one
+     * that needs to be signed to be able to submit the transaction.
+     * @param input {@link CredentialDeploymentDetails} serialized as JSON.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the serialization of
+     * {@link CredentialDeploymentDetails} as a hex encoded string.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
     public static native String serializeCredentialDeployment(String input);
+    
+    /**
+     * Serializes a credential deployment for submission, i.e. it includes the signatures.
+     * @param input {@link CredentialDeploymentSerializationContext} serialized as JSON.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the serialization of
+     * {@link CredentialDeploymentSerializationContext} as a hex encoded string.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
     public static native String serializeCredentialDeploymentForSubmission(String input);
 }

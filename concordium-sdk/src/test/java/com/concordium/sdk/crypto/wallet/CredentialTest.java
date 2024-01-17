@@ -77,7 +77,7 @@ public class CredentialTest {
 
     @Test
     public void createUnsignedCredential() throws Exception {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Testnet);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.TESTNET);
 
         CredentialPublicKeys credentialPublicKeys = CredentialPublicKeys.from(Collections.singletonMap(Index.from(0), wallet.getAccountPublicKey(0, 0, 0)), 1);
         Map<AttributeType, String> attributeRandomness = new HashMap<>();
@@ -94,8 +94,8 @@ public class CredentialTest {
             .attributeRandomness(attributeRandomness)
             .blindingRandomness(wallet.getSignatureBlindingRandomness(0, 0))
             .credentialPublicKeys(credentialPublicKeys)
-            .idCredSec(BLSSecretKey.from(wallet.getIdCredSec(0, 0)))
-            .prfKey(BLSSecretKey.from(wallet.getPrfKey(0, 0)))
+            .idCredSec(wallet.getIdCredSec(0, 0))
+            .prfKey(wallet.getPrfKey(0, 0))
             .revealedAttributes(Collections.emptyList())
             .build();
 
@@ -112,9 +112,9 @@ public class CredentialTest {
         CredentialDeploymentSerializationContext context = new CredentialDeploymentSerializationContext(result.getUnsignedCdi(), Collections.singletonList(Hex.encodeHexString(signature)));
         byte[] credentialPayload = Credential.serializeCredentialDeploymentPayload(context);
 
-        Connection connection = Connection.builder().timeout(10000).host("grpc.testnet.concordium.com").port(20000).useTLS(TLSConfig.auto()).build();
-        ClientV2 client = ClientV2.from(connection);
+        // Connection connection = Connection.builder().timeout(10000).host("grpc.testnet.concordium.com").port(20000).useTLS(TLSConfig.auto()).build();
+        // ClientV2 client = ClientV2.from(connection);
 
-        client.sendCredentialDeploymentTransaction(expiry, credentialPayload);
+        // client.sendCredentialDeploymentTransaction(expiry, credentialPayload);
     }
 } 

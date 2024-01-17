@@ -3,8 +3,10 @@ package com.concordium.sdk.crypto.wallet.credential;
 import java.util.Map;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class IdOwnershipProofs {
     
     private String challenge;

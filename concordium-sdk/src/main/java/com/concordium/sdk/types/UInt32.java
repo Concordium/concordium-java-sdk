@@ -60,8 +60,8 @@ public final class UInt32 {
     }
 
     /**
-     * A custom Jackson serializer is provided that makes the UInt32 JSON serialization
-     * compatible with the JSON format expected by the Rust libraries.
+     * A custom Jackson serializer is provided that ensures that the unsigned value
+     * is the one used when serializing to JSON.
      */
     static class UInt32Serializer extends StdSerializer<UInt32> {
 

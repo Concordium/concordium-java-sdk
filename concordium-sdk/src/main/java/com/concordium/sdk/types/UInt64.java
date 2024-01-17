@@ -74,9 +74,9 @@ public final class UInt64 implements Comparable<UInt64> {
         return Long.compareUnsigned(this.value, other.value);
     }
 
-        /**
-     * A custom Jackson serializer is provided that makes the UInt32 JSON serialization
-     * compatible with the JSON format expected by the Rust libraries.
+    /**
+     * A custom Jackson serializer is provided that ensures that the unsigned value
+     * is the one used when serializing to JSON.
      */
     static class UInt64Serializer extends StdSerializer<UInt64> {
 
@@ -92,8 +92,7 @@ public final class UInt64 implements Comparable<UInt64> {
         public void serialize(
                 UInt64 uint, JsonGenerator jgen, SerializerProvider provider)
                 throws IOException, JsonProcessingException {
-
-            jgen.writeNumber(uint.getValue());
+            jgen.writeRawValue(Long.toUnsignedString(uint.getValue()));
         }
     }
 }

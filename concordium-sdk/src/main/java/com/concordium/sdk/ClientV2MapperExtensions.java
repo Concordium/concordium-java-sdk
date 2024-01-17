@@ -871,11 +871,8 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
-    // TODO This is mine.
-
     static SendBlockItemRequest to(TransactionExpiry expiry, byte[] payload) {
         TransactionTime time = to(expiry.getExpiry());
-        System.out.println(time.getValue());
 
         return SendBlockItemRequest.newBuilder()
             .setCredentialDeployment(
