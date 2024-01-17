@@ -1,5 +1,9 @@
 package com.concordium.sdk.responses.accountinfo.credential;
 
+import com.concordium.sdk.serializing.YearMonthDeserializer;
+import com.concordium.sdk.serializing.YearMonthSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableMap;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
@@ -18,17 +22,19 @@ import static com.google.common.collect.ImmutableMap.copyOf;
 @Jacksonized
 @EqualsAndHashCode
 public final class Policy {
-    private static final String FORMAT = "yyyyMM";
-
     /**
      * The year and month when the identity object from which the credential is derived was created.
      */
+    @JsonDeserialize(using = YearMonthDeserializer.class)
+    @JsonSerialize(using = YearMonthSerializer.class)
     private YearMonth createdAt;
 
     /**
      * The last year and month when the credential is still valid. After this
      * expires an account can no longer be created from the credential.
      */
+    @JsonDeserialize(using = YearMonthDeserializer.class)
+    @JsonSerialize(using = YearMonthSerializer.class)
     private YearMonth validTo;
 
     @Singular

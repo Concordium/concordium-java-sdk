@@ -7,7 +7,7 @@ public class WordLists {
      * This wordlist is in code as it is supplied as a resource file in the BIP39
      * library we are using, which does not work out of the box on Android.
      */
-    public static String ENGLISH = "abandon\n" + //
+    public static final String ENGLISH = "abandon\n" + //
             "ability\n" + //
             "able\n" + //
             "about\n" + //

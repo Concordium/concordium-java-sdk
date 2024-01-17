@@ -2,7 +2,10 @@ use anyhow::{anyhow, Result};
 pub use concordium_base::common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
 use concordium_base::{
     base,
-    common::{Serialize, *},
+    common::{
+        types::{KeyIndex, TransactionTime},
+        Serialize, *,
+    },
     contracts_common::{schema::VersionedModuleSchema, Amount},
     encrypted_transfers,
     encrypted_transfers::types::{
@@ -10,7 +13,16 @@ use concordium_base::{
         IndexedEncryptedAmount, SecToPubAmountTransferData,
     },
     id,
-    id::{constants::ArCurve, curve_arithmetic::Curve, elgamal, types::GlobalContext},
+    id::{
+        constants::{ArCurve, AttributeKind, IpPairing},
+        curve_arithmetic::Curve,
+        elgamal,
+        types::{
+            AccountCredential, AccountOwnershipProof, AccountOwnershipSignature,
+            CredDeploymentProofs, CredentialDeploymentInfo, GlobalContext,
+            UnsignedCredentialDeploymentInfo,
+        },
+    },
     transactions::{AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload},
 };
 use core::slice;
@@ -24,11 +36,13 @@ use jni::{
 use rand::thread_rng;
 use serde_json::{from_str, to_string};
 use std::{
-    convert::{From, TryFrom},
+    collections::BTreeMap,
+    convert::{From, TryFrom, TryInto},
     i8,
     str::Utf8Error,
 };
 use wallet_library::{
+    credential::create_unsigned_credential_v1_aux,
     identity::{create_identity_object_request_v1_aux, create_identity_recovery_request_aux},
     wallet::{
         get_account_public_key_aux, get_account_signing_key_aux,
@@ -682,7 +696,7 @@ fn get_string(env: JNIEnv, java_string: JString) -> Result<String, JNIErrorRespo
         Err(err) => {
             return Err(JNIErrorResponse {
                 errorMessage: err.to_string(),
-                errorType:    JNIErrorResponseType::ParameterSerialization,
+                errorType:    JNIErrorResponseType::JsonDeserialization,
             })
         }
     };
@@ -700,11 +714,15 @@ fn get_string(env: JNIEnv, java_string: JString) -> Result<String, JNIErrorRespo
     Ok(rust_str.to_string())
 }
 
+/// Convenience struct for grouping the hex encoded seed with
+/// the network in string form.
 struct SeedAndNet {
     seed_as_hex: String,
     net_as_str:  String,
 }
 
+/// Parse the hex encoded seed and the network from Java types to
+/// equivalent Rust types.
 fn get_seed_and_net(
     seed_as_hex: JString,
     net_as_str: JString,
@@ -718,19 +736,19 @@ fn get_seed_and_net(
     })
 }
 
-type KeyResult = CryptoJniResult<String>;
+type StringResult = CryptoJniResult<String>;
 
 /// The JNI wrapper for getting the account signing key.
 /// # Arguments
 ///
 /// * `seedAsHex` - The seed as a hex string.
 /// * `netAsStr` - The network type as a string. Must be 'Mainnet' or 'Testnet'.
-/// * `identityProviderIndex` - The index of the identity provider. It must be
-///   ensured that only a valid u32 is provided.
-/// * `identityIndex` - The index of the identity. It must be ensured that only
-///   a valid u32 is provided.
+/// * `identityProviderIndex` - The index of the identity provider which will be
+///   interpreted as a u32
+/// * `identityIndex` - The index of the identity which will be interpreted as a
+///   u32.
 /// * `credentialCounter` - The credential number of the credential to get the
-///   public key for. It must be ensured that only a valid u32 is provided.
+///   signing key for which will be interpreted as a u32.
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccountSigningKey(
@@ -738,13 +756,13 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccount
     _: JClass,
     seedAsHex: JString,
     netAsStr: JString,
-    identityProviderIndex: jlong,
-    identityIndex: jlong,
-    credentialCounter: jlong,
+    identityProviderIndex: jint,
+    identityIndex: jint,
+    credentialCounter: jint,
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {
         Ok(h) => h,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let account_signing_key = match get_account_signing_key_aux(
@@ -755,7 +773,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccount
         credentialCounter as u32,
     ) {
         Ok(k) => k,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(account_signing_key).to_jstring(&env)
@@ -766,12 +784,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccount
 ///
 /// * `seedAsHex` - The seed as a hex string.
 /// * `netAsStr` - The network type as a string. Must be 'Mainnet' or 'Testnet'.
-/// * `identityProviderIndex` - The index of the identity provider. It must be
-///   ensured that only a valid u32 is provided.
-/// * `identityIndex` - The index of the identity. It must be ensured that only
-///   a valid u32 is provided.
+/// * `identityProviderIndex` - The index of the identity provider which will be
+///   interpreted as a u32
+/// * `identityIndex` - The index of the identity which will be interpreted as a
+///   u32.
 /// * `credentialCounter` - The credential number of the credential to get the
-///   public key for. It must be ensured that only a valid u32 is provided.
+///   public key for which will be interpreted as a u32.
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccountPublicKey(
@@ -779,13 +797,13 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccount
     _: JClass,
     seedAsHex: JString,
     netAsStr: JString,
-    identityProviderIndex: jlong,
-    identityIndex: jlong,
-    credentialCounter: jlong,
+    identityProviderIndex: jint,
+    identityIndex: jint,
+    credentialCounter: jint,
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {
         Ok(h) => h,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let account_public_key = match get_account_public_key_aux(
@@ -796,7 +814,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccount
         credentialCounter as u32,
     ) {
         Ok(k) => k,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(account_public_key).to_jstring(&env)
@@ -807,10 +825,10 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAccount
 ///
 /// * `seedAsHex` - The seed as a hex string.
 /// * `netAsStr` - The network type as a string. Must be 'Mainnet' or 'Testnet'.
-/// * `identityProviderIndex` - The index of the identity provider. It must be
-///   ensured that only a valid u32 is provided.
-/// * `identityIndex` - The index of the identity. It must be ensured that only
-///   a valid u32 is provided.
+/// * `identityProviderIndex` - The index of the identity provider which will be
+///   interpreted as a u32
+/// * `identityIndex` - The index of the identity which will be interpreted as a
+///   u32.
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getIdCredSec(
@@ -818,12 +836,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getIdCredS
     _: JClass,
     seedAsHex: JString,
     netAsStr: JString,
-    identityProviderIndex: jlong,
-    identityIndex: jlong,
+    identityProviderIndex: jint,
+    identityIndex: jint,
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {
         Ok(h) => h,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let id_cred_sec = match get_id_cred_sec_aux(
@@ -833,7 +851,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getIdCredS
         identityIndex as u32,
     ) {
         Ok(k) => k,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(id_cred_sec).to_jstring(&env)
@@ -842,10 +860,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getIdCredS
 /// The JNI wrapper for getting the PRF key.
 /// # Arguments
 ///
-/// * `identityProviderIndex` - The index of the identity provider. It must be
-///   ensured that only a valid u32 is provided.
-/// * `identityIndex` - The index of the identity. It must be ensured that only
-///   a valid u32 is provided.
+/// * `seedAsHex` - The seed as a hex string.
+/// * `netAsStr` - The network type as a string. Must be 'Mainnet' or 'Testnet'.
+/// * `identityProviderIndex` - The index of the identity provider which will be
+///   interpreted as a u32
+/// * `identityIndex` - The index of the identity which will be interpreted as a
+///   u32.
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getPrfKey(
@@ -853,12 +873,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getPrfKey(
     _: JClass,
     seedAsHex: JString,
     netAsStr: JString,
-    identityProviderIndex: jlong,
-    identityIndex: jlong,
+    identityProviderIndex: jint,
+    identityIndex: jint,
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {
         Ok(h) => h,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let prf_key = match get_prf_key_aux(
@@ -868,7 +888,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getPrfKey(
         identityIndex as u32,
     ) {
         Ok(k) => k,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(prf_key).to_jstring(&env)
@@ -879,12 +899,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getPrfKey(
 ///
 /// * `seedAsHex` - The seed as a hex string.
 /// * `netAsStr` - The network type as a string. Must be 'Mainnet' or 'Testnet'.
-/// * `identityProviderIndex` - The index of the identity provider. It must be
-///   ensured that only a valid u32 is provided.
-/// * `identityIndex` - The index of the identity. It must be ensured that only
-///   a valid u32 is provided.
+/// * `identityProviderIndex` - The index of the identity provider which will be
+///   interpreted as a u32
+/// * `identityIndex` - The index of the identity which will be interpreted as a
+///   u32.
 /// * `credentialCounter` - The credential number of the credential to get the
-///   id of. It must be ensured that only a valid u8 is provided.
+///   credential id for  which will be interpreted as a u8.
 /// * `onChainCommitmentKey` - The on chain commitment key. This value can be
 ///   retrieved from a node through its gRPC interface.
 #[no_mangle]
@@ -894,19 +914,19 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getCredent
     _: JClass,
     seedAsHex: JString,
     netAsStr: JString,
-    identityProviderIndex: jlong,
-    identityIndex: jlong,
+    identityProviderIndex: jint,
+    identityIndex: jint,
     credentialCounter: jint,
     onChainCommitmentKey: JString,
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {
         Ok(h) => h,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let commitmentKey = match get_string(env, onChainCommitmentKey) {
         Ok(n) => n,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let credential_id = match get_credential_id_aux(
@@ -918,7 +938,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getCredent
         &commitmentKey,
     ) {
         Ok(k) => k,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(credential_id).to_jstring(&env)
@@ -929,10 +949,10 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getCredent
 ///
 /// * `seedAsHex` - The seed as a hex string.
 /// * `netAsStr` - The network type as a string. Must be 'Mainnet' or 'Testnet'.
-/// * `identityProviderIndex` - The index of the identity provider. It must be
-///   ensured that only a valid u32 is provided.
-/// * `identityIndex` - The index of the identity. It must be ensured that only
-///   a valid u32 is provided.
+/// * `identityProviderIndex` - The index of the identity provider which will be
+///   interpreted as a u32
+/// * `identityIndex` - The index of the identity which will be interpreted as a
+///   u32.
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getSignatureBlindingRandomness(
@@ -940,12 +960,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getSignatu
     _: JClass,
     seedAsHex: JString,
     netAsStr: JString,
-    identityProviderIndex: jlong,
-    identityIndex: jlong,
+    identityProviderIndex: jint,
+    identityIndex: jint,
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {
         Ok(h) => h,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let blinding_randomness = match get_signature_blinding_randomness_aux(
@@ -955,7 +975,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getSignatu
         identityIndex as u32,
     ) {
         Ok(k) => k,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(blinding_randomness).to_jstring(&env)
@@ -966,15 +986,15 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getSignatu
 ///
 /// * `seedAsHex` - The seed as a hex string.
 /// * `netAsStr` - The network type as a string. Must be 'Mainnet' or 'Testnet'.
-/// * `identityProviderIndex` - The index of the identity provider that the
-///   credential is associated with. It must be ensured that only a valid u32 is
+/// * `identityProviderIndex` - The index of the identity provider which will be
+///   interpreted as a u32
+/// * `identityIndex` - The index of the identity which will be interpreted as a
+///   u32.
+/// * `credentialCounter` - The credential number of the credential to get the
+///   attribute commitment
+/// randomness for which will be interpreted as a u32.
+/// * `attribute` - The attribute key which will be interpreted as a u8. is
 ///   provided.
-/// * `identityIndex` - The index of the identity that the credential is
-///   associated with. It must be ensured that only a valid u32 is provided.
-/// * `credentialCounter` - The credential number to get attribute commitmnet
-///   randomness for. It must be ensured that only a valid u32 is provided.
-/// * `attribute` - The attribute key. It must be ensured that only a valid u8
-///   is provided.
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAttributeCommitmentRandomness(
@@ -982,14 +1002,14 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAttribu
     _: JClass,
     seedAsHex: JString,
     netAsStr: JString,
-    identityProviderIndex: jlong,
-    identityIndex: jlong,
-    credentialCounter: jlong,
+    identityProviderIndex: jint,
+    identityIndex: jint,
+    credentialCounter: jint,
     attribute: jint,
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {
         Ok(h) => h,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let attribute_commitment_randomness = match get_attribute_commitment_randomness_aux(
@@ -1001,7 +1021,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAttribu
         attribute as u8,
     ) {
         Ok(k) => k,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(attribute_commitment_randomness).to_jstring(&env)
@@ -1012,12 +1032,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getAttribu
 ///
 /// * `seedAsHex` - The seed as a hex string.
 /// * `netAsStr` - The network type as a string. Must be 'Mainnet' or 'Testnet'.
-/// * `issuerIndex` - The issuer contract index. It must be ensured that only a
-///   valid u64 is provided.
-/// * `issuerSubindex` - The issuer contract subindex. It must be ensured that
-///   only a valid u64 is provided.
-/// * `verifiableCredentialIndex` - The index of the verifiable credential. It
-///   must be ensured that only a valid u32 is provided.
+/// * `issuerIndex` - The issuer contract index which is interpreted as a u64.
+/// * `issuerSubindex` - The issuer contract subindex which is interpreted as a
+///   u64.
+/// * `verifiableCredentialIndex` - The index of the verifiable credential which
+///   is interpreted
+/// as a u32.
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifiableCredentialSigningKey(
@@ -1027,11 +1047,11 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifia
     netAsStr: JString,
     issuerIndex: jlong,
     issuerSubindex: jlong,
-    verifiableCredentialIndex: jlong,
+    verifiableCredentialIndex: jint,
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {
         Ok(h) => h,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let verifiable_credential_signing_key = match get_verifiable_credential_signing_key_aux(
@@ -1042,7 +1062,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifia
         verifiableCredentialIndex as u32,
     ) {
         Ok(k) => k,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(verifiable_credential_signing_key).to_jstring(&env)
@@ -1053,12 +1073,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifia
 ///
 /// * `seedAsHex` - The seed as a hex string.
 /// * `netAsStr` - The network type as a string. Must be 'Mainnet' or 'Testnet'.
-/// * `issuerIndex` - The issuer contract index. It must be ensured that only a
-///   valid u64 is provided.
-/// * `issuerSubindex` - The issuer contract subindex. It must be ensured that
-///   only a valid u64 is provided.
-/// * `verifiableCredentialIndex` - The index of the verifiable credential. It
-///   must be ensured that only a valid u32 is provided.
+/// * `issuerIndex` - The issuer contract index which is interpreted as a u64.
+/// * `issuerSubindex` - The issuer contract subindex which is interpreted as a
+///   u64.
+/// * `verifiableCredentialIndex` - The index of the verifiable credential which
+///   is interpreted
+/// as a u32.
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifiableCredentialPublicKey(
@@ -1068,11 +1088,11 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifia
     netAsStr: JString,
     issuerIndex: jlong,
     issuerSubindex: jlong,
-    verifiableCredentialIndex: jlong,
+    verifiableCredentialIndex: jint,
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {
         Ok(h) => h,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let verifiable_credential_public_key = match get_verifiable_credential_public_key_aux(
@@ -1083,7 +1103,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifia
         verifiableCredentialIndex as u32,
     ) {
         Ok(k) => k,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(verifiable_credential_public_key).to_jstring(&env)
@@ -1103,7 +1123,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifia
 ) -> jstring {
     let seed_net = match get_seed_and_net(seedAsHex, netAsStr, env) {
         Ok(h) => h,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let verifiable_credential_backup_encryption_key =
@@ -1112,7 +1132,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_getVerifia
             &seed_net.net_as_str,
         ) {
             Ok(k) => k,
-            Err(err) => return KeyResult::from(err).to_jstring(&env),
+            Err(err) => return StringResult::from(err).to_jstring(&env),
         };
 
     CryptoJniResult::Ok(verifiable_credential_backup_encryption_key).to_jstring(&env)
@@ -1130,18 +1150,18 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIden
 ) -> jstring {
     let input_string = match get_string(env, input) {
         Ok(s) => s,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let id_request_input: wallet_library::identity::IdentityObjectRequestInput =
         match serde_json::from_str(&input_string) {
             Ok(req) => req,
-            Err(err) => return KeyResult::from(err).to_jstring(&env),
+            Err(err) => return StringResult::from(err).to_jstring(&env),
         };
 
     let request = match create_identity_object_request_v1_aux(id_request_input) {
         Ok(r) => r,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(request).to_jstring(&env)
@@ -1159,19 +1179,205 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIden
 ) -> jstring {
     let input_string = match get_string(env, input) {
         Ok(s) => s,
-        Err(err) => return KeyResult::Err(err).to_jstring(&env),
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
     let id_recovery_request_input: wallet_library::identity::IdentityRecoveryRequestInput =
         match serde_json::from_str(&input_string) {
             Ok(req) => req,
-            Err(err) => return KeyResult::from(err).to_jstring(&env),
+            Err(err) => return StringResult::from(err).to_jstring(&env),
         };
 
     let request = match create_identity_recovery_request_aux(id_recovery_request_input) {
         Ok(r) => r,
-        Err(err) => return KeyResult::from(err).to_jstring(&env),
+        Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
     CryptoJniResult::Ok(request).to_jstring(&env)
+}
+
+/// The JNI wrapper for creating a credential deployment transaction.
+/// * `input` - the JSON string of
+///   [`wallet_library::credential::UnsignedCredentialInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createUnsignedCredentialV1(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let unsigned_credential_input: wallet_library::credential::UnsignedCredentialInput =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return StringResult::from(err).to_jstring(&env),
+        };
+
+    let request = match create_unsigned_credential_v1_aux(unsigned_credential_input) {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(request).to_jstring(&env)
+}
+
+#[derive(SerdeSerialize, SerdeDeserialize)]
+#[allow(non_snake_case)]
+struct CredentialDeploymentDetails {
+    expiry:      TransactionTime,
+    unsignedCdi: UnsignedCredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>,
+}
+
+/// The JNI wrapper for getting the serialized bytes of a credential deployment
+/// transaction payload, i.e. the bytes of which should be hashed and signed
+/// before sending the transaction.
+/// * `input` - the JSON string of
+///   [`wallet_library::credential::UnsignedCredentialInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeCredentialDeployment(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let credential_deployment_details: CredentialDeploymentDetails =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return StringResult::from(err).to_jstring(&env),
+        };
+
+    let mut result = Vec::<u8>::new();
+
+    let mut credential_deployment_bytes = Vec::<u8>::new();
+    credential_deployment_details
+        .unsignedCdi
+        .values
+        .serial(&mut credential_deployment_bytes);
+
+    let mut cred_proofs = Vec::<u8>::new();
+    credential_deployment_details
+        .unsignedCdi
+        .proofs
+        .serial(&mut cred_proofs);
+
+    // Expiry
+    let mut expiry_bytes = Vec::<u8>::new();
+    credential_deployment_details
+        .expiry
+        .seconds
+        .serial(&mut expiry_bytes);
+
+    result.append(&mut credential_deployment_bytes);
+    result.append(&mut cred_proofs);
+    result.push(0);
+    result.append(&mut expiry_bytes);
+
+    let test = hex::encode(result);
+    CryptoJniResult::Ok(test).to_jstring(&env)
+}
+
+#[derive(SerdeSerialize, SerdeDeserialize)]
+#[allow(non_snake_case)]
+struct CredentialDeploymentSerializationContext {
+    unsignedCdi: UnsignedCredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>,
+    signatures:  Vec<String>,
+}
+
+/// The JNI wrapper for getting the serialized bytes of a credential deployment
+/// transaction payload, i.e. the bytes of which should be hashed and signed
+/// before sending the transaction.
+/// * `input` - the JSON string of
+///   [`wallet_library::credential::UnsignedCredentialInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeCredentialDeploymentForSubmission(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let context: CredentialDeploymentSerializationContext =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return StringResult::from(err).to_jstring(&env),
+        };
+
+    let result = match serialize_credential_deployment_payload_aux(
+        context.signatures,
+        context.unsignedCdi,
+    ) {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let test = hex::encode(result);
+    CryptoJniResult::Ok(test).to_jstring(&env)
+}
+
+fn serialize_credential_deployment_payload_aux(
+    signatures: Vec<String>,
+    unsigned_cdi: UnsignedCredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>,
+) -> Result<Vec<u8>> {
+    let cdi = get_credential_deployment_info(signatures, unsigned_cdi)?;
+
+    let acc_cred = AccountCredential::Normal { cdi };
+
+    let mut acc_cred_ser = Vec::<u8>::new();
+    acc_cred.serial(&mut acc_cred_ser);
+
+    Ok(acc_cred_ser)
+}
+
+fn get_credential_deployment_info(
+    signatures: Vec<String>,
+    unsigned_cdi: UnsignedCredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>,
+) -> Result<CredentialDeploymentInfo<IpPairing, ArCurve, AttributeKind>> {
+    let values = unsigned_cdi.values;
+    let proofs = unsigned_cdi.proofs;
+
+    let unsigned_credential_info =
+        UnsignedCredentialDeploymentInfo::<IpPairing, ArCurve, AttributeKind> { values, proofs };
+
+    let signature_map = build_signature_map(&signatures);
+    let proof_acc_sk = AccountOwnershipProof {
+        sigs: signature_map,
+    };
+
+    let cdp = CredDeploymentProofs {
+        id_proofs: unsigned_credential_info.proofs,
+        proof_acc_sk,
+    };
+
+    let cdi = CredentialDeploymentInfo {
+        values: unsigned_credential_info.values,
+        proofs: cdp,
+    };
+
+    Ok(cdi)
+}
+
+fn build_signature_map(signatures: &[String]) -> BTreeMap<KeyIndex, AccountOwnershipSignature> {
+    signatures
+        .iter()
+        .enumerate()
+        .map(|(index, key)| {
+            (
+                KeyIndex(index.try_into().unwrap()),
+                base16_decode_string(key).unwrap(),
+            )
+        })
+        .collect()
 }

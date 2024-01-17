@@ -1,7 +1,10 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.val;
 
@@ -13,16 +16,17 @@ import java.util.Map;
  */
 @Getter
 @ToString
+@NoArgsConstructor
 public class CredentialPublicKeys {
 
     /**
      * Credential keys (i.e. account holder keys).
      */
-    private final Map<Index, ED25519PublicKey> keys;
+    private Map<Index, ED25519PublicKey> keys;
     /**
      * The account threshold.
      */
-    private final int threshold;
+    private int threshold;
 
     CredentialPublicKeys(Map<Index, ED25519PublicKey> keys,
                          int threshold) {
@@ -50,6 +54,7 @@ public class CredentialPublicKeys {
         return buffer.array();
     }
 
+    @JsonIgnore
     public byte[] getBytes() {
         val keysLenBytes = keys.keySet().size();
         int keyBufferSize = TransactionType.BYTES;
