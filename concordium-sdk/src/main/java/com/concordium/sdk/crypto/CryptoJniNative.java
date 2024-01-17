@@ -1,11 +1,16 @@
 package com.concordium.sdk.crypto;
 
+import com.concordium.sdk.crypto.wallet.IdentityRequestInput;
+import com.concordium.sdk.crypto.wallet.Network;
+import com.concordium.sdk.crypto.wallet.StringResult;
 import com.concordium.sdk.exceptions.JNIError;
 import com.concordium.sdk.transactions.InitName;
 import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.transactions.smartcontracts.SchemaVersion;
 import com.concordium.sdk.transactions.smartcontracts.SerializeParameterResult;
+import com.concordium.sdk.types.ContractAddress;
+
 import lombok.SneakyThrows;
 
 public class CryptoJniNative {
@@ -110,17 +115,158 @@ public class CryptoJniNative {
     }
     private static native String serializeInitParameter(String parameterJson, String contractName, byte[] schemaBytes, int schemaVersion, boolean verboseErrors);
 
-    public static native String getAccountSigningKey(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex, long credentialCounter);
-    public static native String getAccountPublicKey(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex, long credentialCounter);
-    public static native String getIdCredSec(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex);
-    public static native String getPrfKey(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex);
-    public static native String getCredentialId(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex, long credentialCounter, String commitmentKey);
-    public static native String getSignatureBlindingRandomness(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex);
-    public static native String getAttributeCommitmentRandomness(String seedAsHex, String netAsStr, long identityProviderIndex, long identityIndex, long credentialCounter, int attribute);
-    public static native String getVerifiableCredentialSigningKey(String seedAsHex, String netAsStr, long issuerIndex, long issuerSubindex, long verifiableCredentialIndex);
-    public static native String getVerifiableCredentialPublicKey(String seedAsHex, String netAsStr, long issuerIndex, long issuerSubindex, long verifiableCredentialIndex);
-    public static native String getVerifiableCredentialBackupEncryptionKey(String seedAsHex, String netAsStr);
+    /**
+     * Derives an account signing key from the provided seed and network for the given indices.
+     * @param seedAsHex the seed derived from a seed phrase as a hex string
+     * @param network the network that the derived key is for
+     * @param identityProviderIndex the index of the identity provider that the account is associated with interpreted as a u32.
+     * @param identityIndex the index of the identity that the account is associated with interpreted as a u32.
+     * @param credentialCounter the number of the credential interpreted as a u32.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex encoded account signing key.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static String getAccountSigningKey(String seedAsHex, Network network, int identityProviderIndex, int identityIndex, int credentialCounter) {
+        return getAccountSigningKey(seedAsHex, network.getValue(), identityProviderIndex, identityIndex, credentialCounter);
+    }
+    private static native String getAccountSigningKey(String seedAsHex, String network, int identityProviderIndex, int identityIndex, int credentialCounter);
+
+    /**
+     * Derives an account public key from the provided seed and network for the given indices.
+     * @param seedAsHex the seed derived from a seed phrase as a hex string
+     * @param network the network that the derived key is for
+     * @param identityProviderIndex the index of the identity provider that the account is associated with interpreted as a u32.
+     * @param identityIndex the index of the identity that the account is associated with interpreted as a u32.
+     * @param credentialCounter the number of the credential interpreted as a u32.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex encoded account public key.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static String getAccountPublicKey(String seedAsHex, Network network, int identityProviderIndex, int identityIndex, int credentialCounter) {
+        return getAccountPublicKey(seedAsHex, network.getValue(), identityProviderIndex, identityIndex, credentialCounter);
+    }
+    private static native String getAccountPublicKey(String seedAsHex, String netAsStr, int identityProviderIndex, int identityIndex, int credentialCounter);
+
+    /**
+     * Derives id cred sec from the provided seed and network for the given indices.
+     * @param seedAsHex the seed derived from a seed phrase as a hex string
+     * @param network the network that the derived key is for
+     * @param identityProviderIndex the index of the identity provider that the account is associated with interpreted as a u32.
+     * @param identityIndex the index of the identity that the account is associated with interpreted as a u32.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex id cred sec.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static String getIdCredSec(String seedAsHex, Network network, int identityProviderIndex, int identityIndex) {
+        return getIdCredSec(seedAsHex, network.getValue(), identityProviderIndex, identityIndex);
+    }
+    private static native String getIdCredSec(String seedAsHex, String netAsStr, int identityProviderIndex, int identityIndex);
+
+    /**
+     * Derives a PRF-key from the provided seed and network for the given indices.
+     * @param seedAsHex the seed derived from a seed phrase as a hex string
+     * @param network the network that the derived key is for
+     * @param identityProviderIndex the index of the identity provider that the account is associated with interpreted as a u32.
+     * @param identityIndex the index of the identity that the account is associated with interpreted as a u32.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex encoded PRF-key.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static String getPrfKey(String seedAsHex, Network network, int identityProviderIndex, int identityIndex) {
+        return getPrfKey(seedAsHex, network.getValue(), identityProviderIndex, identityIndex);
+    }
+    private static native String getPrfKey(String seedAsHex, String netAsStr, int identityProviderIndex, int identityIndex);
+
+    /**
+     * Gets the credential ID for a specific credential defined by the identity provider index,
+     * identity index and the credential counter.
+     * @param seedAsHex the seed derived from a seed phrase as a hex string
+     * @param network the network that the derived key is for
+     * @param identityProviderIndex the index of the identity provider that the account is associated with interpreted as a u32.
+     * @param identityIndex the index of the identity that the account is associated with interpreted as a u32.
+     * @param credentialCounter the credential number of the credential to get the id for interpreted as a u8.
+     * @param commitmentKey the on chain commitment key. This value can be retrieved from a node through its gRPC interface.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex encoded credential id.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static String getCredentialId(String seedAsHex, Network network, int identityProviderIndex, int identityIndex, int credentialCounter, String commitmentKey) {
+        return getCredentialId(seedAsHex, network.getValue(), identityProviderIndex, identityIndex, credentialCounter, commitmentKey);
+    }
+    private static native String getCredentialId(String seedAsHex, String netAsStr, int identityProviderIndex, int identityIndex, int credentialCounter, String commitmentKey);
     
+    /**
+     * Derives the signature blinding randomness for a specific identity.
+     * @param seedAsHex the seed derived from a seed phrase as a hex string
+     * @param network the network that the derived randomness is for
+     * @param identityProviderIndex the index of the identity provider interpreted as a u32.
+     * @param identityIndex the index of the identity interpreted as a u32.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex encoded signature blinding randomness.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static String getSignatureBlindingRandomness(String seedAsHex, Network network, int identityProviderIndex, int identityIndex) {
+        return getSignatureBlindingRandomness(seedAsHex, network.getValue(), identityProviderIndex, identityIndex);
+    }
+    private static native String getSignatureBlindingRandomness(String seedAsHex, String netAsStr, int identityProviderIndex, int identityIndex);
+
+    /**
+     * Derives the attribute commitment randomness for a specific attribute.
+     * @param seedAsHex the seed derived from a seed phrase as a hex string
+     * @param network the network that the derived randomness is for
+     * @param identityProviderIndex the index of the identity provider interpreted as a u32.
+     * @param identityIndex the index of the identity interpreted as a u32.
+     * @param credentialCounter the credential number that the attribute is randomness is for interpreted as a u32.
+     * @param attribute the attribute key index interpreted as a u8.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex encoded attribute commitment randomness.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static String getAttributeCommitmentRandomness(String seedAsHex, Network network, int identityProviderIndex, int identityIndex, int credentialCounter, int attribute) {
+        return getAttributeCommitmentRandomness(seedAsHex, network.getValue(), identityProviderIndex, identityIndex, credentialCounter, attribute);
+    }
+    private static native String getAttributeCommitmentRandomness(String seedAsHex, String netAsStr, int identityProviderIndex, int identityIndex, int credentialCounter, int attribute);
+
+    /**
+     * Derives a verifiable credential signing key.
+     * @param seedAsHex the seed derived from a seed phrase as a hex string
+     * @param network the network that the derived randomness is for
+     * @param issuer the verifiable credential issuer contract
+     * @param verifiableCredentialIndex the index of the verifiable credential to derive a signing key for interpreted as a u32
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex encoded verifiable credential signing key.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static String getVerifiableCredentialSigningKey(String seedAsHex, Network network, ContractAddress issuer, int verifiableCredentialIndex) {
+        return getVerifiableCredentialSigningKey(seedAsHex, network.getValue(), issuer.getIndex(), issuer.getSubIndex(), verifiableCredentialIndex);
+    }
+    private static native String getVerifiableCredentialSigningKey(String seedAsHex, String netAsStr, long issuerIndex, long issuerSubindex, int verifiableCredentialIndex);
+
+    /**
+     * Derives a verifiable credential public key.
+     * @param seedAsHex the seed derived from a seed phrase as a hex string
+     * @param network the network that the derived randomness is for
+     * @param issuer the verifiable credential issuer contract
+     * @param verifiableCredentialIndex the index of the verifiable credential to derive a public key for interpreted as a u32
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex encoded verifiable credential public key.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static String getVerifiableCredentialPublicKey(String seedAsHex, Network network, ContractAddress issuer, int verifiableCredentialIndex) {
+        return getVerifiableCredentialPublicKey(seedAsHex, network.getValue(), issuer.getIndex(), issuer.getSubIndex(), verifiableCredentialIndex);
+    }
+    private static native String getVerifiableCredentialPublicKey(String seedAsHex, String netAsStr, long issuerIndex, long issuerSubindex, int verifiableCredentialIndex);
+
+    /**
+     * Derives the verifiable credential backup encryption key. This key should be used to encrypt
+     * the backup file of verifiable credentials. The key is derived from the seed phrase so that
+     * a user can access the backup file when only holding the seed phrase.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex encoded verifiable credential backup encryption key.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static String getVerifiableCredentialBackupEncryptionKey(String seedAsHex, Network network) {
+        return getVerifiableCredentialBackupEncryptionKey(seedAsHex, network.getValue());
+    }
+    private static native String getVerifiableCredentialBackupEncryptionKey(String seedAsHex, String netAsStr);
+
+    /**
+     * Creates an identity request that is to be sent to an identity provider when
+     * creating a new identity.
+     * @param input {@link IdentityRequestInput} serialized as JSON
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the identity request as JSON.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
     public static native String createIdentityRequestV1(String input);
     public static native String createIdentityRecoveryRequest(String input);
 }

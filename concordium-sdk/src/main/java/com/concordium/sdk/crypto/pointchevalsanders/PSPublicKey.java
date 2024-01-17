@@ -1,20 +1,14 @@
 package com.concordium.sdk.crypto.pointchevalsanders;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -22,8 +16,6 @@ import java.util.Arrays;
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode
-@ToString
-@JsonSerialize(using = PSPublicKey.JacksonSerializer.class)
 public class PSPublicKey {
 
     /**
@@ -48,25 +40,9 @@ public class PSPublicKey {
         return Arrays.copyOf(bytes, bytes.length);
     }
 
-    /**
-     * A custom Jackson serializer is provided that makes the PSPublicKey JSON serialization
-     * compatible with the JSON format expected by the Rust libraries.
-     */
-    static class JacksonSerializer extends StdSerializer<PSPublicKey> {
-        public JacksonSerializer() {
-            this(null);
-        }
-
-        public JacksonSerializer(Class<PSPublicKey> t) {
-            super(t);
-        }
-
-        @Override
-        public void serialize(
-                PSPublicKey publicKey, JsonGenerator jgen, SerializerProvider provider)
-                throws IOException, JsonProcessingException {
-
-            jgen.writeString(Hex.encodeHexString(publicKey.getBytes()));
-        }
+    @Override
+    @JsonValue
+    public String toString() {
+        return Hex.encodeHexString(this.bytes);
     }
 }

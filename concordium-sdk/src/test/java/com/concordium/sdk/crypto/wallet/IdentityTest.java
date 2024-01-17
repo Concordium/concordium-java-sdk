@@ -49,9 +49,9 @@ public class IdentityTest {
 
     @Test
     public void testCreatingIdentityRequest() throws Exception {
-        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.Testnet);
-        String idCredSec = wallet.getIdCredSec(0, 0);
-        String prfKey = wallet.getPrfKey(0, 0);
+        ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.TESTNET);
+        BLSSecretKey idCredSec = wallet.getIdCredSec(0, 0);
+        BLSSecretKey prfKey = wallet.getPrfKey(0, 0);
         String blindingRandomness = wallet.getSignatureBlindingRandomness(0, 0);
 
         IdentityRequestInput input = IdentityRequestInput.builder()

@@ -77,9 +77,7 @@ public final class UInt32 {
         public void serialize(
                 UInt32 uint, JsonGenerator jgen, SerializerProvider provider)
                 throws IOException, JsonProcessingException {
-
-            jgen.writeNumber(uint.getValue());
+            jgen.writeRawValue(Integer.toUnsignedString(uint.getValue()));
         }
     }
-
 }
