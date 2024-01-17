@@ -1,9 +1,9 @@
 # Changelog
 
 ## Unreleased changes
- - Purge remaining usages of V1 GRPC API.
-
+- Purge remaining usages of V1 GRPC API.
 - Added support for android through an AAR artifact.
+- Added `ConcordiumHdWallet` class for deriving Concordium specific keys and randomness from a seed phrase.
 
 ## 6.0.0
 - Added method `waitUntilFinalized` for waiting until a given transaction is finalized.
