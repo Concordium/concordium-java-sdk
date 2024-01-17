@@ -6,16 +6,21 @@ import com.concordium.sdk.responses.cryptographicparameters.CryptographicParamet
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NonNull;
 
 @Getter
-@Setter
 @Builder
 public class IdentityRecoveryRequestInput {
 
+    @NonNull
     private IdentityProviderInfo ipInfo;
+
+    @NonNull
     private CryptographicParameters globalContext;
-    private long timestamp;
+
+    @NonNull
     BLSSecretKey idCredSec;
+
+    private long timestamp;
 
 }
