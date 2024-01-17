@@ -78,6 +78,9 @@
                             <protoSourceRoot>${project.basedir}/../concordium-base/concordium-grpc-api/
                             </protoSourceRoot>
                             <checkStaleness>true</checkStaleness>
+                            <excludes>
+                                <exclude>**/google/protobuf/wrappers.proto</exclude>
+                            </excludes>
                         </configuration>
                         <executions>
                             <execution>
@@ -115,6 +118,9 @@
                             </protoSourceRoot>
                             <attachProtoSources>false</attachProtoSources>
                             <checkStaleness>true</checkStaleness>
+                            <excludes>
+                                <exclude>**/google/protobuf/wrappers.proto</exclude>
+                            </excludes>
                         </configuration>
                         <executions>
                             <execution>

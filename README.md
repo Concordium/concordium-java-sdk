@@ -78,6 +78,7 @@ git clone https://github.com/Concordium/concordium-java-sdk.git --recurse-submod
 2. Set the ANDROID_HOME environment variable to the path to your Android SDK installation.
 3. Run `make add-android-targets` from the root of this repository.
 4. Run `make android` from the root of this repository.
+4. Run `mvn install -N` from the root of the repository.
 5. Run `mvn install` from the root of the [concordium-android-sdk](./concordium-android-sdk) folder.
 
 `make add-android-targets` adds the rust targets that the native libraries will be built for.

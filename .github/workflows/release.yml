@@ -90,6 +90,11 @@ jobs:
   build-aar-library:
     runs-on: ubuntu-22.04
     steps:
+    - name: Set Up Android tools
+      run: |
+          ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager \
+          --sdk_root=$ANDROID_SDK_ROOT \
+          "platform-tools" "platforms;android-27" "build-tools;27.0.3"
     # Setup rust
     - name: Setup Rust
       uses: actions-rs/toolchain@v1
@@ -103,6 +108,8 @@ jobs:
     - name: Make android native dependencies
       run: make add-android-targets && make android
     # Builds and tests the sdk
+    - name: Initialize root project
+      run: mvn install -N
     - name: Build and test android sdk
       run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install
     - name: Upload aar
