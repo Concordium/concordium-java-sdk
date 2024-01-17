@@ -74,10 +74,12 @@ public class IdentityTest {
     public void testCreatingIdentityRecoveryRequest() throws Exception {
         IdentityRecoveryRequestInput input = IdentityRecoveryRequestInput.builder()
                 .globalContext(getCryptographicParameters()).ipInfo(getIdentityProviderInfo()).timestamp(0)
-                .idCredSec(BLSSecretKey.from("7392eb0b4840c8a6f9314e99a8dd3e2c3663a1e615d8820851e3abd2965fab18")).build();
+                .idCredSec(BLSSecretKey.from("7392eb0b4840c8a6f9314e99a8dd3e2c3663a1e615d8820851e3abd2965fab18"))
+                .build();
 
         String result = Identity.createIdentityRecoveryRequest(input);
 
-        assertTrue(result.contains("\"idCredPub\":\"b23e360b21cb8baad1fb1f9a593d1115fc678cb9b7c1a5b5631f82e088092d79d34b6a6c8520c06c41002a666adf792f\""));
+        assertTrue(result.contains(
+                "\"idCredPub\":\"b23e360b21cb8baad1fb1f9a593d1115fc678cb9b7c1a5b5631f82e088092d79d34b6a6c8520c06c41002a666adf792f\""));
     }
 }

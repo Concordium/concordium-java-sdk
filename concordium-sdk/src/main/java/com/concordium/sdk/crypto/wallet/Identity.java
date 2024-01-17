@@ -35,6 +35,12 @@ public class Identity {
         return result.getResult();
     }
 
+    /**
+     * Creates an identity recovery request that is to be sent to an identity provider when
+     * recovering an existing identity.
+     * @param input the input required to generate an identity recovery request
+     * @return an identity recovery request serialized as JSON
+     */
     public static String createIdentityRecoveryRequest(IdentityRecoveryRequestInput input) {
         StringResult result = null;
         try {

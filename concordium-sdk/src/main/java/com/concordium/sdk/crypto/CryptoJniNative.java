@@ -1,5 +1,6 @@
 package com.concordium.sdk.crypto;
 
+import com.concordium.sdk.crypto.wallet.IdentityRecoveryRequestInput;
 import com.concordium.sdk.crypto.wallet.IdentityRequestInput;
 import com.concordium.sdk.crypto.wallet.Network;
 import com.concordium.sdk.crypto.wallet.StringResult;
@@ -268,5 +269,13 @@ public class CryptoJniNative {
      * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
      */
     public static native String createIdentityRequestV1(String input);
+
+    /**
+     * Creates an identity recovery request that is to be sent to an identity provider when
+     * recovering a previously created identity.
+     * @param input {@link IdentityRecoveryRequestInput} serialized as JSON
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the identity recovery request as JSON.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
     public static native String createIdentityRecoveryRequest(String input);
 }
