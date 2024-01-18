@@ -17,11 +17,9 @@ import org.junit.Test;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.TLSConfig;
-import com.concordium.sdk.crypto.bls.BLSSecretKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentSerializationContext;
-import com.concordium.sdk.crypto.wallet.credential.UnsignedCredentialDeploymentInfo;
 import com.concordium.sdk.crypto.wallet.credential.UnsignedCredentialDeploymentInfoWithRandomness;
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType;
@@ -32,7 +30,6 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.CredentialPublicKeys;
 import com.concordium.sdk.transactions.Index;
 import com.concordium.sdk.transactions.TransactionExpiry;
-import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
@@ -78,11 +75,12 @@ public class CredentialTest {
     @Test
     public void createUnsignedCredential() throws Exception {
         ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.TESTNET);
+        int credentialCounter = 3;
 
-        CredentialPublicKeys credentialPublicKeys = CredentialPublicKeys.from(Collections.singletonMap(Index.from(0), wallet.getAccountPublicKey(0, 0, 0)), 1);
+        CredentialPublicKeys credentialPublicKeys = CredentialPublicKeys.from(Collections.singletonMap(Index.from(0), wallet.getAccountPublicKey(0, 0, credentialCounter)), 1);
         Map<AttributeType, String> attributeRandomness = new HashMap<>();
         for (AttributeType attrType : AttributeType.values()) {
-            attributeRandomness.put(attrType, wallet.getAttributeCommitmentRandomness(0, 0, 0, attrType.ordinal()));
+            attributeRandomness.put(attrType, wallet.getAttributeCommitmentRandomness(0, 0, credentialCounter, attrType.ordinal()));
         }
 
         UnsignedCredentialInput input = UnsignedCredentialInput.builder()
@@ -90,7 +88,7 @@ public class CredentialTest {
             .globalContext(getCryptographicParameters())
             .arsInfos(getAnonymityRevokerInfos())
             .idObject(getIdentityObject())
-            .credNumber(0)
+            .credNumber(credentialCounter)
             .attributeRandomness(attributeRandomness)
             .blindingRandomness(wallet.getSignatureBlindingRandomness(0, 0))
             .credentialPublicKeys(credentialPublicKeys)
@@ -100,21 +98,20 @@ public class CredentialTest {
             .build();
 
         UnsignedCredentialDeploymentInfoWithRandomness result = Credential.createUnsignedCredential(input);
-
         TransactionExpiry expiry = TransactionExpiry.fromLong(new Date().getTime() + 360);
 
         byte[] credentialDeploymentSignDigest = Credential.getCredentialDeploymentSignDigest(new CredentialDeploymentDetails(result.getUnsignedCdi(), expiry));
-        ED25519SecretKey signingKey = wallet.getAccountSigningKey(0, 0, 0);
+        ED25519SecretKey signingKey = wallet.getAccountSigningKey(0, 0, credentialCounter);
         byte[] signature = signingKey.sign(credentialDeploymentSignDigest);
         
         assertTrue(credentialPublicKeys.getKeys().get(Index.from(0)).verify(credentialDeploymentSignDigest, signature));
 
-        CredentialDeploymentSerializationContext context = new CredentialDeploymentSerializationContext(result.getUnsignedCdi(), Collections.singletonList(Hex.encodeHexString(signature)));
+        CredentialDeploymentSerializationContext context = new CredentialDeploymentSerializationContext(result.getUnsignedCdi(), Collections.singletonMap(Index.from(0), Hex.encodeHexString(signature)));
         byte[] credentialPayload = Credential.serializeCredentialDeploymentPayload(context);
 
-        // Connection connection = Connection.builder().timeout(10000).host("grpc.testnet.concordium.com").port(20000).useTLS(TLSConfig.auto()).build();
-        // ClientV2 client = ClientV2.from(connection);
+        Connection connection = Connection.builder().timeout(10000).host("grpc.testnet.concordium.com").port(20000).useTLS(TLSConfig.auto()).build();
+        ClientV2 client = ClientV2.from(connection);
 
-        // client.sendCredentialDeploymentTransaction(expiry, credentialPayload);
+        client.sendCredentialDeploymentTransaction(expiry, credentialPayload);
     }
 } 

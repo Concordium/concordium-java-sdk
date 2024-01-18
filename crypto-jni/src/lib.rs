@@ -1215,14 +1215,13 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createUnsi
     CryptoJniResult::Ok(request).to_jstring(&env)
 }
 
-/// The JNI wrapper for getting the serialized bytes of a credential deployment
-/// transaction payload, i.e. the bytes of which should be hashed and signed
-/// before sending the transaction.
+/// The JNI wrapper for computing the hash to sign of a credential deployment
+/// transaction payload.
 /// * `input` - the JSON string of
 ///   [`wallet_library::credential::UnsignedCredentialInput`]
 #[no_mangle]
 #[allow(non_snake_case)]
-pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeCredentialDeployment(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_computeCredentialDeploymentSignDigest(
     env: JNIEnv,
     _: JClass,
     input: JString,
@@ -1238,9 +1237,9 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeC
             Err(err) => return StringResult::from(err).to_jstring(&env),
         };
 
-    let mut serialized_credential_deployment_details = Vec::<u8>::new();
-    credential_deployment_details.serial(&mut serialized_credential_deployment_details);
-    CryptoJniResult::Ok(hex::encode(serialized_credential_deployment_details)).to_jstring(&env)
+    let credential_deployment_sign_digest =
+        credential::compute_credential_deployment_hash_to_sign(credential_deployment_details);
+    CryptoJniResult::Ok(credential_deployment_sign_digest).to_jstring(&env)
 }
 
 /// The JNI wrapper for getting the serialized bytes of a credential deployment
@@ -1265,10 +1264,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeC
         Err(err) => return StringResult::from(err).to_jstring(&env),
     };
 
-    let result = match serialize_credential_deployment_payload(payload) {
-        Ok(r) => r,
-        Err(err) => return StringResult::from(err).to_jstring(&env),
-    };
+    let serialized_credential_deployment_payload = serialize_credential_deployment_payload(payload);
 
-    CryptoJniResult::Ok(hex::encode(result)).to_jstring(&env)
+    CryptoJniResult::Ok(serialized_credential_deployment_payload).to_jstring(&env)
 }
