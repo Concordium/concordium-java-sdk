@@ -1,6 +1,5 @@
 package com.example.android_sdk_example.activities
 
-// TODO Check SeedPhrase is Valid
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -26,7 +25,7 @@ class SeedPhraseActivity : ComponentActivity() {
         // Save seed phrase in SharedPreferences
         storage.seedPhrase.set(phrase)
         // Go to identity issuance
-        val myIntent = Intent(this, IssueIdentityActivity::class.java)
+        val myIntent = Intent(this, NewIdentityActivity::class.java)
         startActivity(myIntent)
     }
 

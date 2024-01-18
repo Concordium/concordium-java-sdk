@@ -41,6 +41,7 @@
         </activity>
         <activity android:name="com.example.android_sdk_example.activities.RecoverIdentityActivity" />
         <activity android:name="com.example.android_sdk_example.activities.IdentityConfirmationActivity" />
+        <activity android:name="com.example.android_sdk_example.activities.NewIdentityActivity" />
     </application>
 
 </manifest>
