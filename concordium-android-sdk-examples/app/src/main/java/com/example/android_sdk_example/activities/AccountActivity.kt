@@ -5,12 +5,9 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -23,11 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cash.z.ecc.android.bip39.Mnemonics
-import cash.z.ecc.android.bip39.toSeed
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey
-import com.concordium.sdk.crypto.wallet.ConcordiumHdWallet
-import com.concordium.sdk.crypto.wallet.Network
 import com.concordium.sdk.requests.AccountQuery
 import com.concordium.sdk.requests.BlockQuery
 import com.concordium.sdk.transactions.AccountNonce
@@ -38,14 +31,20 @@ import com.concordium.sdk.transactions.SignerEntry
 import com.concordium.sdk.transactions.TransactionFactory
 import com.concordium.sdk.transactions.TransactionSigner
 import com.concordium.sdk.types.AccountAddress
-import com.example.android_sdk_example.ConcordiumClientService
+import com.example.android_sdk_example.Constants
 import com.example.android_sdk_example.Storage
-import com.example.android_sdk_example.ui.theme.AndroidsdkexampleTheme
+import com.example.android_sdk_example.services.ConcordiumClientService
+import com.example.android_sdk_example.ui.Container
 
 
 class AccountActivity : ComponentActivity() {
 
-    private fun sendTransfer(senderAddress: String, receiverAddress: String, microCCDAmount: Long, privateKey: ED25519SecretKey): String {
+    private fun sendTransfer(
+        senderAddress: String,
+        receiverAddress: String,
+        microCCDAmount: Long,
+        privateKey: ED25519SecretKey
+    ): String {
         val sender = AccountAddress.from(senderAddress)
         val receiver = AccountAddress.from(receiverAddress)
         val amount = CCDAmount.fromMicro(microCCDAmount)
@@ -74,24 +73,28 @@ class AccountActivity : ComponentActivity() {
         return transactionHash.asHex()
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val storage = Storage(getSharedPreferences("EXAMPLE", ComponentActivity.MODE_PRIVATE))
+        val storage = Storage(applicationContext)
         val address = storage.accountAddress.get()
-        val seedPhrase = storage.seedPhrase.get()
         val providerIndex = storage.identityProviderIndex.get()
-        val seedAsHex = Mnemonics.MnemonicCode(seedPhrase!!.toCharArray()).toSeed().toHexString()
-        val wallet: ConcordiumHdWallet = ConcordiumHdWallet.fromHex(seedAsHex, Network.Mainnet)
-        val privateKey = wallet.getAccountSigningKey(providerIndex?.toLong()!!, 0, 0)
+        val privateKey = storage.getWallet().getAccountSigningKey(
+            providerIndex!!.toInt(),
+            Constants.IDENTITY_INDEX,
+            Constants.CREDENTIAL_COUNTER
+        )
 
         setContent {
-            AndroidsdkexampleTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    AccountView(accountAddress = address!!, sendTransfer = { recipient, amount ->  sendTransfer(address, recipient, amount, privateKey)})
-                }
-            }
+            AccountView(
+                accountAddress = address!!,
+                sendTransfer = { recipient, amount ->
+                    sendTransfer(
+                        address,
+                        recipient,
+                        amount,
+                        privateKey
+                    )
+                })
         }
     }
 }
@@ -100,15 +103,16 @@ class AccountActivity : ComponentActivity() {
 fun Transfer(sendTransfer: (recipient: String, amount: Long) -> Unit) {
     var amount by remember { mutableStateOf("0") }
     var recipient by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
-    Column ( modifier = Modifier.padding(top = 30.dp)) {
+    Column(modifier = Modifier.padding(top = 30.dp)) {
         TextField(
             value = recipient,
             onValueChange = { recipient = it },
             label = { Text("Recipient Address") }
         )
         TextField(
-            label = { Text("Amount (µϾ)")},
+            label = { Text("Amount (µϾ)") },
             value = amount,
             onValueChange = { value ->
                 amount = value.filter { it.isDigit() }
@@ -117,7 +121,13 @@ fun Transfer(sendTransfer: (recipient: String, amount: Long) -> Unit) {
                 keyboardType = KeyboardType.Number
             )
         )
-        Button(onClick = { sendTransfer(recipient, amount.toLong())}) {
+        Button(onClick = {
+            try {
+                sendTransfer(recipient, amount.toLong())
+            } catch (e: Exception) {
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }
+        }) {
             Text(text = "Send Transfer")
         }
     }
@@ -125,7 +135,7 @@ fun Transfer(sendTransfer: (recipient: String, amount: Long) -> Unit) {
 
 @Composable
 fun AccountView(accountAddress: String, sendTransfer: (recipient: String, amount: Long) -> Unit) {
-    AndroidsdkexampleTheme {
+    Container {
         Column {
             Text(text = "Your Concordium account")
             Text(text = "Address: $accountAddress")
@@ -142,7 +152,7 @@ fun DisplayAccountBalance(address: String, modifier: Modifier = Modifier) {
             val accountInfo = ConcordiumClientService.getClient().getAccountInfo(
                 BlockQuery.BEST,
                 AccountQuery.from(AccountAddress.from(address))
-            );
+            )
             "Ͼ${accountInfo.accountAmount.value.value / 10000}"
         } catch (e: Exception) {
             "Unavailable"
@@ -159,5 +169,13 @@ fun DisplayAccountBalance(address: String, modifier: Modifier = Modifier) {
 fun AccountActivityPreview() {
     val address by remember { mutableStateOf("4NkgEGFC483jcdgMUR8QKhhKNsRaeSuDQVmoE5LG6MQNDQvCvf") }
     val context = LocalContext.current
-    AccountView(accountAddress = address, sendTransfer = { recipient: String, amount: Long -> Toast.makeText(context, "Sending Ͼ${amount / 10000} to $recipient", Toast.LENGTH_SHORT).show() })
+    AccountView(
+        accountAddress = address,
+        sendTransfer = { recipient: String, amount: Long ->
+            Toast.makeText(
+                context,
+                "Sending Ͼ${amount / 10000} to $recipient",
+                Toast.LENGTH_SHORT
+            ).show()
+        })
 }

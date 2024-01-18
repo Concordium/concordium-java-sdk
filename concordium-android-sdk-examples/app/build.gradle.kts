@@ -49,22 +49,22 @@ android {
 
 dependencies {
     implementation("io.grpc:grpc-okhttp:1.60.0")
-    implementation("io.grpc:grpc-protobuf:1.40.1")
+    implementation("io.grpc:grpc-protobuf:1.60.0")
     implementation("io.grpc:grpc-stub:1.60.0")
-    implementation(files("libs/concordium-android-sdk.aar"))
     implementation("androidx.browser:browser:1.7.0")
+    implementation(files("libs/concordium-android-sdk.aar"))
     compileOnly("org.apache.tomcat:annotations-api:6.0.53") // necessary for Java 9+
-    implementation ("com.fasterxml.jackson.core:jackson-core:2.10.1")
-    implementation ("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1")
-    implementation ("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.1")
+    implementation ("com.fasterxml.jackson.core:jackson-core:2.16.1")
+    implementation ("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
+    implementation ("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.16.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("com.squareup.retrofit2:converter-jackson:2.9.0")
 
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.activity:activity-compose:1.7.0")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")

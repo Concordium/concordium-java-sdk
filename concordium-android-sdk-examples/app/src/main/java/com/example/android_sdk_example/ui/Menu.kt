@@ -15,7 +15,12 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <Option> Menu(options: Iterable<Option>, initialOption: Option?, display: (option: Option) -> String, onClick: (chosen: Option) -> Unit) {
+fun <Option> Menu(
+    options: Iterable<Option>,
+    initialOption: Option?,
+    display: (option: Option) -> String,
+    onClick: (chosen: Option) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
