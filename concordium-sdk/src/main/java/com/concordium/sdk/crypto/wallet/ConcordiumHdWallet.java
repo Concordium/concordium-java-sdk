@@ -13,6 +13,7 @@ import org.bitcoinj.crypto.MnemonicException;
 
 import com.concordium.sdk.crypto.CryptoJniNative;
 import com.concordium.sdk.crypto.NativeResolver;
+import com.concordium.sdk.crypto.bls.BLSSecretKey;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.exceptions.CryptoJniException;
@@ -169,28 +170,28 @@ public class ConcordiumHdWallet {
      * Derives id cred sec for a specific identity.
      * @param identityProviderIndex the index of the identity provider interpreted as a u32.
      * @param identityIndex the index of the identity interpreted as a u32.
-     * @return id cred sec encoded as a hex string
+     * @return id cred sec
      */
-    public String getIdCredSec(int identityProviderIndex, int identityIndex) {
+    public BLSSecretKey getIdCredSec(int identityProviderIndex, int identityIndex) {
         String idCredSec = getStringResult((String seedAsHex, Network network) -> {
             return CryptoJniNative.getIdCredSec(seedAsHex, network, identityProviderIndex, identityIndex);
         });
 
-        return idCredSec;
+        return BLSSecretKey.from(idCredSec);
     }
 
     /**
      * Derives the PRF key for a specific identity.
      * @param identityProviderIndex the index of the identity provider interpreted as a u32.
      * @param identityIndex the index of the identity interpreted as a u32.
-     * @return a PRF key encoded as a hex string
+     * @return a PRF key
      */
-    public String getPrfKey(int identityProviderIndex, int identityIndex) {
+    public BLSSecretKey getPrfKey(int identityProviderIndex, int identityIndex) {
         String prfKey = getStringResult((String seedAsHex, Network network) -> {
             return CryptoJniNative.getPrfKey(seedAsHex, network, identityProviderIndex, identityIndex);
         });
 
-        return prfKey;
+        return BLSSecretKey.from(prfKey);
     }
 
     /**

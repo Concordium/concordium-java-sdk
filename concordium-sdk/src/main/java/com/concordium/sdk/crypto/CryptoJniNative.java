@@ -1,5 +1,6 @@
 package com.concordium.sdk.crypto;
 
+import com.concordium.sdk.crypto.wallet.IdentityRequestInput;
 import com.concordium.sdk.crypto.wallet.Network;
 import com.concordium.sdk.crypto.wallet.StringResult;
 import com.concordium.sdk.exceptions.JNIError;
@@ -258,4 +259,13 @@ public class CryptoJniNative {
         return getVerifiableCredentialBackupEncryptionKey(seedAsHex, network.getValue());
     }
     private static native String getVerifiableCredentialBackupEncryptionKey(String seedAsHex, String netAsStr);
+
+    /**
+     * Creates an identity request that is to be sent to an identity provider when
+     * creating a new identity.
+     * @param input {@link IdentityRequestInput} serialized as JSON
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the identity request as JSON.
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static native String createIdentityRequestV1(String input);
 }

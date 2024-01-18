@@ -105,7 +105,7 @@ public class ConcordiumHdWalletTest {
     public void testMainnetIdCredSec() {
         ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
-        String idCredSec = wallet.getIdCredSec(2, 115);
+        String idCredSec = wallet.getIdCredSec(2, 115).toString();
 
         assertEquals("33b9d19b2496f59ed853eb93b9d374482d2e03dd0a12e7807929d6ee54781bb1", idCredSec);
     }
@@ -114,7 +114,7 @@ public class ConcordiumHdWalletTest {
     public void testMainnetPrfKey() {
         ConcordiumHdWallet wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.MAINNET);
 
-        String prfKey = wallet.getPrfKey(3, 35);
+        String prfKey = wallet.getPrfKey(3, 35).toString();
 
         assertEquals("4409e2e4acffeae641456b5f7406ecf3e1e8bd3472e2df67a9f1e8574f211bc5", prfKey);
     }

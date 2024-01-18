@@ -4,6 +4,7 @@ import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * A Set of Cryptographic parameters that are particular to the chain and
@@ -11,6 +12,7 @@ import lombok.Data;
  */
 @Data
 @Builder
+@Jacksonized
 public final class CryptographicParameters {
 
     /**
