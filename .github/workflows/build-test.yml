@@ -90,6 +90,11 @@ jobs:
     runs-on: ubuntu-22.04
     if: ${{ !github.event.pull_request.draft }}
     steps:
+    - name: Set Up Android tools
+      run: |
+          ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager \
+          --sdk_root=$ANDROID_SDK_ROOT \
+          "platform-tools" "platforms;android-27" "build-tools;27.0.3"
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -106,5 +111,7 @@ jobs:
         toolchain: 1.69
     - name: Create native dependencies
       run: make add-android-targets && make android
+    - name: Initialize root project
+      run: mvn install -N
     - name: Build android sdk
       run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install
