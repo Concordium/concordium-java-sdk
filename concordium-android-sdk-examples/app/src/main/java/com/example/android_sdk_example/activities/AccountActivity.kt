@@ -155,7 +155,7 @@ fun Transfer(sendTransfer: (recipient: String, amount: Long) -> String) {
 fun TransactionHashLink(transactionHash: String) {
     val annotatedLinkString: AnnotatedString = buildAnnotatedString {
         val str = "Latest transaction hash: $transactionHash"
-        val startIndex = str.indexOf("$transactionHash")
+        val startIndex = str.indexOf(transactionHash)
         val endIndex = startIndex + transactionHash.length
         append(str)
         addStyle(
@@ -195,7 +195,7 @@ fun AccountView(accountAddress: String, sendTransfer: (recipient: String, amount
         Column(modifier = Modifier.padding(12.dp)) {
             Text(text = "Your Concordium account", fontSize = 22.sp)
             Text(text = "Address")
-            Text(text = "$accountAddress", fontSize = 14.sp, modifier = Modifier.paddingFromBaseline(0.dp, 14.dp))
+            Text(text = accountAddress, fontSize = 14.sp, modifier = Modifier.paddingFromBaseline(0.dp, 14.dp))
             DisplayAccountBalance(address = accountAddress)
             Transfer(sendTransfer)
         }
@@ -219,7 +219,7 @@ fun DisplayAccountBalance(address: String) {
         Text(
             text = "Balance"
         )
-        Text(text = "$balance", fontSize = 14.sp)
+        Text(text = balance, fontSize = 14.sp)
     }
 }
 
@@ -227,7 +227,6 @@ fun DisplayAccountBalance(address: String) {
 @Composable
 fun AccountActivityPreview() {
     val address by remember { mutableStateOf("4NkgEGFC483jcdgMUR8QKhhKNsRaeSuDQVmoE5LG6MQNDQvCvf") }
-    val context = LocalContext.current
     AccountView(
         accountAddress = address,
         sendTransfer = { recipient: String, amount: Long -> "Dummy hash"})
