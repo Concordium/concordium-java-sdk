@@ -187,6 +187,17 @@ jobs:
         project: maven
         custom-command: cd concordium-sdk && mvn javadoc:javadoc -f pom.xml # Generates javadoc from the delombok'ed code
 
+    # Setup maven central repository
+    - name: Set up Maven Central Repository
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+
+    # Publish the artifact to the central maven repository.
     - name: Publish package to central maven repository
       run: mvn --batch-mode deploy
       env:
