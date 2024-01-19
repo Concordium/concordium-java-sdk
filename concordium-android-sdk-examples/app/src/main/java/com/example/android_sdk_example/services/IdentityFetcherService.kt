@@ -29,6 +29,11 @@ class IdentityFetcherService {
         }
     }
 
+    private data class RecoveryErrorResponse(
+        val code: Int,
+        val message: String
+    )
+
     private data class IdentityWrapper(val identityObject: VersionedIdentity)
 
     @JsonAutoDetect
@@ -95,10 +100,16 @@ class IdentityFetcherService {
      */
     fun getFromRecovery(recoveryUrl: String): IdentityObject {
         val backend = initializeBackend()
-        println(recoveryUrl)
         val response = backend.recoverIdentity(recoveryUrl).execute()
         if (response.isSuccessful) {
             response.body()?.let { return it.value }
+        } else {
+            response.errorBody()?.let {
+                val raw = it.string()
+                val errorResponse =
+                    jacksonObjectMapper().readValue(raw, RecoveryErrorResponse::class.java)
+                throw Exception(errorResponse.message)
+            }
         }
         throw Exception(response.message())
     }

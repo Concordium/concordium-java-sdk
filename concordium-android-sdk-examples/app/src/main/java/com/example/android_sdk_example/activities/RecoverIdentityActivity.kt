@@ -3,6 +3,7 @@ package com.example.android_sdk_example.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RecoverIdentityActivity : ComponentActivity() {
     private fun getRecoverUrl(provider: IdentityProvider, request: String): String {
@@ -64,11 +66,18 @@ class RecoverIdentityActivity : ComponentActivity() {
         setContent {
             RecoverIdentityView(onSubmit = { provider ->
                 CoroutineScope(Dispatchers.Default).launch {
-                    recoverIdentity(
-                        provider,
-                        global,
-                        storage
-                    )
+                    try {
+                        recoverIdentity(
+                            provider,
+                            global,
+                            storage
+                        )
+                    } catch (e: Exception) {
+                        println(e.message)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
                 }
             })
         }
