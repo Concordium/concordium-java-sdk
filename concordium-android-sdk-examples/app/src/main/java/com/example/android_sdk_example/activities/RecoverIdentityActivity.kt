@@ -16,8 +16,11 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.concordium.sdk.requests.AccountQuery
 import com.concordium.sdk.requests.BlockQuery
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters
+import com.concordium.sdk.transactions.CredentialRegistrationId
+import com.example.android_sdk_example.Constants
 import com.example.android_sdk_example.Requests
 import com.example.android_sdk_example.Storage
 import com.example.android_sdk_example.services.ConcordiumClientService
@@ -50,11 +53,6 @@ class RecoverIdentityActivity : ComponentActivity() {
 
         storage.identityProviderIndex.set(provider.ipInfo.ipIdentity.toString())
         storage.identity.set(jacksonObjectMapper().writeValueAsString(identity))
-
-        // Then continue to identity view
-        val myIntent = Intent(this, IdentityActivity::class.java)
-        myIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(myIntent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +70,7 @@ class RecoverIdentityActivity : ComponentActivity() {
                             global,
                             storage
                         )
+                        goToNext(storage, provider, global)
                     } catch (e: Exception) {
                         println(e.message)
                         withContext(Dispatchers.Main) {
@@ -81,6 +80,25 @@ class RecoverIdentityActivity : ComponentActivity() {
                 }
             })
         }
+    }
+
+    private fun goToNext(storage: Storage, provider: IdentityProvider, global: CryptographicParameters) {
+        val providerIndex = provider.ipInfo.ipIdentity.value
+        val wallet = storage.getWallet()
+        val credId = wallet.getCredentialId(providerIndex, Constants.IDENTITY_INDEX, Constants.CREDENTIAL_COUNTER, global.onChainCommitmentKey.toHex())
+
+        // Try to get the accountInfo for the identity's account. If successful, jump to the account page, otherwise go to identity page.
+        val myIntent = try {
+            val accountInfo = ConcordiumClientService.getClient().getAccountInfo(
+                BlockQuery.BEST,
+                AccountQuery.from(CredentialRegistrationId.from(credId))
+            )
+            storage.accountAddress.set(accountInfo.accountAddress.encoded())
+            Intent(this, AccountActivity::class.java)
+        } catch (e: Exception) {
+            Intent(this, IdentityActivity::class.java)
+        }
+        startActivity(myIntent)
     }
 }
 
