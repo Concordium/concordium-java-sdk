@@ -14,19 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Androidsdkexample"
         tools:targetApi="31">
-        <activity
-            android:name=".MainActivity"
+        <activity android:name="com.example.android_sdk_example.activities.SeedPhraseActivity"
             android:exported="true"
             android:theme="@style/Theme.Androidsdkexample">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.android_sdk_example.activities.AccountActivity" />
-        <activity android:name="com.example.android_sdk_example.activities.IdentityActivity" />
-        <activity android:name="com.example.android_sdk_example.activities.SeedPhraseActivity" />
+        <activity android:name="com.example.android_sdk_example.activities.NewIdentityActivity" />
         <activity android:name="com.example.android_sdk_example.activities.IssueIdentityActivity"
             android:exported="true">
             <intent-filter android:label="schemefilter">
@@ -39,9 +35,10 @@
                 android:scheme="concordiumwallet-example" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.android_sdk_example.activities.RecoverIdentityActivity" />
         <activity android:name="com.example.android_sdk_example.activities.IdentityConfirmationActivity" />
-        <activity android:name="com.example.android_sdk_example.activities.NewIdentityActivity" />
+        <activity android:name="com.example.android_sdk_example.activities.RecoverIdentityActivity" />
+        <activity android:name="com.example.android_sdk_example.activities.IdentityActivity" />
+        <activity android:name="com.example.android_sdk_example.activities.AccountActivity" />
     </application>
 
 </manifest>
