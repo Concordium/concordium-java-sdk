@@ -192,7 +192,7 @@ fun TransactionHashLink(transactionHash: String) {
 @Composable
 fun AccountView(accountAddress: String, sendTransfer: (recipient: String, amount: Long) -> String) {
     Container {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column {
             Text(text = "Your Concordium account", fontSize = 22.sp)
             Text(text = "Address")
             Text(text = accountAddress, fontSize = 14.sp, modifier = Modifier.paddingFromBaseline(0.dp, 14.dp))
