@@ -5,7 +5,10 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -16,10 +19,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey
 import com.concordium.sdk.requests.AccountQuery
 import com.concordium.sdk.requests.BlockQuery
@@ -100,16 +110,18 @@ class AccountActivity : ComponentActivity() {
 }
 
 @Composable
-fun Transfer(sendTransfer: (recipient: String, amount: Long) -> Unit) {
+fun Transfer(sendTransfer: (recipient: String, amount: Long) -> String) {
     var amount by remember { mutableStateOf("0") }
     var recipient by remember { mutableStateOf("") }
+    var transactionHash by remember { mutableStateOf("") }
     val context = LocalContext.current
 
-    Column(modifier = Modifier.padding(top = 30.dp)) {
+    Column(modifier = Modifier.padding(top = 24.dp)) {
         TextField(
             value = recipient,
             onValueChange = { recipient = it },
-            label = { Text("Recipient Address") }
+            label = { Text("Recipient Address") },
+            modifier = Modifier.fillMaxWidth()
         )
         TextField(
             label = { Text("Amount (µϾ)") },
@@ -119,26 +131,71 @@ fun Transfer(sendTransfer: (recipient: String, amount: Long) -> Unit) {
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
-            )
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp, bottom = 10.dp),
         )
         Button(onClick = {
             try {
-                sendTransfer(recipient, amount.toLong())
+                transactionHash = sendTransfer(recipient, amount.toLong())
             } catch (e: Exception) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             }
         }) {
             Text(text = "Send Transfer")
         }
+        if (transactionHash.isNotBlank()) {
+            TransactionHashLink(transactionHash)
+        }
     }
 }
 
 @Composable
-fun AccountView(accountAddress: String, sendTransfer: (recipient: String, amount: Long) -> Unit) {
+fun TransactionHashLink(transactionHash: String) {
+    val annotatedLinkString: AnnotatedString = buildAnnotatedString {
+        val str = "Latest transaction hash: $transactionHash"
+        val startIndex = str.indexOf("$transactionHash")
+        val endIndex = startIndex + transactionHash.length
+        append(str)
+        addStyle(
+            style = SpanStyle(
+                color = Color(0xff64B5F6),
+                fontSize = 16.sp,
+                textDecoration = TextDecoration.Underline
+            ), start = startIndex, end = endIndex
+        )
+        addStringAnnotation(
+            tag = "URL",
+            annotation = "https://testnet.ccdscan.io/transactions?dcount=1&dentity=transaction&dhash=$transactionHash",
+            start = startIndex,
+            end = endIndex
+        )
+    }
+
+    val uriHandler = LocalUriHandler.current
+    ClickableText(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        text = annotatedLinkString,
+        onClick = {
+            annotatedLinkString
+                .getStringAnnotations("URL", it, it)
+                .firstOrNull()?.let { stringAnnotation ->
+                    uriHandler.openUri(stringAnnotation.item)
+                }
+        }
+    )
+}
+
+@Composable
+fun AccountView(accountAddress: String, sendTransfer: (recipient: String, amount: Long) -> String) {
     Container {
-        Column {
-            Text(text = "Your Concordium account")
-            Text(text = "Address: $accountAddress")
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(text = "Your Concordium account", fontSize = 22.sp)
+            Text(text = "Address")
+            Text(text = "$accountAddress", fontSize = 14.sp, modifier = Modifier.paddingFromBaseline(0.dp, 14.dp))
             DisplayAccountBalance(address = accountAddress)
             Transfer(sendTransfer)
         }
@@ -146,22 +203,24 @@ fun AccountView(accountAddress: String, sendTransfer: (recipient: String, amount
 }
 
 @Composable
-fun DisplayAccountBalance(address: String, modifier: Modifier = Modifier) {
+fun DisplayAccountBalance(address: String) {
     val balance = remember(address) {
         try {
             val accountInfo = ConcordiumClientService.getClient().getAccountInfo(
                 BlockQuery.BEST,
                 AccountQuery.from(AccountAddress.from(address))
             )
-            "Ͼ${accountInfo.accountAmount.value.value / 10000}"
+            "µϾ${accountInfo.accountAmount.value.value}"
         } catch (e: Exception) {
             "Unavailable"
         }
     }
-    Text(
-        text = "Balance: $balance",
-        modifier = modifier
-    )
+    Column {
+        Text(
+            text = "Balance"
+        )
+        Text(text = "$balance", fontSize = 14.sp)
+    }
 }
 
 @Preview(showBackground = true)
@@ -171,11 +230,5 @@ fun AccountActivityPreview() {
     val context = LocalContext.current
     AccountView(
         accountAddress = address,
-        sendTransfer = { recipient: String, amount: Long ->
-            Toast.makeText(
-                context,
-                "Sending Ͼ${amount / 10000} to $recipient",
-                Toast.LENGTH_SHORT
-            ).show()
-        })
+        sendTransfer = { recipient: String, amount: Long -> "Dummy hash"})
 }
