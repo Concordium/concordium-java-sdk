@@ -33,8 +33,8 @@ open class StorageAccessor(
 ) {
     private var cache: String? = null
 
-    open fun get(): String? {
-        cache = cache ?: this.sharedPreferences.getString(key, "")
+    fun get(): String? {
+        cache = cache ?: this.sharedPreferences.getString(key, null)
         return cache
     }
 
