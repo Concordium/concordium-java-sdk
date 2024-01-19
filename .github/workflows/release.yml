@@ -186,4 +186,14 @@ jobs:
         without-checkout: true
         project: maven
         custom-command: cd concordium-sdk && mvn javadoc:javadoc -f pom.xml # Generates javadoc from the delombok'ed code
+
+    - name: Deploy to maven central repository
+      run: mvn -B clean deploy -Pci-cd
+      env:
+        MAVEN_USERNAME: ${{ secrets.SONATYPE_USR }}
+        MAVEN_PASSWORD: ${{ secrets.SONATYPE_PWD }}
+        MAVEN_GPG_PASSPHRASE: ${{ secrets.SONATYPE_PKEY }}
+
+
+
    
