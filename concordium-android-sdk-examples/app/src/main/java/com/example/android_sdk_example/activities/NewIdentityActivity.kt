@@ -7,11 +7,15 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.android_sdk_example.ui.Container
 
 class NewIdentityActivity : ComponentActivity() {
@@ -35,6 +39,7 @@ fun NewIdentityView(
 ) {
     Container {
         Column {
+            Text(text = "Create or recover an identity", fontSize = 22.sp, modifier = Modifier.padding(bottom = 10.dp))
             Button(onClick = { onContinue(IssueIdentityActivity::class.java) }) {
                 Text(text = "Create a new identity")
             }
