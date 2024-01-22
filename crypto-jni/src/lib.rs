@@ -2,7 +2,7 @@ use anyhow::{anyhow, Result};
 pub use concordium_base::common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
 use concordium_base::{
     base,
-    common::{Serialize, *},
+    common::*,
     contracts_common::{schema::VersionedModuleSchema, Amount},
     encrypted_transfers,
     encrypted_transfers::types::{
@@ -29,6 +29,10 @@ use std::{
     str::Utf8Error,
 };
 use wallet_library::{
+    credential::{
+        self, create_unsigned_credential_v1_aux, serialize_credential_deployment_payload,
+        CredentialDeploymentDetails, CredentialDeploymentPayload,
+    },
     identity::{create_identity_object_request_v1_aux, create_identity_recovery_request_aux},
     wallet::{
         get_account_public_key_aux, get_account_signing_key_aux,
@@ -1184,4 +1188,87 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createIden
     };
 
     CryptoJniResult::Ok(request).to_jstring(&env)
+}
+
+/// The JNI wrapper for creating a credential deployment transaction.
+/// * `input` - the JSON string of
+///   [`wallet_library::credential::UnsignedCredentialInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createUnsignedCredentialV1(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let unsigned_credential_input: credential::UnsignedCredentialInput =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return StringResult::from(err).to_jstring(&env),
+        };
+
+    let request = match create_unsigned_credential_v1_aux(unsigned_credential_input) {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(request).to_jstring(&env)
+}
+
+/// The JNI wrapper for computing the hash to sign of a credential deployment
+/// transaction payload.
+/// * `input` - the JSON string of
+///   [`wallet_library::credential::UnsignedCredentialInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_computeCredentialDeploymentSignDigest(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let credential_deployment_details: CredentialDeploymentDetails =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return StringResult::from(err).to_jstring(&env),
+        };
+
+    let credential_deployment_sign_digest =
+        credential::compute_credential_deployment_hash_to_sign(credential_deployment_details);
+    CryptoJniResult::Ok(credential_deployment_sign_digest).to_jstring(&env)
+}
+
+/// The JNI wrapper for getting the serialized bytes of a credential deployment
+/// transaction payload, i.e. the bytes of which should be hashed and signed
+/// before sending the transaction.
+/// * `input` - the JSON string of
+///   [`wallet_library::credential::UnsignedCredentialInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeCredentialDeploymentForSubmission(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let payload: CredentialDeploymentPayload = match serde_json::from_str(&input_string) {
+        Ok(req) => req,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let serialized_credential_deployment_payload = serialize_credential_deployment_payload(payload);
+
+    CryptoJniResult::Ok(serialized_credential_deployment_payload).to_jstring(&env)
 }

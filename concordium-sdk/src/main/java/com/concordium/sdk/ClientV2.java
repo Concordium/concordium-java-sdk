@@ -232,6 +232,20 @@ public final class ClientV2 {
     }
 
     /**
+     * Sends a credential deployment transaction to the Concordium Node.
+     *
+     * @param expiry the transaction expiry, i.e. the time after which the transaction is invalid
+     * @param rawPayload the serialized bytes of the credential deployment transaction, including its signatures
+     * @return Transaction {@link Hash}.
+     */
+    public Hash sendCredentialDeploymentTransaction(TransactionExpiry expiry, byte[] rawPayload) {
+        val req = ClientV2MapperExtensions.to(expiry, rawPayload);
+        val grpcOutput = this.server().sendBlockItem(req);
+
+        return to(grpcOutput);
+    }
+
+    /**
      * Gets all the Identity Providers at the end of the block pointed by {@link BlockQuery}.
      *
      * @param input Pointer to the Block.

@@ -27,6 +27,7 @@ import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
+import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.EpochQuery;
@@ -868,6 +869,19 @@ interface ClientV2MapperExtensions {
                         .setSignature(to(accountTransaction.getSignature()))
                         .build())
                 .build();
+    }
+
+    static SendBlockItemRequest to(TransactionExpiry expiry, byte[] payload) {
+        TransactionTime time = to(expiry.getExpiry());
+
+        return SendBlockItemRequest.newBuilder()
+            .setCredentialDeployment(
+                CredentialDeployment.newBuilder()
+                    .setMessageExpiry(time)
+                    .setRawPayload(ByteString.copyFrom(payload))
+                    .build()
+                )
+            .build();
     }
 
     static AccountTransactionSignature to(TransactionSignature signature) {
