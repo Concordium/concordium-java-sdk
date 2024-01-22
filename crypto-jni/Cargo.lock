@@ -531,7 +531,6 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "concordium_base",
- "curve25519-dalek",
  "ed25519-dalek",
  "hex",
  "jni",

@@ -103,7 +103,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_verify(
 
     let public_key_bytes_array: [u8; 32] = match public_key_bytes.try_into() {
         Ok(s) => s,
-        Err(_) => return MALFORMED_SECRET_KEY,
+        Err(_) => return MALFORMED_PUBLIC_KEY,
     };
 
     let public_key = match VerifyingKey::from_bytes(&public_key_bytes_array) {
