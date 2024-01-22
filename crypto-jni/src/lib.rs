@@ -24,7 +24,7 @@ use jni::{
 use rand::thread_rng;
 use serde_json::{from_str, to_string};
 use std::{
-    convert::{From, TryFrom},
+    convert::{From, TryFrom, TryInto},
     i8,
     str::Utf8Error,
 };
@@ -61,20 +61,17 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_sign(
         _ => return NATIVE_CONVERSION_ERROR,
     };
 
-    let secret_key = match SecretKey::from_bytes(&secretKeyBytes) {
-        Ok(sk) => sk,
-        _ => return MALFORMED_SECRET_KEY,
+    let secret_key_bytes_array: [u8; 32] = match secretKeyBytes.try_into() {
+        Ok(s) => s,
+        Err(_) => return MALFORMED_SECRET_KEY,
     };
 
-    let public_key: PublicKey = (&secret_key).into();
-
+    let signing_key = SigningKey::from_bytes(&secret_key_bytes_array);
     let bytesToSign = match env.convert_byte_array(messageBytes) {
         Ok(x) => x,
         _ => return NATIVE_CONVERSION_ERROR,
     };
-
-    let expanded_secret_key = ExpandedSecretKey::from(&secret_key);
-    let signature = expanded_secret_key.sign(&bytesToSign, &public_key);
+    let signature = signing_key.sign(&bytesToSign);
     let signatureBytesU8 = signature.to_bytes();
 
     let signatureBytesI8: &[i8] = unsafe {
@@ -103,7 +100,13 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_verify(
         Ok(x) => x,
         _ => return NATIVE_CONVERSION_ERROR,
     };
-    let public_key = match PublicKey::from_bytes(&public_key_bytes) {
+
+    let public_key_bytes_array: [u8; 32] = match public_key_bytes.try_into() {
+        Ok(s) => s,
+        Err(_) => return MALFORMED_SECRET_KEY,
+    };
+
+    let public_key = match VerifyingKey::from_bytes(&public_key_bytes_array) {
         Ok(x) => x,
         _ => return MALFORMED_PUBLIC_KEY,
     };
@@ -136,7 +139,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateSe
     out: jbyteArray,
 ) -> jint {
     let mut csprng = rand::rngs::OsRng {};
-    let secret_key = SecretKey::generate(&mut csprng);
+    let secret_key = SigningKey::generate(&mut csprng);
     let secret_key_bytes = secret_key.to_bytes();
 
     let secret_key_bytes_i8: &[i8] = unsafe {
@@ -165,12 +168,13 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generatePu
         _ => return NATIVE_CONVERSION_ERROR,
     };
 
-    let secret_key = match SecretKey::from_bytes(&secretKeyBytes) {
-        Ok(sk) => sk,
-        _ => return MALFORMED_SECRET_KEY,
+    let secret_key_bytes_array: [u8; 32] = match secretKeyBytes.try_into() {
+        Ok(s) => s,
+        Err(_) => return MALFORMED_SECRET_KEY,
     };
 
-    let public_key: PublicKey = (&secret_key).into();
+    let signing_key = SigningKey::from_bytes(&secret_key_bytes_array);
+    let public_key = signing_key.verifying_key();
     let public_key_bytes = public_key.to_bytes();
 
     let public_key_bytes_i8: &[i8] = unsafe {
