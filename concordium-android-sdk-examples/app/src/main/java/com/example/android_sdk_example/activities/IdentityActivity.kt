@@ -20,6 +20,7 @@ import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentSerializa
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType
 import com.concordium.sdk.transactions.CredentialRegistrationId
+import com.concordium.sdk.transactions.Index
 import com.concordium.sdk.transactions.TransactionExpiry
 import com.concordium.sdk.types.AccountAddress
 import com.example.android_sdk_example.Constants
@@ -29,6 +30,7 @@ import com.example.android_sdk_example.services.ConcordiumClientService
 import com.example.android_sdk_example.ui.Container
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.apache.commons.codec.binary.Hex
+import java.util.Collections
 import java.util.Date
 
 
@@ -63,7 +65,7 @@ class IdentityActivity : ComponentActivity() {
         val signature = signingKey.sign(credentialDeploymentSignDigest)
         val context = CredentialDeploymentSerializationContext(
             credential.unsignedCdi,
-            listOf(Hex.encodeHexString(signature))
+            Collections.singletonMap(Index.from(0), Hex.encodeHexString(signature))
         )
         val credentialPayload = Credential.serializeCredentialDeploymentPayload(context)
         ConcordiumClientService.getClient()
