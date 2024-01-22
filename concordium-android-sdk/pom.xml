@@ -54,6 +54,11 @@
             <artifactId>jackson-datatype-jdk8</artifactId>
             <version>2.10.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.bitcoinj</groupId>
+            <artifactId>bitcoinj-core</artifactId>
+            <version>0.16.2</version>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -78,6 +83,9 @@
                             <protoSourceRoot>${project.basedir}/../concordium-base/concordium-grpc-api/
                             </protoSourceRoot>
                             <checkStaleness>true</checkStaleness>
+                            <excludes>
+                                <exclude>**/google/protobuf/wrappers.proto</exclude>
+                            </excludes>
                         </configuration>
                         <executions>
                             <execution>
@@ -115,6 +123,9 @@
                             </protoSourceRoot>
                             <attachProtoSources>false</attachProtoSources>
                             <checkStaleness>true</checkStaleness>
+                            <excludes>
+                                <exclude>**/google/protobuf/wrappers.proto</exclude>
+                            </excludes>
                         </configuration>
                         <executions>
                             <execution>
