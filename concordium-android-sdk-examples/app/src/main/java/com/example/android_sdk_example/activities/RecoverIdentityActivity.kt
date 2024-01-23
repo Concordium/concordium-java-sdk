@@ -87,7 +87,7 @@ class RecoverIdentityActivity : ComponentActivity() {
         val wallet = storage.getWallet()
         val credId = wallet.getCredentialId(providerIndex, Constants.IDENTITY_INDEX, Constants.CREDENTIAL_COUNTER, global.onChainCommitmentKey.toHex())
 
-        // Try to get the accountInfo for the identity's account. If successful, jump to the account page, otherwise go to identity page.
+        // The recovered identity might already have an associated account. Check if an account info is available, and if so go directly to the account page. Otherwise go to the identity page.
         val myIntent = try {
             val accountInfo = ConcordiumClientService.getClient().getAccountInfo(
                 BlockQuery.BEST,
