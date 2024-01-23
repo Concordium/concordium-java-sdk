@@ -3,12 +3,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val bundleId = "com.concordium.example.wallet"
+
 android {
-    namespace = "com.example.android_sdk_example"
+    namespace = bundleId
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.android_sdk_example"
+        applicationId = bundleId
         minSdk = 26
         targetSdk = 34
         versionCode = 1

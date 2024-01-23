@@ -1,4 +1,4 @@
-package com.example.android_sdk_example.services.wallet_proxy
+package com.concordium.example.wallet.services.wallet_proxy
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import okhttp3.OkHttpClient

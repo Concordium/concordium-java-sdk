@@ -1,9 +1,9 @@
-package com.example.android_sdk_example.services
+package com.concordium.example.wallet.services
 
 import com.concordium.sdk.ClientV2
 import com.concordium.sdk.Connection
 import com.concordium.sdk.TLSConfig
-import com.example.android_sdk_example.Constants
+import com.concordium.example.wallet.Constants
 
 object ConcordiumClientService {
     private val connection = Connection.newBuilder()

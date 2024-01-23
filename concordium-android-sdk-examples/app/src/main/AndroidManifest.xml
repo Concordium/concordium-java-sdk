@@ -14,28 +14,30 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Androidsdkexample"
         tools:targetApi="34">
-        <activity android:name="com.example.android_sdk_example.activities.SeedPhraseActivity"/>
-        <activity android:name="com.example.android_sdk_example.activities.NewIdentityActivity" />
-        <activity android:name="com.example.android_sdk_example.activities.IssueIdentityActivity"
+        <activity android:name="com.concordium.example.wallet.activities.SeedPhraseActivity" />
+        <activity android:name="com.concordium.example.wallet.activities.NewIdentityActivity" />
+        <activity
+            android:name="com.concordium.example.wallet.activities.IssueIdentityActivity"
             android:exported="true">
             <intent-filter android:label="schemefilter">
-            <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW" />
 
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
-            <data
-                android:host="identity-issuer"
-                android:scheme="concordiumwallet-example" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="identity-issuer"
+                    android:scheme="concordiumwallet-example" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.android_sdk_example.activities.IdentityConfirmationActivity" />
-        <activity android:name="com.example.android_sdk_example.activities.RecoverIdentityActivity" />
-        <activity android:name="com.example.android_sdk_example.activities.IdentityActivity" />
-        <activity android:name="com.example.android_sdk_example.activities.AccountActivity" />
-        <activity android:name="com.example.android_sdk_example.activities.RouterActivity"
-            android:exported="true"
-        >
-        <intent-filter>
+        <activity android:name="com.concordium.example.wallet.activities.IdentityConfirmationActivity" />
+        <activity android:name="com.concordium.example.wallet.activities.RecoverIdentityActivity" />
+        <activity android:name="com.concordium.example.wallet.activities.IdentityActivity" />
+        <activity android:name="com.concordium.example.wallet.activities.AccountActivity" />
+        <activity
+            android:name="com.concordium.example.wallet.activities.RouterActivity"
+            android:exported="true">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

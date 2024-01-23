@@ -1,4 +1,4 @@
-package com.example.android_sdk_example
+package com.concordium.example.wallet
 
 import android.content.Context
 import android.content.SharedPreferences

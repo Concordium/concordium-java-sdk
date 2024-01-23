@@ -1,4 +1,4 @@
-package com.example.android_sdk_example.ui
+package com.concordium.example.wallet.ui
 
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api

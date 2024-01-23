@@ -1,4 +1,4 @@
-package com.example.android_sdk_example.activities
+package com.concordium.example.wallet.activities
 
 import android.app.Activity
 import android.content.Intent
@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.android_sdk_example.ui.Container
+import com.concordium.example.wallet.ui.Container
 
 class NewIdentityActivity : ComponentActivity() {
     private fun onContinue(activity: Class<out Activity>) {

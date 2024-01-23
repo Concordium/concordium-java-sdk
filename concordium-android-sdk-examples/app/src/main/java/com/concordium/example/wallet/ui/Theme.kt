@@ -1,4 +1,4 @@
-package com.example.android_sdk_example.ui
+package com.concordium.example.wallet.ui
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme

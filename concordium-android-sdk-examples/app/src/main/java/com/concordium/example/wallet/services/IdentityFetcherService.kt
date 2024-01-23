@@ -1,4 +1,4 @@
-package com.example.android_sdk_example.services
+package com.concordium.example.wallet.services
 
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject
 import com.fasterxml.jackson.annotation.JsonAutoDetect

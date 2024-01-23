@@ -1,8 +1,8 @@
-package com.example.android_sdk_example.services
+package com.concordium.example.wallet.services
 
-import com.example.android_sdk_example.Constants
-import com.example.android_sdk_example.services.wallet_proxy.IdentityProvider
-import com.example.android_sdk_example.services.wallet_proxy.ProxyBackendConfig
+import com.concordium.example.wallet.Constants
+import com.concordium.example.wallet.services.wallet_proxy.IdentityProvider
+import com.concordium.example.wallet.services.wallet_proxy.ProxyBackendConfig
 
 object ConcordiumWalletProxyService {
     private val backend = ProxyBackendConfig(Constants.WALLET_PROXY_URL).backend

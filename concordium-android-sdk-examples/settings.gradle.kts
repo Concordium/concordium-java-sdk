@@ -14,6 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Android-sdk-example"
+rootProject.name = "Android-wallet-example"
 include(":app")
- 

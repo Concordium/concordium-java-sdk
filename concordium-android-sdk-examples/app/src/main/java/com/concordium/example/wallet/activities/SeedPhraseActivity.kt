@@ -1,4 +1,4 @@
-package com.example.android_sdk_example.activities
+package com.concordium.example.wallet.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,8 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import cash.z.ecc.android.bip39.Mnemonics.MnemonicCode
-import com.example.android_sdk_example.Storage
-import com.example.android_sdk_example.ui.Container
+import com.concordium.example.wallet.Storage
+import com.concordium.example.wallet.ui.Container
 
 class SeedPhraseActivity : ComponentActivity() {
     private fun submit(phrase: String, storage: Storage) {

@@ -1,4 +1,4 @@
-package com.example.android_sdk_example.activities
+package com.concordium.example.wallet.activities
 
 import android.content.Intent
 import android.net.Uri
@@ -21,14 +21,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.concordium.sdk.requests.BlockQuery
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters
-import com.example.android_sdk_example.Constants
-import com.example.android_sdk_example.Requests
-import com.example.android_sdk_example.Storage
-import com.example.android_sdk_example.services.ConcordiumClientService
-import com.example.android_sdk_example.services.ConcordiumWalletProxyService
-import com.example.android_sdk_example.services.wallet_proxy.IdentityProvider
-import com.example.android_sdk_example.ui.Container
-import com.example.android_sdk_example.ui.Menu
+import com.concordium.example.wallet.Constants
+import com.concordium.example.wallet.Requests
+import com.concordium.example.wallet.Storage
+import com.concordium.example.wallet.services.ConcordiumClientService
+import com.concordium.example.wallet.services.ConcordiumWalletProxyService
+import com.concordium.example.wallet.services.wallet_proxy.IdentityProvider
+import com.concordium.example.wallet.ui.Container
+import com.concordium.example.wallet.ui.Menu
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

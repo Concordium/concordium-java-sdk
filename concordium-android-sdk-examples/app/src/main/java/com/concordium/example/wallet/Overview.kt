@@ -1,4 +1,4 @@
-package com.example.android_sdk_example
+package com.concordium.example.wallet
 
 import android.content.Intent
 import androidx.activity.ComponentActivity
@@ -12,12 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.android_sdk_example.activities.AccountActivity
-import com.example.android_sdk_example.activities.IdentityActivity
-import com.example.android_sdk_example.activities.IssueIdentityActivity
-import com.example.android_sdk_example.activities.RecoverIdentityActivity
-import com.example.android_sdk_example.activities.SeedPhraseActivity
-import com.example.android_sdk_example.ui.Container
+import com.concordium.example.wallet.activities.AccountActivity
+import com.concordium.example.wallet.activities.IdentityActivity
+import com.concordium.example.wallet.activities.IssueIdentityActivity
+import com.concordium.example.wallet.activities.RecoverIdentityActivity
+import com.concordium.example.wallet.activities.SeedPhraseActivity
+import com.concordium.example.wallet.ui.Container
 
 /**
  * Preview that an overview menu, where each activity can be accessed directly.

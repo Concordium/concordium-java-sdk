@@ -1,9 +1,9 @@
-package com.example.android_sdk_example.activities
+package com.concordium.example.wallet.activities
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import com.example.android_sdk_example.Storage
+import com.concordium.example.wallet.Storage
 
 class RouterActivity: Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {

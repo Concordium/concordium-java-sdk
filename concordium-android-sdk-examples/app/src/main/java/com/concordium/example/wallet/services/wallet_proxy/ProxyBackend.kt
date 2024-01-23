@@ -1,4 +1,4 @@
-package com.example.android_sdk_example.services.wallet_proxy
+package com.concordium.example.wallet.services.wallet_proxy
 
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo

@@ -1,4 +1,4 @@
-package com.example.android_sdk_example.activities
+package com.concordium.example.wallet.activities
 
 import android.os.Bundle
 import android.widget.Toast
@@ -31,10 +31,10 @@ import com.concordium.sdk.transactions.SignerEntry
 import com.concordium.sdk.transactions.TransactionFactory
 import com.concordium.sdk.transactions.TransactionSigner
 import com.concordium.sdk.types.AccountAddress
-import com.example.android_sdk_example.Constants
-import com.example.android_sdk_example.Storage
-import com.example.android_sdk_example.services.ConcordiumClientService
-import com.example.android_sdk_example.ui.Container
+import com.concordium.example.wallet.Constants
+import com.concordium.example.wallet.Storage
+import com.concordium.example.wallet.services.ConcordiumClientService
+import com.concordium.example.wallet.ui.Container
 
 
 class AccountActivity : ComponentActivity() {

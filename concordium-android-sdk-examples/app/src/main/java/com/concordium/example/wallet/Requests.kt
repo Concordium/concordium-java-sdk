@@ -1,4 +1,4 @@
-package com.example.android_sdk_example
+package com.concordium.example.wallet
 
 import com.concordium.sdk.crypto.wallet.ConcordiumHdWallet
 import com.concordium.sdk.crypto.wallet.Credential
@@ -14,8 +14,8 @@ import com.concordium.sdk.responses.accountinfo.credential.AttributeType
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters
 import com.concordium.sdk.transactions.CredentialPublicKeys
 import com.concordium.sdk.transactions.Index
-import com.example.android_sdk_example.services.ConcordiumClientService
-import com.example.android_sdk_example.services.wallet_proxy.IdentityProvider
+import com.concordium.example.wallet.services.ConcordiumClientService
+import com.concordium.example.wallet.services.wallet_proxy.IdentityProvider
 import java.util.Collections
 import java.util.EnumMap
 

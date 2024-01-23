@@ -1,4 +1,4 @@
-package com.example.android_sdk_example.activities
+package com.concordium.example.wallet.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,9 +13,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject
-import com.example.android_sdk_example.Storage
-import com.example.android_sdk_example.services.IdentityFetcherService
-import com.example.android_sdk_example.ui.Container
+import com.concordium.example.wallet.Storage
+import com.concordium.example.wallet.services.IdentityFetcherService
+import com.concordium.example.wallet.ui.Container
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
