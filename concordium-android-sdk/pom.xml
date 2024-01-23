@@ -109,19 +109,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>3.3.0</version>
-                        <executions>
-                            <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
                         <groupId>org.xolstice.maven.plugins</groupId>
                         <artifactId>protobuf-maven-plugin</artifactId>
                         <version>0.6.1</version>
