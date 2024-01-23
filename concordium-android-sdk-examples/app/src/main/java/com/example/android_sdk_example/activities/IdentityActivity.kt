@@ -127,4 +127,3 @@ fun IdentityView(identity: IdentityObject, createAccount: (identity: IdentityObj
         }
     }
 }
-

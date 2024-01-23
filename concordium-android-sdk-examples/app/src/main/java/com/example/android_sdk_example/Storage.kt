@@ -46,5 +46,4 @@ open class StorageAccessor(
         this.sharedPreferences.edit().putString(key, value).apply()
         cache = value
     }
-
 }

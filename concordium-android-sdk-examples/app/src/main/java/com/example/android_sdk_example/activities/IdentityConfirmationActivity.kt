@@ -69,4 +69,3 @@ fun IdentityConfirmationView(identityUrl: String, onFinish: (identity: IdentityO
         }
     }
 }
-
