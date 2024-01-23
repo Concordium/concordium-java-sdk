@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.concordium.sdk.requests.BlockQuery
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters
 import com.example.android_sdk_example.Constants
+import com.example.android_sdk_example.Requests
 import com.example.android_sdk_example.Storage
-import com.example.android_sdk_example.createIssuanceRequest
 import com.example.android_sdk_example.services.ConcordiumClientService
 import com.example.android_sdk_example.services.ConcordiumWalletProxyService
 import com.example.android_sdk_example.services.wallet_proxy.IdentityProvider
@@ -50,7 +50,7 @@ class IssueIdentityActivity : ComponentActivity() {
         global: CryptographicParameters,
         storage: Storage
     ) {
-        val request = createIssuanceRequest(storage.getWallet(), provider, global)
+        val request = Requests.createIssuanceRequest(storage.getWallet(), provider, global)
         val url = getIssuanceUrl(provider, request)
         launchChromeCustomTab(url)
         storage.identityProviderIndex.set(provider.ipInfo.ipIdentity.toString())

@@ -7,9 +7,6 @@ import retrofit2.http.*
 import java.io.Serializable
 
 internal interface ProxyBackend {
-    @PUT("v0/testnetGTUDrop/{accountAddress}")
-    fun requestGTUDrop(@Path("accountAddress") accountAddress: String): Call<SubmissionData>
-
     @GET("v1/ip_info")
     fun getIdentityProviderInfo(): Call<ArrayList<IdentityProvider>>
 }

@@ -39,23 +39,24 @@ import com.example.android_sdk_example.ui.Container
 
 class AccountActivity : ComponentActivity() {
 
+    /**
+     * Sends a simple transfer to the chain
+     * @param senderAddress the address which should send the funds
+     * @param receiverAddress the address which should receive the funds
+     * @param microCCDAmount the amount of funds that should be transferred, given in micro ccd
+     * @param signer representation of the account that can sign the transaction
+     * @return the hash of the transaction, as a HEX-encoded string
+     */
     private fun sendTransfer(
         senderAddress: String,
         receiverAddress: String,
         microCCDAmount: Long,
-        privateKey: ED25519SecretKey
+        signer: TransactionSigner
     ): String {
         val sender = AccountAddress.from(senderAddress)
         val receiver = AccountAddress.from(receiverAddress)
         val amount = CCDAmount.fromMicro(microCCDAmount)
         val expiry = Expiry.createNew().addMinutes(5)
-
-        val signer: TransactionSigner = TransactionSigner.from(
-            SignerEntry.from(
-                Index.from(0), Index.from(0),
-                privateKey
-            )
-        )
 
         val client = ConcordiumClientService.getClient()
         val senderInfo = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(sender))
@@ -71,6 +72,19 @@ class AccountActivity : ComponentActivity() {
                 .build()
         )
         return transactionHash.asHex()
+    }
+
+    /**
+     * Creates a TransactionSigner for an standard account that only requires one signature
+     * @param privateKey the signing key of the first credential of the account
+     */
+    private fun getSimpleSigner(privateKey: ED25519SecretKey?): TransactionSigner {
+        return TransactionSigner.from(
+            SignerEntry.from(
+                Index.from(0), Index.from(0),
+                privateKey
+            )
+        );
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,7 +106,7 @@ class AccountActivity : ComponentActivity() {
                         address,
                         recipient,
                         amount,
-                        privateKey
+                        getSimpleSigner(privateKey)
                     )
                 })
         }

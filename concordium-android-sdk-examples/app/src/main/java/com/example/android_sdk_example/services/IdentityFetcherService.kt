@@ -62,8 +62,8 @@ class IdentityFetcherService {
 
     /**
      * Get the identity object from an url resulting from identity issuance
-     * @returns the identity object or null, if the identity is not ready yet
-     * Throws if the identity failed, or the request fails.
+     * @return the identity object or null, if the identity is not ready yet
+     * @Throws Exception if the identity failed, or the request fails.
      */
     private fun getIdentity(identityUrl: String): IdentityObject? {
         val backend = initializeBackend()
@@ -82,6 +82,10 @@ class IdentityFetcherService {
 
     /**
      * Loop that calls [getIdentity] until it returns an identity object, or fails
+     * @param identityUrl the url that should be the result of the identity issuance protocol
+     * @param retryDelay how long the delay between attempts should be, in milliseconds
+     * @return the identity that becomes available at the url
+     * @throws Exception if the url does not conform to the identity issuance protocol or the identity issuance failed
      */
     suspend fun fetch(identityUrl: String, retryDelay: Long = 10000): IdentityObject {
         while (true) {
@@ -96,7 +100,9 @@ class IdentityFetcherService {
 
     /**
      * Get the identity object from a recovery url
-     * Throws if the url doesn't return an identity object
+     * @param recoveryUrl the url that should be the result of the identity recovery protocol
+     * @return the identity that is available at the url
+     * @throws Exception if the url does not conform to the identity recovery protocol or the recovery failed
      */
     fun getFromRecovery(recoveryUrl: String): IdentityObject {
         val backend = initializeBackend()

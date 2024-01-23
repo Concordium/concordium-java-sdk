@@ -13,6 +13,10 @@ import com.concordium.sdk.crypto.wallet.ConcordiumHdWallet
 class Storage(context: Context) {
     private val sharedPreferences =
         context.getSharedPreferences("EXAMPLE", ComponentActivity.MODE_PRIVATE)
+    /**
+     * @see seedPhrase the seed phrase should not be stored like this in shared preferences as it not secure. We do it here for
+    demonstration purposes only
+     */
     val seedPhrase = StorageAccessor(sharedPreferences, "seed_phrase")
     val identityProviderIndex = StorageAccessor(sharedPreferences, "provider_index")
     val identityUrl = StorageAccessor(sharedPreferences, "identity_url")

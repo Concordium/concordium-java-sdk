@@ -22,7 +22,11 @@ import java.util.EnumMap
 object Requests {
 
     /**
-     *
+     * Creates the serialized input for requesting an identity recovery.
+     * @param wallet the wallet for the seed phrase that the identity should be created with
+     * @param provider the chosen identity provider
+     * @param global the global cryptographic parameters of the current chain
+     * @return returns the recovery request as a JSON string
      */
     fun createRecoveryRequest(
         wallet: ConcordiumHdWallet,
@@ -42,6 +46,13 @@ object Requests {
         return createIdentityRecoveryRequest(input)
     }
 
+    /**
+     * Creates credential deployment info for creating a new account.
+     * @param wallet the wallet for the seed phrase that the account should be created with
+     * @param identity the identity object that the credential will be constructed from
+     * @param ipIdentity the index of the identity's provider
+     * @return returns the unsigned info and the randomness used
+     */
     fun createCredentialRequest(
         wallet: ConcordiumHdWallet,
         identity: IdentityObject,
@@ -66,8 +77,7 @@ object Requests {
                 )
         }
 
-        val input:
-                UnsignedCredentialInput = UnsignedCredentialInput.builder()
+        val input: UnsignedCredentialInput = UnsignedCredentialInput.builder()
             .ipInfo(provider!!)
             .globalContext(global)
             .arsInfos(anonymityRevokers)
@@ -99,29 +109,36 @@ object Requests {
 
         return Credential.createUnsignedCredential(input)
     }
-}
 
-fun createIssuanceRequest(
-    wallet: ConcordiumHdWallet,
-    provider: IdentityProvider,
-    global: CryptographicParameters
-): String {
-    val providerIndex = provider.ipInfo.ipIdentity.value
+    /**
+     * Creates the serialized input for requesting an identity issuance.
+     * @param wallet the wallet for the seed phrase that the identity should be created with
+     * @param provider the chosen identity provider
+     * @param global the global cryptographic parameters of the current chain
+     * @return returns the identity issuance request as a JSON string
+     */
+    fun createIssuanceRequest(
+        wallet: ConcordiumHdWallet,
+        provider: IdentityProvider,
+        global: CryptographicParameters
+    ): String {
+        val providerIndex = provider.ipInfo.ipIdentity.value
 
-    val idCredSec = wallet.getIdCredSec(providerIndex, Constants.IDENTITY_INDEX)
-    val prfKey = wallet.getPrfKey(providerIndex, Constants.IDENTITY_INDEX)
-    val blindingRandomness: String =
-        wallet.getSignatureBlindingRandomness(providerIndex, Constants.IDENTITY_INDEX)
+        val idCredSec = wallet.getIdCredSec(providerIndex, Constants.IDENTITY_INDEX)
+        val prfKey = wallet.getPrfKey(providerIndex, Constants.IDENTITY_INDEX)
+        val blindingRandomness: String =
+            wallet.getSignatureBlindingRandomness(providerIndex, Constants.IDENTITY_INDEX)
 
-    val input: IdentityRequestInput = IdentityRequestInput.builder()
-        .globalContext(global)
-        .ipInfo(provider.ipInfo)
-        .arsInfos(provider.arsInfos)
-        .arThreshold(Constants.AR_THRESHOLD)
-        .idCredSec(idCredSec)
-        .prfKey(prfKey)
-        .blindingRandomness(blindingRandomness)
-        .build()
+        val input: IdentityRequestInput = IdentityRequestInput.builder()
+            .globalContext(global)
+            .ipInfo(provider.ipInfo)
+            .arsInfos(provider.arsInfos)
+            .arThreshold(Constants.AR_THRESHOLD)
+            .idCredSec(idCredSec)
+            .prfKey(prfKey)
+            .blindingRandomness(blindingRandomness)
+            .build()
 
-    return Identity.createIdentityRequest(input)
+        return Identity.createIdentityRequest(input)
+    }
 }

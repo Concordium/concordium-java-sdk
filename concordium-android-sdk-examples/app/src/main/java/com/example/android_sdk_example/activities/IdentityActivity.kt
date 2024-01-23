@@ -36,6 +36,12 @@ import java.util.Date
 
 class IdentityActivity : ComponentActivity() {
 
+    /**
+     * Creates a new account, and then navigates to the account activity.
+     * @param identity the identity object that the account will be created for
+     * @param ipIdentity the index of the identity's provider
+     * @param storage storage delegator to get the wallet and to save the account address
+     */
     private fun createAccount(
         identity: IdentityObject,
         ipIdentity: Int,
@@ -71,6 +77,7 @@ class IdentityActivity : ComponentActivity() {
         ConcordiumClientService.getClient()
             .sendCredentialDeploymentTransaction(expiry, credentialPayload)
 
+        // Save the address of the account
         val address =
             AccountAddress.from(CredentialRegistrationId.from(credential.unsignedCdi.credId))
         storage.accountAddress.set(address.encoded())
