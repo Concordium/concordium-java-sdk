@@ -256,6 +256,8 @@ public class CryptoJniNative {
      * Derives the verifiable credential backup encryption key. This key should be used to encrypt
      * the backup file of verifiable credentials. The key is derived from the seed phrase so that
      * a user can access the backup file when only holding the seed phrase.
+     * @param seedAsHex the seed derived from a seed phrase as a hex string
+     * @param network the network that the derived randomness is for
      * @return JSON representing {@link StringResult}. If successful the field 'result' contains the hex encoded verifiable credential backup encryption key.
      * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
      */

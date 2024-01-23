@@ -18,9 +18,9 @@ import org.apache.commons.codec.binary.Hex;
 /**
  * Represents smart contract parameters serializable via a {@link Schema}.
  * <p>
- * Classes representing smart contract parameters should extend this, and ensure that they are JSON serializable in accordance with the provided smart contract schema.<p>
+ * Classes representing smart contract parameters should extend this, and ensure that they are JSON serializable in accordance with the provided smart contract schema.</p>
  * Fields in the extending class, that should be serialized, must be visible to the serializer.
- * Visible fields are: <p>
+ * Visible fields are:
  * <ul>
  * <li>Fields with 'getter' methods (either user-created or by @Getter annotation).</li>
  * <li>All fields in a class annotated with '@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)'. Fields can be excluded from this with the '@JsonIgnore' annotation.</li>

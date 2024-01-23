@@ -30,7 +30,7 @@ public class ElgamalPublicKey {
     }
 
     /**
-     * Creates an Elgamal Public Key from {@link byte} Array.
+     * Creates an Elgamal Public Key from an array of bytes.
      *
      * @param bytes Input Byte Array
      * @return Instance of {@link ElgamalPublicKey}

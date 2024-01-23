@@ -34,6 +34,7 @@ public class UpdateContractTransaction extends AccountTransaction {
      * @param maxEnergyCost the maximum energy allowed to spend on this transaction.
      * @throws TransactionCreationException On failure to create the Transaction from input params.
      *                                      Ex when any of the input param is NULL.
+     * @return a transaction for updating a contract
      */
     @Builder(builderClassName = "UpdateContractTransactionBuilder")
     public static UpdateContractTransaction from(

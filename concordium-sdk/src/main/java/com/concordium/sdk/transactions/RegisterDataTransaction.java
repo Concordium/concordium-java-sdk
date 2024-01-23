@@ -60,7 +60,7 @@ public class RegisterDataTransaction extends AccountTransaction {
      * @param header    {@link TransactionHeader}.
      * @param signature {@link TransactionSignature}.
      * @param payload   {@link Data} Payload for this transaction.
-     * @return
+     * @return a register data transaction
      * @throws TransactionCreationException On failure to create the Transaction from input params.
      *                                      Ex when any of the input param is NULL.
      */

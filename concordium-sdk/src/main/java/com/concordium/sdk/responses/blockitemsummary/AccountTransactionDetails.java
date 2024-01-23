@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.blockitemsummary;
 
-import com.concordium.grpc.v2.AccountTransactionEffects;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
 import com.concordium.sdk.responses.transactionstatus.*;
@@ -9,7 +8,6 @@ import com.concordium.sdk.types.AccountAddress;
 import lombok.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**

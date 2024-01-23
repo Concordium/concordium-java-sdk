@@ -43,7 +43,7 @@ public final class UpdateContract extends Payload {
     }
 
     /**
-     * > This function creates a payload for updating a contract
+     * This function creates a payload for updating a contract
      *
      * @param amount          The amount of CCD to be sent to the contract.
      * @param contractAddress Address of the contract instance to invoke.
@@ -84,6 +84,7 @@ public final class UpdateContract extends Payload {
      *
      * @param contractAddress Address of the contract instance to invoke.
      * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
+     * @return A new UpdateContractPayload object.
      */
     public static UpdateContract from(@NonNull final ContractAddress contractAddress,
                                       SchemaParameter schemaParameter) {
@@ -102,6 +103,7 @@ public final class UpdateContract extends Payload {
      * @param amount          The amount of CCD to be sent to the contract.
      * @param contractAddress Address of the contract instance to invoke.
      * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
+     * @return A new UpdateContractPayload object.
      */
     public static UpdateContract from(CCDAmount amount,
                                       @NonNull final ContractAddress contractAddress,

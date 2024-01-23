@@ -1,5 +1,10 @@
 package com.concordium.sdk.responses.smartcontracts;
 
+import com.concordium.sdk.responses.transactionstatus.ContractUpdated;
+import com.concordium.sdk.responses.transactionstatus.InterruptedResult;
+import com.concordium.sdk.responses.transactionstatus.ResumedResult;
+import com.concordium.sdk.responses.transactionstatus.TransferredResult;
+import com.concordium.sdk.responses.transactionstatus.UpgradedResult;
 
 /**
  * Contract trace element types used with the GRPCv2 API.

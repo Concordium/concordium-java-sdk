@@ -14,6 +14,7 @@ public class EpochQuery {
     /**
      * Query for the epoch of a specified block.
      * @param block the specific block to query.
+     * @return an {@link EpochQuery} from a block hash
      */
     public static EpochQuery BLOCK_HASH(BlockQuery block) {
         return EpochQuery.builder()
@@ -25,6 +26,7 @@ public class EpochQuery {
      * Query by genesis index and epoch.
      * @param genesisIndex the genesis index to query at. The query is restricted to this genesis index, and will not return results for other indices even if the epoch number is out of bounds.
      * @param epoch the {@link Epoch} to query at.
+     * @return an {@link EpochQuery} from a relative epoch
      */
     public static EpochQuery RELATIVE_EPOCH(int genesisIndex, Epoch epoch) {
         return EpochQuery.builder()

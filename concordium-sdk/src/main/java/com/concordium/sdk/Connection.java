@@ -77,7 +77,7 @@ public final class Connection {
      * A connection builder to use with the {@link ClientV2}
      * I.e. the GRPCv2 API.
      *
-     * @return the {@link NoCredentialsConnectionBuilder}
+     * @return the {@link Connection.NoCredentialsConnectionBuilder}
      */
     public static Connection.ConnectionBuilder newBuilder() {
         return new Connection.NoCredentialsConnectionBuilder();

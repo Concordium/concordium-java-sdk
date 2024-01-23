@@ -40,6 +40,7 @@ public class UpdateCredentialKeysTransaction extends AccountTransaction {
      * @param signer                   {@link Signer} of this transaction.
      * @throws TransactionCreationException On failure to create the Transaction from input params.
      *                                      Ex when any of the input param is NULL.
+     * @return a transaction for updating the signings keys of a credential
      */
     @Builder
     public static UpdateCredentialKeysTransaction from(

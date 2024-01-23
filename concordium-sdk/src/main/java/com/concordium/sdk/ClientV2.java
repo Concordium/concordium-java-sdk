@@ -124,7 +124,7 @@ public final class ClientV2 {
      * This can be used to listen for incoming blocks.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator<BlockIdentifier>}
+     * @return {@link Iterator}<{@link BlockIdentifier}>
      */
     public Iterator<BlockIdentifier> getBlocks(int timeoutMillis) {
         val grpcOutput = this.server(timeoutMillis).getBlocks(Empty.newBuilder().build());
@@ -139,7 +139,7 @@ public final class ClientV2 {
      * This can be used to listen for blocks being Finalized.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
-     * @return {@link Iterator<BlockIdentifier>}
+     * @return {@link Iterator}<{@link BlockIdentifier}>
      *
      */
     public Iterator<BlockIdentifier> getFinalizedBlocks(int timeoutMillis) {
@@ -172,7 +172,7 @@ public final class ClientV2 {
      * Retrieve the list of accounts that exist at the end of the given block.
      *
      * @param input Pointer to the Block.
-     * @return {@link Iterator<AccountAddress>}.
+     * @return {@link Iterator}<{@link AccountAddress}>.
      */
     public Iterator<AccountAddress> getAccountList(final BlockQuery input) {
         val grpcOutput = this.server().getAccountList(to(input));
@@ -199,7 +199,7 @@ public final class ClientV2 {
      * <br/> {@link com.concordium.sdk.transactions.BlockItemType#UPDATE_INSTRUCTION}
      *
      * @param input Pointer to the Block.
-     * @return {@link Iterator<BlockItem>}
+     * @return {@link Iterator}<{@link BlockItem}>
      */
     public Iterator<BlockItem> getBlockItems(final BlockQuery input) {
         val grpcOutput = this.server().getBlockItems(to(input));
@@ -476,7 +476,7 @@ public final class ClientV2 {
      *
      * @param input   {@link BlockQuery}.
      * @param bakerId {@link com.concordium.sdk.responses.BakerId}.
-     * @return {@link Iterator<DelegatorRewardPeriodInfo>}.
+     * @return {@link Iterator}<{@link DelegatorRewardPeriodInfo}>.
      */
     public Iterator<DelegatorRewardPeriodInfo> getPoolDelegatorsRewardPeriod(
             BlockQuery input,
@@ -497,7 +497,7 @@ public final class ClientV2 {
      * The stream will end when all the delegators has been returned.
      *
      * @param input {@link BlockQuery}.
-     * @return {@link Iterator<DelegatorRewardPeriodInfo>}.
+     * @return {@link Iterator}<{@link DelegatorRewardPeriodInfo}>.
      */
     public Iterator<DelegatorRewardPeriodInfo> getPassiveDelegatorsRewardPeriod(
             BlockQuery input) {
@@ -665,7 +665,7 @@ public final class ClientV2 {
      * Get list of Smart Contract modules at the end of the given block.
      *
      * @param input {@link BlockQuery}.
-     * @return {@link Iterator<ModuleRef>}.
+     * @return {@link Iterator}<{@link ModuleRef}>.
      */
     public Iterator<ModuleRef> getModuleList(BlockQuery input) {
         val grpcOutput = this.server().getModuleList(to(input));
@@ -902,12 +902,12 @@ public final class ClientV2 {
     }
 
     /**
-     * Waits until a given transaction is finalized and returns the corresponding {@link Optional<FinalizedBlockItem>}.
+     * Waits until a given transaction is finalized and returns the corresponding {@link Optional}<{@link FinalizedBlockItem}>.
      * If the transaction is unknown to the node or not finalized, the client starts listening for newly finalized blocks,
-     * and returns the corresponding {@link Optional<FinalizedBlockItem>} once the transaction is finalized.
+     * and returns the corresponding {@link Optional}<{@link FinalizedBlockItem}> once the transaction is finalized.
      * @param transactionHash the {@link Hash} of the transaction to wait for.
      * @param timeoutMillis the number of milliseconds to listen for newly finalized blocks.
-     * @return {@link Optional<FinalizedBlockItem>} of the transaction if it was finalized before exceeding the timeout, Empty otherwise.
+     * @return {@link Optional}<{@link FinalizedBlockItem}> of the transaction if it was finalized before exceeding the timeout, Empty otherwise.
      */
     public Optional<FinalizedBlockItem> waitUntilFinalized(Hash transactionHash, int timeoutMillis) {
         Optional<FinalizedBlockItem> maybeStatus = getFinalizedTransaction(transactionHash);
@@ -939,9 +939,9 @@ public final class ClientV2 {
     }
 
     /**
-     * Helper function for {@link ClientV2#waitUntilFinalized(Hash, int)}. Retrieves the {@link Optional<FinalizedBlockItem>} of the transaction if it is finalized.
+     * Helper function for {@link ClientV2#waitUntilFinalized(Hash, int)}. Retrieves the {@link Optional}<{@link FinalizedBlockItem}> of the transaction if it is finalized.
      * @param transactionHash the {@link Hash} of the transaction to wait for.
-     * @return {@link Optional<FinalizedBlockItem>} of the transaction if it is finalized, Empty otherwise.
+     * @return {@link Optional}<{@link FinalizedBlockItem}> of the transaction if it is finalized, Empty otherwise.
      */
     private Optional<FinalizedBlockItem> getFinalizedTransaction(Hash transactionHash) {
         try {

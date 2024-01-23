@@ -25,23 +25,21 @@ public class Credential {
      * Creates an unsigned credential.
      * @param input the required input for creating an unsigned credential
      * @return an unsigned credential and the randomness used to generate the credential
-     * @throws JsonMappingException
-     * @throws JsonProcessingException
      */
-    public static UnsignedCredentialDeploymentInfoWithRandomness createUnsignedCredential(UnsignedCredentialInput input) throws JsonMappingException, JsonProcessingException {
+    public static UnsignedCredentialDeploymentInfoWithRandomness createUnsignedCredential(UnsignedCredentialInput input) {
         StringResult result = null;
         try {
             String jsonStr = CryptoJniNative.createUnsignedCredentialV1(JsonMapper.INSTANCE.writeValueAsString(input));            
             result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
+
+            if (!result.isSuccess()) {
+                throw CryptoJniException.from(result.getErr());
+            }
+    
+            return JsonMapper.INSTANCE.readValue(result.getResult(), UnsignedCredentialDeploymentInfoWithRandomness.class);
         } catch (JsonProcessingException e) { 
             throw new RuntimeException(e);
         }
-
-        if (!result.isSuccess()) {
-            throw CryptoJniException.from(result.getErr());
-        }
-
-        return JsonMapper.INSTANCE.readValue(result.getResult(), UnsignedCredentialDeploymentInfoWithRandomness.class);
     }
 
     /**
@@ -49,24 +47,21 @@ public class Credential {
      * to able to construct the signed credential deployment transaction that is sent to the Concordium node.
      * @param credentialDeploymentDetails the details for the credential deployment
      * @return the credential deployment transaction sign digest
-     * @throws JsonMappingException
-     * @throws JsonProcessingException
-     * @throws DecoderException
      */
-    public static byte[] getCredentialDeploymentSignDigest(CredentialDeploymentDetails credentialDeploymentDetails) throws JsonMappingException, JsonProcessingException, DecoderException {
+    public static byte[] getCredentialDeploymentSignDigest(CredentialDeploymentDetails credentialDeploymentDetails) {
         StringResult result = null;
         try {
             String jsonStr = CryptoJniNative.computeCredentialDeploymentSignDigest(JsonMapper.INSTANCE.writeValueAsString(credentialDeploymentDetails));
             result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
-        } catch (JsonProcessingException e) {
+
+            if (!result.isSuccess()) {
+                throw CryptoJniException.from(result.getErr());
+            }
+    
+            return Hex.decodeHex(result.getResult());
+        } catch (JsonProcessingException | DecoderException e) {
             throw new RuntimeException(e);
         }
-
-        if (!result.isSuccess()) {
-            throw CryptoJniException.from(result.getErr());
-        }
-
-        return Hex.decodeHex(result.getResult());
     }
 
     /**
@@ -74,21 +69,19 @@ public class Credential {
      * with the transaction expiry.
      * @param context the credential deployment serialization context, including the signatures on the credential deployment sign digest.
      * @return the serialized credential deployment payload, to be sent as the rawPayload in {@link ClientV2#sendCredentialDeploymentTransaction(com.concordium.sdk.transactions.TransactionExpiry, byte[])}
-     * @throws DecoderException
      */
-    public static byte[] serializeCredentialDeploymentPayload(CredentialDeploymentSerializationContext context) throws DecoderException {
+    public static byte[] serializeCredentialDeploymentPayload(CredentialDeploymentSerializationContext context) {
         StringResult result = null;
         try {
             String jsonStr = CryptoJniNative.serializeCredentialDeploymentForSubmission(JsonMapper.INSTANCE.writeValueAsString(context));
             result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
-        } catch (JsonProcessingException e) {
+            if (!result.isSuccess()) {
+                throw CryptoJniException.from(result.getErr());
+            }
+    
+            return Hex.decodeHex(result.getResult());
+        } catch (JsonProcessingException | DecoderException e) {
             throw new RuntimeException(e);
         }
-
-        if (!result.isSuccess()) {
-            throw CryptoJniException.from(result.getErr());
-        }
-
-        return Hex.decodeHex(result.getResult());
     }
 }

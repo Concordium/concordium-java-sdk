@@ -33,7 +33,7 @@ public class VRFPublicKey implements RawKey {
     }
 
     /**
-     * Creates an BLS Public Key from {@link byte} Array.
+     * Creates an BLS public key from an array of bytes
      *
      * @param bytes Input Byte Array
      * @return Instance of {@link VRFPublicKey}

@@ -71,6 +71,7 @@ public class InvokeInstanceRequest {
      * @param entrypoint The {@link ReceiveName} of the smart contract instance to invoke.
      * @param parameter  The parameter bytes to include in the invocation of the entrypoint.
      * @param energy     The amount of energy to allow for execution.
+     * @return a {@link InvokeInstanceRequest} from the provided parameters
      */
     public static InvokeInstanceRequest from(BlockQuery blockHash,
                                              AbstractAddress invoker,
@@ -99,6 +100,7 @@ public class InvokeInstanceRequest {
      * @param entrypoint The {@link ReceiveName} of the smart contract instance to invoke.
      * @param parameter  The parameter bytes to include in the invocation of the entrypoint.
      * @param energy     The amount of energy to allow for execution.
+     * @return a {@link InvokeInstanceRequest} from the provided parameters
      */
     public static InvokeInstanceRequest from(BlockQuery blockHash,
                                              ContractAddress instance,
@@ -126,6 +128,7 @@ public class InvokeInstanceRequest {
      * @param amount          Amount to invoke the smart contract instance with.
      * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
      * @param energy          The amount of energy to allow for execution.
+     * @return a {@link InvokeInstanceRequest} from the provided parameters
      */
     public static InvokeInstanceRequest from(BlockQuery blockHash,
                                              AbstractAddress invoker,
@@ -148,6 +151,7 @@ public class InvokeInstanceRequest {
      * @param amount          Amount to invoke the smart contract instance with.
      * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
      * @param energy          The amount of energy to allow for execution.
+     * @return a {@link InvokeInstanceRequest} from the provided parameters
      */
     public static InvokeInstanceRequest from(BlockQuery blockHash,
                                              ContractAddress instance,

@@ -49,8 +49,8 @@ public class ConcordiumHdWallet {
      * @param seedPhrase the seed phrase with words separated by a single space
      * @param network the network the wallet is for
      * @return a wallet that can derive required Concordium wallet keys
-     * @throws IOException
-     * @throws MnemonicException
+     * @throws IOException if the wordlist fails to be loaded
+     * @throws MnemonicException if the provided seed phrase is invalid
      */
     public static ConcordiumHdWallet fromSeedPhrase(String seedPhrase, Network network)
             throws IOException, MnemonicException {
@@ -64,8 +64,8 @@ public class ConcordiumHdWallet {
      * @param seedPhrase the seed phrase with words separated by a single space
      * @param network the network the wallet is for
      * @return a wallet that can derive required Concordium wallet keys
-     * @throws IOException
-     * @throws MnemonicException
+     * @throws IOException if the wordlist fails to be loaded
+     * @throws MnemonicException if the provided seed phrase is invalid
      */
     public static ConcordiumHdWallet fromSeedPhrase(List<String> seedPhrase, Network network) throws IOException, MnemonicException {
         // Validate whether the input seed phrase is valid or not.

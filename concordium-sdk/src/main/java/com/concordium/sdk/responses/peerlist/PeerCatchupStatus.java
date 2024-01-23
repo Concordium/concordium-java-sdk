@@ -55,8 +55,7 @@ public enum PeerCatchupStatus {
 
     /**
      * Gets the int value of the {@link PeerCatchupStatus}
-     *
-     * @return
+     * @return the integer value of the catchup status
      */
     public int getValue() {
         return this.value;
