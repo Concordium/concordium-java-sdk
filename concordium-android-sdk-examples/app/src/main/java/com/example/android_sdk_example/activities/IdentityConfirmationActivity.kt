@@ -21,9 +21,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * Activity that blocks until the identity is created.
+ * Display the error if the identity issuance failed
+ * Navigates to the identity page if the issuance succeeded.
+ */
 class IdentityConfirmationActivity : ComponentActivity() {
     private fun onDone(identity: IdentityObject, storage: Storage) {
+        // Save the identity object
         storage.identity.set(jacksonObjectMapper().writeValueAsString(identity))
+        // Go to the identity page
         val myIntent = Intent(this, IdentityActivity::class.java)
         myIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(myIntent)

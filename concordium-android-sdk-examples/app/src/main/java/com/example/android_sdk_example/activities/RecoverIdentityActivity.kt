@@ -36,12 +36,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RecoverIdentityActivity : ComponentActivity() {
+    /**
+     * Build the url used for the recovery protocol
+     * @param provider info about the identity provider which the identity should be recovered from
+     * @param request the identity recovery request info needed for recovery, as a JSON string
+     */
     private fun getRecoverUrl(provider: IdentityProvider, request: String): String {
         val baseUrl = provider.metadata.recoveryStart
         return Uri.parse(baseUrl!!).buildUpon().appendQueryParameter("state", request).build()
             .toString()
     }
 
+    /**
+     * Perform the recovery and save the resulting identity object.
+     *
+     * @param provider info about the identity provider which the identity should be recovered from
+     * @param global the global cryptographic parameters of the current chain
+     * @param storage storage delegator to get the wallet and to save the identity and provider index
+     */
     private fun recoverIdentity(
         provider: IdentityProvider,
         global: CryptographicParameters,
@@ -53,6 +65,33 @@ class RecoverIdentityActivity : ComponentActivity() {
 
         storage.identityProviderIndex.set(provider.ipInfo.ipIdentity.toString())
         storage.identity.set(jacksonObjectMapper().writeValueAsString(identity))
+    }
+
+    /**
+     *
+     * Builds the intent for the next activity.
+     * If an account exists for the recovered identity, go directly to the account page.
+     * Otherwise go to the identity page.
+     * @param storage storage delegator to get the wallet and to save the account address
+     * @param global the global cryptographic parameters of the current chain
+     * @param ipIdentity index of the identity provider which the identity was recovered from
+     */
+    private fun goToNext(storage: Storage, global: CryptographicParameters, ipIdentity: Int) {
+        val wallet = storage.getWallet()
+        val credId = wallet.getCredentialId(ipIdentity, Constants.IDENTITY_INDEX, Constants.CREDENTIAL_COUNTER, global.onChainCommitmentKey.toHex())
+
+        // The recovered identity might already have an associated account. Check if an account info is available, and if so go directly to the account page. Otherwise go to the identity page.
+        val myIntent = try {
+            val accountInfo = ConcordiumClientService.getClient().getAccountInfo(
+                BlockQuery.BEST,
+                AccountQuery.from(CredentialRegistrationId.from(credId))
+            )
+            storage.accountAddress.set(accountInfo.accountAddress.encoded())
+            Intent(this, AccountActivity::class.java)
+        } catch (e: Exception) {
+            Intent(this, IdentityActivity::class.java)
+        }
+        startActivity(myIntent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,9 +109,8 @@ class RecoverIdentityActivity : ComponentActivity() {
                             global,
                             storage
                         )
-                        goToNext(storage, provider, global)
+                        goToNext(storage, global, provider.ipInfo.ipIdentity.value)
                     } catch (e: Exception) {
-                        println(e.message)
                         withContext(Dispatchers.Main) {
                             Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG).show()
                         }
@@ -80,25 +118,6 @@ class RecoverIdentityActivity : ComponentActivity() {
                 }
             })
         }
-    }
-
-    private fun goToNext(storage: Storage, provider: IdentityProvider, global: CryptographicParameters) {
-        val providerIndex = provider.ipInfo.ipIdentity.value
-        val wallet = storage.getWallet()
-        val credId = wallet.getCredentialId(providerIndex, Constants.IDENTITY_INDEX, Constants.CREDENTIAL_COUNTER, global.onChainCommitmentKey.toHex())
-
-        // The recovered identity might already have an associated account. Check if an account info is available, and if so go directly to the account page. Otherwise go to the identity page.
-        val myIntent = try {
-            val accountInfo = ConcordiumClientService.getClient().getAccountInfo(
-                BlockQuery.BEST,
-                AccountQuery.from(CredentialRegistrationId.from(credId))
-            )
-            storage.accountAddress.set(accountInfo.accountAddress.encoded())
-            Intent(this, AccountActivity::class.java)
-        } catch (e: Exception) {
-            Intent(this, IdentityActivity::class.java)
-        }
-        startActivity(myIntent)
     }
 }
 

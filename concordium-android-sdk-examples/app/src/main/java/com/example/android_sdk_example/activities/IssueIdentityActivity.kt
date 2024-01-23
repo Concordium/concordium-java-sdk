@@ -34,17 +34,31 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class IssueIdentityActivity : ComponentActivity() {
-    private fun launchChromeCustomTab(url: String) {
+
+    /**
+     * Launch the given url in a browser window
+     * @param url the url to open in the browser window
+     */
+    private fun launchBrowserCustomTab(url: String) {
         val customTabsIntent = CustomTabsIntent.Builder().build()
         customTabsIntent.launchUrl(this, Uri.parse(url))
     }
 
+    /**
+     * Builds the url to start the identity issuance protocol.
+     */
     private fun getIssuanceUrl(provider: IdentityProvider, request: String): String {
         val baseUrl = provider.metadata.issuanceStart
         val delimiter = if (baseUrl.contains('?')) "&" else "?"
         return "${baseUrl}${delimiter}response_type=code&redirect_uri=${Constants.CALLBACK_URL}.CALLBACK_URL&scope=identity&state=$request"
     }
 
+    /**
+     * Starts the identity issuance in a browser window and saves the choice of identity provider.
+     * @param provider info about the identity provider which the identity should be issued by
+     * @param global the global cryptographic parameters of the current chain
+     * @param storage storage delegator to get the wallet and to save the account address
+     */
     private fun submit(
         provider: IdentityProvider,
         global: CryptographicParameters,
@@ -52,7 +66,7 @@ class IssueIdentityActivity : ComponentActivity() {
     ) {
         val request = Requests.createIssuanceRequest(storage.getWallet(), provider, global)
         val url = getIssuanceUrl(provider, request)
-        launchChromeCustomTab(url)
+        launchBrowserCustomTab(url)
         storage.identityProviderIndex.set(provider.ipInfo.ipIdentity.toString())
     }
 
@@ -62,7 +76,6 @@ class IssueIdentityActivity : ComponentActivity() {
         val global = ConcordiumClientService.getClient().getCryptographicParameters(BlockQuery.BEST)
 
         intent.data?.let {
-            println(it)
             handleCodeUri(it, storage)
         }
 
