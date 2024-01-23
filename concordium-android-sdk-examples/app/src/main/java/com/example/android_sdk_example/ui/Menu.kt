@@ -13,6 +13,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 
+/**
+ * A drop down menu component that displays the current selected option
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <Option> Menu(

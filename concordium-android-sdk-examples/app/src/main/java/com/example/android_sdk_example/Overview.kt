@@ -19,6 +19,10 @@ import com.example.android_sdk_example.activities.RecoverIdentityActivity
 import com.example.android_sdk_example.activities.SeedPhraseActivity
 import com.example.android_sdk_example.ui.Container
 
+/**
+ * Preview that an overview menu, where each activity can be accessed directly.
+ * Mostly useful for testing purposes.
+ */
 @Preview(showBackground = true)
 @Composable
 fun Overview() {
