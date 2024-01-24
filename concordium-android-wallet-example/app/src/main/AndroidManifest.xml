@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Protection level: normal -->
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Androidsdkexample"
+        tools:targetApi="34">
+        <activity android:name="com.concordium.example.wallet.activities.SeedPhraseActivity" />
+        <activity android:name="com.concordium.example.wallet.activities.NewIdentityActivity" />
+        <activity
+            android:name="com.concordium.example.wallet.activities.IssueIdentityActivity"
+            android:exported="true">
+            <intent-filter android:label="schemefilter">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="identity-issuer"
+                    android:scheme="concordiumwallet-example" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.concordium.example.wallet.activities.IdentityConfirmationActivity" />
+        <activity android:name="com.concordium.example.wallet.activities.RecoverIdentityActivity" />
+        <activity android:name="com.concordium.example.wallet.activities.IdentityActivity" />
+        <activity android:name="com.concordium.example.wallet.activities.AccountActivity" />
+        <activity
+            android:name="com.concordium.example.wallet.activities.RouterActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
