@@ -2,6 +2,8 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt64;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
@@ -12,10 +14,11 @@ import java.util.Date;
 @EqualsAndHashCode
 public final class Expiry {
     public static final int BYTES = UInt64.BYTES;
-    private final Timestamp timestampInMillis;
+
+    private final Timestamp expiry;
 
     private Expiry(Timestamp value) {
-        this.timestampInMillis = value;
+        this.expiry = value;
     }
 
     private static final int MILLISECONDS_PER_SECOND = 1000;
@@ -32,7 +35,7 @@ public final class Expiry {
         if (minutes < 1) {
             throw new IllegalArgumentException("Minutes must be positive.");
         }
-        return Expiry.from(Timestamp.newMillis(this.timestampInMillis.getMillis() + ((long) minutes * MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE)));
+        return Expiry.from(Timestamp.newMillis(this.expiry.getMillis() + ((long) minutes * MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE)));
     }
 
     /**
@@ -46,7 +49,7 @@ public final class Expiry {
         if (seconds < 0) {
             throw new IllegalArgumentException("Seconds must be positive.");
         }
-        return Expiry.from(Timestamp.newMillis(this.timestampInMillis.getMillis() + (long) seconds * MILLISECONDS_PER_SECOND));
+        return Expiry.from(Timestamp.newMillis(this.expiry.getMillis() + (long) seconds * MILLISECONDS_PER_SECOND));
     }
 
     /**
@@ -91,13 +94,14 @@ public final class Expiry {
         return new Expiry(timestamp);
     }
 
-    UInt64 getValue() {
-        return UInt64.from(timestampInMillis.getMillis() / 1000);
+    @JsonProperty("expiry")
+    public UInt64 getValue() {
+        return UInt64.from(expiry.getMillis() / 1000);
     }
 
     @Override
     public String toString() {
-        return timestampInMillis.toString();
+        return expiry.toString();
     }
 
 }

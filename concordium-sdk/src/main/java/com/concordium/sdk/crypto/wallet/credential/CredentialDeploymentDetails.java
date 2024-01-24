@@ -1,6 +1,6 @@
 package com.concordium.sdk.crypto.wallet.credential;
 
-import com.concordium.sdk.transactions.TransactionExpiry;
+import com.concordium.sdk.transactions.Expiry;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +16,6 @@ public class CredentialDeploymentDetails {
     
     @NonNull
     @JsonUnwrapped
-    private final TransactionExpiry expiry;
+    private final Expiry expiry;
     
 }

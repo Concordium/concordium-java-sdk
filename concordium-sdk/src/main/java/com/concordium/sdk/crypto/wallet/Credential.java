@@ -6,7 +6,6 @@ import org.apache.commons.codec.binary.Hex;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.crypto.CryptoJniNative;
 import com.concordium.sdk.crypto.NativeResolver;
-import com.concordium.sdk.crypto.SHA256;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentSerializationContext;
 import com.concordium.sdk.crypto.wallet.credential.UnsignedCredentialDeploymentInfoWithRandomness;
@@ -46,18 +45,18 @@ public class Credential {
     }
 
     /**
-     * Serializes credential deployment details. The result of this serialization is what should be hashed
-     * and signed when constructing a signed credential deployment transaction.
+     * Computes the sign digest on the serialized credential deployment details, which is the value that must be signed
+     * to able to construct the signed credential deployment transaction that is sent to the Concordium node.
      * @param credentialDeploymentDetails the details for the credential deployment
-     * @return the serialized credential deployment details
+     * @return the credential deployment transaction sign digest
      * @throws JsonMappingException
      * @throws JsonProcessingException
      * @throws DecoderException
      */
-    private static byte[] serializeCredentialDeployment(CredentialDeploymentDetails credentialDeploymentDetails) throws JsonMappingException, JsonProcessingException, DecoderException {
+    public static byte[] getCredentialDeploymentSignDigest(CredentialDeploymentDetails credentialDeploymentDetails) throws JsonMappingException, JsonProcessingException, DecoderException {
         StringResult result = null;
         try {
-            String jsonStr = CryptoJniNative.serializeCredentialDeployment(JsonMapper.INSTANCE.writeValueAsString(credentialDeploymentDetails));
+            String jsonStr = CryptoJniNative.computeCredentialDeploymentSignDigest(JsonMapper.INSTANCE.writeValueAsString(credentialDeploymentDetails));
             result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -68,20 +67,6 @@ public class Credential {
         }
 
         return Hex.decodeHex(result.getResult());
-    }
-
-    /**
-     * Constructs the sign digest on the serialized credential deployment details, which is the value that must be signed
-     * to able to construct the signed credential deployment transaction that is sent to the Concordium node.
-     * @param credentialDeploymentDetails the details for the credential deployment
-     * @return the credential deployment transaction sign digest
-     * @throws JsonMappingException
-     * @throws JsonProcessingException
-     * @throws DecoderException
-     */
-    public static byte[] getCredentialDeploymentSignDigest(CredentialDeploymentDetails credentialDeploymentDetails) throws JsonMappingException, JsonProcessingException, DecoderException {
-        byte[] serializedCredentialDeploy = serializeCredentialDeployment(credentialDeploymentDetails);
-        return SHA256.hash(serializedCredentialDeploy);
     }
 
     /**

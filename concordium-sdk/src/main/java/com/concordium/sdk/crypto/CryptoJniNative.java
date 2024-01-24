@@ -291,14 +291,14 @@ public class CryptoJniNative {
     public static native String createUnsignedCredentialV1(String input);
 
     /**
-     * Serializes a credential deployment. The digest of this serialization is the one
-     * that needs to be signed to be able to submit the transaction.
+     * Computes the sign digest of a new credential deployment. This digest is the one that needs
+     * to be signed to be able to submit the transaction.
      * @param input {@link CredentialDeploymentDetails} serialized as JSON.
-     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the serialization of
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the sign digest of
      * {@link CredentialDeploymentDetails} as a hex encoded string.
      * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
      */
-    public static native String serializeCredentialDeployment(String input);
+    public static native String computeCredentialDeploymentSignDigest(String input);
     
     /**
      * Serializes a credential deployment for submission, i.e. it includes the signatures.

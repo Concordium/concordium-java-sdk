@@ -1,6 +1,8 @@
 package com.concordium.sdk.crypto.wallet.credential;
 
-import java.util.List;
+import java.util.Map;
+
+import com.concordium.sdk.transactions.Index;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,5 +15,5 @@ public class CredentialDeploymentSerializationContext {
     private final UnsignedCredentialDeploymentInfo unsignedCdi;
 
     @NonNull
-    private final List<String> signatures;
+    private final Map<Index, String> signatures;
 }
