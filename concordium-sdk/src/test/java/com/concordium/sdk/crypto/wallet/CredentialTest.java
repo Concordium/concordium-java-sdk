@@ -7,7 +7,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +24,8 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProvider
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.CredentialPublicKeys;
+import com.concordium.sdk.transactions.Expiry;
 import com.concordium.sdk.transactions.Index;
-import com.concordium.sdk.transactions.TransactionExpiry;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
@@ -91,7 +90,7 @@ public class CredentialTest {
             .build();
 
         UnsignedCredentialDeploymentInfoWithRandomness result = Credential.createUnsignedCredential(input);
-        TransactionExpiry expiry = TransactionExpiry.fromLong(new Date().getTime() + 360);
+        Expiry expiry = Expiry.createNew().addMinutes(5);
 
         byte[] credentialDeploymentSignDigest = Credential.getCredentialDeploymentSignDigest(new CredentialDeploymentDetails(result.getUnsignedCdi(), expiry));
         ED25519SecretKey signingKey = wallet.getAccountSigningKey(0, 0, credentialCounter);

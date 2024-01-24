@@ -238,8 +238,8 @@ public final class ClientV2 {
      * @param rawPayload the serialized bytes of the credential deployment transaction, including its signatures
      * @return Transaction {@link Hash}.
      */
-    public Hash sendCredentialDeploymentTransaction(TransactionExpiry expiry, byte[] rawPayload) {
-        val req = ClientV2MapperExtensions.to(expiry, rawPayload);
+    public Hash sendCredentialDeploymentTransaction(CredentialDeploymentTransaction credentialDeploymentTransaction) {
+        val req = ClientV2MapperExtensions.to(credentialDeploymentTransaction);
         val grpcOutput = this.server().sendBlockItem(req);
 
         return to(grpcOutput);
