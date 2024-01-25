@@ -3,12 +3,10 @@ name: android-deploy
 
 on:
   workflow_dispatch: # allow manual trigger
+  push:
+    branches: [deploy-android]
 
 jobs:
-
-  build-javadocs:
-    runs-on: ubuntu-22.04
-  
   build-aar-library:
     runs-on: ubuntu-22.04
     steps:
@@ -36,10 +34,10 @@ jobs:
       run: make add-android-targets && make android
     - name: Initialize root project
       run: mvn install -N
-    - name: Build and test android sdk
-      run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install && mvn source:jar
     - name: Build concordium-sdk and get javadoc
       run: make && cd concordium-sdk && mvn --batch-mode --update-snapshots install && mvn lombok:delombok -f pom.xml && mvn javadoc:jar -f pom.xml && mv target/*-javadoc.jar ../concordium-android-sdk/target/   
+    - name: Build and test android sdk
+      run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install && mvn source:jar
     - name: Set up Apache Maven Central
       uses: actions/setup-java@v4
       with: # running setup-java again overwrites the settings.xml
