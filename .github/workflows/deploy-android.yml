@@ -34,6 +34,8 @@ jobs:
       run: make add-android-targets && make android
     - name: Initialize root project
       run: mvn install -N
+    - name: Create android-sdk target folder
+      run: mkdir -p concordium-android-sdk/target
     - name: Build concordium-sdk and get javadoc
       run: make && cd concordium-sdk && mvn --batch-mode --update-snapshots install && mvn lombok:delombok -f pom.xml && mvn javadoc:jar -f pom.xml && mv target/*-javadoc.jar ../concordium-android-sdk/target/   
     - name: Build and test android sdk
