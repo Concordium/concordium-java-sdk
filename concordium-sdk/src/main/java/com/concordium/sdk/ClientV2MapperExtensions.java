@@ -77,7 +77,6 @@ import com.concordium.sdk.transactions.Signature;
 import com.concordium.sdk.transactions.TransferPayload;
 import com.concordium.sdk.transactions.TransferWithMemoPayload;
 import com.concordium.sdk.transactions.*;
-import com.concordium.sdk.transactions.UpdateContract;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
 import com.concordium.sdk.types.Timestamp;
@@ -871,14 +870,14 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
-    static SendBlockItemRequest to(TransactionExpiry expiry, byte[] payload) {
-        TransactionTime time = to(expiry.getExpiry());
+    static SendBlockItemRequest to(CredentialDeploymentTransaction credentialDeploymentTransaction) {
+        TransactionTime time = to(credentialDeploymentTransaction.getExpiry().getValue());
 
         return SendBlockItemRequest.newBuilder()
             .setCredentialDeployment(
                 CredentialDeployment.newBuilder()
                     .setMessageExpiry(time)
-                    .setRawPayload(ByteString.copyFrom(payload))
+                    .setRawPayload(ByteString.copyFrom(credentialDeploymentTransaction.getPayloadBytes()))
                     .build()
                 )
             .build();

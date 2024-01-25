@@ -2,6 +2,8 @@ package com.concordium.sdk.types;
 
 import com.concordium.sdk.Constants;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -16,6 +18,7 @@ import java.time.ZonedDateTime;
 public class Timestamp {
 
     @Getter
+    @JsonValue
     private final long millis;
 
     @JsonCreator

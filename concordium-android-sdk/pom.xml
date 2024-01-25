@@ -188,7 +188,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/../concordium-android-sdk-examples/app/libs</outputDirectory>
+                            <outputDirectory>${basedir}/../concordium-android-wallet-example/app/libs</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${basedir}/target</directory>
