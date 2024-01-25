@@ -50,6 +50,19 @@ public class CredentialDeploymentTransaction extends BlockItem {
                 Arrays.copyOf(payloadBytes, payloadBytes.length));
     }
 
+    /**
+     * Creates an instance of {@link CredentialDeploymentTransaction}.
+     *
+     * @param expiry       Indicates when this transaction should expire.
+     * @param payloadBytes Payload serialized as byte array.
+     * @return Instance of {@link CredentialDeploymentTransaction}.
+     */
+    public static CredentialDeploymentTransaction from(final Expiry expiry, final byte[] payloadBytes) {
+        return new CredentialDeploymentTransaction(
+                expiry,
+                Arrays.copyOf(payloadBytes, payloadBytes.length));
+    }
+
     @Override
     @UnstableApi
     byte[] getBlockItemBytes() {

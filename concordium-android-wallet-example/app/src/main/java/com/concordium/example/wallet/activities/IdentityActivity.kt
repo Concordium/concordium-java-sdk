@@ -21,17 +21,17 @@ import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType
 import com.concordium.sdk.transactions.CredentialRegistrationId
 import com.concordium.sdk.transactions.Index
-import com.concordium.sdk.transactions.TransactionExpiry
 import com.concordium.sdk.types.AccountAddress
 import com.concordium.example.wallet.Constants
 import com.concordium.example.wallet.Requests
 import com.concordium.example.wallet.Storage
 import com.concordium.example.wallet.services.ConcordiumClientService
 import com.concordium.example.wallet.ui.Container
+import com.concordium.sdk.transactions.CredentialDeploymentTransaction
+import com.concordium.sdk.transactions.Expiry
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.apache.commons.codec.binary.Hex
 import java.util.Collections
-import java.util.Date
 
 
 class IdentityActivity : ComponentActivity() {
@@ -55,7 +55,7 @@ class IdentityActivity : ComponentActivity() {
             ipIdentity,
         )
 
-        val expiry = TransactionExpiry.fromLong(Date().time + 360)
+        val expiry = Expiry.createNew().addMinutes(5)
 
         val credentialDeploymentSignDigest = Credential.getCredentialDeploymentSignDigest(
             CredentialDeploymentDetails(
@@ -74,8 +74,9 @@ class IdentityActivity : ComponentActivity() {
             Collections.singletonMap(Index.from(0), Hex.encodeHexString(signature))
         )
         val credentialPayload = Credential.serializeCredentialDeploymentPayload(context)
+        val credentialDeploymentTransaction = CredentialDeploymentTransaction.from(expiry, credentialPayload)
         ConcordiumClientService.getClient()
-            .sendCredentialDeploymentTransaction(expiry, credentialPayload)
+            .sendCredentialDeploymentTransaction(credentialDeploymentTransaction)
 
         // Save the address of the account
         val address =
