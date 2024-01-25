@@ -13,11 +13,14 @@ import java.util.Date;
  */
 @EqualsAndHashCode
 public final class Expiry {
+    
     public static final int BYTES = UInt64.BYTES;
 
-    private final Timestamp expiry;
+    // The expiry in seconds since unix epoch.
+    @JsonProperty
+    private final UInt64 expiry;
 
-    private Expiry(Timestamp value) {
+    private Expiry(UInt64 value) {
         this.expiry = value;
     }
 
@@ -26,35 +29,32 @@ public final class Expiry {
 
     /**
      * Create a new `Expiry` with current offset added the amount of minutes.
-     *
      * @param minutes minutes to add.
-     *                The amount of minutes must be positive.
+     *                The amount of minutes must be strictly positive.
      * @return The Expiry with the added minutes.
      */
     public Expiry addMinutes(int minutes) {
         if (minutes < 1) {
             throw new IllegalArgumentException("Minutes must be positive.");
         }
-        return Expiry.from(Timestamp.newMillis(this.expiry.getMillis() + ((long) minutes * MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE)));
+        return Expiry.from(this.expiry.getValue() + (minutes * SECONDS_PER_MINUTE));
     }
 
     /**
      * Create a new `Expiry` with current offset added the amount of seconds.
-     *
      * @param seconds seconds to add.
-     *                The amount of seconds provided must be positive.
+     *                The amount of seconds provided must be strictly positive.
      * @return The Expiry with the added minutes.
      */
     public Expiry addSeconds(int seconds) {
-        if (seconds < 0) {
+        if (seconds < 1) {
             throw new IllegalArgumentException("Seconds must be positive.");
         }
-        return Expiry.from(Timestamp.newMillis(this.expiry.getMillis() + (long) seconds * MILLISECONDS_PER_SECOND));
+        return Expiry.from(this.expiry.getValue() + seconds);
     }
 
     /**
-     * Create an `Expiry` from a raw unix timestamp.
-     *
+     * Create an `Expiry` from a raw unix timestamp in seconds.
      * @param value the raw unix timestamp i.e., seconds since unix epoch.
      * @return the Expiry
      */
@@ -62,12 +62,11 @@ public final class Expiry {
         if (value == 0) {
             throw new IllegalArgumentException("Expiry cannot be zero");
         }
-        return new Expiry(Timestamp.newSeconds(value));
+        return Expiry.from(Timestamp.newSeconds(value));
     }
 
     /**
      * Create a new `Expiry` with an offset of the current time.
-     *
      * @return the Expiry
      */
     public static Expiry createNew() {
@@ -75,33 +74,33 @@ public final class Expiry {
     }
 
     /**
-     * Create an `Expiry` from a {@link Date}
-     *
+     * Create an `Expiry` from a {@link Date}. Note that there is a loss of precision
+     * when using this as a {@link Date} holds milliseconds and the internal
+     * value of a {@link Expiry} is in seconds.
      * @param date the date
      * @return the expiry
      */
     public static Expiry from(Date date) {
-        return new Expiry(Timestamp.newMillis(date.getTime()));
+        return Expiry.from(Timestamp.newMillis(date.getTime()));
     }
 
     /**
-     * Create an `Expiry` from a {@link Timestamp}
-     *
+     * Create an `Expiry` from a {@link Timestamp}. Note that there is a loss of precision
+     * when using this as a {@link Timestamp} holds milliseconds and the internal
+     * value of a {@link Expiry} is in seconds.
      * @param timestamp the timestamp
      * @return the expiry
      */
     public static Expiry from(Timestamp timestamp) {
-        return new Expiry(timestamp);
+        return new Expiry(UInt64.from(timestamp.getMillis() / MILLISECONDS_PER_SECOND));
     }
 
-    @JsonProperty("expiry")
     public UInt64 getValue() {
-        return UInt64.from(expiry.getMillis() / 1000);
+        return expiry;
     }
 
     @Override
     public String toString() {
         return expiry.toString();
     }
-
 }
