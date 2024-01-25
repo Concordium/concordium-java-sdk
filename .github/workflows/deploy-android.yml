@@ -7,7 +7,7 @@ on:
     branches: [deploy-android]
 
 jobs:
-  build-aar-library:
+  deploy-android:
     runs-on: ubuntu-22.04
     environment: release
     steps:
@@ -38,7 +38,7 @@ jobs:
     - name: Create android-sdk target folder
       run: mkdir -p concordium-android-sdk/target
     - name: Build concordium-sdk and get javadoc
-      run: make && cd concordium-sdk && mvn --batch-mode --update-snapshots install && mvn lombok:delombok -f pom.xml && mvn javadoc:jar -f pom.xml && mv target/*-javadoc.jar ../concordium-android-sdk/target/   
+      run: make && cd concordium-sdk && mvn --batch-mode --update-snapshots install && mvn lombok:delombok -f pom.xml && mvn javadoc:jar -f pom.xml && mv target/*-javadoc.jar ../concordium-android-sdk/target/concordium-android-sdk-javadoc.jar
     - name: Build and test android sdk
       run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install && mvn source:jar
     - name: Set up Apache Maven Central
@@ -51,7 +51,7 @@ jobs:
         server-password: ${{ secrets.SONATYPE_PWD }} # env variable for token in deploy
         gpg-private-key: ${{ secrets.SONATYPE_PKEY }} # Value of the GPG private key to import
     - name: Publish package to central maven repository
-      run: cd concordium-android-sdk && mvn --batch-mode deploy
+      run: cd concordium-android-sdk && mvn --batch-mode -e -X deploy
       env:
         MAVEN_USERNAME: ${{ secrets.SONATYPE_USR }}
         MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PWD }}
