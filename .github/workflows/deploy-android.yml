@@ -41,11 +41,6 @@ jobs:
       run: make && cd concordium-sdk && mvn --batch-mode --update-snapshots install && mvn lombok:delombok -f pom.xml && mvn javadoc:jar -f pom.xml && mv target/*-javadoc.jar ../concordium-android-sdk/target/   
     - name: Build and test android sdk
       run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install && mvn source:jar
-    - name: Upload aar
-      uses: actions/upload-artifact@master
-      with:
-        name: deploy-android
-        path: ./concordium-android-sdk/target
     - name: Set up Apache Maven Central
       uses: actions/setup-java@v4
       with: # running setup-java again overwrites the settings.xml
