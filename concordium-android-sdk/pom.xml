@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.concordium.sdk</groupId>
         <artifactId>concordium-sdk-base</artifactId>
-        <version>6.0.1-SNAPSHOT</version>
+        <version>6.0.1</version>
     </parent>
 
     <artifactId>concordium-android-sdk</artifactId>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.concordium.sdk</groupId>
             <artifactId>concordium-sdk</artifactId>
-            <version>6.0.1-SNAPSHOT</version>
+            <version>6.0.1</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
