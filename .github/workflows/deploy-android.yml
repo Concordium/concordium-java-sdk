@@ -50,9 +50,6 @@ jobs:
         server-username: ${{ secrets.SONATYPE_USR }} # env variable for username in deploy
         server-password: ${{ secrets.SONATYPE_PWD }} # env variable for token in deploy
         gpg-private-key: ${{ secrets.SONATYPE_PKEY }} # Value of the GPG private key to import
+        gpg-passphrase:  ${{ secrets.SONATYPE_PHRASE }} # Passphrase for the GPG private key
     - name: Publish package to central maven repository
-      run: cd concordium-android-sdk && mvn --batch-mode -e -X deploy
-      env:
-        MAVEN_USERNAME: ${{ secrets.SONATYPE_USR }}
-        MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PWD }}
-      
+      run: cd concordium-android-sdk && mvn --batch-mode deploy
