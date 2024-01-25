@@ -9,6 +9,7 @@ on:
 jobs:
   build-aar-library:
     runs-on: ubuntu-22.04
+    environment: release
     steps:
     - name: Set Up Android tools
       run: |
