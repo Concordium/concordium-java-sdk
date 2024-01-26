@@ -52,7 +52,7 @@ jobs:
         gpg-private-key: ${{ secrets.PKEY }} # Value of the GPG private key to import
         gpg-passphrase:  GPG_PASSPHRASE # Passphrase for the GPG private key
     - name: Publish package to central maven repository
-      run: cd concordium-android-sdk && mvn --batch-mode deploy -Psign
+      run: cd concordium-android-sdk && mvn --batch-mode deploy
       env:
         MAVEN_USERNAME: ${{ secrets.SONATYPE_USR }}
         MAVEN_PASSWORD: ${{ secrets.SONATYPE_PWD }}
