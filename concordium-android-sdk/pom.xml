@@ -223,7 +223,7 @@
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
-                        <phase>deploy</phase>
+                        <phase>pre-deploy</phase>
                         <goals>
                             <goal>sign</goal>
                        </goals>
