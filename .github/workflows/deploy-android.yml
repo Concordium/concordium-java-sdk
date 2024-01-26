@@ -47,9 +47,9 @@ jobs:
         distribution: 'temurin'
         java-version: '8'
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: ${{ secrets.SONATYPE_USR }} # env variable for username in deploy
-        server-password: ${{ secrets.SONATYPE_PWD }} # env variable for token in deploy
-        gpg-private-key: ${{ secrets.SONATYPE_PKEY }} # Value of the GPG private key to import
-        gpg-passphrase:  ${{ secrets.SONATYPE_PHRASE }} # Passphrase for the GPG private key
+        server-username: '${{ secrets.SONATYPE_USR }}' # env variable for username in deploy
+        server-password: '${{ secrets.SONATYPE_PWD }}' # env variable for token in deploy
+        gpg-private-key: '${{ secrets.SONATYPE_PKEY }}' # Value of the GPG private key to import
+        gpg-passphrase:  '${{ secrets.SONATYPE_PHRASE }}' # Passphrase for the GPG private key
     - name: Publish package to central maven repository
       run: cd concordium-android-sdk && mvn --batch-mode deploy
