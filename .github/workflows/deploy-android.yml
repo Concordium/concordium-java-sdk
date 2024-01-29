@@ -49,51 +49,7 @@ jobs:
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
         server-username: MAVEN_USERNAME # env variable for username in deploy
         server-password: MAVEN_PASSWORD # env variable for token in deploy
-        gpg-private-key: "-----BEGIN PGP PRIVATE KEY BLOCK-----
-
-          lQOBBGW3a/QRCACB6iajCXtlb/7u7tf9qMeO14xbJbFlvJf0wAwIN+AhnI7QbgE8
-          Dc4HuCZ4wtDU2r4eQb0YcLhOEKj5serbH+86BGsSyVgNpNilud3eLORV8Qya8n18
-          CYBOWgRyyvYKMg/EulEaT0oqmjuLrDMNu5qZQ3x7bV2Nx9zNnbHLwmA2QUi0XTrE
-          Apo9GaYWPd1nVJRKDrR7F+7PIaC31lt/tJRg1vM/+fAAPqMInOuxSGG9pvo94dp+
-          oZGnoDF8EfcYNXEu57iykVaZV2RtNU8/0vy0f5iFwFFX8C3KS6QqTTGSTzVZnFx0
-          jB0DOYFeAp3mQLeuF4nQDXTgXCglyXpbI/OzAQDoRderB3VY0eHSvMkOevd45Tdo
-          0KTfedby8djLZwag8wf+KjB3mqmLQ4ur20xJ6GvVbQLAND9izMFbVyECA2oysb0p
-          nnjotmL0lnP/cJWl1e2BFlxPA7Ns3jq0MGOIHLQB4vszrWWAyXylFh1GULn6OXr0
-          GSRrQf9kgET3Zp/vcj+8Af1dvpDAj7m3ZD8XFCataaelmS33ufc61RRMoW/5fYVt
-          GrVvTExABImfr0SL4DyQLfZpCTbf6mnaSj6hz3dAnd+v7pKM+ZG4ViIO7lcb1OeP
-          gX7jQ44aDS97R2cwK/bVrt+0+2A1/fbFcJAqNCEwR8L+Vr7DFQ0SJEzzifeS4TF3
-          hyi9PadrHOgORWZvbGMlCQD9gQcNufZHFaNAaasOhgf/Q9wFttDKmtUqEw9uEw75
-          fPvgOFn4u4IQNwKo0kkM05lSCth8bcV+gK92RvaBECrAFx1lGeK064oMlBtM0e0P
-          U3rb2FVd/z14amgIqgfDMTI6xjW5Xg/XNYssVz5Aox/uMpjS8ttOh3DDHdM7CeKM
-          JHRBxel3kRHPX4hz/cPBdZ9uTR29XEk16jG7h8f/yLzhLZSrvGmf+WEnv27XxAYH
-          YjjSDI/l8j8JdZutMD0jU6pjocWbDaUaaCTO5UY/Lu1/iLKvXYlCRCB7yB/1O1PT
-          pMMs05PwzIUQ0fuuDjQ+1xR9wfvrnfH+rXfEdw44bFe/rzG3Sl6KbVglNHHv7XW/
-          hf4HAwJlsIllCB4Ovf+qY2BZE8mm1L0x7PbE9sq+etNT8ecyLZlayPMBlPTeXTx3
-          wVk+Nv4V89fg3La96Nl9qidYlRIDrrCBixshqT6vl2GLjhI3tCNUZXN0ZXIgKEZv
-          ciB0ZXN0aW5nIG9ubHkpIDx0QHQuY29tPoiWBBMRCAA+FiEEqkMi4Eisj7tpgboU
-          JxfdsgcQVDcFAmW3a/QCGwMFCQABUYAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AA
-          CgkQJxfdsgcQVDfnWAD/dkHrTWmI6yuqnDXaxggtsA/hH/VC7sMvAPxpJclnd2EA
-          /iGUI89oLfILUx6ugigNyW5bjbZcQEn9P4h+USYcxJDqnQJrBGW3a/QQCACWalHe
-          rMSIZRsmuhyktrH+kPQqDw7Q/Ba7YaVCoT76VZuKREnJIT79DJfV2VKfZToMiEa3
-          fhfXPoGv5q1FkZKjhcgKrSbQkg+GCwwwcITj+g2deEM/vQB+rDGNZg4hHBFjojr4
-          k1Bp0RKhBErvrn8JAaw7K/ILZDWL56ls7MN+hEk8qsHMRR6+V+Ks6B6WQYl2VVAV
-          rm3Mmv5DKE8oBSwrRIGzpEfdOHl3uGw9qgQq8CjDO+SkhpehzcsFxa25XmzMxJ5i
-          uUIo+3lo+zUVKis+jXpaq4FVrG4bxRgZyedS8Hn3+2GbCOC08Vd2CZ1SAuIkf1B9
-          dSAQ6sxvc4qPaLZbAAMGB/479vUwXjeoWTRCcP0tdxh5xNvRov3T1ke6Zw04nwbR
-          Wk8Dailpf6VTZM5AFOagHXOdXPLP6VedO6FSo84km7tJ6b+jCj62mPHAHiElqvHN
-          4DK7YskJq2xbqs1kLo7zjOD8NqP9EUx6LAym+oSKZafh1Q7uY/vEXrWJVz3g67pN
-          G7OmtHxH60Rg+NJw4L3hfom/aAJtnxBxRvX0Z4NKuNVx4r+5vom7tNZG6U3WUOC0
-          7pZAZtc7GfRcbSyKBDFdA0uA6oDRabDilyh10wMEI7WTzTsRahDL+SKNvEZ9ioa4
-          ACrBC4GlrEewnLDJNWqgOyCMldwuW5v1VPy1YQYzZXgF/gcDAsRPDcFsraBO/9np
-          W3bZV1RnUQ0P6Vo8FdSt68gSij++qPKiuCrWAlduHXu+zJKxTr+EuPGRYxJPDvLG
-          LFJxtNvRlzi2p0nvcC73Lz4oWg3JcviSz7b2aHPpBoh+BBgRCAAmFiEEqkMi4Eis
-          j7tpgboUJxfdsgcQVDcFAmW3a/QCGwwFCQABUYAACgkQJxfdsgcQVDesOAEAsMO3
-          m+bI3I1y/2BUA3bTU2JmEOBPf4kA8cn8mprQu7YA/2Xq7EiUSEEF8/gTG2TsZRID
-          IigzUwxnGdnSFF4AYxDV
-          =hOdY
-          -----END PGP PRIVATE KEY BLOCK-----
-
-          "
+        gpg-private-key: ${{ secrets.SONATYPE_PKEY }} # Value of the GPG private key to import
         gpg-passphrase:  GPG_PASSPHRASE # Passphrase for the GPG private key
     - name: Publish package to central maven repository
       run: cd concordium-android-sdk && mvn --batch-mode deploy -Psign
