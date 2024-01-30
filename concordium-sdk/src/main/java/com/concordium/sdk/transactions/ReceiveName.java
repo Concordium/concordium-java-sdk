@@ -44,6 +44,16 @@ public final class ReceiveName {
         return new ReceiveName(contractName, method);
     }
 
+    /**
+     * Create a {@link ReceiveName} from a {@link InitName}
+     * @param initName the {@link InitName}
+     * @param endpoint name of the receive endpoint
+     * @return a {@link ReceiveName}
+     */
+    public static ReceiveName from(InitName initName, String endpoint) {
+        return new ReceiveName(initName.getName().split("init_")[1], endpoint);
+    }
+
     public static ReceiveName parse(final String value) {
         val parts = value.split("\\.");
         if (parts.length != 2) {
