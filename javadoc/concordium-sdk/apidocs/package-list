@@ -9,6 +9,9 @@ com.concordium.sdk.crypto.encryptedtransfers
 com.concordium.sdk.crypto.pedersencommitment
 com.concordium.sdk.crypto.pointchevalsanders
 com.concordium.sdk.crypto.vrf
+com.concordium.sdk.crypto.wallet
+com.concordium.sdk.crypto.wallet.credential
+com.concordium.sdk.crypto.wallet.identityobject
 com.concordium.sdk.exceptions
 com.concordium.sdk.requests
 com.concordium.sdk.requests.dumpstart
