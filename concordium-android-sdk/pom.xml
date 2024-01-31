@@ -187,7 +187,7 @@
             </build>
         </profile>
         <profile>
-            <id>sign</id>
+            <id>deploy</id>
             <build>
             <plugins>
                 <plugin>
@@ -235,6 +235,23 @@
                                         <classifier>sources</classifier>
                                     </artifact>
                                 </artifacts>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>1.6.0</version>
+                    <executions>
+                        <execution>
+                            <id>flatten</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                            <configuration>
+                                <flattenMode>ossrh</flattenMode>
                             </configuration>
                         </execution>
                     </executions>
@@ -300,23 +317,6 @@
                                     </includes>
                                 </resource>
                             </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                        <configuration>
-                            <flattenMode>ossrh</flattenMode>
                         </configuration>
                     </execution>
                 </executions>

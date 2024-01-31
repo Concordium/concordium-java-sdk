@@ -107,16 +107,11 @@ jobs:
         submodules: recursive
     - name: Make android native dependencies
       run: make add-android-targets && make android
-    # Builds and tests the sdk
-    - name: Initialize root project
-      run: mvn install -N
-    - name: Build and test android sdk
-      run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install
-    - name: Upload aar
+    - name: Upload android
       uses: actions/upload-artifact@master
       with:
-        name: concordium-android-sdk.aar
-        path: ./concordium-android-sdk/target/concordium-android-sdk.aar
+        name: android-library
+        path: ./concordium-android-sdk/native
 
   build-and-release-jar:
     needs: [build-native-ubuntu, build-native-macos, build-native-windows, build-aar-library]
@@ -130,14 +125,22 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        submodules: recursive
-        
-    - name: Setup JDK 8
-      uses: actions/setup-java@v2
-      with:
-        java-version: 8
-        distribution: 'adopt'
-        cache: maven
+        submodules: recursive    
+    - name: Set Up Android tools
+      run: |
+          ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager \
+          --sdk_root=$ANDROID_SDK_ROOT \
+          "platform-tools" "platforms;android-27" "build-tools;27.0.3"
+    - name: Setup JDK 8 and maven central
+      uses: actions/setup-java@v4
+      with: # running setup-java again overwrites the settings.xml
+        distribution: 'temurin'
+        java-version: '8'
+        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        server-username: MAVEN_USERNAME # env variable for username in deploy
+        server-password: MAVEN_PASSWORD # env variable for token in deploy
+        gpg-private-key: ${{ secrets.SONATYPE_PKEY }} # Value of the GPG private key to import
+        gpg-passphrase:  GPG_PASSPHRASE # Passphrase for the GPG private key
         
     - name: Download linux library
       uses: actions/download-artifact@master
@@ -157,23 +160,15 @@ jobs:
         name: windows-library
         path: concordium-sdk/native
 
-    - name: Download aar library
+    - name: Download android library
       uses: actions/download-artifact@master
       with:
-        name: concordium-android-sdk.aar
-        path: concordium-android-sdk/target
+        name: android-library
+        path: ./concordium-android-sdk/native
 
     # Builds and tests the sdk. Delomboks code and generates a javadoc jar from the delombok'ed code
     - name: Build and test sdk
-      run: cd concordium-sdk && mvn --batch-mode --update-snapshots install && mvn lombok:delombok -f pom.xml && mvn javadoc:jar -f pom.xml
-
-      # Attach jar files to release (jar, jar-with-dependencies and javadoc-jar)
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          concordium-sdk/target/*.jar
-          concordium-android-sdk/target/concordium-android-sdk.aar
+      run: cd concordium-sdk && mvn --batch-mode --update-snapshots install && mvn lombok:delombok -f pom.xml && mvn javadoc:jar -f pom.xml && mvn source:jar
 
     - name: Deploy javadoc
       uses: MathieuSoysal/Javadoc-publisher.yml@v2.4.0
@@ -186,4 +181,28 @@ jobs:
         without-checkout: true
         project: maven
         custom-command: cd concordium-sdk && mvn javadoc:javadoc -f pom.xml # Generates javadoc from the delombok'ed code
-   
+    - name: Publish java package to central maven repository
+      run: cd concordium-sdk && mvn --batch-mode deploy -Pdeploy
+      env:
+        MAVEN_USERNAME: ${{ secrets.SONATYPE_USR }}
+        MAVEN_PASSWORD: ${{ secrets.SONATYPE_PWD }}
+        GPG_PASSPHRASE: ${{secrets.SONATYPE_PHRASE }}
+    - name: Copy javadocs and sources for android
+      run: > 
+        mv concordium-sdk/target/*-javadoc.jar concordium-android-sdk/target/concordium-android-sdk-javadoc.jar
+        && mv concordium-sdk/target/*-sources.jar concordium-android-sdk/target/concordium-android-sdk-sources.jar
+    - name: Publish android package to central maven repository
+      run: cd concordium-android-sdk && mvn --batch-mode deploy -Pdeploy
+      env:
+        MAVEN_USERNAME: ${{ secrets.SONATYPE_USR }}
+        MAVEN_PASSWORD: ${{ secrets.SONATYPE_PWD }}
+        GPG_PASSPHRASE: ${{secrets.SONATYPE_PHRASE }}
+      # Attach jar files to release (jar, jar-with-dependencies and javadoc-jar)
+    - name: Release github
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          concordium-sdk/target/*.jar
+          concordium-android-sdk/target/concordium-android-sdk.aar
+    
+      
