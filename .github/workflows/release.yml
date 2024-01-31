@@ -131,17 +131,12 @@ jobs:
           ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager \
           --sdk_root=$ANDROID_SDK_ROOT \
           "platform-tools" "platforms;android-27" "build-tools;27.0.3"
-    - name: Setup JDK 8 and maven central
-      uses: actions/setup-java@v4
-      with: # running setup-java again overwrites the settings.xml
-        distribution: 'temurin'
-        java-version: '8'
-        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: MAVEN_USERNAME # env variable for username in deploy
-        server-password: MAVEN_PASSWORD # env variable for token in deploy
-        gpg-private-key: ${{ secrets.SONATYPE_PKEY }} # Value of the GPG private key to import
-        gpg-passphrase:  GPG_PASSPHRASE # Passphrase for the GPG private key
-        
+    - name: Setup JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: 8
+        distribution: 'adopt'
+        cache: maven
     - name: Download linux library
       uses: actions/download-artifact@master
       with:
@@ -181,6 +176,16 @@ jobs:
         without-checkout: true
         project: maven
         custom-command: cd concordium-sdk && mvn javadoc:javadoc -f pom.xml # Generates javadoc from the delombok'ed code
+    - name: Setup and maven central
+      uses: actions/setup-java@v4
+      with: # running setup-java again overwrites the settings.xml
+        distribution: 'adopt'
+        java-version: '8'
+        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        server-username: MAVEN_USERNAME # env variable for username in deploy
+        server-password: MAVEN_PASSWORD # env variable for token in deploy
+        gpg-private-key: ${{ secrets.SONATYPE_PKEY }} # Value of the GPG private key to import
+        gpg-passphrase:  GPG_PASSPHRASE # Passphrase for the GPG private key
     - name: Publish java package to central maven repository
       run: cd concordium-sdk && mvn --batch-mode deploy -Pdeploy
       env:
