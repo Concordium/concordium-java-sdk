@@ -19,11 +19,23 @@ public final class UInt16 {
         this.value = value;
     }
 
-    //Big endian
+    /**
+     * Get the value serialized as big endian.
+     */
     public byte[] getBytes() {
         val bytes = new byte[2];
         bytes[0] = (byte) ((value >> 8) & 0xff);
         bytes[1] = (byte) (value & 0xff);
+        return bytes;
+    }
+
+    /**
+     * Get the value serialized as little endian.
+     */
+    public byte[] getBytesLittleEndian() {
+        val bytes = new byte[2];
+        bytes[0] = (byte) (value & 0xff);
+        bytes[1] = (byte) ((value >> 8) & 0xff);
         return bytes;
     }
 

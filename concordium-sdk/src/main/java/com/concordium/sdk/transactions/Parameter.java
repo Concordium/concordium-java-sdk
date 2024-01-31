@@ -42,17 +42,6 @@ public final class Parameter {
     }
 
     /**
-     * @return buffer bytes of {@link Parameter}.
-     */
-    public byte[] getBytes() {
-        val paramBuffer = this.bytes;
-        val buffer = ByteBuffer.allocate(UInt16.BYTES + paramBuffer.length);
-        buffer.put(UInt16.from(paramBuffer.length).getBytes());
-        buffer.put(paramBuffer);
-        return buffer.array();
-    }
-
-    /**
      * Constructs a {@link Parameter} from the provided {@link SchemaParameter}.
      * Provided {@link SchemaParameter} must be initialized using {@link SchemaParameter#initialize()} beforehand.
      * @param param {@link SchemaParameter} to convert.

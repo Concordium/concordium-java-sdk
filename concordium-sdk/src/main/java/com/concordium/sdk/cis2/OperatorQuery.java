@@ -6,19 +6,25 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * An object used for querying token balances.
+ * An object used for querying the operator of a specific {@link AbstractAddress}
  * See <a href="https://proposals.concordium.software/CIS/cis-2.html#balanceof">here</a> for the specification.
  */
 @Getter
 @ToString
 @EqualsAndHashCode
-public class BalanceQuery {
-    private final String tokenId;
+public class OperatorQuery {
+    /**
+     * Potential operator
+     */
+    private final AbstractAddress owner;
+
+    /**
+     * The address which {@link OperatorQuery#owner} operates.
+     */
     private final AbstractAddress address;
 
-    public BalanceQuery(String hexTokenId, AbstractAddress address) {
-        this.tokenId = hexTokenId;
+    public OperatorQuery(AbstractAddress owner, AbstractAddress address) {
+        this.owner = owner;
         this.address = address;
     }
-
 }

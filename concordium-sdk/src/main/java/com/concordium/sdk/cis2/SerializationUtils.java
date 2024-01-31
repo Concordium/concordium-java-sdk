@@ -10,14 +10,30 @@ import lombok.val;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.util.Arrays;
 
+import java.net.URL;
 import java.nio.ByteBuffer;
-import java.util.Collection;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
-public class SerializationUtils {
+class SerializationUtils {
 
-    public static Parameter serializeBalanceOfParameter(Collection<BalanceQuery> query) {
-        byte[] parameterBytes = UInt16.from(query.size()).getBytes();
-        for (BalanceQuery balanceQuery : query) {
+    /**
+     * Size of a serialized {@link AccountAddress}
+     * Tag + the bytes of the account address.
+     */
+    private static final int ACCOUNT_ADDRESS_SIZE = 1 + AccountAddress.BYTES;
+
+    /**
+     * Size of a serialized {@link ContractAddress}
+     * Tag + 8 bytes for the {@link ContractAddress#getIndex()} + 8 bytes for the {@link ContractAddress#getSubIndex()}.
+     */
+    private static final int CONTRACT_ADDRESS_SIZE = 1 + (2 * 8);
+
+    static Parameter serializeBalanceOfParameter(Collection<BalanceQuery> queries) {
+        // lengths are stored as little endian.
+        byte[] parameterBytes = UInt16.from(queries.size()).getBytesLittleEndian();
+        for (BalanceQuery balanceQuery : queries) {
             val tokenIdBytes = SerializationUtils.serializeTokenId(balanceQuery.getTokenId());
             val addressBytes = SerializationUtils.serializeAddress(balanceQuery.getAddress());
             parameterBytes = Arrays.concatenate(parameterBytes, Arrays.concatenate(tokenIdBytes, addressBytes));
@@ -25,8 +41,79 @@ public class SerializationUtils {
         return Parameter.from(parameterBytes);
     }
 
+    static long[] deserializeTokenAmounts(byte[] returnValue) {
+        val resultBuffer = ByteBuffer.wrap(returnValue);
+        // lengths are stored as little endian.
+        resultBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        val noOfOutputs = UInt16.from(resultBuffer.getShort()).getValue();
+        resultBuffer.order(ByteOrder.BIG_ENDIAN);
+        val outputs = new long[noOfOutputs];
+        for (int i = 0; i < noOfOutputs; i++) {
+            outputs[i] = readUnsignedLeb128(resultBuffer);
+        }
+        return outputs;
+    }
+
+    static Parameter serializeOperatorOfParameter(Collection<OperatorQuery> queries) {
+        // lengths are stored as little endian.
+        byte[] parameterBytes = UInt16.from(queries.size()).getBytesLittleEndian();
+        for (OperatorQuery operatorQuery : queries) {
+            val ownerBytes = SerializationUtils.serializeAddress(operatorQuery.getOwner());
+            val addressBytes = SerializationUtils.serializeAddress(operatorQuery.getAddress());
+            parameterBytes = Arrays.concatenate(parameterBytes, Arrays.concatenate(ownerBytes, addressBytes));
+        }
+        return Parameter.from(parameterBytes);
+    }
+
+    static boolean[] deserializeOperatorOfResponse(byte[] returnValue) {
+        val resultBuffer = ByteBuffer.wrap(returnValue);
+        // lengths are stored as little endian.
+        resultBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        val noOfOutputs = UInt16.from(resultBuffer.getShort()).getValue();
+        resultBuffer.order(ByteOrder.BIG_ENDIAN);
+        val outputs = new boolean[noOfOutputs];
+        for (int i = 0; i < noOfOutputs; i++) {
+            outputs[i] = resultBuffer.get() != 0;
+        }
+        return outputs;
+    }
+
+    static Parameter serializeTokenIds(List<String> listOfQueries) {
+        // lengths are stored as little endian.
+        byte[] parameterBytes = UInt16.from(listOfQueries.size()).getBytesLittleEndian();
+        for (String tokenId : listOfQueries) {
+            val tokenIdBytes = SerializationUtils.serializeTokenId(tokenId);
+            parameterBytes = Arrays.concatenate(parameterBytes, tokenIdBytes);
+        }
+        return Parameter.from(parameterBytes);
+    }
+
     @SneakyThrows
-    public static byte[] serializeTokenId(String hexTokenId) {
+    static MetadataResponse[] deserializeTokenMetadatas(byte[] returnValue) {
+        val resultBuffer = ByteBuffer.wrap(returnValue);
+        // lengths are stored as little endian.
+        resultBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        val noOfOutputs = UInt16.from(resultBuffer.getShort()).getValue();
+        val outputs = new MetadataResponse[noOfOutputs];
+        for (int i = 0; i < noOfOutputs; i++) {
+            val urlLength = UInt16.from(resultBuffer.getShort()).getValue();
+            resultBuffer.order(ByteOrder.BIG_ENDIAN);
+            val urlBytes = new byte[urlLength];
+            resultBuffer.get(urlBytes);
+            val hasChecksum = resultBuffer.get() != 0;
+            byte[] checksumBuffer = null;
+            if (hasChecksum) {
+                checksumBuffer = new byte[32];
+                resultBuffer.get(checksumBuffer);
+            }
+            outputs[i] = new MetadataResponse(new URL(new String(urlBytes, StandardCharsets.UTF_8)), checksumBuffer);
+            resultBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        }
+        return outputs;
+    }
+
+    @SneakyThrows
+    static byte[] serializeTokenId(String hexTokenId) {
         byte[] tokenIdBytes = Hex.decodeHex(hexTokenId);
         // size of token + serialized token id.
         val buffer = ByteBuffer.allocate(1 + tokenIdBytes.length);
@@ -37,11 +124,7 @@ public class SerializationUtils {
         return buffer.array();
     }
 
-    private static final int ACCOUNT_ADDRESS_SIZE = 1 + AccountAddress.BYTES;
-
-    private static final int CONTRACT_ADDRESS_SIZE = 1 + (2 * 8);
-
-    public static byte[] serializeAddress(AbstractAddress address) {
+    static byte[] serializeAddress(AbstractAddress address) {
         if (address instanceof AccountAddress) {
             val accountAddress = (AccountAddress) address;
             val buffer = ByteBuffer.allocate(ACCOUNT_ADDRESS_SIZE);
@@ -52,10 +135,31 @@ public class SerializationUtils {
             ContractAddress contractAddress = (ContractAddress) address;
             val buffer = ByteBuffer.allocate(CONTRACT_ADDRESS_SIZE);
             buffer.put((byte) 1); // tag
+            // index and sub-index are stored as little endian.
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
             buffer.putLong(contractAddress.getIndex());
             buffer.putLong(contractAddress.getSubIndex());
             return buffer.array();
         }
         throw new IllegalArgumentException("AbstractAddress must be either an account address or contract address");
+    }
+
+    private static int readUnsignedLeb128(ByteBuffer buffer) {
+        int result = 0;
+        int cur;
+        int count = 0;
+        do {
+            cur = buffer.get() & 0xff;
+            result |= (cur & 0x7f) << (count * 7);
+            count++;
+        } while (((cur & 0x80) == 0x80) && count < 5);
+        if ((cur & 0x80) == 0x80) {
+            throw new IllegalArgumentException("invalid LEB128 encoding");
+        }
+        return result;
+    }
+
+    public static Parameter serializeUpdateOperators(Map<AbstractAddress, Boolean> operatorUpdates) {
+        return null;
     }
 }
