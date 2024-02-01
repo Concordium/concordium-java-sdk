@@ -8,13 +8,15 @@ import com.concordium.sdk.types.UInt16;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
-import org.bouncycastle.util.Arrays;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 class SerializationUtils {
 
@@ -30,15 +32,30 @@ class SerializationUtils {
      */
     private static final int CONTRACT_ADDRESS_SIZE = 1 + (2 * 8);
 
-    static Parameter serializeBalanceOfParameter(Collection<BalanceQuery> queries) {
-        // lengths are stored as little endian.
-        byte[] parameterBytes = UInt16.from(queries.size()).getBytesLittleEndian();
-        for (BalanceQuery balanceQuery : queries) {
-            val tokenIdBytes = SerializationUtils.serializeTokenId(balanceQuery.getTokenId());
-            val addressBytes = SerializationUtils.serializeAddress(balanceQuery.getAddress());
-            parameterBytes = Arrays.concatenate(parameterBytes, Arrays.concatenate(tokenIdBytes, addressBytes));
+    @SneakyThrows
+    public static Parameter serializeTransfers(List<Cis2Transfer> listOfTransfers) {
+        val bos = new ByteArrayOutputStream();
+        bos.write(UInt16.from(listOfTransfers.size()).getBytesLittleEndian());
+        for (Cis2Transfer transfer : listOfTransfers) {
+            bos.write(SerializationUtils.serializeTokenId(transfer.getHexEncodedTokenId()));
+            writeUnsignedLeb128(bos, transfer.getTokenAmount());
+            bos.write(SerializationUtils.serializeAddress(transfer.getSender()));
+            bos.write(SerializationUtils.serializeAddress(transfer.getReceiver()));
+            bos.write(transfer.getAdditionalData());
         }
-        return Parameter.from(parameterBytes);
+        return Parameter.from(bos.toByteArray());
+    }
+
+    @SneakyThrows
+    static Parameter serializeBalanceOfParameter(Collection<BalanceQuery> queries) {
+        val bos = new ByteArrayOutputStream();
+        // lengths are stored as little endian.
+        bos.write(UInt16.from(queries.size()).getBytesLittleEndian());
+        for (BalanceQuery balanceQuery : queries) {
+            bos.write(SerializationUtils.serializeTokenId(balanceQuery.getTokenId()));
+            bos.write(SerializationUtils.serializeAddress(balanceQuery.getAddress()));
+        }
+        return Parameter.from(bos.toByteArray());
     }
 
     static long[] deserializeTokenAmounts(byte[] returnValue) {
@@ -54,15 +71,16 @@ class SerializationUtils {
         return outputs;
     }
 
+    @SneakyThrows
     static Parameter serializeOperatorOfParameter(Collection<OperatorQuery> queries) {
+        val bos = new ByteArrayOutputStream();
         // lengths are stored as little endian.
-        byte[] parameterBytes = UInt16.from(queries.size()).getBytesLittleEndian();
+        bos.write(UInt16.from(queries.size()).getBytesLittleEndian());
         for (OperatorQuery operatorQuery : queries) {
-            val ownerBytes = SerializationUtils.serializeAddress(operatorQuery.getOwner());
-            val addressBytes = SerializationUtils.serializeAddress(operatorQuery.getAddress());
-            parameterBytes = Arrays.concatenate(parameterBytes, Arrays.concatenate(ownerBytes, addressBytes));
+            bos.write(SerializationUtils.serializeAddress(operatorQuery.getOwner()));
+            bos.write(SerializationUtils.serializeAddress(operatorQuery.getAddress()));
         }
-        return Parameter.from(parameterBytes);
+        return Parameter.from(bos.toByteArray());
     }
 
     static boolean[] deserializeOperatorOfResponse(byte[] returnValue) {
@@ -78,14 +96,15 @@ class SerializationUtils {
         return outputs;
     }
 
+    @SneakyThrows
     static Parameter serializeTokenIds(List<String> listOfQueries) {
+        val bos = new ByteArrayOutputStream();
         // lengths are stored as little endian.
-        byte[] parameterBytes = UInt16.from(listOfQueries.size()).getBytesLittleEndian();
+        bos.write(UInt16.from(listOfQueries.size()).getBytesLittleEndian());
         for (String tokenId : listOfQueries) {
-            val tokenIdBytes = SerializationUtils.serializeTokenId(tokenId);
-            parameterBytes = Arrays.concatenate(parameterBytes, tokenIdBytes);
+            bos.write(SerializationUtils.serializeTokenId(tokenId));
         }
-        return Parameter.from(parameterBytes);
+        return Parameter.from(bos.toByteArray());
     }
 
     @SneakyThrows
@@ -144,6 +163,17 @@ class SerializationUtils {
         throw new IllegalArgumentException("AbstractAddress must be either an account address or contract address");
     }
 
+    @SneakyThrows
+    public static Parameter serializeUpdateOperators(Map<AbstractAddress, Boolean> operatorUpdates) {
+        val bos = new ByteArrayOutputStream();
+        bos.write(UInt16.from(operatorUpdates.size()).getBytesLittleEndian());
+        for (AbstractAddress address : operatorUpdates.keySet()) {
+            bos.write((byte) (operatorUpdates.get(address) ? 1 : 0));
+            bos.write(SerializationUtils.serializeAddress(address));
+        }
+        return Parameter.from(bos.toByteArray());
+    }
+
     private static int readUnsignedLeb128(ByteBuffer buffer) {
         int result = 0;
         int cur;
@@ -159,7 +189,13 @@ class SerializationUtils {
         return result;
     }
 
-    public static Parameter serializeUpdateOperators(Map<AbstractAddress, Boolean> operatorUpdates) {
-        return null;
+    private static void writeUnsignedLeb128(ByteArrayOutputStream bos, int value) {
+        int remaining = value >>> 7;
+        while (remaining != 0) {
+            bos.write((byte) ((value & 0x7f) | 0x80));
+            value = remaining;
+            remaining >>>= 7;
+        }
+        bos.write((byte) (value & 0x7f));
     }
 }

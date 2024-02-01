@@ -6,7 +6,6 @@ import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.smartcontracts.Energy;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.responses.transactionstatus.Outcome;
-import com.concordium.sdk.responses.transactionstatus.Status;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.AccountAddress;
@@ -41,26 +40,20 @@ public class Cis2Client {
         return new Cis2Client(client, address, InitName.from(instanceInfo.getName()));
     }
 
-    public void transfer() {
-
-    }
-
     /**
-     * Update which addresses that the sender (owner) operates.
+     * Perform a CIS2 transfer on the contract.
      *
-     * This function waits up to 10 seconds for the transaction to finalize.
-     * If the transaction is not finalized within that duration then the available {@link Status} is returned.
-     *
-     * @param operatorUpdates the updates to carry out. The keys of the map correspond to the
-     *                        addresses which the sender (owner) should or should not operate given
-     *                        by the provided boolean.
+     * @param sender    address of the sender of the transaction.
+     * @param signer    signer of the transaction.
+     * @param transfers the CIS2 transfers.
      * @return the transaction hash
      */
-    public Status updateOperator(Map<AbstractAddress, Boolean> operatorUpdates, AccountAddress sender, TransactionSigner signer) {
+    public Hash transfer(AccountAddress sender, TransactionSigner signer, Cis2Transfer... transfers) {
+        val listOfTransfers = Arrays.asList(transfers);
         val nextNonce = this.client.getAccountInfo(BlockQuery.LAST_FINAL, AccountQuery.from(sender)).getAccountNonce();
-        val endpoint = ReceiveName.from(contractName, "updateOperator");
-        val parameters = SerializationUtils.serializeUpdateOperators(operatorUpdates);
-        val txHash = this.client.sendTransaction(
+        val endpoint = ReceiveName.from(contractName, "transfer");
+        val parameters = SerializationUtils.serializeTransfers(listOfTransfers);
+        return this.client.sendTransaction(
                 TransactionFactory.newUpdateContract()
                         .maxEnergyCost(UInt64.from(3000))
                         .payload(UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters))
@@ -69,11 +62,30 @@ public class Cis2Client {
                         .sender(sender)
                         .signer(signer)
                         .build());
-        val finalizedBlockItem = this.client.waitUntilFinalized(txHash, 10000);
-        if (!finalizedBlockItem.isPresent()) {
-            return this.client.getBlockItemStatus(txHash).getStatus();
-        }
-        return Status.FINALIZED;
+    }
+
+    /**
+     * Update which addresses that the sender (owner) operates.
+     *
+     * @param operatorUpdates the updates to carry out. The keys of the map correspond to the
+     *                        addresses which the sender (owner) should or should not operate given
+     *                        by the provided boolean.
+     * @return the transaction hash
+     */
+    public Hash updateOperator(Map<AbstractAddress, Boolean> operatorUpdates, AccountAddress sender, TransactionSigner signer) {
+        val nextNonce = this.client.getAccountInfo(BlockQuery.LAST_FINAL, AccountQuery.from(sender)).getAccountNonce();
+        val endpoint = ReceiveName.from(contractName, "updateOperator");
+        val parameters = SerializationUtils.serializeUpdateOperators(operatorUpdates);
+        return this.client.sendTransaction(
+                TransactionFactory.newUpdateContract()
+                        .maxEnergyCost(UInt64.from(3000))
+                        .payload(UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters))
+                        .expiry(Expiry.createNew().addMinutes(5))
+                        .nonce(AccountNonce.from(nextNonce))
+                        .sender(sender)
+                        .signer(signer)
+                        .build());
+
     }
 
     /**
