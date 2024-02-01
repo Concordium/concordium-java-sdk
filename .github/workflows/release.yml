@@ -87,7 +87,7 @@ jobs:
           name: windows-library
           path: crypto-jni\target\release\crypto_jni.dll
 
-  build-aar-library:
+  build-native-android:
     runs-on: ubuntu-22.04
     steps:
     - name: Set Up Android tools
@@ -114,7 +114,7 @@ jobs:
         path: ./concordium-android-sdk/native
 
   build-and-release-jar:
-    needs: [build-native-ubuntu, build-native-macos, build-native-windows, build-aar-library]
+    needs: [build-native-ubuntu, build-native-macos, build-native-windows, build-native-android]
     # Use fixed OS version because we install packages on the system.
     runs-on: ubuntu-22.04
     environment: release

@@ -14,7 +14,7 @@
     <artifactId>concordium-sdk</artifactId>
 
     <name>concordium-sdk</name>
-    <url>https://github.com/Concordium/concordium-java-sdk</url>
+    <description>An SDK for interacting with the Concordium blockchain</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

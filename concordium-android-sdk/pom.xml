@@ -17,32 +17,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
-    
+
     <name>concordium-android-sdk</name>
     <description>An SDK for interacting with the Concordium blockchain packaged for Android</description>
-    <url>https://github.com/Concordium/concordium-java-sdk</url>
-
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>Concordium Software</name>
-            <email>support@concordium.software</email>
-            <organization>Concordium Software</organization>
-            <organizationUrl>https://concordium.com</organizationUrl>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git:git://github.com:Concordium/concordium-java-sdk.git</connection>
-        <developerConnection>scm:git:ssh://github.com:Concordium/concordium-java-sdk.git</developerConnection>
-        <url>https://github.com/Concordium/concordium-java-sdk/tree/main</url>
-    </scm>
 
     <dependencies>
         <dependency>
