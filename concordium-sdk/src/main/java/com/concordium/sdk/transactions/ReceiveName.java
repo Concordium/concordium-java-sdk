@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -69,5 +70,14 @@ public final class ReceiveName {
         buffer.put(UInt16.from(receiveNameBuffer.length).getBytes());
         buffer.put(receiveNameBuffer);
         return buffer.array();
+    }
+
+    public static ReceiveName from(ByteBuffer buffer) {
+        val length = UInt16.fromBytes(buffer);
+        val nameBuffer = new byte[length.getValue()];
+        buffer.get(nameBuffer);
+        val receiveName = new String(nameBuffer, StandardCharsets.UTF_8);
+        val split = receiveName.split("\\.");
+        return new ReceiveName(split[0], split[1]);
     }
 }

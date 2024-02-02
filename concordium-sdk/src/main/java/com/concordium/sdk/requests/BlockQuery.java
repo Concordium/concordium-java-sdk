@@ -5,6 +5,7 @@ import com.concordium.sdk.transactions.Hash;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import javax.annotation.Nullable;
 
@@ -12,6 +13,7 @@ import javax.annotation.Nullable;
  * Type of Block to query an API with. For a list of types see {@link BlockQueryType}
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
 public class BlockQuery {
 
     /**

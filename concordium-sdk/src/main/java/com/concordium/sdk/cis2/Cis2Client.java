@@ -1,10 +1,17 @@
 package com.concordium.sdk.cis2;
 
 import com.concordium.sdk.ClientV2;
+import com.concordium.sdk.cis2.events.Cis2EventWithMetadata;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.smartcontracts.Energy;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
+import com.concordium.sdk.responses.blockitemsummary.AccountTransactionDetails;
+import com.concordium.sdk.responses.blockitemsummary.Summary;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
+import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
+import com.concordium.sdk.responses.smartcontracts.ContractTraceElementType;
+import com.concordium.sdk.responses.transactionstatus.ContractUpdated;
 import com.concordium.sdk.responses.transactionstatus.Outcome;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AbstractAddress;
@@ -13,9 +20,7 @@ import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.UInt64;
 import lombok.val;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A client dedicated to the CIS2 <a href="https://proposals.concordium.software/CIS/cis-2.html">specification</a>.
@@ -138,7 +143,7 @@ public class Cis2Client {
      * @param hexEncodedTokenIds the hex encoded token ids
      * @return A map where the values indicate the token metadata responses for each hex encoded token id.
      */
-    public Map<String, MetadataResponse> tokenMetadata(String... hexEncodedTokenIds) {
+    public Map<String, TokenMetadata> tokenMetadata(String... hexEncodedTokenIds) {
         val listOfQueries = Arrays.asList(hexEncodedTokenIds);
         val parameter = SerializationUtils.serializeTokenIds(listOfQueries);
         val endpoint = ReceiveName.from(contractName, "tokenMetadata");
@@ -147,12 +152,66 @@ public class Cis2Client {
             throw new RuntimeException("operatorOf failed: " + result.getRejectReason().toString());
         }
         val tokenMetadatas = SerializationUtils.deserializeTokenMetadatas(result.getReturnValue());
-        val responses = new HashMap<String, MetadataResponse>();
+        val responses = new HashMap<String, TokenMetadata>();
         for (int i = 0; i < tokenMetadatas.length; i++) {
             responses.put(listOfQueries.get(i), tokenMetadatas[i]);
         }
         return responses;
     }
 
+    /**
+     * Retrieve all events emitted from the CIS2 contract.
+     *
+     * @param from block to start from
+     * @param to   block to end from
+     * @return the list of events.
+     */
+    public List<Cis2EventWithMetadata> getEvents(BlockQuery from, BlockQuery to) {
+        long current = this.client.getBlockInfo(from).getBlockHeight().getValue();
+        val end = this.client.getBlockInfo(to).getBlockHeight().getValue();
+        if (current >= end) {
+            throw new IllegalArgumentException("Starting block must be before the end block");
+        }
+        val accumulator = new ArrayList<Cis2EventWithMetadata>();
+        while (current <= end) {
+            val events = getEventsFor(BlockQuery.HEIGHT(BlocksAtHeightRequest.newAbsolute(current)));
+            accumulator.addAll(events);
+            current++;
+        }
+        return accumulator;
+    }
+
+    /**
+     * Get any events associated with the CIS2 contract that this client is instantiated with.
+     *
+     * @param blockQuery the block to query events for.
+     * @return The list of events if there are any.
+     */
+    public List<Cis2EventWithMetadata> getEventsFor(BlockQuery blockQuery) {
+        val accumulator = new ArrayList<Cis2EventWithMetadata>();
+        val summaries = this.client.getBlockTransactionEvents(blockQuery);
+        while (summaries.hasNext()) {
+            Summary summary = summaries.next();
+            AccountTransactionDetails details = summary.getDetails().getAccountTransactionDetails();
+            if (!(Objects.isNull(details)) && details.isSuccessful()) {
+                val contractUpdated = details.getContractUpdated();
+                if (!Objects.isNull(contractUpdated)) {
+                    for (ContractTraceElement contractTraceElement : contractUpdated) {
+                        if (contractTraceElement.getTraceType() == ContractTraceElementType.INSTANCE_UPDATED) {
+                            val updatedEvent = (ContractUpdated) contractTraceElement;
+                            if (this.contractAddress.equals(updatedEvent.getAddress())) {
+                                for (byte[] event : updatedEvent.getEvents()) {
+                                    accumulator.add(new Cis2EventWithMetadata(SerializationUtils.deserializeCis2Event(event), blockQuery, summary.getTransactionHash()));
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        }
+        return accumulator;
+    }
 
 }

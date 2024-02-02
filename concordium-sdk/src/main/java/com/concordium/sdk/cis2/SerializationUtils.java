@@ -1,15 +1,18 @@
 package com.concordium.sdk.cis2;
 
+import com.concordium.sdk.cis2.events.*;
 import com.concordium.sdk.transactions.Parameter;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.UInt16;
+import jdk.nashorn.internal.parser.Token;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.ByteArrayOutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -17,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 class SerializationUtils {
 
@@ -41,7 +45,12 @@ class SerializationUtils {
             writeUnsignedLeb128(bos, transfer.getTokenAmount());
             bos.write(SerializationUtils.serializeAddress(transfer.getSender()));
             bos.write(SerializationUtils.serializeAddress(transfer.getReceiver()));
-            bos.write(transfer.getAdditionalData());
+            if (Objects.isNull(transfer.getAdditionalData()) || transfer.getAdditionalData().length == 0) {
+                bos.write(UInt16.from(0).getBytesLittleEndian());
+            } else {
+                bos.write(UInt16.from(transfer.getAdditionalData().length).getBytesLittleEndian());
+                bos.write(transfer.getAdditionalData());
+            }
         }
         return Parameter.from(bos.toByteArray());
     }
@@ -108,27 +117,32 @@ class SerializationUtils {
     }
 
     @SneakyThrows
-    static MetadataResponse[] deserializeTokenMetadatas(byte[] returnValue) {
+    static TokenMetadata[] deserializeTokenMetadatas(byte[] returnValue) {
         val resultBuffer = ByteBuffer.wrap(returnValue);
         // lengths are stored as little endian.
         resultBuffer.order(ByteOrder.LITTLE_ENDIAN);
         val noOfOutputs = UInt16.from(resultBuffer.getShort()).getValue();
-        val outputs = new MetadataResponse[noOfOutputs];
+        val outputs = new TokenMetadata[noOfOutputs];
         for (int i = 0; i < noOfOutputs; i++) {
-            val urlLength = UInt16.from(resultBuffer.getShort()).getValue();
-            resultBuffer.order(ByteOrder.BIG_ENDIAN);
-            val urlBytes = new byte[urlLength];
-            resultBuffer.get(urlBytes);
-            val hasChecksum = resultBuffer.get() != 0;
-            byte[] checksumBuffer = null;
-            if (hasChecksum) {
-                checksumBuffer = new byte[32];
-                resultBuffer.get(checksumBuffer);
-            }
-            outputs[i] = new MetadataResponse(new URL(new String(urlBytes, StandardCharsets.UTF_8)), checksumBuffer);
+            outputs[i] = deserializeTokenMetadata(resultBuffer);
             resultBuffer.order(ByteOrder.LITTLE_ENDIAN);
         }
         return outputs;
+    }
+
+    private static TokenMetadata deserializeTokenMetadata(ByteBuffer resultBuffer) throws MalformedURLException {
+        resultBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        val urlLength = UInt16.from(resultBuffer.getShort()).getValue();
+        resultBuffer.order(ByteOrder.BIG_ENDIAN);
+        val urlBytes = new byte[urlLength];
+        resultBuffer.get(urlBytes);
+        val hasChecksum = resultBuffer.get() != 0;
+        byte[] checksumBuffer = null;
+        if (hasChecksum) {
+            checksumBuffer = new byte[32];
+            resultBuffer.get(checksumBuffer);
+        }
+        return new TokenMetadata(new URL(new String(urlBytes, StandardCharsets.UTF_8)), checksumBuffer);
     }
 
     @SneakyThrows
@@ -197,5 +211,89 @@ class SerializationUtils {
             remaining >>>= 7;
         }
         bos.write((byte) (value & 0x7f));
+    }
+
+    public static Cis2Event deserializeCis2Event(byte[] eventBytes) {
+        val buffer = ByteBuffer.wrap(eventBytes);
+        val tag = buffer.get();
+        val eventType = Cis2Event.Type.parse(tag);
+        switch (eventType) {
+            case TRANSFER:
+                return SerializationUtils.deserializeTransferEvent(buffer);
+            case MINT:
+                return SerializationUtils.deserializeMintEvent(buffer);
+            case BURN:
+                return SerializationUtils.deserializeBurnEvent(buffer);
+            case UPDATE_OPERATOR_OF:
+                return SerializationUtils.deserializeUpdateOperatorOfEvent(buffer);
+            case TOKEN_METADATA:
+                return SerializationUtils.deserializeTokenMetadataEvent(buffer);
+            case CUSTOM:
+                return SerializationUtils.deserializeCustomEvent(tag, buffer);
+        }
+        throw new IllegalArgumentException("Malformed CIS2 event");
+    }
+
+    private static Cis2Event deserializeCustomEvent(byte tag, ByteBuffer buffer) {
+        return new CustomEvent(tag, buffer.array());
+    }
+
+    @SneakyThrows
+    private static Cis2Event deserializeTokenMetadataEvent(ByteBuffer buffer) {
+        val tokenId = deserializeTokenId(buffer);
+        val tokenMetadata = deserializeTokenMetadata(buffer);
+        return new TokenMetadataEvent(tokenId, tokenMetadata);
+    }
+
+    private static Cis2Event deserializeUpdateOperatorOfEvent(ByteBuffer buffer) {
+        val isOperator = buffer.get() != 0;
+        val owner = deserializeAddress(buffer);
+        val operator = deserializeAddress(buffer);
+        return new UpdateOperatorEvent(isOperator, owner, operator);
+    }
+
+    private static Cis2Event deserializeBurnEvent(ByteBuffer buffer) {
+        val tokenId = deserializeTokenId(buffer);
+        val tokenAmount = readUnsignedLeb128(buffer);
+        val owner = deserializeAddress(buffer);
+        return new BurnEvent(tokenId, tokenAmount, owner);
+    }
+
+    private static Cis2Event deserializeMintEvent(ByteBuffer buffer) {
+        val tokenId = deserializeTokenId(buffer);
+        val tokenAmount = readUnsignedLeb128(buffer);
+        val owner = deserializeAddress(buffer);
+        return new MintEvent(tokenId, tokenAmount, owner);
+    }
+
+    private static Cis2Event deserializeTransferEvent(ByteBuffer buffer) {
+        val hexTokenId = deserializeTokenId(buffer);
+        val tokenAmount = readUnsignedLeb128(buffer);
+        val from = deserializeAddress(buffer);
+        val to = deserializeAddress(buffer);
+        return new TransferEvent(hexTokenId, tokenAmount, from, to);
+    }
+
+    @SneakyThrows
+    static String deserializeTokenId(ByteBuffer buffer) {
+        byte tokenLength = buffer.get();
+        val tokenBuffer = new byte[tokenLength];
+        buffer.get(tokenBuffer);
+        return new String(tokenBuffer, StandardCharsets.UTF_8);
+    }
+
+    static AbstractAddress deserializeAddress(ByteBuffer buffer) {
+        byte tag = buffer.get();
+        if (tag == 0) {
+            val addressBuffer = new byte[AccountAddress.BYTES];
+            buffer.get(addressBuffer);
+            return AccountAddress.from(addressBuffer);
+        }
+        if (tag == 1) {
+            long index = buffer.getLong();
+            long subIndex = buffer.getLong();
+            return ContractAddress.from(index, subIndex);
+        }
+        throw new IllegalArgumentException("Malformed address");
     }
 }

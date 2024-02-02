@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 @ToString
 @EqualsAndHashCode
-public class MetadataResponse {
+public class TokenMetadata {
 
     /**
      * The metadata url.
@@ -26,7 +26,7 @@ public class MetadataResponse {
     private final byte[] checksum;
 
 
-    public MetadataResponse(URL metadataUrl, byte[] checksum) {
+    public TokenMetadata(URL metadataUrl, byte[] checksum) {
         this.metadataUrl = metadataUrl;
         this.checksum = checksum;
     }

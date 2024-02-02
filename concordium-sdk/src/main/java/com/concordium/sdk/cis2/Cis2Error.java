@@ -14,7 +14,8 @@ public enum Cis2Error {
     // Sender is unauthorized to call the function.
     // (Note that authorization is not mandated by the CIS2 specification,
     // but may be introduced on top of the standard specification)
-    UNAUTHORIZED(-42000003);
+    UNAUTHORIZED(-42000003),
+    CUSTOM(2);
 
     @Getter
     private final int errorCode;
