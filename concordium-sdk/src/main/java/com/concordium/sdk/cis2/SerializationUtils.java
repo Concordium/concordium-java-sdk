@@ -6,7 +6,6 @@ import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.UInt16;
-import jdk.nashorn.internal.parser.Token;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
@@ -22,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-class SerializationUtils {
+public class SerializationUtils {
 
     /**
      * Size of a serialized {@link AccountAddress}
@@ -266,7 +265,7 @@ class SerializationUtils {
         return new MintEvent(tokenId, tokenAmount, owner);
     }
 
-    private static Cis2Event deserializeTransferEvent(ByteBuffer buffer) {
+    public static Cis2Event deserializeTransferEvent(ByteBuffer buffer) {
         val hexTokenId = deserializeTokenId(buffer);
         val tokenAmount = readUnsignedLeb128(buffer);
         val from = deserializeAddress(buffer);
