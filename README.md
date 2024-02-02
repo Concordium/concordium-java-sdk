@@ -1,6 +1,8 @@
 # Concordium Java SDK
 The Concordium Java SDK provides an interface to communicating with a Concordium node.
 
+The package is released on [maven central](https://central.sonatype.com/artifact/com.concordium.sdk/concordium-sdk).
+The android compatible library is also released [maven central](https://central.sonatype.com/artifact/com.concordium.sdk/concordium-android-sdk).
 
 # Prerequisites
 1. Java 1.8
@@ -85,20 +87,6 @@ git clone https://github.com/Concordium/concordium-java-sdk.git --recurse-submod
 `make android` builds the native libraries for various targets using cargo-ndk.
 And the final step builds the aar file `concordium-android-sdk.aar` in the [target](./concordium-android-sdk/target)  folder, which can be used in android projects.
 Note that this uses the [Android Maven Plugin](http://simpligility.github.io/android-maven-plugin/), which is what requires the Android SDK, the specific version can be seen in its documentation.
-
-For the library to work on android, the following packages must be added to the project (Shown in the gradle style)
-```gradle
-dependencies {
-    // gRPC
-    implementation 'io.grpc:grpc-okhttp:1.60.0'
-    implementation 'io.grpc:grpc-protobuf:1.40.1'
-    implementation 'io.grpc:grpc-stub:1.60.0'
-    compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.1'
-}
-```
 
 Note that the minimum android SDK version for this package is 26.
 
