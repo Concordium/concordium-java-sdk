@@ -1,11 +1,12 @@
 # Changelog
 
-## Unreleased changes
+## 6.1.0
 - Purge remaining usages of V1 GRPC API.
 - Added support for android through an AAR artifact.
 - Added `ConcordiumHdWallet` class for deriving Concordium specific keys and randomness from a seed phrase.
 - Added `Identity` class with methods `createIdentityRequest` for creating identity requests and `createIdentityRecoveryRequest` for creating identity recovery requests.
 - Added `Credential` class exposing methods required to create, sign and sending a credential deployment transaction.
+- Added release on maven central.
 
 ## 6.0.0
 - Added method `waitUntilFinalized` for waiting until a given transaction is finalized.
@@ -165,7 +166,7 @@
 - Added support for query `StopBaker`
 
 ## 3.0.0
-- Stronger typing for various places in the API. 
+- Stronger typing for various places in the API.
 - Renamed GTUAmount to CCDAmount
 - New CredentialRegistrationId type.
 - BlockSummary API now reflects the underlying types better.
