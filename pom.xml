@@ -5,8 +5,32 @@
 
     <groupId>com.concordium.sdk</groupId>
     <artifactId>concordium-sdk-base</artifactId>
-    <version>6.0.1-SNAPSHOT</version>
+    <version>6.1.0</version>
     <packaging>pom</packaging>
+
+    <url>https://github.com/Concordium/concordium-java-sdk</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Concordium Software</name>
+            <email>support@concordium.software</email>
+            <organization>Concordium Software</organization>
+            <organizationUrl>https://concordium.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com:Concordium/concordium-java-sdk.git</connection>
+        <developerConnection>scm:git:ssh://github.com:Concordium/concordium-java-sdk.git</developerConnection>
+        <url>https://github.com/Concordium/concordium-java-sdk/tree/main</url>
+    </scm>
 
     <modules>
         <module>concordium-sdk</module>
