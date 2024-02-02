@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +17,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.concordium.sdk.requests.AccountQuery
 import com.concordium.sdk.requests.BlockQuery
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters
@@ -137,7 +141,7 @@ fun RecoverIdentityView(onSubmit: (provider: IdentityProvider) -> Unit) {
 
     Container {
         Column {
-            Text(text = "Recovery")
+            Text(text = "Recover your identity", fontSize = 22.sp, modifier = Modifier.padding(bottom = 10.dp))
             Menu(providers, provider, ::getProviderName) { provider = it }
             Button(onClick = { provider?.let { onSubmit(it) } }) {
                 Text(text = "Submit")
