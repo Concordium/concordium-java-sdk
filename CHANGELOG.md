@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased changes
+
+- Introduced Cis2Client for interfacing with CIS2 compliant smart contracts.
+- Support for deserializing contract update transactions.
 - Purge remaining usages of V1 GRPC API.
 - Added support for android through an AAR artifact.
 - Added `ConcordiumHdWallet` class for deriving Concordium specific keys and randomness from a seed phrase.
