@@ -1,8 +1,8 @@
 # Concordium Java SDK
 The Concordium Java SDK provides an interface to communicating with a Concordium node.
 
-The package is released on [maven central](https://central.sonatype.com/artifact/com.concordium.sdk/concordium-sdk).
-The android compatible library is also released [maven central](https://central.sonatype.com/artifact/com.concordium.sdk/concordium-android-sdk).
+The package is released on [Maven Central](https://central.sonatype.com/artifact/com.concordium.sdk/concordium-sdk).
+The Android compatible package is also released on [Maven Central](https://central.sonatype.com/artifact/com.concordium.sdk/concordium-android-sdk).
 
 # Prerequisites
 1. Java 1.8
