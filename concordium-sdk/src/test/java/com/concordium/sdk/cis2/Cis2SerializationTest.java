@@ -6,9 +6,11 @@ import com.concordium.sdk.cis2.events.MintEvent;
 import com.concordium.sdk.cis2.events.TransferEvent;
 import com.concordium.sdk.transactions.Parameter;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.UInt16;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
+import org.bouncycastle.util.Arrays;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -58,20 +60,24 @@ public class Cis2SerializationTest {
     @SneakyThrows
     @Test
     public void testSerializeTransfer(){
+        // this is a raw transfer parameter i.e. the length of the actual parameter is not included.
         val expectedParameter = Hex.decodeHex("010000a995a405009e15fc57bbe167411d4d9c0686e31e8e937d751625972f7c566de4a97f650dc500fd3dd07c83e42461554cf0dd90d73c1ff04531fc2b9c90b9762df8793319e48d0000");
         val transfers = new ArrayList<Cis2Transfer>();
         transfers.add(new Cis2Transfer("", 11078313, AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), null));
         Parameter parameter = SerializationUtils.serializeTransfers(transfers);
-        assertArrayEquals(expectedParameter, parameter.getBytes());
+        byte[] lengthBytes = UInt16.from(expectedParameter.length).getBytes();
+        assertArrayEquals(Arrays.concatenate(lengthBytes, expectedParameter), parameter.getBytes());
     }
 
     @SneakyThrows
     @Test
     public void testSerializeTransferWithAdditionalData(){
+        // this is a raw transfer parameter i.e. the length of the actual parameter is not included.
         val expectedParameter = Hex.decodeHex("010000a995a405009e15fc57bbe167411d4d9c0686e31e8e937d751625972f7c566de4a97f650dc500fd3dd07c83e42461554cf0dd90d73c1ff04531fc2b9c90b9762df8793319e48d010001");
         val transfers = new ArrayList<Cis2Transfer>();
         transfers.add(new Cis2Transfer("", 11078313, AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), new byte[]{1}));
         Parameter parameter = SerializationUtils.serializeTransfers(transfers);
-        assertArrayEquals(expectedParameter, parameter.getBytes());
+        byte[] lengthBytes = UInt16.from(expectedParameter.length).getBytes();
+        assertArrayEquals(Arrays.concatenate(lengthBytes, expectedParameter), parameter.getBytes());
     }
 }

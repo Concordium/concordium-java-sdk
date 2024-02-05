@@ -171,7 +171,7 @@
 - Added support for query `StopBaker`
 
 ## 3.0.0
-- Stronger typing for various places in the API. 
+- Stronger typing for various places in the API.
 - Renamed GTUAmount to CCDAmount
 - New CredentialRegistrationId type.
 - BlockSummary API now reflects the underlying types better.

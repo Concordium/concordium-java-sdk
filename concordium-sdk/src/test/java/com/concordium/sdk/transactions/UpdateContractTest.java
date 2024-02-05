@@ -37,10 +37,10 @@ public class UpdateContractTest {
                 .build();
         val payload = tx.getPayload();
         val txLength = payload.getBytes().length;
-        assertEquals(40, txLength);
+        assertEquals(42, txLength);
 
         val transferDataToSign = payload.getDataToSign();
-        assertEquals("e223b8eeae8c65204a09f9b9a76adeec0ee68c997fd2e0c13531f03a5884d80b", Hex.encodeHexString(transferDataToSign));
+        assertEquals("02b15fc092aa1e63035a18cb1b4f62a9d2a6186bdb6147f85525bcb8771ab5b7", Hex.encodeHexString(transferDataToSign));
         val blockItem = payload.toAccountTransaction();
 
         val blockItemBytes = blockItem.getBytes();

@@ -13,14 +13,12 @@ import java.nio.ByteBuffer;
 
 
 /**
- * The parameters are used for updating the smart contract instance.
- * i.e. calling a "receive" function exposed in the smart contract with the parameters.
- * Buffer of the parameters message.
+ * The parameters are used for calling a smart contract instance.
+ * i.e. calling a "init" or "receive" function exposed in the smart contract with the parameters.
+ * This object retains the raw parameters that are sent to the contract.
  * For protocol versions below {@link ProtocolVersion#V5} the size is limited to 1kb.
  * From protocol version {@link ProtocolVersion#V5} and onwards the size is limited to be 64kb.
  */
-
-@Getter
 @ToString
 @EqualsAndHashCode
 public final class Parameter {
@@ -28,7 +26,6 @@ public final class Parameter {
     public static final Parameter EMPTY = Parameter.from(new byte[0]);
     private final byte[] bytes;
 
-    @JsonCreator
     Parameter(byte[] bytes) {
         this.bytes = bytes;
     }
@@ -39,6 +36,20 @@ public final class Parameter {
     public static Parameter from(byte[] parameter) {
         if (parameter.length > MAX_SIZE) {throw new IllegalArgumentException("Parameter must not exceed " + MAX_SIZE + " bytes, argument size was: " + parameter.length);}
         return new Parameter(parameter);
+    }
+
+    /**
+     * Get the serialized parameter, namely the length
+     * of the parameter (encoded via 2 bytes, big endian) and concatenated with the
+     * actual parameter bytes.
+     * @return the serialized parameter
+     */
+    public byte[] getBytes() {
+        val paramBuffer = this.bytes;
+        val buffer = ByteBuffer.allocate(UInt16.BYTES + paramBuffer.length);
+        buffer.put(UInt16.from(paramBuffer.length).getBytes());
+        buffer.put(paramBuffer);
+        return buffer.array();
     }
 
     /**
