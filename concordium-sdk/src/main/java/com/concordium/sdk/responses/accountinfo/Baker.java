@@ -17,6 +17,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
+import java.util.Optional;
+
 @ToString
 @EqualsAndHashCode
 @Jacksonized
@@ -43,9 +45,10 @@ public final class Baker {
 
     /**
      * The pending changes for the baker.
+     * Only present if there is a pending change for the baker.
      */
     @Getter
-    private final PendingChange pendingChange;
+    private final Optional<PendingChange> pendingChange;
 
     /**
      * The baker pool info

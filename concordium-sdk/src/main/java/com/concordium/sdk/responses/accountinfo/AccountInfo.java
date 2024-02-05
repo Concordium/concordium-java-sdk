@@ -19,7 +19,6 @@ import java.util.Objects;
 /**
  * Information of an account on chain.
  */
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 @Jacksonized
 @Builder
@@ -27,7 +26,6 @@ public final class AccountInfo {
     /**
      * The account address.
      */
-    @EqualsAndHashCode.Include
     private final AccountAddress accountAddress;
     /**
      * The current nonce for the account.
