@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
+import org.bouncycastle.util.Arrays;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -110,11 +111,7 @@ public class TransactionSerializationTest {
         Cis2Transfer expectedParameters = new Cis2Transfer("", 11078313, AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), null);
         byte[] expectedParams = updateContract.getParam().getBytes();
         byte[] cis2TransferParams = SerializationUtils.serializeTransfers(Lists.newArrayList(expectedParameters)).getBytes();
-        val bos = new ByteArrayOutputStream();
-        bos.write(UInt16.from(cis2TransferParams.length).getBytes());
-        bos.write(cis2TransferParams);
-        byte[] actualParameterBytes = bos.toByteArray();
-        assertArrayEquals(expectedParams, actualParameterBytes);
+        assertArrayEquals(expectedParams, Arrays.concatenate(UInt16.from(cis2TransferParams.length).getBytes(), cis2TransferParams));
     }
 
 
