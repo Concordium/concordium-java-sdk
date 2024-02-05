@@ -1,6 +1,9 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.grpc.v2.Amount;
+import com.concordium.sdk.requests.smartcontracts.Energy;
+import com.concordium.sdk.responses.Fraction;
+import com.concordium.sdk.responses.chainparameters.ChainParameters;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -8,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;
-import java.text.DecimalFormat;
 
 /**
  * A CCD amount with 'micro' precision.
@@ -61,6 +63,16 @@ public class CCDAmount {
     public static CCDAmount fromBytes(ByteBuffer source) {
         UInt64 value = UInt64.fromBytes(source);
         return new CCDAmount(value);
+    }
+
+    public EuroAmount toEuro(ChainParameters parameters) {
+        double microCCDPerEuro = parameters.getMicroCCDPerEuro().asDouble();
+        Fraction flipped = Fraction.from(parameters.getMicroCCDPerEuro().getDenominator().getValue(), parameters.getMicroCCDPerEuro().getNumerator().getValue());
+        return EuroAmount.from(this.getValue().getValue() / microCCDPerEuro);
+    }
+
+    public Energy toEnergy(ChainParameters parameters) {
+        return this.toEuro(parameters).toEnergy(parameters);
     }
 
     @Override
