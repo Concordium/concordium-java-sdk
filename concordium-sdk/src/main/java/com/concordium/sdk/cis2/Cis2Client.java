@@ -214,7 +214,6 @@ public class Cis2Client {
                                 }
                             }
                         }
-
                     }
                 }
             }
