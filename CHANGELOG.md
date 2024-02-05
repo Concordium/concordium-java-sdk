@@ -4,6 +4,7 @@
 
 - Introduced Cis2Client for interfacing with CIS2 compliant smart contracts.
 - Support for deserializing contract update transactions.
+- Fix a bug where contract invocations used wrong format for parameters.
 
 ## 6.1.0
 - Purge remaining usages of V1 GRPC API.

@@ -1652,7 +1652,7 @@ interface ClientV2MapperExtensions {
 
     static com.concordium.grpc.v2.Parameter to(Parameter parameter) {
         return com.concordium.grpc.v2.Parameter.newBuilder()
-                .setValue(ByteString.copyFrom(parameter.getBytes()))
+                .setValue(ByteString.copyFrom(parameter.getBytesForContractInvocation()))
                 .build();
     }
 

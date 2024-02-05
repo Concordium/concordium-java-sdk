@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.responses.ProtocolVersion;
 import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.UInt16;
@@ -50,6 +51,18 @@ public final class Parameter {
         buffer.put(UInt16.from(paramBuffer.length).getBytes());
         buffer.put(paramBuffer);
         return buffer.array();
+    }
+
+    /**
+     * Get the parameter bytes for contract invocation i.e. off-chain operation.
+     * This differs from {@link Parameter#getBytes()} as this does not prepend the
+     * returned byte array with the length of the parameters.
+     *
+     * This function should be only be used for {@link com.concordium.sdk.ClientV2#invokeInstance(InvokeInstanceRequest)} calls.
+     * @return the parameters
+     */
+    public byte[] getBytesForContractInvocation() {
+        return this.bytes;
     }
 
     /**
