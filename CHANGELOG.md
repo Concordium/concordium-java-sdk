@@ -4,6 +4,7 @@
  - Fix a bug that caused `getAccountInfo` to fail for delegator and baker accounts if they had no stake pending changes. 
    This change is also propagated to the type level such that `Baker` and `AccountDelegation` retains an `Optional<PendingChange>` 
    as opposed to just `PendingChange`.
+ - Fix .equals() for AccountInfo such that all fields are used to deduce equality.<
 
 ## 6.1.0
 - Purge remaining usages of V1 GRPC API.

@@ -31,6 +31,7 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
+import lombok.val;
 import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
@@ -117,10 +118,25 @@ public class ClientV2GetAccountInfoTest {
                     .build())
             .build();
 
-    private static final AccountInfo GRPC_RES_1 = NEW_GRPC_RES(ACCOUNT_ADDRESS_1, PENDING_CHANGE_GRPC);
-    private static final AccountInfo GRPC_RES_3 = NEW_GRPC_RES(ACCOUNT_ADDRESS_2, PENDING_CHANGE_GRPC);
+    private static final AccountInfo GRPC_RES_1 = NEW_GRPC_RES(ACCOUNT_ADDRESS_1, Optional.of(PENDING_CHANGE_GRPC));
+    private static final AccountInfo GRPC_RES_3 = NEW_GRPC_RES(ACCOUNT_ADDRESS_2, Optional.empty());
 
-    private static AccountInfo NEW_GRPC_RES(com.concordium.sdk.types.AccountAddress address, StakePendingChange pendingChange) {
+    private static AccountInfo NEW_GRPC_RES(com.concordium.sdk.types.AccountAddress address, Optional<StakePendingChange> pendingChange) {
+        val bakerInfoBuilder = AccountStakingInfo.Baker.newBuilder()
+                .setStakedAmount(Amount.newBuilder().setValue(STAKED_AMOUNT).build())
+                .setRestakeEarnings(RESTAKE_EARNINGS)
+                .setBakerInfo(BakerInfo.newBuilder()
+                        .setBakerId(BakerId.newBuilder().setValue(BAKER_ID).build())
+                        .setAggregationKey(BakerAggregationVerifyKey.newBuilder()
+                                .setValue(ByteString.copyFrom(BAKER_AGGREGATION_KEY))
+                                .build())
+                        .setElectionKey(BakerElectionVerifyKey.newBuilder()
+                                .setValue(ByteString.copyFrom(BAKER_ELECTION_VERIFY_KEY))
+                                .build())
+                        .setSignatureKey(BakerSignatureVerifyKey.newBuilder()
+                                .setValue(ByteString.copyFrom(BAKER_SIGNATURE_VERIFY_KEY))
+                                .build()));
+        pendingChange.ifPresent(bakerInfoBuilder::setPendingChange);
         return AccountInfo.newBuilder()
                 .setAddress(com.concordium.grpc.v2.AccountAddress.newBuilder().setValue(ByteString.copyFrom(address.getBytes())).build())
                 .setAmount(Amount.newBuilder().setValue(ACCOUNT_AMOUNT).build())
@@ -186,22 +202,7 @@ public class ClientV2GetAccountInfoTest {
                                 .build())
                         .build()))
                 .setStake(AccountStakingInfo.newBuilder()
-                        .setBaker(AccountStakingInfo.Baker.newBuilder()
-                                .setStakedAmount(Amount.newBuilder().setValue(STAKED_AMOUNT).build())
-                                .setRestakeEarnings(RESTAKE_EARNINGS)
-                                .setPendingChange(pendingChange)
-                                .setBakerInfo(BakerInfo.newBuilder()
-                                        .setBakerId(BakerId.newBuilder().setValue(BAKER_ID).build())
-                                        .setAggregationKey(BakerAggregationVerifyKey.newBuilder()
-                                                .setValue(ByteString.copyFrom(BAKER_AGGREGATION_KEY))
-                                                .build())
-                                        .setElectionKey(BakerElectionVerifyKey.newBuilder()
-                                                .setValue(ByteString.copyFrom(BAKER_ELECTION_VERIFY_KEY))
-                                                .build())
-                                        .setSignatureKey(BakerSignatureVerifyKey.newBuilder()
-                                                .setValue(ByteString.copyFrom(BAKER_SIGNATURE_VERIFY_KEY))
-                                                .build())
-                                        .build())
+                        .setBaker(bakerInfoBuilder
                                 .setPoolInfo(BakerPoolInfo.newBuilder()
                                         .setUrl(BAKER_POOL_URL)
                                         .setOpenStatus(OpenStatus.OPEN_STATUS_OPEN_FOR_ALL)
