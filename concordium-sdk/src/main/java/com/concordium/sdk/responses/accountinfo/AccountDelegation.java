@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
+import java.util.Optional;
+
 /**
  * If the account is delegating.
  */
@@ -32,6 +34,7 @@ public final class AccountDelegation {
 
     /**
      * The pending changes for the delegator.
+     * Only present if there is a {@link PendingChange} for the delegator.
      */
-    private final PendingChange pendingChange;
+    private final Optional<PendingChange> pendingChange;
 }

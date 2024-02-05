@@ -27,7 +27,6 @@ import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
-import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.EpochQuery;
@@ -325,7 +324,7 @@ interface ClientV2MapperExtensions {
     @Nullable
     static AccountDelegation to(com.concordium.grpc.v2.AccountStakingInfo.Delegator stake) {
         return AccountDelegation.builder()
-                .pendingChange(to(stake.getPendingChange()))
+                .pendingChange(stake.hasPendingChange() ? Optional.of(to(stake.getPendingChange())) : Optional.empty())
                 .restakeEarnings(stake.getRestakeEarnings())
                 .stakedAmount(to(stake.getStakedAmount()))
                 .target(to(stake.getTarget()))
@@ -343,7 +342,7 @@ interface ClientV2MapperExtensions {
 
     static Baker to(com.concordium.grpc.v2.AccountStakingInfo.Baker stake) {
         return Baker.builder()
-                .pendingChange(to(stake.getPendingChange()))
+                .pendingChange(stake.hasPendingChange() ? Optional.of(to(stake.getPendingChange())) : Optional.empty())
                 .restakeEarnings(stake.getRestakeEarnings())
                 .stakedAmount(to(stake.getStakedAmount()))
                 .bakerPoolInfo(to(stake.getPoolInfo()))
@@ -369,7 +368,7 @@ interface ClientV2MapperExtensions {
                         .build();
             default:
             case CHANGE_NOT_SET:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Expected PendingChange to be set.");
         }
     }
 
@@ -874,13 +873,13 @@ interface ClientV2MapperExtensions {
         TransactionTime time = to(credentialDeploymentTransaction.getExpiry().getValue());
 
         return SendBlockItemRequest.newBuilder()
-            .setCredentialDeployment(
-                CredentialDeployment.newBuilder()
-                    .setMessageExpiry(time)
-                    .setRawPayload(ByteString.copyFrom(credentialDeploymentTransaction.getPayloadBytes()))
-                    .build()
+                .setCredentialDeployment(
+                        CredentialDeployment.newBuilder()
+                                .setMessageExpiry(time)
+                                .setRawPayload(ByteString.copyFrom(credentialDeploymentTransaction.getPayloadBytes()))
+                                .build()
                 )
-            .build();
+                .build();
     }
 
     static AccountTransactionSignature to(TransactionSignature signature) {
