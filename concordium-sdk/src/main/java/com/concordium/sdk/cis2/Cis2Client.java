@@ -40,6 +40,12 @@ public class Cis2Client {
         this.contractName = contractName;
     }
 
+    /**
+     * Construct a new {@link Cis2Client} with the provided {@link ClientV2} for the provided {@link ContractAddress}
+     * @param client client to use
+     * @param address the address of the cis 2 contract
+     * @return a cis2 client for interfacing with the provided contract
+     */
     public static Cis2Client newClient(ClientV2 client, ContractAddress address) {
         val instanceInfo = client.getInstanceInfo(BlockQuery.LAST_FINAL, address);
         return new Cis2Client(client, address, InitName.from(instanceInfo.getName()));
