@@ -8,11 +8,13 @@ import com.concordium.sdk.requests.smartcontracts.Energy;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.responses.blockitemsummary.AccountTransactionDetails;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
+import com.concordium.sdk.responses.blockitemsummary.Type;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElementType;
 import com.concordium.sdk.responses.transactionstatus.ContractUpdated;
 import com.concordium.sdk.responses.transactionstatus.Outcome;
+import com.concordium.sdk.responses.transactionstatus.TransactionResultEventType;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.AccountAddress;
@@ -42,7 +44,8 @@ public class Cis2Client {
 
     /**
      * Construct a new {@link Cis2Client} with the provided {@link ClientV2} for the provided {@link ContractAddress}
-     * @param client client to use
+     *
+     * @param client  client to use
      * @param address the address of the cis 2 contract
      * @return a cis2 client for interfacing with the provided contract
      */
@@ -197,11 +200,11 @@ public class Cis2Client {
         val accumulator = new ArrayList<Cis2EventWithMetadata>();
         val summaries = this.client.getBlockTransactionEvents(blockQuery);
         while (summaries.hasNext()) {
-            Summary summary = summaries.next();
-            AccountTransactionDetails details = summary.getDetails().getAccountTransactionDetails();
-            if (!(Objects.isNull(details)) && details.isSuccessful()) {
-                val contractUpdated = details.getContractUpdated();
-                if (!Objects.isNull(contractUpdated)) {
+            val summary = summaries.next();
+            if (summary.getDetails().getType() == Type.ACCOUNT_TRANSACTION) {
+                val details = summary.getDetails().getAccountTransactionDetails();
+                if (details.isSuccessful() && details.getType() == TransactionResultEventType.CONTRACT_UPDATED) {
+                    val contractUpdated = details.getContractUpdated();
                     for (ContractTraceElement contractTraceElement : contractUpdated) {
                         if (contractTraceElement.getTraceType() == ContractTraceElementType.INSTANCE_UPDATED) {
                             val updatedEvent = (ContractUpdated) contractTraceElement;
@@ -214,7 +217,6 @@ public class Cis2Client {
 
                     }
                 }
-
             }
         }
         return accumulator;
