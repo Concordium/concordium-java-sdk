@@ -390,9 +390,9 @@ public class ClientV2GetAccountInfoTest {
 
     @Test
     public void mapPendingRemoveStakeChangeTest() {
-        var expected = RemoveStakeChange.builder()
+        var expected = Optional.of(RemoveStakeChange.builder()
                 .effectiveTime(com.concordium.sdk.types.Timestamp.newMillis(BAKER_REDUCE_STAKE_TIME))
-                .build();
+                .build());
 
         var res = ClientV2MapperExtensions.to(StakePendingChange.newBuilder()
                 .setRemove(Timestamp.newBuilder().setValue(BAKER_REDUCE_STAKE_TIME).build())
