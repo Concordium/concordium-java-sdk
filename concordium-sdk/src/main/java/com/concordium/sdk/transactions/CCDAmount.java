@@ -67,4 +67,9 @@ public class CCDAmount {
     public String toString() {
         return this.getValue().toString() + " micro CCD";
     }
+
+    @JsonValue
+    public String toJsonString() {
+        return String.valueOf(this.value.getValue());
+    }
 }
