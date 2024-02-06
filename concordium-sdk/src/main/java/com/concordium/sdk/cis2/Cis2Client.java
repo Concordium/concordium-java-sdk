@@ -218,12 +218,7 @@ public class Cis2Client {
             return Collections.emptyList();
         }
         Hash blockHash = status.getFinalizedBlockItem().get().getBlockHash();
-        return getEventsFor(BlockQuery.HASH(blockHash)).stream().filter(new Predicate<Cis2EventWithMetadata>() {
-            @Override
-            public boolean test(Cis2EventWithMetadata event) {
-                return transactionHash.equals(event.getTransactionHashOrigin());
-            }
-        }).collect(Collectors.toList());
+        return getEventsFor(BlockQuery.HASH(blockHash)).stream().filter(event -> transactionHash.equals(event.getTransactionHashOrigin())).collect(Collectors.toList());
     }
 
 
