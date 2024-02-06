@@ -21,7 +21,6 @@ import com.concordium.sdk.types.UInt64;
 import lombok.val;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -210,12 +209,15 @@ public class Cis2Client {
      *
      * @param transactionHash to query
      * @return the list of events which originated from the specified transaction hash.
-     * Empty list if the transaction was not finalized.
+     * @throws IllegalArgumentException if the transaction was not finalized.
      */
     public List<Cis2EventWithMetadata> getEventsForFinalizedTransaction(Hash transactionHash) {
         val status = this.client.getBlockItemStatus(transactionHash);
         if (!status.getFinalizedBlockItem().isPresent()) {
-            return Collections.emptyList();
+            if (status.getCommittedBlockItem().isPresent()) {
+                throw new IllegalArgumentException("Transaction was not finalized. But it was committed in block(s) " + status.getCommittedBlockItem().get().getSummaries().keySet());
+            }
+            throw new IllegalArgumentException("Transaction was not finalized, but was " + status.getStatus().toString());
         }
         Hash blockHash = status.getFinalizedBlockItem().get().getBlockHash();
         return getEventsFor(BlockQuery.HASH(blockHash)).stream().filter(event -> transactionHash.equals(event.getTransactionHashOrigin())).collect(Collectors.toList());
