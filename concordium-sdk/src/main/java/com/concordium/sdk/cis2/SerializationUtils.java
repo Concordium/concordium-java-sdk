@@ -272,11 +272,11 @@ public class SerializationUtils {
     }
 
     @SneakyThrows
-    static String deserializeTokenId(ByteBuffer buffer) {
+    static byte[] deserializeTokenId(ByteBuffer buffer) {
         byte tokenLength = buffer.get();
         val tokenBuffer = new byte[tokenLength];
         buffer.get(tokenBuffer);
-        return new String(tokenBuffer, StandardCharsets.UTF_8);
+        return tokenBuffer;
     }
 
     static AbstractAddress deserializeAddress(ByteBuffer buffer) {

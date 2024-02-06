@@ -1,11 +1,14 @@
 package com.concordium.sdk.cis2;
 
 import com.concordium.sdk.ClientV2;
+import com.concordium.sdk.cis2.events.Cis2Event;
 import com.concordium.sdk.cis2.events.Cis2EventWithMetadata;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.smartcontracts.Energy;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
+import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
+import com.concordium.sdk.responses.blockitemsummary.Summary;
 import com.concordium.sdk.responses.blockitemsummary.Type;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
@@ -207,7 +210,7 @@ public class Cis2Client {
      * Get any events associated emitted from the specified CIS2 contract by the
      * supplied transaction hash.
      *
-     * @param transactionHash to query
+     * @param transactionHash the hash of the transaction to query outcome for.
      * @return the list of events which originated from the specified transaction hash.
      * @throws IllegalArgumentException if the transaction was not finalized.
      */
@@ -219,8 +222,10 @@ public class Cis2Client {
             }
             throw new IllegalArgumentException("Transaction was not finalized, but was " + status.getStatus().toString());
         }
-        Hash blockHash = status.getFinalizedBlockItem().get().getBlockHash();
-        return getEventsFor(BlockQuery.HASH(blockHash)).stream().filter(event -> transactionHash.equals(event.getTransactionHashOrigin())).collect(Collectors.toList());
+        val accumulator = new ArrayList<Cis2EventWithMetadata>();
+        val finalizedTransaction = status.getFinalizedBlockItem().get();
+        extractCis2Events(BlockQuery.HASH(finalizedTransaction.getBlockHash()), accumulator, finalizedTransaction.getSummary());
+        return accumulator;
     }
 
 
@@ -235,26 +240,37 @@ public class Cis2Client {
         val summaries = this.client.getBlockTransactionEvents(blockQuery);
         while (summaries.hasNext()) {
             val summary = summaries.next();
-            if (summary.getDetails().getType() == Type.ACCOUNT_TRANSACTION) {
-                val details = summary.getDetails().getAccountTransactionDetails();
-                if (details.isSuccessful() && details.getType() == TransactionResultEventType.CONTRACT_UPDATED) {
-                    val contractUpdated = details.getContractUpdated();
-                    for (ContractTraceElement contractTraceElement : contractUpdated) {
-                        if (contractTraceElement.getTraceType() == ContractTraceElementType.INSTANCE_UPDATED) {
-                            val updatedEvent = (ContractUpdated) contractTraceElement;
-                            if (this.contractAddress.equals(updatedEvent.getAddress())) {
-                                for (byte[] event : updatedEvent.getEvents()) {
-                                    accumulator.add(Cis2EventWithMetadata.ok(SerializationUtils.deserializeCis2Event(event), blockQuery, summary.getTransactionHash()));
-                                }
+            extractCis2Events(blockQuery, accumulator, summary);
+        }
+        return accumulator;
+    }
+
+    /**
+     * Extract any events from the CIS2 specified contract.
+     * The events are added to the supplied accumulator.
+     * @param blockQuery a block identifier.
+     * @param accumulator accumulator used for aggregating the events.
+     * @param summary the transaction summary to extract from.
+     */
+    private void extractCis2Events(BlockQuery blockQuery, ArrayList<Cis2EventWithMetadata> accumulator, Summary summary) {
+        if (summary.getDetails().getType() == Type.ACCOUNT_TRANSACTION) {
+            val details = summary.getDetails().getAccountTransactionDetails();
+            if (details.isSuccessful() && details.getType() == TransactionResultEventType.CONTRACT_UPDATED) {
+                val contractUpdated = details.getContractUpdated();
+                for (ContractTraceElement contractTraceElement : contractUpdated) {
+                    if (contractTraceElement.getTraceType() == ContractTraceElementType.INSTANCE_UPDATED) {
+                        val updatedEvent = (ContractUpdated) contractTraceElement;
+                        if (this.contractAddress.equals(updatedEvent.getAddress())) {
+                            for (byte[] event : updatedEvent.getEvents()) {
+                                accumulator.add(Cis2EventWithMetadata.ok(SerializationUtils.deserializeCis2Event(event), blockQuery, summary.getTransactionHash()));
                             }
                         }
                     }
-                } else if (!Objects.isNull(details.getRejectReason())) {
-                    accumulator.add(Cis2EventWithMetadata.err(Cis2Error.from(details.getRejectReason()), blockQuery, summary.getTransactionHash()));
                 }
+            } else if (!Objects.isNull(details.getRejectReason())) {
+                accumulator.add(Cis2EventWithMetadata.err(Cis2Error.from(details.getRejectReason()), blockQuery, summary.getTransactionHash()));
             }
         }
-        return accumulator;
     }
 
 }

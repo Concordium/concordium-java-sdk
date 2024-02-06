@@ -17,7 +17,7 @@ public class MintEvent implements Cis2Event {
     /**
      * ID of the token that was minted.
      */
-    private final String hexTokenId;
+    private final byte[] tokenId;
 
     /**
      * Amount of tokens that was minted.
@@ -29,8 +29,8 @@ public class MintEvent implements Cis2Event {
      */
     private final AbstractAddress owner;
 
-    public MintEvent(String hexTokenId, long tokenAmount, AbstractAddress owner) {
-        this.hexTokenId = hexTokenId;
+    public MintEvent(byte[] tokenId, long tokenAmount, AbstractAddress owner) {
+        this.tokenId = tokenId;
         this.tokenAmount = tokenAmount;
         this.owner = owner;
     }

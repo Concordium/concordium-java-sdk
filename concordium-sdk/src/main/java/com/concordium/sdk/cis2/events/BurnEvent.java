@@ -17,7 +17,7 @@ public class BurnEvent implements Cis2Event {
     /**
      * The token that was burned.
      */
-    private final String hexTokenId;
+    private final byte[] tokenId;
     /**
      * The amount of tokens that was burned.
      */
@@ -27,8 +27,8 @@ public class BurnEvent implements Cis2Event {
      */
     private final AbstractAddress owner;
 
-    public BurnEvent(String hexTokenId, long tokenAmount, AbstractAddress owner) {
-        this.hexTokenId = hexTokenId;
+    public BurnEvent(byte[] tokenId, long tokenAmount, AbstractAddress owner) {
+        this.tokenId = tokenId;
         this.tokenAmount = tokenAmount;
         this.owner = owner;
     }

@@ -17,7 +17,7 @@ public class TransferEvent implements Cis2Event {
     /**
      * The id of the token(s) that were transferred.
      */
-    private final String hexTokenId;
+    private final byte[] tokenId;
 
     /**
      * The amount of tokens that was transferred.
@@ -34,8 +34,8 @@ public class TransferEvent implements Cis2Event {
      */
     private final AbstractAddress to;
 
-    public TransferEvent(String hexTokenId, long tokenAmount, AbstractAddress from, AbstractAddress to) {
-        this.hexTokenId = hexTokenId;
+    public TransferEvent(byte[] tokenId, long tokenAmount, AbstractAddress from, AbstractAddress to) {
+        this.tokenId = tokenId;
         this.tokenAmount = tokenAmount;
         this.from = from;
         this.to = to;

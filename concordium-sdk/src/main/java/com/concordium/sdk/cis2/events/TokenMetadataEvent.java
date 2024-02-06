@@ -17,15 +17,15 @@ public class TokenMetadataEvent implements Cis2Event {
     /**
      * The token id which as
      */
-    private final String hexTokenId;
+    private final byte[] tokenId;
 
     /**
      * The new metadata url for the token.
      */
     private final TokenMetadata metadataUrl;
 
-    public TokenMetadataEvent(String hexTokenId, TokenMetadata metadataUrl) {
-        this.hexTokenId = hexTokenId;
+    public TokenMetadataEvent(byte[] tokenId, TokenMetadata metadataUrl) {
+        this.tokenId = tokenId;
         this.metadataUrl = metadataUrl;
     }
 
