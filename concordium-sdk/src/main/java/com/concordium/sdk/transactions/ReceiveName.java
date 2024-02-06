@@ -64,6 +64,10 @@ public final class ReceiveName {
         return from(parts[0], parts[1]);
     }
 
+    public static ReceiveName from(com.concordium.grpc.v2.ReceiveName receiveName) {
+        return ReceiveName.parse(receiveName.getValue());
+    }
+
     public byte[] getBytes() {
         val receiveNameBuffer = (contractName + "." + method).getBytes();
         val buffer = ByteBuffer.allocate(UInt16.BYTES + receiveNameBuffer.length);

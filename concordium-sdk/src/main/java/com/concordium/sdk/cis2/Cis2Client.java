@@ -6,8 +6,6 @@ import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.smartcontracts.Energy;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
-import com.concordium.sdk.responses.blockitemsummary.AccountTransactionDetails;
-import com.concordium.sdk.responses.blockitemsummary.Summary;
 import com.concordium.sdk.responses.blockitemsummary.Type;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
@@ -23,6 +21,8 @@ import com.concordium.sdk.types.UInt64;
 import lombok.val;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * A client dedicated to the CIS2 <a href="https://proposals.concordium.software/CIS/cis-2.html">specification</a>.
@@ -191,12 +191,49 @@ public class Cis2Client {
     }
 
     /**
+     * Get any events associated emitted from the specified CIS2 contract.
+     *
+     * @param queries blocks to query
+     * @return the list of events.
+     */
+    public List<Cis2EventWithMetadata> getEventsFor(BlockQuery... queries) {
+        val accumulator = new ArrayList<Cis2EventWithMetadata>();
+        for (BlockQuery query : queries) {
+            accumulator.addAll(getEventsFor(query));
+        }
+        return accumulator;
+    }
+
+    /**
+     * Get any events associated emitted from the specified CIS2 contract by the
+     * supplied transaction hash.
+     *
+     * @param transactionHash to query
+     * @return the list of events which originated from the specified transaction hash.
+     * Empty list if the transaction was not finalized.
+     */
+    public List<Cis2EventWithMetadata> getEventsForFinalizedTransaction(Hash transactionHash) {
+        val status = this.client.getBlockItemStatus(transactionHash);
+        if (!status.getFinalizedBlockItem().isPresent()) {
+            return Collections.emptyList();
+        }
+        Hash blockHash = status.getFinalizedBlockItem().get().getBlockHash();
+        return getEventsFor(BlockQuery.HASH(blockHash)).stream().filter(new Predicate<Cis2EventWithMetadata>() {
+            @Override
+            public boolean test(Cis2EventWithMetadata event) {
+                return transactionHash.equals(event.getTransactionHashOrigin());
+            }
+        }).collect(Collectors.toList());
+    }
+
+
+    /**
      * Get any events associated with the CIS2 contract that this client is instantiated with.
      *
      * @param blockQuery the block to query events for.
      * @return The list of events if there are any.
      */
-    public List<Cis2EventWithMetadata> getEventsFor(BlockQuery blockQuery) {
+    private List<Cis2EventWithMetadata> getEventsFor(BlockQuery blockQuery) {
         val accumulator = new ArrayList<Cis2EventWithMetadata>();
         val summaries = this.client.getBlockTransactionEvents(blockQuery);
         while (summaries.hasNext()) {
@@ -210,11 +247,13 @@ public class Cis2Client {
                             val updatedEvent = (ContractUpdated) contractTraceElement;
                             if (this.contractAddress.equals(updatedEvent.getAddress())) {
                                 for (byte[] event : updatedEvent.getEvents()) {
-                                    accumulator.add(new Cis2EventWithMetadata(SerializationUtils.deserializeCis2Event(event), blockQuery, summary.getTransactionHash()));
+                                    accumulator.add(Cis2EventWithMetadata.ok(SerializationUtils.deserializeCis2Event(event), blockQuery, summary.getTransactionHash()));
                                 }
                             }
                         }
                     }
+                } else if (!Objects.isNull(details.getRejectReason())) {
+                    accumulator.add(Cis2EventWithMetadata.err(Cis2Error.from(details.getRejectReason()), blockQuery, summary.getTransactionHash()));
                 }
             }
         }

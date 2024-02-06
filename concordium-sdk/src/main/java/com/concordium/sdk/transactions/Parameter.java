@@ -39,6 +39,10 @@ public final class Parameter {
         return new Parameter(parameter);
     }
 
+    public static Parameter from(com.concordium.grpc.v2.Parameter parameter) {
+        return Parameter.from(parameter.getValue().toByteArray());
+    }
+
     /**
      * Get the serialized parameter, namely the length
      * of the parameter (encoded via 2 bytes, big endian) and concatenated with the

@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.BakerId;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,7 +16,7 @@ public class RejectReasonDelegationTargetNotABaker extends RejectReason {
     /**
      * The delegation target which was not a baker.
      */
-    private final AccountIndex bakerId;
+    private final BakerId bakerId;
 
     @Override
     public RejectReasonType getType() {

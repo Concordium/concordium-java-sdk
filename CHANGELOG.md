@@ -2,6 +2,7 @@
 
 ## Unreleased changes
 
+- Parse the underlying reject reasons into `AccountTransactionDetails`.
 - Introduced Cis2Client for interfacing with CIS2 compliant smart contracts.
 - Support for deserializing contract update transactions.
 - Fix a bug where contract invocations used wrong format for parameters.
