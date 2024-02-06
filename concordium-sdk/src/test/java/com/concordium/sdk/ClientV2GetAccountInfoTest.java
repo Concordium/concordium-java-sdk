@@ -31,11 +31,13 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
+import lombok.val;
 import lombok.var;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.nio.charset.StandardCharsets;
@@ -53,6 +55,8 @@ public class ClientV2GetAccountInfoTest {
 
     private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_1
             = com.concordium.sdk.types.AccountAddress.from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf");
+    private static final com.concordium.sdk.types.AccountAddress ACCOUNT_ADDRESS_2
+            = com.concordium.sdk.types.AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P");
     private static final byte[] ENCRYPTED_AMOUNT = new byte[]{0, 0, 1};
     private static final long ACCOUNT_AMOUNT = 10000;
     private static final long ACCOUNT_INDEX = 1;
@@ -113,176 +117,193 @@ public class ClientV2GetAccountInfoTest {
                     .setEffectiveTime(Timestamp.newBuilder().setValue(BAKER_REDUCE_STAKE_TIME).build())
                     .build())
             .build();
-    private static final AccountInfo GRPC_RES_1 = AccountInfo.newBuilder()
-            .setAddress(com.concordium.grpc.v2.AccountAddress.newBuilder().setValue(ByteString.copyFrom(ACCOUNT_ADDRESS_1.getBytes())).build())
-            .setAmount(Amount.newBuilder().setValue(ACCOUNT_AMOUNT).build())
-            .setEncryptedBalance(EncryptedBalance.newBuilder()
-                    .setStartIndex(ENCRYPTED_AMOUNT_START_INDEX)
-                    .setAggregatedAmount(from(ENCRYPTED_AMOUNT))
-                    .setNumAggregated(1)
-                    .addIncomingAmounts(from(ENCRYPTED_AMOUNT_INCOMING_AMOUNT_1))
-                    .setSelfAmount(from(ENCRYPTED_AMOUNT_SELF_AMOUNT_1))
-                    .build())
-            .setIndex(AccountIndex.newBuilder().setValue(ACCOUNT_INDEX).build())
-            .setThreshold(AccountThreshold.newBuilder()
-                    .setValue(ACCOUNT_THRESHOLD)
-                    .build())
-            .setEncryptionKey(EncryptionKey.newBuilder()
-                    .setValue(ByteString.copyFrom(ENCRYPTION_KEY))
-                    .build())
-            .setSchedule(ReleaseSchedule.newBuilder()
-                    .addSchedules(Release.newBuilder()
-                            .setAmount(Amount.newBuilder().setValue(RELEASE_AMOUNT).build())
-                            .setTimestamp(Timestamp.newBuilder().setValue(RELEASE_TIME).build())
-                            .addTransactions(TransactionHash.newBuilder()
-                                    .setValue(ByteString.copyFrom(RELEASE_TRANSACTION_HASH))
-                                    .build())
-                            .build())
-                    .setTotal(Amount.newBuilder().setValue(RELEASE_AMOUNT_TOTAL).build())
-                    .build())
-            .setSequenceNumber(SequenceNumber.newBuilder()
-                    .setValue(SEQUENCE_NUMBER)
-                    .build())
-            .putAllCreds(ImmutableMap.of(0, AccountCredential.newBuilder()
-                    .setNormal(NormalCredentialValues.newBuilder()
-                            .setArThreshold(ArThreshold.newBuilder().setValue(AR_THRESHOLD).build())
-                            .putAllArData(ImmutableMap.of(0, ChainArData.newBuilder()
-                                    .setEncIdCredPubShare(ByteString.copyFrom(ENC_ID_PUB_SHARE))
-                                    .build()))
-                            .setCommitments(CredentialCommitments.newBuilder()
-                                    .setCredCounter(toCommitment(COMMITMENT_CRED_COUNTER))
-                                    .setMaxAccounts(toCommitment(COMMITMENT_MAX_ACCOUNTS))
-                                    .setPrf(toCommitment(COMMITMENT_PRF))
-                                    .addIdCredSecSharingCoeff(0, toCommitment(COMMITMENT_ID_CRED_SHARING_COEFF))
-                                    .putAllAttributes(ImmutableMap.of(0, toCommitment(COMMITMENT_ATTRIBUTE_0)))
-                                    .build())
-                            .setCredId(CredentialRegistrationId.newBuilder()
-                                    .setValue(ByteString.copyFrom(CREDENTIAL_REG_ID))
-                                    .build())
-                            .setIpId(IdentityProviderIdentity.newBuilder()
-                                    .setValue(IDP_ID)
-                                    .build())
-                            .setKeys(CredentialPublicKeys.newBuilder()
-                                    .setThreshold(SignatureThreshold.newBuilder().setValue(SIGNATURE_THRESHOLD).build())
-                                    .putAllKeys(ImmutableMap.of(0, AccountVerifyKey.newBuilder()
-                                            .setEd25519Key(ByteString.copyFrom(NORMAL_CRED_SIG_0))
-                                            .build()))
-                                    .build())
-                            .setPolicy(Policy.newBuilder()
-                                    .setCreatedAt(POLICY_CREATED_AT)
-                                    .setValidTo(POLICY_VALID_TO)
-                                    .putAllAttributes(ImmutableMap.of(
-                                            FIRST_NAME.ordinal(),
-                                            ByteString.copyFrom(FIRST_NAME_VALUE)))
-                                    .build())
-                            .build())
-                    .build()))
-            .setStake(AccountStakingInfo.newBuilder()
-                    .setBaker(AccountStakingInfo.Baker.newBuilder()
-                            .setStakedAmount(Amount.newBuilder().setValue(STAKED_AMOUNT).build())
-                            .setRestakeEarnings(RESTAKE_EARNINGS)
-                            .setPendingChange(PENDING_CHANGE_GRPC)
-                            .setBakerInfo(BakerInfo.newBuilder()
-                                    .setBakerId(BakerId.newBuilder().setValue(BAKER_ID).build())
-                                    .setAggregationKey(BakerAggregationVerifyKey.newBuilder()
-                                            .setValue(ByteString.copyFrom(BAKER_AGGREGATION_KEY))
-                                            .build())
-                                    .setElectionKey(BakerElectionVerifyKey.newBuilder()
-                                            .setValue(ByteString.copyFrom(BAKER_ELECTION_VERIFY_KEY))
-                                            .build())
-                                    .setSignatureKey(BakerSignatureVerifyKey.newBuilder()
-                                            .setValue(ByteString.copyFrom(BAKER_SIGNATURE_VERIFY_KEY))
-                                            .build())
-                                    .build())
-                            .setPoolInfo(BakerPoolInfo.newBuilder()
-                                    .setUrl(BAKER_POOL_URL)
-                                    .setOpenStatus(OpenStatus.OPEN_STATUS_OPEN_FOR_ALL)
-                                    .setCommissionRates(CommissionRates.newBuilder()
-                                            .setBaking(toAmountFrac(COMMISSION_BAKING_PPHT))
-                                            .setFinalization(toAmountFrac(COMMISSION_FINALIZATION_PPHT))
-                                            .setTransaction(toAmountFrac(COMMISSION_TRANSACTION_PPHT))
-                                            .build())
-                                    .build())
-                            .build())
-                    .build())
-            .build();
 
-    private static final PendingChange PENDING_CHANGE = ReduceStakeChange.builder()
+    private static final AccountInfo GRPC_RES_1 = NEW_GRPC_RES(ACCOUNT_ADDRESS_1, Optional.of(PENDING_CHANGE_GRPC));
+    private static final AccountInfo GRPC_RES_3 = NEW_GRPC_RES(ACCOUNT_ADDRESS_2, Optional.empty());
+
+    private static AccountInfo NEW_GRPC_RES(com.concordium.sdk.types.AccountAddress address, Optional<StakePendingChange> pendingChange) {
+        val bakerInfoBuilder = AccountStakingInfo.Baker.newBuilder()
+                .setStakedAmount(Amount.newBuilder().setValue(STAKED_AMOUNT).build())
+                .setRestakeEarnings(RESTAKE_EARNINGS)
+                .setBakerInfo(BakerInfo.newBuilder()
+                        .setBakerId(BakerId.newBuilder().setValue(BAKER_ID).build())
+                        .setAggregationKey(BakerAggregationVerifyKey.newBuilder()
+                                .setValue(ByteString.copyFrom(BAKER_AGGREGATION_KEY))
+                                .build())
+                        .setElectionKey(BakerElectionVerifyKey.newBuilder()
+                                .setValue(ByteString.copyFrom(BAKER_ELECTION_VERIFY_KEY))
+                                .build())
+                        .setSignatureKey(BakerSignatureVerifyKey.newBuilder()
+                                .setValue(ByteString.copyFrom(BAKER_SIGNATURE_VERIFY_KEY))
+                                .build()));
+        pendingChange.ifPresent(bakerInfoBuilder::setPendingChange);
+        return AccountInfo.newBuilder()
+                .setAddress(com.concordium.grpc.v2.AccountAddress.newBuilder().setValue(ByteString.copyFrom(address.getBytes())).build())
+                .setAmount(Amount.newBuilder().setValue(ACCOUNT_AMOUNT).build())
+                .setEncryptedBalance(EncryptedBalance.newBuilder()
+                        .setStartIndex(ENCRYPTED_AMOUNT_START_INDEX)
+                        .setAggregatedAmount(from(ENCRYPTED_AMOUNT))
+                        .setNumAggregated(1)
+                        .addIncomingAmounts(from(ENCRYPTED_AMOUNT_INCOMING_AMOUNT_1))
+                        .setSelfAmount(from(ENCRYPTED_AMOUNT_SELF_AMOUNT_1))
+                        .build())
+                .setIndex(AccountIndex.newBuilder().setValue(ACCOUNT_INDEX).build())
+                .setThreshold(AccountThreshold.newBuilder()
+                        .setValue(ACCOUNT_THRESHOLD)
+                        .build())
+                .setEncryptionKey(EncryptionKey.newBuilder()
+                        .setValue(ByteString.copyFrom(ENCRYPTION_KEY))
+                        .build())
+                .setSchedule(ReleaseSchedule.newBuilder()
+                        .addSchedules(Release.newBuilder()
+                                .setAmount(Amount.newBuilder().setValue(RELEASE_AMOUNT).build())
+                                .setTimestamp(Timestamp.newBuilder().setValue(RELEASE_TIME).build())
+                                .addTransactions(TransactionHash.newBuilder()
+                                        .setValue(ByteString.copyFrom(RELEASE_TRANSACTION_HASH))
+                                        .build())
+                                .build())
+                        .setTotal(Amount.newBuilder().setValue(RELEASE_AMOUNT_TOTAL).build())
+                        .build())
+                .setSequenceNumber(SequenceNumber.newBuilder()
+                        .setValue(SEQUENCE_NUMBER)
+                        .build())
+                .putAllCreds(ImmutableMap.of(0, AccountCredential.newBuilder()
+                        .setNormal(NormalCredentialValues.newBuilder()
+                                .setArThreshold(ArThreshold.newBuilder().setValue(AR_THRESHOLD).build())
+                                .putAllArData(ImmutableMap.of(0, ChainArData.newBuilder()
+                                        .setEncIdCredPubShare(ByteString.copyFrom(ENC_ID_PUB_SHARE))
+                                        .build()))
+                                .setCommitments(CredentialCommitments.newBuilder()
+                                        .setCredCounter(toCommitment(COMMITMENT_CRED_COUNTER))
+                                        .setMaxAccounts(toCommitment(COMMITMENT_MAX_ACCOUNTS))
+                                        .setPrf(toCommitment(COMMITMENT_PRF))
+                                        .addIdCredSecSharingCoeff(0, toCommitment(COMMITMENT_ID_CRED_SHARING_COEFF))
+                                        .putAllAttributes(ImmutableMap.of(0, toCommitment(COMMITMENT_ATTRIBUTE_0)))
+                                        .build())
+                                .setCredId(CredentialRegistrationId.newBuilder()
+                                        .setValue(ByteString.copyFrom(CREDENTIAL_REG_ID))
+                                        .build())
+                                .setIpId(IdentityProviderIdentity.newBuilder()
+                                        .setValue(IDP_ID)
+                                        .build())
+                                .setKeys(CredentialPublicKeys.newBuilder()
+                                        .setThreshold(SignatureThreshold.newBuilder().setValue(SIGNATURE_THRESHOLD).build())
+                                        .putAllKeys(ImmutableMap.of(0, AccountVerifyKey.newBuilder()
+                                                .setEd25519Key(ByteString.copyFrom(NORMAL_CRED_SIG_0))
+                                                .build()))
+                                        .build())
+                                .setPolicy(Policy.newBuilder()
+                                        .setCreatedAt(POLICY_CREATED_AT)
+                                        .setValidTo(POLICY_VALID_TO)
+                                        .putAllAttributes(ImmutableMap.of(
+                                                FIRST_NAME.ordinal(),
+                                                ByteString.copyFrom(FIRST_NAME_VALUE)))
+                                        .build())
+                                .build())
+                        .build()))
+                .setStake(AccountStakingInfo.newBuilder()
+                        .setBaker(bakerInfoBuilder
+                                .setPoolInfo(BakerPoolInfo.newBuilder()
+                                        .setUrl(BAKER_POOL_URL)
+                                        .setOpenStatus(OpenStatus.OPEN_STATUS_OPEN_FOR_ALL)
+                                        .setCommissionRates(CommissionRates.newBuilder()
+                                                .setBaking(toAmountFrac(COMMISSION_BAKING_PPHT))
+                                                .setFinalization(toAmountFrac(COMMISSION_FINALIZATION_PPHT))
+                                                .setTransaction(toAmountFrac(COMMISSION_TRANSACTION_PPHT))
+                                                .build())
+                                        .build())
+                                .build())
+                        .build())
+                .build();
+    }
+
+    private static final Optional<PendingChange> PENDING_CHANGE = Optional.of(ReduceStakeChange.builder()
             .newStake(CCDAmount.fromMicro(BAKER_REDUCE_STAKE_AMOUNT))
             .effectiveTime(com.concordium.sdk.types.Timestamp.newMillis(BAKER_REDUCE_STAKE_TIME))
-            .build();
-    private static final com.concordium.sdk.responses.accountinfo.AccountInfo ACCOUNT_INFO_RES_EXPECTED_1
-            = com.concordium.sdk.responses.accountinfo.AccountInfo.builder()
-            .accountAddress(ACCOUNT_ADDRESS_1)
-            .accountAmount(CCDAmount.fromMicro(ACCOUNT_AMOUNT))
-            .accountEncryptedAmount(AccountEncryptedAmount.builder()
-                    .startIndex(EncryptedAmountIndex.from(ENCRYPTED_AMOUNT_START_INDEX))
-                    .selfAmount(com.concordium.sdk.transactions.EncryptedAmount.from(ENCRYPTED_AMOUNT_SELF_AMOUNT_1))
-                    .incomingAmounts(ImmutableList.of(com.concordium.sdk.transactions.EncryptedAmount.from(ENCRYPTED_AMOUNT_INCOMING_AMOUNT_1)))
-                    .numAggregated(Optional.of(1))
-                    .aggregatedAmount(Optional.of(com.concordium.sdk.transactions.EncryptedAmount.from(ENCRYPTED_AMOUNT)))
-                    .build())
-            .accountIndex(com.concordium.sdk.responses.AccountIndex.from(ACCOUNT_INDEX))
-            .accountThreshold(ACCOUNT_THRESHOLD)
-            .accountEncryptionKey(ElgamalPublicKey.from(ENCRYPTION_KEY))
-            .accountReleaseSchedule(com.concordium.sdk.responses.accountinfo.ReleaseSchedule.builder()
-                    .total(CCDAmount.fromMicro(RELEASE_AMOUNT_TOTAL))
-                    .schedule(ImmutableList.of(ScheduledRelease.builder()
-                            .amount(CCDAmount.fromMicro(RELEASE_AMOUNT))
-                            .timestamp(com.concordium.sdk.types.Timestamp.newMillis(RELEASE_TIME))
-                            .transaction(Hash.from(RELEASE_TRANSACTION_HASH))
-                            .build()))
-                    .build())
-            .accountNonce(Nonce.from(SEQUENCE_NUMBER))
-            .accountCredential(Index.from(0), Credential
-                    .builder()
-                    .type(CredentialType.NORMAL)
-                    .revocationThreshold(AR_THRESHOLD)
-                    .arDataItem(Index.from(0), ArData.builder()
-                            .encIdCredPubShare(EncIdPubShare.from(ENC_ID_PUB_SHARE))
-                            .build())
-                    .commitments(Commitments.builder()
-                            .cmmCredCounter(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_CRED_COUNTER))
-                            .cmmIdCredSecSharingCoeffItem(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_ID_CRED_SHARING_COEFF))
-                            .cmmMaxAccounts(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_MAX_ACCOUNTS))
-                            .cmmPrf(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_PRF))
-                            .cmmAttribute(FIRST_NAME, com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_ATTRIBUTE_0))
-                            .build())
-                    .credId(fromBytes(CREDENTIAL_REG_ID))
-                    .ipIdentity(IDP_ID)
-                    .credentialPublicKeys(com.concordium.sdk.responses.accountinfo.credential.CredentialPublicKeys.builder()
-                            .threshold(SIGNATURE_THRESHOLD)
-                            .key(Index.from(0), Key.builder()
-                                    .verifyKey(NORMAL_CRED_SIG_0)
-                                    .schemeId(VerificationScheme.Ed25519).build())
-                            .build())
-                    .policy(com.concordium.sdk.responses.accountinfo.credential.Policy.builder()
-                            .createdAt(of(POLICY_CREATED_AT.getYear(), POLICY_CREATED_AT.getMonth()))
-                            .validTo(of(POLICY_VALID_TO.getYear(), POLICY_VALID_TO.getMonth()))
-                            .revealedAttributes(ImmutableMap.of(FIRST_NAME, new String(FIRST_NAME_VALUE, StandardCharsets.UTF_8)))
-                            .build())
-                    .build())
-            .bakerInfo(Baker
-                    .builder()
-                    .stakedAmount(CCDAmount.fromMicro(STAKED_AMOUNT))
-                    .restakeEarnings(RESTAKE_EARNINGS)
-                    .pendingChange(PENDING_CHANGE)
-                    .bakerInfo(com.concordium.sdk.responses.bakersrewardperiod.BakerInfo.builder()
-                            .bakerId(com.concordium.sdk.responses.BakerId.from(BAKER_ID))
-                            .bakerAggregationVerifyKey(BLSPublicKey.from(BAKER_AGGREGATION_KEY))
-                            .bakerElectionVerifyKey(VRFPublicKey.from(BAKER_ELECTION_VERIFY_KEY))
-                            .bakerSignatureVerifyKey(ED25519PublicKey.from(BAKER_SIGNATURE_VERIFY_KEY)).build())
-                    .bakerPoolInfo(com.concordium.sdk.responses.accountinfo.BakerPoolInfo.builder()
-                            .metadataUrl(BAKER_POOL_URL)
-                            .openStatus(com.concordium.sdk.responses.transactionstatus.OpenStatus.OPEN_FOR_ALL)
-                            .commissionRates(com.concordium.sdk.responses.accountinfo.CommissionRates.builder()
-                                    .bakingCommission((double) COMMISSION_BAKING_PPHT / 100_000D)
-                                    .finalizationCommission((double) COMMISSION_FINALIZATION_PPHT / 100_000D)
-                                    .transactionCommission((double) COMMISSION_TRANSACTION_PPHT / 100_000D)
-                                    .build())
-                            .build())
-                    .build())
-            .build();
+            .build());
+
+    private static final com.concordium.sdk.responses.accountinfo.AccountInfo ACCOUNT_INFO_RES_EXPECTED_1 = NEW_EXPECTED_GRPC_RES(ACCOUNT_ADDRESS_1, PENDING_CHANGE);
+
+    private static final com.concordium.sdk.responses.accountinfo.AccountInfo ACCOUNT_INFO_RES_EXPECTED_2 = NEW_EXPECTED_GRPC_RES(ACCOUNT_ADDRESS_2, Optional.empty());
+
+    private static com.concordium.sdk.responses.accountinfo.AccountInfo NEW_EXPECTED_GRPC_RES(com.concordium.sdk.types.AccountAddress address, Optional<PendingChange> pendingChange) {
+        return com.concordium.sdk.responses.accountinfo.AccountInfo.builder().
+                accountAddress(address).
+                accountAmount(CCDAmount.fromMicro(ACCOUNT_AMOUNT)).
+                accountEncryptedAmount(AccountEncryptedAmount.builder().
+                        startIndex(EncryptedAmountIndex.from(ENCRYPTED_AMOUNT_START_INDEX)).
+                        selfAmount(com.concordium.sdk.transactions.EncryptedAmount.from(ENCRYPTED_AMOUNT_SELF_AMOUNT_1)).
+                        incomingAmounts(ImmutableList.of(com.concordium.sdk.transactions.EncryptedAmount.from(ENCRYPTED_AMOUNT_INCOMING_AMOUNT_1))).
+                        numAggregated(Optional.of(1)).
+                        aggregatedAmount(Optional.of(com.concordium.sdk.transactions.EncryptedAmount.from(ENCRYPTED_AMOUNT))).
+                        build()).
+                accountIndex(com.concordium.sdk.responses.AccountIndex.from(ACCOUNT_INDEX)).
+                accountThreshold(ACCOUNT_THRESHOLD).
+                accountEncryptionKey(ElgamalPublicKey.from(ENCRYPTION_KEY)).
+                accountReleaseSchedule(com.concordium.sdk.responses.accountinfo.ReleaseSchedule.builder().
+                        total(CCDAmount.fromMicro(RELEASE_AMOUNT_TOTAL)).
+                        schedule(ImmutableList.of(ScheduledRelease.builder().
+                                amount(CCDAmount.fromMicro(RELEASE_AMOUNT)).
+                                timestamp(com.concordium.sdk.types.Timestamp.newMillis(RELEASE_TIME)).
+                                transaction(Hash.from(RELEASE_TRANSACTION_HASH)).
+                                build())).
+                        build()).
+                accountNonce(Nonce.from(SEQUENCE_NUMBER)).
+                accountCredential(Index.from(0), Credential.
+                        builder().
+                        type(CredentialType.NORMAL).
+                        revocationThreshold(AR_THRESHOLD).
+                        arDataItem(Index.from(0), ArData.
+                                builder().
+                                encIdCredPubShare(EncIdPubShare.from(ENC_ID_PUB_SHARE)).
+                                build()).
+                        commitments(Commitments.builder().
+                                cmmCredCounter(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_CRED_COUNTER)).
+                                cmmIdCredSecSharingCoeffItem(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_ID_CRED_SHARING_COEFF)).
+                                cmmMaxAccounts(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_MAX_ACCOUNTS)).
+                                cmmPrf(com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_PRF)).
+                                cmmAttribute(FIRST_NAME, com.concordium.sdk.responses.accountinfo.credential.Commitment.from(COMMITMENT_ATTRIBUTE_0)).
+                                build()).
+                        credId(fromBytes(CREDENTIAL_REG_ID)).
+                        ipIdentity(IDP_ID).
+                        credentialPublicKeys(com.concordium.sdk.responses.accountinfo.credential.CredentialPublicKeys.builder().
+                                threshold(SIGNATURE_THRESHOLD).
+                                key(Index.from(0), Key.
+                                        builder().
+                                        verifyKey(NORMAL_CRED_SIG_0).
+                                        schemeId(VerificationScheme.Ed25519).
+                                        build()).
+                                build()).
+                        policy(com.concordium.sdk.responses.accountinfo.credential.Policy.builder().
+                                createdAt(of(POLICY_CREATED_AT.getYear(), POLICY_CREATED_AT.
+                                        getMonth())).
+                                validTo(of(POLICY_VALID_TO.getYear(), POLICY_VALID_TO.
+                                        getMonth())).
+                                revealedAttributes(ImmutableMap.of(FIRST_NAME, new String(FIRST_NAME_VALUE, StandardCharsets.UTF_8))).
+                                build()).build()).
+                bakerInfo(Baker.builder().
+                        stakedAmount(CCDAmount.fromMicro(STAKED_AMOUNT)).
+                        restakeEarnings(RESTAKE_EARNINGS).
+                        pendingChange(pendingChange).
+                        bakerInfo(com.concordium.sdk.responses.bakersrewardperiod.BakerInfo.builder().
+                                bakerId(com.concordium.sdk.responses.BakerId.from(BAKER_ID)).
+                                bakerAggregationVerifyKey(BLSPublicKey.from(BAKER_AGGREGATION_KEY)).
+                                bakerElectionVerifyKey(VRFPublicKey.from(BAKER_ELECTION_VERIFY_KEY)).
+                                bakerSignatureVerifyKey(ED25519PublicKey.from(BAKER_SIGNATURE_VERIFY_KEY)).
+                                build()).
+                        bakerPoolInfo(com.concordium.sdk.responses.accountinfo.BakerPoolInfo.builder().
+                                metadataUrl(BAKER_POOL_URL).
+                                openStatus(com.concordium.sdk.responses.transactionstatus.OpenStatus.OPEN_FOR_ALL).
+                                commissionRates(com.concordium.sdk.responses.accountinfo.CommissionRates.builder().
+                                        bakingCommission((double) COMMISSION_BAKING_PPHT / 100_000D).
+                                        finalizationCommission((double) COMMISSION_FINALIZATION_PPHT / 100_000D).
+                                        transactionCommission((double) COMMISSION_TRANSACTION_PPHT / 100_000D).
+                                        build()).
+                                build()).
+                        build()).
+                build();
+
+    }
 
     private static AmountFraction toAmountFrac(int commissionPartsPerHundredThousand) {
         return AmountFraction.newBuilder().setPartsPerHundredThousand(commissionPartsPerHundredThousand).build();
@@ -304,6 +325,9 @@ public class ClientV2GetAccountInfoTest {
                         responseObserver.onNext(GRPC_RES_1);
                     if (request.getAccountIdentifier().getAddress().equals(GRPC_RES_2.getAddress()))
                         responseObserver.onNext(GRPC_RES_2);
+                    if (request.getAccountIdentifier().getAddress().equals(GRPC_RES_3.getAddress()))
+                        responseObserver.onNext(GRPC_RES_3);
+
                     responseObserver.onCompleted();
                 }
             }
@@ -321,6 +345,7 @@ public class ClientV2GetAccountInfoTest {
         ManagedChannel channel = grpcCleanup.register(
                 InProcessChannelBuilder.forName(serverName).directExecutor().build());
         client = new ClientV2(10000, channel, Optional.empty());
+        Mockito.reset(serviceImpl);
     }
 
     @Test
@@ -329,6 +354,14 @@ public class ClientV2GetAccountInfoTest {
 
         verify(serviceImpl).getAccountInfo(any(AccountInfoRequest.class), any(StreamObserver.class));
         assertEquals(ACCOUNT_INFO_RES_EXPECTED_1, res);
+    }
+
+    @Test
+    public void getAccountInfoNoPendingChangeTest() {
+        var res = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(ACCOUNT_ADDRESS_2));
+
+        verify(serviceImpl).getAccountInfo(any(AccountInfoRequest.class), any(StreamObserver.class));
+        assertEquals(ACCOUNT_INFO_RES_EXPECTED_2, res);
     }
 
     @Test
@@ -357,9 +390,9 @@ public class ClientV2GetAccountInfoTest {
 
     @Test
     public void mapPendingRemoveStakeChangeTest() {
-        var expected = RemoveStakeChange.builder()
+        var expected = Optional.of(RemoveStakeChange.builder()
                 .effectiveTime(com.concordium.sdk.types.Timestamp.newMillis(BAKER_REDUCE_STAKE_TIME))
-                .build();
+                .build());
 
         var res = ClientV2MapperExtensions.to(StakePendingChange.newBuilder()
                 .setRemove(Timestamp.newBuilder().setValue(BAKER_REDUCE_STAKE_TIME).build())
