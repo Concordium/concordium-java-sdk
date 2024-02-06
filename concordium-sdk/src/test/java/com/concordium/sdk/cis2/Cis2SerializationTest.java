@@ -25,7 +25,7 @@ public class Cis2SerializationTest {
         val cis2Event = SerializationUtils.deserializeCis2Event(event);
         assertEquals(Cis2Event.Type.TRANSFER, cis2Event.getType());
         val transferEvent = (TransferEvent) cis2Event;
-        assertEquals(new byte[0], transferEvent.getTokenId());
+        assertArrayEquals(new byte[0], transferEvent.getTokenId());
         assertEquals(11010000, transferEvent.getTokenAmount());
         assertEquals(AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), transferEvent.getFrom());
         assertEquals(AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), transferEvent.getTo());
@@ -38,7 +38,7 @@ public class Cis2SerializationTest {
         val cis2Event = SerializationUtils.deserializeCis2Event(event);
         assertEquals(Cis2Event.Type.MINT, cis2Event.getType());
         val mintEvent = (MintEvent) cis2Event;
-        assertEquals(new byte[0], mintEvent.getTokenId());
+        assertArrayEquals(new byte[0], mintEvent.getTokenId());
         assertEquals(1000000, mintEvent.getTokenAmount());
         assertEquals(AccountAddress.from("46Pu3wVfURgihzAXoDxMxWucyFo5irXvaEmacNgeK7i49MKyiD"), mintEvent.getOwner());
     }
@@ -50,7 +50,7 @@ public class Cis2SerializationTest {
         val cis2Event = SerializationUtils.deserializeCis2Event(event);
         assertEquals(Cis2Event.Type.BURN, cis2Event.getType());
         val burnEvent = (BurnEvent) cis2Event;
-        assertEquals(new byte[0], burnEvent.getTokenId());
+        assertArrayEquals(new byte[0], burnEvent.getTokenId());
         assertEquals(1000000, burnEvent.getTokenAmount());
         assertEquals(AccountAddress.from("46Pu3wVfURgihzAXoDxMxWucyFo5irXvaEmacNgeK7i49MKyiD"), burnEvent.getOwner());
     }
