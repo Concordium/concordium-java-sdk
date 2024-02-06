@@ -13,10 +13,10 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class BalanceQuery {
-    private final String tokenId;
+    private final byte[] tokenId;
     private final AbstractAddress address;
 
-    public BalanceQuery(String hexTokenId, AbstractAddress address) {
+    public BalanceQuery(byte[] hexTokenId, AbstractAddress address) {
         this.tokenId = hexTokenId;
         this.address = address;
     }

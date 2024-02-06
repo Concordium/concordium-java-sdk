@@ -8,7 +8,6 @@ import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.UInt16;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.apache.commons.codec.binary.Hex;
 
 import java.io.ByteArrayOutputStream;
 import java.net.MalformedURLException;
@@ -40,7 +39,7 @@ public class SerializationUtils {
         val bos = new ByteArrayOutputStream();
         bos.write(UInt16.from(listOfTransfers.size()).getBytesLittleEndian());
         for (Cis2Transfer transfer : listOfTransfers) {
-            bos.write(SerializationUtils.serializeTokenId(transfer.getHexEncodedTokenId()));
+            bos.write(SerializationUtils.serializeTokenId(transfer.getTokenId()));
             writeUnsignedLeb128(bos, transfer.getTokenAmount());
             bos.write(SerializationUtils.serializeAddress(transfer.getSender()));
             bos.write(SerializationUtils.serializeAddress(transfer.getReceiver()));
@@ -105,11 +104,11 @@ public class SerializationUtils {
     }
 
     @SneakyThrows
-    static Parameter serializeTokenIds(List<String> listOfQueries) {
+    static Parameter serializeTokenIds(List<byte[]> listOfQueries) {
         val bos = new ByteArrayOutputStream();
         // lengths are stored as little endian.
         bos.write(UInt16.from(listOfQueries.size()).getBytesLittleEndian());
-        for (String tokenId : listOfQueries) {
+        for (byte[] tokenId : listOfQueries) {
             bos.write(SerializationUtils.serializeTokenId(tokenId));
         }
         return Parameter.from(bos.toByteArray());
@@ -145,13 +144,12 @@ public class SerializationUtils {
     }
 
     @SneakyThrows
-    static byte[] serializeTokenId(String hexTokenId) {
-        byte[] tokenIdBytes = Hex.decodeHex(hexTokenId);
+    static byte[] serializeTokenId(byte[] tokenId) {
         // size of token + serialized token id.
-        val buffer = ByteBuffer.allocate(1 + tokenIdBytes.length);
-        buffer.put((byte) tokenIdBytes.length);
-        if (tokenIdBytes.length != 0) {
-            buffer.put(tokenIdBytes);
+        val buffer = ByteBuffer.allocate(1 + tokenId.length);
+        buffer.put((byte) tokenId.length);
+        if (tokenId.length != 0) {
+            buffer.put(tokenId);
         }
         return buffer.array();
     }

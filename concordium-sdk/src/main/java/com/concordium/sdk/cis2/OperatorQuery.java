@@ -19,7 +19,7 @@ public class OperatorQuery {
     private final AbstractAddress owner;
 
     /**
-     * The address which {@link OperatorQuery#owner} operates.
+     * The address which operates {@link OperatorQuery#owner}.
      */
     private final AbstractAddress address;
 

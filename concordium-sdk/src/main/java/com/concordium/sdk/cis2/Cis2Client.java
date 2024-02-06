@@ -149,11 +149,11 @@ public class Cis2Client {
     /**
      * Query the token metadata for each provided token id
      *
-     * @param hexEncodedTokenIds the hex encoded token ids
+     * @param tokenIds the token ids to query
      * @return A map where the values indicate the token metadata responses for each hex encoded token id.
      */
-    public Map<String, TokenMetadata> tokenMetadata(String... hexEncodedTokenIds) {
-        val listOfQueries = Arrays.asList(hexEncodedTokenIds);
+    public Map<byte[], TokenMetadata> tokenMetadata(byte[]... tokenIds) {
+        val listOfQueries = Arrays.asList(tokenIds);
         val parameter = SerializationUtils.serializeTokenIds(listOfQueries);
         val endpoint = ReceiveName.from(contractName, "tokenMetadata");
         val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, CCDAmount.from(0), endpoint, parameter, MAX_ENERGY));
@@ -161,7 +161,7 @@ public class Cis2Client {
             throw new RuntimeException("operatorOf failed: " + result.getRejectReason().toString());
         }
         val tokenMetadatas = SerializationUtils.deserializeTokenMetadatas(result.getReturnValue());
-        val responses = new HashMap<String, TokenMetadata>();
+        val responses = new HashMap<byte[], TokenMetadata>();
         for (int i = 0; i < tokenMetadatas.length; i++) {
             responses.put(listOfQueries.get(i), tokenMetadatas[i]);
         }

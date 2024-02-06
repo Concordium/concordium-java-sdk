@@ -17,7 +17,7 @@ public class Cis2Transfer {
     /**
      * The hex encoded token id.
      */
-    private final String hexEncodedTokenId;
+    private final byte[] tokenId;
 
     /**
      * The token amount.
@@ -39,8 +39,8 @@ public class Cis2Transfer {
      */
     private final byte[] additionalData;
 
-    public Cis2Transfer(String hexEncodedTokenId, int tokenAmount, AbstractAddress sender, AbstractAddress receiver, byte[] additionalData) {
-        this.hexEncodedTokenId = hexEncodedTokenId;
+    public Cis2Transfer(byte[] tokenId, int tokenAmount, AbstractAddress sender, AbstractAddress receiver, byte[] additionalData) {
+        this.tokenId = tokenId;
         this.tokenAmount = tokenAmount;
         this.sender = sender;
         this.receiver = receiver;
