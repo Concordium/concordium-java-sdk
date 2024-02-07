@@ -32,7 +32,7 @@ public final class AccountInfo {
      * That is, this is the first unused nonce from the perspective of the block that
      * `AccountInfo` is for.
      */
-    private final Nonce accountNonce;
+    private final Nonce Nonce;
     /**
      * The amount of CCD owned by this account.
      */

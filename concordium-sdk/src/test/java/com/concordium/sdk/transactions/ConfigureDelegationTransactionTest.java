@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class ConfigureDelegationTransactionTest {
 
         val transaction = ConfigureDelegationTransaction.builder()
                 .sender(accountAddress)
-                .nonce(AccountNonce.from(123))
+                .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)

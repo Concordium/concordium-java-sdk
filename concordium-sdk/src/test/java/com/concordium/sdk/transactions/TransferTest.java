@@ -20,7 +20,7 @@ public class TransferTest {
     public void testCreateTransfer() {
         TransferTransaction tx = TransactionFactory.newTransfer()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
                 .amount(CCDAmount.fromMicro(17))
@@ -53,7 +53,7 @@ public class TransferTest {
                 .withHeader(TransactionHeader
                         .builder()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .accountNonce(Nonce.from(78910))
+                        .Nonce(Nonce.from(78910))
                         .expiry(UInt64.from(123456))
                         .build())
                 .signWith(

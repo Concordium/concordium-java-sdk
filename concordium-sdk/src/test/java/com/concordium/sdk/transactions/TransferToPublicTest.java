@@ -570,7 +570,7 @@ public class TransferToPublicTest {
                                         "ab6e980b"))
                         .startIndex(EncryptedAmountIndex.from(0))
                         .build())
-                .accountNonce(nonce)
+                .Nonce(nonce)
                 .build();
         val cryptographicParameters = CryptographicParameters.builder()
                 .onChainCommitmentKey(ON_CHAIN_COMMITMENT_KEY)
@@ -584,7 +584,7 @@ public class TransferToPublicTest {
                         accountSecretKey,
                         amountToMakePublic)
                 .sender(accountInfo.getAccountAddress())
-                .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                .nonce(accountInfo.getNonce())
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .build();
@@ -614,7 +614,7 @@ public class TransferToPublicTest {
                                         "ab6e980b"))
                         .startIndex(EncryptedAmountIndex.from(0))
                         .build())
-                .accountNonce(nonce)
+                .Nonce(nonce)
                 .build();
 
         val cases = new CryptographicParameters[]{
@@ -640,7 +640,7 @@ public class TransferToPublicTest {
                                 accountSecretKey,
                                 amountToMakePublic)
                         .sender(accountInfo.getAccountAddress())
-                        .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                        .nonce(accountInfo.getNonce())
                         .expiry(Expiry.from(123456))
                         .signer(TransactionTestHelper.getValidSigner())
                         .build();

@@ -3,6 +3,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import lombok.*;
 
 @Getter
@@ -13,7 +14,7 @@ public class TransferTransaction extends AccountTransaction {
             @NonNull final AccountAddress sender,
             @NonNull final AccountAddress receiver,
             @NonNull final CCDAmount amount,
-            @NonNull final AccountNonce nonce,
+            @NonNull final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
         super(sender, nonce, expiry, signer, Transfer.createNew(receiver, amount), TransactionTypeCost.TRANSFER_BASE_COST.getValue());
@@ -31,7 +32,7 @@ public class TransferTransaction extends AccountTransaction {
             final AccountAddress sender,
             final AccountAddress receiver,
             final CCDAmount amount,
-            final AccountNonce nonce,
+            final Nonce nonce,
             final Expiry expiry,
             final TransactionSigner signer) {
         try {

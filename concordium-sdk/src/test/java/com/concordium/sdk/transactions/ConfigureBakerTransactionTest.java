@@ -3,6 +3,7 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt32;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -34,7 +35,7 @@ public class ConfigureBakerTransactionTest {
 
         val transaction = TransactionFactory.newConfigureBaker()
                 .sender(accountAddress)
-                .nonce(AccountNonce.from(123))
+                .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)
@@ -55,7 +56,7 @@ public class ConfigureBakerTransactionTest {
 
         val transaction = TransactionFactory.newConfigureBaker()
                 .sender(accountAddress)
-                .nonce(AccountNonce.from(123))
+                .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)
@@ -82,7 +83,7 @@ public class ConfigureBakerTransactionTest {
 
         val transaction = TransactionFactory.newConfigureBaker()
                 .sender(accountAddress)
-                .nonce(AccountNonce.from(123))
+                .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)
@@ -103,7 +104,7 @@ public class ConfigureBakerTransactionTest {
 
         val transaction = TransactionFactory.newConfigureBaker()
                 .sender(accountAddress)
-                .nonce(AccountNonce.from(123))
+                .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)

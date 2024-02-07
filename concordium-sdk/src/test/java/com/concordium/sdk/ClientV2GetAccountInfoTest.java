@@ -248,7 +248,7 @@ public class ClientV2GetAccountInfoTest {
                                 transaction(Hash.from(RELEASE_TRANSACTION_HASH)).
                                 build())).
                         build()).
-                accountNonce(Nonce.from(SEQUENCE_NUMBER)).
+                Nonce(Nonce.from(SEQUENCE_NUMBER)).
                 accountCredential(Index.from(0), Credential.
                         builder().
                         type(CredentialType.NORMAL).

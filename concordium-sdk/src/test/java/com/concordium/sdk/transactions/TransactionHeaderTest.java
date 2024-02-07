@@ -14,7 +14,7 @@ public class TransactionHeaderTest {
         val header = TransactionHeader
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .accountNonce(Nonce.from(78910))
+                .Nonce(Nonce.from(78910))
                 .expiry(UInt64.from(123456))
                 .build();
         header.setPayloadSize(UInt32.from(41));

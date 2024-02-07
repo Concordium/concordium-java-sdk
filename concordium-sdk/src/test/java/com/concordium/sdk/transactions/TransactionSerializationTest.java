@@ -46,7 +46,7 @@ public class TransactionSerializationTest {
         // check header
         TransactionHeader header = ((AccountTransaction) blockItem).getHeader();
         assertEquals(AccountAddress.from("3LFSxgiU4d7i1irUx1pNrQFFC74RxHBRaNztKWKDVJ1FJN8UP1"), header.getSender());
-        assertEquals(Nonce.from(1), header.getAccountNonce());
+        assertEquals(Nonce.from(1), header.getNonce());
         assertEquals(UInt64.from(1690898672), header.getExpiry());
         // check payload
         TransactionType transactionType = payload.getTransactionType();
@@ -69,7 +69,7 @@ public class TransactionSerializationTest {
         // check header
         TransactionHeader header = ((AccountTransaction) blockItem).getHeader();
         assertEquals(AccountAddress.from("4aM9746fwvhvh567MWWvmAgEtYmN9TwfhdEbWLRY8FzomGrtps"), header.getSender());
-        assertEquals(Nonce.from(5), header.getAccountNonce());
+        assertEquals(Nonce.from(5), header.getNonce());
         assertEquals(UInt64.from(1690969995), header.getExpiry());
         // check payload
         TransactionType transactionType = payload.getTransactionType();
@@ -93,7 +93,7 @@ public class TransactionSerializationTest {
             .withHeader(TransactionHeader
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                    .accountNonce(Nonce.from(78910))
+                    .Nonce(Nonce.from(78910))
                     .expiry(UInt64.from(123456))
                     .build())
             .signWith(
