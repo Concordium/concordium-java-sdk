@@ -68,7 +68,7 @@ public class Cis2WCCD implements Callable<Integer> {
                 .timeout(timeout)
                 .build();
         var client = ClientV2.from(connection);
-        Nonce nonce = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(AccountAddress.from(SENDER_ADDRESS))).getAccountNonce();
+        Nonce nonce = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(AccountAddress.from(SENDER_ADDRESS))).getNonce();
         switch (this.methodName) {
             case INIT:
                 handleInit(client, nonce);
@@ -136,7 +136,7 @@ public class Cis2WCCD implements Callable<Integer> {
                 .sender(AccountAddress.from(SENDER_ADDRESS))
                 .payload(payload)
                 .expiry(EXPIRY)
-                .nonce(AccountNonce.from(nonce))
+                .nonce(Nonce.from(nonce))
                 .signer(SIGNER)
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
@@ -152,7 +152,7 @@ public class Cis2WCCD implements Callable<Integer> {
                 .sender(AccountAddress.from(SENDER_ADDRESS))
                 .payload(payload)
                 .expiry(EXPIRY)
-                .nonce(AccountNonce.from(nonce))
+                .nonce(Nonce.from(nonce))
                 .signer(SIGNER)
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
