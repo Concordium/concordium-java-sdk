@@ -146,9 +146,10 @@ public class SerializationUtils {
     @SneakyThrows
     static byte[] serializeTokenId(TokenId tokenId) {
         // size of token + serialized token id.
-        val buffer = ByteBuffer.allocate(1 + tokenId.getSize());
-        buffer.put((byte) tokenId.getSize());
-        if (tokenId.getSize() != 0) {
+        val tokenSize = tokenId.getSize();
+        val buffer = ByteBuffer.allocate(1 + tokenSize);
+        buffer.put((byte) tokenSize);
+        if (tokenSize != 0) {
             buffer.put(tokenId.getBytes());
         }
         return buffer.array();

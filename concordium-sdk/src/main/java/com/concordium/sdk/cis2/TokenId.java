@@ -3,8 +3,17 @@ package com.concordium.sdk.cis2;
 import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
+import com.google.common.collect.Lists;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
+import lombok.val;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple wrapper around the actual token id.
@@ -13,6 +22,7 @@ import lombok.Getter;
  */
 @EqualsAndHashCode
 @Getter
+@ToString
 public class TokenId {
 
     private static final int MAX_BYTES_SIZE = 256;
@@ -52,30 +62,48 @@ public class TokenId {
     }
 
     /**
-     * Create a token id that consists of two bytes
+     * Create a token id from the {@link UInt16} in little endian
      * @param value the token id
      * @return a new token id
      */
     public static TokenId from(UInt16 value) {
-        return new TokenId(value.getBytes());
+        val tokenBytes = value.getBytes();
+        reverseByteArray(tokenBytes);
+        return new TokenId(tokenBytes);
     }
 
     /**
-     * Create a token id that consists of four bytes
+     * Create a token id from the {@link UInt32} in little endian
      * @param value the token id
      * @return a new token id
      */
     public static TokenId from(UInt32 value) {
-        return new TokenId(value.getBytes());
+        val tokenBytes = value.getBytes();
+        reverseByteArray(tokenBytes);
+        return new TokenId(tokenBytes);
     }
 
     /**
-     * Create a token id that consists of eight bytes
+     *Create a token id from the {@link UInt64} in little endian
      * @param value the token id
      * @return a new token id
      */
     public static TokenId from(UInt64 value) {
-        return new TokenId(value.getBytes());
+        val tokenBytes = value.getBytes();
+        reverseByteArray(tokenBytes);
+        return new TokenId(tokenBytes);
     }
 
+    /**
+     * reverse a byte array
+     * @param array the array to reverse
+     */
+    private static void reverseByteArray(byte[] array) {
+        int length = array.length;
+        for (int i = 0; i < length / 2; i++) {
+            byte temp = array[i];
+            array[i] = array[length - i - 1];
+            array[length - i - 1] = temp;
+        }
+    }
 }
