@@ -79,6 +79,11 @@ public final class BakerKeys {
 
     }
 
+    @SneakyThrows
+    public String toJson(){
+        return JsonMapper.INSTANCE.writeValueAsString(this);
+    }
+
 
     /**
      * Write the {@link BakerCredentials} to the provided Writer with the supplied baker id.

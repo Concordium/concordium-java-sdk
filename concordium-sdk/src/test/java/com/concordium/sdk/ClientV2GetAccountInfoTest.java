@@ -18,6 +18,7 @@ import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.accountinfo.*;
 import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.EncryptedAmountIndex;
 import com.concordium.sdk.transactions.Hash;
@@ -295,9 +296,9 @@ public class ClientV2GetAccountInfoTest {
                                 metadataUrl(BAKER_POOL_URL).
                                 openStatus(com.concordium.sdk.responses.transactionstatus.OpenStatus.OPEN_FOR_ALL).
                                 commissionRates(com.concordium.sdk.responses.accountinfo.CommissionRates.builder().
-                                        bakingCommission((double) COMMISSION_BAKING_PPHT / 100_000D).
-                                        finalizationCommission((double) COMMISSION_FINALIZATION_PPHT / 100_000D).
-                                        transactionCommission((double) COMMISSION_TRANSACTION_PPHT / 100_000D).
+                                        bakingCommission(PartsPerHundredThousand.from(COMMISSION_BAKING_PPHT)).
+                                        finalizationCommission(PartsPerHundredThousand.from(COMMISSION_FINALIZATION_PPHT)).
+                                        transactionCommission(PartsPerHundredThousand.from(COMMISSION_TRANSACTION_PPHT)).
                                         build()).
                                 build()).
                         build()).

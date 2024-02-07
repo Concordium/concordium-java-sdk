@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
 import com.concordium.sdk.responses.BakerId;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt32;
@@ -27,9 +28,9 @@ public class ConfigureBakerTransactionTest {
                 .openForDelegation(false)
                 .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, bakerKeys))
                 .metadataUrl("abc@xyz.com")
-                .transactionFeeCommission(UInt32.from(10000))
-                .bakingRewardCommission(UInt32.from(10000))
-                .finalizationRewardCommission(UInt32.from(100000))
+                .transactionFeeCommission(PartsPerHundredThousand.from(10000))
+                .bakingRewardCommission(PartsPerHundredThousand.from(10000))
+                .finalizationRewardCommission(PartsPerHundredThousand.from(100000))
                 .build();
 
 
@@ -75,9 +76,9 @@ public class ConfigureBakerTransactionTest {
                 .restakeEarnings(true)
                 .openForDelegation(false)
                 .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, BakerKeys.createBakerKeys()))
-                .transactionFeeCommission(UInt32.from(10000))
-                .bakingRewardCommission(UInt32.from(10000))
-                .finalizationRewardCommission(UInt32.from(100000))
+                .transactionFeeCommission(PartsPerHundredThousand.from(10000))
+                .bakingRewardCommission(PartsPerHundredThousand.from(10000))
+                .finalizationRewardCommission(PartsPerHundredThousand.from(100000))
                 .build();
 
 

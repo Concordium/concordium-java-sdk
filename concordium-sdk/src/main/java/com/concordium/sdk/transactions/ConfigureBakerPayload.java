@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt32;
 import lombok.Builder;
@@ -40,18 +41,22 @@ public class ConfigureBakerPayload {
      * The URL referencing the baker's metadata.
      */
     private final String metadataUrl;
+
     /**
      * The commission the pool owner takes on transaction fees.
+     * The supplied value is interpreted as "the value" / 100_000
      */
-    private final UInt32 transactionFeeCommission;
+    private final PartsPerHundredThousand transactionFeeCommission;
     /**
      * The commission the pool owner takes on baking rewards.
+     * The supplied value is interpreted as "the value" / 100_000
      */
-    private final UInt32 bakingRewardCommission;
+    private final PartsPerHundredThousand bakingRewardCommission;
     /**
      * The commission the pool owner takes on finalization rewards.
+     * The supplied value is interpreted as "the value" / 100_000
      */
-    private final UInt32 finalizationRewardCommission;
+    private final PartsPerHundredThousand finalizationRewardCommission;
 
     ByteBuffer createNotNullBuffer(byte[] bufferBytes) {
         val buffer = ByteBuffer.allocate(bufferBytes.length);
@@ -73,11 +78,11 @@ public class ConfigureBakerPayload {
         it *= 2;
         bitValue |= ((this.metadataUrl != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.transactionFeeCommission != null) ? it : 0);
+        bitValue |= (!Objects.isNull(this.transactionFeeCommission ) ? it : 0);
         it *= 2;
-        bitValue |= ((this.bakingRewardCommission != null) ? it : 0);
+        bitValue |= (!Objects.isNull(this.bakingRewardCommission) ? it : 0);
         it *= 2;
-        bitValue |= ((this.finalizationRewardCommission != null) ? it : 0);
+        bitValue |= (!Objects.isNull(this.finalizationRewardCommission) ? it : 0);
 
         return UInt16.from(bitValue).getBytes();
     }
