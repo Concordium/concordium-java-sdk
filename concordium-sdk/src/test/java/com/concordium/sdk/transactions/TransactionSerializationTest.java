@@ -2,6 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.cis2.Cis2Transfer;
 import com.concordium.sdk.cis2.SerializationUtils;
+import com.concordium.sdk.cis2.TokenId;
 import com.concordium.sdk.cis2.events.Cis2Event;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.types.*;
@@ -108,7 +109,7 @@ public class TransactionSerializationTest {
         assertEquals(CCDAmount.from(0), updateContract.getAmount());
         assertEquals(ContractAddress.from(9390, 0), updateContract.getContractAddress());
         assertEquals(ReceiveName.from("euroe_stablecoin", "transfer"), updateContract.getReceiveName());
-        Cis2Transfer expectedParameters = new Cis2Transfer(new byte[0], 11078313, AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), null);
+        Cis2Transfer expectedParameters = new Cis2Transfer(TokenId.from(new byte[0]), 11078313, AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), null);
         byte[] expectedParams = updateContract.getParam().getBytes();
         byte[] cis2TransferParams = SerializationUtils.serializeTransfers(Lists.newArrayList(expectedParameters)).getBytes();
         assertArrayEquals(expectedParams, Arrays.concatenate(UInt16.from(cis2TransferParams.length).getBytes(), cis2TransferParams));

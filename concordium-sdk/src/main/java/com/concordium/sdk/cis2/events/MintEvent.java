@@ -1,5 +1,6 @@
 package com.concordium.sdk.cis2.events;
 
+import com.concordium.sdk.cis2.TokenId;
 import com.concordium.sdk.types.AbstractAddress;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class MintEvent implements Cis2Event {
     /**
      * ID of the token that was minted.
      */
-    private final byte[] tokenId;
+    private final TokenId tokenId;
 
     /**
      * Amount of tokens that was minted.
@@ -29,7 +30,7 @@ public class MintEvent implements Cis2Event {
      */
     private final AbstractAddress owner;
 
-    public MintEvent(byte[] tokenId, long tokenAmount, AbstractAddress owner) {
+    public MintEvent(TokenId tokenId, long tokenAmount, AbstractAddress owner) {
         this.tokenId = tokenId;
         this.tokenAmount = tokenAmount;
         this.owner = owner;

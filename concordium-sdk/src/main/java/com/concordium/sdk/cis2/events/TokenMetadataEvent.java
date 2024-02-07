@@ -1,5 +1,6 @@
 package com.concordium.sdk.cis2.events;
 
+import com.concordium.sdk.cis2.TokenId;
 import com.concordium.sdk.cis2.TokenMetadata;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,16 +16,16 @@ import lombok.ToString;
 public class TokenMetadataEvent implements Cis2Event {
 
     /**
-     * The token id which as
+     * The token id which was queried
      */
-    private final byte[] tokenId;
+    private final TokenId tokenId;
 
     /**
      * The new metadata url for the token.
      */
     private final TokenMetadata metadataUrl;
 
-    public TokenMetadataEvent(byte[] tokenId, TokenMetadata metadataUrl) {
+    public TokenMetadataEvent(TokenId tokenId, TokenMetadata metadataUrl) {
         this.tokenId = tokenId;
         this.metadataUrl = metadataUrl;
     }

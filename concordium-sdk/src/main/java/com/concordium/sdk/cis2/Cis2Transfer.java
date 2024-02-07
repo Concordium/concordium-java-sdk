@@ -15,9 +15,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Cis2Transfer {
     /**
-     * The hex encoded token id.
+     * The token id.
      */
-    private final byte[] tokenId;
+    private final TokenId tokenId;
 
     /**
      * The token amount.
@@ -39,7 +39,7 @@ public class Cis2Transfer {
      */
     private final byte[] additionalData;
 
-    public Cis2Transfer(byte[] tokenId, int tokenAmount, AbstractAddress sender, AbstractAddress receiver, byte[] additionalData) {
+    public Cis2Transfer(TokenId tokenId, int tokenAmount, AbstractAddress sender, AbstractAddress receiver, byte[] additionalData) {
         this.tokenId = tokenId;
         this.tokenAmount = tokenAmount;
         this.sender = sender;

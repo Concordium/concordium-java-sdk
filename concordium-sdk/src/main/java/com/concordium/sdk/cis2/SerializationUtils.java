@@ -104,11 +104,11 @@ public class SerializationUtils {
     }
 
     @SneakyThrows
-    static Parameter serializeTokenIds(List<byte[]> listOfQueries) {
+    static Parameter serializeTokenIds(List<TokenId> listOfQueries) {
         val bos = new ByteArrayOutputStream();
         // lengths are stored as little endian.
         bos.write(UInt16.from(listOfQueries.size()).getBytesLittleEndian());
-        for (byte[] tokenId : listOfQueries) {
+        for (TokenId tokenId : listOfQueries) {
             bos.write(SerializationUtils.serializeTokenId(tokenId));
         }
         return Parameter.from(bos.toByteArray());
@@ -144,12 +144,12 @@ public class SerializationUtils {
     }
 
     @SneakyThrows
-    static byte[] serializeTokenId(byte[] tokenId) {
+    static byte[] serializeTokenId(TokenId tokenId) {
         // size of token + serialized token id.
-        val buffer = ByteBuffer.allocate(1 + tokenId.length);
-        buffer.put((byte) tokenId.length);
-        if (tokenId.length != 0) {
-            buffer.put(tokenId);
+        val buffer = ByteBuffer.allocate(1 + tokenId.getSize());
+        buffer.put((byte) tokenId.getSize());
+        if (tokenId.getSize() != 0) {
+            buffer.put(tokenId.getBytes());
         }
         return buffer.array();
     }
@@ -264,19 +264,19 @@ public class SerializationUtils {
     }
 
     public static Cis2Event deserializeTransferEvent(ByteBuffer buffer) {
-        val hexTokenId = deserializeTokenId(buffer);
+        val tokenId = deserializeTokenId(buffer);
         val tokenAmount = readUnsignedLeb128(buffer);
         val from = deserializeAddress(buffer);
         val to = deserializeAddress(buffer);
-        return new TransferEvent(hexTokenId, tokenAmount, from, to);
+        return new TransferEvent(tokenId, tokenAmount, from, to);
     }
 
     @SneakyThrows
-    static byte[] deserializeTokenId(ByteBuffer buffer) {
+    static TokenId deserializeTokenId(ByteBuffer buffer) {
         byte tokenLength = buffer.get();
         val tokenBuffer = new byte[tokenLength];
         buffer.get(tokenBuffer);
-        return tokenBuffer;
+        return TokenId.from(tokenBuffer);
     }
 
     static AbstractAddress deserializeAddress(ByteBuffer buffer) {
