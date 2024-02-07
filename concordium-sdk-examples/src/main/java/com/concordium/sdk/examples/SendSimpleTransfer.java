@@ -52,12 +52,12 @@ public class SendSimpleTransfer implements Callable<Integer> {
 
         var client = ClientV2.from(connection);
         var senderInfo = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(sender));
-        var nonce = senderInfo.getAccountNonce();
+        var nonce = senderInfo.getNonce();
         var txnHash = client.sendTransaction(TransactionFactory.newTransfer()
                 .sender(sender)
                 .receiver(receiver)
                 .amount(amount)
-                .nonce(AccountNonce.from(nonce))
+                .nonce(nonce)
                 .expiry(expiry)
                 .signer(signer)
                 .build());
