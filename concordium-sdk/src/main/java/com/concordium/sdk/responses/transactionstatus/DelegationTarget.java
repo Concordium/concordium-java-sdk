@@ -3,11 +3,9 @@ package com.concordium.sdk.responses.transactionstatus;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.transactions.TransactionType;
 import com.concordium.sdk.types.UInt16;
+import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
@@ -53,15 +51,15 @@ public class DelegationTarget {
     }
 
     public byte[] getBytes() {
-        ByteBuffer buffer = ByteBuffer.allocate(TransactionType.BYTES);
         if (this.type == DelegationType.PASSIVE) {
-            buffer.put((byte) 0);
+            return new byte[]{0}; // tag for passive delegation
         } else if (type == DelegationType.BAKER) {
-            buffer = ByteBuffer.allocate(TransactionType.BYTES + UInt16.BYTES);
+            val buffer = ByteBuffer.allocate(1 + UInt64.BYTES); // baker tag + size of a baker id.
             buffer.put((byte) 1);
             buffer.put(this.bakerId.getBytes());
+            return buffer.array();
         }
-        return buffer.array();
+        throw new IllegalArgumentException("Illegal DelegationType. Must be either PASSIVE or BAKER");
     }
 
     @ToString

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.val;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 /**
  * Payload for configuring a baker.
@@ -30,7 +31,7 @@ public class ConfigureBakerPayload {
     /**
      * Whether the pool is open for delegators.
      */
-    private final Integer openForDelegation;
+    private final Boolean openForDelegation;
     /**
      * The key/proof pairs to verify the baker.
      */
@@ -64,9 +65,9 @@ public class ConfigureBakerPayload {
 
         bitValue |= ((this.capital != null) ? it : 0);
         it *= 2;
-        bitValue |= ((this.restakeEarnings != null) ? it : 0);
+        bitValue |= (!(Objects.isNull(this.restakeEarnings)) ? it : 0);
         it *= 2;
-        bitValue |= ((this.openForDelegation != null) ? it : 0);
+        bitValue |= (!Objects.isNull(this.openForDelegation) ? it : 0);
         it *= 2;
         bitValue |= ((this.keysWithProofs != null) ? it : 0);
         it *= 2;
@@ -109,7 +110,7 @@ public class ConfigureBakerPayload {
         }
 
         if (this.openForDelegation != null) {
-            val openForDelegationByte = this.openForDelegation.byteValue();
+            val openForDelegationByte = (byte) (this.openForDelegation ? 1 : 0);
             openForDelegationBuffer = createNotNullBuffer(new byte[]{openForDelegationByte});
             bufferLength += TransactionType.BYTES;
         }
