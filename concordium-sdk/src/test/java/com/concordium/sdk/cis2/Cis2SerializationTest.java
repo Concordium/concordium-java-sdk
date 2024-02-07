@@ -25,7 +25,7 @@ public class Cis2SerializationTest {
         val cis2Event = SerializationUtils.deserializeCis2Event(event);
         assertEquals(Cis2Event.Type.TRANSFER, cis2Event.getType());
         val transferEvent = (TransferEvent) cis2Event;
-        assertEquals(TokenId.from(new byte[0]), transferEvent.getTokenId());
+        assertEquals(TokenId.min(), transferEvent.getTokenId());
         assertEquals(11010000, transferEvent.getTokenAmount());
         assertEquals(AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), transferEvent.getFrom());
         assertEquals(AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), transferEvent.getTo());
@@ -38,7 +38,7 @@ public class Cis2SerializationTest {
         val cis2Event = SerializationUtils.deserializeCis2Event(event);
         assertEquals(Cis2Event.Type.MINT, cis2Event.getType());
         val mintEvent = (MintEvent) cis2Event;
-        assertEquals(TokenId.from(new byte[0]), mintEvent.getTokenId());
+        assertEquals(TokenId.min(), mintEvent.getTokenId());
         assertEquals(1000000, mintEvent.getTokenAmount());
         assertEquals(AccountAddress.from("46Pu3wVfURgihzAXoDxMxWucyFo5irXvaEmacNgeK7i49MKyiD"), mintEvent.getOwner());
     }
@@ -50,7 +50,7 @@ public class Cis2SerializationTest {
         val cis2Event = SerializationUtils.deserializeCis2Event(event);
         assertEquals(Cis2Event.Type.BURN, cis2Event.getType());
         val burnEvent = (BurnEvent) cis2Event;
-        assertEquals(TokenId.from(new byte[0]), burnEvent.getTokenId());
+        assertEquals(TokenId.min(), burnEvent.getTokenId());
         assertEquals(1000000, burnEvent.getTokenAmount());
         assertEquals(AccountAddress.from("46Pu3wVfURgihzAXoDxMxWucyFo5irXvaEmacNgeK7i49MKyiD"), burnEvent.getOwner());
     }
@@ -73,7 +73,7 @@ public class Cis2SerializationTest {
         // this is a raw transfer parameter i.e. the length of the actual parameter is not included.
         val expectedParameter = Hex.decodeHex("010000a995a405009e15fc57bbe167411d4d9c0686e31e8e937d751625972f7c566de4a97f650dc500fd3dd07c83e42461554cf0dd90d73c1ff04531fc2b9c90b9762df8793319e48d0000");
         val transfers = new ArrayList<Cis2Transfer>();
-        transfers.add(new Cis2Transfer(TokenId.from(new byte[0]), 11078313, AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), null));
+        transfers.add(new Cis2Transfer(TokenId.min(), 11078313, AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), null));
         Parameter parameter = SerializationUtils.serializeTransfers(transfers);
         byte[] lengthBytes = UInt16.from(expectedParameter.length).getBytes();
         assertArrayEquals(Arrays.concatenate(lengthBytes, expectedParameter), parameter.getBytes());
@@ -85,7 +85,7 @@ public class Cis2SerializationTest {
         // this is a raw transfer parameter i.e. the length of the actual parameter is not included.
         val expectedParameter = Hex.decodeHex("010000a995a405009e15fc57bbe167411d4d9c0686e31e8e937d751625972f7c566de4a97f650dc500fd3dd07c83e42461554cf0dd90d73c1ff04531fc2b9c90b9762df8793319e48d010001");
         val transfers = new ArrayList<Cis2Transfer>();
-        transfers.add(new Cis2Transfer(TokenId.from(new byte[0]), 11078313, AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), new byte[]{1}));
+        transfers.add(new Cis2Transfer(TokenId.min(), 11078313, AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), new byte[]{1}));
         Parameter parameter = SerializationUtils.serializeTransfers(transfers);
         byte[] lengthBytes = UInt16.from(expectedParameter.length).getBytes();
         assertArrayEquals(Arrays.concatenate(lengthBytes, expectedParameter), parameter.getBytes());
