@@ -1,6 +1,7 @@
 # Changelog
 
 # Unreleased changes
+ - Fix serialization of `ConfigureDelegation` transaction
  - Remove `AccountNonce` in favor of just using the `Nonce` type across the API.
  - Fix a bug in the serialization of `AccountIndex`
  - Fix a bug that caused `getAccountInfo` to fail for delegator and baker accounts if they had no stake pending changes. 
