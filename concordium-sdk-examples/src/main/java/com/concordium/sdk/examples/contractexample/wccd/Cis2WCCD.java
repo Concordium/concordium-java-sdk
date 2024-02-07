@@ -136,7 +136,7 @@ public class Cis2WCCD implements Callable<Integer> {
                 .sender(AccountAddress.from(SENDER_ADDRESS))
                 .payload(payload)
                 .expiry(EXPIRY)
-                .nonce(Nonce.from(nonce))
+                .nonce(nonce)
                 .signer(SIGNER)
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
@@ -152,7 +152,7 @@ public class Cis2WCCD implements Callable<Integer> {
                 .sender(AccountAddress.from(SENDER_ADDRESS))
                 .payload(payload)
                 .expiry(EXPIRY)
-                .nonce(Nonce.from(nonce))
+                .nonce(nonce)
                 .signer(SIGNER)
                 .maxEnergyCost(UInt64.from(10000))
                 .build();
