@@ -1,5 +1,8 @@
 package com.concordium.sdk.cis2;
 
+import com.concordium.sdk.types.UInt16;
+import com.concordium.sdk.types.UInt32;
+import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -46,6 +49,33 @@ public class TokenId {
             throw new IllegalArgumentException("TokenId supersedes max allowed size.");
         }
         return new TokenId(bytes);
+    }
+
+    /**
+     * Create a token id that consists of two bytes
+     * @param value the token id
+     * @return a new token id
+     */
+    public static TokenId from(UInt16 value) {
+        return new TokenId(value.getBytes());
+    }
+
+    /**
+     * Create a token id that consists of four bytes
+     * @param value the token id
+     * @return a new token id
+     */
+    public static TokenId from(UInt32 value) {
+        return new TokenId(value.getBytes());
+    }
+
+    /**
+     * Create a token id that consists of eight bytes
+     * @param value the token id
+     * @return a new token id
+     */
+    public static TokenId from(UInt64 value) {
+        return new TokenId(value.getBytes());
     }
 
 }
