@@ -1,6 +1,7 @@
 package com.concordium.sdk.cis2;
 
 import com.concordium.sdk.responses.transactionstatus.RejectReason;
+import com.concordium.sdk.responses.transactionstatus.RejectReasonRejectedInit;
 import com.concordium.sdk.responses.transactionstatus.RejectReasonRejectedReceive;
 import com.concordium.sdk.responses.transactionstatus.RejectReasonType;
 import lombok.EqualsAndHashCode;
@@ -40,13 +41,17 @@ public class Cis2Error {
     /**
      * Parse a CIS2Error from the provided reject reason.
      * <p>
-     * The provided reject reason MUST be of type {@link RejectReasonType#REJECTED_RECEIVE}
+     * The provided reject reason MUST be of type {@link RejectReasonType#REJECTED_RECEIVE} or {@link RejectReasonType#REJECTED_INIT}
      *
      * @param rejectReason the reject reason
      * @return the parsed {@link Cis2Error}
      */
     static Cis2Error from(RejectReason rejectReason) {
-        return Cis2Error.from(((RejectReasonRejectedReceive) rejectReason).getRejectReason());
+        if (rejectReason.getType() == RejectReasonType.REJECTED_RECEIVE) {
+            return Cis2Error.from(((RejectReasonRejectedReceive) rejectReason).getRejectReason());
+        } else {
+            return Cis2Error.from(((RejectReasonRejectedInit) rejectReason).getRejectedInit());
+        }
     }
 
     public enum Type {

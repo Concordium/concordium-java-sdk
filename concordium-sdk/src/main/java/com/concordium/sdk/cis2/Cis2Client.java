@@ -21,7 +21,10 @@ import com.concordium.sdk.types.AbstractAddress;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.UInt64;
+import com.google.common.collect.Lists;
+import lombok.Getter;
 import lombok.val;
+import lombok.var;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,9 +32,10 @@ import java.util.stream.Collectors;
 /**
  * A client dedicated to the CIS2 <a href="https://proposals.concordium.software/CIS/cis-2.html">specification</a>.
  */
+@Getter
 public class Cis2Client {
 
-    private final ClientV2 client;
+    final ClientV2 client;
     private final ContractAddress contractAddress;
     private final InitName contractName;
 
@@ -174,20 +178,27 @@ public class Cis2Client {
      * @param to   block to end from
      * @return the list of events.
      */
-    public List<Cis2EventWithMetadata> getEvents(BlockQuery from, BlockQuery to) {
-        long current = this.client.getBlockInfo(from).getBlockHeight().getValue();
+    public Iterator<Cis2EventWithMetadata> getEvents(BlockQuery from, BlockQuery to) {
+        final long[] current = {this.client.getBlockInfo(from).getBlockHeight().getValue()};
         val end = this.client.getBlockInfo(to).getBlockHeight().getValue();
-        if (current >= end) {
+        if (current[0] >= end) {
             throw new IllegalArgumentException("Starting block must be before the end block");
         }
-        val accumulator = new ArrayList<Cis2EventWithMetadata>();
-        while (current <= end) {
-            val events = getEventsFor(BlockQuery.HEIGHT(BlocksAtHeightRequest.newAbsolute(current)));
-            accumulator.addAll(events);
-            current++;
-        }
-        return accumulator;
+        return new Cis2EventIterator(this, new Iterator<BlockQuery>() {
+            @Override
+            public boolean hasNext() {
+                return end > current[0];
+            }
+
+            @Override
+            public BlockQuery next() {
+                BlockQuery query = BlockQuery.HEIGHT(BlocksAtHeightRequest.newAbsolute(current[0]));
+                current[0] = current[0] + 1;
+                return query;
+            }
+        });
     }
+
 
     /**
      * Get any events associated emitted from the specified CIS2 contract.
@@ -195,12 +206,8 @@ public class Cis2Client {
      * @param queries blocks to query
      * @return the list of events.
      */
-    public List<Cis2EventWithMetadata> getEventsFor(BlockQuery... queries) {
-        val accumulator = new ArrayList<Cis2EventWithMetadata>();
-        for (BlockQuery query : queries) {
-            accumulator.addAll(getEventsFor(query));
-        }
-        return accumulator;
+    public Iterator<Cis2EventWithMetadata> getEventsFor(BlockQuery... queries) {
+        return new Cis2EventIterator(this, Lists.newArrayList(queries).iterator());
     }
 
     /**
@@ -211,7 +218,7 @@ public class Cis2Client {
      * @return the list of events which originated from the specified transaction hash.
      * @throws IllegalArgumentException if the transaction was not finalized.
      */
-    public List<Cis2EventWithMetadata> getEventsForFinalizedTransaction(Hash transactionHash) {
+    public Iterator<Cis2EventWithMetadata> getEventsForFinalizedTransaction(Hash transactionHash) {
         val status = this.client.getBlockItemStatus(transactionHash);
         if (!status.getFinalizedBlockItem().isPresent()) {
             if (status.getCommittedBlockItem().isPresent()) {
@@ -221,8 +228,7 @@ public class Cis2Client {
         }
         val accumulator = new ArrayList<Cis2EventWithMetadata>();
         val finalizedTransaction = status.getFinalizedBlockItem().get();
-        extractCis2Events(BlockQuery.HASH(finalizedTransaction.getBlockHash()), accumulator, finalizedTransaction.getSummary());
-        return accumulator;
+        return new Cis2EventIterator(this, Lists.newArrayList(BlockQuery.HASH(finalizedTransaction.getBlockHash())).iterator());
     }
 
 
@@ -232,47 +238,9 @@ public class Cis2Client {
      * @param blockQuery the block to query events for.
      * @return The list of events if there are any.
      */
-    private List<Cis2EventWithMetadata> getEventsFor(BlockQuery blockQuery) {
-        val accumulator = new ArrayList<Cis2EventWithMetadata>();
-        val summaries = this.client.getBlockTransactionEvents(blockQuery);
-        while (summaries.hasNext()) {
-            val summary = summaries.next();
-            extractCis2Events(blockQuery, accumulator, summary);
-        }
-        return accumulator;
+    private Iterator<Cis2EventWithMetadata> getEventsFor(BlockQuery blockQuery) {
+        return new Cis2EventIterator(this, Lists.newArrayList(blockQuery).iterator());
     }
 
-    /**
-     * Extract any events from the CIS2 specified contract.
-     * The events are added to the supplied accumulator.
-     *
-     * @param blockQuery  a block identifier.
-     * @param accumulator accumulator used for aggregating the events.
-     * @param summary     the transaction summary to extract from.
-     */
-    private void extractCis2Events(BlockQuery blockQuery, ArrayList<Cis2EventWithMetadata> accumulator, Summary summary) {
-        if (summary.getDetails().getType() == Type.ACCOUNT_TRANSACTION) {
-            val details = summary.getDetails().getAccountTransactionDetails();
-            val eventType = details.getType();
-            boolean isRelevantEventType = eventType == TransactionResultEventType.CONTRACT_UPDATED
-                    || eventType == TransactionResultEventType.CONTRACT_INITIALIZED;
-            if (details.isSuccessful()
-                    && isRelevantEventType) {
-                val contractUpdated = details.getContractUpdated();
-                for (ContractTraceElement contractTraceElement : contractUpdated) {
-                    if (contractTraceElement.getTraceType() == ContractTraceElementType.INSTANCE_UPDATED) {
-                        val updatedEvent = (ContractUpdated) contractTraceElement;
-                        if (this.contractAddress.equals(updatedEvent.getAddress())) {
-                            for (byte[] event : updatedEvent.getEvents()) {
-                                accumulator.add(Cis2EventWithMetadata.ok(SerializationUtils.deserializeCis2Event(event), blockQuery, summary.getTransactionHash()));
-                            }
-                        }
-                    }
-                }
-            } else if (!Objects.isNull(details.getRejectReason())) {
-                accumulator.add(Cis2EventWithMetadata.err(Cis2Error.from(details.getRejectReason()), blockQuery, summary.getTransactionHash()));
-            }
-        }
-    }
 
 }
