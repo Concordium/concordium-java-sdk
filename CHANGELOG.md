@@ -1,7 +1,7 @@
 # Changelog
 
 # Unreleased changes
- - Cleanup the API a bit for configure baker transaction.
+ - Cleanup the API a bit for configure baker transaction by using `PartsPerHundredThousands` for determining the commission rates.
  - Fix serialization of `ConfigureDelegation` transaction
  - Remove `AccountNonce` in favor of just using the `Nonce` type across the API.
  - Fix a bug in the serialization of `AccountIndex`
