@@ -37,23 +37,6 @@ public class Cis2Error {
         return new Cis2Error(Type.CUSTOM, errorCode);
     }
 
-
-    /**
-     * Parse a CIS2Error from the provided reject reason.
-     * <p>
-     * The provided reject reason MUST be of type {@link RejectReasonType#REJECTED_RECEIVE} or {@link RejectReasonType#REJECTED_INIT}
-     *
-     * @param rejectReason the reject reason
-     * @return the parsed {@link Cis2Error}
-     */
-    static Cis2Error from(RejectReason rejectReason) {
-        if (rejectReason.getType() == RejectReasonType.REJECTED_RECEIVE) {
-            return Cis2Error.from(((RejectReasonRejectedReceive) rejectReason).getRejectReason());
-        } else {
-            return Cis2Error.from(((RejectReasonRejectedInit) rejectReason).getRejectedInit());
-        }
-    }
-
     public enum Type {
         INVALID_TOKEN_ID,
         INSUFFICIENT_FUNDS,

@@ -198,7 +198,6 @@ public class AccountTransactionDetails {
                 break;
             case ACCOUNT_TRANSFER:
                 detailsBuilder.type(TransactionResultEventType.TRANSFERRED).accountTransfer(TransferredResult.from(effects.getAccountTransfer(), sender));
-
                 break;
             case BAKER_ADDED:
                 detailsBuilder.type(TransactionResultEventType.BAKER_ADDED).bakerAdded(BakerAddedResult.from(effects.getBakerAdded()));

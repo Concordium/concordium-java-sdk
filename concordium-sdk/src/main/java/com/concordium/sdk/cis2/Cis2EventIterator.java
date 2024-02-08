@@ -2,13 +2,12 @@ package com.concordium.sdk.cis2;
 
 import com.concordium.sdk.cis2.events.Cis2EventWithMetadata;
 import com.concordium.sdk.requests.BlockQuery;
+import com.concordium.sdk.responses.blockitemsummary.AccountTransactionDetails;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
 import com.concordium.sdk.responses.blockitemsummary.Type;
-import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
 import com.concordium.sdk.responses.smartcontracts.ContractTraceElementType;
-import com.concordium.sdk.responses.transactionstatus.ContractUpdated;
-import com.concordium.sdk.responses.transactionstatus.RejectReasonType;
-import com.concordium.sdk.responses.transactionstatus.TransactionResultEventType;
+import com.concordium.sdk.responses.transactionstatus.*;
+import com.concordium.sdk.transactions.Hash;
 import lombok.val;
 
 import java.util.*;
@@ -28,24 +27,25 @@ class Cis2EventIterator implements Iterator<Cis2EventWithMetadata> {
 
     @Override
     public boolean hasNext() {
-        return queries.hasNext() || !buffer.isEmpty();
+        if (!queries.hasNext() && buffer.isEmpty()) return false;
+        val query = queries.next();
+        tryAddEvents(query);
+        if (!buffer.isEmpty()) {
+            return true;
+        } else {
+            // deplete the queries buffer until we fill up the events buffer or there are no
+            // more queries left.
+            while (queries.hasNext()) {
+                tryAddEvents(queries.next());
+                if (!buffer.isEmpty()) return true;
+            }
+            return false;
+        }
     }
 
     @Override
     public Cis2EventWithMetadata next() {
-        if (!buffer.isEmpty()) return buffer.remove(); // deplete the buffer of events before querying again.
-        if (!queries.hasNext()) throw new NoSuchElementException("Queries depleted");
-        val query = queries.next();
-        tryAddEvents(query);
-        if (!buffer.isEmpty()) {
-            return buffer.remove();
-        } else {
-            while (queries.hasNext()) {
-                tryAddEvents(queries.next());
-                if (!buffer.isEmpty()) return buffer.remove();
-            }
-            throw new NoSuchElementException("Buffer and queries depleted");
-        }
+        return buffer.remove();
     }
 
     private void tryAddEvents(BlockQuery query) {
@@ -56,7 +56,7 @@ class Cis2EventIterator implements Iterator<Cis2EventWithMetadata> {
     }
 
     /**
-     * Extract any events from the CIS2 specified contract.
+     * Extract any events from the specified contract.
      * The events are added to the supplied accumulator.
      *
      * @param blockQuery a block identifier.
@@ -67,25 +67,50 @@ class Cis2EventIterator implements Iterator<Cis2EventWithMetadata> {
         val accumulator = new ArrayList<Cis2EventWithMetadata>();
         if (summary.getDetails().getType() == Type.ACCOUNT_TRANSACTION) {
             val details = summary.getDetails().getAccountTransactionDetails();
-            val eventType = details.getType();
-            val isRelevantEventType = eventType == TransactionResultEventType.CONTRACT_UPDATED
-                    || eventType == TransactionResultEventType.CONTRACT_INITIALIZED;
-            if (details.isSuccessful()
-                    && isRelevantEventType) {
-                val contractUpdated = details.getContractUpdated();
-                for (val contractTraceElement : contractUpdated) {
-                    if (contractTraceElement.getTraceType() == ContractTraceElementType.INSTANCE_UPDATED) {
-                        val updatedEvent = (ContractUpdated) contractTraceElement;
-                        if (this.client.getContractAddress().equals(updatedEvent.getAddress())) {
-                            for (val event : updatedEvent.getEvents()) {
-                                accumulator.add(Cis2EventWithMetadata.ok(SerializationUtils.deserializeCis2Event(event), blockQuery, summary.getTransactionHash()));
-                            }
+            if (details.isSuccessful()) {
+                accumulator.addAll(getSuccessEvents(details, blockQuery, summary.getTransactionHash()));
+            } else {
+                val rejectReason = details.getRejectReason();
+                if (rejectReason.getType() == RejectReasonType.REJECTED_RECEIVE) {
+                    val rejectReceive = (RejectReasonRejectedReceive) rejectReason;
+                    if (this.client.getContractAddress().equals(rejectReceive.getContractAddress())) {
+                        accumulator.add(Cis2EventWithMetadata.err(Cis2Error.from(rejectReceive.getRejectReason()), blockQuery, summary.getTransactionHash()));
+                    }
+                }
+            }
+        }
+        return accumulator;
+    }
+
+    /**
+     * Parse events from the contract specified that originated from a successfully executed transaction.
+     * The events can either origin from a contract update or a contract initialization.
+     *
+     * @param details         the account transaction details
+     * @param blockQuery      the block identifier
+     * @param transactionHash the origin transaction
+     * @return list of parsed events.
+     */
+    private List<Cis2EventWithMetadata> getSuccessEvents(AccountTransactionDetails details, BlockQuery blockQuery, Hash transactionHash) {
+        val accumulator = new ArrayList<Cis2EventWithMetadata>();
+        val eventType = details.getType();
+        if (eventType == TransactionResultEventType.CONTRACT_UPDATED) {
+            val contractUpdatedEvents = details.getContractUpdated();
+            for (val e : contractUpdatedEvents) {
+                if (e.getTraceType() == ContractTraceElementType.INSTANCE_UPDATED) {
+                    val updatedEvent = (ContractUpdated) e;
+                    if (this.client.getContractAddress().equals(updatedEvent.getAddress())) {
+                        for (val rawUpdateEvent : updatedEvent.getEvents()) {
+                            accumulator.add(Cis2EventWithMetadata.ok(SerializationUtils.deserializeCis2Event(rawUpdateEvent), blockQuery, transactionHash));
                         }
                     }
                 }
-            } else if (!Objects.isNull(details.getRejectReason())) {
-                if (details.getRejectReason().getType() == RejectReasonType.REJECTED_RECEIVE || details.getRejectReason().getType() == RejectReasonType.REJECTED_INIT) {
-                    accumulator.add(Cis2EventWithMetadata.err(Cis2Error.from(details.getRejectReason()), blockQuery, summary.getTransactionHash()));
+            }
+        } else if (eventType == TransactionResultEventType.CONTRACT_INITIALIZED) {
+            val contractInitialized = details.getContractInitialized();
+            if (this.client.getContractAddress().equals(contractInitialized.getAddress())) {
+                for (val rawInitializeEvent : contractInitialized.getEvents()) {
+                    accumulator.add(Cis2EventWithMetadata.ok(SerializationUtils.deserializeCis2Event(rawInitializeEvent), blockQuery, transactionHash));
                 }
             }
         }
