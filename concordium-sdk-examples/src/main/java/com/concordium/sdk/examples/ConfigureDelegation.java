@@ -76,7 +76,7 @@ public class ConfigureDelegation implements Callable<Integer> {
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new SendSimpleTransfer()).execute(args);
+        int exitCode = new CommandLine(new ConfigureDelegation()).execute(args);
         System.exit(exitCode);
     }
 }

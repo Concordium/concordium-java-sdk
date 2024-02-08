@@ -83,7 +83,7 @@ public class ConfigureBaking implements Callable<Integer> {
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new SendSimpleTransfer()).execute(args);
+        int exitCode = new CommandLine(new ConfigureBaking()).execute(args);
         System.exit(exitCode);
     }
 }
