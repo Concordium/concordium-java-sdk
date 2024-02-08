@@ -21,6 +21,11 @@ public interface Cis2Event {
         TOKEN_METADATA,
         CUSTOM;
 
+        /**
+         * Parse the type of CIS2 event.
+         * @param tag the tag of the event.
+         * @return the resulting {@link Type}
+         */
         public static Type parse(byte tag) {
             if (tag == -1) return TRANSFER;
             if (tag == -2) return MINT;

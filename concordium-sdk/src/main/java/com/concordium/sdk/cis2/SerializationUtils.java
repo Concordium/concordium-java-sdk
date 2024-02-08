@@ -40,7 +40,7 @@ public class SerializationUtils {
         bos.write(UInt16.from(listOfTransfers.size()).getBytesLittleEndian());
         for (Cis2Transfer transfer : listOfTransfers) {
             bos.write(SerializationUtils.serializeTokenId(transfer.getTokenId()));
-            writeUnsignedLeb128(bos, transfer.getTokenAmount());
+            bos.write(transfer.getTokenAmount().encode());
             bos.write(SerializationUtils.serializeAddress(transfer.getSender()));
             bos.write(SerializationUtils.serializeAddress(transfer.getReceiver()));
             if (Objects.isNull(transfer.getAdditionalData()) || transfer.getAdditionalData().length == 0) {
@@ -65,15 +65,15 @@ public class SerializationUtils {
         return Parameter.from(bos.toByteArray());
     }
 
-    static long[] deserializeTokenAmounts(byte[] returnValue) {
+    public static TokenAmount[] deserializeTokenAmounts(byte[] returnValue) {
         val resultBuffer = ByteBuffer.wrap(returnValue);
         // lengths are stored as little endian.
         resultBuffer.order(ByteOrder.LITTLE_ENDIAN);
         val noOfOutputs = UInt16.from(resultBuffer.getShort()).getValue();
         resultBuffer.order(ByteOrder.BIG_ENDIAN);
-        val outputs = new long[noOfOutputs];
+        val outputs = new TokenAmount[noOfOutputs];
         for (int i = 0; i < noOfOutputs; i++) {
-            outputs[i] = readUnsignedLeb128(resultBuffer);
+            outputs[i] = TokenAmount.decode(resultBuffer);
         }
         return outputs;
     }
@@ -186,31 +186,6 @@ public class SerializationUtils {
         return Parameter.from(bos.toByteArray());
     }
 
-    private static int readUnsignedLeb128(ByteBuffer buffer) {
-        int result = 0;
-        int cur;
-        int count = 0;
-        do {
-            cur = buffer.get() & 0xff;
-            result |= (cur & 0x7f) << (count * 7);
-            count++;
-        } while (((cur & 0x80) == 0x80) && count < 5);
-        if ((cur & 0x80) == 0x80) {
-            throw new IllegalArgumentException("invalid LEB128 encoding");
-        }
-        return result;
-    }
-
-    private static void writeUnsignedLeb128(ByteArrayOutputStream bos, int value) {
-        int remaining = value >>> 7;
-        while (remaining != 0) {
-            bos.write((byte) ((value & 0x7f) | 0x80));
-            value = remaining;
-            remaining >>>= 7;
-        }
-        bos.write((byte) (value & 0x7f));
-    }
-
     public static Cis2Event deserializeCis2Event(byte[] eventBytes) {
         val buffer = ByteBuffer.wrap(eventBytes);
         val tag = buffer.get();
@@ -252,21 +227,21 @@ public class SerializationUtils {
 
     private static Cis2Event deserializeBurnEvent(ByteBuffer buffer) {
         val tokenId = deserializeTokenId(buffer);
-        val tokenAmount = readUnsignedLeb128(buffer);
+        val tokenAmount = TokenAmount.decode(buffer);
         val owner = deserializeAddress(buffer);
         return new BurnEvent(tokenId, tokenAmount, owner);
     }
 
     private static Cis2Event deserializeMintEvent(ByteBuffer buffer) {
         val tokenId = deserializeTokenId(buffer);
-        val tokenAmount = readUnsignedLeb128(buffer);
+        val tokenAmount = TokenAmount.decode(buffer);
         val owner = deserializeAddress(buffer);
         return new MintEvent(tokenId, tokenAmount, owner);
     }
 
     public static Cis2Event deserializeTransferEvent(ByteBuffer buffer) {
         val tokenId = deserializeTokenId(buffer);
-        val tokenAmount = readUnsignedLeb128(buffer);
+        val tokenAmount = TokenAmount.decode(buffer);
         val from = deserializeAddress(buffer);
         val to = deserializeAddress(buffer);
         return new TransferEvent(tokenId, tokenAmount, from, to);

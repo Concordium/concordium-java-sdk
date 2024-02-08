@@ -1,5 +1,6 @@
 package com.concordium.sdk.cis2.events;
 
+import com.concordium.sdk.cis2.TokenAmount;
 import com.concordium.sdk.cis2.TokenId;
 import com.concordium.sdk.types.AbstractAddress;
 import lombok.EqualsAndHashCode;
@@ -23,7 +24,7 @@ public class TransferEvent implements Cis2Event {
     /**
      * The amount of tokens that was transferred.
      */
-    private final long tokenAmount;
+    private final TokenAmount tokenAmount;
 
     /**
      * The previous owner of the token(s).
@@ -35,7 +36,7 @@ public class TransferEvent implements Cis2Event {
      */
     private final AbstractAddress to;
 
-    public TransferEvent(TokenId tokenId, long tokenAmount, AbstractAddress from, AbstractAddress to) {
+    public TransferEvent(TokenId tokenId, TokenAmount tokenAmount, AbstractAddress from, AbstractAddress to) {
         this.tokenId = tokenId;
         this.tokenAmount = tokenAmount;
         this.from = from;

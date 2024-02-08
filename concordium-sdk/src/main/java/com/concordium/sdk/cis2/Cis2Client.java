@@ -35,9 +35,6 @@ public class Cis2Client {
     private final ContractAddress contractAddress;
     private final InitName contractName;
 
-    // Default max energy for contract invocations.
-    private static final Energy MAX_ENERGY = Energy.from(UInt64.from(3000000));
-
     private Cis2Client(ClientV2 client, ContractAddress contractAddress, InitName contractName) {
         this.client = client;
         this.contractAddress = contractAddress;
@@ -64,14 +61,14 @@ public class Cis2Client {
      * @param transfers the CIS2 transfers.
      * @return the transaction hash
      */
-    public Hash transfer(AccountAddress sender, TransactionSigner signer, Cis2Transfer... transfers) {
+    public Hash transfer(AccountAddress sender, TransactionSigner signer, Energy maxEnergyCost, Cis2Transfer... transfers) {
         val listOfTransfers = Arrays.asList(transfers);
         val nextNonce = this.client.getAccountInfo(BlockQuery.LAST_FINAL, AccountQuery.from(sender)).getAccountNonce();
         val endpoint = ReceiveName.from(contractName, "transfer");
         val parameters = SerializationUtils.serializeTransfers(listOfTransfers);
         return this.client.sendTransaction(
                 TransactionFactory.newUpdateContract()
-                        .maxEnergyCost(UInt64.from(3000))
+                        .maxEnergyCost(maxEnergyCost.getValue())
                         .payload(UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters))
                         .expiry(Expiry.createNew().addMinutes(5))
                         .nonce(AccountNonce.from(nextNonce))
@@ -81,20 +78,20 @@ public class Cis2Client {
     }
 
     /**
-     * Update which addresses that the sender (owner) operates.
+     * Update the addresses of which the owner (sender of this transaction) operates.
      *
      * @param operatorUpdates the updates to carry out. The keys of the map correspond to the
      *                        addresses which the sender (owner) should or should not operate given
      *                        by the provided boolean.
      * @return the transaction hash
      */
-    public Hash updateOperator(Map<AbstractAddress, Boolean> operatorUpdates, AccountAddress sender, TransactionSigner signer) {
+    public Hash updateOperator(AccountAddress sender, TransactionSigner signer, Energy maxEnergyCost, Map<AbstractAddress, Boolean> operatorUpdates) {
         val nextNonce = this.client.getAccountInfo(BlockQuery.LAST_FINAL, AccountQuery.from(sender)).getAccountNonce();
         val endpoint = ReceiveName.from(contractName, "updateOperator");
         val parameters = SerializationUtils.serializeUpdateOperators(operatorUpdates);
         return this.client.sendTransaction(
                 TransactionFactory.newUpdateContract()
-                        .maxEnergyCost(UInt64.from(3000))
+                        .maxEnergyCost(maxEnergyCost.getValue())
                         .payload(UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters))
                         .expiry(Expiry.createNew().addMinutes(5))
                         .nonce(AccountNonce.from(nextNonce))
@@ -110,16 +107,16 @@ public class Cis2Client {
      * @param queries the token ids and addresses to query
      * @return the balances together with the queries used
      */
-    public Map<BalanceQuery, Long> balanceOf(BalanceQuery... queries) {
+    public Map<BalanceQuery, TokenAmount> balanceOf(BalanceQuery... queries) {
         val listOfQueries = Arrays.asList(queries);
         val parameter = SerializationUtils.serializeBalanceOfParameter(listOfQueries);
         val endpoint = ReceiveName.from(contractName, "balanceOf");
-        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, CCDAmount.from(0), endpoint, parameter, MAX_ENERGY));
+        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, CCDAmount.from(0), endpoint, parameter, Optional.empty()));
         if (result.getOutcome() == Outcome.REJECT) {
             throw new RuntimeException("balanceOf failed: " + result.getRejectReason().toString());
         }
         val balances = SerializationUtils.deserializeTokenAmounts(result.getReturnValue());
-        val responses = new HashMap<BalanceQuery, Long>();
+        val responses = new HashMap<BalanceQuery, TokenAmount>();
         for (int i = 0; i < balances.length; i++) {
             responses.put(listOfQueries.get(i), balances[i]);
         }
@@ -136,7 +133,7 @@ public class Cis2Client {
         val listOfQueries = Arrays.asList(queries);
         val parameter = SerializationUtils.serializeOperatorOfParameter(listOfQueries);
         val endpoint = ReceiveName.from(contractName, "operatorOf");
-        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, CCDAmount.from(0), endpoint, parameter, MAX_ENERGY));
+        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, CCDAmount.from(0), endpoint, parameter, Optional.empty()));
         if (result.getOutcome() == Outcome.REJECT) {
             throw new RuntimeException("operatorOf failed: " + result.getRejectReason().toString());
         }
@@ -152,15 +149,15 @@ public class Cis2Client {
      * Query the token metadata for each provided token id
      *
      * @param tokenIds the token ids to query
-     * @return A map where the values indicate the token metadata responses for each hex encoded token id.
+     * @return A map where the values indicate the token metadata responses for each {@link TokenId}
      */
     public Map<TokenId, TokenMetadata> tokenMetadata(TokenId... tokenIds) {
         val listOfQueries = Arrays.asList(tokenIds);
         val parameter = SerializationUtils.serializeTokenIds(listOfQueries);
         val endpoint = ReceiveName.from(contractName, "tokenMetadata");
-        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, CCDAmount.from(0), endpoint, parameter, MAX_ENERGY));
+        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, CCDAmount.from(0), endpoint, parameter, Optional.empty()));
         if (result.getOutcome() == Outcome.REJECT) {
-            throw new RuntimeException("operatorOf failed: " + result.getRejectReason().toString());
+            throw new RuntimeException("tokenMetadata failed: " + result.getRejectReason().toString());
         }
         val tokenMetadatas = SerializationUtils.deserializeTokenMetadatas(result.getReturnValue());
         val responses = new HashMap<TokenId, TokenMetadata>();
@@ -248,14 +245,19 @@ public class Cis2Client {
     /**
      * Extract any events from the CIS2 specified contract.
      * The events are added to the supplied accumulator.
-     * @param blockQuery a block identifier.
+     *
+     * @param blockQuery  a block identifier.
      * @param accumulator accumulator used for aggregating the events.
-     * @param summary the transaction summary to extract from.
+     * @param summary     the transaction summary to extract from.
      */
     private void extractCis2Events(BlockQuery blockQuery, ArrayList<Cis2EventWithMetadata> accumulator, Summary summary) {
         if (summary.getDetails().getType() == Type.ACCOUNT_TRANSACTION) {
             val details = summary.getDetails().getAccountTransactionDetails();
-            if (details.isSuccessful() && details.getType() == TransactionResultEventType.CONTRACT_UPDATED) {
+            val eventType = details.getType();
+            boolean isRelevantEventType = eventType == TransactionResultEventType.CONTRACT_UPDATED
+                    || eventType == TransactionResultEventType.CONTRACT_INITIALIZED;
+            if (details.isSuccessful()
+                    && isRelevantEventType) {
                 val contractUpdated = details.getContractUpdated();
                 for (ContractTraceElement contractTraceElement : contractUpdated) {
                     if (contractTraceElement.getTraceType() == ContractTraceElementType.INSTANCE_UPDATED) {

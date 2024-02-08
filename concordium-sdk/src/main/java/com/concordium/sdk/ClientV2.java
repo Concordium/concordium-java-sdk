@@ -54,6 +54,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -140,7 +141,6 @@ public final class ClientV2 {
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
      * @return {@link Iterator<BlockIdentifier>}
-     *
      */
     public Iterator<BlockIdentifier> getFinalizedBlocks(int timeoutMillis) {
         val grpcOutput = this.server(timeoutMillis)
@@ -234,7 +234,7 @@ public final class ClientV2 {
     /**
      * Sends a credential deployment transaction to the Concordium Node.
      *
-     * @param expiry the transaction expiry, i.e. the time after which the transaction is invalid
+     * @param expiry     the transaction expiry, i.e. the time after which the transaction is invalid
      * @param rawPayload the serialized bytes of the credential deployment transaction, including its signatures
      * @return Transaction {@link Hash}.
      */
@@ -324,8 +324,8 @@ public final class ClientV2 {
      * @param transactionHash The transaction {@link Hash}
      * @return The {@link BlockItemStatus}
      * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
-     * <li> {@link io.grpc.Status#NOT_FOUND} if the transaction is not known to the node.
-     * </ul>
+     *                                        <li> {@link io.grpc.Status#NOT_FOUND} if the transaction is not known to the node.
+     *                                        </ul>
      */
     public BlockItemStatus getBlockItemStatus(Hash transactionHash) {
         val grpcOutput = this.server()
@@ -794,9 +794,10 @@ public final class ClientV2 {
         grpcRequest.setInstance(to(request.getInstance()))
                 .setAmount(to(request.getAmount()))
                 .setEntrypoint(to(request.getEntrypoint()))
-                .setParameter(to(request.getParameter()))
-                .setEnergy(com.concordium.grpc.v2.Energy.newBuilder().setValue(request.getEnergy().getValue().getValue()));
-
+                .setParameter(to(request.getParameter()));
+        if (request.getEnergy().isPresent()) {
+            grpcRequest.setEnergy(com.concordium.grpc.v2.Energy.newBuilder().setValue(request.getEnergy().get().getValue().getValue()));
+        }
         val grpcResponse = this.server().invokeInstance(grpcRequest.build());
         return InvokeInstanceResult.parse(grpcResponse);
     }
@@ -808,7 +809,7 @@ public final class ClientV2 {
      * @param input The block to query.
      * @return {@link ImmutableList} with the {@link BakerRewardPeriodInfo} of all the bakers in the block.
      * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}:
-     * <ul><li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the protocol does not support the endpoint.</ul>
+     *                                        <ul><li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the protocol does not support the endpoint.</ul>
      */
     public ImmutableList<BakerRewardPeriodInfo> getBakersRewardPeriod(BlockQuery input) {
         val response = this.server().getBakersRewardPeriod(to(input));
@@ -825,9 +826,9 @@ public final class ClientV2 {
      * @param block The block to query
      * @return {@link BlockCertificates} of the block.
      * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}:<ul>
-     * <li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the endpoint is not enabled by the node.
-     * <li>{@link io.grpc.Status.Code#INVALID_ARGUMENT} if the block being pointed to is not a product of ConcordiumBFT, i.e. created before protocol version 6.
-     * </ul>
+     *                                        <li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the endpoint is not enabled by the node.
+     *                                        <li>{@link io.grpc.Status.Code#INVALID_ARGUMENT} if the block being pointed to is not a product of ConcordiumBFT, i.e. created before protocol version 6.
+     *                                        </ul>
      */
     public BlockCertificates getBlockCertificates(BlockQuery block) {
         val res = this.server().getBlockCertificates(to(block));
@@ -836,7 +837,7 @@ public final class ClientV2 {
 
     /**
      * Get the projected earliest time at which a particular baker will be required to bake a block. <p>
-     *
+     * <p>
      * If the baker is not a baker for the current reward period, this returns a timestamp at the
      * start of the next reward period. <p>
      * If the baker is a baker for the current reward period, the
@@ -849,10 +850,11 @@ public final class ClientV2 {
      * epoch. This is because the seed for the leader election is updated at the epoch boundary, and
      * so the winners cannot be predicted beyond that. <p>
      * Note that in some circumstances the returned timestamp can be in the past, especially at the end of an epoch.
+     *
      * @param bakerId id of the baker to query.
      * @return {@link Timestamp} as described in the method documentation.
      * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}:
-     * <ul><li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the current consensus version is 0, as the endpoint is only supported by consensus version 1.</ul>
+     *                                        <ul><li>{@link io.grpc.Status.Code#UNIMPLEMENTED} if the current consensus version is 0, as the endpoint is only supported by consensus version 1.</ul>
      */
     public Timestamp getBakerEarliestWinTime(BakerId bakerId) {
         val res = this.server().getBakerEarliestWinTime(to(bakerId));
@@ -865,12 +867,12 @@ public final class ClientV2 {
      * @param epochQuery {@link EpochQuery} representing the specific epoch to query.
      * @return {@link Hash} of the first finalized block in the epoch.
      * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
-     * <li> {@link io.grpc.Status#NOT_FOUND} if the query specifies an unknown block.
-     * <li> {@link io.grpc.Status#UNAVAILABLE} if the query is for an epoch that is not finalized in the current genesis index, or is for a future genesis index.
-     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for an epoch with no finalized blocks for a past genesis index.
-     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the input {@link EpochQuery} is malformed.
-     * <li> {@link io.grpc.Status#UNIMPLEMENTED} if the endpoint is disabled on the node.
-     * </ul>
+     *                                        <li> {@link io.grpc.Status#NOT_FOUND} if the query specifies an unknown block.
+     *                                        <li> {@link io.grpc.Status#UNAVAILABLE} if the query is for an epoch that is not finalized in the current genesis index, or is for a future genesis index.
+     *                                        <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for an epoch with no finalized blocks for a past genesis index.
+     *                                        <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the input {@link EpochQuery} is malformed.
+     *                                        <li> {@link io.grpc.Status#UNIMPLEMENTED} if the endpoint is disabled on the node.
+     *                                        </ul>
      */
     public Hash getFirstBlockEpoch(EpochQuery epochQuery) {
         val res = this.server().getFirstBlockEpoch(to(epochQuery));
@@ -881,16 +883,17 @@ public final class ClientV2 {
      * Get the list of bakers that won the lottery in a particular historical epoch (i.e. the last finalized block is in a later epoch). <p>
      * This lists the winners for each round in the epoch, starting from the round after the last block in the previous epoch, running to the round before the first block in the next epoch. <p>
      * It also indicates if a block in each round was included in the finalized chain.
+     *
      * @param epochQuery {@link EpochQuery} representing the specific epoch to query.
      * @return {@link ImmutableList} of bakers that won the lottery in the specified epoch.
      * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
-     * <li> {@link io.grpc.Status#NOT_FOUND} if the query specifies an unknown block.
-     * <li> {@link io.grpc.Status#UNAVAILABLE} if the query is for an epoch that is not finalized in the current genesis index, or is for a future genesis index.
-     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for an epoch that is not finalized for a past genesis index.
-     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for a genesis index at consensus version 0.
-     * <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the input {@link EpochQuery} is malformed.
-     * <li> {@link io.grpc.Status#UNIMPLEMENTED} if the endpoint is disabled on the node.
-     * </ul>
+     *                                        <li> {@link io.grpc.Status#NOT_FOUND} if the query specifies an unknown block.
+     *                                        <li> {@link io.grpc.Status#UNAVAILABLE} if the query is for an epoch that is not finalized in the current genesis index, or is for a future genesis index.
+     *                                        <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for an epoch that is not finalized for a past genesis index.
+     *                                        <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query is for a genesis index at consensus version 0.
+     *                                        <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the input {@link EpochQuery} is malformed.
+     *                                        <li> {@link io.grpc.Status#UNIMPLEMENTED} if the endpoint is disabled on the node.
+     *                                        </ul>
      */
     public ImmutableList<WinningBaker> getWinningBakersEpoch(EpochQuery epochQuery) {
         val res = this.server().getWinningBakersEpoch(to(epochQuery));
@@ -905,8 +908,9 @@ public final class ClientV2 {
      * Waits until a given transaction is finalized and returns the corresponding {@link Optional<FinalizedBlockItem>}.
      * If the transaction is unknown to the node or not finalized, the client starts listening for newly finalized blocks,
      * and returns the corresponding {@link Optional<FinalizedBlockItem>} once the transaction is finalized.
+     *
      * @param transactionHash the {@link Hash} of the transaction to wait for.
-     * @param timeoutMillis the number of milliseconds to listen for newly finalized blocks.
+     * @param timeoutMillis   the number of milliseconds to listen for newly finalized blocks.
      * @return {@link Optional<FinalizedBlockItem>} of the transaction if it was finalized before exceeding the timeout, Empty otherwise.
      */
     public Optional<FinalizedBlockItem> waitUntilFinalized(Hash transactionHash, int timeoutMillis) {
@@ -940,6 +944,7 @@ public final class ClientV2 {
 
     /**
      * Helper function for {@link ClientV2#waitUntilFinalized(Hash, int)}. Retrieves the {@link Optional<FinalizedBlockItem>} of the transaction if it is finalized.
+     *
      * @param transactionHash the {@link Hash} of the transaction to wait for.
      * @return {@link Optional<FinalizedBlockItem>} of the transaction if it is finalized, Empty otherwise.
      */

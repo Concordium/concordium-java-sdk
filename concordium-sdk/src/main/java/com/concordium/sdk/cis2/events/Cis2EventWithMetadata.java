@@ -30,13 +30,6 @@ public class Cis2EventWithMetadata {
     private final Cis2Error error;
 
     /**
-     * A flag that indicates whether the event retains an
-     * {@link Cis2Event} (as a result of a successfully executed transaction)
-     * or a {@link Cis2Error} as a result of a failed transaction.
-     */
-    private final boolean isSuccessfull;
-
-    /**
      * The block of which the event was emitted in.
      */
     private final BlockQuery blockIdentifier;
@@ -51,7 +44,15 @@ public class Cis2EventWithMetadata {
         this.error = error;
         this.blockIdentifier = blockIdentifier;
         this.transactionHashOrigin = origin;
-        this.isSuccessfull = Objects.isNull(error);
+    }
+
+    /**
+     * A flag that indicates whether the event retains an
+     * {@link Cis2Event} (as a result of a successfully executed transaction)
+     * or a {@link Cis2Error} as a result of a failed transaction.
+     */
+    public boolean isSuccessfull() {
+        return Objects.isNull(error);
     }
 
     public static Cis2EventWithMetadata ok(Cis2Event event, BlockQuery blockIdentifier, Hash origin) {

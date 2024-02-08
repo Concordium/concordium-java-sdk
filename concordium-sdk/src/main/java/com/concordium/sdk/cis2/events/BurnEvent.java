@@ -1,5 +1,6 @@
 package com.concordium.sdk.cis2.events;
 
+import com.concordium.sdk.cis2.TokenAmount;
 import com.concordium.sdk.cis2.TokenId;
 import com.concordium.sdk.types.AbstractAddress;
 import lombok.EqualsAndHashCode;
@@ -22,13 +23,13 @@ public class BurnEvent implements Cis2Event {
     /**
      * The amount of tokens that was burned.
      */
-    private final long tokenAmount;
+    private final TokenAmount tokenAmount;
     /**
      * The owner of the token
      */
     private final AbstractAddress owner;
 
-    public BurnEvent(TokenId tokenId, long tokenAmount, AbstractAddress owner) {
+    public BurnEvent(TokenId tokenId, TokenAmount tokenAmount, AbstractAddress owner) {
         this.tokenId = tokenId;
         this.tokenAmount = tokenAmount;
         this.owner = owner;

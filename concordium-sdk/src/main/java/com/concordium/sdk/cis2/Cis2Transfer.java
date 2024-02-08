@@ -22,7 +22,7 @@ public class Cis2Transfer {
     /**
      * The token amount.
      */
-    private final int tokenAmount;
+    private final TokenAmount tokenAmount;
 
     /**
      * Sender of the token.
@@ -39,7 +39,7 @@ public class Cis2Transfer {
      */
     private final byte[] additionalData;
 
-    public Cis2Transfer(TokenId tokenId, int tokenAmount, AbstractAddress sender, AbstractAddress receiver, byte[] additionalData) {
+    public Cis2Transfer(TokenId tokenId, TokenAmount tokenAmount, AbstractAddress sender, AbstractAddress receiver, byte[] additionalData) {
         this.tokenId = tokenId;
         this.tokenAmount = tokenAmount;
         this.sender = sender;

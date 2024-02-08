@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -25,7 +26,7 @@ import java.util.List;
 @ToString
 public class TokenId {
 
-    private static final int MAX_BYTES_SIZE = 256;
+    private static final int MAX_BYTES_SIZE = 255;
 
     private final byte[] bytes;
 
@@ -68,7 +69,7 @@ public class TokenId {
      */
     public static TokenId from(UInt16 value) {
         val tokenBytes = value.getBytes();
-        reverseByteArray(tokenBytes);
+        ArrayUtils.reverse(tokenBytes);
         return new TokenId(tokenBytes);
     }
 
@@ -79,7 +80,7 @@ public class TokenId {
      */
     public static TokenId from(UInt32 value) {
         val tokenBytes = value.getBytes();
-        reverseByteArray(tokenBytes);
+        ArrayUtils.reverse(tokenBytes);
         return new TokenId(tokenBytes);
     }
 
@@ -90,20 +91,8 @@ public class TokenId {
      */
     public static TokenId from(UInt64 value) {
         val tokenBytes = value.getBytes();
-        reverseByteArray(tokenBytes);
+        ArrayUtils.reverse(tokenBytes);
         return new TokenId(tokenBytes);
     }
 
-    /**
-     * reverse a byte array
-     * @param array the array to reverse
-     */
-    private static void reverseByteArray(byte[] array) {
-        int length = array.length;
-        for (int i = 0; i < length / 2; i++) {
-            byte temp = array[i];
-            array[i] = array[length - i - 1];
-            array[length - i - 1] = temp;
-        }
-    }
 }
