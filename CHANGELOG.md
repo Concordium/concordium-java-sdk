@@ -9,6 +9,7 @@
    This change is also propagated to the type level such that `Baker` and `AccountDelegation` retains an `Optional<PendingChange>` 
    as opposed to just `PendingChange`.
  - Fix .equals() for AccountInfo such that all fields are used to deduce equality.<
+ - Added `Web3IdProof` class with `getWeb3IdProof` method to create Presentations. (And supporting classes) 
 
 ## 6.1.0
 - Purge remaining usages of V1 GRPC API.

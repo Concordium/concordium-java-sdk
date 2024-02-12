@@ -1,0 +1,18 @@
+[
+    {
+        "type": "account",
+        "issuer": 0,
+        "values": {
+            "firstName": "John",
+            "nationality": "DK",
+            "countryOfResidence": "DK",
+            "dob": "19700101"
+        },
+        "randomness": {
+            "firstName": "2131de4da4126d1c46c89bc4de37e1bab413fb06e4fbb38d6a0ae7bee6e5f18e",
+            "nationality": "3dc83313fbf7d0df8b6f83ead5aa03a30907071416d5c6d9b560c9d044e17b08",
+            "countryOfResidence": "4cf10947453a4faf4b6868205b404e51cec6263621adb37b728c8b9402174339",
+            "dob": "6879bdc6b5798f7bbeb0f47b6abd9a5c5b84bf594b63e64af5a5df0f239299e9"
+        }
+    }
+]

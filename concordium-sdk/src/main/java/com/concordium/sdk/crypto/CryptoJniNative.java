@@ -308,4 +308,12 @@ public class CryptoJniNative {
      * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
      */
     public static native String serializeCredentialDeploymentForSubmission(String input);
+
+    /**
+     * Creates a web3Id presentation for the given statement.
+     * @param input {@link Web3IdProofInput} serialized as JSON.
+     * @return JSON representing {@link StringResult}. If successful the field 'result' contains the
+     * {@link Web3IdProof} as JSON.
+     */
+    public static native String createWeb3IdProof(String input);
 }
