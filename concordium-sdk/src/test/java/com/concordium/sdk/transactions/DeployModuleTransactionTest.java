@@ -6,6 +6,7 @@ import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.val;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class DeployModuleTransactionTest {
         val transaction = DeployModuleTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .module(WasmModule.from(moduleSource, WasmModuleVersion.V1))
@@ -42,7 +43,7 @@ public class DeployModuleTransactionTest {
     public void testDeployModuleTransactionWithoutSenderFails() {
         DeployModuleTransaction
                 .builder()
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .module(WasmModule.from(moduleSource, WasmModuleVersion.V1))
@@ -72,7 +73,7 @@ public class DeployModuleTransactionTest {
         DeployModuleTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .signer(TransactionTestHelper.getValidSigner())
                 .module(WasmModule.from(moduleSource, WasmModuleVersion.V1))
                 .maxEnergyCost(UInt64.from(10000))
@@ -86,7 +87,7 @@ public class DeployModuleTransactionTest {
         DeployModuleTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .module(WasmModule.from(moduleSource, WasmModuleVersion.V1))
                 .maxEnergyCost(UInt64.from(10000))
@@ -99,7 +100,7 @@ public class DeployModuleTransactionTest {
         DeployModuleTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(getSignerWithMalformedSecretKey())
                 .module(WasmModule.from(moduleSource, WasmModuleVersion.V1))

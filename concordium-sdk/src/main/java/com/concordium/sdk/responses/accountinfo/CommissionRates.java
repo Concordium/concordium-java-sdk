@@ -17,21 +17,21 @@ public class CommissionRates {
     /**
      * Fraction of transaction rewards charged by the pool owner.
      */
-    private final double transactionCommission;
+    private final PartsPerHundredThousand transactionCommission;
     /**
      * Fraction of finalization rewards charged by the pool owner.
      */
-    private final double finalizationCommission;
+    private final PartsPerHundredThousand finalizationCommission;
     /**
      * Fraction of baking rewards charged by the pool owner.
      */
-    private final double bakingCommission;
+    private final PartsPerHundredThousand bakingCommission;
 
     public static CommissionRates from(com.concordium.grpc.v2.CommissionRates commissionRates) {
         return CommissionRates.builder()
-                .transactionCommission(PartsPerHundredThousand.from(commissionRates.getTransaction().getPartsPerHundredThousand()).asDouble())
-                .finalizationCommission(PartsPerHundredThousand.from(commissionRates.getFinalization().getPartsPerHundredThousand()).asDouble())
-                .bakingCommission(PartsPerHundredThousand.from(commissionRates.getBaking().getPartsPerHundredThousand()).asDouble())
+                .transactionCommission(PartsPerHundredThousand.from(commissionRates.getTransaction().getPartsPerHundredThousand()))
+                .finalizationCommission(PartsPerHundredThousand.from(commissionRates.getFinalization().getPartsPerHundredThousand()))
+                .bakingCommission(PartsPerHundredThousand.from(commissionRates.getBaking().getPartsPerHundredThousand()))
                 .build();
     }
 }

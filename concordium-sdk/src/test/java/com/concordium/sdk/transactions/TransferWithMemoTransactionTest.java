@@ -5,6 +5,7 @@ import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import lombok.val;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class TransferWithMemoTransactionTest {
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
                 .amount(CCDAmount.fromMicro(17))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionSigner.from(
                         SignerEntry.from(Index.from(0), Index.from(0),
@@ -47,7 +48,7 @@ public class TransferWithMemoTransactionTest {
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
                 .amount(CCDAmount.fromMicro(17))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(getValidSigner())
                 .build();
@@ -61,7 +62,7 @@ public class TransferWithMemoTransactionTest {
                 .memo(Memo.from("Hello, World!".getBytes(StandardCharsets.UTF_8)))
                 .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
                 .amount(CCDAmount.fromMicro(17))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(getValidSigner())
                 .build();
@@ -75,7 +76,7 @@ public class TransferWithMemoTransactionTest {
                 .memo(Memo.from("Hello, World!".getBytes(StandardCharsets.UTF_8)))
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .amount(CCDAmount.fromMicro(17))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(getValidSigner())
                 .build();
@@ -89,7 +90,7 @@ public class TransferWithMemoTransactionTest {
                 .memo(Memo.from("Hello, World!".getBytes(StandardCharsets.UTF_8)))
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(getValidSigner())
                 .build();
@@ -115,7 +116,7 @@ public class TransferWithMemoTransactionTest {
         AccountAddress sender = AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc");
         AccountAddress receiver = AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM");
         CCDAmount amount = CCDAmount.fromMicro(17);
-        AccountNonce accountNonce = AccountNonce.from(78910);
+        Nonce nonce = Nonce.from(78910);
 
         TransferWithMemoTransaction
                 .builder()
@@ -123,7 +124,7 @@ public class TransferWithMemoTransactionTest {
                 .sender(sender)
                 .receiver(receiver)
                 .amount(amount)
-                .nonce(accountNonce)
+                .nonce(nonce)
                 .signer(getValidSigner())
                 .build();
         fail("Expected TransferWithMemo to fail");
@@ -137,7 +138,7 @@ public class TransferWithMemoTransactionTest {
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
                 .amount(CCDAmount.fromMicro(17))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .build();
         fail("Expected TransferWithMemo to fail");
@@ -152,7 +153,7 @@ public class TransferWithMemoTransactionTest {
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
                     .amount(CCDAmount.fromMicro(17))
-                    .nonce(AccountNonce.from(78910))
+                    .nonce(Nonce.from(78910))
                     .expiry(Expiry.from(123456))
                     .signer(getSignerWithMalformedSecretKey())
                     .build();

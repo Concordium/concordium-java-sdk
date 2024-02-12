@@ -3,6 +3,7 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
@@ -15,7 +16,7 @@ import lombok.*;
 public class DeployModuleTransaction extends AccountTransaction {
     private DeployModuleTransaction(
             @NonNull final AccountAddress sender,
-            @NonNull final AccountNonce nonce,
+            @NonNull final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer,
             @NonNull final WasmModule module,
@@ -43,7 +44,7 @@ public class DeployModuleTransaction extends AccountTransaction {
      */
     @Builder(builderClassName = "DeployModuleTransactionBuilder")
     public static DeployModuleTransaction from(final AccountAddress sender,
-                                               final AccountNonce nonce,
+                                               final Nonce nonce,
                                                final Expiry expiry,
                                                final TransactionSigner signer,
                                                final WasmModule module,

@@ -41,6 +41,7 @@ import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.Timestamp;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
@@ -234,14 +235,12 @@ public final class ClientV2 {
     /**
      * Sends a credential deployment transaction to the Concordium Node.
      *
-     * @param expiry     the transaction expiry, i.e. the time after which the transaction is invalid
-     * @param rawPayload the serialized bytes of the credential deployment transaction, including its signatures
+     * @param credentialDeploymentTransaction the credential deployment to send.
      * @return Transaction {@link Hash}.
      */
     public Hash sendCredentialDeploymentTransaction(CredentialDeploymentTransaction credentialDeploymentTransaction) {
         val req = ClientV2MapperExtensions.to(credentialDeploymentTransaction);
         val grpcOutput = this.server().sendBlockItem(req);
-
         return to(grpcOutput);
     }
 
@@ -304,15 +303,15 @@ public final class ClientV2 {
     }
 
     /**
-     * Retrieves the next {@link AccountNonce} for an account.
-     * This is the {@link AccountNonce} to use for future transactions
+     * Retrieves the next {@link Nonce} for an account.
+     * This is the {@link Nonce} to use for future transactions
      * E.g. when using {@link ClientV2#sendTransaction(AccountTransaction)}
      * When this function is queried with a non-existent account it will report the next available account nonce to be 1 and all transactions as finalized.
      *
      * @param address The {@link AccountAddress}
-     * @return The next {@link AccountNonce}
+     * @return The next {@link Nonce}
      */
-    public AccountNonce getNextAccountSequenceNumber(AccountAddress address) {
+    public Nonce getNextAccountSequenceNumber(AccountAddress address) {
         val grpcOutput = this.server()
                 .getNextAccountSequenceNumber(to(address));
         return to(grpcOutput);
