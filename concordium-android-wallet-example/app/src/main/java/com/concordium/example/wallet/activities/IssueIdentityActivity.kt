@@ -30,12 +30,20 @@ import com.concordium.example.wallet.Requests
 import com.concordium.example.wallet.Storage
 import com.concordium.example.wallet.services.ConcordiumClientService
 import com.concordium.example.wallet.services.ConcordiumWalletProxyService
+import com.concordium.example.wallet.services.IdentityFetcherService
 import com.concordium.example.wallet.services.wallet_proxy.IdentityProvider
 import com.concordium.example.wallet.ui.Container
 import com.concordium.example.wallet.ui.Menu
+import com.google.api.Http
+import com.google.common.net.HttpHeaders
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import retrofit2.http.HTTP
 
 class IssueIdentityActivity : ComponentActivity() {
 
@@ -68,10 +76,30 @@ class IssueIdentityActivity : ComponentActivity() {
         global: CryptographicParameters,
         storage: Storage
     ) {
-        val request = Requests.createIssuanceRequest(storage.getWallet(), provider, global)
-        val url = getIssuanceUrl(provider, request)
-        launchBrowserCustomTab(url)
-        storage.identityProviderIndex.set(provider.ipInfo.ipIdentity.toString())
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val request = Requests.createIssuanceRequest(storage.getWallet(), provider, global)
+                val url = getIssuanceUrl(provider, request)
+
+                val okHttpClientBuilder = OkHttpClient().newBuilder()
+                    .followRedirects(false)
+                    .followSslRedirects(false)
+                val client = okHttpClientBuilder.build()
+                val httpRequest = Request.Builder().url(url).build()
+
+                client.newCall(httpRequest).execute().use { response ->
+                    val redirectedUrl = response.header(HttpHeaders.LOCATION)
+                        ?: throw Exception("The identity provider did not redirect as expected.")
+
+                    launchBrowserCustomTab(redirectedUrl)
+                    storage.identityProviderIndex.set(provider.ipInfo.ipIdentity.toString())
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
