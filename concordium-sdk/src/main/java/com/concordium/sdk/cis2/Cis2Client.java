@@ -17,10 +17,7 @@ import com.concordium.sdk.responses.transactionstatus.ContractUpdated;
 import com.concordium.sdk.responses.transactionstatus.Outcome;
 import com.concordium.sdk.responses.transactionstatus.TransactionResultEventType;
 import com.concordium.sdk.transactions.*;
-import com.concordium.sdk.types.AbstractAddress;
-import com.concordium.sdk.types.AccountAddress;
-import com.concordium.sdk.types.ContractAddress;
-import com.concordium.sdk.types.UInt64;
+import com.concordium.sdk.types.*;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.val;
@@ -67,7 +64,7 @@ public class Cis2Client {
      */
     public Hash transfer(AccountAddress sender, TransactionSigner signer, Energy maxEnergyCost, Cis2Transfer... transfers) {
         val listOfTransfers = Arrays.asList(transfers);
-        val nextNonce = this.client.getAccountInfo(BlockQuery.LAST_FINAL, AccountQuery.from(sender)).getAccountNonce();
+        val nextNonce = this.client.getAccountInfo(BlockQuery.LAST_FINAL, AccountQuery.from(sender)).getNonce();
         val endpoint = ReceiveName.from(contractName, "transfer");
         val parameters = SerializationUtils.serializeTransfers(listOfTransfers);
         return this.client.sendTransaction(
@@ -75,7 +72,7 @@ public class Cis2Client {
                         .maxEnergyCost(maxEnergyCost.getValue())
                         .payload(UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters))
                         .expiry(Expiry.createNew().addMinutes(5))
-                        .nonce(AccountNonce.from(nextNonce))
+                        .nonce(nextNonce)
                         .sender(sender)
                         .signer(signer)
                         .build());
@@ -90,7 +87,7 @@ public class Cis2Client {
      * @return the transaction hash
      */
     public Hash updateOperator(AccountAddress sender, TransactionSigner signer, Energy maxEnergyCost, Map<AbstractAddress, Boolean> operatorUpdates) {
-        val nextNonce = this.client.getAccountInfo(BlockQuery.LAST_FINAL, AccountQuery.from(sender)).getAccountNonce();
+        val nextNonce = this.client.getAccountInfo(BlockQuery.LAST_FINAL, AccountQuery.from(sender)).getNonce();
         val endpoint = ReceiveName.from(contractName, "updateOperator");
         val parameters = SerializationUtils.serializeUpdateOperators(operatorUpdates);
         return this.client.sendTransaction(
@@ -98,7 +95,7 @@ public class Cis2Client {
                         .maxEnergyCost(maxEnergyCost.getValue())
                         .payload(UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters))
                         .expiry(Expiry.createNew().addMinutes(5))
-                        .nonce(AccountNonce.from(nextNonce))
+                        .nonce(nextNonce)
                         .sender(sender)
                         .signer(signer)
                         .build());
