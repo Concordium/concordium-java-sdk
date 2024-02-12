@@ -101,7 +101,7 @@ public class TransactionSerializationTest {
         // check header
         TransactionHeader header = ((AccountTransaction) blockItem).getHeader();
         assertEquals(AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), header.getSender());
-        assertEquals(Nonce.from(21), header.getAccountNonce());
+        assertEquals(Nonce.from(21), header.getNonce());
         assertEquals(UInt64.from(1706724577), header.getExpiry());
         // check payload
         TransactionType transactionType = payload.getTransactionType();
