@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.types.UInt32;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,7 +17,16 @@ public class PartsPerHundredThousand {
         this.numerator = value;
     }
 
+    /**
+     * Create a {@link PartsPerHundredThousand} from the provided value.
+     *
+     * @param x numerator of the fraction
+     * @return The parts per hundred thousands i.e. x / 100_000
+     * <p>
+     * @throws IllegalArgumentException if the provided numerator is greater than 100_000.
+     */
     public static PartsPerHundredThousand from(int x) {
+        if (x > 100000) throw new IllegalArgumentException("numerator must be less or equal than 100_000.");
         return new PartsPerHundredThousand(UInt32.from(x));
     }
 
@@ -35,6 +43,7 @@ public class PartsPerHundredThousand {
 
     /**
      * Get the bytes representing the {@link PartsPerHundredThousand}
+     *
      * @return the serialized format
      */
     public byte[] getBytes() {

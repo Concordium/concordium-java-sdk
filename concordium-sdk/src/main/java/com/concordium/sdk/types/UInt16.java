@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode
 @Getter
 @ToString
-public final class UInt16 {
+public final class UInt16 implements Comparable<UInt16> {
     public static final int BYTES = 2;
 
     private final int value;
@@ -52,5 +52,10 @@ public final class UInt16 {
         byte[] valueBytes = new byte[2];
         source.get(valueBytes);
         return UInt16.from(valueBytes);
+    }
+
+    @Override
+    public int compareTo(UInt16 o) {
+        return Integer.compare(this.value, o.value);
     }
 }
