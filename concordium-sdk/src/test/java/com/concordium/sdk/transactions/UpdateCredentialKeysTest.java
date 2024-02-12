@@ -36,7 +36,7 @@ public class UpdateCredentialKeysTest {
                 .keys(credentialPublicKeys)
                 .numExistingCredentials(UInt16.from(5))
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(525))
+                .nonce(Nonce.from(525))
                 .expiry(Expiry.from(1669466666))
                 .signer(TransactionSigner.from(
                         SignerEntry.from(Index.from(0), Index.from(0),

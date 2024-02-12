@@ -27,7 +27,7 @@ public class TransferScheduleWithMemoTest {
                 .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
                 .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionSigner.from(
                         SignerEntry.from(Index.from(0), Index.from(0),

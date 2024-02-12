@@ -289,7 +289,7 @@ interface ClientV2MapperExtensions {
     static com.concordium.sdk.responses.accountinfo.AccountInfo to(AccountInfo account) {
         com.concordium.sdk.responses.accountinfo.AccountInfo.AccountInfoBuilder builder = com.concordium.sdk.responses.accountinfo.AccountInfo.builder();
         builder
-                .accountNonce(to(account.getSequenceNumber()))
+                .Nonce(to(account.getSequenceNumber()))
                 .accountAmount(to(account.getAmount()))
                 .accountReleaseSchedule(to(account.getSchedule()))
                 .accountCredentials(ImmutableMap.copyOf(to(
@@ -529,8 +529,8 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
-    static AccountNonce to(NextAccountSequenceNumber nextAccountSequenceNumber) {
-        return AccountNonce.from(to(nextAccountSequenceNumber.getSequenceNumber()));
+    static Nonce to(NextAccountSequenceNumber nextAccountSequenceNumber) {
+        return Nonce.from(nextAccountSequenceNumber.getSequenceNumber().getValue());
     }
 
 
@@ -784,7 +784,7 @@ interface ClientV2MapperExtensions {
         val ret = TransactionHeader.builder()
                 .sender(to(header.getSender()))
                 .expiry(to(header.getExpiry()))
-                .accountNonce(to(header.getSequenceNumber()))
+                .Nonce(to(header.getSequenceNumber()))
                 .build();
         ret.setMaxEnergyCost(to(header.getEnergyAmount()));
         ret.setPayloadSize(UInt32.from(payloadSize));
@@ -912,7 +912,7 @@ interface ClientV2MapperExtensions {
     static AccountTransactionHeader to(TransactionHeader header) {
         return AccountTransactionHeader.newBuilder()
                 .setSequenceNumber(SequenceNumber.newBuilder()
-                        .setValue(to(header.getAccountNonce()))
+                        .setValue(to(header.getNonce()))
                         .build())
                 .setSender(to(header.getSender()))
                 .setExpiry(to(header.getExpiry()))
@@ -928,8 +928,8 @@ interface ClientV2MapperExtensions {
         return TransactionTime.newBuilder().setValue(expiry.getValue()).build();
     }
 
-    static long to(Nonce accountNonce) {
-        return accountNonce.getValue().getValue();
+    static long to(Nonce Nonce) {
+        return Nonce.getValue().getValue();
     }
 
     static com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters to(CryptographicParameters grpcOutput) {

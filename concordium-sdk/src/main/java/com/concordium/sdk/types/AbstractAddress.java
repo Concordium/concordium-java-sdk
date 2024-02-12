@@ -31,26 +31,6 @@ public abstract class AbstractAddress {
         this.type = type;
     }
 
-    //not pretty - find a better way of handling this.
-    public static AbstractAddress parseAccount(Map<String, Object> o) {
-        try {
-            if (isContractAddress(o)) {
-                val contract = (Map<String, Integer>) o.get("address");
-                return new ContractAddress(
-                        contract.get("subindex"),
-                        contract.get("index"));
-            } else {
-                return AccountAddress.from(((String) o.get("address")));
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private static boolean isContractAddress(Map<String, Object> o) {
-        return AccountType.from((String) o.get("type")) == AccountType.ADDRESS_CONTRACT;
-    }
-
     public static AbstractAddress from(Address instigator) {
         switch (instigator.getTypeCase()) {
             case ACCOUNT:

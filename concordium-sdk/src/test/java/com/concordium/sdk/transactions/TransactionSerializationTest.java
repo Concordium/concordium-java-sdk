@@ -46,7 +46,7 @@ public class TransactionSerializationTest {
         // check header
         TransactionHeader header = ((AccountTransaction) blockItem).getHeader();
         assertEquals(AccountAddress.from("3LFSxgiU4d7i1irUx1pNrQFFC74RxHBRaNztKWKDVJ1FJN8UP1"), header.getSender());
-        assertEquals(Nonce.from(1), header.getAccountNonce());
+        assertEquals(Nonce.from(1), header.getNonce());
         assertEquals(UInt64.from(1690898672), header.getExpiry());
         // check payload
         TransactionType transactionType = payload.getTransactionType();
@@ -69,7 +69,7 @@ public class TransactionSerializationTest {
         // check header
         TransactionHeader header = ((AccountTransaction) blockItem).getHeader();
         assertEquals(AccountAddress.from("4aM9746fwvhvh567MWWvmAgEtYmN9TwfhdEbWLRY8FzomGrtps"), header.getSender());
-        assertEquals(Nonce.from(5), header.getAccountNonce());
+        assertEquals(Nonce.from(5), header.getNonce());
         assertEquals(UInt64.from(1690969995), header.getExpiry());
         // check payload
         TransactionType transactionType = payload.getTransactionType();
@@ -86,14 +86,14 @@ public class TransactionSerializationTest {
 
     // a hex encoded transfer with memo
     private static final String biTransferWithMemo = "000001000100004052545c8418bf3228469cde4aa33ed8bb646aaffc6595c7bfcc1c0a4f353c1b1b874f5bd54a4e953c4a38e6529ae2e1b9a44597505d0676b8f7d15741b62fba00d6cea90316c56d994abd205876e423c6f6c9488e2d7c4f0b044539de501f1174000000000000000500000000000001fc000000300000000064ca278b16393d88b218e44301cceb22bd64184edba56996498523710ebb43b4cf430db89700056474657374000000000bebc200";
-
+    
     private static final BlockItem bi = Transfer.createNew(
                     AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"),
                     CCDAmount.fromMicro(17))
             .withHeader(TransactionHeader
                     .builder()
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                    .accountNonce(Nonce.from(78910))
+                    .Nonce(Nonce.from(78910))
                     .expiry(UInt64.from(123456))
                     .build())
             .signWith(

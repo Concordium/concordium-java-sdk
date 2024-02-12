@@ -566,7 +566,7 @@ public class EncryptedTransferResultTransactionTest {
                                         "ab6e980b"))
                         .startIndex(EncryptedAmountIndex.from(0))
                         .build())
-                .accountNonce(nonce)
+                .Nonce(nonce)
                 .build();
 
         val toAccountAddress = AccountAddress.from("3aYdMM4CFQSH7P16sCN51p3J6TYhACgV9EYBeVJoLTfZxRFwp4");
@@ -585,7 +585,7 @@ public class EncryptedTransferResultTransactionTest {
                         CCDAmount.fromMicro(1)
                 )
                 .sender(accountInfo.getAccountAddress())
-                .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                .nonce(accountInfo.getNonce())
                 .expiry(Expiry.from(123456))
                 .receiver(toAccountAddress)
                 .signer(TransactionTestHelper.getValidSigner())
@@ -613,7 +613,7 @@ public class EncryptedTransferResultTransactionTest {
                                         "ab6e980b"))
                         .startIndex(EncryptedAmountIndex.from(0))
                         .build())
-                .accountNonce(nonce)
+                .Nonce(nonce)
                 .build();
 
         val cases = new CryptographicParameters[]{
@@ -641,7 +641,7 @@ public class EncryptedTransferResultTransactionTest {
                             CCDAmount.fromMicro(1)
                     )
                     .sender(accountInfo.getAccountAddress())
-                    .nonce(AccountNonce.from(accountInfo.getAccountNonce()))
+                    .nonce(accountInfo.getNonce())
                     .expiry(Expiry.from(123456))
                     .receiver(toAccountAddress)
                     .signer(TransactionTestHelper.getValidSigner())

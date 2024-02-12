@@ -4,7 +4,7 @@ import com.concordium.grpc.v2.AccountAddress;
 import com.concordium.grpc.v2.NextAccountSequenceNumber;
 import com.concordium.grpc.v2.QueriesGrpc;
 import com.concordium.grpc.v2.SequenceNumber;
-import com.concordium.sdk.transactions.AccountNonce;
+import com.concordium.sdk.types.Nonce;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
@@ -37,7 +37,7 @@ public class ClientV2GetNextAccountSequenceNumberTest {
             .setAllFinal(true)
             .build();
 
-    private static final AccountNonce CONSENSUS_INFO_RES_EXPECTED = AccountNonce.from(NONCE_VALUE);
+    private static final Nonce CONSENSUS_INFO_RES_EXPECTED = Nonce.from(NONCE_VALUE);
 
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
             new QueriesGrpc.QueriesImplBase() {

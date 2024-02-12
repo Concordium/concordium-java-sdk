@@ -5,6 +5,7 @@ import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class UpdateContractTransactionTest {
         UpdateContractTransaction transaction = UpdateContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)
@@ -38,7 +39,7 @@ public class UpdateContractTransactionTest {
     public void testUpdateContractTransactionWithoutSenderFails() {
         UpdateContractTransaction
                 .builder()
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(UpdateContract.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
@@ -69,7 +70,7 @@ public class UpdateContractTransactionTest {
         UpdateContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(UpdateContract.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
@@ -84,7 +85,7 @@ public class UpdateContractTransactionTest {
         UpdateContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .payload(UpdateContract.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))
                 .maxEnergyCost(UInt64.from(10000))
@@ -97,7 +98,7 @@ public class UpdateContractTransactionTest {
         UpdateContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(getSignerWithMalformedSecretKey())
                 .payload(UpdateContract.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray))

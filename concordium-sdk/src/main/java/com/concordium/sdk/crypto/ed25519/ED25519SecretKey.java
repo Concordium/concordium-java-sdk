@@ -5,6 +5,7 @@ import com.concordium.sdk.crypto.KeyJsonSerializer;
 import com.concordium.sdk.exceptions.ED25519Exception;
 import com.concordium.sdk.transactions.Signer;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -70,5 +71,11 @@ public final class ED25519SecretKey implements Signer, RawKey {
     @Override
     public byte[] getRawBytes() {
         return this.bytes;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return Hex.encodeHexString(this.getBytes());
     }
 }
