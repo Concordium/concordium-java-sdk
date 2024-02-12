@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 /**
  * Represents energy, i.e. the cost of executing transactions on the chain.
  */
@@ -19,7 +21,7 @@ public class Energy {
 
     @Override
     public String toString() {
-        return this.value.getValue() + " NRG";
+        return this.value.toString() + " NRG";
     }
 
     public static Energy from(com.concordium.grpc.v2.Energy energy) {
@@ -29,6 +31,9 @@ public class Energy {
     public static Energy from(UInt64 value) {
         return new Energy(value);
     }
+    public static Energy from(String val) {
+        return Energy.from(UInt64.from(val));
+    }
 
     /**
      * Approximates the {@link EuroAmount} amount corresponding to the {@link Energy} using the provided {@link ChainParameters}.
@@ -36,9 +41,10 @@ public class Energy {
      * @return {@link EuroAmount} corresponding to the value of {@link Energy}
      */
     public EuroAmount toEuro(ChainParameters parameters) {
-        double euroPerEnergy = parameters.getEuroPerEnergy().asDouble();
-        double euros = value.getValue() * euroPerEnergy;
-        return EuroAmount.from(euros);
+        BigDecimal euroPerEnergy = parameters.getEuroPerEnergy().asBigDecimal(20);
+        BigDecimal energy = new BigDecimal(this.getValue().toString());
+        BigDecimal euros = energy.multiply(euroPerEnergy);
+        return EuroAmount.from(euros.toString());
     }
 
     /**

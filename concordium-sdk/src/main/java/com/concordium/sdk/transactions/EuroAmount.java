@@ -2,11 +2,13 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.sdk.requests.smartcontracts.Energy;
-import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.chainparameters.ChainParameters;
 import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * An amount of Euros.
@@ -24,17 +26,21 @@ public class EuroAmount {
     public static EuroAmount from(double value) {
         return new EuroAmount(value);
     }
+    public static EuroAmount from(String value) {return EuroAmount.from(Double.parseDouble(value));}
 
     public Energy toEnergy(ChainParameters parameters) {
-        double euroPerEnergy = parameters.getEuroPerEnergy().asDouble();
-        Fraction flipped = Fraction.from(parameters.getEuroPerEnergy().getDenominator().getValue(), parameters.getEuroPerEnergy().getNumerator().getValue());
-        return Energy.from(UInt64.from((long) (this.getValue() / euroPerEnergy)));
+        BigDecimal euroPerEnergy = parameters.getEuroPerEnergy().asBigDecimal(20);
+        BigDecimal euroAmount = BigDecimal.valueOf(this.getValue());
+        BigDecimal energy = euroAmount.divide(euroPerEnergy, 20, RoundingMode.HALF_UP);
+        return Energy.from(UInt64.from(energy.longValue()));
 
     }
 
     public CCDAmount toCCD(ChainParameters parameters) {
-        double microCCDPerEuro = parameters.getMicroCCDPerEuro().asDouble();
-        return CCDAmount.fromMicro((long) (this.getValue() * microCCDPerEuro));
+        BigDecimal microCCDPerEuro = parameters.getMicroCCDPerEuro().asBigDecimal(20);
+        BigDecimal euroAmount = BigDecimal.valueOf(this.getValue());
+        BigDecimal ccd = euroAmount.multiply(microCCDPerEuro);
+        return CCDAmount.fromMicro(ccd.longValue());
     }
 
     @Override
