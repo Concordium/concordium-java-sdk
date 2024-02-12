@@ -59,8 +59,8 @@ public class Fraction {
     }
 
     /**
-     * Get the fraction as a {@link BigDecimal} value with the specified amount of digits after the decimal point.
-     * Last decimal is rounded using {@link RoundingMode#HALF_UP}
+     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision.
+     * Result is rounded using {@link RoundingMode#HALF_UP}
      *
      * @param precision how many decimals of precision.
      * @return the fraction represented as a {@link BigDecimal}.

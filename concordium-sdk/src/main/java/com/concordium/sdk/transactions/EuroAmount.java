@@ -28,6 +28,12 @@ public class EuroAmount {
     }
     public static EuroAmount from(String value) {return EuroAmount.from(Double.parseDouble(value));}
 
+    /**
+     * Approximates the {@link Energy} amount corresponding to the {@link EuroAmount} using the provided {@link ChainParameters}.
+     * Rounding may occur, so result might not be exact.
+     * @param parameters {@link ChainParameters} with exchange rate used for conversion.
+     * @return {@link Energy} corresponding to the value of {@link EuroAmount}.
+     */
     public Energy toEnergy(ChainParameters parameters) {
         BigDecimal euroPerEnergy = parameters.getEuroPerEnergy().asBigDecimal(20);
         BigDecimal euroAmount = BigDecimal.valueOf(this.getValue());
@@ -36,6 +42,12 @@ public class EuroAmount {
 
     }
 
+    /**
+     * Approximates the {@link CCDAmount} amount corresponding to the {@link EuroAmount} using the provided {@link ChainParameters}.
+     * Rounding may occur, so result might not be exact.
+     * @param parameters {@link ChainParameters} with exchange rate used for conversion.
+     * @return {@link CCDAmount} corresponding to the value of {@link EuroAmount}.
+     */
     public CCDAmount toCCD(ChainParameters parameters) {
         BigDecimal microCCDPerEuro = parameters.getMicroCCDPerEuro().asBigDecimal(20);
         BigDecimal euroAmount = BigDecimal.valueOf(this.getValue());

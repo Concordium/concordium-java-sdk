@@ -37,8 +37,9 @@ public class Energy {
 
     /**
      * Approximates the {@link EuroAmount} amount corresponding to the {@link Energy} using the provided {@link ChainParameters}.
+     * Rounding may occur, so result might not be exact.
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
-     * @return {@link EuroAmount} corresponding to the value of {@link Energy}
+     * @return {@link EuroAmount} corresponding to the value of {@link Energy}.
      */
     public EuroAmount toEuro(ChainParameters parameters) {
         BigDecimal euroPerEnergy = parameters.getEuroPerEnergy().asBigDecimal(20);
@@ -48,7 +49,8 @@ public class Energy {
     }
 
     /**
-     * Approximates the {@link CCDAmount} corresponding to the {@link Energy} using the provided {@link ChainParameters}.
+     * Approximates the {@link CCDAmount} amount corresponding to the {@link Energy} using the provided {@link ChainParameters}.
+     * Rounding may occur, so result might not be exact.
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
      * @return {@link CCDAmount} corresponding to the value of {@link Energy}.
      */
