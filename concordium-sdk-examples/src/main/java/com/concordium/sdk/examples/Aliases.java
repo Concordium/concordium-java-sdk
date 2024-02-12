@@ -13,7 +13,8 @@ import java.util.concurrent.Callable;
 public class Aliases implements Callable<Integer> {
 
     @CommandLine.Parameters(
-            description = "List of addresses to check")
+            description = "List of addresses to check",
+            arity = "2..." )
     List<String> addresses;
     @Override
     public Integer call() throws Exception {
