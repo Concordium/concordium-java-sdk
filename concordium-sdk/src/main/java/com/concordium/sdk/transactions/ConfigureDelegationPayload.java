@@ -18,17 +18,14 @@ public class ConfigureDelegationPayload {
     /**
      * The capital delegated to the pool.
      */
-    @NonNull
     private final CCDAmount capital;
     /**
      * Whether the delegator's earnings are restaked.
      */
-    @NonNull
     private final Boolean restakeEarnings;
     /**
      * The target of the delegation.
      */
-    @NonNull
     private final DelegationTarget delegationTarget;
 
     ByteBuffer createNotNullBuffer(byte[] bufferBytes) {

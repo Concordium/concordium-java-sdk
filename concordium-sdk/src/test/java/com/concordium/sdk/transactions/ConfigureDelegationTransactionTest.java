@@ -90,4 +90,22 @@ public class ConfigureDelegationTransactionTest {
         assertEquals("00010000000000000000", Hex.encodeHexString(payload.getBytes()));
     }
 
+    @Test
+    public void serializeStopRestake() {
+        val payload = ConfigureDelegationPayload
+                .builder()
+                .restakeEarnings(false)
+                .build();
+        assertEquals("000200", Hex.encodeHexString(payload.getBytes()));
+    }
+
+    @Test
+    public void serializeEnableRestake() {
+        val payload = ConfigureDelegationPayload
+                .builder()
+                .restakeEarnings(true)
+                .build();
+        assertEquals("000201", Hex.encodeHexString(payload.getBytes()));
+    }
+
 }
