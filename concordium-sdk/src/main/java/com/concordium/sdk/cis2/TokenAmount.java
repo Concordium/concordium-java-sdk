@@ -58,11 +58,10 @@ public class TokenAmount {
                 currentByte |= 0x80; // Set the MSB to 1 to indicate there are more bytes to come
             }
             bos.write(currentByte);
+            if (bos.size() > 37)
+                throw new IllegalArgumentException("Invalid encoding of TokenAmount. Must not exceed 37 byes.");
         }
-        val result = bos.toByteArray();
-        if (result.length > 37) throw new IllegalArgumentException("Invalid encoding of TokenAmount. Must not exceed 37 byes.");
-        return result;
-
+        return bos.toByteArray();
     }
 
     /**
@@ -78,7 +77,8 @@ public class TokenAmount {
         int shift = 0;
         int count = 0;
         while (true) {
-            if (count > 37) throw new IllegalArgumentException("Tried to decode a TokenAmount which consists of more than 37 bytes.");
+            if (count > 37)
+                throw new IllegalArgumentException("Tried to decode a TokenAmount which consists of more than 37 bytes.");
             byte b = buffer.get();
             BigInteger byteValue = BigInteger.valueOf(b & 0x7F); // Mask to get 7 least significant bits
             result = result.or(byteValue.shiftLeft(shift));
