@@ -1,5 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.transactions.ReceiveName;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -10,9 +12,9 @@ import lombok.ToString;
 @Getter
 @ToString
 @Builder
-class RejectReasonInvalidReceiveMethod extends RejectReason {
-    private final String moduleRef;
-    private final String receiveName;
+public class RejectReasonInvalidReceiveMethod extends RejectReason {
+    private final ModuleRef moduleRef;
+    private final ReceiveName receiveName;
 
     @Override
     public RejectReasonType getType() {

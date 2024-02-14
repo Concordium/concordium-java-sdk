@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,7 +12,7 @@ import lombok.ToString;
 @Builder
 public class RejectReasonDuplicateAggregationKey extends RejectReason {
     @Getter
-    private final String publicKey;
+    private final BLSPublicKey publicKey;
 
     @Override
     public RejectReasonType getType() {

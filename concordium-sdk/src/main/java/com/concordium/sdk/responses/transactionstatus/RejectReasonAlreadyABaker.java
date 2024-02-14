@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.AccountIndex;
+import com.concordium.sdk.responses.BakerId;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,7 +13,7 @@ import lombok.ToString;
 @Getter
 @Builder
 public class RejectReasonAlreadyABaker extends RejectReason {
-    private final AccountIndex bakerId;
+    private final BakerId bakerId;
 
     @Override
     public RejectReasonType getType() {

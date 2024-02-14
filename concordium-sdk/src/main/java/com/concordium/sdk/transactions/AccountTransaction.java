@@ -123,6 +123,9 @@ public class AccountTransaction extends BlockItem {
         byte tag = source.get();
         Payload payload;
         switch (tag) {
+            case 2:
+                payload = UpdateContract.fromBytes(source);
+                break;
             case 3:
                 payload = Transfer.fromBytes(source);
                 break;
@@ -133,7 +136,7 @@ public class AccountTransaction extends BlockItem {
                 payload = TransferWithMemo.fromBytes(source);
                 break;
             default:
-                throw new UnsupportedOperationException("Only transfers and transfers with memo are currently supported.");
+                throw new UnsupportedOperationException("Unsupported transaction type: " + tag);
         }
 
         return new AccountTransaction(signature, header, payload);

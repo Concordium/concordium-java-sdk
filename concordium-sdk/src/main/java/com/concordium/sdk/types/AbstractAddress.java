@@ -8,10 +8,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.val;
-
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * An abstract Address.
