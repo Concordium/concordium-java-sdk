@@ -1,16 +1,12 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.grpc.v2.Amount;
-import com.concordium.sdk.requests.smartcontracts.Energy;
-import com.concordium.sdk.responses.chainparameters.ChainParameters;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 
 /**
@@ -64,29 +60,6 @@ public class CCDAmount {
     public static CCDAmount fromBytes(ByteBuffer source) {
         UInt64 value = UInt64.fromBytes(source);
         return new CCDAmount(value);
-    }
-
-    /**
-     * Approximates the {@link EuroAmount} amount corresponding to the {@link CCDAmount} using the provided {@link ChainParameters}.
-     * Rounding may occur, so result might not be exact.
-     * @param parameters {@link ChainParameters} with exchange rate used for conversion.
-     * @return {@link EuroAmount} corresponding to the value of {@link CCDAmount}.
-     */
-    public EuroAmount toEuro(ChainParameters parameters) {
-        BigDecimal microCCDPerEuro = parameters.getMicroCCDPerEuro().asBigDecimal(20);
-        BigDecimal ccd = new BigDecimal(this.getValue().toString());
-        BigDecimal euros = ccd.divide(microCCDPerEuro, 20, RoundingMode.HALF_UP);
-        return EuroAmount.from(euros.toString());
-    }
-
-    /**
-     * Approximates the {@link Energy} amount corresponding to the {@link CCDAmount} using the provided {@link ChainParameters}.
-     * Rounding may occur, so result might not be exact.
-     * @param parameters {@link ChainParameters} with exchange rate used for conversion.
-     * @return {@link Energy} corresponding to the value of {@link CCDAmount}.
-     */
-    public Energy toEnergy(ChainParameters parameters) {
-        return this.toEuro(parameters).toEnergy(parameters);
     }
 
     @Override

@@ -66,8 +66,20 @@ public class Fraction {
      * @return the fraction represented as a {@link BigDecimal}.
      */
     public BigDecimal asBigDecimal(int precision) {
+        return asBigDecimal(precision, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision.
+     * Result is rounded using the provided {@link RoundingMode}.
+     *
+     * @param precision how many decimals of precision.
+     * @param roundingMode the {@link RoundingMode} to use.
+     * @return the fraction represented as a {@link BigDecimal}.
+     */
+    public BigDecimal asBigDecimal(int precision, RoundingMode roundingMode) {
         BigDecimal numerator = new BigDecimal(this.numerator.toString());
         BigDecimal denominator = new BigDecimal(this.denominator.toString());
-        return numerator.divide(denominator, precision, RoundingMode.HALF_UP);
+        return numerator.divide(denominator, precision, roundingMode);
     }
 }
