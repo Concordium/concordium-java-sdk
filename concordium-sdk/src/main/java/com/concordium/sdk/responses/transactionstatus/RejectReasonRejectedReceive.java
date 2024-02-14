@@ -1,5 +1,7 @@
 package com.concordium.sdk.responses.transactionstatus;
 
+import com.concordium.sdk.transactions.Parameter;
+import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.types.ContractAddress;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,11 +25,11 @@ public class RejectReasonRejectedReceive extends RejectReason {
     /**
      * The name of the receive method.
      */
-    private final String receiveName;
+    private final ReceiveName receiveName;
     /**
-     * The parameter the it was called with.
+     * The parameter the contract was called with.
      */
-    private final String parameter;
+    private final Parameter parameter;
 
     @Override
     public RejectReasonType getType() {

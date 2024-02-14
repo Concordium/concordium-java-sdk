@@ -1,14 +1,21 @@
 # Changelog
 
-# Unreleased changes
- - Cleanup the API a bit for configure baker transaction by using `PartsPerHundredThousands` for determining the commission rates.
- - Fix serialization of `ConfigureDelegation` transaction
- - Remove `AccountNonce` in favor of just using the `Nonce` type across the API.
- - Fix a bug in the serialization of `AccountIndex`
- - Fix a bug that caused `getAccountInfo` to fail for delegator and baker accounts if they had no stake pending changes. 
-   This change is also propagated to the type level such that `Baker` and `AccountDelegation` retains an `Optional<PendingChange>` 
-   as opposed to just `PendingChange`.
- - Fix .equals() for AccountInfo such that all fields are used to deduce equality.<
+## Unreleased changes
+- Make the `energy` parameter for invoking an instance `Optional`.
+- Parse the underlying reject reasons into `AccountTransactionDetails`.
+- Introduced Cis2Client for interfacing with CIS2 compliant smart contracts.
+- Support for deserializing contract update transactions.
+- Fix a bug where contract invocations used the wrong format for parameters.
+- Fix a bug in the serialization of `AccountIndex`
+- Fix a bug that caused `getAccountInfo` to fail for delegator and baker accounts if they had no stake pending changes. 
+- Cleanup the API a bit for configure baker transaction by using `PartsPerHundredThousands` for determining the commission rates.
+- Fix serialization of `ConfigureDelegation` transaction
+- Remove `AccountNonce` in favor of just using the `Nonce` type across the API.
+- Fix a bug in the serialization of `AccountIndex`
+- Fix a bug that caused `getAccountInfo` to fail for delegator and baker accounts if they had no stake pending changes. 
+  This change is also propagated to the type level such that `Baker` and `AccountDelegation` retains an `Optional<PendingChange>` 
+  as opposed to just `PendingChange`.
+- Fix .equals() for AccountInfo such that all fields are used to deduce equality.
 
 ## 6.1.0
 - Purge remaining usages of V1 GRPC API.

@@ -39,6 +39,12 @@ public final class ContractAddress extends AbstractAddress {
         return ContractAddress.from(address.getIndex(), address.getSubindex());
     }
 
+    public static ContractAddress from(ByteBuffer source) {
+        long contractIndex = source.getLong();
+        long contractSubIndex = source.getLong();
+        return new ContractAddress(contractSubIndex, contractIndex);
+    }
+
     public String toJson() {
         try {
             return JsonMapper.INSTANCE.writeValueAsString(this);

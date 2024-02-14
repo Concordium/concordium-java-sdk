@@ -6,7 +6,7 @@ import lombok.ToString;
  * At least one of the credentials was either malformed or its proof was incorrect.
  */
 @ToString
-class RejectReasonInvalidCredentials extends RejectReason {
+public class RejectReasonInvalidCredentials extends RejectReason {
     @Override
     public RejectReasonType getType() {
         return RejectReasonType.INVALID_CREDENTIALS;

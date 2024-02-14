@@ -68,8 +68,8 @@ public final class UpdateContract extends Payload {
      *
      * @param amount          The amount of CCD to be sent to the contract.
      * @param contractAddress Address of the contract instance to invoke.
-     * @param receiveName The {@link ReceiveName} of the smart contract instance to invoke.
-     * @param param       The parameter of the contract method.
+     * @param receiveName     The {@link ReceiveName} of the smart contract instance to invoke.
+     * @param param           The parameter of the contract method.
      * @return A new UpdateContractPayload object.
      */
     public static UpdateContract from(@NonNull final CCDAmount amount,
@@ -112,6 +112,7 @@ public final class UpdateContract extends Payload {
         return from(amount, contractAddress, schemaParameter.getReceiveName(), Parameter.from(schemaParameter));
     }
 
+
     @Override
     public TransactionType getTransactionType() {
         return TransactionType.UPDATE_SMART_CONTRACT_INSTANCE;
@@ -134,5 +135,14 @@ public final class UpdateContract extends Payload {
         buffer.put(paramBytes);
 
         return buffer.array();
+    }
+
+    public static Payload fromBytes(ByteBuffer source) {
+        val amount = CCDAmount.fromBytes(source);
+        val contractAddress = ContractAddress.from(source);
+        val receiveName = ReceiveName.from(source);
+        byte[] parameterBuffer = new byte[source.remaining()];
+        source.get(parameterBuffer);
+        return UpdateContract.from(amount, contractAddress, receiveName, Parameter.from(parameterBuffer));
     }
 }
