@@ -5,7 +5,7 @@
 - Parse the underlying reject reasons into `AccountTransactionDetails`.
 - Introduced Cis2Client for interfacing with CIS2 compliant smart contracts.
 - Support for deserializing contract update transactions.
-- Fix a bug where contract invocations used wrong format for parameters.
+- Fix a bug where contract invocations used the wrong format for parameters.
 - Fix a bug in the serialization of `AccountIndex`
 - Fix a bug that caused `getAccountInfo` to fail for delegator and baker accounts if they had no stake pending changes. 
 - Cleanup the API a bit for configure baker transaction by using `PartsPerHundredThousands` for determining the commission rates.
