@@ -1,30 +1,20 @@
 package com.concordium.sdk.cis2;
 
 import com.concordium.sdk.ClientV2;
-import com.concordium.sdk.cis2.events.Cis2Event;
 import com.concordium.sdk.cis2.events.Cis2EventWithMetadata;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.smartcontracts.Energy;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
-import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
-import com.concordium.sdk.responses.blockitemsummary.Summary;
-import com.concordium.sdk.responses.blockitemsummary.Type;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
-import com.concordium.sdk.responses.smartcontracts.ContractTraceElement;
-import com.concordium.sdk.responses.smartcontracts.ContractTraceElementType;
-import com.concordium.sdk.responses.transactionstatus.ContractUpdated;
 import com.concordium.sdk.responses.transactionstatus.Outcome;
-import com.concordium.sdk.responses.transactionstatus.TransactionResultEventType;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.*;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.val;
-import lombok.var;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * A client dedicated to the CIS2 <a href="https://proposals.concordium.software/CIS/cis-2.html">specification</a>.
@@ -112,7 +102,7 @@ public class Cis2Client {
         val listOfQueries = Arrays.asList(queries);
         val parameter = SerializationUtils.serializeBalanceOfParameter(listOfQueries);
         val endpoint = ReceiveName.from(contractName, "balanceOf");
-        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, CCDAmount.from(0), endpoint, parameter, Optional.empty()));
+        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, endpoint, parameter, Optional.empty()));
         if (result.getOutcome() == Outcome.REJECT) {
             throw new RuntimeException("balanceOf failed: " + result.getRejectReason().toString());
         }
@@ -134,7 +124,7 @@ public class Cis2Client {
         val listOfQueries = Arrays.asList(queries);
         val parameter = SerializationUtils.serializeOperatorOfParameter(listOfQueries);
         val endpoint = ReceiveName.from(contractName, "operatorOf");
-        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, CCDAmount.from(0), endpoint, parameter, Optional.empty()));
+        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, endpoint, parameter, Optional.empty()));
         if (result.getOutcome() == Outcome.REJECT) {
             throw new RuntimeException("operatorOf failed: " + result.getRejectReason().toString());
         }
@@ -156,7 +146,7 @@ public class Cis2Client {
         val listOfQueries = Arrays.asList(tokenIds);
         val parameter = SerializationUtils.serializeTokenIds(listOfQueries);
         val endpoint = ReceiveName.from(contractName, "tokenMetadata");
-        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, CCDAmount.from(0), endpoint, parameter, Optional.empty()));
+        val result = this.client.invokeInstance(InvokeInstanceRequest.from(BlockQuery.LAST_FINAL, this.contractAddress, endpoint, parameter, Optional.empty()));
         if (result.getOutcome() == Outcome.REJECT) {
             throw new RuntimeException("tokenMetadata failed: " + result.getRejectReason().toString());
         }

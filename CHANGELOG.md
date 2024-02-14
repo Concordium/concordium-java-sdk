@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Removed unnecessary  `amount` parameter from `InvokeInstanceRequest`.
 - Added utility functions for converting between `CCDAmount` and `Energy`. Present in utility class `Converter`.
 - Make the `energy` parameter for invoking an instance `Optional`.
 - Parse the underlying reject reasons into `AccountTransactionDetails`.
