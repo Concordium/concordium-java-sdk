@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased changes
-- Make the `energy` paramter for invoking an instance `Optional`.
+- Make the `energy` parameter for invoking an instance `Optional`.
 - Parse the underlying reject reasons into `AccountTransactionDetails`.
 - Introduced Cis2Client for interfacing with CIS2 compliant smart contracts.
 - Support for deserializing contract update transactions.
