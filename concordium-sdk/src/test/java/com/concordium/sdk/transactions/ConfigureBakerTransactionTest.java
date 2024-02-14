@@ -2,7 +2,9 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
 import com.concordium.sdk.responses.BakerId;
+import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt32;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -23,18 +25,18 @@ public class ConfigureBakerTransactionTest {
         val payload = ConfigureBakerPayload.builder()
                 .capital(CCDAmount.fromMicro("14000000000"))
                 .restakeEarnings(true)
-                .openForDelegation(0)
+                .openForDelegation(false)
                 .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, bakerKeys))
                 .metadataUrl("abc@xyz.com")
-                .transactionFeeCommission(UInt32.from(10000))
-                .bakingRewardCommission(UInt32.from(10000))
-                .finalizationRewardCommission(UInt32.from(100000))
+                .transactionFeeCommission(PartsPerHundredThousand.from(10000))
+                .bakingRewardCommission(PartsPerHundredThousand.from(10000))
+                .finalizationRewardCommission(PartsPerHundredThousand.from(100000))
                 .build();
 
 
         val transaction = TransactionFactory.newConfigureBaker()
                 .sender(accountAddress)
-                .nonce(AccountNonce.from(123))
+                .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)
@@ -55,7 +57,7 @@ public class ConfigureBakerTransactionTest {
 
         val transaction = TransactionFactory.newConfigureBaker()
                 .sender(accountAddress)
-                .nonce(AccountNonce.from(123))
+                .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)
@@ -72,17 +74,17 @@ public class ConfigureBakerTransactionTest {
         val payload = ConfigureBakerPayload.builder()
                 .capital(CCDAmount.fromMicro("14000000000"))
                 .restakeEarnings(true)
-                .openForDelegation(0)
+                .openForDelegation(false)
                 .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, BakerKeys.createBakerKeys()))
-                .transactionFeeCommission(UInt32.from(10000))
-                .bakingRewardCommission(UInt32.from(10000))
-                .finalizationRewardCommission(UInt32.from(100000))
+                .transactionFeeCommission(PartsPerHundredThousand.from(10000))
+                .bakingRewardCommission(PartsPerHundredThousand.from(10000))
+                .finalizationRewardCommission(PartsPerHundredThousand.from(100000))
                 .build();
 
 
         val transaction = TransactionFactory.newConfigureBaker()
                 .sender(accountAddress)
-                .nonce(AccountNonce.from(123))
+                .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)
@@ -103,7 +105,7 @@ public class ConfigureBakerTransactionTest {
 
         val transaction = TransactionFactory.newConfigureBaker()
                 .sender(accountAddress)
-                .nonce(AccountNonce.from(123))
+                .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(payload)

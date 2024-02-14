@@ -576,7 +576,7 @@ public class EncryptedTransfersTestResult {
                                         "ab6e980b"))
                         .startIndex(EncryptedAmountIndex.from(0))
                         .build())
-                .accountNonce(nonce)
+                .Nonce(nonce)
                 .build();
         val cryptographicParameters = getTestCryptographicParameters();
 
@@ -610,7 +610,7 @@ public class EncryptedTransfersTestResult {
                                         "ab6e980b"))
                         .startIndex(EncryptedAmountIndex.from(0))
                         .build())
-                .accountNonce(nonce)
+                .Nonce(nonce)
                 .build();
 
         val encryptedTransferjniOutput = EncryptedTransfers.createEncryptedTransferPayload(

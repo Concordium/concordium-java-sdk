@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.val;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -44,6 +45,16 @@ public final class ReceiveName {
         return new ReceiveName(contractName, method);
     }
 
+    /**
+     * Create a {@link ReceiveName} from a {@link InitName}
+     * @param initName the {@link InitName}
+     * @param endpoint name of the receive endpoint
+     * @return a {@link ReceiveName}
+     */
+    public static ReceiveName from(InitName initName, String endpoint) {
+        return new ReceiveName(initName.getName().split("init_")[1], endpoint);
+    }
+
     public static ReceiveName parse(final String value) {
         val parts = value.split("\\.");
         if (parts.length != 2) {
@@ -53,11 +64,24 @@ public final class ReceiveName {
         return from(parts[0], parts[1]);
     }
 
+    public static ReceiveName from(com.concordium.grpc.v2.ReceiveName receiveName) {
+        return ReceiveName.parse(receiveName.getValue());
+    }
+
     public byte[] getBytes() {
         val receiveNameBuffer = (contractName + "." + method).getBytes();
         val buffer = ByteBuffer.allocate(UInt16.BYTES + receiveNameBuffer.length);
         buffer.put(UInt16.from(receiveNameBuffer.length).getBytes());
         buffer.put(receiveNameBuffer);
         return buffer.array();
+    }
+
+    public static ReceiveName from(ByteBuffer buffer) {
+        val length = UInt16.fromBytes(buffer);
+        val nameBuffer = new byte[length.getValue()];
+        buffer.get(nameBuffer);
+        val receiveName = new String(nameBuffer, StandardCharsets.UTF_8);
+        val split = receiveName.split("\\.");
+        return new ReceiveName(split[0], split[1]);
     }
 }

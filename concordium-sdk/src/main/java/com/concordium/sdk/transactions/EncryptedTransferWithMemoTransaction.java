@@ -3,6 +3,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import lombok.*;
 
 @Getter
@@ -18,7 +19,7 @@ public class EncryptedTransferWithMemoTransaction extends AccountTransaction {
             @NonNull final AccountAddress receiver,
             @NonNull final Memo memo,
             @NonNull final AccountAddress sender,
-            @NonNull final AccountNonce nonce,
+            @NonNull final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer) {
         super(sender, nonce, expiry, signer, EncryptedTransferWithMemo.createNew(data, receiver, memo), TransactionTypeCost.ENCRYPTED_TRANSFER_WITH_MEMO.getValue());
@@ -44,7 +45,7 @@ public class EncryptedTransferWithMemoTransaction extends AccountTransaction {
             final AccountAddress receiver,
             final Memo memo,
             final AccountAddress sender,
-            final AccountNonce nonce,
+            final Nonce nonce,
             final Expiry expiry,
             final TransactionSigner signer) {
         try {

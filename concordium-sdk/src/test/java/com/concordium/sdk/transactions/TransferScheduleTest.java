@@ -34,7 +34,7 @@ public class TransferScheduleTest {
                 .sender(sender)
                 .to(to)
                 .schedule(schedule)
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(signer)
                 .build();

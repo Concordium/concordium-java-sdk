@@ -3,6 +3,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
@@ -16,7 +17,7 @@ public class UpdateContractTransaction extends AccountTransaction {
     private UpdateContractTransaction(
             @NonNull final UpdateContract payload,
             @NonNull final AccountAddress sender,
-            @NonNull final AccountNonce nonce,
+            @NonNull final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer,
             @NonNull final UInt64 maxEnergyCost) {
@@ -39,7 +40,7 @@ public class UpdateContractTransaction extends AccountTransaction {
     public static UpdateContractTransaction from(
             final UpdateContract payload,
             final AccountAddress sender,
-            final AccountNonce nonce,
+            final Nonce nonce,
             final Expiry expiry,
             final TransactionSigner signer,
             final UInt64 maxEnergyCost) {
