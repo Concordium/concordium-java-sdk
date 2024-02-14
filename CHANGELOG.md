@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Added utility functions for converting between `CCDAmount` and `Energy`. Present in utility class `Converter`.
 - Make the `energy` parameter for invoking an instance `Optional`.
 - Parse the underlying reject reasons into `AccountTransactionDetails`.
 - Introduced Cis2Client for interfacing with CIS2 compliant smart contracts.
