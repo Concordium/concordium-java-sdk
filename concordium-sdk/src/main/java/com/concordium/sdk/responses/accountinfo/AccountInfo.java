@@ -19,7 +19,6 @@ import java.util.Objects;
 /**
  * Information of an account on chain.
  */
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 @Jacksonized
 @Builder
@@ -27,14 +26,13 @@ public final class AccountInfo {
     /**
      * The account address.
      */
-    @EqualsAndHashCode.Include
     private final AccountAddress accountAddress;
     /**
      * The current nonce for the account.
      * That is, this is the first unused nonce from the perspective of the block that
      * `AccountInfo` is for.
      */
-    private final Nonce accountNonce;
+    private final Nonce Nonce;
     /**
      * The amount of CCD owned by this account.
      */

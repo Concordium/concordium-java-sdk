@@ -2,10 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.types.UInt16;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.val;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
@@ -79,13 +76,13 @@ public class ConfigureDelegationPayload {
         if (this.restakeEarnings != null) {
             val restakeEarningsByte = (byte) (this.restakeEarnings ? 1 : 0);
             restakeEarningBuffer = createNotNullBuffer(new byte[]{restakeEarningsByte});
-            bufferLength += TransactionType.BYTES;
+            bufferLength += 1; // 1 byte indicates whether restaking should be set or not.
         }
 
         if (this.delegationTarget != null) {
             val openForDelegationBytes = this.delegationTarget.getBytes();
             delegationTargetBuffer = createNotNullBuffer(openForDelegationBytes);
-            bufferLength += TransactionType.BYTES;
+            bufferLength += openForDelegationBytes.length;
         }
 
         val buffer = ByteBuffer.allocate(bufferLength);

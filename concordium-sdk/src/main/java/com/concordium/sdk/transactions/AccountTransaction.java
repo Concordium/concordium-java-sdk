@@ -1,9 +1,12 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
+
 import java.nio.ByteBuffer;
+
 import static com.google.common.primitives.Bytes.concat;
 
 @Getter
@@ -28,16 +31,17 @@ public class AccountTransaction extends BlockItem {
 
     /**
      * Constructor serializing an account transaction
-     * @param sender sender of the transaction
-     * @param nonce account nonce
-     * @param expiry the expiry of the transaction
-     * @param signer the {@link Signer} of the transaction
-     * @param payload the payload of the transaction
+     *
+     * @param sender        sender of the transaction
+     * @param nonce         account nonce
+     * @param expiry        the expiry of the transaction
+     * @param signer        the {@link Signer} of the transaction
+     * @param payload       the payload of the transaction
      * @param maxEnergyCost the max energy cost allowed for this transaction.
      */
     AccountTransaction(
             @NonNull final AccountAddress sender,
-            @NonNull final AccountNonce nonce,
+            @NonNull final Nonce nonce,
             @NonNull final Expiry expiry,
             @NonNull final TransactionSigner signer,
             @NonNull final Payload payload,
@@ -45,7 +49,7 @@ public class AccountTransaction extends BlockItem {
         this(payload
                 .withHeader(TransactionHeader.explicitMaxEnergyBuilder()
                         .sender(sender)
-                        .accountNonce(nonce.getNonce())
+                        .Nonce(nonce)
                         .expiry(expiry.getValue())
                         .maxEnergyCost(maxEnergyCost)
                         .build())
@@ -54,9 +58,10 @@ public class AccountTransaction extends BlockItem {
 
     /**
      * Constructor for deserializing a transaction
+     *
      * @param signature the signature
-     * @param header the header
-     * @param payload the payload
+     * @param header    the header
+     * @param payload   the payload
      */
     public AccountTransaction(
             @NonNull final TransactionSignature signature,
@@ -95,10 +100,10 @@ public class AccountTransaction extends BlockItem {
     /**
      * Sequence number for Account Activity. This should increase monotonically.
      *
-     * @return {@link AccountNonce}.
+     * @return {@link Nonce}.
      */
-    public AccountNonce getNonce() {
-        return AccountNonce.from(this.header.getAccountNonce());
+    public Nonce getNonce() {
+        return this.header.getNonce();
     }
 
     /**
@@ -118,6 +123,9 @@ public class AccountTransaction extends BlockItem {
         byte tag = source.get();
         Payload payload;
         switch (tag) {
+            case 2:
+                payload = UpdateContract.fromBytes(source);
+                break;
             case 3:
                 payload = Transfer.fromBytes(source);
                 break;
@@ -128,7 +136,7 @@ public class AccountTransaction extends BlockItem {
                 payload = TransferWithMemo.fromBytes(source);
                 break;
             default:
-                throw new UnsupportedOperationException("Only transfers and transfers with memo are currently supported.");
+                throw new UnsupportedOperationException("Unsupported transaction type: " + tag);
         }
 
         return new AccountTransaction(signature, header, payload);

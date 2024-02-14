@@ -51,5 +51,6 @@ android:
 
 
 clean:
+	cd $(PATH_CRYPTO) && cargo clean
 	rm -rf $(PATH_JAVA_NATIVE_RESOURCES)*
 	rm -rf $(PATH_ANDROID_NATIVE_RESOURCES)*

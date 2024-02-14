@@ -27,7 +27,6 @@ import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
-import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.EpochQuery;
@@ -290,7 +289,7 @@ interface ClientV2MapperExtensions {
     static com.concordium.sdk.responses.accountinfo.AccountInfo to(AccountInfo account) {
         com.concordium.sdk.responses.accountinfo.AccountInfo.AccountInfoBuilder builder = com.concordium.sdk.responses.accountinfo.AccountInfo.builder();
         builder
-                .accountNonce(to(account.getSequenceNumber()))
+                .Nonce(to(account.getSequenceNumber()))
                 .accountAmount(to(account.getAmount()))
                 .accountReleaseSchedule(to(account.getSchedule()))
                 .accountCredentials(ImmutableMap.copyOf(to(
@@ -355,21 +354,21 @@ interface ClientV2MapperExtensions {
         return com.concordium.sdk.responses.BakerId.from(bakerId.getValue());
     }
 
-    static PendingChange to(StakePendingChange pendingChange) {
+    static Optional<PendingChange> to(StakePendingChange pendingChange) {
         switch (pendingChange.getChangeCase()) {
             case REDUCE:
                 StakePendingChange.Reduce reduce = pendingChange.getReduce();
-                return ReduceStakeChange.builder()
+                return Optional.of(ReduceStakeChange.builder()
                         .effectiveTime(Timestamp.from(reduce.getEffectiveTime()))
                         .newStake(to(reduce.getNewStake()))
-                        .build();
+                        .build());
             case REMOVE:
-                return RemoveStakeChange.builder()
+                return Optional.of(RemoveStakeChange.builder()
                         .effectiveTime(Timestamp.from(pendingChange.getRemove()))
-                        .build();
+                        .build());
             default:
             case CHANGE_NOT_SET:
-                throw new IllegalArgumentException();
+                return Optional.empty();
         }
     }
 
@@ -530,8 +529,8 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
-    static AccountNonce to(NextAccountSequenceNumber nextAccountSequenceNumber) {
-        return AccountNonce.from(to(nextAccountSequenceNumber.getSequenceNumber()));
+    static Nonce to(NextAccountSequenceNumber nextAccountSequenceNumber) {
+        return Nonce.from(nextAccountSequenceNumber.getSequenceNumber().getValue());
     }
 
 
@@ -785,7 +784,7 @@ interface ClientV2MapperExtensions {
         val ret = TransactionHeader.builder()
                 .sender(to(header.getSender()))
                 .expiry(to(header.getExpiry()))
-                .accountNonce(to(header.getSequenceNumber()))
+                .Nonce(to(header.getSequenceNumber()))
                 .build();
         ret.setMaxEnergyCost(to(header.getEnergyAmount()));
         ret.setPayloadSize(UInt32.from(payloadSize));
@@ -876,9 +875,9 @@ interface ClientV2MapperExtensions {
         return SendBlockItemRequest.newBuilder()
             .setCredentialDeployment(
                 CredentialDeployment.newBuilder()
-                    .setMessageExpiry(time)
-                    .setRawPayload(ByteString.copyFrom(credentialDeploymentTransaction.getPayloadBytes()))
-                    .build()
+                        .setMessageExpiry(time)
+                        .setRawPayload(ByteString.copyFrom(credentialDeploymentTransaction.getPayloadBytes()))
+                        .build()
                 )
             .build();
     }
@@ -913,7 +912,7 @@ interface ClientV2MapperExtensions {
     static AccountTransactionHeader to(TransactionHeader header) {
         return AccountTransactionHeader.newBuilder()
                 .setSequenceNumber(SequenceNumber.newBuilder()
-                        .setValue(to(header.getAccountNonce()))
+                        .setValue(to(header.getNonce()))
                         .build())
                 .setSender(to(header.getSender()))
                 .setExpiry(to(header.getExpiry()))
@@ -929,8 +928,8 @@ interface ClientV2MapperExtensions {
         return TransactionTime.newBuilder().setValue(expiry.getValue()).build();
     }
 
-    static long to(Nonce accountNonce) {
-        return accountNonce.getValue().getValue();
+    static long to(Nonce Nonce) {
+        return Nonce.getValue().getValue();
     }
 
     static com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters to(CryptographicParameters grpcOutput) {
@@ -1182,9 +1181,7 @@ interface ClientV2MapperExtensions {
         return com.concordium.sdk.responses.DelegatorInfo.builder()
                 .account(to(delegatorInfo.getAccount()))
                 .stake(to(delegatorInfo.getStake()))
-                .pendingChange(delegatorInfo.hasPendingChange()
-                        ? Optional.of(to(delegatorInfo.getPendingChange()))
-                        : Optional.empty())
+                .pendingChange(to(delegatorInfo.getPendingChange()))
                 .build();
     }
 
@@ -1652,7 +1649,7 @@ interface ClientV2MapperExtensions {
 
     static com.concordium.grpc.v2.Parameter to(Parameter parameter) {
         return com.concordium.grpc.v2.Parameter.newBuilder()
-                .setValue(ByteString.copyFrom(parameter.getBytes()))
+                .setValue(ByteString.copyFrom(parameter.getBytesForContractInvocation()))
                 .build();
     }
 

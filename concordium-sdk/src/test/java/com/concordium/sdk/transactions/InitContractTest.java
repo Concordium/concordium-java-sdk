@@ -33,7 +33,7 @@ public class InitContractTest {
 
         val tx = TransactionFactory.newInitContract()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .maxEnergyCost(UInt64.from(3000))
                 .payload(initPayload)
@@ -70,7 +70,7 @@ public class InitContractTest {
     public void testCreateInitContractTransactionWithoutSenderFails() {
         InitContractTransaction
                 .builder()
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", new byte[0]))
@@ -85,7 +85,7 @@ public class InitContractTest {
         InitContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(TransactionTestHelper.getValidSigner())
                 .maxEnergyCost(UInt64.from(3000))
@@ -113,7 +113,7 @@ public class InitContractTest {
         InitContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .signer(TransactionTestHelper.getValidSigner())
                 .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", new byte[0]))
                 .maxEnergyCost(UInt64.from(3000))
@@ -127,7 +127,7 @@ public class InitContractTest {
         InitContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .payload(InitContractPayload.from(0, moduleRef.getBytes(), "init_CIS2-NFT", new byte[0]))
                 .maxEnergyCost(UInt64.from(3000))
@@ -141,7 +141,7 @@ public class InitContractTest {
         InitContractTransaction
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .signer(getSignerWithMalformedSecretKey())
                 .maxEnergyCost(UInt64.from(3000))

@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.concordium.sdk</groupId>
         <artifactId>concordium-sdk-base</artifactId>
-        <version>6.1.0</version>
+        <version>6.1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>concordium-android-sdk</artifactId>
@@ -82,6 +82,11 @@
                     <artifactId>protobuf-javalite</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.14.0</version>
         </dependency>
     </dependencies>
 

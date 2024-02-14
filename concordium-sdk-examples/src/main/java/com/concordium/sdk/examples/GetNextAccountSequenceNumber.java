@@ -3,8 +3,8 @@ package com.concordium.sdk.examples;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.transactions.AccountNonce;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -31,7 +31,7 @@ public class GetNextAccountSequenceNumber implements Callable<Integer> {
                 .build();
 
 
-        AccountNonce nextAccountSequenceNumber = ClientV2
+        Nonce nextAccountSequenceNumber = ClientV2
                 .from(connection)
                 .getNextAccountSequenceNumber(ACCOUNT_ADDRESS);
 

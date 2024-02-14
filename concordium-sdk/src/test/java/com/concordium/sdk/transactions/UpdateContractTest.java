@@ -25,7 +25,7 @@ public class UpdateContractTest {
         UpdateContractTransaction tx = TransactionFactory.newUpdateContract()
                 .payload(updateContractPayload)
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .nonce(AccountNonce.from(78910))
+                .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
                 .maxEnergyCost(UInt64.from(3000))
                 .signer(TransactionSigner.from(

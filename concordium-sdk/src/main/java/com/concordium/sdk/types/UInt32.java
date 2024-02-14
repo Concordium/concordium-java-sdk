@@ -1,5 +1,10 @@
 package com.concordium.sdk.types;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
@@ -7,16 +12,10 @@ import lombok.val;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
 @EqualsAndHashCode
 @Getter
 @JsonSerialize(using = UInt32.UInt32Serializer.class)
-public final class UInt32 {
+public final class UInt32 implements Comparable<UInt32> {
     public static final int BYTES = Integer.BYTES;
     final int value;
 
@@ -34,10 +33,13 @@ public final class UInt32 {
         return new UInt32(Integer.parseUnsignedInt(value));
     }
 
+    /**
+     * Construct a 32 bits wide integer that is interpreted as unsigned.
+     *
+     * @param value the integer treated as unsigned.
+     * @return the resulting {@link UInt32}
+     */
     public static UInt32 from(int value) {
-        if (value < 0) {
-            throw new NumberFormatException("Value of UInt32 can not be negative");
-        }
         return new UInt32(value);
     }
 
@@ -56,7 +58,12 @@ public final class UInt32 {
 
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return Integer.toUnsignedString(value);
+    }
+
+    @Override
+    public int compareTo(UInt32 other) {
+        return Integer.compareUnsigned(this.value, other.value);
     }
 
     /**

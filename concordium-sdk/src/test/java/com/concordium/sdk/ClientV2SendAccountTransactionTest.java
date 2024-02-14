@@ -98,7 +98,7 @@ public class ClientV2SendAccountTransactionTest {
                 .sender(SENDER_ACCOUNT_ADDRESS)
                 .receiver(RECEIVER_ACCOUNT_ADDRESS)
                 .amount(CCDAmount.fromMicro(AMOUNT))
-                .nonce(AccountNonce.from(Nonce.from(SEQUENCE_NUMBER)))
+                .nonce(Nonce.from(SEQUENCE_NUMBER))
                 .expiry(Expiry.from(EXPIRY))
                 .signer(signer)
                 .build());

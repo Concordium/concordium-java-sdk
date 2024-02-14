@@ -38,9 +38,7 @@ public final class AccountIndex implements ID{
     }
 
     public byte[] getBytes() {
-        val buffer = ByteBuffer.allocate(UInt16.BYTES);
-        buffer.put(index.getBytes());
-        return buffer.array();
+        return this.index.getBytes();
     }
 
     @Override
