@@ -10,7 +10,7 @@ import lombok.ToString;
 
 
 /**
- * Errors supported by the CIS2 standard https://proposals.concordium.software/CIS/cis-2.html#rejection-errors
+ * Errors defined by the CIS2 standard https://proposals.concordium.software/CIS/cis-2.html#rejection-errors
  */
 @EqualsAndHashCode
 @ToString
