@@ -39,27 +39,27 @@ public class Converter {
     }
 
     /**
-     * Converts {@link Energy} to CCD using exchange rate from the provided {@link ChainParameters}.
+     * Converts {@link Energy} to micro CCD using exchange rate from the provided {@link ChainParameters}.
      *
      * @param energy {@link Energy} to convert.
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
-     * @return {@link BigFraction} corresponding to the CCD value of {@link Energy}.
+     * @return {@link BigFraction} corresponding to the micro CCD value of {@link Energy}.
      */
-    public static BigFraction energyToCCD(Energy energy, ChainParameters parameters) {
+    public static BigFraction energyToMicroCCD(Energy energy, ChainParameters parameters) {
         BigFraction energyFraction = BigFraction.from(energy.getValue(), UInt64.from(1));
-        return energyToCCD(energyFraction, parameters);
+        return energyToMicroCCD(energyFraction, parameters);
     }
 
     /**
-     * Converts {@link BigFraction} representing {@link Energy} to CCD using exchange rate from the provided {@link ChainParameters}.
+     * Converts {@link BigFraction} representing {@link Energy} to micro CCD using exchange rate from the provided {@link ChainParameters}.
      *
      * @param energy {@link BigFraction} representing an amount of {@link Energy} to convert.
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
-     * @return {@link BigFraction} corresponding to the CCD value of {@link Energy}.
+     * @return {@link BigFraction} corresponding to the micro CCD value of {@link Energy}.
      */
-    public static BigFraction energyToCCD(BigFraction energy, ChainParameters parameters) {
+    public static BigFraction energyToMicroCCD(BigFraction energy, ChainParameters parameters) {
         BigFraction euros = energyToEuro(energy, parameters);
-        return euroToCCD(euros, parameters);
+        return euroToMicroCCD(euros, parameters);
     }
 
     /**
@@ -69,9 +69,9 @@ public class Converter {
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
      * @return {@link BigFraction} corresponding to the euro value of {@link CCDAmount}.
      */
-    public static BigFraction ccdToEuro(CCDAmount ccdAmount, ChainParameters parameters) {
+    public static BigFraction microCCDToEuro(CCDAmount ccdAmount, ChainParameters parameters) {
         BigFraction ccd = BigFraction.from(ccdAmount.getValue(), UInt64.from(1));
-        return ccdToEuro(ccd, parameters);
+        return microCCDToEuro(ccd, parameters);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Converter {
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
      * @return {@link BigFraction} corresponding to the euro value of {@link CCDAmount}.
      */
-    public static BigFraction ccdToEuro(BigFraction ccd, ChainParameters parameters) {
+    public static BigFraction microCCDToEuro(BigFraction ccd, ChainParameters parameters) {
         BigFraction microCCDPerEuro = BigFraction.from(parameters.getMicroCCDPerEuro());
         return div(ccd, microCCDPerEuro);
     }
@@ -106,18 +106,18 @@ public class Converter {
      * @return {@link BigFraction} corresponding to the energy value of {@link CCDAmount}.
      */
     public static BigFraction ccdToEnergy(BigFraction ccdAmount, ChainParameters parameters) {
-        BigFraction euros = ccdToEuro(ccdAmount, parameters);
+        BigFraction euros = microCCDToEuro(ccdAmount, parameters);
         return euroToEnergy(euros, parameters);
     }
 
     /**
-     * Converts {@link BigFraction} representing an amount of euros to CCD using exchange rate from the provided {@link ChainParameters}.
+     * Converts {@link BigFraction} representing an amount of euros to micro CCD using exchange rate from the provided {@link ChainParameters}.
      *
      * @param euros {@link BigFraction} representing amount of euros to convert.
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
-     * @return {@link BigFraction} corresponding to the CCD value of the input.
+     * @return {@link BigFraction} corresponding to the micro CCD value of the input.
      */
-    public static BigFraction euroToCCD(BigFraction euros, ChainParameters parameters) {
+    public static BigFraction euroToMicroCCD(BigFraction euros, ChainParameters parameters) {
         BigFraction microCCDPerEuro = BigFraction.from(parameters.getMicroCCDPerEuro());
         return mult(euros, microCCDPerEuro);
     }

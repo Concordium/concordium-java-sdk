@@ -89,8 +89,8 @@ public class EnergyToCCDTest {
     }
 
     private void energyToCCD(ChainParameters parameters) {
-        BigFraction ccdFromEnergy = Converter.energyToCCD(ENERGY, parameters);
-        BigFraction ccdFromEnergyFraction = Converter.energyToCCD(ENERGY_FRACTION, parameters);
+        BigFraction ccdFromEnergy = Converter.energyToMicroCCD(ENERGY, parameters);
+        BigFraction ccdFromEnergyFraction = Converter.energyToMicroCCD(ENERGY_FRACTION, parameters);
         // Both conversions receive same result
         assertEquals(ccdFromEnergy, ccdFromEnergyFraction);
 
@@ -126,8 +126,8 @@ public class EnergyToCCDTest {
         // Both conversions receive same result
         assertEquals(energyFromCCD, energyFromCCDFraction);
 
-        BigFraction ccdFromEnergy = Converter.energyToCCD(energyFromCCD, parameters);
-        BigFraction ccdFromEnergyFraction = Converter.energyToCCD(energyFromCCDFraction, parameters);
+        BigFraction ccdFromEnergy = Converter.energyToMicroCCD(energyFromCCD, parameters);
+        BigFraction ccdFromEnergyFraction = Converter.energyToMicroCCD(energyFromCCDFraction, parameters);
 
         // Converting back receives same result
         assertEquals(ccdFromEnergy, ccdFromEnergyFraction);
@@ -136,13 +136,13 @@ public class EnergyToCCDTest {
         assertEquals(ccdFromEnergy, CCD_FRACTION);
     }
     private void ccdToEuro(ChainParameters parameters) {
-        BigFraction euroFromCCD = Converter.ccdToEuro(CCD_AMOUNT, parameters);
-        BigFraction euroFromCCDFraction = Converter.ccdToEuro(CCD_FRACTION, parameters);
+        BigFraction euroFromCCD = Converter.microCCDToEuro(CCD_AMOUNT, parameters);
+        BigFraction euroFromCCDFraction = Converter.microCCDToEuro(CCD_FRACTION, parameters);
         // Both conversions receive same result
         assertEquals(euroFromCCD,euroFromCCDFraction);
 
-        BigFraction ccdFromEuro = Converter.euroToCCD(euroFromCCD, parameters);
-        BigFraction ccdFromEuroFraction = Converter.euroToCCD(euroFromCCDFraction, parameters);
+        BigFraction ccdFromEuro = Converter.euroToMicroCCD(euroFromCCD, parameters);
+        BigFraction ccdFromEuroFraction = Converter.euroToMicroCCD(euroFromCCDFraction, parameters);
 
         // Converting back receives same result
         assertEquals(ccdFromEuro, ccdFromEuroFraction);
@@ -158,8 +158,8 @@ public class EnergyToCCDTest {
         assertEquals(euroFromEnergy, EURO_FRACTION);
     }
     private void euroToCCD(ChainParameters parameters) {
-        BigFraction ccdFromEuro = Converter.euroToCCD(EURO_FRACTION, parameters);
-        BigFraction euroFromCCD = Converter.ccdToEuro(ccdFromEuro, parameters);
+        BigFraction ccdFromEuro = Converter.euroToMicroCCD(EURO_FRACTION, parameters);
+        BigFraction euroFromCCD = Converter.microCCDToEuro(ccdFromEuro, parameters);
 
         // Conversions are precise
         assertEquals(euroFromCCD, EURO_FRACTION);
@@ -177,17 +177,17 @@ public class EnergyToCCDTest {
 
         // MICRO_CCD_PER_EURO_1 * EURO = 16626124143116419072/78228883861 * 10 = 166261241431164190720/78228883861
         BigFraction expectedCCDFromEuro = frac("166261241431164190720","78228883861");
-        BigFraction ccdFromEuro = Converter.euroToCCD(EURO_FRACTION, PARAM_1);
+        BigFraction ccdFromEuro = Converter.euroToMicroCCD(EURO_FRACTION, PARAM_1);
         assertEquals(expectedCCDFromEuro, ccdFromEuro);
 
         // EURO_PER_ENERGY * ENERGY * MICRO_CCD_PER_EURO_1 = 1/110 * 16626124143116419072/78228883861 = 8313062071558209536/4302588612355
         BigFraction expectedCCDFromEnergy = frac("8313062071558209536", "4302588612355");
-        BigFraction ccdFromEnergy = Converter.energyToCCD(ENERGY, PARAM_1);
+        BigFraction ccdFromEnergy = Converter.energyToMicroCCD(ENERGY, PARAM_1);
         assertEquals(expectedCCDFromEnergy, ccdFromEnergy);
 
         // CCD_AMOUNT / MICRO_CCD_PER_EURO_1 = 1000000 / (16626124143116419072/78228883861) = 1222326310328125/259783189736194048
         BigFraction expectedEuroFromCCD = frac("1222326310328125", "259783189736194048");
-        BigFraction euroFromCCD = Converter.ccdToEuro(CCD_AMOUNT, PARAM_1);
+        BigFraction euroFromCCD = Converter.microCCDToEuro(CCD_AMOUNT, PARAM_1);
         assertEquals(expectedEuroFromCCD, euroFromCCD);
 
         // EUROS / EURO_PER_ENERGY = 10 / (1/1100000) = 11000000
