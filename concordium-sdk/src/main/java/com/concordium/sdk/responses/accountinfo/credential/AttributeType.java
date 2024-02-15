@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.accountinfo.credential;
 
+import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -36,5 +37,9 @@ public enum AttributeType {
     @JsonProperty("taxIdNo")
     TAX_ID_NO,
     @JsonProperty("lei")
-    LEI
+    LEI;
+
+    public static AttributeType fromJSON(String jsonStr) throws Exception {
+        return JsonMapper.INSTANCE.readValue(jsonStr, AttributeType.class);
+    }
 }
