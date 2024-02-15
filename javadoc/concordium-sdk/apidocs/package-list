@@ -1,4 +1,6 @@
 com.concordium.sdk
+com.concordium.sdk.cis2
+com.concordium.sdk.cis2.events
 com.concordium.sdk.crypto
 com.concordium.sdk.crypto.bakertransactions
 com.concordium.sdk.crypto.bls
