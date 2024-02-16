@@ -31,6 +31,21 @@ Invoking the `Release` workflow generates and attaches the following to the rele
 2. A jar-with-dependencies containing all of the above as well as all maven dependencies.
 3. A jar with javadoc that can be imported to the users IDE to add documentation.
 
+### Maven central
+Two artifacts are automatically being uploaded and staged to maven central
+1. The Java sdk with precompiled binaries for ubuntu, macos and windows. 
+2. The Android archive to use in Android apps.
+   
+See the [Makefile](../Makefile) for specific targets.
+
+One must login to https://s01.oss.sonatype.org/ (credentials can be found in Bitwarden) publish the release.
+This is done by first closing the staged release followed by a click on the "release" button.
+
+Lastly the released artifiacts are available here: 
+- [java sdk](https://central.sonatype.com/artifact/com.concordium.sdk/concordium-sdk)
+- [android archive](https://central.sonatype.com/artifact/com.concordium.sdk/concordium-android-sdk)
+
+### Javadoc
 The `Relase` workflow also creates the branch `javadoc` if it does not already exist.
 This branch contains the generated javadoc which is visible at: [https://concordium.github.io/concordium-java-sdk/javadoc/concordium-sdk/apidocs/](https://concordium.github.io/concordium-java-sdk/javadoc/concordium-sdk/apidocs/)
 
