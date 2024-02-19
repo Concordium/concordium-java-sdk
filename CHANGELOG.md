@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased changes
+- Added `Web3IdProof` class with `getWeb3IdProof` method to create Presentations. (And supporting classes)
+
 ## 7.0.0
 - Make the `energy` parameter for invoking an instance `Optional`.
 - Parse the underlying reject reasons into `AccountTransactionDetails`.

@@ -34,6 +34,7 @@ use wallet_library::{
         CredentialDeploymentDetails, CredentialDeploymentPayload,
     },
     identity::{create_identity_object_request_v1_aux, create_identity_recovery_request_aux},
+    proofs::Web3IdProofInput,
     wallet::{
         get_account_public_key_aux, get_account_signing_key_aux,
         get_attribute_commitment_randomness_aux, get_credential_id_aux, get_id_cred_sec_aux,
@@ -247,6 +248,15 @@ impl<T> From<jni::errors::Error> for CryptoJniResult<T> {
     }
 }
 
+impl<T> From<concordium_base::web3id::ProofError> for CryptoJniResult<T> {
+    fn from(e: concordium_base::web3id::ProofError) -> Self {
+        let error = JNIErrorResponse {
+            errorType:    JNIErrorResponseType::NativeConversion,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
+    }
+}
 /// Creates errors from strings. Used when payload creation fails as no error to
 /// be passed on is generated.
 impl<T> From<&str> for CryptoJniResult<T> {
@@ -1271,4 +1281,36 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_serializeC
     let serialized_credential_deployment_payload = serialize_credential_deployment_payload(payload);
 
     CryptoJniResult::Ok(serialized_credential_deployment_payload).to_jstring(&env)
+}
+
+/// The JNI wrapper for creating a web3Id presentation for the given statement.
+/// * `input` - the JSON string of [`wallet_library::proofs::Web3IdProofInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createWeb3IdProof(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let proofInput: Web3IdProofInput = match serde_json::from_str(&input_string) {
+        Ok(req) => req,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let presentation = match proofInput.create_proof() {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let presentation_string = match to_string(&presentation) {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(presentation_string).to_jstring(&env)
 }
