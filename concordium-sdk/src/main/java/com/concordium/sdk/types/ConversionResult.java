@@ -1,6 +1,6 @@
 package com.concordium.sdk.types;
 
-import com.concordium.sdk.Converter;
+import com.concordium.sdk.CurrencyConverter;
 import com.concordium.sdk.requests.smartcontracts.Energy;
 import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.transactions.CCDAmount;
@@ -12,12 +12,13 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 
 /**
- * For representing fractions with large numerators or denominators. Used in {@link Converter} to convert to/from {@link CCDAmount} and {@link Energy}.
- * Use {@link BigFraction#asBigDecimal(int)} to get numeric value of the fraction.
+ * For representing fractions with large numerators or denominators. Used in {@link CurrencyConverter} to convert to/from {@link CCDAmount} and {@link Energy}.
+ * Use {@link ConversionResult#asBigDecimal(int)} to get numeric value of the fraction.
  */
 @Getter
 @Builder
-public class BigFraction {
+
+public class ConversionResult{
 
     /**
      * Numerator of the fraction.
@@ -28,17 +29,22 @@ public class BigFraction {
      */
     private BigInteger denominator;
 
-    public static BigFraction from(BigInteger numerator, BigInteger denominator) {
-        return new BigFraction(numerator, denominator);
+    public static ConversionResult from(BigInteger numerator, BigInteger denominator) {
+        return new ConversionResult(numerator, denominator);
     }
 
-    public static BigFraction from(UInt64 numerator, UInt64 denominator) {
-        return new BigFraction(new BigInteger(numerator.toString()), new BigInteger(denominator.toString()));
+    public static ConversionResult from(UInt64 numerator, UInt64 denominator) {
+        return from(numerator.toString(),denominator.toString());
     }
 
-    public static BigFraction from(Fraction fraction) {
+    public static ConversionResult from(Fraction fraction) {
         return from(fraction.getNumerator(),fraction.getDenominator());
     }
+
+    public static ConversionResult from(String numerator, String denominator) {
+        return from(new BigInteger(numerator), new BigInteger(denominator));
+    }
+
     @Override
     public String toString() {
         return this.numerator + "/" + this.denominator;
@@ -69,6 +75,26 @@ public class BigFraction {
         return numerator.divide(denominator, precision, roundingMode);
     }
 
+    /**
+     * Multiplies {@link ConversionResult}s.
+     * Calculates a*c/b*d for input a/b, c/d.
+     */
+    public ConversionResult mult(ConversionResult other) {
+        BigInteger numerator = this.getNumerator().multiply(other.getNumerator());
+        BigInteger denominator = this.getDenominator().multiply(other.getDenominator());
+        return ConversionResult.from(numerator, denominator);
+    }
+
+    /**
+     * Helper function for dividing {@link ConversionResult}s used during conversions.
+     * Calculates a*d/b*c for input a/b, c/d.
+     */
+    public ConversionResult div(ConversionResult other) {
+        BigInteger numerator = this.getNumerator().multiply(other.getDenominator());
+        BigInteger denominator = this.getDenominator().multiply(other.getNumerator());
+        return ConversionResult.from(numerator, denominator);
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -76,11 +102,11 @@ public class BigFraction {
             return true;
         }
 
-        if (!(o instanceof BigFraction)) {
+        if (!(o instanceof ConversionResult)) {
             return false;
         }
 
-        BigFraction otherFraction = (BigFraction) o;
+        ConversionResult otherFraction = (ConversionResult) o;
 
         // Comparison done using cross multiplication. a * d = b * c => a/b = c/d
         BigInteger ad = this.numerator.multiply(otherFraction.denominator);
