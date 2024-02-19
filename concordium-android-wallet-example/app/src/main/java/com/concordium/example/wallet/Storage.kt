@@ -3,8 +3,6 @@ package com.concordium.example.wallet
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.activity.ComponentActivity
-import cash.z.ecc.android.bip39.Mnemonics
-import cash.z.ecc.android.bip39.toSeed
 import com.concordium.sdk.crypto.wallet.ConcordiumHdWallet
 
 /***
@@ -26,8 +24,7 @@ class Storage(context: Context) {
     @OptIn(ExperimentalStdlibApi::class)
     fun getWallet(): ConcordiumHdWallet {
         val seedPhrase = this.seedPhrase.get()
-        val seedAsHex = Mnemonics.MnemonicCode(seedPhrase!!.toCharArray()).toSeed().toHexString()
-        return ConcordiumHdWallet.fromHex(seedAsHex, Constants.NETWORK)
+        return ConcordiumHdWallet.fromSeedPhrase(seedPhrase, Constants.NETWORK)
     }
 }
 
