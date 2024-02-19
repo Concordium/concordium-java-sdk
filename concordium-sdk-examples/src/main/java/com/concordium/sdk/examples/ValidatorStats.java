@@ -1,4 +1,4 @@
-package com.concordium.sdk.examples.contractexample;
+package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
@@ -16,13 +16,13 @@ import java.util.concurrent.Callable;
 
 /**
  * List
- * - all bakers (id, own stake, stake from delegators, list of delegators and their stake)
+ * - all validators (id, own stake, stake from delegators, list of delegators and their stake)
  * - total equity
  * - total delegated stake
  * - total effective stake
  */
-@CommandLine.Command(name = "BakerStats", mixinStandardHelpOptions = true)
-public class BakerStats implements Callable<Integer> {
+@CommandLine.Command(name = "ValidatorStats", mixinStandardHelpOptions = true)
+public class ValidatorStats implements Callable<Integer> {
 
     @CommandLine.Option(
             names = {"--endpoint"},
@@ -50,16 +50,16 @@ public class BakerStats implements Callable<Integer> {
         BigInteger equity = BigInteger.ZERO;
         BigInteger delegated = BigInteger.ZERO;
         BigInteger effective = BigInteger.ZERO;
-        var activeBakers = 0;
+        var activeValidators = 0;
 
         val block = client.getBlockInfo(BlockQuery.LAST_FINAL).getBlockHash();
         val blockQuery = BlockQuery.HASH(block);
-        val bakers = client.getBakerList(blockQuery);
+        val validators = client.getBakerList(blockQuery);
 
         StringBuilder sb = new StringBuilder();
-        while (bakers.hasNext()) {
-            BakerId baker = bakers.next();
-            val pool = client.getPoolInfo(blockQuery, baker);
+        while (validators.hasNext()) {
+            BakerId validator = validators.next();
+            val pool = client.getPoolInfo(blockQuery, validator);
             val statusOptional = pool.getCurrentPaydayStatus();
             if (statusOptional.isPresent()) {
                 val status = statusOptional.get();
@@ -67,16 +67,16 @@ public class BakerStats implements Callable<Integer> {
                 long delegatedVal = status.getDelegatedCapital().getValue().getValue();
                 long effectiveVal = status.getEffectiveStake().getValue().getValue();
 
-                activeBakers++;
+                activeValidators++;
                 equity = equity.add(BigInteger.valueOf(equityVal));
                 delegated = delegated.add(BigInteger.valueOf(delegatedVal));
                 effective = effective.add(BigInteger.valueOf(effectiveVal));
 
-                // Add info about this specific baker
-                sb.append("Baker ").append(baker).append(": own stake = ").append(equityVal)
+                // Add info about this specific validator
+                sb.append("Validator ").append(validator).append(": own stake = ").append(equityVal)
                         .append(" micro CCD, from delegators = ").append(delegatedVal).append(" micro CCD");
 
-                val delegators = client.getPoolDelegatorsRewardPeriod(blockQuery, baker);
+                val delegators = client.getPoolDelegatorsRewardPeriod(blockQuery, validator);
 
                 // Add info about delegators if present
                 if (delegators.hasNext()) {
@@ -93,7 +93,7 @@ public class BakerStats implements Callable<Integer> {
 
             }
         }
-        sb.append("\nThere are ").append(activeBakers).append(" active bakers\n")
+        sb.append("\nThere are ").append(activeValidators).append(" active validators\n")
             .append("Total effective stake is ").append(effective).append(" micro CCD\n")
             .append("Total equity capital is ").append(equity).append(" micro CCD\n")
             .append("Total delegated stake is ").append(delegated).append(" micro CCD\n");
@@ -103,7 +103,7 @@ public class BakerStats implements Callable<Integer> {
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new BakerStats()).execute(args);
+        int exitCode = new CommandLine(new ValidatorStats()).execute(args);
         System.exit(exitCode);
     }
 }
