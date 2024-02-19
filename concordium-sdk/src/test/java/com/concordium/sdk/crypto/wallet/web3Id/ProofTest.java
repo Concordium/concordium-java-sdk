@@ -1,25 +1,17 @@
 package com.concordium.sdk.crypto.wallet.web3Id;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.contains;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-
-import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
 
-import com.concordium.sdk.Range;
+import com.concordium.sdk.crypto.wallet.FileHelpers;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.AtomicStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.MembershipStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.NonMembershipStatement;
@@ -27,36 +19,23 @@ import com.concordium.sdk.crypto.wallet.web3Id.Statement.RangeStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.RequestStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.RevealStatement;
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType;
-import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 public class ProofTest {
 
-    static String readFile(String path, Charset encoding)
-            throws IOException {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        return new String(encoded, encoding);
-    }
-
     static public Request loadRequest(String fileName) throws Exception {
         return JsonMapper.INSTANCE.readValue(
-                readFile("./src/test/testresources/wallet/web3Id/" + fileName, Charset.forName("UTF-8")),
+                FileHelpers.readFile("./src/test/testresources/wallet/web3Id/" + fileName, Charset.forName("UTF-8")),
                 Request.class
         );
     }
 
     public List<CommitmentInput> loadCommitmentInputs(String fileName) throws Exception {
         return JsonMapper.INSTANCE.readValue(
-                readFile("./src/test/testresources/wallet/web3Id/" + fileName, Charset.forName("UTF-8")),
+                FileHelpers.readFile("./src/test/testresources/wallet/web3Id/" + fileName, Charset.forName("UTF-8")),
                 new TypeReference<List<CommitmentInput>>(){}
         );
-    }
-
-    private CryptographicParameters getCryptographicParameters() throws Exception {
-        return JsonMapper.INSTANCE.readValue(
-                readFile("./src/test/testresources/wallet/global.json", Charset.forName("UTF-8")),
-                CryptographicParameters.class);
     }
 
     @Test
@@ -126,7 +105,7 @@ public class ProofTest {
         Web3IdProofInput input = Web3IdProofInput.builder()
             .request(loadRequest("accountRequest.json"))
             .commitmentInputs(loadCommitmentInputs("accountCommitments.json"))
-            .globalContext(getCryptographicParameters())
+            .globalContext(FileHelpers.getCryptographicParameters())
             .build();
         String proof = Web3IdProof.getWeb3IdProof(input);
         assertNotNull(proof);
@@ -170,7 +149,7 @@ public class ProofTest {
         Web3IdProofInput input = Web3IdProofInput.builder()
             .request(loadRequest("web3IdRequest.json"))
             .commitmentInputs(loadCommitmentInputs("web3IdCommitments.json"))
-            .globalContext(getCryptographicParameters())
+            .globalContext(FileHelpers.getCryptographicParameters())
             .build();
         String proof = Web3IdProof.getWeb3IdProof(input);
         assertNotNull(proof);
