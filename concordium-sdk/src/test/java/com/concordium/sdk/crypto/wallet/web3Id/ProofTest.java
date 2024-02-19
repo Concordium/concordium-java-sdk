@@ -39,7 +39,7 @@ public class ProofTest {
         return new String(encoded, encoding);
     }
 
-    public Request loadRequest(String fileName) throws Exception {
+    static public Request loadRequest(String fileName) throws Exception {
         return JsonMapper.INSTANCE.readValue(
                 readFile("./src/test/testresources/wallet/web3Id/" + fileName, Charset.forName("UTF-8")),
                 Request.class

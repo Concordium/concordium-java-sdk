@@ -40,6 +40,6 @@ public enum AttributeType {
     LEI;
 
     public static AttributeType fromJSON(String jsonStr) throws Exception {
-        return JsonMapper.INSTANCE.readValue(jsonStr, AttributeType.class);
+        return JsonMapper.INSTANCE.readValue(String.format("\"%s\"", jsonStr), AttributeType.class);
     }
 }
