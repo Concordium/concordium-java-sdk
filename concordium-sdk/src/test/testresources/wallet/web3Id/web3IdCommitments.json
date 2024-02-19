@@ -1,0 +1,17 @@
+[
+    {
+        "type": "web3Issuer",
+        "signer": "a2a67cd911fe5d4ce36d68ff93d1973bcdaf3d5074fb4b0d5c7819ac339d236e",
+        "values": {
+            "degreeType": "BachelorDegree",
+            "degreeName": "Bachelor of Science and Arts",
+            "graduationDate": "2023-08-30T00:00:00.000Z"
+        },
+        "randomness": {
+            "degreeName": "7045d4371b37232bc2ac23efc40684398ebdf2a718dbbf23f8554e4cd571f49a",
+            "degreeType": "0b17ecfb53a5102a00672cd2c23e55d5beb9d8940ca15376a13efd961c179fdd",
+            "graduationDate": "3002ab4c1f2773f5f914a06c8f9e52a2f0132a50d6d442fc4425925a0793e868"
+        },
+        "signature": "ef9ea4b3edcb500365354bdd5f9d2f8214625007bf9754a60d4add6e28be5f8aca8cd1a7dd13186f1909b5cdc3ab541412bd375de224d1416a016315765eaa0f"
+    }
+]

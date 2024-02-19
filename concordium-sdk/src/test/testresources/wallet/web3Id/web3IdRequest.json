@@ -1,0 +1,29 @@
+{
+    "challenge": "5d50c6e18aca83e991af81e7d7e760f5dc753db7966dc19e9aa42f25aef1696b",
+    "credentialStatements": [
+        {
+            "statement": [
+                {
+                    "type": "AttributeInRange",
+                    "attributeTag": "graduationDate",
+                    "lower": "2023-01-29T00:00:00.000Z",
+                    "upper": "2023-10-29T00:00:00.000Z"
+                },
+                {
+                    "type": "AttributeInSet",
+                    "attributeTag": "degreeType",
+                    "set": [
+                        "BachelorDegree",
+                        "MasterDegree"
+                    ]
+                }
+            ],
+            "id": "did:ccd:testnet:sci:6105:0/credentialEntry/31163ba14e30b834f1e97b9544d86df94883fd4f2c77e1d1fac0b6189c9e7996",
+            "type": [
+                "VerifiableCredential",
+                "ConcordiumVerifiableCredential",
+                "UniversityDegreeCredential"
+            ]
+        }
+    ]
+}
