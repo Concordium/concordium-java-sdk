@@ -11,7 +11,7 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @Builder
 @Jacksonized
-public class Request {
+public class Request<Statement extends RequestStatement> {
     private final String challenge;
-    private final List<RequestStatement> credentialStatements;
+    private final List<Statement> credentialStatements;
 }

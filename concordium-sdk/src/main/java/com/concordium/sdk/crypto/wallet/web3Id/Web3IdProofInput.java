@@ -2,6 +2,7 @@ package com.concordium.sdk.crypto.wallet.web3Id;
 
 import java.util.List;
 
+import com.concordium.sdk.crypto.wallet.web3Id.Statement.RequestStatement;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 
 import lombok.Builder;
@@ -14,8 +15,8 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @Builder
 @Jacksonized
-public class Web3IdProofInput {
-    private final Request request;
+public class Web3IdProofInput<Statement extends RequestStatement> {
+    private final Request<Statement> request;
     private final List<CommitmentInput> commitmentInputs;
     private final CryptographicParameters globalContext;
 }

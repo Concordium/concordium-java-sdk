@@ -5,15 +5,12 @@ import java.util.stream.Collectors;
 
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.extern.jackson.Jacksonized;
+import lombok.experimental.SuperBuilder;
 
+@SuperBuilder
 @Getter
-@Builder
-@Jacksonized
-public class RequestStatement {
-    private String id;
+public abstract class RequestStatement {
     private List<String> type;
     private List<AtomicStatement> statement;
 
