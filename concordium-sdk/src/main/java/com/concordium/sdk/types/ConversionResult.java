@@ -4,7 +4,6 @@ import com.concordium.sdk.CurrencyConverter;
 import com.concordium.sdk.requests.smartcontracts.Energy;
 import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.transactions.CCDAmount;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -14,35 +13,50 @@ import java.math.RoundingMode;
 /**
  * For representing fractions with large numerators or denominators. Used in {@link CurrencyConverter} to convert to/from {@link CCDAmount} and {@link Energy}.
  * Use {@link ConversionResult#asBigDecimal(int)} to get numeric value of the fraction.
+ * Type parameter prevents faulty usage of conversion functions in {@link CurrencyConverter}.
  */
 @Getter
-@Builder
+public class ConversionResult<Type>{
 
-public class ConversionResult{
+    private ConversionResult(BigInteger numerator, BigInteger denominator) {
+        this.numerator = numerator;
+        this.denominator = denominator;
+    }
+
+
+    public interface ConversionResultType {}
+
+    public static final class CCD implements ConversionResultType {}
+
+    public static final class NRG implements ConversionResultType {}
+
+    public static final class EUR implements ConversionResultType {}
+
+    public static final class ConversionRate implements ConversionResultType {}
 
     /**
      * Numerator of the fraction.
      */
-    private BigInteger numerator;
+    private final BigInteger numerator;
     /**
      * Denominator of the fraction.
      */
-    private BigInteger denominator;
+    private final BigInteger denominator;
 
-    public static ConversionResult from(BigInteger numerator, BigInteger denominator) {
-        return new ConversionResult(numerator, denominator);
+    public static <T> ConversionResult<T> from(BigInteger numerator, BigInteger denominator) {
+        return new ConversionResult<>(numerator, denominator);
     }
 
-    public static ConversionResult from(UInt64 numerator, UInt64 denominator) {
+    public static <T> ConversionResult<T> from(String numerator, String denominator) {
+        return from(new BigInteger(numerator), new BigInteger(denominator));
+    }
+
+    public static <T> ConversionResult<T> from(UInt64 numerator, UInt64 denominator) {
         return from(numerator.toString(),denominator.toString());
     }
 
-    public static ConversionResult from(Fraction fraction) {
+    public static <T> ConversionResult<T> from(Fraction fraction) {
         return from(fraction.getNumerator(),fraction.getDenominator());
-    }
-
-    public static ConversionResult from(String numerator, String denominator) {
-        return from(new BigInteger(numerator), new BigInteger(denominator));
     }
 
     @Override
@@ -79,17 +93,17 @@ public class ConversionResult{
      * Multiplies {@link ConversionResult}s.
      * Calculates a*c/b*d for input a/b, c/d.
      */
-    public ConversionResult mult(ConversionResult other) {
+    public <T extends ConversionResultType> ConversionResult<T> mult(ConversionResult<?> other) {
         BigInteger numerator = this.getNumerator().multiply(other.getNumerator());
         BigInteger denominator = this.getDenominator().multiply(other.getDenominator());
         return ConversionResult.from(numerator, denominator);
     }
 
     /**
-     * Helper function for dividing {@link ConversionResult}s used during conversions.
+     * Divides {@link ConversionResult}s.
      * Calculates a*d/b*c for input a/b, c/d.
      */
-    public ConversionResult div(ConversionResult other) {
+    public <T extends ConversionResultType> ConversionResult<T> div(ConversionResult<?> other) {
         BigInteger numerator = this.getNumerator().multiply(other.getDenominator());
         BigInteger denominator = this.getDenominator().multiply(other.getNumerator());
         return ConversionResult.from(numerator, denominator);
@@ -106,7 +120,7 @@ public class ConversionResult{
             return false;
         }
 
-        ConversionResult otherFraction = (ConversionResult) o;
+        ConversionResult<?> otherFraction = (ConversionResult<?>) o;
 
         // Comparison done using cross multiplication. a * d = b * c => a/b = c/d
         BigInteger ad = this.numerator.multiply(otherFraction.denominator);

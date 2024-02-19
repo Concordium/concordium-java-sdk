@@ -2,7 +2,7 @@ package com.concordium.sdk.examples.contractexample.cis2nft;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.Converter;
+import com.concordium.sdk.CurrencyConverter;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.AccountQuery;
@@ -143,8 +143,8 @@ public class Cis2Nft implements Callable<Integer> {
         Energy usedEnergy = invokeInstanceResult.getUsedEnergy();
         ChainParameters parameters = client.getChainParameters(BlockQuery.LAST_FINAL);
         // Convert to Euro and CCD using ChainParameters from the best block and utility methods in the Converter class.
-        BigDecimal euros = Converter.energyToEuro(usedEnergy, parameters).asBigDecimal(6);
-        BigDecimal ccd = Converter.energyToMicroCCD(usedEnergy, parameters).asBigDecimal(6);
+        BigDecimal euros = CurrencyConverter.energyToEuro(usedEnergy, parameters).asBigDecimal(6);
+        BigDecimal ccd = CurrencyConverter.energyToMicroCCD(usedEnergy, parameters).asBigDecimal(6);
         System.out.println("Price of transaction is: " + usedEnergy + " = " + euros + " euros = " + ccd + " micro CCD");
 
         UpdateContract payload = UpdateContract.from(CONTRACT_ADDRESS, parameter);
