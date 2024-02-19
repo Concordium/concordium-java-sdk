@@ -48,9 +48,9 @@ public final class CredentialAttribute {
         return 0;
     }
 
-    public boolean isBetween(CredentialAttribute lower, CredentialAttribute upper) throws Exception {
+    public boolean isBetween(CredentialAttribute lower, CredentialAttribute upper) throws IllegalArgumentException {
         if (!this.getType().equals(lower.getType()) || !this.getType().equals(upper.getType())) {
-            return false; // TODO should throw instead?            
+            throw new IllegalArgumentException("Attribute types must match");
         }
         switch (this.type) {
             case INT: {
@@ -60,10 +60,10 @@ public final class CredentialAttribute {
                 return lowerVal <= val && val < upperVal;
             }
             case TIMESTAMP: {
-                LocalDateTime lowerVal = LocalDateTime.parse(lower.getValue());   
-                LocalDateTime upperVal = LocalDateTime.parse(upper.getValue());   
+                LocalDateTime lowerVal = LocalDateTime.parse(lower.getValue());
+                LocalDateTime upperVal = LocalDateTime.parse(upper.getValue());
                 LocalDateTime val = LocalDateTime.parse(this.getValue());
-                return !lowerVal.isAfter(val) && upperVal.isAfter(val);   
+                return !lowerVal.isAfter(val) && upperVal.isAfter(val);
             }
             case STRING: {
                 byte[] lowerVal = lower.getValue().getBytes(StandardCharsets.UTF_8);
@@ -72,7 +72,7 @@ public final class CredentialAttribute {
                 return this.compareStringAttributes(val, lowerVal) >= 0 && this.compareStringAttributes(val, upperVal) < 0;
             }
             default:
-                throw new Exception(); // TODO better type
+                throw new IllegalArgumentException("Unknown attribute type");
         }
     }
 
