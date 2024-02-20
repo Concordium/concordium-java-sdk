@@ -1,0 +1,19 @@
+{
+    "challenge": "beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef",
+    "credentialStatements": [
+        {
+            "statement": [
+                {
+                    "type": "RevealAttribute",
+                    "attributeTag": "firstName"
+                }
+            ],
+            "idQualifier": {
+                "type": "cred",
+                "issuers": [
+                    0
+                ]
+            }
+        }
+    ]
+}
