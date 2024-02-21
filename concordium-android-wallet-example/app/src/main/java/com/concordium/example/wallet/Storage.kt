@@ -21,7 +21,6 @@ class Storage(context: Context) {
     val accountAddress = StorageAccessor(sharedPreferences, "account_address")
     val identity = StorageAccessor(sharedPreferences, "identity")
 
-    @OptIn(ExperimentalStdlibApi::class)
     fun getWallet(): ConcordiumHdWallet {
         val seedPhrase = this.seedPhrase.get()
         return ConcordiumHdWallet.fromSeedPhrase(seedPhrase, Constants.NETWORK)
