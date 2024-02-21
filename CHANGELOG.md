@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+- Added method `findAtLowestHeight` for finding the earliest block satisfying some condition.
+- Added method `findAccountCreation` for finding the block in which an account was created.
 - Make the `energy` parameter for invoking an instance `Optional`.
 - Parse the underlying reject reasons into `AccountTransactionDetails`.
 - Introduced Cis2Client for interfacing with CIS2 compliant smart contracts.
