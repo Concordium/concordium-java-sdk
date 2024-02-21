@@ -2,6 +2,7 @@
 
 ## Unreleased changes
 - Added `Web3IdProof` class with `getWeb3IdProof` method to create Presentations. (And supporting classes)
+- Fixed an issue where `ConcordiumHdWallet.fromSeedPhrase` always produced an invalid seed as hex.
 
 ## 7.0.0
 - Make the `energy` parameter for invoking an instance `Optional`.
