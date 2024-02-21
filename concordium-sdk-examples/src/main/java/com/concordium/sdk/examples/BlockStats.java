@@ -1,10 +1,12 @@
 package com.concordium.sdk.examples;
 
+import com.concordium.grpc.v2.AbsoluteBlockHeight;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
+import lombok.val;
 import lombok.var;
 import picocli.CommandLine;
 
@@ -63,11 +65,27 @@ public class BlockStats implements Callable<Integer> {
                 .build();
         var client = ClientV2.from(connection);
 
+        var height = client.getConsensusInfo().getLastFinalizedBlockHeight()-10;
+        var max = client.getConsensusInfo().getLastFinalizedBlockHeight();
+        // Traverse entire chain starting from genesis block
+        while (height <= max){
+            val start = BlocksAtHeightRequest.newAbsolute(height);
+            val query = BlockQuery.HEIGHT(start);
+            val b = client.getBlockInfo(query);
+            System.out.println(b);
+            height++;
+            if (height == max) {
+                max = client.getConsensusInfo().getLastFinalizedBlockHeight();
+                if (height == max) {
+                    break;
+                }
+            }
+        }
         return 0;
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new FindAccount()).execute(args);
+        int exitCode = new CommandLine(new BlockStats()).execute(args);
         System.exit(exitCode);
     }
 }

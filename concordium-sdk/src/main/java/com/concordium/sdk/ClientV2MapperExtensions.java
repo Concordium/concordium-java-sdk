@@ -21,6 +21,7 @@ import com.concordium.grpc.v2.NextUpdateSequenceNumbers;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ProtocolVersion;
 import com.concordium.grpc.v2.ReleaseSchedule;
+import com.concordium.grpc.v2.AbsoluteBlockHeight;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;

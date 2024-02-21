@@ -2,6 +2,7 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.ClientInitializationException;
+import com.concordium.sdk.requests.Range;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.EpochQuery;
@@ -19,6 +20,7 @@ import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blockitemstatus.BlockItemStatus;
 import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
+import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
@@ -39,6 +41,7 @@ import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
+import com.concordium.sdk.types.AbsoluteBlockHeight;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.Nonce;
@@ -55,9 +58,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 
 import static com.concordium.sdk.ClientV2MapperExtensions.to;
 import static com.concordium.sdk.ClientV2MapperExtensions.toTransactionHash;
@@ -963,6 +966,122 @@ public final class ClientV2 {
             // report back any other exceptions.
             throw e;
         }
+    }
+
+    /**
+     * Find a finalized block with the lowest height that satisfies the given condition. If a block is not found return {@link Optional#empty()}.<p>
+     *
+     * The provided `test` method should, given a {@link ClientV2} and a {@link BlockQuery},
+     * return {@link Optional#of(T)} if the object is found in the block, and {@link Optional#empty()} otherwise.
+     * It can also throw exceptions which will terminate the search immediately.<p>
+     *
+     * The precondition for this method is that the `test` method is monotone, i.e. if a block at height `h` satisfies the test then also a block at height `h+1` does.
+     * If this precondition does not hold then the return value from this method is unspecified.<p>
+     *
+     * Note, this searches the entire chain. Use {@link ClientV2#findAtLowestHeight(Range, BiFunction)} to only search a given range.
+     * @param test {@link BiFunction} satisfying the conditions described above.
+     * @return {@link Optional#of(T)} if the search was successful, {@link Optional#empty()} otherwise.
+     * @param <T> The type to be returned if the search is successful.
+     */
+    public <T> Optional<T> findAtLowestHeight(BiFunction<ClientV2, BlockQuery, Optional<T>> test) {
+        return findAtLowestHeight(Range.newUnbounded(), test);
+    }
+
+    /**
+     * Find a finalized block with the lowest height that satisfies the given condition. If a block is not found return {@link Optional#empty()}.<p>
+     *
+     * The provided `test` method should, given a {@link ClientV2} and a {@link BlockQuery},
+     * return {@link Optional#of(T)} if the object is found in the block, and {@link Optional#empty()} otherwise.
+     * It can also throw exceptions which will terminate the search immediately.<p>
+     *
+     * The precondition for this method is that the `test` method is monotone, i.e. if a block at height `h` satisfies the test then also a block at height `h+1` does.
+     * If this precondition does not hold then the return value from this method is unspecified.<p>
+     *
+     * The search is limited to at most the given range, the upper bound is always at most the last finalized block at the time of the call.
+     * If the lower bound is not provided it defaults to 0, if the upper bound is not provided it defaults to the last finalized block at the time of the call.
+     * @param range {@link Range} optionally specifying upper and lower bounds of the search.
+     * @param test {@link BiFunction} satisfying the conditions described above.
+     * @return {@link Optional#of(T)} if the search was successful, {@link Optional#empty()} otherwise.
+     * @param <T> The type to be returned if the search is successful.
+     */
+    public <T> Optional<T> findAtLowestHeight(Range<AbsoluteBlockHeight> range, BiFunction<ClientV2, BlockQuery, Optional<T>> test) {
+        long start = 0;
+        if (range.getLowerBound().isPresent()) {
+            start = range.getLowerBound().get().getHeight().getValue();
+        }
+
+        long end = this.getConsensusInfo().getLastFinalizedBlockHeight();
+        if (range.getUpperBound().isPresent()) {
+            end = Math.min(end, range.getUpperBound().get().getHeight().getValue());
+        }
+
+        if (end < start) {
+            throw new IllegalArgumentException("Start height must be before end height");
+        }
+        Optional<T> lastFound = Optional.empty();
+        while (start < end) {
+            long mid = start + (end - start) / 2;
+            Optional<T> ok = test.apply(this, BlockQuery.HEIGHT(BlocksAtHeightRequest.newAbsolute(mid)));
+            if (ok.isPresent()) {
+                end = mid;
+                lastFound = ok;
+            } else {
+                start = mid + 1;
+            }
+        }
+
+        return lastFound;
+    }
+
+    /**
+     * Find a block in which the {@link AccountAddress} was created, if it exists and is finalized.
+     * The returned {@link FindAccountResponse}, if present, contains the absolute block height, corresponding {@link Hash} and the {@link AccountInfo} at the end of the block.
+     * The block is the first block in which the account appears.<p>
+     *
+     * Note that this is not necessarily the initial state of the account since there can be transactions updating it in the same block that it is created.<p>
+     *
+     * The search is limited to at most the given range, the upper bound is always at most the last finalized block at the time of the call.
+     * If the lower bound is not provided it defaults to 0, if the upper bound is not provided it defaults to the last finalized block at the time of the call.<p>
+     *
+     * If the account is not found, {@link Optional#empty()} is returned.
+     * @param range {@link Range} optionally specifying upper and lower bounds of the search.
+     * @param address The {@link AccountAddress} to search for.
+     * @return {@link Optional} containing {@link FindAccountResponse} if the search was successful, {@link Optional#empty()} otherwise.
+     */
+    public Optional<FindAccountResponse> findAccountCreation(Range<AbsoluteBlockHeight> range, AccountAddress address) {
+        return this.findAtLowestHeight(range, (client, height) -> {
+            try {
+                AccountInfo info = client.getAccountInfo(height, AccountQuery.from(address));
+                BlockInfo blockInfo = client.getBlockInfo(height);
+                FindAccountResponse response = FindAccountResponse.builder()
+                        .absoluteBlockHeight(blockInfo.getBlockHeight())
+                        .accountInfo(info)
+                        .blockHash(blockInfo.getBlockHash())
+                        .build();
+                return Optional.of(response);
+            } catch (io.grpc.StatusRuntimeException e) {
+                if (e.getStatus().getCode().equals(Status.Code.NOT_FOUND)) {
+                    return Optional.empty();
+                }
+                throw e;
+            }
+        });
+    }
+
+    /**
+     * Find a block in which the {@link AccountAddress} was created, if it exists and is finalized.
+     * The returned {@link FindAccountResponse}, if present, contains the absolute block height, corresponding {@link Hash} and the {@link AccountInfo} at the end of the block.
+     * The block is the first block in which the account appears.<p>
+     *
+     * Note that this is not necessarily the initial state of the account since there can be transactions updating it in the same block that it is created.<p>
+     *
+     * If the account is not found, {@link Optional#empty()} is returned.<p>
+     * Note, this searches the entire chain. Use {@link ClientV2#findAtLowestHeight(Range, BiFunction)} to only search a given range.
+     * @param address The {@link AccountAddress} to search for.
+     * @return {@link Optional} containing {@link FindAccountResponse} if the search was successful, {@link Optional#empty()} otherwise.
+     */
+    public Optional<FindAccountResponse> findAccountCreation(AccountAddress address) {
+        return findAccountCreation(Range.newUnbounded(), address);
     }
 
     /**
