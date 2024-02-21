@@ -12,7 +12,6 @@ import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.AtomicStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.RequestStatement;
 
-
 public class RequestStatementTest {
  
     @Test

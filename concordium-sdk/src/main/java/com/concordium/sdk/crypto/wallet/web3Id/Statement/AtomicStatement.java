@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
+import com.concordium.sdk.crypto.wallet.identityobject.MissingAttributeException;
 import com.concordium.sdk.crypto.wallet.web3Id.CredentialAttribute;
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType;
 
@@ -19,11 +22,10 @@ public abstract class AtomicStatement {
    public abstract String getAttributeTag();
 
    // TODO: add overload for web3Id credential
-   protected CredentialAttribute getAttributeValue(IdentityObject identityObject) throws Exception {
+   protected CredentialAttribute getAttributeValue(IdentityObject identityObject) throws JsonProcessingException, JsonParseException, MissingAttributeException {
       AttributeType type = AttributeType.fromJSON(this.getAttributeTag());
-      String raw = identityObject.getAttributeList().getChosenAttributes().get(type);
+      String raw = identityObject.getChosenAttribute(type);
       return CredentialAttribute.builder().value(raw).type(CredentialAttribute.CredentialAttributeType.STRING).build();
-
    }
 
    // TODO: add overload for web3Id credential

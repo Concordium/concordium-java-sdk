@@ -45,7 +45,7 @@ public class ProofTest {
         assertEquals("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef", request.getChallenge());
         
         RequestStatement credentialStatement = request.getCredentialStatements().get(0);
-        assertEquals("did:ccd:testnet:cred:a88a8214fc7a7f11aeda54661b76a1fd7c67e15278b83a85ec92cb799ef0abaa3b7c61a7e90ea6bb108fa2ca1a3ba217", credentialStatement.getId());
+        assertEquals("did:ccd:testnet:cred:a88a8214fc7a7f11aeda54661b76a1fd7c67e15278b83a85ec92cb799ef0abaa3b7c61a7e90ea6bb108fa2ca1a3ba217", credentialStatement.getId().toString());
 
         Iterator<AtomicStatement> iter = credentialStatement.getStatement().iterator();
 
@@ -118,9 +118,9 @@ public class ProofTest {
         assertEquals("5d50c6e18aca83e991af81e7d7e760f5dc753db7966dc19e9aa42f25aef1696b", request.getChallenge());
         
         RequestStatement credentialStatement = request.getCredentialStatements().get(0);
-        assertEquals("did:ccd:testnet:sci:6105:0/credentialEntry/31163ba14e30b834f1e97b9544d86df94883fd4f2c77e1d1fac0b6189c9e7996", credentialStatement.getId());
+        assertEquals("did:ccd:testnet:sci:6105:0/credentialEntry/31163ba14e30b834f1e97b9544d86df94883fd4f2c77e1d1fac0b6189c9e7996", credentialStatement.getId().toString());
 
-        List<String> type = credentialStatement.getType();
+        List<String> type = credentialStatement.getVerifiableCredentialTypes();
         assert(type.stream().anyMatch(item -> item.equals("VerifiableCredential")));
         assert(type.stream().anyMatch(item -> item.equals("ConcordiumVerifiableCredential")));
         assert(type.stream().anyMatch(item -> item.equals("UniversityDegreeCredential"))); 
