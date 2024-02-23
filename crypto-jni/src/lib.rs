@@ -4,45 +4,35 @@ use concordium_base::{
     base,
     common::*,
     contracts_common::{schema::VersionedModuleSchema, Amount},
-    encrypted_transfers,
-    encrypted_transfers::types::{
+    encrypted_transfers::{self, types::{
         AggregatedDecryptedAmount, EncryptedAmount, EncryptedAmountTransferData,
         IndexedEncryptedAmount, SecToPubAmountTransferData,
-    },
-    id,
-    id::{constants::ArCurve, curve_arithmetic::Curve, elgamal, types::GlobalContext},
-    transactions::{AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload},
+    }},
+    id::{self, constants::{self, ArCurve, AttributeKind}, types::AttributeTag, curve_arithmetic::Curve, elgamal, id_proof_types::AtomicStatement, types::GlobalContext},
+    transactions::{AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload}, web3id::{Request, Web3IdAttribute},
 };
 use core::slice;
 use ed25519_dalek::*;
 
 use jni::{
-    objects::{JClass, JString},
+    objects::{JClass, JString, JValue, JObject},
     sys::{jboolean, jbyteArray, jint, jlong, jstring, JNI_FALSE},
     JNIEnv,
 };
 use rand::thread_rng;
 use serde_json::{from_str, to_string};
 use std::{
-    convert::{From, TryFrom, TryInto},
-    i8,
-    str::Utf8Error,
+    collections::HashSet, convert::{From, TryFrom, TryInto}, i8, str::Utf8Error
 };
 use wallet_library::{
     credential::{
         self, create_unsigned_credential_v1_aux, serialize_credential_deployment_payload,
         CredentialDeploymentDetails, CredentialDeploymentPayload,
-    },
-    identity::{create_identity_object_request_v1_aux, create_identity_recovery_request_aux},
-    proofs::Web3IdProofInput,
-    wallet::{
-        get_account_public_key_aux, get_account_signing_key_aux,
-        get_attribute_commitment_randomness_aux, get_credential_id_aux, get_id_cred_sec_aux,
-        get_prf_key_aux, get_signature_blinding_randomness_aux,
-        get_verifiable_credential_backup_encryption_key_aux,
-        get_verifiable_credential_public_key_aux, get_verifiable_credential_signing_key_aux,
-    },
+    }, identity::{create_identity_object_request_v1_aux, create_identity_recovery_request_aux}, proofs::Web3IdProofInput, statement::{AcceptableRequest, RequestCheckError}, wallet::{
+        get_account_public_key_aux, get_account_signing_key_aux, get_attribute_commitment_randomness_aux, get_credential_id_aux, get_id_cred_sec_aux, get_prf_key_aux, get_signature_blinding_randomness_aux, get_verifiable_credential_backup_encryption_key_aux, get_verifiable_credential_public_key_aux, get_verifiable_credential_signing_key_aux
+    }
 };
+use wallet_library::statement::{AcceptableAtomicStatement, WalletConfigRules};
 
 const SUCCESS: i32 = 0;
 const NATIVE_CONVERSION_ERROR: i32 = 1;
@@ -1313,4 +1303,115 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createWeb3
     };
 
     CryptoJniResult::Ok(presentation_string).to_jstring(&env)
+}
+
+impl<T> From<wallet_library::statement::RequestCheckError> for CryptoJniResult<T> {
+    fn from(e: wallet_library::statement::RequestCheckError) -> Self {
+        let error = JNIErrorResponse {
+            errorType:    JNIErrorResponseType::NativeConversion,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
+    }
+}
+
+/// The JNI wrapper for checking that a request is acceptable.
+/// * `input` - the JSON string of [`wallet_library::proofs::RequestStatement`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptableRequest(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let request: Request<constants::ArCurve, AttributeKind> = match serde_json::from_str(&input_string) {
+        Ok(req) => req,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    match request.acceptable_request(&wallet_library::statement::get_default_wallet_config()) {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(()).to_jstring(&env)
+}
+
+/// The JNI wrapper for checking that a request is acceptable.
+/// * `input` - the JSON string of [`wallet_library::proofs::RequestStatement`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptableAtomicStatement<'a>(
+    env: JNIEnv<'a>,
+    _: JClass,
+    request_input: JString,
+    range_tags_input: JString,
+    set_tags_input: JString,
+    attribute_check: JObject<'a>,
+) -> jstring {
+    let input_string = match get_string(env, request_input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let request: AtomicStatement<constants::ArCurve, AttributeTag, Web3IdAttribute> = match  serde_json::from_str(&input_string) {
+        Ok(req) => req,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let input_string = match get_string(env, set_tags_input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let set_tags: HashSet<AttributeTag> = match  serde_json::from_str(&input_string) {
+        Ok(req) => req,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let input_string = match get_string(env, range_tags_input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let range_tags: HashSet<AttributeTag> = match  serde_json::from_str(&input_string) {
+        Ok(req) => req,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let check = |tag: &AttributeTag, value: &Web3IdAttribute| {
+        let attribute: String = match to_string(value) {
+            Ok(a) => a,
+            Err(_) => return Err(RequestCheckError::InvalidValue("Unable to be stringified".to_owned()))
+        };
+        let attribute: JString = match env.new_string(attribute) {
+            Ok(a) => a,
+            Err(_) => return Err(RequestCheckError::InvalidValue("Unable to be stringified".to_owned()))
+        };
+
+        let args = &[JValue::Int(tag.0.into()), attribute.into()];
+        match env.call_method(attribute_check, "check_attribute", "(I)V", args) {
+            Ok(_) => Ok(()),
+            Err(e) => Err(RequestCheckError::InvalidValue(e.to_string()))
+        }
+    };
+
+    let rules = WalletConfigRules::<constants::ArCurve, AttributeTag, Web3IdAttribute> {
+        set_tags,
+        range_tags,
+        attribute_check: Box::new(check),
+        _marker: std::marker::PhantomData
+    };
+
+    match request.acceptable_atomic_statement(&Some(rules)) {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(()).to_jstring(&env)
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -12,8 +13,10 @@ import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.wallet.FileHelpers;
 import com.concordium.sdk.crypto.wallet.Network;
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
+import com.concordium.sdk.crypto.wallet.web3Id.CredentialAttribute.CredentialAttributeType;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.AtomicStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.QualifiedRequestStatement;
+import com.concordium.sdk.crypto.wallet.web3Id.Statement.RangeStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.RequestStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.StatementType;
 import com.concordium.sdk.serializing.JsonMapper;
@@ -49,6 +52,27 @@ public class RequestStatementTest {
         assertEquals(1, unsatisfied.size());
         assertEquals("dob", unsatisfied.get(0).getAttributeTag());
         assertEquals(requestStatement1.getStatement().get(0), unsatisfied.get(0));
+    }
+
+    @Test
+    public void testIsAcceptableRequest() throws Exception {
+        QualifiedRequest request = ProofTest.loadRequest("accountRequest.json");
+        AcceptableRequest.acceptableRequest(request);
+    }
+
+    @Test
+    public void testIsAcceptableAtomicStatement() {
+        AtomicStatement statement = RangeStatement.builder().attributeTag("dob")
+                .lower(CredentialAttribute.builder().type(CredentialAttributeType.STRING).value("20140112").build())
+                .upper(CredentialAttribute.builder().type(CredentialAttributeType.STRING).value("20150112").build())
+                .build();
+
+        AcceptableRequest.acceptableAtomicStatement(statement, Collections.singletonList("dob"), Collections.emptyList(), new AttributeCheck() {
+
+            @Override
+            public String checkAttribute(String tag, CredentialAttribute value) {
+                return "Test";
+            }});
     }
 
     @Test
