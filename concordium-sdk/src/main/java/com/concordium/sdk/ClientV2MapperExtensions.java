@@ -146,6 +146,28 @@ interface ClientV2MapperExtensions {
         return builder.build();
     }
 
+    static com.concordium.grpc.v2.BlocksAtHeightRequest to(com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest height) {
+        switch (height.getType()) {
+            case ABSOLUTE:
+                return BlocksAtHeightRequest.newBuilder()
+                        .setAbsolute(BlocksAtHeightRequest.Absolute.newBuilder()
+                                .setHeight(AbsoluteBlockHeight.newBuilder().setValue(height.getHeight()).build())
+                                .build())
+                        .build();
+            case RELATIVE:
+                return BlocksAtHeightRequest.newBuilder()
+                        .setRelative(BlocksAtHeightRequest.Relative.newBuilder()
+                                .setGenesisIndex(GenesisIndex.newBuilder().setValue(height.getGenesisIndex()))
+                                .setHeight(BlockHeight.newBuilder().setValue(height.getHeight()))
+                                .setRestrict(height.isRestrictedToGenesisIndex())
+                                .build())
+                        .build();
+            default:
+                throw new IllegalArgumentException("Invalid type");
+        }
+
+    }
+
     static com.concordium.grpc.v2.BlockHash to(final Hash blockHash) {
         return com.concordium.grpc.v2.BlockHash.newBuilder().setValue(to(blockHash.getBytes())).build();
     }
@@ -874,13 +896,13 @@ interface ClientV2MapperExtensions {
         TransactionTime time = to(credentialDeploymentTransaction.getExpiry().getValue());
 
         return SendBlockItemRequest.newBuilder()
-            .setCredentialDeployment(
-                CredentialDeployment.newBuilder()
-                        .setMessageExpiry(time)
-                        .setRawPayload(ByteString.copyFrom(credentialDeploymentTransaction.getPayloadBytes()))
-                        .build()
+                .setCredentialDeployment(
+                        CredentialDeployment.newBuilder()
+                                .setMessageExpiry(time)
+                                .setRawPayload(ByteString.copyFrom(credentialDeploymentTransaction.getPayloadBytes()))
+                                .build()
                 )
-            .build();
+                .build();
     }
 
     static AccountTransactionSignature to(TransactionSignature signature) {

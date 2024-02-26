@@ -51,6 +51,8 @@ import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import lombok.val;
+import lombok.var;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +60,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
@@ -148,6 +151,20 @@ public final class ClientV2 {
      */
     public Iterator<BlockIdentifier> getFinalizedBlocks(int timeoutMillis) {
         val grpcOutput = this.server(timeoutMillis)
+                .getFinalizedBlocks(Empty.newBuilder().build());
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Gets an {@link Iterator} of Finalized Blocks from the time request is made and onwards.
+     * This can be used to listen for blocks being Finalized. <p>
+     *
+     * Note, may block indefinitely. Use {@link ClientV2#getFinalizedBlocks(int)} to specify a timeout.
+     * @return {@link Iterator<BlockIdentifier>}
+     */
+    public Iterator<BlockIdentifier> getFinalizedBlocks() {
+        val grpcOutput = this.blockingStub
                 .getFinalizedBlocks(Empty.newBuilder().build());
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
@@ -1009,7 +1026,7 @@ public final class ClientV2 {
         if (range.getLowerBound().isPresent()) {
             start = range.getLowerBound().get().getHeight().getValue();
         }
-
+        // TODO rewrite using BlockQuery and just get abs height from `from` and `to` in input
         long end = this.getConsensusInfo().getLastFinalizedBlockHeight();
         if (range.getUpperBound().isPresent()) {
             end = Math.min(end, range.getUpperBound().get().getHeight().getValue());
@@ -1082,6 +1099,29 @@ public final class ClientV2 {
      */
     public Optional<FindAccountResponse> findAccountCreation(AccountAddress address) {
         return findAccountCreation(Range.newUnbounded(), address);
+    }
+
+    /**
+     * Get a {@link ImmutableList}of live blocks at a given height.
+     * @param height {@link BlocksAtHeightRequest} with the height to query at.
+     * @return {@link ImmutableList} of {@link Hash} of live blocks at the specified height.
+     */
+    public ImmutableList<Hash> getBlocksAtHeight(BlocksAtHeightRequest height) {
+        val output = this.server().getBlocksAtHeight(to(height)).getBlocksList();
+        val list = new ImmutableList.Builder<Hash>();
+        output.forEach(hash -> list.add(to(hash)));
+        return list.build();
+    }
+
+    /**
+     * Get a {@link FinalizedBlockItemIterator} of {@link BlockIdentifier} of finalized blocks starting from a given height.
+     * This function starts a {@link Thread} that listens for new finalized blocks.
+     * This {@link Thread} is killed when the {@link FinalizedBlockItemIterator} dropped with {@link FinalizedBlockItemIterator#drop()}
+     * @param startHeight {@link AbsoluteBlockHeight} to start at.
+     * @return {@link FinalizedBlockItemIterator} containing {@link BlockIdentifier}s of finalized blocks.
+     */
+    public FinalizedBlockItemIterator getFinalizedBlocksFrom(AbsoluteBlockHeight startHeight) {
+        return new FinalizedBlockItemIterator(this, startHeight);
     }
 
     /**
