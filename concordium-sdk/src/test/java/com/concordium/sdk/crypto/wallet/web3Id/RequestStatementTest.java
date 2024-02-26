@@ -22,6 +22,7 @@ import com.concordium.sdk.crypto.wallet.web3Id.Statement.StatementType;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.types.ContractAddress;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class RequestStatementTest {
 
@@ -68,7 +69,6 @@ public class RequestStatementTest {
                 .build();
 
         AcceptableRequest.acceptableAtomicStatement(statement, Collections.singletonList("dob"), Collections.emptyList(), new AttributeCheck() {
-
             @Override
             public String checkAttribute(String tag, CredentialAttribute value) {
                 return "Test";
