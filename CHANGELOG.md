@@ -1,10 +1,13 @@
 # Changelog
 
 ## Unreleased changes
+- Added `Web3IdProof` class with `getWeb3IdProof` method to create Presentations. (And supporting classes)
 - Added method `getFinalizedBlocksFrom` for retrieving finalized blocks starting from a given height.
 - Added method `getBlocksAtHeight` for retrieving live blocks at a given height.
 - Added method `findAtLowestHeight` for finding the earliest block satisfying some condition.
 - Added method `findAccountCreation` for finding the block in which an account was created.
+
+## 7.0.0
 - Make the `energy` parameter for invoking an instance `Optional`.
 - Parse the underlying reject reasons into `AccountTransactionDetails`.
 - Introduced Cis2Client for interfacing with CIS2 compliant smart contracts.

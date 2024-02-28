@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.concordium.sdk</groupId>
         <artifactId>concordium-sdk-base</artifactId>
-        <version>6.1.1-SNAPSHOT</version>
+        <version>7.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>concordium-android-sdk</artifactId>
