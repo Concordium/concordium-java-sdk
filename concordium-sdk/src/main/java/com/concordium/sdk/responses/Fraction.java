@@ -59,7 +59,7 @@ public class Fraction {
     }
 
     /**
-     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision.
+     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision i.e. the specified amount of decimal points.
      * Result is rounded using {@link RoundingMode#HALF_UP}
      *
      * @param precision how many decimals of precision.
@@ -70,7 +70,7 @@ public class Fraction {
     }
 
     /**
-     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision.
+     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision i.e. the specified amount of decimal points.
      * Result is rounded using the provided {@link RoundingMode}.
      *
      * @param precision how many decimals of precision.

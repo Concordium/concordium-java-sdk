@@ -26,10 +26,19 @@ public class ConversionResult<Type>{
 
     public interface ConversionResultType {}
 
-    public static final class CCD implements ConversionResultType {}
+    /**
+     * Phantom type for {@link ConversionResult} indicating the result represents a {@link CCDAmount}.
+     */
+    public static final class microCCD implements ConversionResultType {}
 
+    /**
+     * Phantom type for {@link ConversionResult} indicating the result represents an amount of {@link Energy}
+     */
     public static final class NRG implements ConversionResultType {}
 
+    /**
+     * Phantom type for {@link ConversionResult} indicating the result represents an amount of Euros
+     */
     public static final class EUR implements ConversionResultType {}
 
     public static final class ConversionRate implements ConversionResultType {}
@@ -65,7 +74,7 @@ public class ConversionResult<Type>{
     }
 
     /**
-     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision.
+     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision i.e. the specified amount of decimal points.
      * Result is rounded using {@link RoundingMode#HALF_UP}
      *
      * @param precision how many decimals of precision.
@@ -76,7 +85,7 @@ public class ConversionResult<Type>{
     }
 
     /**
-     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision.
+     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision i.e. the specified amount of decimal points.
      * Result is rounded using the provided {@link RoundingMode}.
      *
      * @param precision how many decimals of precision.

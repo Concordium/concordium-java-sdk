@@ -5,7 +5,7 @@ import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.chainparameters.ChainParameters;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.ConversionResult;
-import com.concordium.sdk.types.ConversionResult.CCD;
+import com.concordium.sdk.types.ConversionResult.microCCD;
 import com.concordium.sdk.types.ConversionResult.EUR;
 import com.concordium.sdk.types.ConversionResult.NRG;
 import com.concordium.sdk.types.UInt64;
@@ -30,7 +30,7 @@ public class EnergyToCCDTest {
     private static final CCDAmount CCD_AMOUNT = CCDAmount.fromMicro(CCD_LONG);
     private static final Energy ENERGY = Energy.from(UInt64.from(ENERGY_LONG));
 
-    private static final ConversionResult<CCD> CCD_FRACTION = ConversionResult.from(CCD_AMOUNT.getValue(), UInt64.from(1));
+    private static final ConversionResult<microCCD> CCD_FRACTION = ConversionResult.from(CCD_AMOUNT.getValue(), UInt64.from(1));
     private static final ConversionResult<NRG> ENERGY_FRACTION = ConversionResult.from(ENERGY.getValue(), UInt64.from(1));
     private static final ConversionResult<EUR> EURO_FRACTION = ConversionResult.from(UInt64.from(10), UInt64.from(1));
 
@@ -91,8 +91,8 @@ public class EnergyToCCDTest {
     }
 
     private void energyToCCD(ChainParameters parameters) {
-        ConversionResult<CCD> ccdFromEnergy = CurrencyConverter.energyToMicroCCD(ENERGY, parameters);
-        ConversionResult<CCD> ccdFromEnergyFraction = CurrencyConverter.energyToMicroCCD(ENERGY_FRACTION, parameters);
+        ConversionResult<microCCD> ccdFromEnergy = CurrencyConverter.energyToMicroCCD(ENERGY, parameters);
+        ConversionResult<microCCD> ccdFromEnergyFraction = CurrencyConverter.energyToMicroCCD(ENERGY_FRACTION, parameters);
         // Both conversions yield same result
         assertEquals(ccdFromEnergy, ccdFromEnergyFraction);
 
@@ -128,8 +128,8 @@ public class EnergyToCCDTest {
         // Both conversions yield same result
         assertEquals(energyFromCCD, energyFromCCDFraction);
 
-        ConversionResult<CCD> ccdFromEnergy = CurrencyConverter.energyToMicroCCD(energyFromCCD, parameters);
-        ConversionResult<CCD> ccdFromEnergyFraction = CurrencyConverter.energyToMicroCCD(energyFromCCDFraction, parameters);
+        ConversionResult<microCCD> ccdFromEnergy = CurrencyConverter.energyToMicroCCD(energyFromCCD, parameters);
+        ConversionResult<microCCD> ccdFromEnergyFraction = CurrencyConverter.energyToMicroCCD(energyFromCCDFraction, parameters);
 
         // Converting back yields same result
         assertEquals(ccdFromEnergy, ccdFromEnergyFraction);
@@ -143,8 +143,8 @@ public class EnergyToCCDTest {
         // Both conversions yield same result
         assertEquals(euroFromCCD,euroFromCCDFraction);
 
-        ConversionResult<CCD> ccdFromEuro = CurrencyConverter.euroToMicroCCD(euroFromCCD, parameters);
-        ConversionResult<CCD> ccdFromEuroFraction = CurrencyConverter.euroToMicroCCD(euroFromCCDFraction, parameters);
+        ConversionResult<microCCD> ccdFromEuro = CurrencyConverter.euroToMicroCCD(euroFromCCD, parameters);
+        ConversionResult<microCCD> ccdFromEuroFraction = CurrencyConverter.euroToMicroCCD(euroFromCCDFraction, parameters);
 
         // Converting back yields same result
         assertEquals(ccdFromEuro, ccdFromEuroFraction);
@@ -160,7 +160,7 @@ public class EnergyToCCDTest {
         assertEquals(euroFromEnergy, EURO_FRACTION);
     }
     private void euroToCCD(ChainParameters parameters) {
-        ConversionResult<CCD> ccdFromEuro = CurrencyConverter.euroToMicroCCD(EURO_FRACTION, parameters);
+        ConversionResult<microCCD> ccdFromEuro = CurrencyConverter.euroToMicroCCD(EURO_FRACTION, parameters);
         ConversionResult<EUR> euroFromCCD = CurrencyConverter.microCCDToEuro(ccdFromEuro, parameters);
 
         // Conversions are precise
@@ -178,13 +178,13 @@ public class EnergyToCCDTest {
         assertEquals(expectedEuroFromEnergy, euroFromEnergy);
 
         // MICRO_CCD_PER_EURO_1 * EURO = 16626124143116419072/78228883861 * 10 = 166261241431164190720/78228883861
-        ConversionResult<CCD> expectedCCDFromEuro = ConversionResult.from("166261241431164190720","78228883861");
-        ConversionResult<CCD> ccdFromEuro = CurrencyConverter.euroToMicroCCD(EURO_FRACTION, PARAM_1);
+        ConversionResult<microCCD> expectedCCDFromEuro = ConversionResult.from("166261241431164190720","78228883861");
+        ConversionResult<microCCD> ccdFromEuro = CurrencyConverter.euroToMicroCCD(EURO_FRACTION, PARAM_1);
         assertEquals(expectedCCDFromEuro, ccdFromEuro);
 
         // EURO_PER_ENERGY * ENERGY * MICRO_CCD_PER_EURO_1 = 1/110 * 16626124143116419072/78228883861 = 8313062071558209536/4302588612355
-        ConversionResult<CCD> expectedCCDFromEnergy = ConversionResult.from("8313062071558209536", "4302588612355");
-        ConversionResult<CCD> ccdFromEnergy = CurrencyConverter.energyToMicroCCD(ENERGY, PARAM_1);
+        ConversionResult<microCCD> expectedCCDFromEnergy = ConversionResult.from("8313062071558209536", "4302588612355");
+        ConversionResult<microCCD> ccdFromEnergy = CurrencyConverter.energyToMicroCCD(ENERGY, PARAM_1);
         assertEquals(expectedCCDFromEnergy, ccdFromEnergy);
 
         // CCD_AMOUNT / MICRO_CCD_PER_EURO_1 = 1000000 / (16626124143116419072/78228883861) = 1222326310328125/259783189736194048

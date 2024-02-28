@@ -45,7 +45,7 @@ public class CurrencyConverter {
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
      * @return {@link ConversionResult} corresponding to the micro CCD value of {@link Energy}.
      */
-    public static ConversionResult<CCD> energyToMicroCCD(Energy energy, ChainParameters parameters) {
+    public static ConversionResult<microCCD> energyToMicroCCD(Energy energy, ChainParameters parameters) {
         ConversionResult<NRG> energyFraction = from(energy.getValue(), UInt64.from(1));
         return energyToMicroCCD(energyFraction, parameters);
     }
@@ -57,7 +57,7 @@ public class CurrencyConverter {
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
      * @return {@link ConversionResult} corresponding to the micro CCD value of {@link Energy}.
      */
-    public static ConversionResult<CCD> energyToMicroCCD(ConversionResult<NRG> energy, ChainParameters parameters) {
+    public static ConversionResult<microCCD> energyToMicroCCD(ConversionResult<NRG> energy, ChainParameters parameters) {
         ConversionResult<EUR> euros = energyToEuro(energy, parameters);
         return euroToMicroCCD(euros, parameters);
     }
@@ -70,7 +70,7 @@ public class CurrencyConverter {
      * @return {@link ConversionResult} corresponding to the euro value of {@link CCDAmount}.
      */
     public static ConversionResult<EUR> microCCDToEuro(CCDAmount ccdAmount, ChainParameters parameters) {
-        ConversionResult<CCD> ccd = from(ccdAmount.getValue(), UInt64.from(1));
+        ConversionResult<microCCD> ccd = from(ccdAmount.getValue(), UInt64.from(1));
         return microCCDToEuro(ccd, parameters);
     }
 
@@ -81,7 +81,7 @@ public class CurrencyConverter {
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
      * @return {@link ConversionResult} corresponding to the euro value of {@link CCDAmount}.
      */
-    public static ConversionResult<EUR> microCCDToEuro(ConversionResult<CCD> ccd, ChainParameters parameters) {
+    public static ConversionResult<EUR> microCCDToEuro(ConversionResult<microCCD> ccd, ChainParameters parameters) {
         ConversionResult<ConversionRate> microCCDPerEuro = from(parameters.getMicroCCDPerEuro());
         return ccd.div(microCCDPerEuro);
     }
@@ -94,7 +94,7 @@ public class CurrencyConverter {
      * @return {@link ConversionResult} corresponding to the energy value of {@link CCDAmount}.
      */
     public static ConversionResult<NRG> ccdToEnergy(CCDAmount ccdAmount, ChainParameters parameters) {
-        ConversionResult<CCD> ccd = from(ccdAmount.getValue(), UInt64.from(1));
+        ConversionResult<microCCD> ccd = from(ccdAmount.getValue(), UInt64.from(1));
         return ccdToEnergy(ccd, parameters);
     }
 
@@ -105,7 +105,7 @@ public class CurrencyConverter {
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
      * @return {@link ConversionResult} corresponding to the energy value of {@link CCDAmount}.
      */
-    public static ConversionResult<NRG> ccdToEnergy(ConversionResult<CCD> ccdAmount, ChainParameters parameters) {
+    public static ConversionResult<NRG> ccdToEnergy(ConversionResult<microCCD> ccdAmount, ChainParameters parameters) {
         ConversionResult<EUR> euros = microCCDToEuro(ccdAmount, parameters);
         return euroToEnergy(euros, parameters);
     }
@@ -117,7 +117,7 @@ public class CurrencyConverter {
      * @param parameters {@link ChainParameters} with exchange rate used for conversion.
      * @return {@link ConversionResult} corresponding to the micro CCD value of the input.
      */
-    public static ConversionResult<CCD> euroToMicroCCD(ConversionResult<EUR> euros, ChainParameters parameters) {
+    public static ConversionResult<microCCD> euroToMicroCCD(ConversionResult<EUR> euros, ChainParameters parameters) {
         ConversionResult<ConversionRate> microCCDPerEuro = from(parameters.getMicroCCDPerEuro());
         return euros.mult(microCCDPerEuro);
     }
