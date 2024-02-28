@@ -1,5 +1,6 @@
 package com.concordium.sdk.crypto.wallet.web3Id;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -12,9 +13,9 @@ public class CredentialAttributeTest {
         CredentialAttribute low = new CredentialAttribute("9", INT);
         CredentialAttribute middle = new CredentialAttribute("10", INT);
         CredentialAttribute high = new CredentialAttribute("11", INT);
-        assertTrue(!low.isBetween(middle, high));
+        assertFalse(low.isBetween(middle, high));
         assertTrue(middle.isBetween(low, high));
-        assertTrue(!high.isBetween(low, middle));
+        assertFalse(high.isBetween(low, middle));
     }
 
     @Test
@@ -24,6 +25,6 @@ public class CredentialAttributeTest {
         CredentialAttribute high = new CredentialAttribute("18446744073709551615", INT);
         assertFalse(low.isBetween(middle, high));
         assertTrue(middle.isBetween(low, high));
-        assertTrue(!high.isBetween(low, middle));
+        assertFalse(high.isBetween(low, middle));
     }
 }
