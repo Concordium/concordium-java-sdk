@@ -22,7 +22,7 @@ public class CredentialAttributeTest {
         CredentialAttribute low = new CredentialAttribute("1", INT);
         CredentialAttribute middle = new CredentialAttribute("18446744073709551600", INT);
         CredentialAttribute high = new CredentialAttribute("18446744073709551615", INT);
-        assertTrue(!low.isBetween(middle, high));
+        assertFalse(low.isBetween(middle, high));
         assertTrue(middle.isBetween(low, high));
         assertTrue(!high.isBetween(low, middle));
     }

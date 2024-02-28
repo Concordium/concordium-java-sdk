@@ -44,7 +44,7 @@ public class Web3IssuerRequestIdentifier extends RequestIdentifier {
     @Override
     public String toString() {
         return getDID(network.getValue().toLowerCase(), Long.toUnsignedString(address.getIndex()), Long.toUnsignedString(address.getSubIndex()),
-                Hex.encodeHexString(publicKey.getRawBytes()));
+                publicKey.toString());
     }
 
     @Nullable

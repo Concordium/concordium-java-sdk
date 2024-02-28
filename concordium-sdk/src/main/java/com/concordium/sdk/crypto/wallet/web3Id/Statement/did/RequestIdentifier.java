@@ -25,10 +25,9 @@ public abstract class RequestIdentifier {
 class RequestIdentifierDeserializer extends JsonDeserializer<RequestIdentifier> {
     @Override
     public RequestIdentifier deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        System.out.println("Test");
         JsonNode reference = p.getCodec().readTree(p);
         if (!reference.isTextual()) {
-            throw new JsonParseException(p, "RequestIdentifier must be deserialize from a String");
+            throw new JsonParseException(p, "RequestIdentifier must be deserialized from a String");
         }
         String did = reference.asText();
 
