@@ -11,4 +11,15 @@ public enum Network {
             default: throw new IllegalArgumentException("An unsupported network was provided");
         }
     }
+
+    static public Network fromLowerCase(String value) {
+        switch (value) {
+            case "mainnet":
+                return MAINNET;
+            case "testnet":
+                return TESTNET;
+            default:
+                throw new IllegalArgumentException("An unsupported network was provided");
+        }
+    }
 }
