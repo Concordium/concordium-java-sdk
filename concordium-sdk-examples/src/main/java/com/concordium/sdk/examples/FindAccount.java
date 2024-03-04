@@ -7,7 +7,10 @@ import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.FindAccountResponse;
+import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
+import com.concordium.sdk.responses.blockitemsummary.Details;
+import com.concordium.sdk.responses.blockitemsummary.Summary;
 import com.concordium.sdk.responses.blockitemsummary.Type;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AccountAddress;
@@ -18,6 +21,7 @@ import picocli.CommandLine;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
@@ -31,7 +35,7 @@ public class FindAccount implements Callable<Integer> {
     @CommandLine.Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "http://node.testnet.concordium.com:20000")
+            defaultValue = "http://localhost:20002")
     private String endpoint;
 
     @CommandLine.Option(
@@ -62,11 +66,11 @@ public class FindAccount implements Callable<Integer> {
             return 0;
         }
         System.out.println("Account created in block: " + response.get().getBlockHash());
-        val blockInfo = client.getBlockInfo(BlockQuery.HASH(response.get().getBlockHash()));
+        BlockInfo blockInfo = client.getBlockInfo(BlockQuery.HASH(response.get().getBlockHash()));
         System.out.println("Timestamp of the block: " + blockInfo.getBlockTime());
-        val summaries = client.getBlockTransactionEvents(BlockQuery.HASH(response.get().getBlockHash()));
+        Iterator<Summary> summaries = client.getBlockTransactionEvents(BlockQuery.HASH(response.get().getBlockHash()));
         summaries.forEachRemaining(summary -> {
-            val details = summary.getDetails();
+            Details details = summary.getDetails();
             if (details.getType() == Type.ACCOUNT_CREATION) {
                 if (details.getAccountCreationDetails().getAddress().isAliasOf(AccountAddress.from(account))) {
                     System.out.println("Created by transaction hash: " + summary.getTransactionHash());

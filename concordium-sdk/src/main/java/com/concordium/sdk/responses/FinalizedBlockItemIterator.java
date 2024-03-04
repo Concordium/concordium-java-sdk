@@ -75,7 +75,13 @@ public class FinalizedBlockItemIterator implements Iterator<BlockIdentifier> {
         private final ClientV2 client;
         private final AbsoluteBlockHeight startHeight;
 
-        public Producer(BlockingQueue<BlockIdentifier> queue, ClientV2 client, AbsoluteBlockHeight startHeight) {
+        /**
+         * Instantiates a new {@link Producer} polling for finalized blocks using the provided {@link ClientV2}, starting from the provided {@link AbsoluteBlockHeight} and putting them in the provided {@link BlockingQueue}.
+         * @param queue the {@link BlockingQueue} to put the found blocks in.
+         * @param client {@link ClientV2} to use for polling.
+         * @param startHeight {@link AbsoluteBlockHeight} to start from.
+         */
+        Producer(BlockingQueue<BlockIdentifier> queue, ClientV2 client, AbsoluteBlockHeight startHeight) {
             this.queue = queue;
             this.client = client;
             this.startHeight = startHeight;

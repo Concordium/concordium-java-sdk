@@ -5,6 +5,10 @@ import com.concordium.sdk.Connection;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;
+import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
+import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
+import com.concordium.sdk.responses.poolstatus.CurrentPaydayStatus;
+import com.concordium.sdk.transactions.Hash;
 import lombok.val;
 import lombok.var;
 import picocli.CommandLine;
@@ -12,6 +16,8 @@ import picocli.CommandLine;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 /**
@@ -50,19 +56,19 @@ public class ValidatorStats implements Callable<Integer> {
         BigInteger equity = BigInteger.ZERO;
         BigInteger delegated = BigInteger.ZERO;
         BigInteger effective = BigInteger.ZERO;
-        var activeValidators = 0;
+        int activeValidators = 0;
 
-        val block = client.getBlockInfo(BlockQuery.LAST_FINAL).getBlockHash();
-        val blockQuery = BlockQuery.HASH(block);
-        val validators = client.getBakerList(blockQuery);
+        Hash block = client.getBlockInfo(BlockQuery.LAST_FINAL).getBlockHash();
+        BlockQuery blockQuery = BlockQuery.HASH(block);
+        Iterator<BakerId> validators = client.getBakerList(blockQuery);
 
         StringBuilder sb = new StringBuilder();
         while (validators.hasNext()) {
             BakerId validator = validators.next();
-            val pool = client.getPoolInfo(blockQuery, validator);
-            val statusOptional = pool.getCurrentPaydayStatus();
+            BakerPoolStatus pool = client.getPoolInfo(blockQuery, validator);
+            Optional<CurrentPaydayStatus> statusOptional = pool.getCurrentPaydayStatus();
             if (statusOptional.isPresent()) {
-                val status = statusOptional.get();
+                CurrentPaydayStatus status = statusOptional.get();
                 long equityVal = status.getBakerEquityCapital().getValue().getValue();
                 long delegatedVal = status.getDelegatedCapital().getValue().getValue();
                 long effectiveVal = status.getEffectiveStake().getValue().getValue();
@@ -76,7 +82,7 @@ public class ValidatorStats implements Callable<Integer> {
                 sb.append("Validator ").append(validator).append(": own stake = ").append(equityVal)
                         .append(" micro CCD, from delegators = ").append(delegatedVal).append(" micro CCD");
 
-                val delegators = client.getPoolDelegatorsRewardPeriod(blockQuery, validator);
+                Iterator<DelegatorRewardPeriodInfo> delegators = client.getPoolDelegatorsRewardPeriod(blockQuery, validator);
 
                 // Add info about delegators if present
                 if (delegators.hasNext()) {

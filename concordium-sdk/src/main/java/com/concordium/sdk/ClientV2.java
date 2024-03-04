@@ -1092,7 +1092,7 @@ public final class ClientV2 {
      * Note that this is not necessarily the initial state of the account since there can be transactions updating it in the same block that it is created.<p>
      *
      * If the account is not found, {@link Optional#empty()} is returned.<p>
-     * Note, this searches the entire chain. Use {@link ClientV2#findAtLowestHeight(Range, BiFunction)} to only search a given range.
+     * Note, this searches the entire chain. Use {@link ClientV2#findAccountCreation(Range, AccountAddress)} to only search a given range.
      * @param address The {@link AccountAddress} to search for.
      * @return {@link Optional} containing {@link FindAccountResponse} if the search was successful, {@link Optional#empty()} otherwise.
      */
