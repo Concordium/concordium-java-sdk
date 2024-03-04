@@ -1,0 +1,31 @@
+{
+    "challenge": "beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef",
+    "credentialStatements": [
+        {
+            "statement": [
+                {
+                    "type": "RevealAttribute",
+                    "attributeTag": "firstName"
+                }
+            ],
+            "idQualifier": {
+                "type": "cred",
+                "issuers": [
+                    0
+                ]
+            }
+        },
+        {
+            "statement": [
+                {
+                    "type": "RevealAttribute",
+                    "attributeTag": "degreeName"
+                }
+            ],
+            "idQualifier": {
+                "type": "sci",
+                "issuers": [{"index": 100, "subindex": 0}, {"index": 1232, "subindex": 3}]
+            }
+        }
+    ]
+}

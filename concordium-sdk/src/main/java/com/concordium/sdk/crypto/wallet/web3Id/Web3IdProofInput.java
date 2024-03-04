@@ -15,7 +15,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public class Web3IdProofInput {
-    private final Request request;
+    private final QualifiedRequest request;
     private final List<CommitmentInput> commitmentInputs;
     private final CryptographicParameters globalContext;
 }

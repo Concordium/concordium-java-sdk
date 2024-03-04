@@ -2,10 +2,6 @@ package com.concordium.sdk.crypto.wallet;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,17 +13,10 @@ import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentSerializationContext;
 import com.concordium.sdk.crypto.wallet.credential.UnsignedCredentialDeploymentInfoWithRandomness;
-import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType;
-import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevokerInfo;
-import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
-import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
-import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.CredentialPublicKeys;
 import com.concordium.sdk.transactions.Expiry;
 import com.concordium.sdk.transactions.Index;
-import com.fasterxml.jackson.databind.type.MapType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 
 
 public class CredentialTest {
