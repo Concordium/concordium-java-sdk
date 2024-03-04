@@ -7,22 +7,17 @@ import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.did.RequestIdentifier;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.extern.jackson.Jacksonized;
+import lombok.experimental.SuperBuilder;
 
+@SuperBuilder
 @Getter
-@Builder
-@Jacksonized
-public class RequestStatement {
-    private RequestIdentifier id;
+public abstract class RequestStatement {
     @JsonProperty("type")
     private List<String> verifiableCredentialTypes;
     private List<AtomicStatement> statement;
 
-    public StatementType getStatementType() {
-        return this.id.getType();
-    }
+    public abstract StatementType getStatementType();
 
     public List<AtomicStatement> getUnsatisfiedStatements(IdentityObject identityObject) {
         if (!this.getStatementType().equals(StatementType.Credential)) {
