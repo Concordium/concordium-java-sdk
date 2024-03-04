@@ -4,11 +4,15 @@ import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockQuery;
+import com.concordium.sdk.responses.BlockIdentifier;
+import com.concordium.sdk.responses.FinalizedBlockItemIterator;
+import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.PaydayAccountReward;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.PaydayFoundationReward;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.PaydayPoolReward;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import com.concordium.sdk.types.AbsoluteBlockHeight;
+import com.google.common.collect.ImmutableList;
 import lombok.val;
 import lombok.var;
 import picocli.CommandLine;
@@ -74,10 +78,10 @@ public class BlockStats implements Callable<Integer> {
 
         AbsoluteBlockHeight start;
         if (fromString.isPresent()) {
-            val from = ZonedDateTime.parse(fromString.get(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-            val b = client.findAtLowestHeight((c, query) -> {
-                val blockInfo = c.getBlockInfo(query);
-                val blockTime = blockInfo.getBlockTime().getZonedDateTime();
+            ZonedDateTime from = ZonedDateTime.parse(fromString.get(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            Optional<BlockInfo> b = client.findAtLowestHeight((c, query) -> {
+                BlockInfo blockInfo = c.getBlockInfo(query);
+                ZonedDateTime blockTime = blockInfo.getBlockTime().getZonedDateTime();
                 if (from.isBefore(blockTime)) {
                     return Optional.of(blockInfo);
                 } else {
@@ -97,32 +101,32 @@ public class BlockStats implements Callable<Integer> {
 
         int blockCount = 0;
         int finalizationCount = 0;
-        val blocks = client.getFinalizedBlocksFrom(start);
+        FinalizedBlockItemIterator blocks = client.getFinalizedBlocksFrom(start);
         ZonedDateTime endTime;
         endTime = toString.map(s -> ZonedDateTime.parse(s, DateTimeFormatter.ISO_OFFSET_DATE_TIME)).orElseGet(ZonedDateTime::now);
-        String fstring = "%1$-64s | %2$-29s | %3$-29s | %4$-29s | %5$-13s | %6$-12s | %7$-14s | %8$-17s | %9$-17s | %10$-30s | %11$-28s | %12$-8s\n";
-        System.out.printf(fstring,
+        String format = "%1$-64s | %2$-29s | %3$-29s | %4$-29s | %5$-13s | %6$-12s | %7$-14s | %8$-17s | %9$-17s | %10$-30s | %11$-28s | %12$-8s\n";
+        System.out.printf(format,
                 "Block hash", "block time", "block receive time", "block arrive time", "receive delta", "arrive" +
                         " delta", "#payday events", "finalization data", "transaction count", "round", "epoch", "baker id");
         while (blocks.hasNext()) {
-            val block = blocks.next();
+            BlockIdentifier block = blocks.next();
             BlockQuery blockQuery = BlockQuery.HASH(block.getBlockHash());
-            val blockInfo = client.getBlockInfo(blockQuery);
-            val blockTime = blockInfo.getBlockTime().getZonedDateTime();
+            BlockInfo blockInfo = client.getBlockInfo(blockQuery);
+            ZonedDateTime blockTime = blockInfo.getBlockTime().getZonedDateTime();
             if (endTime.isBefore(blockTime)) {
                 break;
             }
 
-            var paydayBlock = 0;
-            val events = client.getBlockSpecialEvents(blockQuery);
+            int paydayBlock = 0;
+            ImmutableList<SpecialOutcome> events = client.getBlockSpecialEvents(blockQuery);
             for (SpecialOutcome event: events) {
                 if (event.getClass().equals(PaydayFoundationReward.class) || event.getClass().equals(PaydayAccountReward.class) || event.getClass().equals(PaydayPoolReward.class)) {
                     paydayBlock++;
                 }
             }
-            val hasFinalizationData = client.getBlockFinalizationSummary(blockQuery).isPresent();
+            boolean hasFinalizationData = client.getBlockFinalizationSummary(blockQuery).isPresent();
 
-            System.out.printf(fstring,
+            System.out.printf(format,
                     blockInfo.getBlockHash(),
                     blockInfo.getBlockTime(),
                     blockInfo.getBlockReceiveTime(),
@@ -144,9 +148,9 @@ public class BlockStats implements Callable<Integer> {
             blockCount++;
 
         }
+        blocks.drop();
         System.out.println("Block count: " + blockCount);
         System.out.println("Finalization record count: " + finalizationCount);
-
 
         return 0;
     }

@@ -1026,7 +1026,6 @@ public final class ClientV2 {
         if (range.getLowerBound().isPresent()) {
             start = range.getLowerBound().get().getHeight().getValue();
         }
-        // TODO rewrite using BlockQuery and just get abs height from `from` and `to` in input
         long end = this.getConsensusInfo().getLastFinalizedBlockHeight();
         if (range.getUpperBound().isPresent()) {
             end = Math.min(end, range.getUpperBound().get().getHeight().getValue());
@@ -1102,7 +1101,7 @@ public final class ClientV2 {
     }
 
     /**
-     * Get a {@link ImmutableList}of live blocks at a given height.
+     * Get a {@link ImmutableList} of live blocks at a given height.
      * @param height {@link BlocksAtHeightRequest} with the height to query at.
      * @return {@link ImmutableList} of {@link Hash} of live blocks at the specified height.
      */
