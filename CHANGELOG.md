@@ -6,6 +6,7 @@
 - Added method `getBlocksAtHeight` for retrieving live blocks at a given height.
 - Added method `findAtLowestHeight` for finding the earliest block satisfying some condition.
 - Added method `findAccountCreation` for finding the block in which an account was created.
+- Fixed an issue where `ConcordiumHdWallet.fromSeedPhrase` always produced an invalid seed as hex.
 
 ## 7.0.0
 - Make the `energy` parameter for invoking an instance `Optional`.

@@ -60,6 +60,17 @@ public class ConcordiumHdWalletTest {
         ConcordiumHdWallet.fromSeedPhrase(validSeedPhrase, Network.MAINNET);
     }
 
+    @Test
+    public void testWalletFromSeedAndFromPhraseProduceEqualIdCredSec() throws IOException, MnemonicException {
+        Network network = Network.MAINNET;
+        String validSeedPhrase = "plug pipe now victory right then canvas monkey treat weasel bacon skull that shaft rookie sell adjust chase trumpet depth asthma traffic code castle";
+
+        ConcordiumHdWallet walletFromPhrase = ConcordiumHdWallet.fromSeedPhrase(validSeedPhrase, network);
+        ConcordiumHdWallet walletFromSeed = ConcordiumHdWallet.fromHex("5f9649eb1aeb049e095324f5a012188f3a0eebb56ed622b683686b0d603f114b421a86bbfa2d60ac64c3841d0a0b944abc510b50546645083a7ac9acbee27d25", network); 
+
+        assertEquals(walletFromPhrase.getIdCredSec(0, 0), walletFromSeed.getIdCredSec(0, 0));
+    }
+
     private static String TEST_SEED = "efa5e27326f8fa0902e647b52449bf335b7b605adc387015ec903f41d95080eb71361cbc7fb78721dcd4f3926a337340aa1406df83332c44c1cdcfe100603860";
 
     @Test
