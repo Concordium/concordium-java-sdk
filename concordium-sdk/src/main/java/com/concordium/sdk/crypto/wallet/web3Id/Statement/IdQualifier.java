@@ -12,15 +12,8 @@ import lombok.Getter;
 
 @Getter
 @JsonTypeInfo(use = Id.NAME, include = As.EXISTING_PROPERTY, property = "type", visible = true)
-@JsonSubTypes({ @Type(value = IdentityQualifier.class), @Type(value = Web3IdIssuerQualifier.class) })
+@JsonSubTypes({ @Type(value = IdentityQualifier.class), @Type(value = VerifiableCredentialQualifier.class) })
 public class IdQualifier {
     @JsonUnwrapped
-    QualifierType type;
-
-    public enum QualifierType {
-        @JsonProperty("cred")
-        Credential,
-        @JsonProperty("sci")
-        SmartContract
-    }
+    StatementType type;
 }

@@ -9,6 +9,6 @@ import lombok.Getter;
 
 @Getter
 @JsonTypeName("sci")
-public class Web3IdIssuerQualifier extends IdQualifier {
+public class VerifiableCredentialQualifier extends IdQualifier {
     private List<ContractAddress> issuers;
 }

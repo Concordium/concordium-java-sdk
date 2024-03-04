@@ -13,14 +13,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Getter
 public abstract class RequestStatement {
-    private RequestIdentifier id;
     @JsonProperty("type")
     private List<String> verifiableCredentialTypes;
     private List<AtomicStatement> statement;
 
-    public StatementType getStatementType() {
-        return this.id.getType();
-    }
+    public abstract StatementType getStatementType();
 
     public List<AtomicStatement> getUnsatisfiedStatements(IdentityObject identityObject) {
         if (!this.getStatementType().equals(StatementType.Credential)) {
