@@ -202,13 +202,13 @@ public class SerializationUtils {
             case TOKEN_METADATA:
                 return SerializationUtils.deserializeTokenMetadataEvent(buffer);
             case CUSTOM:
-                return SerializationUtils.deserializeCustomEvent(tag, buffer);
+                return SerializationUtils.deserializeCustomEvent(buffer);
         }
         throw new IllegalArgumentException("Malformed CIS2 event");
     }
 
-    private static Cis2Event deserializeCustomEvent(byte tag, ByteBuffer buffer) {
-        return new CustomEvent(tag, buffer.array());
+    private static Cis2Event deserializeCustomEvent(ByteBuffer buffer) {
+        return new CustomEvent(buffer.array());
     }
 
     @SneakyThrows
