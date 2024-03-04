@@ -27,7 +27,7 @@ public class UnqualifiedRequest {
         return QualifiedRequest.builder().challenge(challenge).credentialStatements(qualifiedStatements).build();
     }
 
-    static interface Qualifier {
+    public static interface Qualifier {
         QualifiedRequestStatement qualify(UnqualifiedRequestStatement statement);
     }
 }

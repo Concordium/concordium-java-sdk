@@ -27,7 +27,7 @@ public class UnqualifiedRequestStatement extends RequestStatement {
     
     public QualifiedRequestStatement qualify(CredentialRegistrationId credId, Network network) {
         if (!idQualifier.getType().equals(StatementType.Credential)) {
-            throw new IllegalArgumentException("Only an account statement may only be qualified using a credentialId");
+            throw new IllegalArgumentException("Only an account statement may be qualified using a credentialId");
         }
         RequestIdentifier did = new AccountRequestIdentifier(network, credId);
         return QualifiedRequestStatement.builder().id(did).statement(getStatement()).build();
@@ -36,7 +36,7 @@ public class UnqualifiedRequestStatement extends RequestStatement {
     public QualifiedRequestStatement qualify(ContractAddress contract, ED25519PublicKey publicKey, Network network) {
         if (!idQualifier.getType().equals(StatementType.SmartContract)) {
             throw new IllegalArgumentException(
-                    "Only an web3Id statement may only be qualified using a Contract Address");
+                    "Only a verifiable credential statement may be qualified using a Contract Address");
         }
         if (!((VerifiableCredentialQualifier) idQualifier).getIssuers().contains(contract)) {
             throw new IllegalArgumentException("The Contract Address must be one specified in the qualifier");
