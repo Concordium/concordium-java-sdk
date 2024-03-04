@@ -2,6 +2,8 @@ package com.concordium.sdk.responses.accountinfo.credential;
 
 import com.concordium.sdk.serializing.JsonMapper;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * Identity attributes of which a {@link Commitment} is generated for by the identity provider.
@@ -39,7 +41,7 @@ public enum AttributeType {
     @JsonProperty("lei")
     LEI;
 
-    public static AttributeType fromJSON(String jsonStr) throws Exception {
+    public static AttributeType fromJSON(String jsonStr) throws JsonMappingException, JsonProcessingException {
         return JsonMapper.INSTANCE.readValue(String.format("\"%s\"", jsonStr), AttributeType.class);
     }
 }

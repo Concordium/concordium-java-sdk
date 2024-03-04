@@ -4,6 +4,8 @@ import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.crypto.wallet.identityobject.MissingAttributeException;
 import com.concordium.sdk.crypto.wallet.web3Id.CredentialAttribute;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +20,7 @@ public class RangeStatement extends AtomicStatement {
     private CredentialAttribute upper;
     private String attributeTag;
     @Override
-    public boolean canBeProvedBy(IdentityObject identityObject) throws Exception {
+    public boolean canBeProvedBy(IdentityObject identityObject) throws JsonParseException, JsonProcessingException  {
         try {
             CredentialAttribute value = getAttributeValue(identityObject);
             return value.isBetween(lower, upper);

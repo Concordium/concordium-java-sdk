@@ -1,9 +1,10 @@
 package com.concordium.sdk.crypto.wallet.identityobject;
 
+import java.util.Map;
+
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType;
 
 import lombok.Getter;
-import lombok.val;
 
 @Getter
 public class IdentityObject {
@@ -13,7 +14,7 @@ public class IdentityObject {
     private String signature;
 
     public String getChosenAttribute(AttributeType attribute) throws MissingAttributeException {
-        val chosenAttributes = this.getAttributeList().getChosenAttributes();
+        Map<AttributeType, String> chosenAttributes = this.getAttributeList().getChosenAttributes();
         if (!chosenAttributes.containsKey(attribute)) {
             throw new MissingAttributeException(attribute);
         }

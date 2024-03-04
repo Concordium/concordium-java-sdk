@@ -54,10 +54,10 @@ public final class CredentialAttribute {
         }
         switch (this.type) {
             case INT: {
-                long lowerVal = Long.parseLong(lower.getValue());
-                long upperVal =  Long.parseLong(upper.getValue());
-                long val = Long.parseLong(this.getValue());
-                return lowerVal <= val && val < upperVal;
+                long lowerVal = Long.parseUnsignedLong(lower.getValue());
+                long upperVal =  Long.parseUnsignedLong(upper.getValue());
+                long val = Long.parseUnsignedLong(this.getValue());
+                return Long.compareUnsigned(lowerVal, val) <= 0 && Long.compareUnsigned(upperVal, val) > 0;
             }
             case TIMESTAMP: {
                 LocalDateTime lowerVal = LocalDateTime.parse(lower.getValue());
