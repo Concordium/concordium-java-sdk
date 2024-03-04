@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Fixed a bug in `CustomEvent`. Removed unnecessary `tag` field.
 - Added `Web3IdProof` class with `getWeb3IdProof` method to create Presentations. (And supporting classes)
 - Fixed an issue where `ConcordiumHdWallet.fromSeedPhrase` always produced an invalid seed as hex.
 
