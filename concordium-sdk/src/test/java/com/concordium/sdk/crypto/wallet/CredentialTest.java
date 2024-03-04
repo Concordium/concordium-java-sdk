@@ -32,36 +32,6 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 public class CredentialTest {
     
-    static String readFile(String path, Charset encoding)
-            throws IOException {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        return new String(encoded, encoding);
-    }
-
-    private CryptographicParameters getCryptographicParameters() throws Exception {
-        return JsonMapper.INSTANCE.readValue(
-                readFile("./src/test/testresources/wallet/global.json", Charset.forName("UTF-8")),
-                CryptographicParameters.class);
-    }
-
-    private IdentityProviderInfo getIdentityProviderInfo() throws Exception {
-        return JsonMapper.INSTANCE.readValue(
-                readFile("./src/test/testresources/wallet/ip_info.json", Charset.forName("UTF-8")),
-                IdentityProviderInfo.class);
-    }
-
-    private Map<String, AnonymityRevokerInfo> getAnonymityRevokerInfos() throws Exception {
-        MapType mapType = TypeFactory.defaultInstance().constructMapType(Map.class, String.class,
-                AnonymityRevokerInfo.class);
-        return JsonMapper.INSTANCE.readValue(
-                readFile("./src/test/testresources/wallet/ars_infos.json", Charset.forName("UTF-8")), mapType);
-    }
-
-    private IdentityObject getIdentityObject() throws Exception {
-    return JsonMapper.INSTANCE.readValue(
-                readFile("./src/test/testresources/wallet/id_object.json", Charset.forName("UTF-8")),
-                IdentityObject.class);    }
-
     private static String TEST_SEED = "efa5e27326f8fa0902e647b52449bf335b7b605adc387015ec903f41d95080eb71361cbc7fb78721dcd4f3926a337340aa1406df83332c44c1cdcfe100603860";
 
     @Test
@@ -76,10 +46,10 @@ public class CredentialTest {
         }
 
         UnsignedCredentialInput input = UnsignedCredentialInput.builder()
-            .ipInfo(getIdentityProviderInfo())
-            .globalContext(getCryptographicParameters())
-            .arsInfos(getAnonymityRevokerInfos())
-            .idObject(getIdentityObject())
+            .ipInfo(FileHelpers.getIdentityProviderInfo())
+            .globalContext(FileHelpers.getCryptographicParameters())
+            .arsInfos(FileHelpers.getAnonymityRevokerInfos())
+            .idObject(FileHelpers.getIdentityObject())
             .credNumber(credentialCounter)
             .attributeRandomness(attributeRandomness)
             .blindingRandomness(wallet.getSignatureBlindingRandomness(0, 0))
