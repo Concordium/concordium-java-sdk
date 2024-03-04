@@ -141,9 +141,7 @@ public final class ClientV2 {
     }
 
     /**
-     * Gets an {@link Iterator} of Finalized Blocks.
-     * With Specified Timeout.
-     * Form the time request is made and onwards.
+     * Gets an {@link Iterator} of Finalized Blocks with specified timeout from the time request is made and onwards.
      * This can be used to listen for blocks being Finalized.
      *
      * @param timeoutMillis Timeout for the request in Milliseconds.
@@ -990,7 +988,7 @@ public final class ClientV2 {
      *
      * The provided `test` method should, given a {@link ClientV2} and a {@link BlockQuery},
      * return {@link Optional#of(T)} if the object is found in the block, and {@link Optional#empty()} otherwise.
-     * It can also throw exceptions which will terminate the search immediately.<p>
+     * It can also throw exceptions which will terminate the search immediately and pass on the exception.<p>
      *
      * The precondition for this method is that the `test` method is monotone, i.e. if a block at height `h` satisfies the test then also a block at height `h+1` does.
      * If this precondition does not hold then the return value from this method is unspecified.<p>
@@ -1009,7 +1007,7 @@ public final class ClientV2 {
      *
      * The provided `test` method should, given a {@link ClientV2} and a {@link BlockQuery},
      * return {@link Optional#of(T)} if the object is found in the block, and {@link Optional#empty()} otherwise.
-     * It can also throw exceptions which will terminate the search immediately.<p>
+     * It can also throw exceptions which will terminate the search immediately and pass on the exception.<p>
      *
      * The precondition for this method is that the `test` method is monotone, i.e. if a block at height `h` satisfies the test then also a block at height `h+1` does.
      * If this precondition does not hold then the return value from this method is unspecified.<p>

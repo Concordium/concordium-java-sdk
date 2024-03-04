@@ -108,9 +108,6 @@ public class FinalizedBlockItemIterator implements Iterator<BlockIdentifier> {
             }
             val blockStream = client.getFinalizedBlocks();
             while (!Thread.currentThread().isInterrupted()) {
-                if (!blockStream.hasNext()) {
-                    continue;
-                }
                 val block = blockStream.next();
                 // Recover missed blocks
                 val blockHeight = block.getBlockHeight().getValue();
