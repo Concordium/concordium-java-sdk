@@ -44,13 +44,13 @@ public class ValidatorStats implements Callable<Integer> {
 
     @Override
     public Integer call() throws MalformedURLException, ClientInitializationException {
-        var endpointUrl = new URL(this.endpoint);
+        URL endpointUrl = new URL(this.endpoint);
         Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
                 .timeout(timeout)
                 .build();
-        var client = ClientV2.from(connection);
+        ClientV2 client = ClientV2.from(connection);
 
         // BigInteger to avoid overflow
         BigInteger equity = BigInteger.ZERO;

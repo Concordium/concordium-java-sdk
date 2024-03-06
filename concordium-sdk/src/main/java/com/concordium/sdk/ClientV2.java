@@ -1065,7 +1065,7 @@ public final class ClientV2 {
                 AccountInfo info = client.getAccountInfo(height, AccountQuery.from(address));
                 BlockInfo blockInfo = client.getBlockInfo(height);
                 FindAccountResponse response = FindAccountResponse.builder()
-                        .absoluteBlockHeight(blockInfo.getBlockHeight())
+                        .absoluteBlockHeight(AbsoluteBlockHeight.from(blockInfo.getBlockHeight()))
                         .accountInfo(info)
                         .blockHash(blockInfo.getBlockHash())
                         .build();

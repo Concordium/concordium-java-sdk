@@ -52,31 +52,35 @@ public class FindAccount implements Callable<Integer> {
 
     @Override
     public Integer call() throws MalformedURLException, ClientInitializationException {
-        var endpointUrl = new URL(this.endpoint);
+        URL endpointUrl = new URL(this.endpoint);
         Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
                 .timeout(timeout)
                 .build();
-        var client = ClientV2.from(connection);
+        ClientV2 client = ClientV2.from(connection);
 
         Optional<FindAccountResponse> response = client.findAccountCreation(AccountAddress.from(account));
         if (!response.isPresent()) {
             System.out.println("Account not found.");
             return 0;
         }
-        System.out.println("Account created in block: " + response.get().getBlockHash());
-        BlockInfo blockInfo = client.getBlockInfo(BlockQuery.HASH(response.get().getBlockHash()));
+        Hash blockHash = response.get().getBlockHash();
+        BlockQuery blockQuery = BlockQuery.HASH(blockHash);
+        System.out.println("Account created in block: " + blockHash);
+        BlockInfo blockInfo = client.getBlockInfo(blockQuery);
         System.out.println("Timestamp of the block: " + blockInfo.getBlockTime());
-        Iterator<Summary> summaries = client.getBlockTransactionEvents(BlockQuery.HASH(response.get().getBlockHash()));
-        summaries.forEachRemaining(summary -> {
+        Iterator<Summary> summaries = client.getBlockTransactionEvents(blockQuery);
+        while (summaries.hasNext()) {
+            Summary summary = summaries.next();
             Details details = summary.getDetails();
             if (details.getType() == Type.ACCOUNT_CREATION) {
                 if (details.getAccountCreationDetails().getAddress().isAliasOf(AccountAddress.from(account))) {
                     System.out.println("Created by transaction hash: " + summary.getTransactionHash());
+                    break;
                 }
             }
-        });
+        }
 
         return 0;
     }

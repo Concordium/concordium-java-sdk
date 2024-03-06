@@ -20,10 +20,10 @@ public class Aliases implements Callable<Integer> {
     public Integer call() throws Exception {
         String first = addresses.remove(0);
         AccountAddress addr = AccountAddress.from(first);
-        for (String a : addresses) {
+        for (String address : addresses) {
 
-            if (!addr.isAliasOf(AccountAddress.from(a))) {
-                System.out.println(a + " is not an alias of " + first);
+            if (!addr.isAliasOf(AccountAddress.from(address))) {
+                System.out.println(address + " is not an alias of " + first);
                 return 0;
             }
         }

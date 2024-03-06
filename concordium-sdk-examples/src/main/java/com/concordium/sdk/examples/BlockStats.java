@@ -13,11 +13,10 @@ import com.concordium.sdk.responses.blocksummary.specialoutcomes.PaydayPoolRewar
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.SpecialOutcome;
 import com.concordium.sdk.types.AbsoluteBlockHeight;
 import com.google.common.collect.ImmutableList;
-import lombok.val;
 import lombok.var;
 import picocli.CommandLine;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -67,20 +66,20 @@ public class BlockStats implements Callable<Integer> {
     private Optional<String> toString;
 
     @Override
-    public Integer call() throws MalformedURLException, ClientInitializationException {
-        var endpointUrl = new URL(this.endpoint);
+    public Integer call() throws IOException, ClientInitializationException {
+        URL endpointUrl = new URL(this.endpoint);
         Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
                 .timeout(timeout)
                 .build();
-        var client = ClientV2.from(connection);
+        ClientV2 client = ClientV2.from(connection);
 
         AbsoluteBlockHeight start;
         if (fromString.isPresent()) {
             ZonedDateTime from = ZonedDateTime.parse(fromString.get(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-            Optional<BlockInfo> b = client.findAtLowestHeight((c, query) -> {
-                BlockInfo blockInfo = c.getBlockInfo(query);
+            Optional<BlockInfo> startBlock = client.findAtLowestHeight((clientV2, query) -> {
+                BlockInfo blockInfo = clientV2.getBlockInfo(query);
                 ZonedDateTime blockTime = blockInfo.getBlockTime().getZonedDateTime();
                 if (from.isBefore(blockTime)) {
                     return Optional.of(blockInfo);
@@ -89,8 +88,8 @@ public class BlockStats implements Callable<Integer> {
                 }
 
             });
-            if (b.isPresent()) {
-                start = AbsoluteBlockHeight.from(b.get().getBlockHeight());
+            if (startBlock.isPresent()) {
+                start = AbsoluteBlockHeight.from(startBlock.get().getBlockHeight());
             } else {
                 throw new IllegalArgumentException("Last finalized block is not after the requested start time.");
             }
@@ -104,7 +103,7 @@ public class BlockStats implements Callable<Integer> {
         FinalizedBlockItemIterator blocks = client.getFinalizedBlocksFrom(start);
         ZonedDateTime endTime;
         endTime = toString.map(s -> ZonedDateTime.parse(s, DateTimeFormatter.ISO_OFFSET_DATE_TIME)).orElseGet(ZonedDateTime::now);
-        String format = "%1$-64s | %2$-29s | %3$-29s | %4$-29s | %5$-13s | %6$-12s | %7$-14s | %8$-17s | %9$-17s | %10$-30s | %11$-28s | %12$-8s\n";
+        String format = "%1$-64s | %2$-29s | %3$-29s | %4$-29s | %5$-13s | %6$-12s | %7$-14s | %8$-17s | %9$-17s | %10$-7s | %11$-6s | %12$-8s\n";
         System.out.printf(format,
                 "Block hash", "block time", "block receive time", "block arrive time", "receive delta", "arrive" +
                         " delta", "#payday events", "finalization data", "transaction count", "round", "epoch", "baker id");
@@ -136,8 +135,8 @@ public class BlockStats implements Callable<Integer> {
                     paydayBlock,
                     hasFinalizationData,
                     blockInfo.getTransactionCount(),
-                    blockInfo.getRound().isPresent() ? blockInfo.getRound().toString() : "",
-                    blockInfo.getEpoch().isPresent() ? blockInfo.getEpoch().toString() : "",
+                    blockInfo.getRound().isPresent() ? blockInfo.getRound().get().getValue().toString() : "",
+                    blockInfo.getEpoch().isPresent() ? blockInfo.getEpoch().get().getValue().toString() : "",
                     Objects.isNull(blockInfo.getBlockBaker()) ? "" : blockInfo.getBlockBaker().toString()
 
                     );
