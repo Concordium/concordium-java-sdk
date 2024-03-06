@@ -34,7 +34,7 @@ import java.util.concurrent.Callable;
  * - Arrive time of the block at the given node
  * - Difference between receive and slot times
  * - Difference between arrive and slot times
- * - Number if events associated with payday
+ * - Number of events associated with payday
  * - Whether the block contains a finalization record
  * - The number of transactions included in the block
  */
