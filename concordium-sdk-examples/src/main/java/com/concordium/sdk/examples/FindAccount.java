@@ -45,7 +45,7 @@ public class FindAccount implements Callable<Integer> {
     private int timeout;
 
     @CommandLine.Option(
-            names = {"-a ", "--account"},
+            names = {"--a", "--account"},
             description = "Account to look for",
             defaultValue = "4AuT5RRmBwcdkLMA6iVjxTDb1FQmxwAh3wHBS22mggWL8xH6s3")
     private String account;
@@ -61,7 +61,7 @@ public class FindAccount implements Callable<Integer> {
         var client = ClientV2.from(connection);
 
         Optional<FindAccountResponse> response = client.findAccountCreation(AccountAddress.from(account));
-        if (!response.isPresent()) {
+        if (response.isEmpty()) {
             System.out.println("Account not found.");
             return 0;
         }
