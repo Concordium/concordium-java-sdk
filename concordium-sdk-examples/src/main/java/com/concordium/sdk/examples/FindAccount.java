@@ -2,21 +2,15 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.exceptions.ClientInitializationException;
-import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.FindAccountResponse;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
-import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
 import com.concordium.sdk.responses.blockitemsummary.Details;
 import com.concordium.sdk.responses.blockitemsummary.Summary;
 import com.concordium.sdk.responses.blockitemsummary.Type;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AccountAddress;
-import jdk.nashorn.internal.codegen.CompilerConstants;
-import lombok.val;
-import lombok.var;
 import picocli.CommandLine;
 
 import java.net.MalformedURLException;
@@ -61,7 +55,10 @@ public class FindAccount implements Callable<Integer> {
         ClientV2 client = ClientV2.from(connection);
 
         Optional<FindAccountResponse> response = client.findAccountCreation(AccountAddress.from(account));
-        if (response.isEmpty()) {
+
+        boolean isEmpty = !response.isPresent();
+
+        if (isEmpty) {
             System.out.println("Account not found.");
             return 0;
         }
