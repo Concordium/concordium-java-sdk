@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Fixed a bug in `CustomEvent`. Removed unnecessary `tag` field.
 - Added `Web3IdProof` class with `getWeb3IdProof` method to create Presentations. (And supporting classes)
 - Added method `getFinalizedBlocksFrom` for retrieving finalized blocks starting from a given height.
 - Added method `getBlocksAtHeight` for retrieving live blocks at a given height.
