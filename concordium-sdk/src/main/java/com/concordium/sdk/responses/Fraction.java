@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * A fraction
  */
@@ -53,5 +56,30 @@ public class Fraction {
      */
     public double asDouble() {
         return (double) this.numerator.getValue() / (double) this.denominator.getValue();
+    }
+
+    /**
+     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision i.e. the specified amount of decimal points.
+     * Result is rounded using {@link RoundingMode#HALF_UP}
+     *
+     * @param precision how many decimals of precision.
+     * @return the fraction represented as a {@link BigDecimal}.
+     */
+    public BigDecimal asBigDecimal(int precision) {
+        return asBigDecimal(precision, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * Get the fraction as a {@link BigDecimal} value with the specified amount of precision i.e. the specified amount of decimal points.
+     * Result is rounded using the provided {@link RoundingMode}.
+     *
+     * @param precision how many decimals of precision.
+     * @param roundingMode the {@link RoundingMode} to use.
+     * @return the fraction represented as a {@link BigDecimal}.
+     */
+    public BigDecimal asBigDecimal(int precision, RoundingMode roundingMode) {
+        BigDecimal numerator = new BigDecimal(this.numerator.toString());
+        BigDecimal denominator = new BigDecimal(this.denominator.toString());
+        return numerator.divide(denominator, precision, roundingMode);
     }
 }

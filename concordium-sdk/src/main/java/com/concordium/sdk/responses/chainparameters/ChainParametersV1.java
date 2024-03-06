@@ -5,10 +5,7 @@ import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Chain parameters for protocol versions 4 to 5.
@@ -16,6 +13,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @Builder
+@Getter
 @AllArgsConstructor
 public class ChainParametersV1 extends ChainParameters {
 

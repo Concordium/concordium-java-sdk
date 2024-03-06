@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;
-import java.text.DecimalFormat;
 
 /**
  * A CCD amount with 'micro' precision.

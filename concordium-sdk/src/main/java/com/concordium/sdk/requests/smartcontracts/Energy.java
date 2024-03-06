@@ -16,7 +16,7 @@ public class Energy {
 
     @Override
     public String toString() {
-        return this.value.getValue() + " NRG";
+        return this.value.toString() + " NRG";
     }
 
     public static Energy from(com.concordium.grpc.v2.Energy energy) {
@@ -26,4 +26,8 @@ public class Energy {
     public static Energy from(UInt64 value) {
         return new Energy(value);
     }
+    public static Energy from(String val) {
+        return Energy.from(UInt64.from(val));
+    }
+
 }

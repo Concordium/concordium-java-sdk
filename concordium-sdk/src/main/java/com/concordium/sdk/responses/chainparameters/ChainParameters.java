@@ -1,5 +1,7 @@
 package com.concordium.sdk.responses.chainparameters;
 
+import com.concordium.sdk.responses.Fraction;
+
 /**
  * Base class for all chain parameters.
  * All chain parameters must implement 'getVersion'.
@@ -7,6 +9,9 @@ package com.concordium.sdk.responses.chainparameters;
 public abstract class ChainParameters {
 
     public abstract Version getVersion();
+
+    public abstract Fraction getEuroPerEnergy();
+    public abstract Fraction getMicroCCDPerEuro();
 
     /**
      * Chain parameters versions
