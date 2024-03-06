@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey
 import com.concordium.sdk.requests.AccountQuery
 import com.concordium.sdk.requests.BlockQuery
-import com.concordium.sdk.transactions.AccountNonce
 import com.concordium.sdk.transactions.CCDAmount
 import com.concordium.sdk.transactions.Expiry
 import com.concordium.sdk.transactions.Index
@@ -70,13 +69,13 @@ class AccountActivity : ComponentActivity() {
 
         val client = ConcordiumClientService.getClient()
         val senderInfo = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(sender))
-        val nonce = senderInfo.accountNonce
+        val nonce = senderInfo.nonce
         val transactionHash = client.sendTransaction(
             TransactionFactory.newTransfer()
                 .sender(sender)
                 .receiver(receiver)
                 .amount(amount)
-                .nonce(AccountNonce.from(nonce))
+                .nonce(nonce)
                 .expiry(expiry)
                 .signer(signer)
                 .build()

@@ -82,7 +82,7 @@ public class ConcordiumHdWallet {
         byte[] seed = MnemonicCode.toSeed(seedPhrase, "");
         StringBuilder sb = new StringBuilder();
         for (byte b : seed) {
-            sb.append(String.format("%02X ", b));
+            sb.append(String.format("%02X", b));
         }
         return new ConcordiumHdWallet(sb.toString(), network);
     }

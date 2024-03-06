@@ -1,0 +1,38 @@
+{
+    "challenge": "beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef",
+    "credentialStatements": [
+        {
+            "statement": [
+                {
+                    "type": "AttributeInRange",
+                    "attributeTag": "dob",
+                    "upper": "20060215",
+                    "lower": "99990101"
+                },
+                {
+                    "type": "RevealAttribute",
+                    "attributeTag": "firstName"
+                },
+                {
+                    "type": "AttributeInSet",
+                    "attributeTag": "nationality",
+                    "set": [
+                        "DK",
+                        "FR",
+                        "GB"
+                    ]
+                },
+                {
+                    "type": "AttributeNotInSet",
+                    "attributeTag": "countryOfResidence",
+                    "set": [
+                        "FR",
+                        "GB",
+                        "DE"
+                    ]
+                }
+            ],
+            "id": "did:ccd:testnet:cred:a88a8214fc7a7f11aeda54661b76a1fd7c67e15278b83a85ec92cb799ef0abaa3b7c61a7e90ea6bb108fa2ca1a3ba217"
+        }
+    ]
+}
