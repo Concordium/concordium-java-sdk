@@ -2,11 +2,16 @@ package com.concordium.sdk.examples.contractexample.wccd;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
+import com.concordium.sdk.CurrencyConverter;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
+import com.concordium.sdk.requests.smartcontracts.Energy;
+import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
+import com.concordium.sdk.responses.chainparameters.ChainParameters;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
+import com.concordium.sdk.responses.smartcontracts.InvokeInstanceResult;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.AccountAddress;
@@ -16,6 +21,7 @@ import com.concordium.sdk.types.UInt64;
 import lombok.var;
 import picocli.CommandLine;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -147,6 +153,19 @@ public class Cis2WCCD implements Callable<Integer> {
     }
 
     private void handleMethod(ClientV2 client, Nonce nonce, SchemaParameter parameter) {
+        // Estimate energy used by transaction.
+        InvokeInstanceRequest invokeInstanceRequest = InvokeInstanceRequest.from(BlockQuery.LAST_FINAL,
+                CONTRACT_ADDRESS,
+                parameter,
+                Optional.empty());
+        InvokeInstanceResult invokeInstanceResult = client.invokeInstance(invokeInstanceRequest);
+        Energy usedEnergy = invokeInstanceResult.getUsedEnergy();
+        ChainParameters parameters = client.getChainParameters(BlockQuery.LAST_FINAL);
+        // Convert to Euro and CCD using ChainParameters from the best block and utility methods in the Converter class.
+        BigDecimal euros = CurrencyConverter.energyToEuro(usedEnergy, parameters).asBigDecimal(6);
+        BigDecimal ccd = CurrencyConverter.energyToMicroCCD(usedEnergy, parameters).asBigDecimal(6);
+        System.out.println("Price of transaction is: " + usedEnergy + " = " + euros + " euros = " + ccd + " micro CCD");
+
         UpdateContract payload = UpdateContract.from(CONTRACT_ADDRESS, parameter);
         UpdateContractTransaction transaction = TransactionFactory.newUpdateContract()
                 .sender(AccountAddress.from(SENDER_ADDRESS))

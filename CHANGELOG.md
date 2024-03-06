@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased changes
+- Removed unnecessary  `amount` parameter from `InvokeInstanceRequest`.
+- Added utility functions for converting between `CCDAmount` and `Energy`. Present in utility class `Converter`.
 - Fixed a bug in `CustomEvent`. Removed unnecessary `tag` field.
 - Added `Web3IdProof` class with `getWeb3IdProof` method to create Presentations. (And supporting classes)
 - Added method `getFinalizedBlocksFrom` for retrieving finalized blocks starting from a given height.

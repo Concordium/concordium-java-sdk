@@ -38,10 +38,6 @@ public class InvokeInstanceRequest {
      */
     private ContractAddress instance;
 
-    /**
-     * Amount to invoke the smart contract instance with.
-     */
-    private CCDAmount amount;
 
     /**
      * The entrypoint of the smart contract instance to invoke.
@@ -70,7 +66,6 @@ public class InvokeInstanceRequest {
      *                   If this is not supplied then the contract will be invoked by an account with address 0,
      *                   no credentials and sufficient amount of CCD to cover the transfer amount.
      * @param instance   Address of the contract instance to invoke.
-     * @param amount     Amount to invoke the smart contract instance with.
      * @param entrypoint The {@link ReceiveName} of the smart contract instance to invoke.
      * @param parameter  The parameter bytes to include in the invocation of the entrypoint.
      * @param energy     The amount of energy to allow for execution. If this is not set, then the node
@@ -79,7 +74,6 @@ public class InvokeInstanceRequest {
     public static InvokeInstanceRequest from(@NonNull BlockQuery blockHash,
                                              @NonNull AbstractAddress invoker,
                                              @NonNull ContractAddress instance,
-                                             @NonNull CCDAmount amount,
                                              @NonNull ReceiveName entrypoint,
                                              @NonNull Parameter parameter,
                                              @NonNull Optional<Energy> energy) {
@@ -87,7 +81,6 @@ public class InvokeInstanceRequest {
                 .blockHash(blockHash)
                 .invoker(invoker)
                 .instance(instance)
-                .amount(amount)
                 .entrypoint(entrypoint)
                 .parameter(parameter)
                 .energy(energy).build();
@@ -99,7 +92,6 @@ public class InvokeInstanceRequest {
      *
      * @param blockHash  Block to invoke the contract. The invocation will be at the end of the given block.
      * @param instance   Address of the contract instance to invoke.
-     * @param amount     Amount to invoke the smart contract instance with.
      * @param entrypoint The {@link ReceiveName} of the smart contract instance to invoke.
      * @param parameter  The parameter bytes to include in the invocation of the entrypoint.
      * @param energy     The amount of energy to allow for execution. If this is not set, then the node
@@ -107,14 +99,12 @@ public class InvokeInstanceRequest {
      */
     public static InvokeInstanceRequest from(@NonNull BlockQuery blockHash,
                                              @NonNull ContractAddress instance,
-                                             @NonNull CCDAmount amount,
                                              @NonNull ReceiveName entrypoint,
                                              @NonNull Parameter parameter,
                                              @NonNull Optional<Energy> energy) {
         return InvokeInstanceRequest.builder()
                 .blockHash(blockHash)
                 .instance(instance)
-                .amount(amount)
                 .entrypoint(entrypoint)
                 .parameter(parameter)
                 .energy(energy).build();
@@ -128,7 +118,6 @@ public class InvokeInstanceRequest {
      *                        If this is not supplied then the contract will be invoked by an account with address 0,
      *                        no credentials and sufficient amount of CCD to cover the transfer amount.
      * @param instance        Address of the contract instance to invoke.
-     * @param amount          Amount to invoke the smart contract instance with.
      * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
      * @param energy          The amount of energy to allow for execution. If this is not set, then the node
      *                        will decide a sufficient amount of energy allowed for transaction execution.
@@ -136,13 +125,12 @@ public class InvokeInstanceRequest {
     public static InvokeInstanceRequest from(@NonNull BlockQuery blockHash,
                                              @NonNull AbstractAddress invoker,
                                              @NonNull ContractAddress instance,
-                                             @NonNull CCDAmount amount,
                                              @NonNull SchemaParameter schemaParameter,
                                              @NonNull Optional<Energy> energy) {
         if (!(schemaParameter.getType() == ParameterType.RECEIVE)) {
             throw new IllegalArgumentException("Cannot initialize smart contract with InvokeInstance. SchemaParameter for InvokeInstanceRequest must be initialized with a ReceiveName");
         }
-        return from(blockHash, invoker, instance, amount, schemaParameter.getReceiveName(), Parameter.from(schemaParameter), energy);
+        return from(blockHash, invoker, instance, schemaParameter.getReceiveName(), Parameter.from(schemaParameter), energy);
     }
 
     /**
@@ -151,20 +139,18 @@ public class InvokeInstanceRequest {
      *
      * @param blockHash       Block to invoke the contract. The invocation will be at the end of the given block.
      * @param instance        Address of the contract instance to invoke.
-     * @param amount          Amount to invoke the smart contract instance with.
      * @param schemaParameter {@link SchemaParameter} message to invoke the contract with. Must be initialized with {@link SchemaParameter#initialize()} beforehand.
      * @param energy          The amount of energy to allow for execution. If this is not set, then the node
      *                        will decide a sufficient amount of energy allowed for transaction execution.
      */
     public static InvokeInstanceRequest from(@NonNull BlockQuery blockHash,
                                              @NonNull ContractAddress instance,
-                                             @NonNull CCDAmount amount,
                                              @NonNull SchemaParameter schemaParameter,
                                              @NonNull Optional<Energy> energy) {
         if (!(schemaParameter.getType() == ParameterType.RECEIVE)) {
             throw new IllegalArgumentException("Cannot initialize smart contract with InvokeInstance. SchemaParameter for InvokeInstanceRequest must be initialized with a ReceiveName");
         }
-        return from(blockHash, instance, amount, schemaParameter.getReceiveName(), Parameter.from(schemaParameter), energy);
+        return from(blockHash, instance, schemaParameter.getReceiveName(), Parameter.from(schemaParameter), energy);
     }
 
     public boolean hasInvoker() {

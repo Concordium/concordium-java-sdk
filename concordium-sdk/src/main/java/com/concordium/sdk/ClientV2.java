@@ -806,7 +806,7 @@ public final class ClientV2 {
             grpcRequest.setInvoker(to(request.getInvoker()));
         }
         grpcRequest.setInstance(to(request.getInstance()))
-                .setAmount(to(request.getAmount()))
+                .setAmount(to(CCDAmount.from(0)))
                 .setEntrypoint(to(request.getEntrypoint()))
                 .setParameter(to(request.getParameter()));
         if (request.getEnergy().isPresent()) {
