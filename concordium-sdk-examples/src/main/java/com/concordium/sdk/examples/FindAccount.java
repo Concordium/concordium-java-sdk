@@ -36,9 +36,15 @@ public class FindAccount implements Callable<Integer> {
 
     @CommandLine.Option(
             names = {"--tls"},
+            description = "Whether to use TLS. Uses default trust store. Use --tls-path to supply certificate"
+    )
+    private boolean useTLS;
+
+    @CommandLine.Option(
+            names = {"--tls-path"},
             description = "Path to the server certificate"
     )
-    private Optional<String> tls;
+    private Optional<String> tlsPath;
 
     @CommandLine.Option(
             names = {"--timeout"},
@@ -60,9 +66,14 @@ public class FindAccount implements Callable<Integer> {
                 .port(endpointUrl.getPort())
                 .timeout(timeout);
 
-        if (tls.isPresent()) {
-            connection = connection.useTLS(TLSConfig.from(new File(tls.get())));
+        if (useTLS) {
+            if (tlsPath.isPresent()) {
+                connection = connection.useTLS(TLSConfig.from(new File(tlsPath.get())));
+            } else {
+                connection = connection.useTLS(TLSConfig.auto());
+            }
         }
+
         ClientV2 client = ClientV2.from(connection.build());
 
         Optional<FindAccountResponse> response = client.findAccountCreation(AccountAddress.from(account));
