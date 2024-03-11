@@ -2,6 +2,7 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
+import com.concordium.sdk.TLSConfig;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.BakerId;
@@ -9,10 +10,9 @@ import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.poolstatus.CurrentPaydayStatus;
 import com.concordium.sdk.transactions.Hash;
-import lombok.val;
-import lombok.var;
 import picocli.CommandLine;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -37,6 +37,12 @@ public class ValidatorStats implements Callable<Integer> {
     private String endpoint;
 
     @CommandLine.Option(
+            names = {"--tls"},
+            description = "Path to the server certificate"
+    )
+    private Optional<String> tls;
+
+    @CommandLine.Option(
             names = {"--timeout"},
             description = "GRPC request timeout in milliseconds.",
             defaultValue = "100000")
@@ -45,12 +51,15 @@ public class ValidatorStats implements Callable<Integer> {
     @Override
     public Integer call() throws MalformedURLException, ClientInitializationException {
         URL endpointUrl = new URL(this.endpoint);
-        Connection connection = Connection.newBuilder()
+        Connection.ConnectionBuilder connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .timeout(timeout)
-                .build();
-        ClientV2 client = ClientV2.from(connection);
+                .timeout(timeout);
+
+        if (tls.isPresent()) {
+            connection = connection.useTLS(TLSConfig.from(new File(tls.get())));
+        }
+        ClientV2 client = ClientV2.from(connection.build());
 
         // BigInteger to avoid overflow
         BigInteger equity = BigInteger.ZERO;

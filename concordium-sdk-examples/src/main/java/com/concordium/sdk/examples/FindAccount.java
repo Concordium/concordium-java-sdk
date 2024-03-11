@@ -2,6 +2,7 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
+import com.concordium.sdk.TLSConfig;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.FindAccountResponse;
@@ -13,6 +14,7 @@ import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AccountAddress;
 import picocli.CommandLine;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -33,6 +35,12 @@ public class FindAccount implements Callable<Integer> {
     private String endpoint;
 
     @CommandLine.Option(
+            names = {"--tls"},
+            description = "Path to the server certificate"
+    )
+    private Optional<String> tls;
+
+    @CommandLine.Option(
             names = {"--timeout"},
             description = "GRPC request timeout in milliseconds.",
             defaultValue = "100000")
@@ -47,12 +55,15 @@ public class FindAccount implements Callable<Integer> {
     @Override
     public Integer call() throws MalformedURLException, ClientInitializationException {
         URL endpointUrl = new URL(this.endpoint);
-        Connection connection = Connection.newBuilder()
+        Connection.ConnectionBuilder connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .timeout(timeout)
-                .build();
-        ClientV2 client = ClientV2.from(connection);
+                .timeout(timeout);
+
+        if (tls.isPresent()) {
+            connection = connection.useTLS(TLSConfig.from(new File(tls.get())));
+        }
+        ClientV2 client = ClientV2.from(connection.build());
 
         Optional<FindAccountResponse> response = client.findAccountCreation(AccountAddress.from(account));
 
