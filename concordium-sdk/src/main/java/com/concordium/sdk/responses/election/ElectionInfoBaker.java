@@ -4,6 +4,7 @@ import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.types.AccountAddress;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -12,6 +13,7 @@ import lombok.ToString;
 @Builder
 @ToString
 @EqualsAndHashCode
+@Getter
 public class ElectionInfoBaker {
     /**
      * The ID of the baker.

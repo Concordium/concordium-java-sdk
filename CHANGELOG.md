@@ -5,6 +5,10 @@
 - Added utility functions for converting between `CCDAmount` and `Energy`. Present in utility class `Converter`.
 - Fixed a bug in `CustomEvent`. Removed unnecessary `tag` field.
 - Added `Web3IdProof` class with `getWeb3IdProof` method to create Presentations. (And supporting classes)
+- Added method `getFinalizedBlocksFrom` for retrieving finalized blocks starting from a given height.
+- Added method `getBlocksAtHeight` for retrieving live blocks at a given height.
+- Added method `findAtLowestHeight` for finding the earliest block satisfying some condition.
+- Added method `findAccountCreation` for finding the block in which an account was created.
 - Fixed an issue where `ConcordiumHdWallet.fromSeedPhrase` always produced an invalid seed as hex.
 
 ## 7.0.0

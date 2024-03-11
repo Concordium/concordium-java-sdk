@@ -4,10 +4,12 @@ import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 @Builder
 @ToString
+@Getter
 @EqualsAndHashCode
 public class DelegatorRewardPeriodInfo {
     /**
