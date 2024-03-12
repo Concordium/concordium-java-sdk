@@ -9,8 +9,10 @@ import com.concordium.sdk.serializing.YearMonthSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import lombok.Builder;
 import lombok.Getter;
 
+@Builder
 @Getter
 public class AttributeList {
     

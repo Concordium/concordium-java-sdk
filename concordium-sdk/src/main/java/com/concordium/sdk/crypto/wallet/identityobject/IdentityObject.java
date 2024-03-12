@@ -4,8 +4,10 @@ import java.util.Map;
 
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType;
 
+import lombok.Builder;
 import lombok.Getter;
 
+@Builder
 @Getter
 public class IdentityObject {
 
