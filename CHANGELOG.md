@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased changes
+- Added function in `WasmModule` to exctract a `Schema` if embedded.
 - Removed unnecessary  `amount` parameter from `InvokeInstanceRequest`.
 - Added utility functions for converting between `CCDAmount` and `Energy`. Present in utility class `Converter`.
 - Fixed a bug in `CustomEvent`. Removed unnecessary `tag` field.
