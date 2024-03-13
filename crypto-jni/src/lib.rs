@@ -1358,7 +1358,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptab
             Err(err) => return StringResult::from(err).to_jstring(&env),
         };
 
-    match request.acceptable_request(&wallet_library::statement::get_default_wallet_config()) {
+    match request.acceptable_request(&wallet_library::default_wallet_config::default_wallet_config()) {
         Ok(r) => r,
         Err(err) => return StringResult::from(err).to_jstring(&env),
     };
@@ -1457,7 +1457,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptab
         _marker: std::marker::PhantomData,
     };
 
-    match request.acceptable_atomic_statement(&Some(rules)) {
+    match request.acceptable_atomic_statement(Some(rules).as_ref()) {
         Ok(r) => r,
         Err(err) => return StringResult::from(err).to_jstring(&env),
     };
