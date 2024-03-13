@@ -7,7 +7,8 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 /**
- * Contains methods to encode/decode LEB128U amounts.
+ * Contains methods to encode/decode <a href="https://en.wikipedia.org/wiki/LEB128">LEB128U</a> amounts.
+ * <a href="https://webassembly.github.io/spec/core/binary/values.html">Max byte numbers</a>
  */
 public class LEB128U {
 
