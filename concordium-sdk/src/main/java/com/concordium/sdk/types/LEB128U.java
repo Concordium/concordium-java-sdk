@@ -103,7 +103,7 @@ public class LEB128U {
             }
             bos.write(currentByte);
             if (maxSize != UNBOUNDED && bos.size() > maxSize) {
-                throw new IllegalArgumentException("BigInteger: " + value + " does not fit withing provided max size: " + maxSize);
+                throw new IllegalArgumentException("BigInteger: " + value + " does not fit within provided max size: " + maxSize);
             }
         }
         return bos.toByteArray();
