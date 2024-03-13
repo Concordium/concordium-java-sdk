@@ -1,8 +1,8 @@
 package com.concordium.sdk.cis2;
 
+import com.concordium.sdk.types.LEB128U;
 import lombok.*;
 
-import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
@@ -42,26 +42,15 @@ public class TokenAmount {
      * Encode the {@link TokenAmount} in LEB128 unsigned format.
      *
      * @return the serialized token amount
-     * @throws RuntimeException if the resulting byte array would exceed 37 bytes.
+     * @throws IllegalArgumentException if the resulting byte array would exceed 37 bytes.
      */
-    @SneakyThrows
     public byte[] encode() {
-        if (this.amount.equals(BigInteger.ZERO)) return new byte[]{0};
-        val bos = new ByteArrayOutputStream();
-        var value = this.amount;
-        // Loop until the most significant byte is zero or less
-        while (value.compareTo(BigInteger.ZERO) > 0) {
-            // Take the 7 least significant bits of the current value and set the MSB
-            var currentByte = value.and(BigInteger.valueOf(0x7F)).byteValue();
-            value = value.shiftRight(7);
-            if (value.compareTo(BigInteger.ZERO) != 0) {
-                currentByte |= 0x80; // Set the MSB to 1 to indicate there are more bytes to come
-            }
-            bos.write(currentByte);
-            if (bos.size() > 37)
-                throw new IllegalArgumentException("Invalid encoding of TokenAmount. Must not exceed 37 byes.");
+        try {
+            return LEB128U.encode(this.amount, 37);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid encoding of TokenAmount. Must not exceed 37 byes.", e);
         }
-        return bos.toByteArray();
+
     }
 
     /**
@@ -70,26 +59,18 @@ public class TokenAmount {
      *
      * @param buffer the buffer to read from.
      * @return the parsed {@link TokenAmount}
-     * @throws RuntimeException if the encoding is more than 37 bytes.
+     * @throws IllegalArgumentException if the encoding is more than 37 bytes.
      */
     public static TokenAmount decode(ByteBuffer buffer) {
-        var result = BigInteger.ZERO;
-        int shift = 0;
-        int count = 0;
-        while (true) {
-            if (count > 37)
-                throw new IllegalArgumentException("Tried to decode a TokenAmount which consists of more than 37 bytes.");
-            byte b = buffer.get();
-            BigInteger byteValue = BigInteger.valueOf(b & 0x7F); // Mask to get 7 least significant bits
-            result = result.or(byteValue.shiftLeft(shift));
-            if ((b & 0x80) == 0) {
-                break; // If MSB is 0, this is the last byte
-            }
-            shift += 7;
-            count++;
+
+        try {
+            val result = LEB128U.decode(buffer, 37);
+            return new TokenAmount(result);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Tried to decode a TokenAmount consisting of more than 37 bytes.", e);
         }
-        return new TokenAmount(result);
     }
-
-
 }
+
+
+
