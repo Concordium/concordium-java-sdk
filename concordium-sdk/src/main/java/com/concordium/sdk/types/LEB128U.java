@@ -82,10 +82,12 @@ public class LEB128U {
      * @param value {@link BigInteger} representing the value to encode.
      * @param maxSize the max amount of bytes to decode.
      * @return byte array containing the encoded value.
-     * @throws IllegalArgumentException if more than `maxSize` bytes are encoded.
+     * @throws IllegalArgumentException if more than `maxSize` bytes are encoded or `value` is negative.
      */
     public static byte[] encode(BigInteger value, int maxSize) {
-
+        if (value.compareTo(BigInteger.ZERO) < 0) {
+            throw new IllegalArgumentException("Cannot encode negative amount: " + value);
+        }
         if (value.equals(BigInteger.ZERO)) {
             return new byte[]{0};
         }
