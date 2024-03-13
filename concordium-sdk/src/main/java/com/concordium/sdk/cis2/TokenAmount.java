@@ -25,6 +25,7 @@ public class TokenAmount {
     private final BigInteger amount;
 
     private TokenAmount(BigInteger value) {
+        if (value.compareTo(BigInteger.ZERO) < 0) throw new IllegalArgumentException("TokenAmount must be positive");
         if (value.compareTo(MAX_VALUE) > 0) throw new IllegalArgumentException("TokenAmount exceeds max value");
         this.amount = value;
     }
@@ -34,7 +35,6 @@ public class TokenAmount {
     }
 
     public static TokenAmount from(String value) {
-        if (value.startsWith("-")) throw new IllegalArgumentException("TokenAmount must be positive");
         return new TokenAmount(new BigInteger(value));
     }
 
