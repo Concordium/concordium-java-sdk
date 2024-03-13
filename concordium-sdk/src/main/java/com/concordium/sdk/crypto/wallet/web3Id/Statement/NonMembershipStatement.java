@@ -13,7 +13,7 @@ import lombok.Getter;
 
 @Getter
 @JsonTypeName("AttributeNotInSet")
-public class NonMembershipStatement extends AtomicStatement {
+public class NonMembershipStatement extends AtomicStatement implements SetStatement {
     private String attributeTag;
     private List<CredentialAttribute> set;
     
