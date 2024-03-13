@@ -22,8 +22,6 @@ public class GetSchemaTest {
 
     static WasmModule MODULE_WITHOUT_SCHEMA;
 
-    static String CONTRACT_NAME = "java_sdk_schema_unit_test";
-
     static {
         try {
             MODULE_WITH_SCHEMA = WasmModule.from("./src/test/testresources/smartcontractschema/unit-test-with-schema.wasm");
@@ -38,7 +36,7 @@ public class GetSchemaTest {
         Optional<Schema> optionalSchema = MODULE_WITH_SCHEMA.getSchema();
         assert(optionalSchema.isPresent());
         Schema schema = optionalSchema.get();
-        ReceiveName receiveName = ReceiveName.from(CONTRACT_NAME, "account_address_test");
+        ReceiveName receiveName = ReceiveName.from("java_sdk_schema_unit_test", "account_address_test");
         AccountAddress address = AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P");
         AccountAddressParam accountAddressParam = new AccountAddressParam(schema, receiveName, address);
         try {

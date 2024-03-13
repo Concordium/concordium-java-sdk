@@ -72,6 +72,7 @@ public class LEB128U {
      *
      * @param value {@link BigInteger} representing the value to encode.
      * @return byte array containing the encoded value.
+     * @throws IllegalArgumentException if value is negative.
      */
     public static byte[] encode(BigInteger value) {
         return encode(value, UNBOUNDED);

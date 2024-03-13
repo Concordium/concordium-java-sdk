@@ -7,8 +7,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 /**
- * An amount as specified in the CIS2 specification.
- * https://proposals.concordium.software/CIS/cis-2.html#tokenamount
+ * An amount as specified in the <a href="https://proposals.concordium.software/CIS/cis-2.html#tokenamount">CIS2 specification.</a>
  * <p>
  * It is an unsigned integer where the max value is 2^256 - 1.
  */
@@ -50,7 +49,6 @@ public class TokenAmount {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid encoding of TokenAmount. Must not exceed 37 byes.", e);
         }
-
     }
 
     /**
@@ -62,7 +60,6 @@ public class TokenAmount {
      * @throws IllegalArgumentException if the encoding is more than 37 bytes.
      */
     public static TokenAmount decode(ByteBuffer buffer) {
-
         try {
             val result = LEB128U.decode(buffer, 37);
             return new TokenAmount(result);

@@ -127,8 +127,8 @@ public class WasmModule {
      * @return {@link Optional} containing the {@link Schema} if found, empty otherwise.
      */
     public Optional<Schema> getSchema() {
-        val moduleSourceBytes = source.getBytes();
-        val buffer = ByteBuffer.wrap(moduleSourceBytes.clone());
+        val moduleSourceBytes = source.getBytes().clone();
+        val buffer = ByteBuffer.wrap(moduleSourceBytes);
 
         // Skip 4 byte length of WasmModuleSource (UInt32.BYTES) + 4 byte magic number + 4 byte WASM version
         buffer.position(buffer.position() + 12);
@@ -138,7 +138,7 @@ public class WasmModule {
             byte id = buffer.get();
             int remainingSectionLength = LEB128U.decode(buffer, LEB128U.U32_BYTES).intValue();
 
-            // Custom sections have id 0 så all other ids are skipped.
+            // Custom sections have id 0 so all other ids are skipped.
             if (id != 0) {
                 buffer.position(buffer.position() + remainingSectionLength);
                 continue;
