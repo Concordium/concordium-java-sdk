@@ -42,11 +42,7 @@ public class GetSchemaTest {
         AccountAddress address = AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P");
         AccountAddressParam accountAddressParam = new AccountAddressParam(schema, receiveName, address);
         try {
-            accountAddressParam.initialize();
-        } catch (Exception e) {
-            fail();
-        }
-        try {
+            // Asserts that the extracted Schema is actually a valid Schema.
             accountAddressParam.initialize();
         } catch (Exception e) {
             fail();
