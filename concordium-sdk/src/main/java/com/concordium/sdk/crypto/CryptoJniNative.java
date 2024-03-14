@@ -321,11 +321,28 @@ public class CryptoJniNative {
 
     /**
      * Check that a request is acceptable
+     *
      * @param input {@link Request} serialized as JSON.
-     * @return JSON representing {@link StringResult}. If successful the field 'result' is empty, 
-     * but if not acceptable the reason will be contained in the error.
+     * @return JSON representing {@link VoidResult}. If successful the field
+     *         'result' is empty,
+     *         but if not acceptable the reason will be contained in the error.
      */
     public static native String isAcceptableRequest(String input);
 
-    public static native String isAcceptableAtomicStatement(String input, String rangeTags, String setTags, AcceptableRequest.RawAttributeCheck check);
+    /**
+     * Check that an atomic is acceptable, with the given restrictions
+     *
+     * @param input     {@link Request} serialized as JSON.
+     * @param rangeTags the list of tags, which may be used for range statements,
+     *                  serialized as JSON.
+     * @param setTags   the list of tags, which may be used for membership
+     *                  statements, serialized as JSON.
+     * @param check     provides the function to check whether the statement value
+     *                  is acceptable.
+     * @return JSON representing {@link VoidResult}. If successful the field
+     *         'result' is empty,
+     *         but if not acceptable the reason will be contained in the error.
+     */
+    public static native String isAcceptableAtomicStatement(String input, String rangeTags, String setTags,
+            AcceptableRequest.RawAttributeCheck check);
 }

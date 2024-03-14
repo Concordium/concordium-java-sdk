@@ -1338,8 +1338,11 @@ impl<T> From<wallet_library::statement::RequestCheckError> for CryptoJniResult<T
     }
 }
 
+/// Encodes a potential error message inside the result, that differentiates from the JniError
+type ErrorResult = CryptoJniResult<Option<String>>;
+
 /// The JNI wrapper for checking that a request is acceptable.
-/// * `input` - the JSON string of [`wallet_library::proofs::RequestStatement`]
+/// * `input` - the JSON string of [`concordium_base::web3id::Request`]
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptableRequest(
@@ -1349,25 +1352,28 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptab
 ) -> jstring {
     let input_string = match get_string(env, input) {
         Ok(s) => s,
-        Err(err) => return StringResult::Err(err).to_jstring(&env),
+        Err(err) => return ErrorResult::Err(err).to_jstring(&env),
     };
 
     let request: Request<constants::ArCurve, AttributeKind> =
         match serde_json::from_str(&input_string) {
             Ok(req) => req,
-            Err(err) => return StringResult::from(err).to_jstring(&env),
+            Err(err) => return ErrorResult::from(err).to_jstring(&env),
         };
 
     match request.acceptable_request(&wallet_library::default_wallet_config::default_wallet_config()) {
         Ok(r) => r,
-        Err(err) => return StringResult::from(err).to_jstring(&env),
+        Err(err) => return ErrorResult::Ok(Some(err.to_string())).to_jstring(&env),
     };
 
-    CryptoJniResult::Ok(()).to_jstring(&env)
+    ErrorResult::Ok(None).to_jstring(&env)
 }
 
-/// The JNI wrapper for checking that a request is acceptable.
-/// * `input` - the JSON string of [`wallet_library::proofs::RequestStatement`]
+/// The JNI wrapper for checking that an atomic statement is acceptable, according to the given rules.
+/// * `statement_input` - the JSON string of [`concordium_base::id::id_proof_types::AtomicStatement`]
+/// * `range_tags_input` - the JSON string for a list of strings, that represent attribute tags allowed for range statements
+/// * `set_tags_input` - the JSON string for a list of strings, that represent attribute tags allowed for membership statements
+/// * `attribute_check` - an object implementing the "check_attribute" function, to do a custom check for the attribute
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptableAtomicStatement<
@@ -1375,40 +1381,40 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptab
 >(
     env: JNIEnv<'a>,
     _: JClass,
-    request_input: JString,
+    statement_input: JString,
     range_tags_input: JString,
     set_tags_input: JString,
     attribute_check: JObject<'a>,
 ) -> jstring {
-    let input_string = match get_string(env, request_input) {
+    let input_string = match get_string(env, statement_input) {
         Ok(s) => s,
-        Err(err) => return StringResult::Err(err).to_jstring(&env),
+        Err(err) => return ErrorResult::Err(err).to_jstring(&env),
     };
 
-    let request: AtomicStatement<constants::ArCurve, String, Web3IdAttribute> =
+    let statement: AtomicStatement<constants::ArCurve, String, Web3IdAttribute> =
         match serde_json::from_str(&input_string) {
             Ok(req) => req,
-            Err(err) => return StringResult::from(err).to_jstring(&env),
+            Err(err) => return ErrorResult::from(err).to_jstring(&env),
         };
 
     let input_string = match get_string(env, set_tags_input) {
         Ok(s) => s,
-        Err(err) => return StringResult::Err(err).to_jstring(&env),
+        Err(err) => return ErrorResult::Err(err).to_jstring(&env),
     };
 
     let set_tags: HashSet<String> = match serde_json::from_str(&input_string) {
         Ok(req) => req,
-        Err(err) => return StringResult::from(err).to_jstring(&env),
+        Err(err) => return ErrorResult::from(err).to_jstring(&env),
     };
 
     let input_string = match get_string(env, range_tags_input) {
         Ok(s) => s,
-        Err(err) => return StringResult::Err(err).to_jstring(&env),
+        Err(err) => return ErrorResult::Err(err).to_jstring(&env),
     };
 
     let range_tags: HashSet<String> = match serde_json::from_str(&input_string) {
         Ok(req) => req,
-        Err(err) => return StringResult::from(err).to_jstring(&env),
+        Err(err) => return ErrorResult::from(err).to_jstring(&env),
     };
 
     let check = |tag: &String, attribute: &Web3IdAttribute| {
@@ -1442,7 +1448,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptab
         match env.call_method(
             attribute_check,
             "check_attribute",
-            "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+            "(Ljava/lang/String;Ljava/lang/String;)V",
             args,
         ) {
             Ok(_) => Ok(()),
@@ -1457,10 +1463,10 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptab
         _marker: std::marker::PhantomData,
     };
 
-    match request.acceptable_atomic_statement(Some(rules).as_ref()) {
+    match statement.acceptable_atomic_statement(Some(rules).as_ref()) {
         Ok(r) => r,
-        Err(err) => return StringResult::from(err).to_jstring(&env),
+        Err(err) => return ErrorResult::Ok(Some(err.to_string())).to_jstring(&env),
     };
 
-    CryptoJniResult::Ok(()).to_jstring(&env)
+    ErrorResult::Ok(None).to_jstring(&env)
 }
