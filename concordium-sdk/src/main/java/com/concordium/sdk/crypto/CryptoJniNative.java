@@ -7,6 +7,8 @@ import com.concordium.sdk.crypto.wallet.StringResult;
 import com.concordium.sdk.crypto.wallet.UnsignedCredentialInput;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentSerializationContext;
+import com.concordium.sdk.crypto.wallet.web3Id.AcceptableRequest;
+import com.concordium.sdk.crypto.wallet.web3Id.AttributeCheck;
 import com.concordium.sdk.exceptions.JNIError;
 import com.concordium.sdk.transactions.InitName;
 import com.concordium.sdk.transactions.ReceiveName;
@@ -316,4 +318,31 @@ public class CryptoJniNative {
      * {@link Web3IdProof} as JSON.
      */
     public static native String createWeb3IdProof(String input);
+
+    /**
+     * Check that a request is acceptable
+     *
+     * @param input {@link Request} serialized as JSON.
+     * @return JSON representing {@link VoidResult}. If successful the field
+     *         'result' is empty,
+     *         but if not acceptable the reason will be contained in the error.
+     */
+    public static native String isAcceptableRequest(String input);
+
+    /**
+     * Check that an atomic is acceptable, with the given restrictions
+     *
+     * @param input     {@link Request} serialized as JSON.
+     * @param rangeTags the list of tags, which may be used for range statements,
+     *                  serialized as JSON.
+     * @param setTags   the list of tags, which may be used for membership
+     *                  statements, serialized as JSON.
+     * @param check     provides the function to check whether the statement value
+     *                  is acceptable.
+     * @return JSON representing {@link VoidResult}. If successful the field
+     *         'result' is empty,
+     *         but if not acceptable the reason will be contained in the error.
+     */
+    public static native String isAcceptableAtomicStatement(String input, String rangeTags, String setTags,
+            AcceptableRequest.RawAttributeCheck check);
 }
