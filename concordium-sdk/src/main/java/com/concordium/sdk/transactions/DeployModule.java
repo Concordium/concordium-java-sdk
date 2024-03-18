@@ -1,7 +1,6 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
-import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
-import com.concordium.sdk.crypto.wallet.web3Id.Statement.did.RequestIdentifier;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;

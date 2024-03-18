@@ -8,7 +8,6 @@ import com.concordium.sdk.crypto.wallet.UnsignedCredentialInput;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentDetails;
 import com.concordium.sdk.crypto.wallet.credential.CredentialDeploymentSerializationContext;
 import com.concordium.sdk.crypto.wallet.web3Id.AcceptableRequest;
-import com.concordium.sdk.crypto.wallet.web3Id.AttributeCheck;
 import com.concordium.sdk.exceptions.JNIError;
 import com.concordium.sdk.transactions.InitName;
 import com.concordium.sdk.transactions.ReceiveName;
