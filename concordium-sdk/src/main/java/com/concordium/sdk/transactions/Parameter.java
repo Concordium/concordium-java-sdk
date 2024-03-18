@@ -4,9 +4,7 @@ import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.responses.ProtocolVersion;
 import com.concordium.sdk.transactions.smartcontracts.SchemaParameter;
 import com.concordium.sdk.types.UInt16;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
 

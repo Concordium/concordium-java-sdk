@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased changes
+## 7.1.0
 - Removed unnecessary  `amount` parameter from `InvokeInstanceRequest`.
 - Added utility functions for converting between `CCDAmount` and `Energy`. Present in utility class `Converter`.
 - Fixed a bug in `CustomEvent`. Removed unnecessary `tag` field.

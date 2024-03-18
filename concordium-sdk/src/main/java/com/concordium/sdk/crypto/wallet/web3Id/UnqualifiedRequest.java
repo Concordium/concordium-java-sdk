@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.QualifiedRequestStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.UnqualifiedRequestStatement;
+import com.concordium.sdk.serializing.JsonMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -29,5 +33,9 @@ public class UnqualifiedRequest {
 
     public static interface Qualifier {
         QualifiedRequestStatement qualify(UnqualifiedRequestStatement statement);
+    }
+
+    public static UnqualifiedRequest fromJson(String raw) throws JsonMappingException, JsonProcessingException {
+        return JsonMapper.INSTANCE.readValue(raw, UnqualifiedRequest.class);
     }
 }
