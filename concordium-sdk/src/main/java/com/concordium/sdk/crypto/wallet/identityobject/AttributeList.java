@@ -11,9 +11,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 @Builder
 @Getter
+@Jacksonized
 public class AttributeList {
     
     private Map<AttributeType, String> chosenAttributes;

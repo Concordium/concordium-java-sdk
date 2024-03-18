@@ -6,9 +6,11 @@ import com.concordium.sdk.responses.accountinfo.credential.AttributeType;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 @Builder
 @Getter
+@Jacksonized
 public class IdentityObject {
 
     private AttributeList attributeList;
