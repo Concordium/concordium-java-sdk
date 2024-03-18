@@ -5,7 +5,7 @@
 
     <groupId>com.concordium.sdk</groupId>
     <artifactId>concordium-sdk-base</artifactId>
-    <version>7.1.0</version>
+    <version>7.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <url>https://github.com/Concordium/concordium-java-sdk</url>
