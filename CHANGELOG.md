@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- Added `MessageSigningDigest` class to generate digests for message signing
+
 ## 7.1.0
 - Removed unnecessary  `amount` parameter from `InvokeInstanceRequest`.
 - Added utility functions for converting between `CCDAmount` and `Energy`. Present in utility class `Converter`.
