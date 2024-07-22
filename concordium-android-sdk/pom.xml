@@ -265,7 +265,7 @@
                         <debuggable>true</debuggable>
                     </manifest>
                     <sdk>
-                        <platform>27</platform>
+                        <platform>29</platform>
                     </sdk>
                     <nativeLibrariesDirectory>${project.basedir}/native</nativeLibrariesDirectory>
                 </configuration>
