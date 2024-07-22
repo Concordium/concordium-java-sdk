@@ -39,7 +39,16 @@ public enum AttributeType {
     @JsonProperty("taxIdNo")
     TAX_ID_NO,
     @JsonProperty("lei")
-    LEI;
+    LEI,
+    @JsonProperty("legalName")
+    LEGAL_NAME,
+    @JsonProperty("legalCountry")
+    LEGAL_COUNTRY,
+    @JsonProperty("businessNumber")
+    BUSINESS_NUMBER,
+    @JsonProperty("registrationAuth")
+    REGISTRATION_AUTH,
+    ;
 
     public static AttributeType fromJSON(String jsonStr) throws JsonMappingException, JsonProcessingException {
         return JsonMapper.INSTANCE.readValue(String.format("\"%s\"", jsonStr), AttributeType.class);
