@@ -2,6 +2,7 @@
 
 ## Unreleased
 - Added `MessageSigningDigest` class to generate digests for message signing
+- Added support for company identity attributes
 
 ## 7.1.0
 - Removed unnecessary  `amount` parameter from `InvokeInstanceRequest`.
