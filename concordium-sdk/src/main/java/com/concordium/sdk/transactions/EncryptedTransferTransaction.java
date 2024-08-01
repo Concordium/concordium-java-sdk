@@ -6,6 +6,10 @@ import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import lombok.*;
 
+/**
+ * @deprecated Encrypted transfers are deprecated and partially removed since protocol version 7
+ */
+@Deprecated
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -34,7 +38,9 @@ public class EncryptedTransferTransaction extends AccountTransaction {
      * @return Initialized {@link EncryptedTransferTransaction}.
      * @throws TransactionCreationException On failure to create the Transaction from input params.
      *                                      Ex when any of the input param is NULL.
+     * @deprecated Encrypted transfers are deprecated and partially removed since protocol version 7
      */
+    @Deprecated
     @Builder
     public static EncryptedTransferTransaction from(final EncryptedAmountTransferData data,
                                                     final AccountAddress receiver,
