@@ -13,6 +13,7 @@ import lombok.val;
  * TransactionFactory provides convenient functions for building a
  * {@link Transaction}
  */
+@SuppressWarnings("DeprecatedIsStillUsed")
 public class TransactionFactory {
 
     /**
@@ -149,7 +150,9 @@ public class TransactionFactory {
      * creating a {@link TransferToEncryptedTransaction}
      *
      * @return the builder for a {@link TransferToEncryptedTransaction}
+     * @deprecated Encrypted transfers are deprecated and partially removed since protocol version 7
      */
+    @Deprecated
     public static TransferToEncryptedTransaction.TransferToEncryptedTransactionBuilder newTransferToEncrypted() {
         return TransferToEncryptedTransaction.builder();
     }
@@ -160,8 +163,9 @@ public class TransactionFactory {
      * creating a {@link EncryptedTransferTransaction}
      *
      * @return the builder for a {@link EncryptedTransferTransaction}
+     * @deprecated Encrypted transfers are deprecated and partially removed since protocol version 7
      */
-
+    @Deprecated
     public static EncryptedTransferTransaction.EncryptedTransferTransactionBuilder newEncryptedTransfer() {
         return EncryptedTransferTransaction.builder();
     }
@@ -172,7 +176,9 @@ public class TransactionFactory {
      * creating a {@link EncryptedTransferTransaction}
      *
      * @return the builder for a {@link EncryptedTransferTransaction}
+     * @deprecated Encrypted transfers are deprecated and partially removed since protocol version 7
      */
+    @Deprecated
     public static EncryptedTransferTransaction.EncryptedTransferTransactionBuilder newEncryptedTransfer(
             CryptographicParameters cryptographicParameters,
             AccountEncryptedAmount accountEncryptedAmount,
@@ -204,8 +210,9 @@ public class TransactionFactory {
      * creating a {@link EncryptedTransferWithMemoTransaction}
      *
      * @return the builder for a {@link EncryptedTransferWithMemoTransaction}
+     * @deprecated Encrypted transfers are deprecated and partially removed since protocol version 7
      */
-
+    @Deprecated
     public static EncryptedTransferWithMemoTransaction.EncryptedTransferWithMemoTransactionBuilder newEncryptedTransferWithMemo() {
         return EncryptedTransferWithMemoTransaction.builder();
     }
@@ -215,7 +222,9 @@ public class TransactionFactory {
      * creating a {@link EncryptedTransferWithMemoTransaction}
      *
      * @return the builder for a {@link EncryptedTransferWithMemoTransaction}
+     * @deprecated Encrypted transfers are deprecated and partially removed since protocol version 7
      */
+    @Deprecated
     public static EncryptedTransferWithMemoTransaction.EncryptedTransferWithMemoTransactionBuilder newEncryptedTransferWithMemo(
             CryptographicParameters cryptographicParameters,
             AccountEncryptedAmount accountEncryptedAmount,

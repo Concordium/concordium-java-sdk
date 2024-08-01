@@ -8,7 +8,10 @@ import lombok.*;
 
 /**
  * Construct a transaction to transfer from public to encrypted balance of the sender account.
+ *
+ * @deprecated Encrypted transfers are deprecated and partially removed since protocol version 7
  */
+@Deprecated
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -33,7 +36,9 @@ public class TransferToEncryptedTransaction extends AccountTransaction {
      * @return Initialized {@link TransferToEncryptedTransaction}.
      * @throws TransactionCreationException On failure to create the Transaction from input params.
      *                                      Ex when any of the input param is NULL.
+     * @deprecated Encrypted transfers are deprecated and partially removed since protocol version 7
      */
+    @Deprecated
     @Builder
     public static TransferToEncryptedTransaction from(
             final CCDAmount amount,

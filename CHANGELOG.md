@@ -3,6 +3,7 @@
 ## Unreleased
 - Added `MessageSigningDigest` class to generate digests for message signing
 - Added support for company identity attributes
+- Deprecated encrypted transfers. They are partially removed since protocol version 7
 
 ## 7.1.0
 - Removed unnecessary  `amount` parameter from `InvokeInstanceRequest`.
