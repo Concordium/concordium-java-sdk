@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 7.2.0
 - Added `MessageSigningDigest` class to generate digests for message signing
 - Added support for company identity attributes
 - Deprecated encrypted transfers. They are partially removed since protocol version 7
