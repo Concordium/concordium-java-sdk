@@ -178,3 +178,30 @@ A signer is then added to a `TransactionSigner` as follows:
                 }), ... );
 
 ```
+
+# Development notes
+
+## Testing unreleased changes locally in an application
+1. Update all the SDK artifacts version to `X.Y.Z-SNAPSHOT`,
+   having `X.Y.Z` the next version from the current according to semver.
+   Do it once the changes made require semver version change.
+   Otherwise, the same `-SNAPSHOT` can be re-written
+2. Optionally, if updated `concordium-base`, run `make` or `make-android`
+3. Run `mvn install`, so the artifacts get installed in your local Maven repo
+   (an `.m2` directory under your home directory)
+4. In your application, reference the new SDK snapshot. 
+   Make sure to have Maven Local repository in your dependency resolution configuration
+
+## Releasing
+1. Create a `v.X.Y.Z` tag for a commit to release
+2. Manually trigger the Release workflow for the tag
+3. Ask for approval for the last part of the Release workflow
+4. Sign in to https://s01.oss.sonatype.org/
+5. In the Build Promotion menu in the left select the Staging Repositories item
+6. Select the Concordium repository
+7. "Close" the selected repository to prepare it for release
+8. Once the closing is complete, "Release" it
+9. Wait for the version to appear under https://repo1.maven.org/maven2/com/concordium/sdk/
+10. Manually add Changelog entries of this version to the GitHub release
+
+[Maven – Releasing the deployment](https://central.sonatype.org/publish/release/)
