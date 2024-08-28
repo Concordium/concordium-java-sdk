@@ -47,6 +47,7 @@ public class BakerPoolStatus {
 
     /**
      * Any pending change to the baker's stake.
+     * This is not used from protocol version 7 onwards, as stake changes are immediate.
      */
     private final PendingChange bakerStakePendingChange;
 
@@ -59,6 +60,22 @@ public class BakerPoolStatus {
      * Total capital staked across all pools.
      */
     private final CCDAmount allPoolTotalCapital;
+
+    public Optional<CCDAmount> getBakerEquityCapital() {
+        return Optional.ofNullable(bakerEquityCapital);
+    }
+
+    public Optional<CCDAmount> getDelegatedCapital() {
+        return Optional.ofNullable(delegatedCapital);
+    }
+
+    public Optional<CCDAmount> getDelegatedCapitalCap() {
+        return Optional.ofNullable(delegatedCapitalCap);
+    }
+
+    public Optional<BakerPoolInfo> getPoolInfo() {
+        return Optional.ofNullable(poolInfo);
+    }
 
     public Optional<PendingChange> getBakerStakePendingChange() {
         return Optional.ofNullable(bakerStakePendingChange);

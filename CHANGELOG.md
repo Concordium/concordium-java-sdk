@@ -4,6 +4,8 @@
 - Added `ProtocolVersion.V7` corresponding to Protocol version 7
 - Added `cooldowns` list to `AccountInfo`
 - Added `availableBalance` to `AccountInfo`
+- Made optional the following `BakerPoolStatus` fields: 
+  `bakerEquityCapital`, `delegatedCapital`, `delegatedCapitalCap`, `poolInfo`
 
 ## 7.2.0
 - Added `MessageSigningDigest` class to generate digests for message signing
