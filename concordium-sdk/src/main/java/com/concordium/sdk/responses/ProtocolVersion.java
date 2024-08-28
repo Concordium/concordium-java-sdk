@@ -24,7 +24,12 @@ public enum ProtocolVersion {
     /**
      * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P6.txt
      */
-    V6;
+    V6,
+    /**
+     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P7.txt
+     */
+    V7,
+    ;
 
     /**
      * Parses {@link com.concordium.grpc.v2.ProtocolVersion} to {@link ProtocolVersion}.
@@ -46,6 +51,8 @@ public enum ProtocolVersion {
                 return V5;
             case PROTOCOL_VERSION_6:
                 return V6;
+            case PROTOCOL_VERSION_7:
+                return V7;
             default:
                 throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }
