@@ -315,6 +315,7 @@ interface ClientV2MapperExtensions {
         builder
                 .Nonce(to(account.getSequenceNumber()))
                 .accountAmount(to(account.getAmount()))
+                .availableBalance(to(account.getAvailableBalance()))
                 .accountReleaseSchedule(to(account.getSchedule()))
                 .accountCredentials(ImmutableMap.copyOf(to(
                         account.getCredsMap(),

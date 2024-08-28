@@ -3,6 +3,7 @@
 ## Unreleased
 - Added `ProtocolVersion.V7` corresponding to Protocol version 7
 - Added `cooldowns` list to `AccountInfo`
+- Added `availableBalance` to `AccountInfo`
 
 ## 7.2.0
 - Added `MessageSigningDigest` class to generate digests for message signing

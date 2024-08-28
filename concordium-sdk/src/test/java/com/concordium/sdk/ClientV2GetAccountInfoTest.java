@@ -4,6 +4,7 @@ import com.concordium.grpc.v2.AccountInfo;
 import com.concordium.grpc.v2.BakerPoolInfo;
 import com.concordium.grpc.v2.CommissionRates;
 import com.concordium.grpc.v2.Commitment;
+import com.concordium.grpc.v2.Cooldown;
 import com.concordium.grpc.v2.CredentialPublicKeys;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ReleaseSchedule;
@@ -60,6 +61,7 @@ public class ClientV2GetAccountInfoTest {
             = com.concordium.sdk.types.AccountAddress.from("3XSLuJcXg6xEua6iBPnWacc3iWh93yEDMCqX8FbE3RDSbEnT9P");
     private static final byte[] ENCRYPTED_AMOUNT = new byte[]{0, 0, 1};
     private static final long ACCOUNT_AMOUNT = 10000;
+    private static final long AVAILABLE_BALANCE = 9000;
     private static final long ACCOUNT_INDEX = 1;
     private static final byte[] ENCRYPTION_KEY = new byte[]{0, 0, 2};
     private static final long RELEASE_AMOUNT = 10;
@@ -101,6 +103,9 @@ public class ClientV2GetAccountInfoTest {
     private static final byte[] FIRST_NAME_VALUE
             = "policy-value-0".getBytes(StandardCharsets.UTF_8);
     private static final byte[] ENC_ID_PUB_SHARE = new byte[]{90, 90, 90};
+    private static final long COOLDOWN_AMOUNT = 1000;
+    private static final Cooldown.CooldownStatus COOLDOWN_STATUS = Cooldown.CooldownStatus.COOLDOWN;
+    private static final long COOLDOWN_END_TIME = 1234;
 
     private static Commitment toCommitment(byte[] commitmentCredCounter) {
         return Commitment.newBuilder()
@@ -139,8 +144,9 @@ public class ClientV2GetAccountInfoTest {
                                 .build()));
         pendingChange.ifPresent(bakerInfoBuilder::setPendingChange);
         return AccountInfo.newBuilder()
-                .setAddress(com.concordium.grpc.v2.AccountAddress.newBuilder().setValue(ByteString.copyFrom(address.getBytes())).build())
+                .setAddress(AccountAddress.newBuilder().setValue(ByteString.copyFrom(address.getBytes())).build())
                 .setAmount(Amount.newBuilder().setValue(ACCOUNT_AMOUNT).build())
+                .setAvailableBalance(Amount.newBuilder().setValue(AVAILABLE_BALANCE).build())
                 .setEncryptedBalance(EncryptedBalance.newBuilder()
                         .setStartIndex(ENCRYPTED_AMOUNT_START_INDEX)
                         .setAggregatedAmount(from(ENCRYPTED_AMOUNT))
@@ -215,6 +221,12 @@ public class ClientV2GetAccountInfoTest {
                                         .build())
                                 .build())
                         .build())
+                .addCooldowns(Cooldown.newBuilder()
+                        .setAmount(Amount.newBuilder().setValue(COOLDOWN_AMOUNT).build())
+                        .setStatus(COOLDOWN_STATUS)
+                        .setEndTime(Timestamp.newBuilder().setValue(COOLDOWN_END_TIME).build())
+                        .build()
+                )
                 .build();
     }
 
@@ -231,6 +243,7 @@ public class ClientV2GetAccountInfoTest {
         return com.concordium.sdk.responses.accountinfo.AccountInfo.builder().
                 accountAddress(address).
                 accountAmount(CCDAmount.fromMicro(ACCOUNT_AMOUNT)).
+                availableBalance(CCDAmount.fromMicro(AVAILABLE_BALANCE)).
                 accountEncryptedAmount(AccountEncryptedAmount.builder().
                         startIndex(EncryptedAmountIndex.from(ENCRYPTED_AMOUNT_START_INDEX)).
                         selfAmount(com.concordium.sdk.transactions.EncryptedAmount.from(ENCRYPTED_AMOUNT_SELF_AMOUNT_1)).
@@ -302,7 +315,12 @@ public class ClientV2GetAccountInfoTest {
                                         build()).
                                 build()).
                         build()).
-                build();
+                cooldown(com.concordium.sdk.responses.accountinfo.Cooldown.builder().
+                        amount(CCDAmount.fromMicro(COOLDOWN_AMOUNT)).
+                        status(com.concordium.sdk.responses.accountinfo.Cooldown.CooldownStatus.from(COOLDOWN_STATUS)).
+                        endTime(com.concordium.sdk.types.Timestamp.newMillis(COOLDOWN_END_TIME)).
+                        build()).
+        build();
 
     }
 
