@@ -7,6 +7,7 @@ import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Index;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import lombok.Builder;
 import lombok.Data;
@@ -76,11 +77,18 @@ public final class AccountInfo {
      */
     @Singular
     private final ImmutableMap<Index, Credential> accountCredentials;
-
     /**
      * If the account is delegating then this is non-null.
      */
     private final AccountDelegation delegation;
+    /**
+     * The stake on the account that is in cooldown.
+     * There can be multiple amounts in cooldown that expire at different times.
+     * This was introduced in protocol version 7, and so is not present in
+     * earlier protocol versions.
+     */
+    @Singular
+    private final ImmutableList<Cooldown> cooldowns;
 
     public boolean isBaker() {
         return !Objects.isNull(bakerInfo);

@@ -1,5 +1,6 @@
 package com.concordium.sdk;
 
+import com.concordium.grpc.v2.AbsoluteBlockHeight;
 import com.concordium.grpc.v2.AccessStructure;
 import com.concordium.grpc.v2.AccountAddress;
 import com.concordium.grpc.v2.AccountIndex;
@@ -9,6 +10,7 @@ import com.concordium.grpc.v2.BakerId;
 import com.concordium.grpc.v2.BlockItem;
 import com.concordium.grpc.v2.Commitment;
 import com.concordium.grpc.v2.ContractAddress;
+import com.concordium.grpc.v2.Cooldown;
 import com.concordium.grpc.v2.CredentialPublicKeys;
 import com.concordium.grpc.v2.CredentialRegistrationId;
 import com.concordium.grpc.v2.DelegatorInfo;
@@ -21,7 +23,6 @@ import com.concordium.grpc.v2.NextUpdateSequenceNumbers;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ProtocolVersion;
 import com.concordium.grpc.v2.ReleaseSchedule;
-import com.concordium.grpc.v2.AbsoluteBlockHeight;
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
@@ -323,7 +324,8 @@ interface ClientV2MapperExtensions {
                 .accountEncryptedAmount(to(account.getEncryptedBalance()))
                 .accountEncryptionKey(ElgamalPublicKey.from(account.getEncryptionKey().getValue().toByteArray()))
                 .accountIndex(to(account.getIndex()))
-                .accountAddress(to(account.getAddress()));
+                .accountAddress(to(account.getAddress()))
+                .cooldowns(copyOf(to(account.getCooldownsList(), ClientV2MapperExtensions::to)));
 
         if (account.hasStake()) {
             switch (account.getStake().getStakingInfoCase()) {
@@ -342,6 +344,14 @@ interface ClientV2MapperExtensions {
 
     static com.concordium.sdk.types.AccountAddress to(AccountAddress address) {
         return com.concordium.sdk.types.AccountAddress.from(address.getValue().toByteArray());
+    }
+
+    static com.concordium.sdk.responses.accountinfo.Cooldown to(Cooldown cooldown) {
+        return com.concordium.sdk.responses.accountinfo.Cooldown.builder()
+                .amount(to(cooldown.getAmount()))
+                .endTime(Timestamp.from(cooldown.getEndTime()))
+                .status(com.concordium.sdk.responses.accountinfo.Cooldown.CooldownStatus.from(cooldown.getStatus()))
+                .build();
     }
 
     @Nullable
