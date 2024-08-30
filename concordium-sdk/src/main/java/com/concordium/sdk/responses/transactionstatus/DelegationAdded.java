@@ -17,6 +17,8 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class DelegationAdded extends AbstractDelegatorResult {
 
+    private final AccountIndex delegatorId;
+
     public static DelegationAdded from(DelegatorId delegationAdded, AccountAddress sender) {
         return DelegationAdded
                 .builder()

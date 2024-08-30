@@ -14,6 +14,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public class DelegationStakeDecreased extends AbstractDelegatorResult {
+
+    private final AccountIndex delegatorId;
     private final CCDAmount newStake;
 
     public static DelegationStakeDecreased from(DelegationEvent.DelegationStakeDecreased delegationStakeDecreased, AccountAddress sender) {

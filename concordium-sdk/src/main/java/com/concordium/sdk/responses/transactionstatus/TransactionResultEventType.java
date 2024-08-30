@@ -79,6 +79,8 @@ public enum TransactionResultEventType {
     DELEGATION_ADDED,
     @JsonProperty("DelegationRemoved")
     DELEGATION_REMOVED,
+    @JsonProperty("DelegationBakerRemoved")
+    DELEGATION_BAKER_REMOVED,
     @JsonProperty("Upgraded")
     UPGRADED,
     @JsonProperty("BakerStakeUpdated")

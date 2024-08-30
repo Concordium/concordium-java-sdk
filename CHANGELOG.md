@@ -7,7 +7,7 @@
 - Added `availableBalance` to `AccountInfo`
 - Made optional the following `BakerPoolStatus` fields: 
   `bakerEquityCapital`, `delegatedCapital`, `delegatedCapitalCap`, `poolInfo`
-- Added `BakerDelegationRemoved` transaction result event
+- Added `BakerDelegationRemoved` and `DelegationBakerRemoved` transaction result events
 
 ## 7.2.0
 - Added `MessageSigningDigest` class to generate digests for message signing

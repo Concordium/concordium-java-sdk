@@ -1,13 +1,9 @@
 package com.concordium.sdk.responses;
 
 import com.concordium.grpc.v2.DelegatorId;
-import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.val;
-
-import java.nio.ByteBuffer;
 
 /**
  * Account index

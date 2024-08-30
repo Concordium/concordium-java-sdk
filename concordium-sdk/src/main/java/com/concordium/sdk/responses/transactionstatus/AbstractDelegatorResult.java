@@ -12,7 +12,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode
 public abstract class AbstractDelegatorResult implements TransactionResultEvent {
-    private final AccountIndex delegatorId;
     private final AccountAddress delegatorAddress;
-
 }
