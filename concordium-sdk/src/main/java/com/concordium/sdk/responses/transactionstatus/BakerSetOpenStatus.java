@@ -17,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class BakerSetOpenStatus extends AbstractBakerResult {
 
+    private final BakerId bakerId;
     /**
      * The updated {@link OpenStatus} for the baker.
      */

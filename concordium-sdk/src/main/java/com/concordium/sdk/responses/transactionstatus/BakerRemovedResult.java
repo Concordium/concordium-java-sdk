@@ -12,6 +12,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public final class BakerRemovedResult extends AbstractBakerResult {
+    private final BakerId bakerId;
+
     public static BakerRemovedResult from(com.concordium.grpc.v2.BakerId bakerRemoved, AccountAddress accountAddress) {
         return BakerRemovedResult
                 .builder()

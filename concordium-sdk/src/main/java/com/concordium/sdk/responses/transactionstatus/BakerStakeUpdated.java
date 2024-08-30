@@ -18,6 +18,9 @@ import lombok.val;
 @Getter
 @ToString
 public abstract class BakerStakeUpdated extends AbstractBakerResult {
+
+    private final BakerId bakerId;
+
     public static BakerStakeUpdated from(AccountTransactionEffects.BakerStakeUpdated bakerStakeUpdated, AccountAddress account) {
         val update = bakerStakeUpdated.getUpdate();
         if (update.getIncreased()) {

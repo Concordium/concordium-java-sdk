@@ -13,7 +13,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public class BakerSetBakingRewardCommission extends AbstractBakerResult {
+    private final BakerId bakerId;
     private final double bakingRewardCommission;
+
     public static BakerSetBakingRewardCommission from(BakerEvent.BakerSetBakingRewardCommission bakerSetBakingRewardCommission, AccountAddress sender) {
         return BakerSetBakingRewardCommission
                 .builder()

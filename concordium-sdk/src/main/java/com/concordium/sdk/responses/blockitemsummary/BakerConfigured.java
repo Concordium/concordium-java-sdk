@@ -58,6 +58,8 @@ public class BakerConfigured {
                 case BAKER_SET_FINALIZATION_REWARD_COMMISSION:
                     builder.event(BakerSetFinalizationRewardCommission.from(bakerEvent.getBakerSetFinalizationRewardCommission(), sender));
                     break;
+                case DELEGATION_REMOVED:
+                    builder.event(BakerDelegationRemoved.from(bakerEvent.getDelegationRemoved(), sender));
                 case EVENT_NOT_SET:
                     throw new IllegalArgumentException("Baker event was not set.");
             }

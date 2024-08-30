@@ -13,6 +13,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public class BakerSetMetadataURL extends AbstractBakerResult {
+
+    private final BakerId bakerId;
     private final String metadataUrl;
 
     public static BakerSetMetadataURL from(BakerEvent.BakerSetMetadataUrl bakerSetMetadataUrl, AccountAddress sender) {

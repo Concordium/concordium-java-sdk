@@ -13,6 +13,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public class BakerSetTransactionFeeCommission extends AbstractBakerResult {
+
+    private final BakerId bakerId;
     private final double feeCommission;
 
     public static BakerSetTransactionFeeCommission from(BakerEvent.BakerSetTransactionFeeCommission bakerSetTransactionFeeCommission, AccountAddress sender) {
