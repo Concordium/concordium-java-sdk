@@ -10,7 +10,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
- * The delegator increased its stake.
+ * The delegator increased their stake.
  */
 @Getter
 @ToString
@@ -18,6 +18,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class DelegationStakeIncreased extends AbstractDelegatorResult {
 
+    private final AccountIndex delegatorId;
     /**
      * The new stake
      */

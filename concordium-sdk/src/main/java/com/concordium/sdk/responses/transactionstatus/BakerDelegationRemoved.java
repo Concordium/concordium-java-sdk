@@ -1,6 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.DelegatorId;
+import com.concordium.grpc.v2.BakerEvent;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.types.AccountAddress;
 import lombok.EqualsAndHashCode;
@@ -9,26 +9,26 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
- * The sender of the transaction has started delegating.
+ * Removed an existing delegator.
  */
 @Getter
 @ToString
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class DelegationAdded extends AbstractDelegatorResult {
+public class BakerDelegationRemoved extends AbstractBakerResult {
 
     private final AccountIndex delegatorId;
 
-    public static DelegationAdded from(DelegatorId delegationAdded, AccountAddress sender) {
-        return DelegationAdded
+    public static BakerDelegationRemoved from(BakerEvent.DelegationRemoved bakerDelegationRemoved, AccountAddress sender) {
+        return BakerDelegationRemoved
                 .builder()
-                .delegatorId(AccountIndex.from(delegationAdded))
-                .delegatorAddress(sender)
+                .delegatorId(AccountIndex.from(bakerDelegationRemoved.getDelegatorId()))
+                .account(sender)
                 .build();
     }
 
     @Override
     public TransactionResultEventType getType() {
-        return TransactionResultEventType.DELEGATION_ADDED;
+        return TransactionResultEventType.BAKER_DELEGATION_REMOVED;
     }
 }

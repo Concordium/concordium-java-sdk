@@ -7,10 +7,10 @@ import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.transactions.Index;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Singular;
 import lombok.extern.jackson.Jacksonized;
 
@@ -37,6 +37,15 @@ public final class AccountInfo {
      * The amount of CCD owned by this account.
      */
     private final CCDAmount accountAmount;
+    /**
+     * The available (unencrypted) balance of the account (i.e. that can be transferred
+     * or used to pay for transactions). This is the balance ({@link AccountInfo#accountAmount})
+     * minus the locked amount.
+     * The locked amount is the maximum of the amount in the release schedule ({@link AccountInfo#accountReleaseSchedule})
+     * and the total amount that is actively staked or in cooldown (inactive stake, {@link AccountInfo#cooldowns}).
+     * This was introduced in node version 7.0.
+     */
+    private final CCDAmount availableBalance;
     /**
      * The account threshold for this account i.e., how
      * many credentials that needs to sign transactions for this account.
@@ -76,11 +85,18 @@ public final class AccountInfo {
      */
     @Singular
     private final ImmutableMap<Index, Credential> accountCredentials;
-
     /**
      * If the account is delegating then this is non-null.
      */
     private final AccountDelegation delegation;
+    /**
+     * The stake on the account that is in cooldown.
+     * There can be multiple amounts in cooldown that expire at different times.
+     * This was introduced in protocol version 7, and so is not present in
+     * earlier protocol versions.
+     */
+    @Singular
+    private final ImmutableList<Cooldown> cooldowns;
 
     public boolean isBaker() {
         return !Objects.isNull(bakerInfo);

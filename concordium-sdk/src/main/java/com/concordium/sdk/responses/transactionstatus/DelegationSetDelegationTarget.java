@@ -17,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class DelegationSetDelegationTarget extends AbstractDelegatorResult {
 
+    private final AccountIndex delegatorId;
     /**
      * The target to delegate to.
      */

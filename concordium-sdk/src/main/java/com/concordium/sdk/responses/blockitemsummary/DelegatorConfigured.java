@@ -43,6 +43,8 @@ public class DelegatorConfigured {
                 case DELEGATION_REMOVED:
                     builder.event(DelegationRemoved.from(delegationEvent.getDelegationRemoved(), sender));
                     break;
+                case BAKER_REMOVED:
+                    builder.event(DelegationBakerRemoved.from(delegationEvent.getBakerRemoved(), sender));
                 case EVENT_NOT_SET:
                     throw new IllegalArgumentException("Delegation event type not set");
             }

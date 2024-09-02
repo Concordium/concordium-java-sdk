@@ -13,6 +13,8 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 public final class BakerSetRestakeEarningsResult extends AbstractBakerResult {
+
+    private final BakerId bakerId;
     private final boolean restakeEarnings;
 
     public static BakerSetRestakeEarningsResult from(BakerEvent.BakerRestakeEarningsUpdated restake, AccountAddress account) {

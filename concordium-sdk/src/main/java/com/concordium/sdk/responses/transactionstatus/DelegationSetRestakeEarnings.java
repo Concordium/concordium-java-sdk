@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class DelegationSetRestakeEarnings extends AbstractDelegatorResult {
 
-
+    private final AccountIndex delegatorId;
     /**
      * Whether earnings should be automatically restaked or not.
      */
