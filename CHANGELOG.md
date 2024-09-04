@@ -8,6 +8,8 @@
 - Made optional the following `BakerPoolStatus` fields: 
   `bakerEquityCapital`, `delegatedCapital`, `delegatedCapitalCap`, `poolInfo`
 - Added `BakerDelegationRemoved` and `DelegationBakerRemoved` transaction result events
+- Removed previously deprecated encrypted transfers
+  (`EncryptedTransferTransaction`, `EncryptedTransferWithMemoTransaction`, `TransferToEncryptedTransaction`)
 
 ## 7.2.0
 - Added `MessageSigningDigest` class to generate digests for message signing
@@ -56,7 +58,7 @@
 - Removed deprecated V1 API from the SDK. Consumers of the (now removed) `getBlockSummary` endpoint should refer to `GetBlockTransactionEvents`, `GetBlockSpecialEvents` and `GetBlockPendingUpdates`.
 - Added support for GRPC V2 `GetWinningBakersEpoch` for getting a list of bakers that won the lottery in a particular historical epoch. Only available when querying a node with version at least 6.1.
 - Added support for GRPC V2 `GetFirstBlockEpoch` for getting the block hash of the first finalized block in a specified epoch. Only available when querying a node with version at least 6.1.
-- Added support for GRPC V2 `GetBakerEarliestWinTime` for getting the projected earliest time at which a particular baker will be required to bake a block. Only available when querying a node woth version at least 6.1.
+- Added support for GRPC V2 `GetBakerEarliestWinTime` for getting the projected earliest time at which a particular baker will be required to bake a block. Only available when querying a node with version at least 6.1.
 - Added support for GRPC V2 `GetBakerRewardPeriodInfo` for getting all the bakers in the reward period of a block. Only available when querying a node with version at least 6.1.
 - Added support for GRPC V2 `GetBlockCertificates` for retrieving certificates for a block supporting ConcordiumBF, i.e. a node with at least version 6.1.
 - Extended `CurrentPaydayStatus` with `CommissionRates` that apply for the current reward period. Requires at least node version 6.1.
@@ -116,13 +118,13 @@
 - Added support for GRPC V2 `GetAncestors` for getting specified no of ancestor blocks for the input block.
 - Added support for GRPC V2 `GetBakerList` for retrieving the bakers at a certain block.
 - Added support for GRPC V2 `GetAccountNonFinalizedTransactions` for querying transactions from a particular account that have not yet been finalized.
-- Added support for GRPC V2 `GetBranches` for gettting branches of the chain (i.e. decendants of the last finalized block).
+- Added support for GRPC V2 `GetBranches` for getting branches of the chain (i.e. descendants of the last finalized block).
 - Added support for GRPC V2 `GetPassiveDelegators` for getting the passive delegators at a certain block.
 - Added support for GRPC V2 `GetPoolDelegators` for getting the delegators for a specified baking pool at a certain block.
 - Added support for GRPC V2 `GetElectionInfo` for getting the bakers at a certain block and other metadata of the election.
 - Added support for GRPC V2 `GetInstanceState` for getting state of any Contract Instance
 - Added support for GRPC V2 `InstanceStateLookup` for getting value of a particular key in Contract Instance.
-- Added support for GRPC V2 `GetPoolInfo` for gettting information about a given pool at the end of a given block.
+- Added support for GRPC V2 `GetPoolInfo` for getting information about a given pool at the end of a given block.
 - Added support for GRPC V2 `GetModuleList` for getting list of smart contract module at the end of a given block.
 - Added support for GRPC V2 `GetInstanceInfo` for getting information about a contract instance at the end of a given block.
 - Added support for GRPC V2 `GetPoolDelegatorsRewardPeriod` for getting fixed list of Pool Delegators for a given pool at the end of a given block.
