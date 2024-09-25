@@ -193,15 +193,18 @@ A signer is then added to a `TransactionSigner` as follows:
    Make sure to have Maven Local repository in your dependency resolution configuration
 
 ## Releasing
-1. Create a `v.X.Y.Z` tag for a commit to release
-2. Manually trigger the Release workflow for the tag
-3. Ask for approval for the last part of the Release workflow
-4. Sign in to https://s01.oss.sonatype.org/
-5. In the Build Promotion menu in the left select the Staging Repositories item
-6. Select the Concordium repository
-7. "Close" the selected repository to prepare it for release
-8. Once the closing is complete, "Release" it
-9. Wait for the version to appear under https://repo1.maven.org/maven2/com/concordium/sdk/
-10. Manually add Changelog entries of this version to the GitHub release
+1. Change all the SDK artifacts version to `X.Y.Z`
+   where it previously was `X.Y.Z-SNAPSHOT`
+2. Update the Changelog
+3. Create a `v.X.Y.Z` tag for a commit to release
+4. Manually trigger the Release workflow for the tag
+5. Ask for approval for the last part of the Release workflow
+6. Sign in to https://s01.oss.sonatype.org/
+7. In the Build Promotion menu in the left select the Staging Repositories item
+8. Select the Concordium repository
+9. "Close" the selected repository to prepare it for release
+10. Once the closing is complete, "Release" it
+11. Wait for the version to appear under https://repo1.maven.org/maven2/com/concordium/sdk/
+12. Manually add Changelog entries of this version to the GitHub release
 
 [Maven – Releasing the deployment](https://central.sonatype.org/publish/release/)
