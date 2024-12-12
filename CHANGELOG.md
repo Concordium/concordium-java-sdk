@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- Added `ProtocolVersion.V8` corresponding to Protocol version 8
+
 ## 8.0.0
 - Support for Protocol 7
 - Added `ProtocolVersion.V7` corresponding to Protocol version 7
