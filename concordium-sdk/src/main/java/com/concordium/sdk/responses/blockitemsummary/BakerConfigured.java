@@ -5,6 +5,7 @@ import com.concordium.grpc.v2.BakerEvent;
 import com.concordium.sdk.responses.transactionstatus.*;
 import com.concordium.sdk.types.AccountAddress;
 import lombok.*;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.List;
 
@@ -60,6 +61,13 @@ public class BakerConfigured {
                     break;
                 case DELEGATION_REMOVED:
                     builder.event(BakerDelegationRemoved.from(bakerEvent.getDelegationRemoved(), sender));
+                    break;
+                case BAKER_SUSPENDED:
+                    builder.event(BakerSuspended.from(bakerEvent.getBakerSuspended(), sender));
+                    break;
+                case BAKER_RESUMED:
+                    builder.event(BakerResumed.from(bakerEvent.getBakerResumed(), sender));
+                    break;
                 case EVENT_NOT_SET:
                     throw new IllegalArgumentException("Baker event was not set.");
             }

@@ -2,6 +2,7 @@
 
 ## Unreleased
 - Added `ProtocolVersion.V8` corresponding to Protocol version 8
+- Added `BakerSuspended` and `BakerResumed` transaction result events
 
 ## 8.0.0
 - Support for Protocol 7
