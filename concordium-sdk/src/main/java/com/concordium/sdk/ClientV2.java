@@ -2,10 +2,9 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.ClientInitializationException;
+import com.concordium.sdk.requests.ConsensusDetailedStatusQuery;
 import com.concordium.sdk.requests.Range;
-import com.concordium.sdk.requests.AccountQuery;
-import com.concordium.sdk.requests.BlockQuery;
-import com.concordium.sdk.requests.EpochQuery;
+import com.concordium.sdk.requests.*;
 import com.concordium.sdk.requests.dumpstart.DumpRequest;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.responses.AccountIndex;
@@ -13,8 +12,8 @@ import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.DelegatorInfo;
 import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
 import com.concordium.sdk.responses.*;
-import com.concordium.sdk.responses.bakersrewardperiod.BakerRewardPeriodInfo;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
+import com.concordium.sdk.responses.bakersrewardperiod.BakerRewardPeriodInfo;
 import com.concordium.sdk.responses.blockcertificates.BlockCertificates;
 import com.concordium.sdk.responses.blockinfo.BlockInfo;
 import com.concordium.sdk.responses.blockitemstatus.BlockItemStatus;
@@ -27,6 +26,7 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.chainparameters.ChainParameters;
+import com.concordium.sdk.responses.consensusstatus.ConsensusDetailedStatus;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.responses.election.ElectionInfo;
@@ -44,8 +44,8 @@ import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.types.AbsoluteBlockHeight;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
-import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.Timestamp;
+import com.concordium.sdk.types.*;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
@@ -154,8 +154,9 @@ public final class ClientV2 {
     /**
      * Gets an {@link Iterator} of Finalized Blocks from the time request is made and onwards.
      * This can be used to listen for blocks being Finalized. <p>
-     *
+     * <p>
      * Note, may block indefinitely. Use {@link ClientV2#getFinalizedBlocks(int)} to specify a timeout.
+     *
      * @return {@link Iterator<BlockIdentifier>}
      */
     public Iterator<BlockIdentifier> getFinalizedBlocks() {
@@ -227,10 +228,30 @@ public final class ClientV2 {
      * of the chain from the perspective of the node.
      *
      * @return the Consensus Status ({@link ConsensusStatus})
+     *
+     * @see ClientV2#getConsensusDetailedStatus(ConsensusDetailedStatusQuery)
      */
     public ConsensusStatus getConsensusInfo() {
         val grpcOutput = this.server()
                 .getConsensusInfo(Empty.newBuilder().build());
+        return to(grpcOutput);
+    }
+
+    /**
+     * Get the detailed status of the consensus. This is only available for consensus version 1.
+     *
+     * @param query {@link ConsensusDetailedStatusQuery} representing the genesis index to get status for.
+     * @return the detailed status
+     * @throws io.grpc.StatusRuntimeException with {@link io.grpc.Status.Code}: <ul>
+     *                                        <li> {@link io.grpc.Status#NOT_FOUND} if the query specifies an unknown genesis index</li>
+     *                                        <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query specifies a genesis index at consensus version 0</li>
+     *                                        <li> {@link io.grpc.Status#UNIMPLEMENTED} if the endpoint is disabled on the node</li>
+     *                                        </ul>
+     *
+     * @see ClientV2#getConsensusInfo()
+     */
+    public ConsensusDetailedStatus getConsensusDetailedStatus(final ConsensusDetailedStatusQuery query) {
+        val grpcOutput = this.server().getConsensusDetailedStatus(to(query));
         return to(grpcOutput);
     }
 
@@ -982,18 +1003,19 @@ public final class ClientV2 {
 
     /**
      * Find a finalized block with the lowest height that satisfies the given condition. If a block is not found return {@link Optional#empty()}.<p>
-     *
+     * <p>
      * The provided `test` method should, given a {@link ClientV2} and a {@link BlockQuery},
      * return {@link Optional#of(T)} if the object is found in the block, and {@link Optional#empty()} otherwise.
      * It can also throw exceptions which will terminate the search immediately and pass on the exception.<p>
-     *
+     * <p>
      * The precondition for this method is that the `test` method is monotone, i.e. if a block at height `h` satisfies the test then also a block at height `h+1` does.
      * If this precondition does not hold then the return value from this method is unspecified.<p>
-     *
+     * <p>
      * Note, this searches the entire chain. Use {@link ClientV2#findAtLowestHeight(Range, BiFunction)} to only search a given range.
+     *
      * @param test {@link BiFunction} satisfying the conditions described above.
+     * @param <T>  The type to be returned if the search is successful.
      * @return {@link Optional#of(T)} if the search was successful, {@link Optional#empty()} otherwise.
-     * @param <T> The type to be returned if the search is successful.
      */
     public <T> Optional<T> findAtLowestHeight(BiFunction<ClientV2, BlockQuery, Optional<T>> test) {
         return findAtLowestHeight(Range.newUnbounded(), test);
@@ -1001,20 +1023,21 @@ public final class ClientV2 {
 
     /**
      * Find a finalized block with the lowest height that satisfies the given condition. If a block is not found return {@link Optional#empty()}.<p>
-     *
+     * <p>
      * The provided `test` method should, given a {@link ClientV2} and a {@link BlockQuery},
      * return {@link Optional#of(T)} if the object is found in the block, and {@link Optional#empty()} otherwise.
      * It can also throw exceptions which will terminate the search immediately and pass on the exception.<p>
-     *
+     * <p>
      * The precondition for this method is that the `test` method is monotone, i.e. if a block at height `h` satisfies the test then also a block at height `h+1` does.
      * If this precondition does not hold then the return value from this method is unspecified.<p>
-     *
+     * <p>
      * The search is limited to at most the given range, the upper bound is always at most the last finalized block at the time of the call.
      * If the lower bound is not provided it defaults to 0, if the upper bound is not provided it defaults to the last finalized block at the time of the call.
+     *
      * @param range {@link Range} optionally specifying upper and lower bounds of the search.
-     * @param test {@link BiFunction} satisfying the conditions described above.
+     * @param test  {@link BiFunction} satisfying the conditions described above.
+     * @param <T>   The type to be returned if the search is successful.
      * @return {@link Optional#of(T)} if the search was successful, {@link Optional#empty()} otherwise.
-     * @param <T> The type to be returned if the search is successful.
      */
     public <T> Optional<T> findAtLowestHeight(Range<AbsoluteBlockHeight> range, BiFunction<ClientV2, BlockQuery, Optional<T>> test) {
         long start = 0;
@@ -1048,14 +1071,15 @@ public final class ClientV2 {
      * Find a block in which the {@link AccountAddress} was created, if it exists and is finalized.
      * The returned {@link FindAccountResponse}, if present, contains the absolute block height, corresponding {@link Hash} and the {@link AccountInfo} at the end of the block.
      * The block is the first block in which the account appears.<p>
-     *
+     * <p>
      * Note that this is not necessarily the initial state of the account since there can be transactions updating it in the same block that it is created.<p>
-     *
+     * <p>
      * The search is limited to at most the given range, the upper bound is always at most the last finalized block at the time of the call.
      * If the lower bound is not provided it defaults to 0, if the upper bound is not provided it defaults to the last finalized block at the time of the call.<p>
-     *
+     * <p>
      * If the account is not found, {@link Optional#empty()} is returned.
-     * @param range {@link Range} optionally specifying upper and lower bounds of the search.
+     *
+     * @param range   {@link Range} optionally specifying upper and lower bounds of the search.
      * @param address The {@link AccountAddress} to search for.
      * @return {@link Optional} containing {@link FindAccountResponse} if the search was successful, {@link Optional#empty()} otherwise.
      */
@@ -1083,11 +1107,12 @@ public final class ClientV2 {
      * Find a block in which the {@link AccountAddress} was created, if it exists and is finalized.
      * The returned {@link FindAccountResponse}, if present, contains the absolute block height, corresponding {@link Hash} and the {@link AccountInfo} at the end of the block.
      * The block is the first block in which the account appears.<p>
-     *
+     * <p>
      * Note that this is not necessarily the initial state of the account since there can be transactions updating it in the same block that it is created.<p>
-     *
+     * <p>
      * If the account is not found, {@link Optional#empty()} is returned.<p>
      * Note, this searches the entire chain. Use {@link ClientV2#findAccountCreation(Range, AccountAddress)} to only search a given range.
+     *
      * @param address The {@link AccountAddress} to search for.
      * @return {@link Optional} containing {@link FindAccountResponse} if the search was successful, {@link Optional#empty()} otherwise.
      */
@@ -1097,6 +1122,7 @@ public final class ClientV2 {
 
     /**
      * Get a {@link ImmutableList} of live blocks at a given height.
+     *
      * @param height {@link BlocksAtHeightRequest} with the height to query at.
      * @return {@link ImmutableList} of {@link Hash} of live blocks at the specified height.
      */
@@ -1111,6 +1137,7 @@ public final class ClientV2 {
      * Get a {@link FinalizedBlockItemIterator} of {@link BlockIdentifier} of finalized blocks starting from a given height.
      * This function starts a {@link Thread} that listens for new finalized blocks.
      * This {@link Thread} is killed when the {@link FinalizedBlockItemIterator} dropped with {@link FinalizedBlockItemIterator#drop()}
+     *
      * @param startHeight {@link AbsoluteBlockHeight} to start at.
      * @return {@link FinalizedBlockItemIterator} containing {@link BlockIdentifier}s of finalized blocks.
      */

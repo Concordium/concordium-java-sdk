@@ -3,6 +3,7 @@
 ## Unreleased
 - Added `ProtocolVersion.V8` corresponding to Protocol version 8
 - Added `BakerSuspended` and `BakerResumed` transaction result events
+- Added `GetConsensusDetailedStatus` endpoint for querying detailed consensus status information
 
 ## 8.0.0
 - Support for Protocol 7
