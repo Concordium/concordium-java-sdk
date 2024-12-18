@@ -1,5 +1,6 @@
 package com.concordium.sdk.requests;
 
+import com.concordium.sdk.responses.GenesisIndex;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,5 +13,5 @@ public class ConsensusDetailedStatusQuery {
      * If not specified, the status is returned for the latest genesis index.
      */
     @Builder.Default
-    private final int genesisIndex = -1;
+    private final GenesisIndex genesisIndex = null;
 }

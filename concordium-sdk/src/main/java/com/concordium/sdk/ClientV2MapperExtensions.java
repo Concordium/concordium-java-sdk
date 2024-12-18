@@ -17,6 +17,7 @@ import com.concordium.grpc.v2.DelegatorInfo;
 import com.concordium.grpc.v2.DelegatorRewardPeriodInfo;
 import com.concordium.grpc.v2.EncryptedAmount;
 import com.concordium.grpc.v2.GasRewards;
+import com.concordium.grpc.v2.GenesisIndex;
 import com.concordium.grpc.v2.HigherLevelKeys;
 import com.concordium.grpc.v2.Memo;
 import com.concordium.grpc.v2.NextUpdateSequenceNumbers;
@@ -111,9 +112,11 @@ import static com.google.common.collect.ImmutableList.copyOf;
 interface ClientV2MapperExtensions {
 
     static com.concordium.grpc.v2.ConsensusDetailedStatusQuery to(final com.concordium.sdk.requests.ConsensusDetailedStatusQuery input) {
-        return com.concordium.grpc.v2.ConsensusDetailedStatusQuery.newBuilder()
-                .setGenesisIndex(GenesisIndex.newBuilder().setValue(input.getGenesisIndex()))
-                .build();
+        val builder = com.concordium.grpc.v2.ConsensusDetailedStatusQuery.newBuilder();
+        if (input.getGenesisIndex() != null) {
+            builder.setGenesisIndex(GenesisIndex.newBuilder().setValue(input.getGenesisIndex().getValue()).build());
+        }
+        return builder.build();
     }
 
     static ConsensusDetailedStatus to(final com.concordium.grpc.v2.ConsensusDetailedStatus input) {
@@ -130,6 +133,7 @@ interface ClientV2MapperExtensions {
                 .genesisBlockHeight(com.concordium.sdk.types.AbsoluteBlockHeight.from(input.getGenesisBlockHeight().getValue()))
                 .lastFinalizedBlock(Hash.from(input.getLastFinalizedBlock()))
                 .lastFinalizedBlockHeight(input.getLastFinalizedBlockHeight().getValue())
+                .latestFinalizationEntry(to(input.getLatestFinalizationEntry()))
                 .epochBakers(to(input.getEpochBakers()))
                 .timeoutMessages(to(input.getTimeoutMessages()))
                 .terminalBlock(Hash.from(input.getTerminalBlock()))
@@ -162,6 +166,7 @@ interface ClientV2MapperExtensions {
                 .lastSignedQuorumMessage(to(input.getLastSignedQuorumMessage()))
                 .lastSignedTimeoutMessage(to(input.getLastSignedTimeoutMessage()))
                 .lastBakedRound(Round.from(input.getLastBakedRound()))
+                .latestTimeout(to(input.getLatestTimeout()))
                 .build();
     }
 
