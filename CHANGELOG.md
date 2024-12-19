@@ -5,6 +5,9 @@
 - Added `BakerSuspended` and `BakerResumed` transaction result events
 - Added `GetConsensusDetailedStatus` endpoint for querying detailed consensus status information
 - Added `GetScheduledReleaseAccounts` endpoint for querying the list of accounts that have scheduled releases
+- Added `GetCooldownAccounts`, `GetPreCooldownAccounts` and `GetPrePreCooldownAccounts`
+  endpoints for querying the lists of accounts that have pending cooldowns in protocol
+  version 7 onwards.
 
 ## 8.0.0
 - Support for Protocol 7

@@ -265,6 +265,36 @@ public final class ClientV2 {
     }
 
     /**
+     * Get all accounts that have stake in cooldown, with the timestamp of the first pending
+     * cooldown expiry for each account. (Note, this only identifies accounts by index,
+     * and only indicates the first pending cooldown for each account.)
+     * Prior to protocol version 7, the resulting stream will always be empty.
+     */
+    public Iterator<AccountPending> getCooldownAccounts (BlockQuery input){
+        return this.server().getCooldownAccounts(to(input));
+    }
+
+    /**
+     * Get all accounts that have stake in pre-cooldown.
+     * (This only identifies accounts by index.)
+     * Prior to protocol version 7, the resulting stream will always be empty.
+     */
+    public Iterator<AccountIndex> getPreCooldownAccounts (BlockQuery input){
+        val grpcOutput = this.server().getPreCooldownAccounts(to(input));
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get all accounts that have stake in pre-pre-cooldown.
+     * (This only identifies accounts by index.)
+     * Prior to protocol version 7, the resulting stream will always be empty.
+     */
+    public Iterator<AccountIndex> getPrePreCooldownAccounts (BlockQuery input){
+        val grpcOutput = this.server().getPrePreCooldownAccounts(to(input));
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
      * Sends an Account Transaction to the Concordium Node.
      *
      * @param accountTransaction Account Transaction to send.
