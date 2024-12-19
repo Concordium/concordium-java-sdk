@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * Chain parameters from protocol version 6 and onwards.
+ * Chain parameters effective in protocol version 6 and 7.
  */
 @Getter
 @ToString

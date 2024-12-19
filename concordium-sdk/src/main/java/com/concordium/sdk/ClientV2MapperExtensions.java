@@ -63,6 +63,7 @@ import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.chainparameters.ChainParametersV0;
 import com.concordium.sdk.responses.chainparameters.ChainParametersV1;
 import com.concordium.sdk.responses.chainparameters.ChainParametersV2;
+import com.concordium.sdk.responses.chainparameters.ChainParametersV3;
 import com.concordium.sdk.responses.chainparameters.CooldownParametersCpv1;
 import com.concordium.sdk.responses.chainparameters.*;
 import com.concordium.sdk.responses.consensusstatus.BlockSignature;
@@ -415,6 +416,9 @@ interface ClientV2MapperExtensions {
             case V2:
                 val v2Params = parameters.getV2();
                 return ChainParametersV2.from(v2Params);
+            case V3:
+                val v3Params = parameters.getV3();
+                return ChainParametersV3.from(v3Params);
             case PARAMETERS_NOT_SET:
                 throw new IllegalArgumentException("Unexpected parameters version");
 

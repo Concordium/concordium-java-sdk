@@ -11,6 +11,7 @@ public abstract class ChainParameters {
     public abstract Version getVersion();
 
     public abstract Fraction getEuroPerEnergy();
+
     public abstract Fraction getMicroCCDPerEuro();
 
     /**
@@ -21,7 +22,9 @@ public abstract class ChainParameters {
         CPV0,
         // Chain parameters effective in protocol versions 4 to 5.
         CPV1,
-        // Chain parameters effective in protocol version 6.
-        CPV2
+        // Chain parameters effective in protocol version 6 and 7.
+        CPV2,
+        // Chain parameters effective in protocol version 8.
+        CPV3,
     }
 }

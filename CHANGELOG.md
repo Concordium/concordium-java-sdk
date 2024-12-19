@@ -9,6 +9,7 @@
   endpoints for querying the lists of accounts that have pending cooldowns in protocol
   version 7 onwards
 - Added `parameter` field to `ContractInitializedResult` containing the parameter passed to the init function
+- Added `ChainParametersV3` for Protocol version 8, adding `ValidatorScoreParameters`
 
 ## 8.0.0
 - Support for Protocol 7
