@@ -256,6 +256,15 @@ public final class ClientV2 {
     }
 
     /**
+     * Get all accounts that have scheduled releases, with the timestamp of the first pending
+     * scheduled release for that account. (Note, this only identifies accounts by index, and
+     * only indicates the first pending release for each account.)
+     */
+    public Iterator<AccountPending> getScheduledReleaseAccounts(BlockQuery input){
+        return this.server().getScheduledReleaseAccounts(to(input));
+    }
+
+    /**
      * Sends an Account Transaction to the Concordium Node.
      *
      * @param accountTransaction Account Transaction to send.
