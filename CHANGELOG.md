@@ -10,6 +10,8 @@
   version 7 onwards
 - Added `parameter` field to `ContractInitializedResult` containing the parameter passed to the init function
 - Added `ChainParametersV3` for Protocol version 8, adding `ValidatorScoreParameters`
+- Added `isSuspended` field to `Baker` which, since Protocol version 8,
+  indicates whether the account is suspended and is not participating in the consensus algorithm
 
 ## 8.0.0
 - Support for Protocol 7

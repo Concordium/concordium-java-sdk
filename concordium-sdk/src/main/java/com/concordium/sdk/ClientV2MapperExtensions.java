@@ -572,6 +572,7 @@ interface ClientV2MapperExtensions {
                 .stakedAmount(to(stake.getStakedAmount()))
                 .bakerPoolInfo(to(stake.getPoolInfo()))
                 .bakerInfo(BakerInfo.from(stake.getBakerInfo()))
+                .isSuspended(stake.getIsSuspended())
                 .build();
     }
 
