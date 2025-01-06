@@ -1376,6 +1376,20 @@ interface ClientV2MapperExtensions {
                         .finalizationReward(CCDAmount.fromMicro(paydayPoolReward.getFinalizationReward().getValue()));
                 return result.build();
             }
+            case VALIDATOR_SUSPENDED: {
+                val validatorSuspended = event.getValidatorSuspended();
+                return ValidatorSuspended.builder()
+                        .account(to(validatorSuspended.getAccount()))
+                        .bakerId(to(validatorSuspended.getBakerId()))
+                        .build();
+            }
+            case VALIDATOR_PRIMED_FOR_SUSPENSION: {
+                val validatorPrimedForSuspension = event.getValidatorPrimedForSuspension();
+                return ValidatorPrimedForSuspension.builder()
+                        .account(to(validatorPrimedForSuspension.getAccount()))
+                        .bakerId(to(validatorPrimedForSuspension.getBakerId()))
+                        .build();
+            }
             default:
                 throw new IllegalStateException("Unexpected value: " + event.getEventCase());
         }

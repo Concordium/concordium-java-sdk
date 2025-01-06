@@ -134,6 +134,14 @@ public class ClientV2GetBlockSpecialEventsTest {
             .bakerReward(CCDAmount.fromMicro(AMOUNT_TWO))
             .finalizationReward(CCDAmount.fromMicro(AMOUNT_THREE))
             .build();
+    private static final SpecialOutcome VALIDATOR_SUSPENDED = ValidatorSuspended.builder()
+            .account(AccountAddress.from(ADDRESS_ONE))
+            .bakerId(com.concordium.sdk.responses.BakerId.from(BAKER_ID))
+            .build();
+    private static final SpecialOutcome VALIDATOR_PRIMED_FOR_SUSPENSION = ValidatorPrimedForSuspension.builder()
+            .account(AccountAddress.from(ADDRESS_ONE))
+            .bakerId(com.concordium.sdk.responses.BakerId.from(BAKER_ID))
+            .build();
 
     // GRPC Special events
     private static final BlockSpecialEvent GRPC_BAKING_REWARDS = BlockSpecialEvent.newBuilder()
@@ -200,6 +208,30 @@ public class ClientV2GetBlockSpecialEventsTest {
                     .setFinalizationReward(Amount.newBuilder().setValue(AMOUNT_THREE).build())
                     .build())
             .build();
+    private static final BlockSpecialEvent GRPC_VALIDATOR_SUSPENDED = BlockSpecialEvent.newBuilder()
+            .setValidatorSuspended(BlockSpecialEvent.ValidatorSuspended.newBuilder()
+                    .setAccount(
+                            com.concordium.grpc.v2.AccountAddress.newBuilder()
+                                    .setValue(ByteString.copyFrom(ADDRESS_ONE))
+                    )
+                    .setBakerId(
+                            BakerId.newBuilder()
+                                    .setValue(BAKER_ID)
+                    )
+            )
+            .build();
+    private static final BlockSpecialEvent GRPC_VALIDATOR_PRIMED_FOR_SUSPENSION = BlockSpecialEvent.newBuilder()
+            .setValidatorPrimedForSuspension(BlockSpecialEvent.ValidatorPrimedForSuspension.newBuilder()
+                    .setAccount(
+                            com.concordium.grpc.v2.AccountAddress.newBuilder()
+                                    .setValue(ByteString.copyFrom(ADDRESS_ONE))
+                    )
+                    .setBakerId(
+                            BakerId.newBuilder()
+                                    .setValue(BAKER_ID)
+                    )
+            )
+            .build();
 
     // GRPC return value and expected clientside result
     private static final ImmutableList<SpecialOutcome> CLIENT_EXPECTED_RESULT = new ImmutableList.Builder<SpecialOutcome>()
@@ -211,6 +243,8 @@ public class ClientV2GetBlockSpecialEventsTest {
             .add(CLIENT_PAYDAY_ACCOUNT_REWARD)
             .add(CLIENT_BLOCK_ACCRUE_REWARD)
             .add(CLIENT_PAYDAY_POOL_REWARD)
+            .add(VALIDATOR_SUSPENDED)
+            .add(VALIDATOR_PRIMED_FOR_SUSPENSION)
             .build();
 
     private static final Iterator<BlockSpecialEvent> GRPC_RESULT = new ImmutableList.Builder<BlockSpecialEvent>()
@@ -222,6 +256,8 @@ public class ClientV2GetBlockSpecialEventsTest {
             .add(GRPC_PAYDAY_ACCOUNT_REWARD)
             .add(GRPC_BLOCK_ACCRUE_REWARD)
             .add(GRPC_PAYDAY_POOL_REWARD)
+            .add(GRPC_VALIDATOR_SUSPENDED)
+            .add(GRPC_VALIDATOR_PRIMED_FOR_SUSPENSION)
             .build().iterator();
 
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(

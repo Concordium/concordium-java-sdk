@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Support for Protocol 8
 - Added `ProtocolVersion.V8` corresponding to Protocol version 8
 - Added `BakerSuspended` and `BakerResumed` transaction result events
 - Added `GetConsensusDetailedStatus` endpoint for querying detailed consensus status information
@@ -14,6 +15,8 @@
   indicates whether the account is suspended and is not participating in the consensus algorithm
 - Added `suspended` field to `ConfigureBakerPayload` which, since Protocol version 8,
   indicates whether the validator is suspended
+- Added `ValidatorSuspended` and `ValidatorPrimedForSuspension` special outcomes 
+  for the `GetBlockSpecialEvents` endpoint 
 
 ## 8.0.0
 - Support for Protocol 7
