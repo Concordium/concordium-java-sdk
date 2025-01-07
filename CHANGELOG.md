@@ -4,19 +4,18 @@
 - Support for Protocol 8
 - Added `ProtocolVersion.V8` corresponding to Protocol version 8
 - Added `BakerSuspended` and `BakerResumed` transaction result events
+- Added `ValidatorSuspended` and `ValidatorPrimedForSuspension` special outcomes
+  for the `GetBlockSpecialEvents` endpoint
+- Added `ChainParametersV3` for Protocol version 8, adding `ValidatorScoreParameters`
 - Added `GetConsensusDetailedStatus` endpoint for querying detailed consensus status information
 - Added `GetScheduledReleaseAccounts` endpoint for querying the list of accounts that have scheduled releases
 - Added `GetCooldownAccounts`, `GetPreCooldownAccounts` and `GetPrePreCooldownAccounts`
-  endpoints for querying the lists of accounts that have pending cooldowns in protocol
-  version 7 onwards
+  endpoints for querying the lists of accounts that have pending cooldowns in protocol version 7 onwards
 - Added `parameter` field to `ContractInitializedResult` containing the parameter passed to the init function
-- Added `ChainParametersV3` for Protocol version 8, adding `ValidatorScoreParameters`
 - Added `isSuspended` field to `Baker` which, since Protocol version 8,
   indicates whether the account is suspended and is not participating in the consensus algorithm
 - Added `suspended` field to `ConfigureBakerPayload` which, since Protocol version 8,
   indicates whether the validator is suspended
-- Added `ValidatorSuspended` and `ValidatorPrimedForSuspension` special outcomes 
-  for the `GetBlockSpecialEvents` endpoint 
 
 ## 8.0.0
 - Support for Protocol 7
