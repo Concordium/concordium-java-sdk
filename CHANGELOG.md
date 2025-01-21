@@ -12,8 +12,10 @@
 - Added `GetCooldownAccounts`, `GetPreCooldownAccounts` and `GetPrePreCooldownAccounts`
   endpoints for querying the lists of accounts that have pending cooldowns in protocol version 7 onwards
 - Added `parameter` field to `ContractInitializedResult` containing the parameter passed to the init function
-- Added `isSuspended` field to `Baker` which, since Protocol version 8,
+- Added `isSuspended` field to `Baker` and `BakerPoolStatus` which, since Protocol version 8,
   indicates whether the account is suspended and is not participating in the consensus algorithm
+- Added `missedRounds` and `isPrimedForSuspension` fields to `CurrentPaydayStatus` 
+  which, since Protocol version 8, reflect validator score status
 - Added `suspended` field to `ConfigureBakerPayload` which, since Protocol version 8,
   indicates whether the validator is suspended
 

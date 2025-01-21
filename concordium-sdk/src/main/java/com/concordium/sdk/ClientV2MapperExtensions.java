@@ -1496,6 +1496,9 @@ interface ClientV2MapperExtensions {
                         ? to(grpcOutput.getCurrentPaydayInfo())
                         : null)
                 .allPoolTotalCapital(to(grpcOutput.getAllPoolTotalCapital()))
+                .isSuspended(grpcOutput.hasIsSuspended()
+                        ? grpcOutput.getIsSuspended()
+                        : null)
                 .build();
     }
 
@@ -1517,7 +1520,7 @@ interface ClientV2MapperExtensions {
     }
 
     static @NonNull CurrentPaydayStatus to(PoolCurrentPaydayInfo currentPaydayInfo) {
-        return CurrentPaydayStatus.builder()
+        val builder = CurrentPaydayStatus.builder()
                 .bakerEquityCapital(to(currentPaydayInfo.getBakerEquityCapital()))
                 .blocksBaked(UInt64.from(currentPaydayInfo.getBlocksBaked()))
                 .delegatedCapital(to(currentPaydayInfo.getDelegatedCapital()))
@@ -1525,8 +1528,16 @@ interface ClientV2MapperExtensions {
                 .finalizationLive(currentPaydayInfo.getFinalizationLive())
                 .lotteryPower(currentPaydayInfo.getLotteryPower())
                 .transactionFeesEarned(to(currentPaydayInfo.getTransactionFeesEarned()))
-                .commissionRates(CommissionRates.from(currentPaydayInfo.getCommissionRates()))
-                .build();
+                .commissionRates(CommissionRates.from(currentPaydayInfo.getCommissionRates()));
+
+        if (currentPaydayInfo.hasMissedRounds()) {
+            builder.missedRounds(UInt64.from(currentPaydayInfo.getMissedRounds()));
+        }
+        if (currentPaydayInfo.hasIsPrimedForSuspension()) {
+            builder.isPrimedForSuspension(currentPaydayInfo.getIsPrimedForSuspension());
+        }
+
+        return builder.build();
     }
 
     static com.concordium.sdk.responses.intanceinfo.InstanceInfo to(com.concordium.grpc.v2.InstanceInfo instanceInfo) {
