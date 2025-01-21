@@ -19,10 +19,6 @@ public class EpochBakers {
      */
     private final BakersAndFinalizers previousEpochBakers;
 
-    public Optional<BakersAndFinalizers> getPreviousEpochBakers() {
-        return Optional.ofNullable(previousEpochBakers);
-    }
-
     /**
      * The bakers and finalizers for the current epoch.
      * If this is absent, it should be treated as the same as the bakers for the previous epoch.

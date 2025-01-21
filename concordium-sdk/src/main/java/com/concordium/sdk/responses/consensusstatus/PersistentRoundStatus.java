@@ -19,10 +19,18 @@ public class PersistentRoundStatus {
      */
     private final QuorumMessage lastSignedQuorumMessage;
 
+    public Optional<QuorumMessage> getLastSignedQuorumMessage() {
+        return Optional.ofNullable(lastSignedQuorumMessage);
+    }
+
     /**
      * The last signed timeout message by the node.
      */
     private final TimeoutMessage lastSignedTimeoutMessage;
+
+    public Optional<TimeoutMessage> getLastSignedTimeoutMessage() {
+        return Optional.ofNullable(lastSignedTimeoutMessage);
+    }
 
     /**
      * The last round the node baked in.

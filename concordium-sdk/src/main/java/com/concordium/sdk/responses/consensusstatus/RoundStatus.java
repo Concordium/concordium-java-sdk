@@ -64,6 +64,10 @@ public class RoundStatus {
      */
     private final RawFinalizationEntry lastEpochFinalizationEntry;
 
+    public Optional<RawFinalizationEntry> getLastEpochFinalizationEntry() {
+        return Optional.ofNullable(lastEpochFinalizationEntry);
+    }
+
     /**
      * The current duration the node will wait before a round times out.
      */

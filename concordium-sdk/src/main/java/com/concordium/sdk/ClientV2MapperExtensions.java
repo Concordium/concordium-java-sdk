@@ -121,7 +121,7 @@ interface ClientV2MapperExtensions {
     }
 
     static ConsensusDetailedStatus to(final com.concordium.grpc.v2.ConsensusDetailedStatus input) {
-        return ConsensusDetailedStatus.builder()
+        val builder = ConsensusDetailedStatus.builder()
                 .genesisBlock(Hash.from(input.getGenesisBlock()))
                 .persistentRoundStatus(to(input.getPersistentRoundStatus()))
                 .roundStatus(to(input.getRoundStatus()))
@@ -134,11 +134,19 @@ interface ClientV2MapperExtensions {
                 .genesisBlockHeight(com.concordium.sdk.types.AbsoluteBlockHeight.from(input.getGenesisBlockHeight().getValue()))
                 .lastFinalizedBlock(Hash.from(input.getLastFinalizedBlock()))
                 .lastFinalizedBlockHeight(input.getLastFinalizedBlockHeight().getValue())
-                .latestFinalizationEntry(to(input.getLatestFinalizationEntry()))
-                .epochBakers(to(input.getEpochBakers()))
-                .timeoutMessages(to(input.getTimeoutMessages()))
-                .terminalBlock(Hash.from(input.getTerminalBlock()))
-                .build();
+                .epochBakers(to(input.getEpochBakers()));
+
+        if (input.hasLatestFinalizationEntry()) {
+            builder.latestFinalizationEntry(to(input.getLatestFinalizationEntry()));
+        }
+        if (input.hasTimeoutMessages()) {
+            builder.timeoutMessages(to(input.getTimeoutMessages()));
+        }
+        if (input.hasTerminalBlock()) {
+            builder.terminalBlock(Hash.from(input.getTerminalBlock()));
+        }
+
+        return builder.build();
     }
 
     static com.concordium.sdk.responses.consensusstatus.RoundExistingQC to(final RoundExistingQC input) {
@@ -163,12 +171,20 @@ interface ClientV2MapperExtensions {
     }
 
     static com.concordium.sdk.responses.consensusstatus.PersistentRoundStatus to(final com.concordium.grpc.v2.PersistentRoundStatus input) {
-        return com.concordium.sdk.responses.consensusstatus.PersistentRoundStatus.builder()
-                .lastSignedQuorumMessage(to(input.getLastSignedQuorumMessage()))
-                .lastSignedTimeoutMessage(to(input.getLastSignedTimeoutMessage()))
-                .lastBakedRound(Round.from(input.getLastBakedRound()))
-                .latestTimeout(to(input.getLatestTimeout()))
-                .build();
+        val builder = com.concordium.sdk.responses.consensusstatus.PersistentRoundStatus.builder()
+                .lastBakedRound(Round.from(input.getLastBakedRound()));
+
+        if (input.hasLastSignedQuorumMessage()) {
+            builder.lastSignedQuorumMessage(to(input.getLastSignedQuorumMessage()));
+        }
+        if (input.hasLastSignedTimeoutMessage()) {
+            builder.lastSignedTimeoutMessage(to(input.getLastSignedTimeoutMessage()));
+        }
+        if (input.hasLatestTimeout()) {
+            builder.latestTimeout(to(input.getLatestTimeout()));
+        }
+
+        return builder.build();
     }
 
     static com.concordium.sdk.responses.consensusstatus.QuorumMessage to(final com.concordium.grpc.v2.QuorumMessage input) {
@@ -231,12 +247,18 @@ interface ClientV2MapperExtensions {
     }
 
     static com.concordium.sdk.responses.consensusstatus.EpochBakers to(com.concordium.grpc.v2.EpochBakers input) {
-        return com.concordium.sdk.responses.consensusstatus.EpochBakers.builder()
+        val builder = com.concordium.sdk.responses.consensusstatus.EpochBakers.builder()
                 .previousEpochBakers(to(input.getPreviousEpochBakers()))
-                .currentEpochBakers(to(input.getCurrentEpochBakers()))
-                .nextEpochBakers(to(input.getNextEpochBakers()))
-                .nextPayday(to(input.getNextPayday()))
-                .build();
+                .nextPayday(to(input.getNextPayday()));
+
+        if (input.hasCurrentEpochBakers()) {
+            builder.currentEpochBakers(to(input.getCurrentEpochBakers()));
+        }
+        if (input.hasNextEpochBakers()) {
+            builder.nextEpochBakers(to(input.getNextEpochBakers()));
+        }
+
+        return builder.build();
     }
 
     static com.concordium.sdk.responses.consensusstatus.TimeoutMessages to(com.concordium.grpc.v2.TimeoutMessages input) {
@@ -279,15 +301,21 @@ interface ClientV2MapperExtensions {
     }
 
     static com.concordium.sdk.responses.consensusstatus.RoundStatus to(RoundStatus input) {
-        return com.concordium.sdk.responses.consensusstatus.RoundStatus.builder()
+        val builder = com.concordium.sdk.responses.consensusstatus.RoundStatus.builder()
                 .currentRound(Round.from(input.getCurrentRound()))
                 .highestCertifiedBlock(to(input.getHighestCertifiedBlock()))
-                .previousRoundTimeout(to(input.getPreviousRoundTimeout()))
                 .roundEligibleToBake(input.getRoundEligibleToBake())
                 .currentEpoch(Epoch.from(input.getCurrentEpoch()))
-                .lastEpochFinalizationEntry(to(input.getLastEpochFinalizationEntry()))
-                .currentTimeout(to(input.getCurrentTimeout()))
-                .build();
+                .currentTimeout(to(input.getCurrentTimeout()));
+
+        if (input.hasPreviousRoundTimeout()) {
+            builder.previousRoundTimeout(to(input.getPreviousRoundTimeout()));
+        }
+        if (input.hasLastEpochFinalizationEntry()) {
+            builder.lastEpochFinalizationEntry(to(input.getLastEpochFinalizationEntry()));
+        }
+
+        return builder.build();
     }
 
     static com.concordium.grpc.v2.BlockHashInput to(final BlockQuery input) {
