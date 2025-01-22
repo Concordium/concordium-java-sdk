@@ -18,8 +18,8 @@
   which, since Protocol version 8, reflect validator score status
 - Added `suspended` field to `ConfigureBakerPayload` which, since Protocol version 8,
   indicates whether the validator is suspended
-- Added `FinalizationCommitteeParameters` `PendingUpdateType` entry, 
-  therefore a new possible type for `PendingUpdateV2`
+- Added `FinalizationCommitteeParameters` and `ValidatorScoreParameters` entries of `PendingUpdateType`, 
+  therefore new possible update types in `PendingUpdateV2`
 
 ## 8.0.0
 - Support for Protocol 7

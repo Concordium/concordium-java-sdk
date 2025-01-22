@@ -66,6 +66,7 @@ import com.concordium.sdk.responses.chainparameters.ChainParametersV2;
 import com.concordium.sdk.responses.chainparameters.ChainParametersV3;
 import com.concordium.sdk.responses.chainparameters.CooldownParametersCpv1;
 import com.concordium.sdk.responses.chainparameters.FinalizationCommitteeParameters;
+import com.concordium.sdk.responses.chainparameters.ValidatorScoreParameters;
 import com.concordium.sdk.responses.chainparameters.*;
 import com.concordium.sdk.responses.consensusstatus.BlockSignature;
 import com.concordium.sdk.responses.consensusstatus.ConsensusDetailedStatus;
@@ -1748,6 +1749,12 @@ interface ClientV2MapperExtensions {
                         .effectiveTime(to(u.getEffectiveTime()))
                         .type(PendingUpdateType.FinalizationCommitteeParameters)
                         .update(FinalizationCommitteeParameters.from(u.getFinalizationCommitteeParameters()))
+                        .build();
+            case VALIDATOR_SCORE_PARAMETERS:
+                return PendingUpdateV2.<ValidatorScoreParameters>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.ValidatorScoreParameters)
+                        .update(ValidatorScoreParameters.from(u.getValidatorScoreParameters()))
                         .build();
             default:
             case EFFECT_NOT_SET:

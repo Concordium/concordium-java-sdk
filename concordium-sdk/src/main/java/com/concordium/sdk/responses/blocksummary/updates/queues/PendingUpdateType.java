@@ -25,4 +25,5 @@ public enum PendingUpdateType {
     MinBlockTime,
     RootKeys,
     FinalizationCommitteeParameters,
+    ValidatorScoreParameters,
 }
