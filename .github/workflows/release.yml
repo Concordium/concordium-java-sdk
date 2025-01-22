@@ -13,7 +13,7 @@ env:
 
 jobs:
   build-native-ubuntu:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     # Setup rust
@@ -88,7 +88,7 @@ jobs:
           path: crypto-jni\target\release\crypto_jni.dll
 
   build-native-android:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Set Up Android tools
       run: |
@@ -116,7 +116,7 @@ jobs:
   build-and-release-jar:
     needs: [build-native-ubuntu, build-native-macos, build-native-windows, build-native-android]
     # Use fixed OS version because we install packages on the system.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     environment: release
 
     if: ${{ !github.event.pull_request.draft }}

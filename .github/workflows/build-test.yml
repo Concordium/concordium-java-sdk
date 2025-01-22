@@ -47,7 +47,7 @@ env:
 jobs:
   build:
     # Use fixed OS version because we install packages on the system.
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     if: ${{ !github.event.pull_request.draft }}
 
     steps:
@@ -87,7 +87,7 @@ jobs:
       run: cd concordium-sdk-examples && mvn --batch-mode --update-snapshots install
   build-android:
     # Use fixed OS version because we install packages on the system.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - name: Set Up Android tools
