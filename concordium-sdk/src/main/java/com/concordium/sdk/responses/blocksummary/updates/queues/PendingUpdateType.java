@@ -23,5 +23,6 @@ public enum PendingUpdateType {
     TimeoutParameters,
     BlockEnergyLimit,
     MinBlockTime,
-    RootKeys
+    RootKeys,
+    FinalizationCommitteeParameters,
 }
