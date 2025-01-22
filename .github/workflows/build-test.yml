@@ -52,7 +52,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         #token: ${{ secrets.CONCORDIUM_CI }}
         submodules: recursive
@@ -96,7 +96,7 @@ jobs:
           --sdk_root=$ANDROID_SDK_ROOT \
           "platform-tools" "platforms;android-29" "build-tools;29.0.2"
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: recursive
     - name: Setup JDK 8
