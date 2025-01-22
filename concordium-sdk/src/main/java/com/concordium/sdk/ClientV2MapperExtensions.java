@@ -1601,6 +1601,7 @@ interface ClientV2MapperExtensions {
                 .minBlockTime(to(grpcOutput.getMinBlockTime()))
                 .blockEnergyLimit(to(grpcOutput.getBlockEnergyLimit()))
                 .finalizationCommitteeParameters(to(grpcOutput.getFinalizationCommitteeParameters()))
+                .validatorScoreParameters(to(grpcOutput.getValidatorScoreParameters()))
                 .build();
     }
 

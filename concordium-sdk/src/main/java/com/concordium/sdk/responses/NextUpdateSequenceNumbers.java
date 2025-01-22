@@ -111,4 +111,9 @@ public class NextUpdateSequenceNumbers {
      * Updates to the finalization committee parameters for chain parameters version 2 introduced in protocol version 6.
      */
     private final Nonce finalizationCommitteeParameters;
+
+    /**
+     * Updates to the validator score parameters for chain parameters version 3.
+     */
+    private final Nonce validatorScoreParameters;
 }

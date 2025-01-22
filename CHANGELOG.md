@@ -20,6 +20,8 @@
   indicates whether the validator is suspended
 - Added `FinalizationCommitteeParameters` and `ValidatorScoreParameters` entries of `PendingUpdateType`, 
   therefore new possible update types in `PendingUpdateV2`
+- Added `validatorScoreParameters` field to `NextUpdateSequenceNumbers`
+  which corresponds to updates in `ChainParametersV3.validatorScoreParameters`
 
 ## 8.0.0
 - Support for Protocol 7
