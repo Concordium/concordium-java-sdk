@@ -41,7 +41,7 @@ on:
   workflow_dispatch: # allow manual trigger
 
 env:
-  dummy: 3                 # change to force cache invalidation
+  dummy: 6                 # change to force cache invalidation
   CARGO_TERM_COLOR: always # implicitly adds '--color=always' to all cargo commands
 
 jobs:
@@ -91,10 +91,12 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - name: Set Up Android tools
+      # Having "tools" and "--include_obsolete"
+      # is important for com.simpligility.maven.plugins:android-maven-plugin
       run: |
           ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager \
           --sdk_root=$ANDROID_SDK_ROOT \
-          "platform-tools" "platforms;android-29" "build-tools;29.0.2"
+          "platform-tools" "tools" "platforms;android-34" "build-tools;34.0.0" --include_obsolete
     - name: Checkout
       uses: actions/checkout@v4
       with:
@@ -114,4 +116,4 @@ jobs:
     - name: Initialize root project
       run: mvn install -N
     - name: Build android sdk
-      run: cd concordium-android-sdk && mvn -e -X --batch-mode --update-snapshots install
+      run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install
