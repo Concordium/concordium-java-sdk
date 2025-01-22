@@ -41,7 +41,7 @@ on:
   workflow_dispatch: # allow manual trigger
 
 env:
-  dummy: 2                 # change to force cache invalidation
+  dummy: 3                 # change to force cache invalidation
   CARGO_TERM_COLOR: always # implicitly adds '--color=always' to all cargo commands
 
 jobs:
@@ -69,7 +69,7 @@ jobs:
     - name: Create native dependencies
       run: make
     - name: Cache cargo dependencies and targets
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cargo/registry
