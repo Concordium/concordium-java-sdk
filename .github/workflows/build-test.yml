@@ -114,4 +114,4 @@ jobs:
     - name: Initialize root project
       run: mvn install -N
     - name: Build android sdk
-      run: cd concordium-android-sdk && mvn --batch-mode --update-snapshots install
+      run: cd concordium-android-sdk && mvn -e -X --batch-mode --update-snapshots install
