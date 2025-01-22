@@ -1,6 +1,6 @@
 # Changelog
 
-## 8.1.0
+## 9.0.0
 - Support for Protocol 8
 - Added `ProtocolVersion.V8` corresponding to Protocol version 8
 - Added `BakerSuspended` and `BakerResumed` transaction result events
