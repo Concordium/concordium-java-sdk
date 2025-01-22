@@ -1,7 +1,7 @@
 # Changelog
 
 ## 8.0.0
-- Support for Protocol 7
+- Support for Protocol  7
 - Added `ProtocolVersion.V7` corresponding to Protocol version 7
 - Added `cooldowns` list to `AccountInfo`
 - Added `availableBalance` to `AccountInfo`
