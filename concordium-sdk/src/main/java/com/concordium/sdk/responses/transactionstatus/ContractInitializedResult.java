@@ -5,6 +5,7 @@ import com.concordium.grpc.v2.ContractInitializedEvent;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
 import com.concordium.sdk.responses.smartcontracts.ContractVersion;
 import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.transactions.Parameter;
 import com.concordium.sdk.types.ContractAddress;
 import com.google.protobuf.ByteString;
 import lombok.*;
@@ -43,6 +44,11 @@ public final class ContractInitializedResult implements TransactionResultEvent {
     private final String initName;
 
     /**
+     * The parameter passed to the init function.
+     */
+    private final Parameter parameter;
+
+    /**
      * Events (hex encoded) as reported by the contract via the log method, in the
      * order they were reported.
      */
@@ -65,6 +71,7 @@ public final class ContractInitializedResult implements TransactionResultEvent {
                 .amount(CCDAmount.from(contractInitialized.getAmount()))
                 .version(ContractVersion.from(contractInitialized.getContractVersion()))
                 .initName(contractInitialized.getInitName().getValue())
+                .parameter(Parameter.from(contractInitialized.getParameter()))
                 .events(events)
                 .build();
     }

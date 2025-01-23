@@ -314,7 +314,7 @@ public class ClientV2GetBlockCertificatesTest {
     }
 
     // fills a byte[] of length 'len' with 'val' at every pos
-    private static byte[] bytesOfLength(int len, int val) {
+    static byte[] bytesOfLength(int len, int val) {
         val buffer = ByteBuffer.allocate(len);
         Arrays.fill(buffer.array(), (byte) val);
         return buffer.array();

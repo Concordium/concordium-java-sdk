@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Events emitted by transactions.
- * Should match <a href="https://github.com/Concordium/concordium-grpc-api/blob/7.0/branch/v2/concordium/types.proto">GRPC types.proto</a>
+ * Should match <a href="https://github.com/Concordium/concordium-grpc-api/blob/main/v2/concordium/types.proto">GRPC types.proto</a>
  */
 public enum TransactionResultEventType {
     @JsonProperty("ModuleDeployed")
@@ -33,6 +33,10 @@ public enum TransactionResultEventType {
     BAKER_KEYS_UPDATED,
     @JsonProperty("BakerDelegationRemoved")
     BAKER_DELEGATION_REMOVED,
+    @JsonProperty("BakerSuspended")
+    BAKER_SUSPENDED,
+    @JsonProperty("BakerResumed")
+    BAKER_RESUMED,
     @JsonProperty("CredentialKeysUpdated")
     CREDENTIAL_KEYS_UPDATED,
     @JsonProperty("NewEncryptedAmount")

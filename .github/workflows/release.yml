@@ -8,12 +8,12 @@ on:
   workflow_dispatch: # allow manual trigger
 
 env:
-  dummy: 2                 # change to force cache invalidation
+  dummy: 6                 # change to force cache invalidation
   CARGO_TERM_COLOR: always # implicitly adds '--color=always' to all cargo commands
 
 jobs:
   build-native-ubuntu:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     # Setup rust
@@ -24,7 +24,7 @@ jobs:
 
     # Checkout the code
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -49,7 +49,7 @@ jobs:
 
     # Checkout the code
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -74,7 +74,7 @@ jobs:
 
     # Checkout the code
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -88,13 +88,13 @@ jobs:
           path: crypto-jni\target\release\crypto_jni.dll
 
   build-native-android:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Set Up Android tools
       run: |
           ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager \
           --sdk_root=$ANDROID_SDK_ROOT \
-          "platform-tools" "platforms;android-29" "build-tools;29.0.2"
+          "platform-tools" "platforms;android-34" "build-tools;34.0.0"
     # Setup rust
     - name: Setup Rust
       uses: actions-rs/toolchain@v1
@@ -102,7 +102,7 @@ jobs:
         toolchain: 1.69
     # Checkout the code
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: recursive
     - name: Make android native dependencies
@@ -116,21 +116,23 @@ jobs:
   build-and-release-jar:
     needs: [build-native-ubuntu, build-native-macos, build-native-windows, build-native-android]
     # Use fixed OS version because we install packages on the system.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     environment: release
 
     if: ${{ !github.event.pull_request.draft }}
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: recursive
     - name: Set Up Android tools
+      # Having "tools" and "--include_obsolete"
+      # is important for com.simpligility.maven.plugins:android-maven-plugin
       run: |
           ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager \
           --sdk_root=$ANDROID_SDK_ROOT \
-          "platform-tools" "platforms;android-29" "build-tools;29.0.2"
+          "platform-tools" "tools" "platforms;android-34" "build-tools;34.0.0" --include_obsolete
     - name: Setup JDK 8
       uses: actions/setup-java@v4
       with:

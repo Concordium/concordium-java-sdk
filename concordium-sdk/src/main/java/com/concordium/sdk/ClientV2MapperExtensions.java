@@ -17,6 +17,7 @@ import com.concordium.grpc.v2.DelegatorInfo;
 import com.concordium.grpc.v2.DelegatorRewardPeriodInfo;
 import com.concordium.grpc.v2.EncryptedAmount;
 import com.concordium.grpc.v2.GasRewards;
+import com.concordium.grpc.v2.GenesisIndex;
 import com.concordium.grpc.v2.HigherLevelKeys;
 import com.concordium.grpc.v2.Memo;
 import com.concordium.grpc.v2.NextUpdateSequenceNumbers;
@@ -24,15 +25,18 @@ import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ProtocolVersion;
 import com.concordium.grpc.v2.ReleaseSchedule;
 import com.concordium.grpc.v2.*;
+import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.concordium.sdk.crypto.elgamal.ElgamalPublicKey;
 import com.concordium.sdk.crypto.pedersencommitment.PedersenCommitmentKey;
 import com.concordium.sdk.crypto.pointchevalsanders.PSPublicKey;
+import com.concordium.sdk.crypto.vrf.VRFPublicKey;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.EpochQuery;
 import com.concordium.sdk.responses.Epoch;
+import com.concordium.sdk.responses.FinalizerIndex;
 import com.concordium.sdk.responses.Round;
 import com.concordium.sdk.responses.TimeoutParameters;
 import com.concordium.sdk.responses.*;
@@ -42,6 +46,9 @@ import com.concordium.sdk.responses.accountinfo.*;
 import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
 import com.concordium.sdk.responses.bakersrewardperiod.BakerInfo;
+import com.concordium.sdk.responses.blockcertificates.QuorumSignature;
+import com.concordium.sdk.responses.blockcertificates.SuccessorProof;
+import com.concordium.sdk.responses.blockcertificates.TimeoutSignature;
 import com.concordium.sdk.responses.blockitemsummary.AccountCreationDetails;
 import com.concordium.sdk.responses.blockitemsummary.*;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
@@ -56,8 +63,13 @@ import com.concordium.sdk.responses.branch.Branch;
 import com.concordium.sdk.responses.chainparameters.ChainParametersV0;
 import com.concordium.sdk.responses.chainparameters.ChainParametersV1;
 import com.concordium.sdk.responses.chainparameters.ChainParametersV2;
+import com.concordium.sdk.responses.chainparameters.ChainParametersV3;
 import com.concordium.sdk.responses.chainparameters.CooldownParametersCpv1;
+import com.concordium.sdk.responses.chainparameters.FinalizationCommitteeParameters;
+import com.concordium.sdk.responses.chainparameters.ValidatorScoreParameters;
 import com.concordium.sdk.responses.chainparameters.*;
+import com.concordium.sdk.responses.consensusstatus.BlockSignature;
+import com.concordium.sdk.responses.consensusstatus.ConsensusDetailedStatus;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
 import com.concordium.sdk.responses.election.ElectionInfoBaker;
 import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
@@ -101,6 +113,212 @@ import static com.google.common.collect.ImmutableList.copyOf;
  * Object Mapping Extensions. Maps from GRPC types to client types and vice versa.
  */
 interface ClientV2MapperExtensions {
+
+    static com.concordium.grpc.v2.ConsensusDetailedStatusQuery to(final com.concordium.sdk.requests.ConsensusDetailedStatusQuery input) {
+        val builder = com.concordium.grpc.v2.ConsensusDetailedStatusQuery.newBuilder();
+        if (input.getGenesisIndex() != null) {
+            builder.setGenesisIndex(GenesisIndex.newBuilder().setValue(input.getGenesisIndex().getValue()).build());
+        }
+        return builder.build();
+    }
+
+    static ConsensusDetailedStatus to(final com.concordium.grpc.v2.ConsensusDetailedStatus input) {
+        val builder = ConsensusDetailedStatus.builder()
+                .genesisBlock(Hash.from(input.getGenesisBlock()))
+                .persistentRoundStatus(to(input.getPersistentRoundStatus()))
+                .roundStatus(to(input.getRoundStatus()))
+                .nonFinalizedTransactionCount(UInt64.from(input.getNonFinalizedTransactionCount()))
+                .transactionTablePurgeCounter(input.getTransactionTablePurgeCounter())
+                .blockTable(to(input.getBlockTable()))
+                .branches(to(input.getBranchesList(), ClientV2MapperExtensions::to))
+                .roundExistingBlocks(to(input.getRoundExistingBlocksList(), ClientV2MapperExtensions::to))
+                .roundExistingQCs(to(input.getRoundExistingQcsList(), ClientV2MapperExtensions::to))
+                .genesisBlockHeight(com.concordium.sdk.types.AbsoluteBlockHeight.from(input.getGenesisBlockHeight().getValue()))
+                .lastFinalizedBlock(Hash.from(input.getLastFinalizedBlock()))
+                .lastFinalizedBlockHeight(input.getLastFinalizedBlockHeight().getValue())
+                .epochBakers(to(input.getEpochBakers()));
+
+        if (input.hasLatestFinalizationEntry()) {
+            builder.latestFinalizationEntry(to(input.getLatestFinalizationEntry()));
+        }
+        if (input.hasTimeoutMessages()) {
+            builder.timeoutMessages(to(input.getTimeoutMessages()));
+        }
+        if (input.hasTerminalBlock()) {
+            builder.terminalBlock(Hash.from(input.getTerminalBlock()));
+        }
+
+        return builder.build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.RoundExistingQC to(final RoundExistingQC input) {
+        return com.concordium.sdk.responses.consensusstatus.RoundExistingQC.builder()
+                .round(Round.from(input.getRound()))
+                .epoch(Epoch.from(input.getEpoch()))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.RoundExistingBlock to(final RoundExistingBlock input) {
+        return com.concordium.sdk.responses.consensusstatus.RoundExistingBlock.builder()
+                .round(Round.from(input.getRound()))
+                .baker(to(input.getBaker()))
+                .block(Hash.from(input.getBlock()))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.BranchBlocks to(final BranchBlocks input) {
+        return com.concordium.sdk.responses.consensusstatus.BranchBlocks.builder()
+                .blocksAtBranchHeight(to(input.getBlocksAtBranchHeightList(), Hash::from))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.PersistentRoundStatus to(final com.concordium.grpc.v2.PersistentRoundStatus input) {
+        val builder = com.concordium.sdk.responses.consensusstatus.PersistentRoundStatus.builder()
+                .lastBakedRound(Round.from(input.getLastBakedRound()));
+
+        if (input.hasLastSignedQuorumMessage()) {
+            builder.lastSignedQuorumMessage(to(input.getLastSignedQuorumMessage()));
+        }
+        if (input.hasLastSignedTimeoutMessage()) {
+            builder.lastSignedTimeoutMessage(to(input.getLastSignedTimeoutMessage()));
+        }
+        if (input.hasLatestTimeout()) {
+            builder.latestTimeout(to(input.getLatestTimeout()));
+        }
+
+        return builder.build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.QuorumMessage to(final com.concordium.grpc.v2.QuorumMessage input) {
+        return com.concordium.sdk.responses.consensusstatus.QuorumMessage.builder()
+                .signature(QuorumSignature.from(input.getSignature()))
+                .block(Hash.from(input.getBlock()))
+                .finalizer(FinalizerIndex.from(input.getFinalizer()))
+                .round(Round.from(input.getRound()))
+                .epoch(Epoch.from(input.getEpoch()))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.TimeoutMessage to(final com.concordium.grpc.v2.TimeoutMessage input) {
+        return com.concordium.sdk.responses.consensusstatus.TimeoutMessage.builder()
+                .finalizer(FinalizerIndex.from(input.getFinalizer()))
+                .round(Round.from(input.getRound()))
+                .epoch(Epoch.from(input.getEpoch()))
+                .quorumCertificate(to(input.getQuorumCertificate()))
+                .signature(TimeoutSignature.from(input.getSignature()))
+                .messageSignature(BlockSignature.from(input.getMessageSignature()))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.RawQuorumCertificate to(final com.concordium.grpc.v2.RawQuorumCertificate input) {
+        return com.concordium.sdk.responses.consensusstatus.RawQuorumCertificate.builder()
+                .blockHash(Hash.from(input.getBlockHash()))
+                .round(Round.from(input.getRound()))
+                .epoch(Epoch.from(input.getEpoch()))
+                .aggregatedSignature(QuorumSignature.from(input.getAggregateSignature()))
+                .signatories(to(input.getSignatoriesList(), FinalizerIndex::from))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.RawFinalizationEntry to(final com.concordium.grpc.v2.RawFinalizationEntry input) {
+        return com.concordium.sdk.responses.consensusstatus.RawFinalizationEntry.builder()
+                .finalizedQc(to(input.getFinalizedQc()))
+                .successorQc(to(input.getSuccessorQc()))
+                .successorProof(SuccessorProof.from(input.getSuccessorProof()))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.BakersAndFinalizers to(final com.concordium.grpc.v2.BakersAndFinalizers input) {
+        return com.concordium.sdk.responses.consensusstatus.BakersAndFinalizers.builder()
+                .bakers(to(input.getBakersList(), ClientV2MapperExtensions::to))
+                .finalizers(to(input.getFinalizersList(), com.concordium.sdk.responses.BakerId::from))
+                .bakerTotalStake(CCDAmount.fromMicro(input.getBakerTotalStake().getValue()))
+                .finalizerTotalStake(CCDAmount.fromMicro(input.getFinalizerTotalStake().getValue()))
+                .finalizationCommitteeHash(Hash.from(input.getFinalizationCommitteeHash().getValue().toByteArray()))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.FullBakerInfo to(final com.concordium.grpc.v2.FullBakerInfo input) {
+        return com.concordium.sdk.responses.consensusstatus.FullBakerInfo.builder()
+                .bakerIdentity(com.concordium.sdk.responses.BakerId.from(input.getBakerIdentity()))
+                .electionVerifyKey(VRFPublicKey.from(input.getElectionVerifyKey().getValue().toByteArray()))
+                .signatureVerifyKey(ED25519PublicKey.from(input.getSignatureVerifyKey().getValue().toByteArray()))
+                .aggregationVerifyKey(BLSPublicKey.from(input.getAggregationVerifyKey().getValue().toByteArray()))
+                .stake(CCDAmount.fromMicro(input.getStake().getValue()))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.EpochBakers to(com.concordium.grpc.v2.EpochBakers input) {
+        val builder = com.concordium.sdk.responses.consensusstatus.EpochBakers.builder()
+                .previousEpochBakers(to(input.getPreviousEpochBakers()))
+                .nextPayday(to(input.getNextPayday()));
+
+        if (input.hasCurrentEpochBakers()) {
+            builder.currentEpochBakers(to(input.getCurrentEpochBakers()));
+        }
+        if (input.hasNextEpochBakers()) {
+            builder.nextEpochBakers(to(input.getNextEpochBakers()));
+        }
+
+        return builder.build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.TimeoutMessages to(com.concordium.grpc.v2.TimeoutMessages input) {
+        return com.concordium.sdk.responses.consensusstatus.TimeoutMessages.builder()
+                .firstEpoch(Epoch.from(input.getFirstEpoch()))
+                .firstEpochTimeouts(to(input.getFirstEpochTimeoutsList(), ClientV2MapperExtensions::to))
+                .secondEpochTimeouts(to(input.getSecondEpochTimeoutsList(), ClientV2MapperExtensions::to))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.BlockTableSummary to(com.concordium.grpc.v2.BlockTableSummary input) {
+        return com.concordium.sdk.responses.consensusstatus.BlockTableSummary.builder()
+                .deadBlockCacheSize(UInt64.from(input.getDeadBlockCacheSize()))
+                .liveBlocks(to(input.getLiveBlocksList(), Hash::from))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.RawFinalizerRound to(RawFinalizerRound input) {
+        return com.concordium.sdk.responses.consensusstatus.RawFinalizerRound.builder()
+                .round(Round.from(input.getRound()))
+                .finalizers(to(input.getFinalizersList(), FinalizerIndex::from))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.RawTimeoutCertificate to(RawTimeoutCertificate input) {
+        return com.concordium.sdk.responses.consensusstatus.RawTimeoutCertificate.builder()
+                .round(Round.from(input.getRound().getValue()))
+                .minEpoch(Epoch.from(input.getMinEpoch()))
+                .qcRoundsFirstEpoch(to(input.getQcRoundsFirstEpochList(), ClientV2MapperExtensions::to))
+                .qcRoundsSecondEpoch(to(input.getQcRoundsSecondEpochList(), ClientV2MapperExtensions::to))
+                .aggregateSignature(TimeoutSignature.from(input.getAggregateSignature()))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.RoundTimeout to(RoundTimeout input) {
+        return com.concordium.sdk.responses.consensusstatus.RoundTimeout.builder()
+                .timeoutCertificate(to(input.getTimeoutCertificate()))
+                .quorumCertificate(to(input.getQuorumCertificate()))
+                .build();
+    }
+
+    static com.concordium.sdk.responses.consensusstatus.RoundStatus to(RoundStatus input) {
+        val builder = com.concordium.sdk.responses.consensusstatus.RoundStatus.builder()
+                .currentRound(Round.from(input.getCurrentRound()))
+                .highestCertifiedBlock(to(input.getHighestCertifiedBlock()))
+                .roundEligibleToBake(input.getRoundEligibleToBake())
+                .currentEpoch(Epoch.from(input.getCurrentEpoch()))
+                .currentTimeout(to(input.getCurrentTimeout()));
+
+        if (input.hasPreviousRoundTimeout()) {
+            builder.previousRoundTimeout(to(input.getPreviousRoundTimeout()));
+        }
+        if (input.hasLastEpochFinalizationEntry()) {
+            builder.lastEpochFinalizationEntry(to(input.getLastEpochFinalizationEntry()));
+        }
+
+        return builder.build();
+    }
 
     static com.concordium.grpc.v2.BlockHashInput to(final BlockQuery input) {
         BlockHashInput.Builder builder = BlockHashInput.newBuilder();
@@ -228,6 +446,9 @@ interface ClientV2MapperExtensions {
             case V2:
                 val v2Params = parameters.getV2();
                 return ChainParametersV2.from(v2Params);
+            case V3:
+                val v3Params = parameters.getV3();
+                return ChainParametersV3.from(v3Params);
             case PARAMETERS_NOT_SET:
                 throw new IllegalArgumentException("Unexpected parameters version");
 
@@ -381,6 +602,7 @@ interface ClientV2MapperExtensions {
                 .stakedAmount(to(stake.getStakedAmount()))
                 .bakerPoolInfo(to(stake.getPoolInfo()))
                 .bakerInfo(BakerInfo.from(stake.getBakerInfo()))
+                .isSuspended(stake.getIsSuspended())
                 .build();
     }
 
@@ -1184,6 +1406,20 @@ interface ClientV2MapperExtensions {
                         .finalizationReward(CCDAmount.fromMicro(paydayPoolReward.getFinalizationReward().getValue()));
                 return result.build();
             }
+            case VALIDATOR_SUSPENDED: {
+                val validatorSuspended = event.getValidatorSuspended();
+                return ValidatorSuspended.builder()
+                        .account(to(validatorSuspended.getAccount()))
+                        .bakerId(to(validatorSuspended.getBakerId()))
+                        .build();
+            }
+            case VALIDATOR_PRIMED_FOR_SUSPENSION: {
+                val validatorPrimedForSuspension = event.getValidatorPrimedForSuspension();
+                return ValidatorPrimedForSuspension.builder()
+                        .account(to(validatorPrimedForSuspension.getAccount()))
+                        .bakerId(to(validatorPrimedForSuspension.getBakerId()))
+                        .build();
+            }
             default:
                 throw new IllegalStateException("Unexpected value: " + event.getEventCase());
         }
@@ -1262,6 +1498,9 @@ interface ClientV2MapperExtensions {
                         ? to(grpcOutput.getCurrentPaydayInfo())
                         : null)
                 .allPoolTotalCapital(to(grpcOutput.getAllPoolTotalCapital()))
+                .isSuspended(grpcOutput.hasIsSuspended()
+                        ? grpcOutput.getIsSuspended()
+                        : null)
                 .build();
     }
 
@@ -1283,7 +1522,7 @@ interface ClientV2MapperExtensions {
     }
 
     static @NonNull CurrentPaydayStatus to(PoolCurrentPaydayInfo currentPaydayInfo) {
-        return CurrentPaydayStatus.builder()
+        val builder = CurrentPaydayStatus.builder()
                 .bakerEquityCapital(to(currentPaydayInfo.getBakerEquityCapital()))
                 .blocksBaked(UInt64.from(currentPaydayInfo.getBlocksBaked()))
                 .delegatedCapital(to(currentPaydayInfo.getDelegatedCapital()))
@@ -1291,8 +1530,16 @@ interface ClientV2MapperExtensions {
                 .finalizationLive(currentPaydayInfo.getFinalizationLive())
                 .lotteryPower(currentPaydayInfo.getLotteryPower())
                 .transactionFeesEarned(to(currentPaydayInfo.getTransactionFeesEarned()))
-                .commissionRates(CommissionRates.from(currentPaydayInfo.getCommissionRates()))
-                .build();
+                .commissionRates(CommissionRates.from(currentPaydayInfo.getCommissionRates()));
+
+        if (currentPaydayInfo.hasMissedRounds()) {
+            builder.missedRounds(UInt64.from(currentPaydayInfo.getMissedRounds()));
+        }
+        if (currentPaydayInfo.hasIsPrimedForSuspension()) {
+            builder.isPrimedForSuspension(currentPaydayInfo.getIsPrimedForSuspension());
+        }
+
+        return builder.build();
     }
 
     static com.concordium.sdk.responses.intanceinfo.InstanceInfo to(com.concordium.grpc.v2.InstanceInfo instanceInfo) {
@@ -1354,6 +1601,7 @@ interface ClientV2MapperExtensions {
                 .minBlockTime(to(grpcOutput.getMinBlockTime()))
                 .blockEnergyLimit(to(grpcOutput.getBlockEnergyLimit()))
                 .finalizationCommitteeParameters(to(grpcOutput.getFinalizationCommitteeParameters()))
+                .validatorScoreParameters(to(grpcOutput.getValidatorScoreParameters()))
                 .build();
     }
 
@@ -1496,6 +1744,18 @@ interface ClientV2MapperExtensions {
                         .effectiveTime(to(u.getEffectiveTime()))
                         .type(PendingUpdateType.BlockEnergyLimit)
                         .update(to(u.getBlockEnergyLimit()))
+                        .build();
+            case FINALIZATION_COMMITTEE_PARAMETERS:
+                return PendingUpdateV2.<FinalizationCommitteeParameters>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.FinalizationCommitteeParameters)
+                        .update(FinalizationCommitteeParameters.from(u.getFinalizationCommitteeParameters()))
+                        .build();
+            case VALIDATOR_SCORE_PARAMETERS:
+                return PendingUpdateV2.<ValidatorScoreParameters>builder()
+                        .effectiveTime(to(u.getEffectiveTime()))
+                        .type(PendingUpdateType.ValidatorScoreParameters)
+                        .update(ValidatorScoreParameters.from(u.getValidatorScoreParameters()))
                         .build();
             default:
             case EFFECT_NOT_SET:

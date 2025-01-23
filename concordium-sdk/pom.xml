@@ -7,7 +7,7 @@
     <parent>
     <groupId>com.concordium.sdk</groupId>
         <artifactId>concordium-sdk-base</artifactId>
-        <version>8.0.0</version>
+        <version>9.0.0</version>
     </parent>
 
     <groupId>com.concordium.sdk</groupId>
@@ -95,11 +95,6 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jdk8</artifactId>
             <version>2.13.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.semver4j</groupId>
-            <artifactId>semver4j</artifactId>
-            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

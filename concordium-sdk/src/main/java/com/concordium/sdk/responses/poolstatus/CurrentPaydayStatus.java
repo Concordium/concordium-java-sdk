@@ -6,6 +6,8 @@ import com.concordium.sdk.types.UInt64;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Optional;
+
 @Data
 @Builder
 public class CurrentPaydayStatus {
@@ -49,4 +51,24 @@ public class CurrentPaydayStatus {
      * The commission rates that apply for the current reward period.
      */
     private final CommissionRates commissionRates;
+
+    /**
+     * A flag indicating whether the pool owner is primed for suspension.
+     * Absent if the protocol version does not support validator suspension.
+     */
+    private final Boolean isPrimedForSuspension;
+
+    public Optional<Boolean> isPrimedForSuspension() {
+        return Optional.ofNullable(isPrimedForSuspension);
+    }
+
+    /**
+     * The number of missed rounds in the current reward period.
+     * Absent if the protocol version does not support validator suspension.
+     */
+    private final UInt64 missedRounds;
+
+    public Optional<UInt64> getMissedRounds() {
+        return Optional.ofNullable(missedRounds);
+    }
 }

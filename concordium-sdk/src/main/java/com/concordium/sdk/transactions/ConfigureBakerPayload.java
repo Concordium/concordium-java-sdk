@@ -57,6 +57,11 @@ public class ConfigureBakerPayload {
      * The supplied value is interpreted as "the value" / 100_000
      */
     private final PartsPerHundredThousand finalizationRewardCommission;
+    /**
+     * Whether the validator is suspended.
+     * This is only supported from protocol version 8 onwards
+     */
+    private final Boolean suspended;
 
     ByteBuffer createNotNullBuffer(byte[] bufferBytes) {
         val buffer = ByteBuffer.allocate(bufferBytes.length);
@@ -83,6 +88,8 @@ public class ConfigureBakerPayload {
         bitValue |= (!Objects.isNull(this.bakingRewardCommission) ? it : 0);
         it *= 2;
         bitValue |= (!Objects.isNull(this.finalizationRewardCommission) ? it : 0);
+        it *= 2;
+        bitValue |= (!Objects.isNull(this.suspended) ? it : 0);
 
         return UInt16.from(bitValue).getBytes();
     }
@@ -98,6 +105,7 @@ public class ConfigureBakerPayload {
         ByteBuffer transactionFeeCommissionBuffer = ByteBuffer.allocate(bufferLength);
         ByteBuffer bakingRewardCommissionBuffer = ByteBuffer.allocate(bufferLength);
         ByteBuffer finalizationRewardCommissionBuffer = ByteBuffer.allocate(bufferLength);
+        ByteBuffer suspendedBuffer = ByteBuffer.allocate(bufferLength);
 
         byte[] bitMapBytes = getBitMapBytes();
         bufferLength += UInt16.BYTES;
@@ -152,6 +160,12 @@ public class ConfigureBakerPayload {
             bufferLength += UInt32.BYTES;
         }
 
+        if (this.suspended != null) {
+            val suspendedByte = (byte) (this.suspended ? 1 : 0);
+            suspendedBuffer = createNotNullBuffer(new byte[]{suspendedByte});
+            bufferLength += TransactionType.BYTES;
+        }
+
         val buffer = ByteBuffer.allocate(bufferLength);
 
         buffer.put(bitMapBytes);
@@ -165,6 +179,7 @@ public class ConfigureBakerPayload {
         buffer.put(transactionFeeCommissionBuffer.array());
         buffer.put(bakingRewardCommissionBuffer.array());
         buffer.put(finalizationRewardCommissionBuffer.array());
+        buffer.put(suspendedBuffer.array());
 
         return buffer.array();
     }

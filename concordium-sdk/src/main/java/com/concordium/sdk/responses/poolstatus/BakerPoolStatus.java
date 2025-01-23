@@ -61,6 +61,12 @@ public class BakerPoolStatus {
      */
     private final CCDAmount allPoolTotalCapital;
 
+    /**
+     * A flag indicating whether the pool owner is suspended.
+     * Absent if the protocol version does not support validator suspension or the pool is removed.
+     */
+    private final Boolean isSuspended;
+
     public Optional<CCDAmount> getBakerEquityCapital() {
         return Optional.ofNullable(bakerEquityCapital);
     }
@@ -83,5 +89,9 @@ public class BakerPoolStatus {
 
     public Optional<CurrentPaydayStatus> getCurrentPaydayStatus() {
         return Optional.ofNullable(currentPaydayStatus);
+    }
+
+    public Optional<Boolean> isSuspended() {
+        return Optional.ofNullable(isSuspended);
     }
 }

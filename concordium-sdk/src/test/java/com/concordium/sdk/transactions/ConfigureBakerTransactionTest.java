@@ -120,4 +120,24 @@ public class ConfigureBakerTransactionTest {
         StringWriter stringWriter = new StringWriter();
         BakerKeys.createBakerKeys().createBakerCredentials(stringWriter, BakerId.from(0));
     }
+
+    @SneakyThrows
+    @Test
+    public void shouldConfigureSuspendedBakerTest() {
+        val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
+
+        val payload = ConfigureBakerPayload.builder()
+                .suspended(true)
+                .build();
+
+        val transaction = TransactionFactory.newConfigureBaker()
+                .sender(accountAddress)
+                .nonce(Nonce.from(123))
+                .expiry(Expiry.from(413223))
+                .signer(TransactionTestHelper.getValidSigner())
+                .payload(payload)
+                .build();
+
+        assertEquals(203, transaction.getVersionedBytes().length);
+    }
 }

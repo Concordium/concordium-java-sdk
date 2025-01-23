@@ -51,6 +51,7 @@ public class ClientV2GetNextUpdateSequenceNumbersTest {
             .setMinBlockTime(toSeqNo(18))
             .setBlockEnergyLimit(toSeqNo(19))
             .setFinalizationCommitteeParameters(toSeqNo(20))
+            .setValidatorScoreParameters(toSeqNo(21))
             .build();
     private static final com.concordium.sdk.responses.NextUpdateSequenceNumbers EXPECTED
             = com.concordium.sdk.responses.NextUpdateSequenceNumbers.builder()
@@ -74,6 +75,7 @@ public class ClientV2GetNextUpdateSequenceNumbersTest {
             .minBlockTime(toNonce(18))
             .blockEnergyLimit(toNonce(19))
             .finalizationCommitteeParameters(toNonce(20))
+            .validatorScoreParameters(toNonce(21))
             .build();
     private static final QueriesGrpc.QueriesImplBase serviceImpl = mock(QueriesGrpc.QueriesImplBase.class, delegatesTo(
             new QueriesGrpc.QueriesImplBase() {

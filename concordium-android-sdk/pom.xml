@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.concordium.sdk</groupId>
         <artifactId>concordium-sdk-base</artifactId>
-        <version>8.0.0</version>
+        <version>9.0.0</version>
     </parent>
 
     <artifactId>concordium-android-sdk</artifactId>
@@ -265,7 +265,7 @@
                         <debuggable>true</debuggable>
                     </manifest>
                     <sdk>
-                        <platform>29</platform>
+                        <platform>34</platform>
                     </sdk>
                     <nativeLibrariesDirectory>${project.basedir}/native</nativeLibrariesDirectory>
                 </configuration>

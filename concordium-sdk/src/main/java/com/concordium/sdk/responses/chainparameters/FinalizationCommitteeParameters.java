@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * Finalization committee parameters for {@link ChainParametersV2}
+ * Finalization committee parameters used from protocol version 6.
  */
 @EqualsAndHashCode
 @Getter

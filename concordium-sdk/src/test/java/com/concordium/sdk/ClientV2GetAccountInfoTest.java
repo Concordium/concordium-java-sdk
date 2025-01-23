@@ -131,6 +131,7 @@ public class ClientV2GetAccountInfoTest {
         val bakerInfoBuilder = AccountStakingInfo.Baker.newBuilder()
                 .setStakedAmount(Amount.newBuilder().setValue(STAKED_AMOUNT).build())
                 .setRestakeEarnings(RESTAKE_EARNINGS)
+                .setIsSuspended(false)
                 .setBakerInfo(BakerInfo.newBuilder()
                         .setBakerId(BakerId.newBuilder().setValue(BAKER_ID).build())
                         .setAggregationKey(BakerAggregationVerifyKey.newBuilder()
@@ -299,6 +300,7 @@ public class ClientV2GetAccountInfoTest {
                         stakedAmount(CCDAmount.fromMicro(STAKED_AMOUNT)).
                         restakeEarnings(RESTAKE_EARNINGS).
                         pendingChange(pendingChange).
+                        isSuspended(false).
                         bakerInfo(com.concordium.sdk.responses.bakersrewardperiod.BakerInfo.builder().
                                 bakerId(com.concordium.sdk.responses.BakerId.from(BAKER_ID)).
                                 bakerAggregationVerifyKey(BLSPublicKey.from(BAKER_AGGREGATION_KEY)).
