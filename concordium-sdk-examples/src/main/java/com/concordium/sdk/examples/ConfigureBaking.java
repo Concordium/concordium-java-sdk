@@ -72,6 +72,7 @@ public class ConfigureBaking implements Callable<Integer> {
                         .keysWithProofs(
                                 ConfigureBakerKeysPayload
                                         .getNewConfigureBakerKeysPayload(sender, bakerkeys))
+                        .suspended(false)
                         .build())
                 .build();
         Hash hash = client.sendTransaction(tx);
