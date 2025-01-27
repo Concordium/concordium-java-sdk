@@ -465,15 +465,15 @@ public class ClientV2GetAccountInfoTest {
     public void mapOpenStatusTest() {
         assertEquals(
                 com.concordium.sdk.responses.transactionstatus.OpenStatus.OPEN_FOR_ALL,
-                ClientV2MapperExtensions.to(OpenStatus.OPEN_STATUS_OPEN_FOR_ALL));
+                com.concordium.sdk.responses.transactionstatus.OpenStatus.from(OpenStatus.OPEN_STATUS_OPEN_FOR_ALL));
 
         assertEquals(
                 com.concordium.sdk.responses.transactionstatus.OpenStatus.CLOSED_FOR_ALL,
-                ClientV2MapperExtensions.to(OpenStatus.OPEN_STATUS_CLOSED_FOR_ALL));
+                com.concordium.sdk.responses.transactionstatus.OpenStatus.from(OpenStatus.OPEN_STATUS_CLOSED_FOR_ALL));
 
         assertEquals(
                 com.concordium.sdk.responses.transactionstatus.OpenStatus.CLOSED_FOR_NEW,
-                ClientV2MapperExtensions.to(OpenStatus.OPEN_STATUS_CLOSED_FOR_NEW));
+                com.concordium.sdk.responses.transactionstatus.OpenStatus.from(OpenStatus.OPEN_STATUS_CLOSED_FOR_NEW));
     }
 
     @Test

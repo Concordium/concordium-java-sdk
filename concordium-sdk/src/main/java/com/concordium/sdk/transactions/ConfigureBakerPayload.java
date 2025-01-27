@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.responses.transactionstatus.OpenStatus;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt32;
@@ -32,7 +33,7 @@ public class ConfigureBakerPayload {
     /**
      * Whether the pool is open for delegators.
      */
-    private final Boolean openForDelegation;
+    private final OpenStatus openForDelegation;
     /**
      * The key/proof pairs to verify the baker.
      */
@@ -83,7 +84,7 @@ public class ConfigureBakerPayload {
         it *= 2;
         bitValue |= ((this.metadataUrl != null) ? it : 0);
         it *= 2;
-        bitValue |= (!Objects.isNull(this.transactionFeeCommission ) ? it : 0);
+        bitValue |= (!Objects.isNull(this.transactionFeeCommission) ? it : 0);
         it *= 2;
         bitValue |= (!Objects.isNull(this.bakingRewardCommission) ? it : 0);
         it *= 2;
@@ -123,7 +124,20 @@ public class ConfigureBakerPayload {
         }
 
         if (this.openForDelegation != null) {
-            val openForDelegationByte = (byte) (this.openForDelegation ? 1 : 0);
+            byte openForDelegationByte;
+            switch (this.openForDelegation) {
+                case OPEN_FOR_ALL:
+                    openForDelegationByte = 0;
+                    break;
+                case CLOSED_FOR_NEW:
+                    openForDelegationByte = 1;
+                    break;
+                case CLOSED_FOR_ALL:
+                    openForDelegationByte = 2;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unrecognized open status " + this.openForDelegation);
+            }
             openForDelegationBuffer = createNotNullBuffer(new byte[]{openForDelegationByte});
             bufferLength += TransactionType.BYTES;
         }

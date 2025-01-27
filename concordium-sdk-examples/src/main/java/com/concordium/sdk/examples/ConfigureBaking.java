@@ -9,6 +9,7 @@ import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
+import com.concordium.sdk.responses.transactionstatus.OpenStatus;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AccountAddress;
@@ -63,7 +64,7 @@ public class ConfigureBaking implements Callable<Integer> {
                 .sender(sender)
                 .payload(ConfigureBakerPayload.builder()
                         .capital(CCDAmount.from(10000))
-                        .openForDelegation(true)
+                        .openForDelegation(OpenStatus.OPEN_FOR_ALL)
                         .restakeEarnings(true)
                         .bakingRewardCommission(PartsPerHundredThousand.from(5000))
                         .finalizationRewardCommission(PartsPerHundredThousand.from(100000))
