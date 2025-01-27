@@ -79,7 +79,6 @@ import com.concordium.sdk.responses.poolstatus.PendingChangeRemovePool;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.smartcontracts.ContractVersion;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
-import com.concordium.sdk.responses.transactionstatus.OpenStatus;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.InitContractPayload;
@@ -631,22 +630,9 @@ interface ClientV2MapperExtensions {
     static BakerPoolInfo to(com.concordium.grpc.v2.BakerPoolInfo poolInfo) {
         return BakerPoolInfo.builder()
                 .metadataUrl(poolInfo.getUrl())
-                .openStatus(to(poolInfo.getOpenStatus()))
+                .openStatus(com.concordium.sdk.responses.transactionstatus.OpenStatus.from(poolInfo.getOpenStatus()))
                 .commissionRates(CommissionRates.from(poolInfo.getCommissionRates()))
                 .build();
-    }
-
-    static OpenStatus to(com.concordium.grpc.v2.OpenStatus openStatus) {
-        switch (openStatus) {
-            case OPEN_STATUS_OPEN_FOR_ALL:
-                return OpenStatus.OPEN_FOR_ALL;
-            case OPEN_STATUS_CLOSED_FOR_NEW:
-                return OpenStatus.CLOSED_FOR_NEW;
-            case OPEN_STATUS_CLOSED_FOR_ALL:
-                return OpenStatus.CLOSED_FOR_ALL;
-            default:
-                throw new IllegalArgumentException();
-        }
     }
 
     static com.concordium.sdk.responses.AccountIndex to(AccountIndex index) {

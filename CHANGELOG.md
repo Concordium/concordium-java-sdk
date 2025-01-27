@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Changed `openForDelegation` field in `ConfigureBakerPayload` from `boolean` to `OpenStatus`:
+  what used to be `false` is now `OpenStatus.OPEN_FOR_ALL`,
+  what used to be `true` is now `OpenStatus.CLOSED_FOR_NEW`,
+  and it is now possible to set `OpenStatus.CLOSED_FOR_ALL` as well
+
 ## 9.0.0
 - Support for Protocol 8
 - Added `ProtocolVersion.V8` corresponding to Protocol version 8

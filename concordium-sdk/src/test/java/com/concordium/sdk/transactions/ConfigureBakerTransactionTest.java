@@ -2,10 +2,10 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
 import com.concordium.sdk.responses.BakerId;
+import com.concordium.sdk.responses.transactionstatus.OpenStatus;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
-import com.concordium.sdk.types.UInt32;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class ConfigureBakerTransactionTest {
         val payload = ConfigureBakerPayload.builder()
                 .capital(CCDAmount.fromMicro("14000000000"))
                 .restakeEarnings(true)
-                .openForDelegation(false)
+                .openForDelegation(OpenStatus.OPEN_FOR_ALL)
                 .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, bakerKeys))
                 .metadataUrl("abc@xyz.com")
                 .transactionFeeCommission(PartsPerHundredThousand.from(10000))
@@ -74,7 +74,7 @@ public class ConfigureBakerTransactionTest {
         val payload = ConfigureBakerPayload.builder()
                 .capital(CCDAmount.fromMicro("14000000000"))
                 .restakeEarnings(true)
-                .openForDelegation(false)
+                .openForDelegation(OpenStatus.OPEN_FOR_ALL)
                 .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, BakerKeys.createBakerKeys()))
                 .transactionFeeCommission(PartsPerHundredThousand.from(10000))
                 .bakingRewardCommission(PartsPerHundredThousand.from(10000))
