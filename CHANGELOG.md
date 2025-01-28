@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 10.0.0
 
 - Changed `openForDelegation` field in `ConfigureBakerPayload` from `boolean` to `OpenStatus`:
   what used to be `false` is now `OpenStatus.OPEN_FOR_ALL`,
