@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added `getPassiveDelegationInfo` endpoint providing information 
+  about the passive delegators at the end of a given block
+
 ## 10.0.0
 
 - Changed `openForDelegation` field in `ConfigureBakerPayload` from `boolean` to `OpenStatus`:
