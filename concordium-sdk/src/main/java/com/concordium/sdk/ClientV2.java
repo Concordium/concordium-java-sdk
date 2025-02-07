@@ -228,7 +228,6 @@ public final class ClientV2 {
      * of the chain from the perspective of the node.
      *
      * @return the Consensus Status ({@link ConsensusStatus})
-     *
      * @see ClientV2#getConsensusDetailedStatus(ConsensusDetailedStatusQuery)
      */
     public ConsensusStatus getConsensusInfo() {
@@ -247,7 +246,6 @@ public final class ClientV2 {
      *                                        <li> {@link io.grpc.Status#INVALID_ARGUMENT} if the query specifies a genesis index at consensus version 0</li>
      *                                        <li> {@link io.grpc.Status#UNIMPLEMENTED} if the endpoint is disabled on the node</li>
      *                                        </ul>
-     *
      * @see ClientV2#getConsensusInfo()
      */
     public ConsensusDetailedStatus getConsensusDetailedStatus(final ConsensusDetailedStatusQuery query) {
@@ -260,7 +258,7 @@ public final class ClientV2 {
      * scheduled release for that account. (Note, this only identifies accounts by index, and
      * only indicates the first pending release for each account.)
      */
-    public Iterator<AccountPending> getScheduledReleaseAccounts(BlockQuery input){
+    public Iterator<AccountPending> getScheduledReleaseAccounts(BlockQuery input) {
         return this.server().getScheduledReleaseAccounts(to(input));
     }
 
@@ -270,7 +268,7 @@ public final class ClientV2 {
      * and only indicates the first pending cooldown for each account.)
      * Prior to protocol version 7, the resulting stream will always be empty.
      */
-    public Iterator<AccountPending> getCooldownAccounts (BlockQuery input){
+    public Iterator<AccountPending> getCooldownAccounts(BlockQuery input) {
         return this.server().getCooldownAccounts(to(input));
     }
 
@@ -279,7 +277,7 @@ public final class ClientV2 {
      * (This only identifies accounts by index.)
      * Prior to protocol version 7, the resulting stream will always be empty.
      */
-    public Iterator<AccountIndex> getPreCooldownAccounts (BlockQuery input){
+    public Iterator<AccountIndex> getPreCooldownAccounts(BlockQuery input) {
         val grpcOutput = this.server().getPreCooldownAccounts(to(input));
         return to(grpcOutput, ClientV2MapperExtensions::to);
     }
@@ -289,7 +287,7 @@ public final class ClientV2 {
      * (This only identifies accounts by index.)
      * Prior to protocol version 7, the resulting stream will always be empty.
      */
-    public Iterator<AccountIndex> getPrePreCooldownAccounts (BlockQuery input){
+    public Iterator<AccountIndex> getPrePreCooldownAccounts(BlockQuery input) {
         val grpcOutput = this.server().getPrePreCooldownAccounts(to(input));
         return to(grpcOutput, ClientV2MapperExtensions::to);
     }
@@ -625,6 +623,15 @@ public final class ClientV2 {
     }
 
     /**
+     * Get information about the passive delegators at the end of a given block.
+     *
+     * @param input {@link BlockQuery}
+     */
+    public PassiveDelegationInfo getPassiveDelegationInfo(BlockQuery input) {
+        return this.server().getPassiveDelegationInfo(to(input));
+    }
+
+    /**
      * Get next available sequence numbers for updating chain parameters after a given block.
      *
      * @param input {@link BlockQuery}.
@@ -667,7 +674,7 @@ public final class ClientV2 {
      * In contrast to {@link ClientV2#getInstanceState(BlockQuery, ContractAddress)} this is more efficient,
      * but requires the user to know the specific key to look for.
      *
-     * @param input           {@link BlockHashInput}.
+     * @param input           {@link BlockQuery}.
      * @param contractAddress {@link ContractAddress}.
      * @param key             Instance State Key to Lookup.
      * @return Instance State Value for the input `key`
