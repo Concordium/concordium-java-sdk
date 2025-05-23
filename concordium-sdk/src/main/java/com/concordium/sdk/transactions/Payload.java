@@ -118,9 +118,9 @@ public abstract class Payload {
      * @param transactionSpecificCost cost of the specific transaction type.
      * @return the computed cost.
      */
-    private static UInt64 calculateEnergyCost(int noOfSignatures,
-                                              int payloadSize,
-                                              UInt64 transactionSpecificCost) {
+    public static UInt64 calculateEnergyCost(int noOfSignatures,
+                                             int payloadSize,
+                                             UInt64 transactionSpecificCost) {
         return UInt64.from((long)
                 CONSTANT_A * noOfSignatures +
                 CONSTANT_B * (TRANSACTION_HEADER_SIZE + payloadSize)

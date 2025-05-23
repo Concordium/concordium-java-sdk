@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.concordium.sdk</groupId>
             <artifactId>concordium-sdk</artifactId>
-            <version>10.0.0-SNAPSHOT</version>
+            <version>10.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

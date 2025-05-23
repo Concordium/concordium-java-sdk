@@ -19,7 +19,7 @@ public enum TransactionTypeCost {
     /**
      * Constant representing the cost of configuring delegation
      */
-    CONFIGURE_DELEGATION(500),
+    CONFIGURE_DELEGATION(300),
 
     /**
      * Constant representing the cost of encrypted transfer
