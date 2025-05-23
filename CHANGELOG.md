@@ -4,6 +4,7 @@
 
 - Added `getPassiveDelegationInfo` endpoint providing information 
   about the passive delegators at the end of a given block
+- Exposed `Payload.calculateEnergyCost`
 
 ## 10.0.0
 
