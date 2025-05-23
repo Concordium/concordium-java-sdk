@@ -16,24 +16,14 @@ In order to release the SDK on Maven Central, do the following.
 4. Tag the commit in the following format: `v.X.Y.Z`
 5. Manually trigger the `Release` workflow for the tag.
    [Ask for approval](https://github.com/orgs/Concordium/teams/java-sdk-publishers) for the last part of the workflow
-6. Change all the SDK artifacts version to `SNAPSHOT` for further development:
-   from the root of the repository invoke
-   ```
-   mvn versions:set -DnewVersion=$VERSION-SNAPSHOT
-   ```
-   where `$VERSION` is the just released version.
-   This should set the desired version in the various [pom.xml](pom.xml) files, including
-   the [pom.xml](concordium-sdk/pom.xml) in [concordium-sdk](concordium-sdk) and
-   the [pom.xml](concordium-android-sdk/pom.xml) in [concordium-android-sdk/](concordium-android-sdk)
-7. Commit the version update
-8. Merge (squash) the release branch into `main`
-9. Sign in to https://s01.oss.sonatype.org/ (credentials can be found in Bitwarden)
-10. In the Build Promotion menu in the left select the Staging Repositories item
-11. Select the Concordium repository
-12. "Close" the selected repository to prepare it for release
-13. Once the closing is complete, "Release" it
-14. Wait for the version to appear under https://repo1.maven.org/maven2/com/concordium/sdk/
-15. Manually add Changelog entries of this version to the GitHub release,
+6. Merge (squash) the release branch into `main`
+7. Sign in to https://s01.oss.sonatype.org/ (credentials can be found in Bitwarden)
+8. In the Build Promotion menu in the left select the Staging Repositories item
+9. Select the Concordium repository
+10. "Close" the selected repository to prepare it for release
+11. Once the closing is complete, "Release" it
+12. Wait for the version to appear under https://repo1.maven.org/maven2/com/concordium/sdk/
+13. Manually add Changelog entries of this version to the GitHub release,
     which was automatically created by the `Release` workflow
 
 The released artifacts must become available here:
