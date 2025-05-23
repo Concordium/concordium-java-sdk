@@ -4,7 +4,8 @@
 
 - Added `getPassiveDelegationInfo` endpoint providing information 
   about the passive delegators at the end of a given block
-- Exposed `Payload.calculateEnergyCost`
+- Exposed `Payload.calculateEnergyCost` method
+- Fixed base cost of `ConfigureDelegation` transaction being bigger than needed
 
 ## 10.0.0
 
