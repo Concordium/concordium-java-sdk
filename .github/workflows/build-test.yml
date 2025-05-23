@@ -57,7 +57,7 @@ jobs:
         #token: ${{ secrets.CONCORDIUM_CI }}
         submodules: recursive
     - name: Setup JDK 8
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
         java-version: 8
         distribution: 'adopt'
@@ -102,7 +102,7 @@ jobs:
       with:
         submodules: recursive
     - name: Setup JDK 8
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
         java-version: 8
         distribution: 'adopt'
