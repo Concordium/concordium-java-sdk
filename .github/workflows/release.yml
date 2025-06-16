@@ -191,16 +191,16 @@ jobs:
         distribution: 'adopt'
         java-version: '8'
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: MAVEN_CENTRAL_USERNAME # env variable for username in deploy
+        server-username: MAVEN_USERNAME # env variable for username in deploy
         server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
         gpg-private-key: ${{ secrets.SONATYPE_PKEY }} # Value of the GPG private key to import
-        gpg-passphrase:  GPG_PASSPHRASE # Passphrase for the GPG private key
+        gpg-passphrase:  MAVEN_GPG_PASSPHRASE # Passphrase for the GPG private key
     - name: Publish java package to central maven repository
       run: cd concordium-sdk && mvn --batch-mode deploy -Pdeploy
       env:
         MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-        MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
-        GPG_PASSPHRASE: ${{secrets.SONATYPE_PHRASE }}
+        MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+        MAVEN_GPG_PASSPHRASE: ${{secrets.SONATYPE_PHRASE }}
     - name: Copy javadocs and sources for android
       run: >
         mkdir -p concordium-android-sdk/target
