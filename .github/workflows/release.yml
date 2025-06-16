@@ -178,13 +178,13 @@ jobs:
         without-checkout: true
         project: maven
         custom-command: cd concordium-sdk && mvn javadoc:javadoc -f pom.xml # Generates javadoc from the delombok'ed code
-    - name: Release github
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          concordium-sdk/target/*-with-dependencies.jar
-          concordium-sdk/target/*-javadoc.jar
-          concordium-sdk/target/*-sources.jar
+#    - name: Release github
+#      uses: softprops/action-gh-release@v1
+#      with:
+#        files: |
+#          concordium-sdk/target/*-with-dependencies.jar
+#          concordium-sdk/target/*-javadoc.jar
+#          concordium-sdk/target/*-sources.jar
     - name: Setup and maven central
       uses: actions/setup-java@v4
       with: # running setup-java again overwrites the settings.xml
