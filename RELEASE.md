@@ -17,14 +17,9 @@ In order to release the SDK on Maven Central, do the following.
 5. Manually trigger the `Release` workflow for the tag.
    [Ask for approval](https://github.com/orgs/Concordium/teams/java-sdk-publishers) for the last part of the workflow
 6. Merge (squash) the release branch into `main`
-7. Sign in to https://s01.oss.sonatype.org/ (credentials can be found in Bitwarden)
-8. In the Build Promotion menu in the left select the Staging Repositories item
-9. Select the Concordium repository
-10. "Close" the selected repository to prepare it for release
-11. Once the closing is complete, "Release" it
-12. Wait for the version to appear under https://repo1.maven.org/maven2/com/concordium/sdk/
-13. Manually add Changelog entries of this version to the GitHub release,
-    which was automatically created by the `Release` workflow
+7. Wait for the version to appear under https://repo1.maven.org/maven2/com/concordium/sdk/
+8. Manually add Changelog entries of this version to the GitHub release,
+   which was automatically created by the `Release` workflow
 
 The released artifacts must become available here:
 
