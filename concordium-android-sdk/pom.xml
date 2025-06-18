@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.concordium.sdk</groupId>
         <artifactId>concordium-sdk-base</artifactId>
-        <version>10.0.1</version>
+        <version>11.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>concordium-android-sdk</artifactId>
@@ -20,6 +20,14 @@
 
     <name>concordium-android-sdk</name>
     <description>An SDK for interacting with the Concordium blockchain packaged for Android</description>
+    <url>https://github.com/concordium/concordium-java-sdk</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <dependencies>
         <dependency>
@@ -238,6 +246,17 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.7.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>central</publishingServerId>
+                        <autoPublish>true</autoPublish>
+                        <waitUntil>uploaded</waitUntil>
+                    </configuration>
+                </plugin>
             </plugins>
             </build>
         </profile>
@@ -305,11 +324,4 @@
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <name>Central Repository OSSRH</name>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 </project>

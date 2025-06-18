@@ -190,17 +190,17 @@ jobs:
       with: # running setup-java again overwrites the settings.xml
         distribution: 'adopt'
         java-version: '8'
-        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        server-id: central
         server-username: MAVEN_USERNAME # env variable for username in deploy
-        server-password: MAVEN_PASSWORD # env variable for token in deploy
+        server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
         gpg-private-key: ${{ secrets.SONATYPE_PKEY }} # Value of the GPG private key to import
-        gpg-passphrase:  GPG_PASSPHRASE # Passphrase for the GPG private key
+        gpg-passphrase:  MAVEN_GPG_PASSPHRASE # Passphrase for the GPG private key
     - name: Publish java package to central maven repository
       run: cd concordium-sdk && mvn --batch-mode deploy -Pdeploy
       env:
-        MAVEN_USERNAME: ${{ secrets.SONATYPE_USR }}
-        MAVEN_PASSWORD: ${{ secrets.SONATYPE_PWD }}
-        GPG_PASSPHRASE: ${{secrets.SONATYPE_PHRASE }}
+        MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+        MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+        MAVEN_GPG_PASSPHRASE: ${{secrets.SONATYPE_PHRASE }}
     - name: Copy javadocs and sources for android
       run: >
         mkdir -p concordium-android-sdk/target
@@ -209,8 +209,6 @@ jobs:
     - name: Publish android package to central maven repository
       run: cd concordium-android-sdk && mvn --batch-mode deploy -Pdeploy
       env:
-        MAVEN_USERNAME: ${{ secrets.SONATYPE_USR }}
-        MAVEN_PASSWORD: ${{ secrets.SONATYPE_PWD }}
-        GPG_PASSPHRASE: ${{secrets.SONATYPE_PHRASE }}
-
-
+        MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+        MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+        MAVEN_GPG_PASSPHRASE: ${{secrets.SONATYPE_PHRASE }}
