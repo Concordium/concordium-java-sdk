@@ -176,6 +176,12 @@ public class AccountTransactionDetails {
      */
     private final EncryptedAmountsRemovedResult removedFromEncryptedBalance;
 
+    /**
+     * The result of the protocol level token update delegation.
+     * Present if the transaction was a TODO reference type
+     */
+    private final TokenUpdateResult tokenUpdate;
+
     public static AccountTransactionDetails from(com.concordium.grpc.v2.AccountTransactionDetails tx) {
         val sender = AccountAddress.from(tx.getSender());
         val detailsBuilder = AccountTransactionDetails.builder().sender(sender).cost(CCDAmount.from(tx.getCost())).successful(true);
@@ -240,6 +246,9 @@ public class AccountTransactionDetails {
                 break;
             case DELEGATION_CONFIGURED:
                 detailsBuilder.type(TransactionResultEventType.DELEGATION_CONFIGURED).delegatorConfigured(DelegatorConfigured.from(effects.getDelegationConfigured(), sender));
+                break;
+            case TOKEN_UPDATE_EFFECT:
+                detailsBuilder.type(TransactionResultEventType.TOKEN_UPDATE_EFFECT).tokenUpdate(TokenUpdateResult.builder().effect(effects.getTokenUpdateEffect()).build());
                 break;
             case EFFECT_NOT_SET:
                 throw new IllegalArgumentException("Unrecognized effect.");
