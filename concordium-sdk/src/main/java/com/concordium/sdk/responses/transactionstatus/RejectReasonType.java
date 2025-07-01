@@ -58,7 +58,10 @@ public enum RejectReasonType {
     DELEGATION_TARGET_NOT_A_BAKER,
     STAKE_OVER_MAXIMUM_THRESHOLD_FOR_POOL,
     POOL_WOULD_BECOME_OVER_DELEGATED,
-    POOL_CLOSED;
+    POOL_CLOSED,
+    NOT_EXISTENT_TOKEN_ID,
+    TOKEN_UPDATE_TRANSACTION_FAILED,
+    ;
 
     public static RejectReasonType from(com.concordium.grpc.v2.RejectReason reason) {
         switch (reason.getReasonCase()) {
@@ -170,6 +173,10 @@ public enum RejectReasonType {
                 return POOL_WOULD_BECOME_OVER_DELEGATED;
             case POOL_CLOSED:
                 return POOL_CLOSED;
+            case NON_EXISTENT_TOKEN_ID:
+                return NOT_EXISTENT_TOKEN_ID;
+            case TOKEN_UPDATE_TRANSACTION_FAILED:
+                return TOKEN_UPDATE_TRANSACTION_FAILED;
             case REASON_NOT_SET:
                 throw new IllegalArgumentException("No reject reason present.");
         }

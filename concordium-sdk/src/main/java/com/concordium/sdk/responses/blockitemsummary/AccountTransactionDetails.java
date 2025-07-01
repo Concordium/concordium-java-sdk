@@ -415,6 +415,16 @@ public class AccountTransactionDetails {
             case POOL_CLOSED:
                 detailsBuilder.rejectReason(new RejectReasonPoolClosed());
                 break;
+            case NON_EXISTENT_TOKEN_ID:
+                detailsBuilder.rejectReason(RejectReasonNotExistentTokenId.builder()
+                        .tokenId(reason.getNonExistentTokenId())
+                        .build());
+                break;
+            case TOKEN_UPDATE_TRANSACTION_FAILED:
+                detailsBuilder.rejectReason(RejectReasonTokenUpdateTransactionFailed.builder()
+                        .tokenModuleRejectReason(reason.getTokenUpdateTransactionFailed())
+                        .build());
+                break;
             case REASON_NOT_SET:
                 break;
         }
