@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.blockitemsummary;
 
 import com.concordium.grpc.v2.UpdateDetails;
+import com.concordium.grpc.v2.plt.CreatePLT;
 import com.concordium.sdk.requests.smartcontracts.Energy;
 import com.concordium.sdk.responses.Fraction;
 import com.concordium.sdk.responses.TimeoutParameters;
@@ -11,15 +12,12 @@ import com.concordium.sdk.responses.chainparameters.*;
 import com.concordium.sdk.transactions.CCDAmount;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Timestamp;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
 
 import java.time.Duration;
-import java.util.Optional;
 
 /**
- * Details of the different chain updates that
- * may occur on the chain.
+ * Details of a successful different chain update.
  */
 @EqualsAndHashCode(doNotUseGetters = true)
 @Builder
@@ -163,6 +161,14 @@ public class ChainUpdateDetails {
      */
     private final ValidatorScoreParameters validatorScoreParametersUpdate;
 
+    /**
+     * A new protocol-level token (PLT) was created.
+     * This is only non-null if the type is {@link UpdateType#CREATE_PLT}
+     * <br>
+     * <b>This can't be though, because CreatePLT operations are not enqueued, but happen immediately.</b>
+     */
+    private final CreatePLT createPltUpdate;
+
     public static ChainUpdateDetails from(UpdateDetails update) {
         val chainUpdateDetailsBuilder = ChainUpdateDetails
                 .builder()
@@ -282,6 +288,10 @@ public class ChainUpdateDetails {
                 chainUpdateDetailsBuilder
                         .type(UpdateType.VALIDATOR_SCORE_PARAMETERS)
                         .validatorScoreParametersUpdate(ValidatorScoreParameters.from(payload.getValidatorScoreParametersUpdate()));
+            case CREATE_PLT_UPDATE:
+                chainUpdateDetailsBuilder
+                        .type(UpdateType.CREATE_PLT)
+                        .createPltUpdate(payload.getCreatePltUpdate());
             case PAYLOAD_NOT_SET:
                 throw new IllegalArgumentException("Unrecognized chain update");
 
