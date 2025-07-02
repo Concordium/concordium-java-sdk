@@ -30,10 +30,16 @@ public class AuthorizationsV1 extends AuthorizationsV0 implements Authorizations
      */
     private final AccessStructure timeParameters;
 
+    /**
+     * Keys allowed to create a protocol level token.
+     * This is present from protocol version 9.
+     */
+    private final AccessStructure createPltUpdate;
+
     public static AuthorizationsV1 from(com.concordium.grpc.v2.AuthorizationsV1 value) {
         val v0Authorizations = value.getV0();
         val keys = v0Authorizations.getKeysList().stream().map(UpdatePublicKey::getValue).map(ByteString::toByteArray).map(ED25519PublicKey::from).collect(Collectors.toSet());
-        return AuthorizationsV1
+        val builder = AuthorizationsV1
                 .builder()
                 .addAnonymityRevoker(AccessStructure.from(v0Authorizations.getAddAnonymityRevoker()))
                 .addIdentityProvider(AccessStructure.from(v0Authorizations.getAddIdentityProvider()))
@@ -49,8 +55,13 @@ public class AuthorizationsV1 extends AuthorizationsV0 implements Authorizations
                 .transactionFeeDistribution(AccessStructure.from(v0Authorizations.getParameterTransactionFeeDistribution()))
                 .keys(keys)
                 .timeParameters(AccessStructure.from(value.getParameterTime()))
-                .cooldownParameters(AccessStructure.from(value.getParameterCooldown()))
-                .build();
+                .cooldownParameters(AccessStructure.from(value.getParameterCooldown()));
+
+        if (value.hasCreatePlt()){
+            builder.createPltUpdate(AccessStructure.from(value.getCreatePlt()));
+        }
+
+        return builder.build();
     }
 
     @Override
