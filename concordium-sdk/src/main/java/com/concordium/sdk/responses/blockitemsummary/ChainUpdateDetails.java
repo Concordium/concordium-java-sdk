@@ -157,6 +157,12 @@ public class ChainUpdateDetails {
      */
     private final FinalizationCommitteeParameters finalizationCommitteeParametersUpdate;
 
+    /**
+     * Parameters that govern validator suspension were changed.
+     * This is only non-null if the type is {@link UpdateType#VALIDATOR_SCORE_PARAMETERS}
+     */
+    private final ValidatorScoreParameters validatorScoreParametersUpdate;
+
     public static ChainUpdateDetails from(UpdateDetails update) {
         val chainUpdateDetailsBuilder = ChainUpdateDetails
                 .builder()
@@ -272,6 +278,10 @@ public class ChainUpdateDetails {
                         .type(UpdateType.UPDATE_FINALIZATION_COMMITTEE_PARAMETERS)
                         .finalizationCommitteeParametersUpdate(FinalizationCommitteeParameters.from(payload.getFinalizationCommitteeParametersUpdate()));
                 break;
+            case VALIDATOR_SCORE_PARAMETERS_UPDATE:
+                chainUpdateDetailsBuilder
+                        .type(UpdateType.VALIDATOR_SCORE_PARAMETERS)
+                        .validatorScoreParametersUpdate(ValidatorScoreParameters.from(payload.getValidatorScoreParametersUpdate()));
             case PAYLOAD_NOT_SET:
                 throw new IllegalArgumentException("Unrecognized chain update");
 
