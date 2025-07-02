@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * Type of Account Transaction.
  */
-// Types must match https://github.com/Concordium/concordium-base/blob/main/haskell-src/Concordium/Types/Execution.hs
 public enum TransactionType {
     DEPLOY_MODULE((byte) 0),
     INITIALIZE_SMART_CONTRACT_INSTANCE((byte) 1),
