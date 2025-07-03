@@ -7,6 +7,7 @@ import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 /**
  * A protocol-level token (PLT) transaction payload
@@ -26,7 +27,8 @@ public class TokenUpdate extends Payload {
     /**
      * Operations to execute.
      */
-    private final byte[] operations;
+    @Singular
+    private final List<TokenOperation> operations;
 
     @Override
     public TransactionType getTransactionType() {
@@ -36,24 +38,25 @@ public class TokenUpdate extends Payload {
     @Override
     protected byte[] getRawPayloadBytes() {
         val symbolBytes = tokenSymbol.getValueBytes();
-        // TODO Encode operations with CBOR.
-        val operationsBytes = operations;
 
         val buffer = ByteBuffer.allocate(
                 Byte.BYTES + symbolBytes.size()
-                        + UInt32.BYTES + operations.length
+                        + UInt32.BYTES + operations.size()
         );
 
         buffer.put((byte) symbolBytes.size());
         buffer.put(symbolBytes.asReadOnlyByteBuffer());
-        buffer.putInt(operations.length);
-        buffer.put(operations);
+        buffer.putInt(operations.size());
+        // TODO Encode operations array.
 
         return buffer.array();
     }
 
     public UInt64 getOperationsBaseCost() {
-        // TODO Sum base costs of operations.
-        return UInt64.from(100);
+        var total = 0L;
+        for (TokenOperation operation : operations) {
+            total += operation.getBaseCost().getValue();
+        }
+        return UInt64.from(total);
     }
 }
