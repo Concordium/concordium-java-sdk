@@ -177,8 +177,8 @@ public class AccountTransactionDetails {
     private final EncryptedAmountsRemovedResult removedFromEncryptedBalance;
 
     /**
-     * The result of the protocol level token update delegation.
-     * Present if the transaction was a TODO reference type
+     * The result of the protocol level token update.
+     * Present if the transaction was a {@link TokenUpdate}.
      */
     private final TokenUpdateResult tokenUpdate;
 

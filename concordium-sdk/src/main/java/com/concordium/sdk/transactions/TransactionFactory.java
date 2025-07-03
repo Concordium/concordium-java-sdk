@@ -215,4 +215,15 @@ public class TransactionFactory {
     public static ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder newConfigureDelegation() {
         return ConfigureDelegationTransaction.builder();
     }
+
+    /**
+     * Creates a new {@link TokenUpdateTransaction.TokenUpdateTransactionBuilder} for creating a
+     * {@link TokenUpdateTransaction} to execute protocol-level token (PLT) operations
+     * such as transferring, minting, etc.
+     *
+     * @return the builder for a {@link TokenUpdateTransaction}
+     */
+    public static TokenUpdateTransaction.TokenUpdateTransactionBuilder newTokenUpdate() {
+        return TokenUpdateTransaction.builder();
+    }
 }
