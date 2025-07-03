@@ -55,4 +55,8 @@ public class Details {
     public static Details newChainUpdate(UpdateDetails update) {
         return Details.builder().type(Type.CHAIN_UPDATE).chainUpdateDetails(ChainUpdateDetails.from(update)).build();
     }
+
+    public static Details newTokenCreation(TokenCreationDetails tokenCreationDetails) {
+        return Details.builder().type(Type.TOKEN_CREATION).tokenCreationDetails(tokenCreationDetails).build();
+    }
 }

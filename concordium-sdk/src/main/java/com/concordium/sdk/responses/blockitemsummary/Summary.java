@@ -52,6 +52,8 @@ public class Summary {
             case UPDATE:
                 builder.details(Details.newChainUpdate(outcome.getUpdate()));
                 break;
+            case TOKEN_CREATION:
+                builder.details(Details.newTokenCreation(outcome.getTokenCreation()));
             case DETAILS_NOT_SET:
                 throw new IllegalArgumentException("Details type is not set.");
         }
