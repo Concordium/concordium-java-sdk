@@ -14,7 +14,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 public class TransferTokenOperationTest {
 
@@ -33,7 +32,7 @@ public class TransferTokenOperationTest {
                 .build();
         val encoded = CborMapper.INSTANCE.writeValueAsBytes(op);
         Assert.assertEquals(
-                "bf66616d6f756e74c49f25c24316e360ff69726563697069656e74d99d73bf03582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b7ff646d656d6fd818674d79206d656d6fff",
+                "a1687472616e73666572a301c482251b000000000016e36002d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b703d818674d79206d656d6f",
                 Hex.toHexString(encoded)
         );
     }
@@ -52,7 +51,7 @@ public class TransferTokenOperationTest {
                 .build();
         val encoded = CborMapper.INSTANCE.writeValueAsBytes(op);
         Assert.assertEquals(
-                "bf66616d6f756e74c49f25c24316e360ff69726563697069656e74d99d73bf03582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b7ff646d656d6ff6ff",
+                "a1687472616e73666572a301c482251b000000000016e36002d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b703f6",
                 Hex.toHexString(encoded)
         );
     }

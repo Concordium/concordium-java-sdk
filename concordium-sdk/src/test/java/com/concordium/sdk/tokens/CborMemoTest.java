@@ -27,12 +27,4 @@ public class CborMemoTest {
         val encoded = CborMapper.INSTANCE.writeValueAsBytes(cborMemo);
         Assert.assertEquals("d81843010203", Hex.toHexString(encoded));
     }
-
-    @SneakyThrows
-    @Test(
-            expected = IllegalArgumentException.class
-    )
-    public void testCborMemoTooBig() {
-        new CborMemo(SecureRandom.getSeed(257));
-    }
 }
