@@ -40,26 +40,27 @@ public class AuthorizationsV1 extends AuthorizationsV0 implements Authorizations
         val v0Authorizations = value.getV0();
         val keys = v0Authorizations.getKeysList().stream().map(UpdatePublicKey::getValue).map(ByteString::toByteArray).map(ED25519PublicKey::from).collect(Collectors.toSet());
         val builder = AuthorizationsV1
-                .builder()
-                .addAnonymityRevoker(AccessStructure.from(v0Authorizations.getAddAnonymityRevoker()))
-                .addIdentityProvider(AccessStructure.from(v0Authorizations.getAddIdentityProvider()))
-                .emergency(AccessStructure.from(v0Authorizations.getEmergency()))
-                .consensusParameters(AccessStructure.from(v0Authorizations.getParameterConsensus()))
-                .mintDistribution(AccessStructure.from(v0Authorizations.getParameterMintDistribution()))
-                .euroPerEnergy(AccessStructure.from(v0Authorizations.getParameterEuroPerEnergy()))
-                .poolParameters(AccessStructure.from(v0Authorizations.getPoolParameters()))
-                .protocol(AccessStructure.from(v0Authorizations.getProtocol()))
-                .gasRewards(AccessStructure.from(v0Authorizations.getParameterGasRewards()))
-                .foundationAccount(AccessStructure.from(v0Authorizations.getParameterFoundationAccount()))
-                .microCCDPerEuro(AccessStructure.from(v0Authorizations.getParameterMicroCCDPerEuro()))
-                .transactionFeeDistribution(AccessStructure.from(v0Authorizations.getParameterTransactionFeeDistribution()))
-                .keys(keys)
-                .timeParameters(AccessStructure.from(value.getParameterTime()))
-                .cooldownParameters(AccessStructure.from(value.getParameterCooldown()));
-
-        if (value.hasCreatePlt()){
-            builder.createPltUpdate(AccessStructure.from(value.getCreatePlt()));
-        }
+                .builder();
+        // TODO What is wrong with this class?
+//                .addAnonymityRevoker(AccessStructure.from(v0Authorizations.getAddAnonymityRevoker()))
+//                .addIdentityProvider(AccessStructure.from(v0Authorizations.getAddIdentityProvider()))
+//                .emergency(AccessStructure.from(v0Authorizations.getEmergency()))
+//                .consensusParameters(AccessStructure.from(v0Authorizations.getParameterConsensus()))
+//                .mintDistribution(AccessStructure.from(v0Authorizations.getParameterMintDistribution()))
+//                .euroPerEnergy(AccessStructure.from(v0Authorizations.getParameterEuroPerEnergy()))
+//                .poolParameters(AccessStructure.from(v0Authorizations.getPoolParameters()))
+//                .protocol(AccessStructure.from(v0Authorizations.getProtocol()))
+//                .gasRewards(AccessStructure.from(v0Authorizations.getParameterGasRewards()))
+//                .foundationAccount(AccessStructure.from(v0Authorizations.getParameterFoundationAccount()))
+//                .microCCDPerEuro(AccessStructure.from(v0Authorizations.getParameterMicroCCDPerEuro()))
+//                .transactionFeeDistribution(AccessStructure.from(v0Authorizations.getParameterTransactionFeeDistribution()))
+//                .keys(keys)
+//                .timeParameters(AccessStructure.from(value.getParameterTime()))
+//                .cooldownParameters(AccessStructure.from(value.getParameterCooldown()));
+//
+//        if (value.hasCreatePlt()){
+//            builder.createPltUpdate(AccessStructure.from(value.getCreatePlt()));
+//        }
 
         return builder.build();
     }

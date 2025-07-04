@@ -2,6 +2,8 @@ package com.concordium.sdk.transactions;
 
 
 import com.concordium.grpc.v2.plt.TokenId;
+import com.concordium.sdk.serializing.CborMapper;
+import com.concordium.sdk.transactions.tokens.TokenOperation;
 import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
@@ -36,18 +38,22 @@ public class TokenUpdate extends Payload {
     }
 
     @Override
+    @SneakyThrows
     protected byte[] getRawPayloadBytes() {
         val symbolBytes = tokenSymbol.getValueBytes();
+        val operationsBytes = CborMapper
+                .INSTANCE
+                .writeValueAsBytes(operations);
 
         val buffer = ByteBuffer.allocate(
                 Byte.BYTES + symbolBytes.size()
-                        + UInt32.BYTES + operations.size()
+                        + UInt32.BYTES + operationsBytes.length
         );
 
         buffer.put((byte) symbolBytes.size());
         buffer.put(symbolBytes.asReadOnlyByteBuffer());
-        buffer.putInt(operations.size());
-        // TODO Encode operations array.
+        buffer.putInt(operationsBytes.length);
+        buffer.put(operationsBytes);
 
         return buffer.array();
     }
