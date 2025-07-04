@@ -2,11 +2,10 @@ package com.concordium.sdk.types;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
+import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
@@ -78,21 +77,22 @@ public final class UInt64 implements Comparable<UInt64> {
      * A custom Jackson serializer is provided that ensures that the unsigned value
      * is the one used when serializing to JSON.
      */
-    static class UInt64Serializer extends StdSerializer<UInt64> {
-
-        public UInt64Serializer() {
-            this(null);
-        }
-
-        public UInt64Serializer(Class<UInt64> t) {
-            super(t);
-        }
+    static class UInt64Serializer extends JsonSerializer<UInt64> {
 
         @Override
-        public void serialize(
-                UInt64 uint, JsonGenerator jgen, SerializerProvider provider)
-                throws IOException, JsonProcessingException {
-            jgen.writeRawValue(Long.toUnsignedString(uint.getValue()));
+        public void serialize(UInt64 uint,
+                              JsonGenerator generator,
+                              SerializerProvider provider) throws IOException {
+
+            if (generator instanceof CBORGenerator) {
+                // Write as unsigned 8-byte integer.
+                val cborGen = (CBORGenerator) generator;
+                cborGen.writeRaw((byte) 0x1B);
+                cborGen.writeBytes(uint.getBytes(), 0, Long.BYTES);
+                return;
+            }
+
+            generator.writeRawValue(Long.toUnsignedString(uint.getValue()));
         }
     }
 }

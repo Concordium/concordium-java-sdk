@@ -1,9 +1,7 @@
 package com.concordium.sdk.transactions.tokens;
 
-import com.concordium.grpc.v2.plt.TokenAmount;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,11 +14,10 @@ public class TransferTokenOperation {
 
     /**
      * Amount to be transferred.
-     * It very important that the decimals match the actual ones of the token.
+     * It very important that the decimals in it match the actual value of the token.
      */
     @JsonProperty("amount")
-    @JsonSerialize(using = TokenAmountCborSerializer.class)
-    private final TokenAmount amount;
+    private final TokenOperationAmount amount;
 
     /**
      * Recipient of the transfer.
