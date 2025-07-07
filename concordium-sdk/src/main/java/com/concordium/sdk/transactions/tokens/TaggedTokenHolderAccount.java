@@ -28,10 +28,19 @@ public class TaggedTokenHolderAccount {
                               JsonGenerator jsonGenerator,
                               SerializerProvider serializerProvider) throws IOException {
             val cborGenerator = (CBORGenerator) jsonGenerator;
+
             cborGenerator.writeTag(40307);
+
+            if (taggedTokenHolderAccount == null) {
+                cborGenerator.writeNull();
+                return;
+            }
+
             cborGenerator.writeStartObject(taggedTokenHolderAccount, 1);
+
             cborGenerator.writeFieldId(3);
             cborGenerator.writeObject(taggedTokenHolderAccount.data);
+
             cborGenerator.writeEndObject();
         }
     }

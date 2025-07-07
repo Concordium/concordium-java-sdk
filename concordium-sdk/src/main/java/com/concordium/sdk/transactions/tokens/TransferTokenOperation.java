@@ -1,61 +1,58 @@
 package com.concordium.sdk.transactions.tokens;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
+import com.concordium.sdk.types.UInt64;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.Optional;
 
-@Builder
 @Getter
-@JsonSerialize(using = TransferTokenOperation.CborSerializer.class)
-public class TransferTokenOperation {
+@Builder
+public class TransferTokenOperation implements TokenOperation {
 
     /**
      * Amount to be transferred.
      * It very important that the decimals in it match the actual value of the token.
      */
+    @JsonProperty("amount")
     private final TokenOperationAmount amount;
 
     /**
      * Recipient of the transfer.
      */
+    @JsonProperty("recipient")
     private final TaggedTokenHolderAccount recipient;
 
     /**
      * Optional memo (message) to be included to the transfer,
      * which will be <b>publicly available</b> on the blockchain.
      */
+    @JsonProperty("memo")
     private final CborMemo memo;
 
     public Optional<CborMemo> getMemo() {
         return Optional.ofNullable(memo);
     }
 
-    static class CborSerializer extends JsonSerializer<TransferTokenOperation> {
+    @Override
+    public String getType() {
+        return "transfer";
+    }
 
-        @Override
-        public void serialize(TransferTokenOperation operation,
-                              JsonGenerator jsonGenerator,
-                              SerializerProvider serializerProvider) throws IOException {
-            val cborGenerator = (CBORGenerator) jsonGenerator;
-            cborGenerator.writeStartObject(operation, 1);
-            cborGenerator.writeFieldName("transfer");
-            cborGenerator.writeStartObject(operation, 3);
-            cborGenerator.writeFieldId(1);
-            cborGenerator.writeObject(operation.amount);
-            cborGenerator.writeFieldId(2);
-            cborGenerator.writeObject(operation.recipient);
-            cborGenerator.writeFieldId(3);
-            cborGenerator.writeObject(operation.memo);
-            cborGenerator.writeEndObject();
-            cborGenerator.writeEndObject();
-        }
+    @Override
+    public UInt64 getBaseCost() {
+        return UInt64.from(100);
+    }
+
+    @Override
+    public Object getBody() {
+        val body = new HashMap<String, Object>();
+        body.put("amount", amount);
+        body.put("recipient", recipient);
+        body.put("memo", memo);
+        return body;
     }
 }

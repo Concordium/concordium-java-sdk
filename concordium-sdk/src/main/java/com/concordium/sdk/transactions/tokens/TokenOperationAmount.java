@@ -69,17 +69,24 @@ public class TokenOperationAmount {
         public void serialize(TokenOperationAmount tokenOperationAmount,
                               JsonGenerator jsonGenerator,
                               SerializerProvider serializerProvider) throws IOException {
+            val cborGenerator = (CBORGenerator) jsonGenerator;
+
             // Write the amount as CBOR "decfrac" (decimal fraction),
             // with the exponent matching the token decimals.
             // For token module with 6 decimals,
             // "1.5" must be encoded as 4([-6, 1500000]) and not as 4([-1, 15])
             // even though the latter is shorter.
-             val cborGenerator = (CBORGenerator) jsonGenerator;
             cborGenerator.writeTag(4);
-            // Array of length 2.
-            cborGenerator.writeRaw((byte) 0x82);
-            cborGenerator.writeNumber(-tokenOperationAmount.decimals);
-            cborGenerator.writeObject(tokenOperationAmount.value);
+
+            if (tokenOperationAmount == null) {
+                cborGenerator.writeNull();
+                return;
+            }
+
+            cborGenerator.writeObject(new Object[]{
+                    -tokenOperationAmount.decimals,
+                    tokenOperationAmount.value
+            });
         }
     }
 }

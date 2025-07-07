@@ -32,7 +32,7 @@ public class TransferTokenOperationTest {
                 .build();
         val encoded = CborMapper.INSTANCE.writeValueAsBytes(op);
         Assert.assertEquals(
-                "a1687472616e73666572a301c482251b000000000016e36002d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b703d818674d79206d656d6f",
+                "a1687472616e73666572bf66616d6f756e74c482251b000000000016e36069726563697069656e74d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b7646d656d6fd818674d79206d656d6fff",
                 Hex.toHexString(encoded)
         );
     }
@@ -51,7 +51,7 @@ public class TransferTokenOperationTest {
                 .build();
         val encoded = CborMapper.INSTANCE.writeValueAsBytes(op);
         Assert.assertEquals(
-                "a1687472616e73666572a301c482251b000000000016e36002d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b703f6",
+                "a1687472616e73666572bf66616d6f756e74c482251b000000000016e36069726563697069656e74d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b7646d656d6ff6ff",
                 Hex.toHexString(encoded)
         );
     }
