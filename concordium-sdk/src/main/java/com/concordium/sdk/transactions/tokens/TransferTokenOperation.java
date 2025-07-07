@@ -1,7 +1,6 @@
 package com.concordium.sdk.transactions.tokens;
 
 import com.concordium.sdk.types.UInt64;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
@@ -17,20 +16,17 @@ public class TransferTokenOperation implements TokenOperation {
      * Amount to be transferred.
      * It very important that the decimals in it match the actual value of the token.
      */
-    @JsonProperty("amount")
     private final TokenOperationAmount amount;
 
     /**
      * Recipient of the transfer.
      */
-    @JsonProperty("recipient")
     private final TaggedTokenHolderAccount recipient;
 
     /**
      * Optional memo (message) to be included to the transfer,
      * which will be <b>publicly available</b> on the blockchain.
      */
-    @JsonProperty("memo")
     private final CborMemo memo;
 
     public Optional<CborMemo> getMemo() {

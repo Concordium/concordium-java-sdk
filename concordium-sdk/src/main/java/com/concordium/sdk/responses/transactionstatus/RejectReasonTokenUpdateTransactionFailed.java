@@ -1,6 +1,5 @@
 package com.concordium.sdk.responses.transactionstatus;
 
-import com.concordium.grpc.v2.plt.TokenId;
 import com.concordium.grpc.v2.plt.TokenModuleRejectReason;
 import lombok.Builder;
 import lombok.Getter;
