@@ -26,7 +26,7 @@ public class TransferTokenOperationTest {
                                 TransferTokenOperation
                                         .builder()
                                         .amount(new TokenOperationAmount(UInt64.from("1500000"), 6))
-                                        .memo(new CborMemo("My memo"))
+                                        .memo(CborMemo.from("My memo"))
                                         .recipient(new TaggedTokenHolderAccount(
                                                 AccountAddress.from(
                                                         "3CbvrNVpcHpL7tyT2mhXxQwNWHiPNYEJRgp3CMgEcMyXivms6B"
