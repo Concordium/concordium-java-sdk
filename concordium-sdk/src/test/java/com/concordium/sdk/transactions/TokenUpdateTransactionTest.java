@@ -27,12 +27,7 @@ public class TokenUpdateTransactionTest {
                         .payload(
                                 TokenUpdate
                                         .builder()
-                                        .tokenSymbol(
-                                                TokenId
-                                                        .newBuilder()
-                                                        .setValue("TEST")
-                                                        .build()
-                                        )
+                                        .tokenSymbol("TEST")
                                         .operation(
                                                 TransferTokenOperation
                                                         .builder()
@@ -74,12 +69,7 @@ public class TokenUpdateTransactionTest {
                         .payload(
                                 TokenUpdate
                                         .builder()
-                                        .tokenSymbol(
-                                                com.concordium.grpc.v2.plt.TokenId
-                                                        .newBuilder()
-                                                        .setValue("TEST")
-                                                        .build()
-                                        )
+                                        .tokenSymbol("TEST")
                                         .operation(
                                                 TransferTokenOperation
                                                         .builder()
@@ -118,12 +108,7 @@ public class TokenUpdateTransactionTest {
                         .payload(
                                 TokenUpdate
                                         .builder()
-                                        .tokenSymbol(
-                                                com.concordium.grpc.v2.plt.TokenId
-                                                        .newBuilder()
-                                                        .setValue("TEST")
-                                                        .build()
-                                        )
+                                        .tokenSymbol("TEST")
                                         .operation(
                                                 TransferTokenOperation
                                                         .builder()

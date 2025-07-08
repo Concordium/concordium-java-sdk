@@ -1,6 +1,5 @@
 package com.concordium.sdk.examples;
 
-import com.concordium.grpc.v2.plt.TokenId;
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
 import com.concordium.sdk.TLSConfig;
@@ -50,7 +49,7 @@ public class SendTokenTransfer implements Callable<Integer> {
                 .useTLS(TLSConfig.auto())
                 .build();
 
-        TokenId tokenId = TokenId.newBuilder().setValue("TEST").build();
+        String tokenSymbol = "TEST";
         TokenOperationAmount amount = new TokenOperationAmount(
                 new BigDecimal("0.01"),
                 2
@@ -73,7 +72,7 @@ public class SendTokenTransfer implements Callable<Integer> {
                         .payload(
                                 TokenUpdate
                                         .builder()
-                                        .tokenSymbol(tokenId)
+                                        .tokenSymbol(tokenSymbol)
                                         .operation(
                                                 TransferTokenOperation
                                                         .builder()
