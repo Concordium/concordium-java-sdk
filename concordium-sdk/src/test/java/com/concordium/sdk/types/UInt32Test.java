@@ -32,11 +32,29 @@ public class UInt32Test {
     }
 
     @Test
+    public void testAdding() {
+        assertEquals(
+                5,
+                UInt32.from(3).plus(UInt32.from(2)).getValue()
+        );
+        // UInt32 max
+        assertEquals(
+                -1,
+                UInt32.from(Integer.MIN_VALUE).plus(UInt32.from(Integer.MAX_VALUE)).getValue()
+        );
+        // Overflow
+        assertEquals(
+                0,
+                UInt32.from(Integer.MIN_VALUE).plus(UInt32.from(Integer.MIN_VALUE)).getValue()
+        );
+    }
+
+    @Test
     public void testSerializeDeserialize() {
-        val expected = UInt64.from("123242112");
+        val expected = UInt32.from("123242112");
         val bytes = expected.getBytes();
-        val deserialized = UInt64.from(bytes);
+        val deserialized = UInt32.from(bytes);
         assertEquals(expected, deserialized);
-        assertNotEquals(expected, UInt64.from("42"));
+        assertNotEquals(expected, UInt32.from("42"));
     }
 }

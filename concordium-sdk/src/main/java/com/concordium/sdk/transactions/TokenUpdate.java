@@ -59,10 +59,10 @@ public class TokenUpdate extends Payload {
     }
 
     public UInt64 getOperationsBaseCost() {
-        var total = 0L;
+        var total = UInt64.from(0L);
         for (TokenOperation operation : operations) {
-            total += operation.getBaseCost().getValue();
+            total = total.plus(operation.getBaseCost());
         }
-        return UInt64.from(total);
+        return total;
     }
 }

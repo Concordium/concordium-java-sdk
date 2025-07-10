@@ -67,6 +67,10 @@ public final class UInt32 implements Comparable<UInt32> {
         return Integer.compareUnsigned(this.value, other.value);
     }
 
+    public UInt32 plus(UInt32 other) {
+        return UInt32.from(this.value + other.value);
+    }
+
     /**
      * A custom Jackson serializer is provided that ensures that the unsigned value
      * is the one used when serializing to JSON.

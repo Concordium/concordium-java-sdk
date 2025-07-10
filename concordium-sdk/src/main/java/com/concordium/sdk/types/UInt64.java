@@ -74,6 +74,10 @@ public final class UInt64 implements Comparable<UInt64> {
         return Long.compareUnsigned(this.value, other.value);
     }
 
+    public UInt64 plus(UInt64 other) {
+        return UInt64.from(this.value + other.value);
+    }
+
     /**
      * A custom Jackson serializer is provided that ensures that the unsigned value
      * is the one used when serializing to JSON.

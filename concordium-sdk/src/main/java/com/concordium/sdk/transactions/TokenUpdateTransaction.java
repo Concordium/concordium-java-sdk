@@ -3,7 +3,6 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
-import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
 /**
@@ -28,10 +27,8 @@ public class TokenUpdateTransaction extends AccountTransaction {
                 expiry,
                 signer,
                 payload,
-                UInt64.from(
-                        TransactionTypeCost.TOKEN_UPDATE_BASE_COST.getValue().getValue()
-                                + payload.getOperationsBaseCost().getValue()
-                )
+                TransactionTypeCost.TOKEN_UPDATE_BASE_COST.getValue()
+                                .plus(payload.getOperationsBaseCost())
         );
     }
 
