@@ -50,14 +50,7 @@ public class CborMemo {
                               JsonGenerator jsonGenerator,
                               SerializerProvider serializerProvider) throws IOException {
             val cborGenerator = (CBORGenerator) jsonGenerator;
-
             cborGenerator.writeTag(24);
-
-            if (cborMemo == null) {
-                cborGenerator.writeNull();
-                return;
-            }
-
             cborGenerator.writeObject(cborMemo.content);
         }
     }

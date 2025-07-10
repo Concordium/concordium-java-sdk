@@ -39,12 +39,9 @@ public interface TokenOperation {
                               JsonGenerator jsonGenerator,
                               SerializerProvider serializerProvider) throws IOException {
             val cborGenerator = (CBORGenerator) jsonGenerator;
-
             cborGenerator.writeStartObject(tokenOperation, 1);
-
             cborGenerator.writeFieldName(tokenOperation.getType());
             cborGenerator.writeObject(tokenOperation.getBody());
-
             cborGenerator.writeEndObject();
         }
     }

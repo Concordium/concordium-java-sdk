@@ -77,12 +77,6 @@ public class TokenOperationAmount {
             // "1.5" must be encoded as 4([-6, 1500000]) and not as 4([-1, 15])
             // even though the latter is shorter.
             cborGenerator.writeTag(4);
-
-            if (tokenOperationAmount == null) {
-                cborGenerator.writeNull();
-                return;
-            }
-
             cborGenerator.writeObject(new Object[]{
                     -tokenOperationAmount.decimals,
                     tokenOperationAmount.value
