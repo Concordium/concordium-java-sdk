@@ -67,7 +67,8 @@ public class SendTokenTransfer implements Callable<Integer> {
         var senderInfo = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(sender));
         var nonce = senderInfo.getNonce();
         var txnHash = client.sendTransaction(
-                TransactionFactory.newTokenUpdate()
+                TransactionFactory
+                        .newTokenUpdate()
                         .sender(sender)
                         .payload(
                                 TokenUpdate
@@ -76,9 +77,7 @@ public class SendTokenTransfer implements Callable<Integer> {
                                         .operation(
                                                 TransferTokenOperation
                                                         .builder()
-                                                        .recipient(
-                                                                new TaggedTokenHolderAccount(receiver)
-                                                        )
+                                                        .recipient(new TaggedTokenHolderAccount(receiver))
                                                         .amount(amount)
                                                         .memo(CborMemo.from("You must see a multi-byte white woman scientist emoji: 👩🏻‍🔬"))
                                                         .build()
