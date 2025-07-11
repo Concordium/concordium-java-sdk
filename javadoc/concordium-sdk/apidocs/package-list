@@ -53,4 +53,5 @@ com.concordium.sdk.serializing
 com.concordium.sdk.transactions
 com.concordium.sdk.transactions.smartcontracts
 com.concordium.sdk.transactions.smartcontracts.parameters
+com.concordium.sdk.transactions.tokens
 com.concordium.sdk.types
