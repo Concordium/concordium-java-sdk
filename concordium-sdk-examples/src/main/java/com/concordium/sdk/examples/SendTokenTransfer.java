@@ -49,10 +49,10 @@ public class SendTokenTransfer implements Callable<Integer> {
                 .useTLS(TLSConfig.auto())
                 .build();
 
-        String tokenSymbol = "TEST";
+        String tokenSymbol = "TestLists";
         TokenOperationAmount amount = new TokenOperationAmount(
                 new BigDecimal("0.01"),
-                2
+                10
         );
         AccountAddress sender = AccountAddress.from("4m9AzH7oeq2LNZpmBu3uW9KJEimevgBMD79PhTMxJeYVmtRdxR");
         AccountAddress receiver = AccountAddress.from("386L81BpBVrm2cDrnjEqpaGcuveC8FgiH5ZBxSVdvto4ydVFLX");
