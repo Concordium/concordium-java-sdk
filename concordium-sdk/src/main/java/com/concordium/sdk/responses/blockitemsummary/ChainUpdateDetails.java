@@ -288,10 +288,12 @@ public class ChainUpdateDetails {
                 chainUpdateDetailsBuilder
                         .type(UpdateType.VALIDATOR_SCORE_PARAMETERS)
                         .validatorScoreParametersUpdate(ValidatorScoreParameters.from(payload.getValidatorScoreParametersUpdate()));
+                break;
             case CREATE_PLT_UPDATE:
                 chainUpdateDetailsBuilder
                         .type(UpdateType.CREATE_PLT)
                         .createPltUpdate(payload.getCreatePltUpdate());
+                break;
             case PAYLOAD_NOT_SET:
                 throw new IllegalArgumentException("Unrecognized chain update");
 
