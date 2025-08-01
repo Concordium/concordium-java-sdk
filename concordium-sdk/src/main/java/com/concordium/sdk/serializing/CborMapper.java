@@ -32,7 +32,7 @@ public class CborMapper {
             verifyValueWrite.invoke(generator, "write bytes as value");
             verifyValueWrite.setAccessible(false);
         } catch (Exception e) {
-            throw new RuntimeException("Can't verify value write with reflection");
+            throw new RuntimeException("Can't verify value write with reflection: " + e.getMessage(), e);
         }
 
         generator.writeBytes(data, offset, len);
