@@ -17,6 +17,6 @@ public class RejectReasonTokenUpdateTransactionFailed extends RejectReason {
 
     @Override
     public RejectReasonType getType() {
-        return RejectReasonType.NOT_EXISTENT_TOKEN_ID;
+        return RejectReasonType.TOKEN_UPDATE_TRANSACTION_FAILED;
     }
 }
