@@ -54,6 +54,7 @@ public class Summary {
                 break;
             case TOKEN_CREATION:
                 builder.details(Details.newTokenCreation(outcome.getTokenCreation()));
+                break;
             case DETAILS_NOT_SET:
                 throw new IllegalArgumentException("Details type is not set.");
         }
