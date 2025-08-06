@@ -17,7 +17,7 @@ import lombok.*;
 import java.time.Duration;
 
 /**
- * Details of a successful different chain update.
+ * Details of a successful chain update.
  */
 @EqualsAndHashCode(doNotUseGetters = true)
 @Builder
