@@ -39,6 +39,8 @@ public class TokenOperationAmount {
 
         if (decimals < 0) {
             throw new IllegalArgumentException("The number of decimals can't be negative");
+        } else if (decimals > 255) {
+            throw new IllegalArgumentException("The number of decimals can't exceed 255");
         }
 
         this.decimals = decimals;
