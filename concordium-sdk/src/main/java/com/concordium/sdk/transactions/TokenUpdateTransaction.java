@@ -37,7 +37,7 @@ public class TokenUpdateTransaction extends AccountTransaction {
      *
      * @param payload Payload for this Transaction.
      * @param sender  Sender ({@link AccountAddress}) of this Transaction.
-     * @param nonce   Account {@link Nonce} Of the Sender Account.
+     * @param nonce   Nonce {@link Nonce} Of the Sender Account.
      * @param expiry  {@link Expiry} of this transaction.
      * @param signer  {@link Signer} of this transaction.
      * @return Initialized {@link TokenUpdateTransaction}
