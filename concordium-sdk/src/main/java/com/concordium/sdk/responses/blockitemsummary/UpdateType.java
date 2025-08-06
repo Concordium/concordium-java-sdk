@@ -139,11 +139,4 @@ public enum UpdateType {
      * This parameter is only applicable from protocol version 8 and onwards.
      */
     VALIDATOR_SCORE_PARAMETERS,
-    /**
-     * A new protocol-level token (PLT) has been created.
-     * This parameter is only applicable from protocol version 9 and onwards.
-     * <br>
-     * <b>This can't happen though, because CreatePLT operations are not enqueued, but happen immediately.</b>
-     */
-    CREATE_PLT,
 }

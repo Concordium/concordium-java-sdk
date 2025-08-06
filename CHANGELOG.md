@@ -10,7 +10,6 @@
 - Added `TransferTokenOperation` implementing protocol level token transfer
 - Added protocol level token transfer example, see `SendTokenTransfer` in `concordium-sdk-examples`
 - Added `tokenUpdate` result to `AccountTransactionDetails`
-- Added `tokenCreationDetails` field to `ChainUpdateDetails`
 - Added `createPltUpdate` authorization to `AuthorizationsV1`
 - Added `RejectReasonTokenUpdateTransactionFailed` and `RejectReasonNotExistentTokenId` transaction reject reasons 
 - Added `CborMapper` singleton providing Jackson CBOR object mapper
