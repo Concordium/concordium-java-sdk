@@ -1,5 +1,20 @@
 # Changelog
 
+## 11.0.0
+
+- Support for Protocol 9
+- Added `ProtocolVersion.V9` corresponding to Protocol version 9
+- Added `tokens` field to `AccountInfo`, containing list of related protocol level tokens
+- Added new account transaction, `TokenUpdate`, used to execute protocol level tokens operations
+- Added `TokenOperation` interface for protocol level tokens operations
+- Added `TransferTokenOperation` implementing protocol level token transfer
+- Added protocol level token transfer example, see `SendTokenTransfer` in `concordium-sdk-examples`
+- Added `tokenUpdate` result to `AccountTransactionDetails`
+- Added `createPltUpdate` authorization to `AuthorizationsV1`
+- Added `RejectReasonTokenUpdateTransactionFailed` and `RejectReasonNotExistentTokenId` transaction reject reasons 
+- Added `CborMapper` singleton providing Jackson CBOR object mapper
+- Fixed having the Lombok library transitive 
+
 ## 10.0.1
 
 - Added `getPassiveDelegationInfo` endpoint providing information 

@@ -100,6 +100,7 @@ The `ClientV2` must be initialized with a `Connection` which holds information o
 Connection connection = Connection.newBuilder()
                 .host(${node_host})
                 .port(${node_port})
+                .useTLS(TLSConfig.auto()) // If the node is under HTTPS
                 .build();
 ClientV2 client = ClientV2.from(connection);
 ```

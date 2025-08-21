@@ -54,7 +54,14 @@ public enum TransactionTypeCost {
     /**
      * Base cost for a basic transfer.
      */
-    TRANSFER_BASE_COST(300);
+    TRANSFER_BASE_COST(300),
+
+    /**
+     * Base cost for a token update transaction.
+     */
+    TOKEN_UPDATE_BASE_COST(300),
+    ;
+
     /**
      * The cost of the transaction
      */

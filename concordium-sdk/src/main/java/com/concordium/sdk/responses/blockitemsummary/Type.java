@@ -16,5 +16,9 @@ public enum Type {
     /**
      * A chain update
      */
-    CHAIN_UPDATE
+    CHAIN_UPDATE,
+    /**
+     * A new protocol-level token (PLT) was created.
+     */
+    TOKEN_CREATION,
 }

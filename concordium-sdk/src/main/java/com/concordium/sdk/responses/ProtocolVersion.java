@@ -6,33 +6,37 @@ package com.concordium.sdk.responses;
 public enum ProtocolVersion {
     V1,
     /**
-     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P2.txt
+     * <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P2.txt">Protocol Version: 2</a>
      */
     V2,
     /**
-     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P3.txt
+     * <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P3.txt">Protocol Version: 3</a>
      */
     V3,
     /**
-     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P4.txt
+     * <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P4.txt">Protocol Version: 4</a>
      */
     V4,
     /**
-     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P5.txt
+     * <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P5.txt">Protocol Version: 5</a>
      */
     V5,
     /**
-     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P6.txt
+     * <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P6.txt">Protocol Version: 6</a>
      */
     V6,
     /**
-     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P7.txt
+     * <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P7.txt">Protocol Version: 7</a>
      */
     V7,
     /**
-     * https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P8.txt
+     * <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P8.txt">Protocol Version: 8</a>
      */
     V8,
+    /**
+     * <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P9.txt">Protocol Version: 9</a>
+     */
+    V9,
     ;
 
     /**
@@ -59,6 +63,8 @@ public enum ProtocolVersion {
                 return V7;
             case PROTOCOL_VERSION_8:
                 return V8;
+            case PROTOCOL_VERSION_9:
+                return V9;
             default:
                 throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }

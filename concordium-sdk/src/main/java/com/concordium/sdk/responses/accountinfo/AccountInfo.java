@@ -38,7 +38,7 @@ public final class AccountInfo {
      */
     private final CCDAmount accountAmount;
     /**
-     * The available (unencrypted) balance of the account (i.e. that can be transferred
+     * The available (unencrypted) balance of CCD's of the account (i.e. that can be transferred
      * or used to pay for transactions). This is the balance ({@link AccountInfo#accountAmount})
      * minus the locked amount.
      * The locked amount is the maximum of the amount in the release schedule ({@link AccountInfo#accountReleaseSchedule})
@@ -97,6 +97,12 @@ public final class AccountInfo {
      */
     @Singular
     private final ImmutableList<Cooldown> cooldowns;
+
+    /**
+     * The protocol level tokens (PLT) held by the account.
+     */
+    @Singular
+    private final ImmutableList<com.concordium.grpc.v2.AccountInfo.Token> tokens;
 
     public boolean isBaker() {
         return !Objects.isNull(bakerInfo);

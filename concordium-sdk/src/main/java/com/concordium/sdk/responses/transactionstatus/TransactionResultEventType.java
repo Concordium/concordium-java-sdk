@@ -93,6 +93,8 @@ public enum TransactionResultEventType {
     BAKER_CONFIGURED,
     @JsonProperty("DelegationConfigured")
     DELEGATION_CONFIGURED,
+    @JsonProperty("TokenUpdateEffect")
+    TOKEN_UPDATE_EFFECT,
     // An event that occurs when an account send an
     // encrypted transfer.
     // The result of such a transaction is a 'NEW_ENCRYPTED_AMOUNT' event for the

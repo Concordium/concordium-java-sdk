@@ -1,0 +1,68 @@
+package com.concordium.sdk.transactions;
+
+
+import com.concordium.sdk.serializing.CborMapper;
+import com.concordium.sdk.transactions.tokens.TokenOperation;
+import com.concordium.sdk.types.UInt32;
+import com.concordium.sdk.types.UInt64;
+import lombok.*;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+/**
+ * A protocol-level token (PLT) transaction payload
+ * containing the actual operations.
+ */
+@ToString
+@Builder
+@Getter
+@EqualsAndHashCode(callSuper = true)
+public class TokenUpdate extends Payload {
+
+    /**
+     * Symbol (ID) of the token to execute operations on.
+     */
+    private final String tokenSymbol;
+
+    /**
+     * Operations to execute.
+     */
+    @Singular
+    private final List<TokenOperation> operations;
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.TOKEN_UPDATE;
+    }
+
+    @Override
+    @SneakyThrows
+    protected byte[] getRawPayloadBytes() {
+        val symbolBytes = tokenSymbol.getBytes(StandardCharsets.UTF_8);
+        val operationsBytes = CborMapper
+                .INSTANCE
+                .writeValueAsBytes(operations);
+
+        val buffer = ByteBuffer.allocate(
+                Byte.BYTES + symbolBytes.length
+                        + UInt32.BYTES + operationsBytes.length
+        );
+
+        buffer.put((byte) symbolBytes.length);
+        buffer.put(symbolBytes);
+        buffer.putInt(operationsBytes.length);
+        buffer.put(operationsBytes);
+
+        return buffer.array();
+    }
+
+    public UInt64 getOperationsBaseCost() {
+        var total = UInt64.from(0L);
+        for (TokenOperation operation : operations) {
+            total = total.plus(operation.getBaseCost());
+        }
+        return total;
+    }
+}

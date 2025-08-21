@@ -34,4 +34,21 @@ public class UInt64Test {
         assertEquals(expected, deserialized);
     }
 
+    @Test
+    public void testAdding() {
+        assertEquals(
+                5,
+                UInt64.from(3).plus(UInt64.from(2)).getValue()
+        );
+        // UInt64 max
+        assertEquals(
+                -1L,
+                UInt64.from(Long.MIN_VALUE).plus(UInt64.from(Long.MAX_VALUE)).getValue()
+        );
+        // Overflow
+        assertEquals(
+                0,
+                UInt64.from(Long.MIN_VALUE).plus(UInt64.from(Long.MIN_VALUE)).getValue()
+        );
+    }
 }

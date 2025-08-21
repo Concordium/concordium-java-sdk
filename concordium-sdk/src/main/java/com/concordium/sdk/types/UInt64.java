@@ -1,12 +1,12 @@
 package com.concordium.sdk.types;
 
+import com.concordium.sdk.serializing.CborMapper;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
+import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
@@ -74,25 +74,35 @@ public final class UInt64 implements Comparable<UInt64> {
         return Long.compareUnsigned(this.value, other.value);
     }
 
+    public UInt64 plus(UInt64 other) {
+        return UInt64.from(this.value + other.value);
+    }
+
     /**
      * A custom Jackson serializer is provided that ensures that the unsigned value
      * is the one used when serializing to JSON.
      */
-    static class UInt64Serializer extends StdSerializer<UInt64> {
-
-        public UInt64Serializer() {
-            this(null);
-        }
-
-        public UInt64Serializer(Class<UInt64> t) {
-            super(t);
-        }
+    static class UInt64Serializer extends JsonSerializer<UInt64> {
 
         @Override
-        public void serialize(
-                UInt64 uint, JsonGenerator jgen, SerializerProvider provider)
-                throws IOException, JsonProcessingException {
-            jgen.writeRawValue(Long.toUnsignedString(uint.getValue()));
+        public void serialize(UInt64 uint,
+                              JsonGenerator generator,
+                              SerializerProvider provider) throws IOException {
+
+            if (generator instanceof CBORGenerator) {
+                val cborGenerator = (CBORGenerator) generator;
+
+                // Write as unsigned 8-byte integer.
+                val value = ByteBuffer.allocate(1 + Long.BYTES)
+                        .put((byte) 0x1B)
+                        .put(uint.getBytes())
+                        .array();
+                CborMapper.writeBytesAsValue(cborGenerator, value, 0, value.length);
+
+                return;
+            }
+
+            generator.writeRawValue(Long.toUnsignedString(uint.getValue()));
         }
     }
 }

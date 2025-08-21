@@ -132,5 +132,11 @@ public enum UpdateType {
      * of the finalization committee.
      * This parameter is only applicable from protocol version 6 and onwards.
      */
-    UPDATE_FINALIZATION_COMMITTEE_PARAMETERS
+    UPDATE_FINALIZATION_COMMITTEE_PARAMETERS,
+    /**
+     * Update to the {@link com.concordium.sdk.responses.chainparameters.ValidatorScoreParameters},
+     * parameters that govern validator suspension.
+     * This parameter is only applicable from protocol version 8 and onwards.
+     */
+    VALIDATOR_SCORE_PARAMETERS,
 }

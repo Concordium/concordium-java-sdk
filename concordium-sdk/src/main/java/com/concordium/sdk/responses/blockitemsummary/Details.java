@@ -1,6 +1,7 @@
 package com.concordium.sdk.responses.blockitemsummary;
 
 import com.concordium.grpc.v2.UpdateDetails;
+import com.concordium.grpc.v2.plt.TokenCreationDetails;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,6 +38,12 @@ public class Details {
      */
     private final ChainUpdateDetails chainUpdateDetails;
 
+    /**
+     * Protocol-level token (PLT) creation details.
+     * This is only present if the type is {@link Type#TOKEN_CREATION}
+     */
+    private final TokenCreationDetails tokenCreationDetails;
+
     public static Details newAccountTransaction(com.concordium.grpc.v2.AccountTransactionDetails accountTransaction) {
         return Details.builder().type(Type.ACCOUNT_TRANSACTION).accountTransactionDetails(AccountTransactionDetails.from(accountTransaction)).build();
     }
@@ -47,5 +54,9 @@ public class Details {
 
     public static Details newChainUpdate(UpdateDetails update) {
         return Details.builder().type(Type.CHAIN_UPDATE).chainUpdateDetails(ChainUpdateDetails.from(update)).build();
+    }
+
+    public static Details newTokenCreation(TokenCreationDetails tokenCreationDetails) {
+        return Details.builder().type(Type.TOKEN_CREATION).tokenCreationDetails(tokenCreationDetails).build();
     }
 }

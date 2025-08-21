@@ -1245,6 +1245,14 @@ interface ClientV2MapperExtensions {
                         .chainUpdateDetails(details)
                         .build());
                 break;
+            case TOKEN_CREATION:
+                val tokenCreationDetails = blockItemSummary.getTokenCreation();
+                summary.details(Details
+                        .builder()
+                        .type(Type.TOKEN_CREATION)
+                        .tokenCreationDetails(tokenCreationDetails)
+                        .build());
+                break;
             case DETAILS_NOT_SET:
                 throw new IllegalArgumentException("Unrecognized block item summary");
         }
