@@ -13,6 +13,7 @@
 - Added `createPltUpdate` authorization to `AuthorizationsV1`
 - Added `RejectReasonTokenUpdateTransactionFailed` and `RejectReasonNotExistentTokenId` transaction reject reasons 
 - Added `CborMapper` singleton providing Jackson CBOR object mapper
+- Fixed having the Lombok library transitive 
 
 ## 10.0.1
 
