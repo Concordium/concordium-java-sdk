@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 11.0.0
 
 - Support for Protocol 9
 - Added `ProtocolVersion.V9` corresponding to Protocol version 9
