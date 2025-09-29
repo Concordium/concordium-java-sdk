@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 11.0.2
 
 - Fixed always empty `tokens` in `AccountInfo`
 
