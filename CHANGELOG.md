@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Fixed always empty `tokens` in `AccountInfo`
+
 ## 11.0.1
 
 - Made Android package compatible with 16 KB alignment requirement

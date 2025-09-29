@@ -546,7 +546,8 @@ interface ClientV2MapperExtensions {
                 .accountEncryptionKey(ElgamalPublicKey.from(account.getEncryptionKey().getValue().toByteArray()))
                 .accountIndex(to(account.getIndex()))
                 .accountAddress(to(account.getAddress()))
-                .cooldowns(copyOf(to(account.getCooldownsList(), ClientV2MapperExtensions::to)));
+                .cooldowns(copyOf(to(account.getCooldownsList(), ClientV2MapperExtensions::to)))
+                .tokens(account.getTokensList());
 
         if (account.hasStake()) {
             switch (account.getStake().getStakingInfoCase()) {
