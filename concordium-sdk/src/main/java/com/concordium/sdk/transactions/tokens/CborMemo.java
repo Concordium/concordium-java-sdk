@@ -101,5 +101,5 @@ public class CborMemo {
         }
     }
 
-    public static final int CBOR_TAG = 24;
+    private static final int CBOR_TAG = 24;
 }
