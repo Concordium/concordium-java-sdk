@@ -20,7 +20,7 @@ public class TokenUpdateTransactionTest {
     @SneakyThrows
     public void testTokenUpdateTransferTransactionWithTextMemo() {
         Assert.assertEquals(
-                "24303123d37c83a071bf861bb5d4490f945e4253234890062d851fd75c4bf25c",
+                "556c31711e00fc73b7dc7a397bb863198d3059235052241059385bef0c3d0494",
                 TransactionFactory
                         .newTokenUpdate()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -62,7 +62,7 @@ public class TokenUpdateTransactionTest {
     @SneakyThrows
     public void testTokenUpdateTransferTransactionWithoutMemo() {
         Assert.assertEquals(
-                "76d7e2c3f3e2046eb145783f7bda8c26c216e2f2db3a195f41ffb7640981077a",
+                "cab78c06b978e35c1dab92c5aabb4d70a501ffa93ead5e0131a93c4d5ad7bc8d",
                 TransactionFactory
                         .newTokenUpdate()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -101,7 +101,7 @@ public class TokenUpdateTransactionTest {
     @SneakyThrows
     public void testTokenUpdateTransferTransactionCostWithoutMemo() {
         Assert.assertEquals(
-                UInt64.from("751"),
+                UInt64.from("744"),
                 TransactionFactory
                         .newTokenUpdate()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))

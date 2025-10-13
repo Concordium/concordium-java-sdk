@@ -20,7 +20,7 @@ public class TransferTokenOperationTest {
     @SneakyThrows
     public void testTokenTransferOperationSerialization() {
         Assert.assertEquals(
-                "a1687472616e73666572bf66616d6f756e74c482251b000000000016e36069726563697069656e74d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b7646d656d6fd81848674d79206d656d6fff",
+                "a1687472616e73666572bf66616d6f756e74c482251a0016e36069726563697069656e74d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b7646d656d6fd81848674d79206d656d6fff",
                 Hex.toHexString(
                         CborMapper.INSTANCE.writeValueAsBytes(
                                 TransferTokenOperation
@@ -42,7 +42,7 @@ public class TransferTokenOperationTest {
     @SneakyThrows
     public void testTokenTransferOperationWithoutMemoSerialization() {
         Assert.assertEquals(
-                "a1687472616e73666572bf66616d6f756e74c482251b000000000016e36069726563697069656e74d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b7ff",
+                "a1687472616e73666572bf66616d6f756e74c482251a0016e36069726563697069656e74d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b7ff",
                 Hex.toHexString(
                         CborMapper.INSTANCE.writeValueAsBytes(
                                 TransferTokenOperation
@@ -59,7 +59,7 @@ public class TransferTokenOperationTest {
         );
 
         Assert.assertEquals(
-                "a1687472616e73666572bf66616d6f756e74c482231b000000000000007b69726563697069656e74d99d73a10358201515151515151515151515151515151515151515151515151515151515151515ff",
+                "a1687472616e73666572bf66616d6f756e74c48223187b69726563697069656e74d99d73a10358201515151515151515151515151515151515151515151515151515151515151515ff",
                 Hex.toHexString(
                         CborMapper.INSTANCE.writeValueAsBytes(
                                 TransferTokenOperation

@@ -1,6 +1,5 @@
 package com.concordium.sdk.types;
 
-import com.concordium.sdk.serializing.CborMapper;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -82,15 +81,7 @@ public final class UInt32 implements Comparable<UInt32> {
                               JsonGenerator generator,
                               SerializerProvider provider) throws IOException {
             if (generator instanceof CBORGenerator) {
-                val cborGenerator = (CBORGenerator) generator;
-
-                // Write as unsigned 4-byte integer.
-                val value = ByteBuffer.allocate(1 + Integer.BYTES)
-                        .put((byte) 0x1A)
-                        .put(uint.getBytes())
-                        .array();
-                CborMapper.writeBytesAsValue(cborGenerator, value, 0, value.length);
-
+                ((CBORGenerator) generator).writeNumberUnsigned(uint.value);
                 return;
             }
 

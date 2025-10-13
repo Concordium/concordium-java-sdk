@@ -14,7 +14,7 @@ public class TokenOperationAmountTest {
     @SneakyThrows
     public void testTokenOperationAmountSerialization() {
         Assert.assertEquals(
-                "c482251b000000000016e360",
+                "c482251a0016e360",
                 Hex.toHexString(
                         CborMapper.INSTANCE.writeValueAsBytes(
                                 new TokenOperationAmount(
@@ -25,7 +25,7 @@ public class TokenOperationAmountTest {
                 )
         );
         Assert.assertEquals(
-                "c482221b000000000012d687",
+                "c482221a0012d687",
                 Hex.toHexString(
                         CborMapper.INSTANCE.writeValueAsBytes(
                                 new TokenOperationAmount(
