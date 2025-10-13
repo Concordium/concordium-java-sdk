@@ -2,12 +2,15 @@ package com.concordium.sdk.transactions.tokens;
 
 import com.concordium.grpc.v2.plt.TokenAmount;
 import com.concordium.sdk.types.UInt64;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.val;
 
 import java.io.IOException;
@@ -18,7 +21,12 @@ import java.math.BigDecimal;
  * It is very important for decimals to match the actual value of the token.
  */
 @Getter
-@JsonSerialize(using = TokenOperationAmount.CborSerializer.class)
+@EqualsAndHashCode
+@ToString
+@JsonSerialize(
+        using = TokenOperationAmount.CborSerializer.class
+        // And deserialization works with just a JSON creator constructor.
+)
 public class TokenOperationAmount {
 
     /**
@@ -58,6 +66,18 @@ public class TokenOperationAmount {
         );
     }
 
+    /**
+     * A constructor for CBOR parser.
+     *
+     * @param cborParserDecimalValue parsed decimal value
+     *                               which has the scale the serializer wrote (amount decimals).
+     */
+    @JsonCreator
+    public TokenOperationAmount(BigDecimal cborParserDecimalValue) {
+        this(cborParserDecimalValue, cborParserDecimalValue.scale());
+    }
+
+    @SuppressWarnings("unused")
     public TokenOperationAmount(TokenAmount tokenAmount) {
         this(
                 UInt64.from(tokenAmount.getValue()),
@@ -75,6 +95,8 @@ public class TokenOperationAmount {
 
             // Write the amount as CBOR "decfrac" (decimal fraction),
             // with the exponent matching the token decimals.
+            // When parsed, it becomes BigDecimal with scale matching the decimals.
+            //
             // For token module with 6 decimals,
             // "1.5" must be encoded as 4([-6, 1500000]) and not as 4([-1, 15])
             // even though the latter is shorter.

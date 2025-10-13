@@ -1,8 +1,12 @@
 package com.concordium.sdk.types;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import lombok.EqualsAndHashCode;
@@ -15,6 +19,7 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode
 @Getter
 @JsonSerialize(using = UInt32.UInt32Serializer.class)
+@JsonDeserialize(using = UInt32.UInt32Deserializer.class)
 public final class UInt32 implements Comparable<UInt32> {
     public static final int BYTES = Integer.BYTES;
     final int value;
@@ -86,6 +91,15 @@ public final class UInt32 implements Comparable<UInt32> {
             }
 
             generator.writeRawValue(Integer.toUnsignedString(uint.getValue()));
+        }
+    }
+
+    static class UInt32Deserializer extends JsonDeserializer<UInt32>{
+
+        @Override
+        public UInt32 deserialize(JsonParser parser,
+                                  DeserializationContext deserializationContext) throws IOException {
+            return UInt32.from(parser.getBigIntegerValue().toString());
         }
     }
 }
