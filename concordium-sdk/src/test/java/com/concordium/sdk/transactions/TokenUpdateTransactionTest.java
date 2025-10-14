@@ -1,6 +1,5 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.grpc.v2.plt.TokenId;
 import com.concordium.sdk.transactions.tokens.CborMemo;
 import com.concordium.sdk.transactions.tokens.TaggedTokenHolderAccount;
 import com.concordium.sdk.transactions.tokens.TokenOperationAmount;
@@ -20,7 +19,7 @@ public class TokenUpdateTransactionTest {
     @SneakyThrows
     public void testTokenUpdateTransferTransactionWithTextMemo() {
         Assert.assertEquals(
-                "556c31711e00fc73b7dc7a397bb863198d3059235052241059385bef0c3d0494",
+                "b61c9f2d8407ccfb849fc12d202c352e4bcb50fef9f6c6dd85115e379a0c75fe",
                 TransactionFactory
                         .newTokenUpdate()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -62,7 +61,7 @@ public class TokenUpdateTransactionTest {
     @SneakyThrows
     public void testTokenUpdateTransferTransactionWithoutMemo() {
         Assert.assertEquals(
-                "cab78c06b978e35c1dab92c5aabb4d70a501ffa93ead5e0131a93c4d5ad7bc8d",
+                "6db4f1828dc94e1d2c5b6ded5f6d7fdac79a44733abce9986624dbe643921858",
                 TransactionFactory
                         .newTokenUpdate()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
@@ -101,7 +100,7 @@ public class TokenUpdateTransactionTest {
     @SneakyThrows
     public void testTokenUpdateTransferTransactionCostWithoutMemo() {
         Assert.assertEquals(
-                UInt64.from("744"),
+                UInt64.from("743"),
                 TransactionFactory
                         .newTokenUpdate()
                         .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
