@@ -5,12 +5,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import com.fasterxml.jackson.dataformat.cbor.CBORParser;
 import lombok.Getter;
@@ -50,7 +50,11 @@ public class TaggedTokenHolderAccount {
         return Arrays.hashCode(data);
     }
 
-    static class CborSerializer extends JsonSerializer<TaggedTokenHolderAccount> {
+    static class CborSerializer extends StdSerializer<TaggedTokenHolderAccount> {
+
+        protected CborSerializer() {
+            super(TaggedTokenHolderAccount.class);
+        }
 
         @Override
         public void serialize(TaggedTokenHolderAccount taggedTokenHolderAccount,
@@ -65,7 +69,11 @@ public class TaggedTokenHolderAccount {
         }
     }
 
-    static class CborDeserializer extends JsonDeserializer<TaggedTokenHolderAccount> {
+    static class CborDeserializer extends StdDeserializer<TaggedTokenHolderAccount> {
+
+        protected CborDeserializer() {
+            super(TaggedTokenHolderAccount.class);
+        }
 
         @Override
         public TaggedTokenHolderAccount deserialize(JsonParser jsonParser,

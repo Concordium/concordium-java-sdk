@@ -6,8 +6,8 @@ import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.dataformat.cbor.CBORParser;
 import lombok.val;
 
@@ -33,7 +33,11 @@ public interface TokenOperation {
      */
     UInt64 getBaseCost();
 
-    class CborDeserializer extends JsonDeserializer<TokenOperation> {
+    class CborDeserializer extends StdDeserializer<TokenOperation> {
+
+        protected CborDeserializer() {
+            super(TokenOperation.class);
+        }
 
         @Override
         public TokenOperation deserialize(JsonParser jsonParser,

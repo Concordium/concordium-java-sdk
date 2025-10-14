@@ -6,11 +6,11 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -52,7 +52,11 @@ public class TransferTokenOperation implements TokenOperation {
         return UInt64.from(100);
     }
 
-    static class CborSerializer extends JsonSerializer<TransferTokenOperation> {
+    static class CborSerializer extends StdSerializer<TransferTokenOperation> {
+
+        protected CborSerializer() {
+            super(TransferTokenOperation.class);
+        }
 
         @Override
         public void serialize(TransferTokenOperation value,
@@ -78,7 +82,11 @@ public class TransferTokenOperation implements TokenOperation {
         }
     }
 
-    static class CborBodyDeserializer extends JsonDeserializer<TransferTokenOperation> {
+    static class CborBodyDeserializer extends StdDeserializer<TransferTokenOperation> {
+
+        protected CborBodyDeserializer() {
+            super(TransferTokenOperation.class);
+        }
 
         @Override
         public TransferTokenOperation deserialize(JsonParser parser,
@@ -90,6 +98,13 @@ public class TransferTokenOperation implements TokenOperation {
             // Deserializer for a token operation only reads the operation body.
             // It skips the type as at this moment it is already read
             // by TokenOperation deserializer.
+
+            if (parser.currentToken() != JsonToken.START_OBJECT) {
+                throw new JsonParseException(
+                        parser,
+                        "Expected START_OBJECT, but read " + parser.currentToken()
+                );
+            }
 
             while (parser.currentToken() != JsonToken.END_OBJECT) {
                 if (parser.currentToken() == JsonToken.FIELD_NAME) {
@@ -114,6 +129,9 @@ public class TransferTokenOperation implements TokenOperation {
                 }
                 parser.nextToken();
             }
+
+            // Consume the END_OBJECT.
+            parser.nextToken();
 
             if (amount == null) {
                 throw new JsonParseException(

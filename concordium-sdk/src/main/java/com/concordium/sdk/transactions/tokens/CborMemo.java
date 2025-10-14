@@ -5,11 +5,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import com.fasterxml.jackson.dataformat.cbor.CBORParser;
 import lombok.Getter;
@@ -72,7 +72,11 @@ public class CborMemo {
         return Arrays.hashCode(content);
     }
 
-    static class CborSerializer extends JsonSerializer<CborMemo> {
+    static class CborSerializer extends StdSerializer<CborMemo> {
+
+        protected CborSerializer() {
+            super(CborMemo.class);
+        }
 
         @Override
         public void serialize(CborMemo cborMemo,
@@ -84,7 +88,11 @@ public class CborMemo {
         }
     }
 
-    static class CborDeserializer extends JsonDeserializer<CborMemo> {
+    static class CborDeserializer extends StdDeserializer<CborMemo> {
+
+        protected CborDeserializer() {
+            super(CborMemo.class);
+        }
 
         @Override
         public CborMemo deserialize(JsonParser jsonParser,

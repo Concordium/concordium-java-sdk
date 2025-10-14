@@ -3,11 +3,11 @@ package com.concordium.sdk.types;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -79,7 +79,11 @@ public final class UInt32 implements Comparable<UInt32> {
      * A custom Jackson serializer is provided that ensures that the unsigned value
      * is the one used when serializing to JSON.
      */
-    static class UInt32Serializer extends JsonSerializer<UInt32> {
+    static class UInt32Serializer extends StdSerializer<UInt32> {
+
+        protected UInt32Serializer() {
+            super(UInt32.class);
+        }
 
         @Override
         public void serialize(UInt32 uint,
@@ -94,8 +98,12 @@ public final class UInt32 implements Comparable<UInt32> {
         }
     }
 
-    static class UInt32Deserializer extends JsonDeserializer<UInt32>{
+    static class UInt32Deserializer extends StdDeserializer<UInt32> {
 
+        protected UInt32Deserializer() {
+            super(UInt32.class);
+        }
+        
         @Override
         public UInt32 deserialize(JsonParser parser,
                                   DeserializationContext deserializationContext) throws IOException {

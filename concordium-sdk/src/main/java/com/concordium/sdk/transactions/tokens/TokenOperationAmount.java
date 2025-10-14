@@ -4,9 +4,9 @@ import com.concordium.grpc.v2.plt.TokenAmount;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -85,7 +85,11 @@ public class TokenOperationAmount {
         );
     }
 
-    static class CborSerializer extends JsonSerializer<TokenOperationAmount> {
+    static class CborSerializer extends StdSerializer<TokenOperationAmount> {
+
+        protected CborSerializer() {
+            super(TokenOperationAmount.class);
+        }
 
         @Override
         public void serialize(TokenOperationAmount tokenOperationAmount,

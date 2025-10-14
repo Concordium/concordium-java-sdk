@@ -2,9 +2,9 @@ package com.concordium.sdk.types;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -81,7 +81,11 @@ public final class UInt64 implements Comparable<UInt64> {
      * A custom Jackson serializer is provided that ensures that the unsigned value
      * is the one used when serializing to JSON.
      */
-    static class UInt64Serializer extends JsonSerializer<UInt64> {
+    static class UInt64Serializer extends StdSerializer<UInt64> {
+
+        protected UInt64Serializer() {
+            super(UInt64.class);
+        }
 
         @Override
         public void serialize(UInt64 uint,
