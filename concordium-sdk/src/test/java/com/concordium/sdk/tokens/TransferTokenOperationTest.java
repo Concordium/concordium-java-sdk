@@ -4,6 +4,7 @@ import com.concordium.sdk.serializing.CborMapper;
 import com.concordium.sdk.transactions.tokens.*;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.UInt64;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.bouncycastle.util.encoders.Hex;
@@ -11,6 +12,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 public class TransferTokenOperationTest {
 
