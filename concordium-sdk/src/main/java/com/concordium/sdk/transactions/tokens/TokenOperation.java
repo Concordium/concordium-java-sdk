@@ -28,10 +28,16 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         // deserializer won't work.
         @JsonSubTypes.Type(
                 value = TransferTokenOperation.class,
-                name = "transfer"
+                name = TransferTokenOperation.TYPE
         )
 })
 public interface TokenOperation {
+
+    /**
+     * @return operation type name, e.g. "transfer", "mint", etc.
+     */
+    @JsonIgnore
+    String getType();
 
     /**
      * @return the base energy cost of this operation.

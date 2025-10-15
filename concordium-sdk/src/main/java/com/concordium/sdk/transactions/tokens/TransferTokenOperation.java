@@ -43,4 +43,11 @@ public class TransferTokenOperation implements TokenOperation {
     public UInt64 getBaseCost() {
         return UInt64.from(100);
     }
+
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+
+    public static final String TYPE = "transfer";
 }
