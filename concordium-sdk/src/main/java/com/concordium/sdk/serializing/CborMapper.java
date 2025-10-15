@@ -9,8 +9,10 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 public class CborMapper {
     public static ObjectMapper INSTANCE = new CBORMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            // Needed to decode a single element array as array.
             .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            // Needed to deserialize Optional Fields
+            // Do not write nulls or empty Optionals.
+            .setDefaultPropertyInclusion(JsonInclude.Include.NON_ABSENT)
+            // Needed to deserialize Optionals.
             .registerModule(new Jdk8Module());
 }
