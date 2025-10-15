@@ -87,4 +87,26 @@ public class CborMemoTest {
     public void testCborMemoTooBig() {
         CborMemo.from(SecureRandom.getSeed(257));
     }
+
+    @SneakyThrows
+    @Test
+    public void testCborMemoListSerialization() {
+
+        val memos = new CborMemo[]{
+                CborMemo.from("This is my memo"),
+                CborMemo.from(20090103)
+        };
+        val expectedHex = "82d818506f54686973206973206d79206d656d6fd818451a01328cf7";
+
+        Assert.assertEquals(
+                expectedHex,
+                Hex.toHexString(CborMapper.INSTANCE.writeValueAsBytes(memos))
+        );
+        Assert.assertArrayEquals(
+                memos,
+                CborMapper.INSTANCE
+                        .readerForArrayOf(CborMemo.class)
+                        .readValue(Hex.decode(expectedHex))
+        );
+    }
 }

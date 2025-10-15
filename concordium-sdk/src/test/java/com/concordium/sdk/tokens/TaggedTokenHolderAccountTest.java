@@ -35,6 +35,35 @@ public class TaggedTokenHolderAccountTest {
 
     @Test
     @SneakyThrows
+    public void testTaggedTokenHolderAccountListSerialization() {
+        val accounts = new TaggedTokenHolderAccount[]{
+                new TaggedTokenHolderAccount(
+                        AccountAddress.from(
+                                Hex.decode("1515151515151515151515151515151515151515151515151515151515151515")
+                        )
+                ),
+                new TaggedTokenHolderAccount(
+                        AccountAddress.from(
+                                Hex.decode("2525252525252525252525252525252525252525252525252525252525252525")
+                        )
+                )
+        };
+        val expectedHex = "82d99d73a10358201515151515151515151515151515151515151515151515151515151515151515d99d73a10358202525252525252525252525252525252525252525252525252525252525252525";
+
+        Assert.assertEquals(
+                expectedHex,
+                Hex.toHexString(CborMapper.INSTANCE.writeValueAsBytes(accounts))
+        );
+        Assert.assertArrayEquals(
+                accounts,
+                CborMapper.INSTANCE
+                        .readerForArrayOf(TaggedTokenHolderAccount.class)
+                        .readValue(Hex.decode(expectedHex))
+        );
+    }
+
+    @Test
+    @SneakyThrows
     public void testTaggedTokenHolderAccountDeserializationWithCoinInfo() {
         // Coin info is ignored at the moment.
         // Only the address must be read.

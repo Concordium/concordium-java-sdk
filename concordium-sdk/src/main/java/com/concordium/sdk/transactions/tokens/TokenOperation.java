@@ -5,6 +5,7 @@ import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -17,8 +18,8 @@ import java.io.IOException;
  * A protocol-level token (PLT) operation used in {@link TokenUpdate}.
  * <p>
  * An operation must implement CBOR serialization writing its type and body.
- * And for the deserialization, it must only deserialize the body
- * as the type is read by {@link TokenOperation.CborDeserializer}.
+ * And for the deserialization, only the body must be deserialized
+ * as the type is being read by {@link TokenOperation.CborDeserializer}.
  * <p>
  * To deserialize an operation from CBOR, always use <code>TokenOperation.class</code>
  * even if you know the exact type.
@@ -54,15 +55,26 @@ public interface TokenOperation {
 
             cborParser.nextToken();
 
+            TokenOperation parsedOperation;
             switch (type) {
                 case TransferTokenOperation.TYPE:
-                    return cborParser.readValueAs(TransferTokenOperation.class);
+                    parsedOperation = cborParser.readValueAs(TransferTokenOperation.class);
+                    break;
                 default:
                     throw new JsonParseException(
                             jsonParser,
                             "This operation is not supported: " + type
                     );
             }
+
+            if (cborParser.nextToken() != JsonToken.END_OBJECT) {
+                throw new JsonParseException(
+                        jsonParser,
+                        "Expected END_OBJECT, but read " + cborParser.currentToken()
+                );
+            }
+
+            return parsedOperation;
         }
     }
 }

@@ -16,6 +16,7 @@ import lombok.val;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+
 /**
  * An amount for a protocol-level token (PLT) operation.
  * It is very important for decimals to match the actual value of the token.
@@ -25,7 +26,7 @@ import java.math.BigDecimal;
 @ToString
 @JsonSerialize(
         using = TokenOperationAmount.CborSerializer.class
-        // And deserialization works with just a JSON creator constructor.
+        // And deserialization works via the @JsonCreator constructor.
 )
 public class TokenOperationAmount {
 

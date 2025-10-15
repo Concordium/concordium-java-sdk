@@ -95,4 +95,30 @@ public class TokenOperationAmountTest {
                 )
         );
     }
+
+    @Test
+    @SneakyThrows
+    public void testTokenOperationAmountListSerialization() {
+        val amounts = new TokenOperationAmount[]{
+                new TokenOperationAmount(
+                        UInt64.from("1500000"),
+                        6
+                ),
+                new TokenOperationAmount(
+                        UInt64.from("1234567"),
+                        3
+                )
+        };
+        val expectedHex = "82c482251a0016e360c482221a0012d687";
+        Assert.assertEquals(
+                expectedHex,
+                Hex.toHexString(CborMapper.INSTANCE.writeValueAsBytes(amounts))
+        );
+        Assert.assertArrayEquals(
+                amounts,
+                CborMapper.INSTANCE
+                        .readerForArrayOf(TokenOperationAmount.class)
+                        .readValue(Hex.decode(expectedHex))
+        );
+    }
 }
