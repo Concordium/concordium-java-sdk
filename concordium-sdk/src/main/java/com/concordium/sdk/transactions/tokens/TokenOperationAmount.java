@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.fasterxml.jackson.dataformat.cbor.CBORConstants;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -105,7 +106,7 @@ public class TokenOperationAmount {
             // For token module with 6 decimals,
             // "1.5" must be encoded as 4([-6, 1500000]) and not as 4([-1, 15])
             // even though the latter is shorter.
-            cborGenerator.writeTag(4);
+            cborGenerator.writeTag(CBORConstants.TAG_DECIMAL_FRACTION);
             cborGenerator.writeObject(new Object[]{
                     -tokenOperationAmount.decimals,
                     tokenOperationAmount.value
