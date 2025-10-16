@@ -21,6 +21,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Memo representation used in Protocol-Level Token operations.
+ * Holds up to 256 bytes of CBOR-encoded content.
+ *
+ * @see <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/source/CIS/cis-7.rst#memo">CBOR Schema</a>
+ */
 @Getter
 @JsonSerialize(using = CborMemo.CborSerializer.class)
 @JsonDeserialize(using = CborMemo.CborDeserializer.class)

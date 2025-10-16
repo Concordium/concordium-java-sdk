@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * To deserialize an operation from CBOR, always use <code>TokenOperation.class</code>
  * even if you know the exact type.
  *
+ * @see <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/source/CIS/cis-7.rst#transactions">CBOR Schemas</a>
  * @see TransferTokenOperation TransferTokenOperation
  * as an example of a CBOR-serializable token operation
  */

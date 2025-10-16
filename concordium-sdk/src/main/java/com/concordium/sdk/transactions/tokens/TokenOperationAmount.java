@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 /**
  * An amount for a protocol-level token (PLT) operation.
  * It is very important for decimals to match the actual value of the token.
+ *
+ * @see <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/source/CIS/cis-7.rst#token-amount">CBOR Schema</a>
  */
 @Getter
 @EqualsAndHashCode

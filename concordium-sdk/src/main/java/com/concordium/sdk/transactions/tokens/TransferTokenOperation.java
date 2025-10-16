@@ -9,6 +9,11 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.util.Optional;
 
+/**
+ * Transfers a specified amount of tokens from the sender account to the recipient account.
+ *
+ * @see <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/source/CIS/cis-7.rst#transfer">CBOR Schema</a>
+ */
 @Getter
 @Builder
 @EqualsAndHashCode
@@ -30,7 +35,7 @@ public class TransferTokenOperation implements TokenOperation {
     private final TaggedTokenHolderAccount recipient;
 
     /**
-     * Optional memo (message) to be included to the transfer,
+     * Optional memo (message, data) to be included to the transfer,
      * which will be <b>publicly available</b> on the blockchain.
      */
     private final CborMemo memo;

@@ -1,12 +1,9 @@
 package com.concordium.sdk.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import lombok.EqualsAndHashCode;
@@ -14,18 +11,26 @@ import lombok.Getter;
 import lombok.val;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
 @Getter
-@JsonSerialize(using = UInt32.UInt32Serializer.class)
-@JsonDeserialize(using = UInt32.UInt32Deserializer.class)
+@JsonSerialize(
+        using = UInt32.UInt32Serializer.class
+        // And deserialization works via the @JsonCreator constructor.
+)
 public final class UInt32 implements Comparable<UInt32> {
     public static final int BYTES = Integer.BYTES;
     final int value;
 
     private UInt32(int value) {
         this.value = value;
+    }
+
+    @JsonCreator
+    public UInt32(BigInteger value) {
+        this.value = UInt32.from(value.toString()).getValue();
     }
 
     public byte[] getBytes() {
@@ -77,7 +82,7 @@ public final class UInt32 implements Comparable<UInt32> {
 
     /**
      * A custom Jackson serializer is provided that ensures that the unsigned value
-     * is the one used when serializing to JSON.
+     * is the one used when serializing to JSON and CBOR.
      */
     static class UInt32Serializer extends StdSerializer<UInt32> {
 
@@ -95,19 +100,6 @@ public final class UInt32 implements Comparable<UInt32> {
             }
 
             generator.writeRawValue(Integer.toUnsignedString(uint.getValue()));
-        }
-    }
-
-    static class UInt32Deserializer extends StdDeserializer<UInt32> {
-
-        protected UInt32Deserializer() {
-            super(UInt32.class);
-        }
-        
-        @Override
-        public UInt32 deserialize(JsonParser parser,
-                                  DeserializationContext deserializationContext) throws IOException {
-            return UInt32.from(parser.getBigIntegerValue().toString());
         }
     }
 }

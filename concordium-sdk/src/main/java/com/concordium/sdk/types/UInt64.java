@@ -16,7 +16,10 @@ import java.nio.ByteBuffer;
 
 @Getter
 @EqualsAndHashCode
-@JsonSerialize(using = UInt64.UInt64Serializer.class)
+@JsonSerialize(
+        using = UInt64.UInt64Serializer.class
+        // And deserialization works via the @JsonCreator constructor.
+)
 public final class UInt64 implements Comparable<UInt64> {
     public static final int BYTES = Long.BYTES;
 
@@ -79,7 +82,7 @@ public final class UInt64 implements Comparable<UInt64> {
 
     /**
      * A custom Jackson serializer is provided that ensures that the unsigned value
-     * is the one used when serializing to JSON.
+     * is the one used when serializing to JSON and CBOR.
      */
     static class UInt64Serializer extends StdSerializer<UInt64> {
 

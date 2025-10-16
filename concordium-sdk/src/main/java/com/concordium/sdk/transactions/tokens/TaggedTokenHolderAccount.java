@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Account address representation used in Protocol-Level Token operations.
+ *
+ * @see <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/source/CIS/cis-7.rst#account-address">CBOR Schema</a>
+ */
 @Getter
 @JsonSerialize(using = TaggedTokenHolderAccount.CborSerializer.class)
 @JsonDeserialize(using = TaggedTokenHolderAccount.CborDeserializer.class)
