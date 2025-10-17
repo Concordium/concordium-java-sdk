@@ -15,7 +15,7 @@ import com.fasterxml.jackson.dataformat.cbor.CBORParser;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.apache.commons.codec.binary.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -62,7 +62,7 @@ public class CborMemo {
     @Override
     public String toString() {
         return "CborMemo(" +
-                "encodedContent=" + Hex.encodeHexString(content) +
+                "encodedContent=" + Hex.toHexString(content) +
                 ')';
     }
 
