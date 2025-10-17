@@ -5,6 +5,9 @@ import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import java.util.List;
 
 /**
  * A protocol-level token (PLT) operation used in {@link TokenUpdate}.
@@ -45,4 +48,10 @@ public interface TokenOperation {
      */
     @JsonIgnore
     UInt64 getBaseCost();
+
+    TypeReference<List<TokenOperation>> LIST_TYPE =
+            new TypeReference<List<TokenOperation>>() {
+                // TypeReference is needed as Java erases types from generics
+                // leaving the deserializer clueless about the TokenOperation hierarchy.
+            };
 }

@@ -8,6 +8,8 @@ import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
+import lombok.val;
+import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -174,6 +176,35 @@ public class TokenUpdateTransactionTest {
                         .build()
                         .getHeader()
                         .getMaxEnergyCost()
+        );
+    }
+
+    @Test
+    @SneakyThrows
+    public void testTokenUpdateBuilderWithSerializedOperations() {
+        val expectedPayload = TokenUpdate
+                .builder()
+                .tokenSymbol("TEST")
+                .operation(
+                        TransferTokenOperation
+                                .builder()
+                                .amount(new TokenOperationAmount(new BigDecimal("1.5"), 6))
+                                .recipient(new TaggedTokenHolderAccount(
+                                        AccountAddress.from(
+                                                "3CbvrNVpcHpL7tyT2mhXxQwNWHiPNYEJRgp3CMgEcMyXivms6B"
+                                        )
+                                ))
+                                .build()
+                )
+                .build();
+        val serializedOperationsHex = Hex.toHexString(expectedPayload.getOperationsSerialized());
+        Assert.assertEquals(
+                expectedPayload,
+                TokenUpdate
+                        .builder()
+                        .tokenSymbol("TEST")
+                        .operationsSerialized(Hex.decode(serializedOperationsHex))
+                        .build()
         );
     }
 }
