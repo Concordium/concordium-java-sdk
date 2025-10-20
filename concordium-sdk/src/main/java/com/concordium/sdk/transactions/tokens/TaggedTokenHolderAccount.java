@@ -43,6 +43,13 @@ public class TaggedTokenHolderAccount {
         this(accountAddress.getBytes());
     }
 
+    /**
+     * @return the address in a convenient form.
+     */
+    public AccountAddress getAddress() {
+        return AccountAddress.from(data);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof TaggedTokenHolderAccount)) return false;
