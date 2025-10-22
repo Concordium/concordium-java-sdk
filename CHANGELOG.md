@@ -1,9 +1,10 @@
 # Changelog
 
-## Unreleased
+## 11.1.0
 
-- Make `TokenOperation`s deserializable from CBOR.
+- Made `TokenOperation`s deserializable from CBOR.
   `TokenUpdate.builder().operationsSerialized()` can be used for deserialization
+- Added `TaggedTokenHolderAccount.getAddress()` returning the address in a convenient form
 
 ## 11.0.2
 
