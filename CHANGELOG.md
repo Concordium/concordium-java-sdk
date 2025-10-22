@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Make `TokenOperation`s deserializable from CBOR.
+  `TokenUpdate.builder().operationsSerialized()` can be used for deserialization
+
 ## 11.0.2
 
 - Fixed always empty `tokens` in `AccountInfo`

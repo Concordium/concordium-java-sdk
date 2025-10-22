@@ -1,27 +1,36 @@
 package com.concordium.sdk.types;
 
-import com.concordium.sdk.serializing.CborMapper;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 @EqualsAndHashCode
 @Getter
-@JsonSerialize(using = UInt32.UInt32Serializer.class)
+@JsonSerialize(
+        using = UInt32.UInt32Serializer.class
+        // And deserialization works via the @JsonCreator constructor.
+)
 public final class UInt32 implements Comparable<UInt32> {
     public static final int BYTES = Integer.BYTES;
     final int value;
 
     private UInt32(int value) {
         this.value = value;
+    }
+
+    @JsonCreator
+    public UInt32(BigInteger value) {
+        this.value = UInt32.from(value.toString()).getValue();
     }
 
     public byte[] getBytes() {
@@ -73,24 +82,20 @@ public final class UInt32 implements Comparable<UInt32> {
 
     /**
      * A custom Jackson serializer is provided that ensures that the unsigned value
-     * is the one used when serializing to JSON.
+     * is the one used when serializing to JSON and CBOR.
      */
-    static class UInt32Serializer extends JsonSerializer<UInt32> {
+    static class UInt32Serializer extends StdSerializer<UInt32> {
+
+        protected UInt32Serializer() {
+            super(UInt32.class);
+        }
 
         @Override
         public void serialize(UInt32 uint,
                               JsonGenerator generator,
                               SerializerProvider provider) throws IOException {
             if (generator instanceof CBORGenerator) {
-                val cborGenerator = (CBORGenerator) generator;
-
-                // Write as unsigned 4-byte integer.
-                val value = ByteBuffer.allocate(1 + Integer.BYTES)
-                        .put((byte) 0x1A)
-                        .put(uint.getBytes())
-                        .array();
-                CborMapper.writeBytesAsValue(cborGenerator, value, 0, value.length);
-
+                ((CBORGenerator) generator).writeNumberUnsigned(uint.value);
                 return;
             }
 

@@ -2,47 +2,56 @@ package com.concordium.sdk.transactions.tokens;
 
 import com.concordium.sdk.transactions.TokenUpdate;
 import com.concordium.sdk.types.UInt64;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
-import lombok.val;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.io.IOException;
+import java.util.List;
 
 /**
  * A protocol-level token (PLT) operation used in {@link TokenUpdate}.
+ * <p>
+ * To deserialize an operation from CBOR, always use <code>TokenOperation.class</code>
+ * even if you know the exact type.
+ *
+ * @see <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/source/CIS/cis-7.rst#transactions">CBOR Schemas</a>
+ * @see TransferTokenOperation TransferTokenOperation
+ * as an example of a CBOR-serializable token operation
  */
-@JsonSerialize(using = TokenOperation.CborSerializer.class)
+@JsonTypeInfo(
+        // For CBOR serialization, wrap the operation with a single field object
+        // where the field name is the operation type.
+        include = JsonTypeInfo.As.WRAPPER_OBJECT,
+        // Use subtype name as the operation type.
+        use = JsonTypeInfo.Id.NAME
+)
+@JsonSubTypes({
+        // All the operations must be defined here.
+        // If you use @JsonTypeName in the operation class instead,
+        // deserializer won't work.
+        @JsonSubTypes.Type(
+                value = TransferTokenOperation.class,
+                name = TransferTokenOperation.TYPE
+        )
+})
 public interface TokenOperation {
 
     /**
      * @return operation type name, e.g. "transfer", "mint", etc.
      */
+    @JsonIgnore
     String getType();
-
-    /**
-     * @return A CBOR-serializable (Jackson) operation body.
-     */
-    Object getBody();
 
     /**
      * @return the base energy cost of this operation.
      */
+    @JsonIgnore
     UInt64 getBaseCost();
 
-    class CborSerializer extends JsonSerializer<TokenOperation> {
-
-        @Override
-        public void serialize(TokenOperation tokenOperation,
-                              JsonGenerator jsonGenerator,
-                              SerializerProvider serializerProvider) throws IOException {
-            val cborGenerator = (CBORGenerator) jsonGenerator;
-            cborGenerator.writeStartObject(tokenOperation, 1);
-            cborGenerator.writeFieldName(tokenOperation.getType());
-            cborGenerator.writeObject(tokenOperation.getBody());
-            cborGenerator.writeEndObject();
-        }
-    }
+    TypeReference<List<TokenOperation>> LIST_TYPE =
+            new TypeReference<List<TokenOperation>>() {
+                // TypeReference is needed as Java erases types from generics
+                // leaving the deserializer clueless about the TokenOperation hierarchy.
+            };
 }

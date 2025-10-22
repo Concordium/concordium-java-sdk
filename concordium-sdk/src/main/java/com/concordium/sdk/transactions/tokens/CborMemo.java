@@ -2,22 +2,38 @@ package com.concordium.sdk.transactions.tokens;
 
 import com.concordium.sdk.serializing.CborMapper;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
+import com.fasterxml.jackson.dataformat.cbor.CBORParser;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
 
+/**
+ * Memo representation used in Protocol-Level Token operations.
+ * Holds up to 256 bytes of CBOR-encoded content.
+ *
+ * @see <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/source/CIS/cis-7.rst#memo">CBOR Schema</a>
+ */
 @Getter
 @JsonSerialize(using = CborMemo.CborSerializer.class)
+@JsonDeserialize(using = CborMemo.CborDeserializer.class)
 public class CborMemo {
 
     /**
-     * Memo content to be CBOR-encoded (Jackson), up to 256 bytes total.
+     * CBOR-encoded content, up to 256 bytes total.
      */
     private final byte[] content;
 
@@ -43,15 +59,61 @@ public class CborMemo {
         return new CborMemo(CborMapper.INSTANCE.writeValueAsBytes(content));
     }
 
-    static class CborSerializer extends JsonSerializer<CborMemo> {
+    @Override
+    public String toString() {
+        return "CborMemo(" +
+                "encodedContent=" + Hex.toHexString(content) +
+                ')';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof CborMemo)) return false;
+        CborMemo cborMemo = (CborMemo) o;
+        return Objects.deepEquals(content, cborMemo.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(content);
+    }
+
+    static class CborSerializer extends StdSerializer<CborMemo> {
+
+        protected CborSerializer() {
+            super(CborMemo.class);
+        }
 
         @Override
         public void serialize(CborMemo cborMemo,
                               JsonGenerator jsonGenerator,
                               SerializerProvider serializerProvider) throws IOException {
             val cborGenerator = (CBORGenerator) jsonGenerator;
-            cborGenerator.writeTag(24);
+            cborGenerator.writeTag(CBOR_TAG);
             cborGenerator.writeObject(cborMemo.content);
         }
     }
+
+    static class CborDeserializer extends StdDeserializer<CborMemo> {
+
+        protected CborDeserializer() {
+            super(CborMemo.class);
+        }
+
+        @Override
+        public CborMemo deserialize(JsonParser jsonParser,
+                                    DeserializationContext deserializationContext) throws IOException {
+            val cborParser = (CBORParser) jsonParser;
+            val currentTag = cborParser.getCurrentTag();
+            if (currentTag != CBOR_TAG) {
+                throw new JsonParseException(
+                        jsonParser,
+                        "Expected CBOR memo tag " + CBOR_TAG + ", but read " + currentTag
+                );
+            }
+            return new CborMemo(cborParser.getBinaryValue());
+        }
+    }
+
+    private static final int CBOR_TAG = 24;
 }
