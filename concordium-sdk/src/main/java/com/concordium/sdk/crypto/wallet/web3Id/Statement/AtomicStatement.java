@@ -1,19 +1,20 @@
 package com.concordium.sdk.crypto.wallet.web3Id.Statement;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.crypto.wallet.identityobject.MissingAttributeException;
 import com.concordium.sdk.crypto.wallet.web3Id.CredentialAttribute;
 import com.concordium.sdk.responses.accountinfo.credential.AttributeType;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode
 @JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = "type", visible = true)
 @JsonSubTypes ({@Type (value = RevealStatement.class), @Type (value = RangeStatement.class), @Type (value = MembershipStatement.class), @Type (value = NonMembershipStatement.class)})
 public abstract class AtomicStatement {

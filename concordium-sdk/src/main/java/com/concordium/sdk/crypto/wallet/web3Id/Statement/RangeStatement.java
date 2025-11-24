@@ -8,19 +8,22 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
-@JsonTypeName("AttributeInRange")
 @Getter
 @Builder
 @Jacksonized
+@EqualsAndHashCode(callSuper = true)
+@JsonTypeName("AttributeInRange")
 public class RangeStatement extends AtomicStatement {
-    private CredentialAttribute lower;
-    private CredentialAttribute upper;
-    private String attributeTag;
+    private final CredentialAttribute lower;
+    private final CredentialAttribute upper;
+    private final String attributeTag;
+
     @Override
-    public boolean canBeProvedBy(IdentityObject identityObject) throws JsonParseException, JsonProcessingException  {
+    public boolean canBeProvedBy(IdentityObject identityObject) throws JsonParseException, JsonProcessingException {
         try {
             CredentialAttribute value = getAttributeValue(identityObject);
             return value.isBetween(lower, upper);
