@@ -40,11 +40,10 @@ use std::{
 };
 use wallet_library::{
     credential::{
-        self, create_unsigned_credential_v1_aux, serialize_credential_deployment_payload,
-        CredentialDeploymentDetails, CredentialDeploymentPayload,
+        self, CredentialDeploymentDetails, CredentialDeploymentPayload, create_unsigned_credential_v1_aux, serialize_credential_deployment_payload
     },
     identity::{create_identity_object_request_v1_aux, create_identity_recovery_request_aux},
-    proofs::Web3IdProofInput,
+    proofs::{PresentationV1ProofInput, Web3IdProofInput},
     statement::{
         AcceptableAtomicStatement, AcceptableRequest, RequestCheckError, WalletConfigRules,
     },
@@ -1469,4 +1468,38 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptab
     };
 
     ErrorResult::Ok(None).to_jstring(&env)
+}
+
+
+
+/// The JNI wrapper for creating a PresentationV1 for the given statement.
+/// * `input` - the JSON string of [`wallet_library::proofs::PresentationV1ProofInput`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createPresentationProof(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let proofInput: PresentationV1ProofInput = match serde_json::from_str(&input_string) {
+        Ok(req) => req,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let presentation = match proofInput.prove() {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let presentation_string = match to_string(&presentation) {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(presentation_string).to_jstring(&env)
 }
