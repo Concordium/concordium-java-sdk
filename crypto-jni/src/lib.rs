@@ -269,6 +269,16 @@ impl<T> From<concordium_base::web3id::ProofError> for CryptoJniResult<T> {
         CryptoJniResult::Err(error)
     }
 }
+
+impl<T> From<concordium_base::web3id::v1::ProveError> for CryptoJniResult<T> {
+    fn from(e: concordium_base::web3id::v1::ProveError) -> Self {
+        let error = JNIErrorResponse {
+            errorType:    JNIErrorResponseType::NativeConversion,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
+    }
+}
 /// Creates errors from strings. Used when payload creation fails as no error to
 /// be passed on is generated.
 impl<T> From<&str> for CryptoJniResult<T> {
