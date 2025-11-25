@@ -1,5 +1,6 @@
 package com.concordium.sdk.crypto.wallet.web3Id;
 
+import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.transactions.Hash;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,9 @@ import java.util.List;
  * are being requested from a credential holder.
  * This class encapsulates the request context, the specific credential subject claims needed,
  * and a reference to the blockchain transaction (its hash) that anchors the request.
+ * <br><br>
+ * To satisfy this request, call
+ * {@link VerifiablePresentationV1#getVerifiablePresentation(VerificationRequestV1, List, List, CryptographicParameters)}
  */
 @Getter
 @Builder

@@ -20,7 +20,7 @@ import java.util.List;
 public class IdentityClaim implements SubjectClaim {
 
     /**
-     * Source types accepted for this statement (identity credential, account credential, or both).
+     * Credential types accepted for this statement (identity credential, account credential, or both).
      *
      * @see IdentityClaim#IDENTITY_CREDENTIAL_SOURCE
      * @see IdentityClaim#ACCOUNT_CREDENTIAL_SOURCE
