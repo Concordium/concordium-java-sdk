@@ -1,6 +1,7 @@
 package com.concordium.sdk.crypto.wallet.web3Id;
 
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.RevealStatement;
+import com.concordium.sdk.crypto.wallet.web3Id.Statement.did.IdentityProviderRequestIdentifier;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
 import lombok.SneakyThrows;
@@ -51,9 +52,9 @@ public class VerificationRequestV1Test {
                                                 .attributeTag("firstName")
                                                 .build()
                                 )
-                                .issuer("did:ccd:testnet:idp:0")
-                                .issuer("did:ccd:testnet:idp:1")
-                                .issuer("did:ccd:testnet:idp:2")
+                                .issuer(IdentityProviderRequestIdentifier.fromString("did:ccd:testnet:idp:0"))
+                                .issuer(IdentityProviderRequestIdentifier.fromString("did:ccd:testnet:idp:1"))
+                                .issuer(IdentityProviderRequestIdentifier.fromString("did:ccd:testnet:idp:2"))
                                 .build()
                 )
                 .transactionRef(Hash.from("0102030401020304010203040102030401020304010203040102030401020304"))

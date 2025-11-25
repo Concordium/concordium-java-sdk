@@ -15,8 +15,8 @@ import lombok.Getter;
 
 @Getter
 public class AccountRequestIdentifier extends RequestIdentifier {
-    private CredentialRegistrationId credId;
-    private static Pattern pattern = Pattern.compile( "^" + getDID("(mainnet|testnet)", "([a-zA-Z0-9]*)") + "$");
+    private final CredentialRegistrationId credId;
+    private static final Pattern pattern = Pattern.compile( "^" + getDID("(mainnet|testnet)", "([a-zA-Z0-9]*)") + "$");
 
     @Builder
     public AccountRequestIdentifier(Network network, CredentialRegistrationId credId) {

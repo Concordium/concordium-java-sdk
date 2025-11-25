@@ -42,6 +42,39 @@ public class VerifiablePresentationV1 {
         context.put("type", "ConcordiumContextInformationV1");
         context.putPOJO("given", request.getContext().getGiven());
         context.putPOJO("requested", filledRequestedContext);
+//
+//        val subjectClaims = JsonMapper.INSTANCE.createArrayNode();
+//
+//        for (int claimIndex = 0; claimIndex < request.getSubjectClaims().size(); claimIndex++) {
+//            val requestSubjectClaim = request.getSubjectClaims().get(claimIndex);
+//            val commitmentInput = commitmentInputs.get(claimIndex);
+//
+//            val claimJson = JsonMapper.INSTANCE.createObjectNode();
+//            val claimTypeArray = JsonMapper.INSTANCE.createArrayNode().add("ConcordiumSubjectClaimsV1");
+//            claimJson.set("type", claimTypeArray);
+//            claimJson.putPOJO("statement", requestSubjectClaim.getStatements());
+//
+//            if (commitmentInput instanceof IdentityCommitmentInput) {
+//                val identityCommitmentInput = (IdentityCommitmentInput) commitmentInput;
+//                claimTypeArray.add("ConcordiumIdBasedSubjectClaims");
+//                claimJson.put(
+//                        "issuer",
+//                        "did:ccd:blabla:idp:" + identityCommitmentInput.getIpInfo().getIpIdentity().toString()
+//                );
+//            } else if (commitmentInput instanceof AccountCommitmentInput) {
+//                val accountCommitmentInput = (AccountCommitmentInput) commitmentInput;
+//                claimTypeArray.add("ConcordiumAccountBasedSubjectClaims");
+//                claimJson.put(
+//                        "id",
+//                        "did:ccd:blabla:cred:" + accountCommitmentInput.getValues()
+//                );
+//            } else {
+//                throw new IllegalArgumentException("Commitment input #" + claimIndex +
+//                        " has unsupported type " + commitmentInput.getClass().getSimpleName());
+//            }
+//
+//            subjectClaims.add(claimJson);
+//        }
 
         val requestJson = JsonMapper.INSTANCE.createObjectNode();
         requestJson.put("type", "ConcordiumVerifiablePresentationRequestV1");
@@ -53,7 +86,7 @@ public class VerifiablePresentationV1 {
         input.putPOJO("global", globalContext);
         input.set("request", requestJson);
 
-        StringResult result = null;
+        StringResult result;
         try {
             String jsonStr = CryptoJniNative.createPresentationV1(JsonMapper.INSTANCE.writeValueAsString(input));
             result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);

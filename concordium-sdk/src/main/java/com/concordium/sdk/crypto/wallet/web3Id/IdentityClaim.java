@@ -1,6 +1,7 @@
 package com.concordium.sdk.crypto.wallet.web3Id;
 
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.AtomicStatement;
+import com.concordium.sdk.crypto.wallet.web3Id.Statement.did.IdentityProviderRequestIdentifier;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,11 +35,13 @@ public class IdentityClaim implements SubjectClaim {
     private final List<AtomicStatement> statements;
 
     /**
-     * Valid identity issuers for this statement, in form of DIDs.
+     * Valid identity issuers for this statement, in form of identity provider DIDs.
      * For example, <code>did:ccd:testnet:idp:0</code>
+     *
+     * @see IdentityProviderRequestIdentifier#fromString(String)
      */
     @Singular
-    private final List<String> issuers;
+    private final List<IdentityProviderRequestIdentifier> issuers;
 
     public static final String TYPE = "identity";
     public static final String IDENTITY_CREDENTIAL_SOURCE = "identityCredential";

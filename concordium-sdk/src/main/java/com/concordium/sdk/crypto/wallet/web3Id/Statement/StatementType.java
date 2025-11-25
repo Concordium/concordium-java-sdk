@@ -6,5 +6,7 @@ public enum StatementType {
     @JsonProperty("cred")
     Credential,
     @JsonProperty("sci")
-    SmartContract
+    SmartContract,
+    @JsonProperty("idp")
+    IdentityProvider,
 }

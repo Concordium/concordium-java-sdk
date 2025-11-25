@@ -1,6 +1,5 @@
 package com.concordium.sdk.crypto.wallet.web3Id.Statement.did;
 
-import java.io.IOException;
 import com.concordium.sdk.crypto.wallet.Network;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.StatementType;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -9,12 +8,15 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
+import java.io.IOException;
 
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode
 @JsonDeserialize(using = RequestIdentifierDeserializer.class)
 public abstract class RequestIdentifier {
     Network network;
@@ -34,6 +36,10 @@ class RequestIdentifierDeserializer extends JsonDeserializer<RequestIdentifier> 
         AccountRequestIdentifier accountDID = AccountRequestIdentifier.tryFromString(did);
         if (accountDID != null) {
             return accountDID;
+        }
+        IdentityProviderRequestIdentifier idpDID = IdentityProviderRequestIdentifier.tryFromString(did);
+        if (idpDID != null) {
+            return idpDID;
         }
         Web3IssuerRequestIdentifier web3DID = Web3IssuerRequestIdentifier.tryFromString(did);
         if (web3DID != null) {
