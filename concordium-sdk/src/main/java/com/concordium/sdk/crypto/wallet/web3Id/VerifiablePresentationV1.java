@@ -18,7 +18,6 @@ import lombok.val;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class VerifiablePresentationV1 {
     // Static block to load native library.
@@ -46,26 +45,10 @@ public class VerifiablePresentationV1 {
                                                    List<QualifiedSubjectClaim> qualifiedClaims,
                                                    List<GivenContext> filledRequestedContext,
                                                    CryptographicParameters globalContext) {
-        val context = JsonMapper.INSTANCE.createObjectNode();
-        context.put("type", "ConcordiumContextInformationV1");
-        context.putPOJO("given", request.getContext().getGiven());
-        context.putPOJO("requested", filledRequestedContext);
-
-        val requestJson = JsonMapper.INSTANCE.createObjectNode();
-        requestJson.put("type", "ConcordiumVerifiablePresentationRequestV1");
-        requestJson.putPOJO("subjectClaims", qualifiedClaims);
-        requestJson.set("context", context);
-
-        val input = JsonMapper.INSTANCE.createObjectNode();
-        input.set("request", requestJson);
-        input.putPOJO("global", globalContext);
-        input.putPOJO("inputs", qualifiedClaims.stream()
-                .map(QualifiedSubjectClaim::getCommitmentInput)
-                .collect(Collectors.toList())
-        );
-
         StringResult result;
         try {
+            val input = new VerifiablePresentationInputV1(request, qualifiedClaims,
+                    filledRequestedContext, globalContext);
             String jsonStr = CryptoJniNative.createPresentationV1(JsonMapper.INSTANCE.writeValueAsString(input));
             result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
         } catch (JsonProcessingException e) {

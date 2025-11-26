@@ -1,10 +1,7 @@
 package com.concordium.sdk.crypto.wallet.web3Id;
 
-import com.concordium.sdk.crypto.wallet.web3Id.Statement.AtomicStatement;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-import java.util.List;
 
 @JsonTypeInfo(
         include = JsonTypeInfo.As.PROPERTY,
@@ -18,5 +15,4 @@ import java.util.List;
         )
 )
 public interface SubjectClaim {
-    List<AtomicStatement> getStatements();
 }
