@@ -3,7 +3,7 @@ pub use concordium_base::common::types::{AccountAddress, ACCOUNT_ADDRESS_SIZE};
 use concordium_base::{
     base,
     common::*,
-    contracts_common::{Amount, schema::VersionedModuleSchema},
+    contracts_common::{schema::VersionedModuleSchema, Amount},
     encrypted_transfers::{
         self,
         types::{
@@ -20,11 +20,17 @@ use concordium_base::{
         types::GlobalContext,
     },
     transactions::{AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload},
-    web3id::{Request, Web3IdAttribute, v1::anchor::{RequestedSubjectClaims, UnfilledContextInformation, VerificationRequest, VerificationRequestData}},
+    web3id::{
+        v1::anchor::{
+            RequestedSubjectClaims, UnfilledContextInformation, VerificationRequest,
+            VerificationRequestData,
+        },
+        Request, Web3IdAttribute,
+    },
 };
-use serde::de;
 use core::slice;
 use ed25519_dalek::*;
+use serde::de;
 
 use jni::{
     objects::{JClass, JObject, JString},
@@ -41,7 +47,8 @@ use std::{
 };
 use wallet_library::{
     credential::{
-        self, CredentialDeploymentDetails, CredentialDeploymentPayload, create_unsigned_credential_v1_aux, serialize_credential_deployment_payload
+        self, create_unsigned_credential_v1_aux, serialize_credential_deployment_payload,
+        CredentialDeploymentDetails, CredentialDeploymentPayload,
     },
     identity::{create_identity_object_request_v1_aux, create_identity_recovery_request_aux},
     proofs::{PresentationV1Input, VerificationRequestV1Input, Web3IdProofInput},
@@ -1529,13 +1536,19 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_compute_an
         Err(err) => return StringResult::Err(err).to_jstring(&env),
     };
 
-    let verification_request_v1_input: VerificationRequestV1Input  = match serde_json::from_str(&input_string) {
-        Ok(req) => req,
-        Err(err) => return StringResult::from(err).to_jstring(&env),
-    };
+    let verification_request_v1_input: VerificationRequestV1Input =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return StringResult::from(err).to_jstring(&env),
+        };
 
     let public_info = verification_request_v1_input.public_info.clone();
-    let verification_request_data = VerificationRequestData::from(verification_request_v1_input);
+
+    let verification_request_data = VerificationRequestData {
+        context: verification_request_v1_input.context,
+        subject_claims: verification_request_v1_input.subject_claims,
+    };
+
     let anchor = verification_request_data.to_anchor(public_info.map(|p| p.0));
 
     let hash_string = match to_string(&anchor.hash) {
