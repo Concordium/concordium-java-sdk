@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-class VerifiablePresentationInputV1 {
+class PresentationV1Input {
     private final JsonNode request;
     private final CryptographicParameters global;
     private final List<CommitmentInput> inputs;
 
-    VerifiablePresentationInputV1(VerificationRequestV1 request,
-                                  List<QualifiedSubjectClaim> qualifiedClaims,
-                                  List<GivenContext> filledRequestedContext,
-                                  CryptographicParameters globalContext) {
+    PresentationV1Input(VerificationRequestV1 request,
+                        List<QualifiedSubjectClaim> qualifiedClaims,
+                        List<GivenContext> filledRequestedContext,
+                        CryptographicParameters globalContext) {
         val context = JsonMapper.INSTANCE.createObjectNode();
         context.put("type", "ConcordiumContextInformationV1");
         context.putPOJO("given", request.getContext().getGiven());

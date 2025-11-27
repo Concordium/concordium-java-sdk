@@ -45,11 +45,14 @@ public class VerifiablePresentationV1 {
                                                    List<QualifiedSubjectClaim> qualifiedClaims,
                                                    List<GivenContext> filledRequestedContext,
                                                    CryptographicParameters globalContext) {
+        val input = new PresentationV1Input(request, qualifiedClaims, filledRequestedContext, globalContext);
+        return getVerifiablePresentation(input);
+    }
+
+    static String getVerifiablePresentation(PresentationV1Input input) {
         StringResult result;
         try {
-            val input = new VerifiablePresentationInputV1(request, qualifiedClaims,
-                    filledRequestedContext, globalContext);
-            String jsonStr = CryptoJniNative.createPresentationV1(JsonMapper.INSTANCE.writeValueAsString(input));
+            String jsonStr = CryptoJniNative.createPresentation(JsonMapper.INSTANCE.writeValueAsString(input));
             result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

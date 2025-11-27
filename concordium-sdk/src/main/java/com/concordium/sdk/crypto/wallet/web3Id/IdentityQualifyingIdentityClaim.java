@@ -11,16 +11,10 @@ import java.util.List;
 @Builder
 @Getter
 public class IdentityQualifyingIdentityClaim implements QualifiedSubjectClaim {
+    private final String[] type = {"ConcordiumSubjectClaimsV1", "ConcordiumIdBasedSubjectClaims"};
+
     @JsonProperty("issuer")
     private final IdentityProviderRequestIdentifier id;
-
     private final IdentityCommitmentInput commitmentInput;
-
     private final List<AtomicStatement> statements;
-
-    public String[] getType() {
-        return TYPE;
-    }
-
-    public static final String[] TYPE = {"ConcordiumSubjectClaimsV1", "ConcordiumIdBasedSubjectClaims"};
 }

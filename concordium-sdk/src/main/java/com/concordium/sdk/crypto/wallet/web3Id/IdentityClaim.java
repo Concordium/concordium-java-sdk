@@ -113,6 +113,7 @@ public class IdentityClaim implements SubjectClaim {
 
         return AccountQualifyingIdentityClaim.builder()
                 .id(new AccountRequestIdentifier(network, credId))
+                .issuer(new IdentityProviderRequestIdentifier(network, ipIdentity))
                 .statements(statements)
                 .commitmentInput(new AccountCommitmentInput(ipIdentity, attributeValues, attributeRandomness))
                 .build();

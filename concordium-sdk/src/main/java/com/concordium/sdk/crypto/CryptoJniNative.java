@@ -379,5 +379,5 @@ public class CryptoJniNative {
      * If successful the field 'result' contains ConcordiumVerifiablePresentationV1 JSON.
      * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
      */
-    public static native String createPresentationV1(String input);
+    public static native String createPresentation(String input);
 }
