@@ -1526,7 +1526,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createPres
 /// * `input` - the JSON string of [`wallet_library::proofs::VerificationRequestV1Input`]
 #[no_mangle]
 #[allow(non_snake_case)]
-pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_compute_anchor_hash(
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_computeAnchorHash(
     env: JNIEnv,
     _: JClass,
     input: JString,
