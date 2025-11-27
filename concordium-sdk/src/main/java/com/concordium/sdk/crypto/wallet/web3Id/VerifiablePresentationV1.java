@@ -33,7 +33,7 @@ public class VerifiablePresentationV1 {
      * and collect all the {@link VerificationRequestV1#getContext() requested context information}.
      *
      * @param request                the request to create a presentation (proof) for
-     * @param qualifiedClaims        request claims qualified with identities or accounts,
+     * @param claimsProofInputs       request claims ready to be proven with identities or accounts,
      *                               corresponds to {@link VerificationRequestV1#getSubjectClaims()}
      * @param filledRequestedContext provided requested context information,
      *                               corresponds to {@link UnfilledContextInformation#getRequested()}
@@ -41,18 +41,18 @@ public class VerifiablePresentationV1 {
      * @param globalContext          chain cryptographic parameters, stored in the wallet or fetched from a node
      * @return verifiable presentation JSON (ConcordiumVerifiablePresentationV1)
      * @see com.concordium.sdk.ClientV2#getCryptographicParameters(BlockQuery) Fetch global context (chain cryptographic parameters)
-     * @see IdentityClaim#qualify(Network, IdentityProviderInfo, Map, IdentityObject, BLSSecretKey, BLSSecretKey, String) Qualify for a claim with an identity
-     * @see IdentityClaim#qualify(Network, UInt32, CredentialRegistrationId, Map, Map) Qualify for a claim with an account
+     * @see IdentityClaims#getIdentityProofInput(Network, IdentityProviderInfo, Map, IdentityObject, BLSSecretKey, BLSSecretKey, String) Get claims proof input with an identity
+     * @see IdentityClaims#getAccountProofInput(Network, UInt32, CredentialRegistrationId, Map, Map) Get claims proof input with an account
      */
     public static String getVerifiablePresentation(VerificationRequestV1 request,
-                                                   List<QualifiedSubjectClaim> qualifiedClaims,
+                                                   List<SubjectClaimsProofInput> claimsProofInputs,
                                                    List<GivenContext> filledRequestedContext,
                                                    CryptographicParameters globalContext) {
-        val input = new PresentationV1Input(request, qualifiedClaims, filledRequestedContext, globalContext);
+        val input = new VerifiablePresentationV1Input(request, claimsProofInputs, filledRequestedContext, globalContext);
         return getVerifiablePresentation(input);
     }
 
-    static String getVerifiablePresentation(PresentationV1Input input) {
+    static String getVerifiablePresentation(VerifiablePresentationV1Input input) {
         StringResult result;
         try {
             String jsonStr = CryptoJniNative.createPresentation(JsonMapper.INSTANCE.writeValueAsString(input));

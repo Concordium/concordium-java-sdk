@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
- * A claim to prove.
+ * Some claims to prove.
  * <p>
- * Currently, the only claim type is {@link IdentityClaim}.
+ * Currently, the only known claims are {@link IdentityClaims}.
  */
 @JsonTypeInfo(
         include = JsonTypeInfo.As.PROPERTY,
@@ -15,9 +15,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 )
 @JsonSubTypes(
         @JsonSubTypes.Type(
-                value = IdentityClaim.class,
-                name = IdentityClaim.TYPE
+                value = IdentityClaims.class,
+                name = IdentityClaims.TYPE
         )
 )
-public interface SubjectClaim {
+public interface SubjectClaims {
 }

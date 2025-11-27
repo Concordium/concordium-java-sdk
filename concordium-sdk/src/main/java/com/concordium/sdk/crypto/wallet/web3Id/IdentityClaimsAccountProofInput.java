@@ -10,11 +10,11 @@ import java.util.List;
 
 @Builder
 @Getter
-public class AccountQualifyingIdentityClaim implements QualifiedSubjectClaim {
+public class IdentityClaimsAccountProofInput implements IdentityClaimsProofInput {
     private final String[] type = {"ConcordiumSubjectClaimsV1", "ConcordiumAccountBasedSubjectClaims"};
 
     private final AccountRequestIdentifier id;
     private final IdentityProviderRequestIdentifier issuer;
     private final AccountCommitmentInput commitmentInput;
-    private final List<AtomicStatement> statementInput;
+    private final List<AtomicStatement> statement;
 }

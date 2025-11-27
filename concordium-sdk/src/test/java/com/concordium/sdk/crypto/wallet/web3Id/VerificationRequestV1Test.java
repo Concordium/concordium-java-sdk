@@ -18,7 +18,7 @@ public class VerificationRequestV1Test {
     public void jsonSerialization() {
 
         val source = new ArrayList<String>();
-        source.add(IdentityClaim.IDENTITY_CREDENTIAL_SOURCE);
+        source.add(IdentityClaims.IDENTITY_CREDENTIAL_SOURCE);
         val request = VerificationRequestV1.builder()
                 .context(
                         UnfilledContextInformation.builder()
@@ -44,8 +44,8 @@ public class VerificationRequestV1Test {
                                 .requestedContext(GivenContext.RESOURCE_ID_LABEL)
                                 .build()
                 )
-                .subjectClaim(
-                        IdentityClaim.builder()
+                .addSubjectClaims(
+                        IdentityClaims.builder()
                                 .source(source)
                                 .statement(
                                         RevealStatement.builder()

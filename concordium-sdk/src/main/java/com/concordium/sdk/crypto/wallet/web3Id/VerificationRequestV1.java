@@ -24,6 +24,8 @@ import java.util.List;
 @EqualsAndHashCode
 @Jacksonized
 public class VerificationRequestV1 {
+    private final String type = TYPE;
+
     /**
      * The context information for this request
      * describing both the information that is already known (given) and
@@ -32,12 +34,12 @@ public class VerificationRequestV1 {
     private final UnfilledContextInformation context;
 
     /**
-     * The specific credential subject claims that are requested to be proven.
+     * The specific credential claims that are requested to be proven.
      * <p>
-     * Currently, the only claim type is {@link IdentityClaim}.
+     * Currently, the only known claims are {@link IdentityClaims}.
      */
-    @Singular
-    private final List<SubjectClaim> subjectClaims;
+    @Singular("addSubjectClaims")
+    private final List<SubjectClaims> subjectClaims;
 
     /**
      * Hash of the blockchain transaction anchoring this request.
@@ -45,10 +47,6 @@ public class VerificationRequestV1 {
      * @see VerificationRequestAnchor
      */
     private final Hash transactionRef;
-
-    public String getType() {
-        return TYPE;
-    }
 
     public static final String TYPE = "ConcordiumVerificationRequestV1";
 }
