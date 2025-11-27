@@ -20,7 +20,7 @@ use concordium_base::{
         types::GlobalContext,
     },
     transactions::{AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload},
-    web3id::{Request, Web3IdAttribute},
+    web3id::{v1::anchor::VerificationRequestData, Request, Web3IdAttribute},
 };
 use core::slice;
 use ed25519_dalek::*;
@@ -44,7 +44,7 @@ use wallet_library::{
         CredentialDeploymentDetails, CredentialDeploymentPayload,
     },
     identity::{create_identity_object_request_v1_aux, create_identity_recovery_request_aux},
-    proofs::Web3IdProofInput,
+    proofs::{PresentationV1Input, VerificationRequestV1Input, Web3IdProofInput},
     statement::{
         AcceptableAtomicStatement, AcceptableRequest, RequestCheckError, WalletConfigRules,
     },
@@ -227,14 +227,14 @@ enum JNIErrorResponseType {
 #[derive(SerdeSerialize, SerdeDeserialize)]
 #[allow(non_snake_case)]
 struct JNIErrorResponse {
-    errorType:    JNIErrorResponseType,
+    errorType: JNIErrorResponseType,
     errorMessage: String,
 }
 
 impl<T> From<serde_json::Error> for CryptoJniResult<T> {
     fn from(e: serde_json::Error) -> Self {
         let error = JNIErrorResponse {
-            errorType:    JNIErrorResponseType::JsonDeserialization,
+            errorType: JNIErrorResponseType::JsonDeserialization,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -244,7 +244,7 @@ impl<T> From<serde_json::Error> for CryptoJniResult<T> {
 impl<T> From<Utf8Error> for CryptoJniResult<T> {
     fn from(e: Utf8Error) -> Self {
         let error = JNIErrorResponse {
-            errorType:    JNIErrorResponseType::Utf8Decode,
+            errorType: JNIErrorResponseType::Utf8Decode,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -254,7 +254,7 @@ impl<T> From<Utf8Error> for CryptoJniResult<T> {
 impl<T> From<jni::errors::Error> for CryptoJniResult<T> {
     fn from(e: jni::errors::Error) -> Self {
         let error = JNIErrorResponse {
-            errorType:    JNIErrorResponseType::NativeConversion,
+            errorType: JNIErrorResponseType::NativeConversion,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -264,7 +264,17 @@ impl<T> From<jni::errors::Error> for CryptoJniResult<T> {
 impl<T> From<concordium_base::web3id::ProofError> for CryptoJniResult<T> {
     fn from(e: concordium_base::web3id::ProofError) -> Self {
         let error = JNIErrorResponse {
-            errorType:    JNIErrorResponseType::NativeConversion,
+            errorType: JNIErrorResponseType::NativeConversion,
+            errorMessage: e.to_string(),
+        };
+        CryptoJniResult::Err(error)
+    }
+}
+
+impl<T> From<concordium_base::web3id::v1::ProveError> for CryptoJniResult<T> {
+    fn from(e: concordium_base::web3id::v1::ProveError) -> Self {
+        let error = JNIErrorResponse {
+            errorType: JNIErrorResponseType::NativeConversion,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -275,7 +285,7 @@ impl<T> From<concordium_base::web3id::ProofError> for CryptoJniResult<T> {
 impl<T> From<&str> for CryptoJniResult<T> {
     fn from(e: &str) -> Self {
         let error = JNIErrorResponse {
-            errorType:    JNIErrorResponseType::PayloadCreation,
+            errorType: JNIErrorResponseType::PayloadCreation,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -285,7 +295,7 @@ impl<T> From<&str> for CryptoJniResult<T> {
 impl<T> From<anyhow::Error> for CryptoJniResult<T> {
     fn from(e: anyhow::Error) -> Self {
         let error = JNIErrorResponse {
-            errorType:    JNIErrorResponseType::ParameterSerialization,
+            errorType: JNIErrorResponseType::ParameterSerialization,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -324,9 +334,9 @@ fn decrypt_encrypted_amount(
 #[serde(bound(serialize = "C: Curve", deserialize = "C: Curve"))]
 #[serde(rename_all = "camelCase")]
 struct JniInput<C: Curve> {
-    global:                 GlobalContext<C>,
-    amount:                 Amount,
-    sender_secret_key:      elgamal::SecretKey<C>,
+    global: GlobalContext<C>,
+    amount: Amount,
+    sender_secret_key: elgamal::SecretKey<C>,
     input_encrypted_amount: IndexedEncryptedAmount<C>,
 }
 
@@ -364,10 +374,10 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createSecT
 
     let input_amount: AggregatedDecryptedAmount<ArCurve> = AggregatedDecryptedAmount {
         agg_encrypted_amount: input.input_encrypted_amount.encrypted_chunks,
-        agg_index:            encrypted_transfers::types::EncryptedAmountAggIndex {
+        agg_index: encrypted_transfers::types::EncryptedAmountAggIndex {
             index: input.input_encrypted_amount.index.index,
         },
-        agg_amount:           decrypted_amount,
+        agg_amount: decrypted_amount,
     };
 
     let mut csprng = thread_rng();
@@ -390,10 +400,10 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createSecT
 #[serde(bound(serialize = "C: Curve", deserialize = "C: Curve"))]
 #[serde(rename_all = "camelCase")]
 struct TransferJniInput<C: Curve> {
-    global:                 GlobalContext<C>,
-    receiver_public_key:    elgamal::PublicKey<C>,
-    sender_secret_key:      elgamal::SecretKey<C>,
-    amount_to_send:         Amount,
+    global: GlobalContext<C>,
+    receiver_public_key: elgamal::PublicKey<C>,
+    sender_secret_key: elgamal::SecretKey<C>,
+    amount_to_send: Amount,
     input_encrypted_amount: IndexedEncryptedAmount<C>,
 }
 
@@ -433,10 +443,10 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateEn
 
     let input_amount: AggregatedDecryptedAmount<ArCurve> = AggregatedDecryptedAmount {
         agg_encrypted_amount: input.input_encrypted_amount.encrypted_chunks,
-        agg_index:            encrypted_transfers::types::EncryptedAmountAggIndex {
+        agg_index: encrypted_transfers::types::EncryptedAmountAggIndex {
             index: input.input_encrypted_amount.index.index,
         },
-        agg_amount:           decrypted_amount,
+        agg_amount: decrypted_amount,
     };
 
     let mut csprng = thread_rng();
@@ -471,7 +481,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_generateBa
 #[serde(rename_all = "camelCase")]
 struct AddBakerPayloadInput {
     pub sender: AccountAddress,
-    pub keys:   base::BakerKeyPairs,
+    pub keys: base::BakerKeyPairs,
 }
 
 type AddBakerResult = CryptoJniResult<BakerKeysPayload<AddBakerKeysMarker>>;
@@ -713,7 +723,7 @@ fn get_string(env: JNIEnv, java_string: JString) -> Result<String, JNIErrorRespo
         Err(err) => {
             return Err(JNIErrorResponse {
                 errorMessage: err.to_string(),
-                errorType:    JNIErrorResponseType::JsonDeserialization,
+                errorType: JNIErrorResponseType::JsonDeserialization,
             })
         }
     };
@@ -723,7 +733,7 @@ fn get_string(env: JNIEnv, java_string: JString) -> Result<String, JNIErrorRespo
         Err(err) => {
             return Err(JNIErrorResponse {
                 errorMessage: err.to_string(),
-                errorType:    JNIErrorResponseType::Utf8Decode,
+                errorType: JNIErrorResponseType::Utf8Decode,
             })
         }
     };
@@ -735,7 +745,7 @@ fn get_string(env: JNIEnv, java_string: JString) -> Result<String, JNIErrorRespo
 /// the network in string form.
 struct SeedAndNet {
     seed_as_hex: String,
-    net_as_str:  String,
+    net_as_str: String,
 }
 
 /// Parse the hex encoded seed and the network from Java types to
@@ -749,7 +759,7 @@ fn get_seed_and_net(
     let net = get_string(env, net_as_str)?;
     Ok(SeedAndNet {
         seed_as_hex: seed,
-        net_as_str:  net,
+        net_as_str: net,
     })
 }
 
@@ -1331,7 +1341,7 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createWeb3
 impl<T> From<wallet_library::statement::RequestCheckError> for CryptoJniResult<T> {
     fn from(e: wallet_library::statement::RequestCheckError) -> Self {
         let error = JNIErrorResponse {
-            errorType:    JNIErrorResponseType::NativeConversion,
+            errorType: JNIErrorResponseType::NativeConversion,
             errorMessage: e.to_string(),
         };
         CryptoJniResult::Err(error)
@@ -1361,7 +1371,9 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptab
             Err(err) => return ErrorResult::from(err).to_jstring(&env),
         };
 
-    match request.acceptable_request(&wallet_library::default_wallet_config::default_wallet_config()) {
+    match request
+        .acceptable_request(&wallet_library::default_wallet_config::default_wallet_config())
+    {
         Ok(r) => r,
         Err(err) => return ErrorResult::Ok(Some(err.to_string())).to_jstring(&env),
     };
@@ -1469,4 +1481,69 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_isAcceptab
     };
 
     ErrorResult::Ok(None).to_jstring(&env)
+}
+
+/// The JNI wrapper for creating a PresentationV1 for the given statement.
+/// * `input` - the JSON string of [`wallet_library::proofs::PresentationV1Input`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_createPresentation(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let proofInput: PresentationV1Input = match serde_json::from_str(&input_string) {
+        Ok(req) => req,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let presentation = match proofInput.prove() {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    let presentation_string = match to_string(&presentation) {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(presentation_string).to_jstring(&env)
+}
+
+/// The JNI wrapper for computing the anchor hash for VerificationRequestData
+/// * `input` - the JSON string of [`wallet_library::proofs::VerificationRequestV1Input`]
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_computeAnchorHash(
+    env: JNIEnv,
+    _: JClass,
+    input: JString,
+) -> jstring {
+    let input_string = match get_string(env, input) {
+        Ok(s) => s,
+        Err(err) => return StringResult::Err(err).to_jstring(&env),
+    };
+
+    let verification_request_v1_input: VerificationRequestV1Input =
+        match serde_json::from_str(&input_string) {
+            Ok(req) => req,
+            Err(err) => return StringResult::from(err).to_jstring(&env),
+        };
+
+    let verification_request_data = VerificationRequestData {
+        context: verification_request_v1_input.context,
+        subject_claims: verification_request_v1_input.subject_claims,
+    };
+
+    let hash_string = match to_string(&verification_request_data.hash()) {
+        Ok(r) => r,
+        Err(err) => return StringResult::from(err).to_jstring(&env),
+    };
+
+    CryptoJniResult::Ok(hash_string).to_jstring(&env)
 }
