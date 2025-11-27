@@ -20,17 +20,10 @@ use concordium_base::{
         types::GlobalContext,
     },
     transactions::{AddBakerKeysMarker, BakerKeysPayload, ConfigureBakerKeysPayload},
-    web3id::{
-        v1::anchor::{
-            RequestedSubjectClaims, UnfilledContextInformation, VerificationRequest,
-            VerificationRequestData,
-        },
-        Request, Web3IdAttribute,
-    },
+    web3id::{v1::anchor::VerificationRequestData, Request, Web3IdAttribute},
 };
 use core::slice;
 use ed25519_dalek::*;
-use serde::de;
 
 use jni::{
     objects::{JClass, JObject, JString},
@@ -40,7 +33,7 @@ use jni::{
 use rand::thread_rng;
 use serde_json::{from_str, to_string};
 use std::{
-    collections::{HashMap, HashSet},
+    collections::HashSet,
     convert::{From, TryFrom, TryInto},
     i8,
     str::Utf8Error,
@@ -1542,16 +1535,12 @@ pub extern "system" fn Java_com_concordium_sdk_crypto_CryptoJniNative_computeAnc
             Err(err) => return StringResult::from(err).to_jstring(&env),
         };
 
-    let public_info = verification_request_v1_input.public_info.clone();
-
     let verification_request_data = VerificationRequestData {
         context: verification_request_v1_input.context,
         subject_claims: verification_request_v1_input.subject_claims,
     };
 
-    let anchor = verification_request_data.to_anchor(public_info.map(|p| p.0));
-
-    let hash_string = match to_string(&anchor.hash) {
+    let hash_string = match to_string(&verification_request_data.hash()) {
         Ok(r) => r,
         Err(err) => return StringResult::from(err).to_jstring(&env),
     };
