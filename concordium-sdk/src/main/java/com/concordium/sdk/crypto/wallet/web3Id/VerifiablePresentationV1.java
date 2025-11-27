@@ -14,6 +14,7 @@ import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.types.UInt32;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.collect.Sets;
 import lombok.val;
 
 import java.util.List;
@@ -32,13 +33,13 @@ public class VerifiablePresentationV1 {
      * for each requested {@link VerificationRequestV1#getSubjectClaims() subject claim}
      * and collect all the {@link VerificationRequestV1#getContext() requested context information}.
      *
-     * @param request                the request to create a presentation (proof) for
-     * @param claimsProofInputs       request claims ready to be proven with identities or accounts,
-     *                               corresponds to {@link VerificationRequestV1#getSubjectClaims()}
-     * @param filledRequestedContext provided requested context information,
-     *                               corresponds to {@link UnfilledContextInformation#getRequested()}
-     *                               from the {@link VerificationRequestV1#getContext() request context}
-     * @param globalContext          chain cryptographic parameters, stored in the wallet or fetched from a node
+     * @param request           the request to create a presentation (proof) for
+     * @param claimsProofInputs request claims ready to be proven with identities or accounts,
+     *                          corresponds to {@link VerificationRequestV1#getSubjectClaims()}
+     * @param requestedContext  provided requested context information,
+     *                          corresponds to {@link UnfilledContextInformation#getRequested()}
+     *                          from the {@link VerificationRequestV1#getContext() request context}
+     * @param globalContext     chain cryptographic parameters, stored in the wallet or fetched from a node
      * @return verifiable presentation JSON (ConcordiumVerifiablePresentationV1)
      * @see com.concordium.sdk.ClientV2#getCryptographicParameters(BlockQuery) Fetch global context (chain cryptographic parameters)
      * @see IdentityClaims#getIdentityProofInput(Network, IdentityProviderInfo, Map, IdentityObject, BLSSecretKey, BLSSecretKey, String) Get claims proof input with an identity
@@ -46,10 +47,28 @@ public class VerifiablePresentationV1 {
      */
     public static String getVerifiablePresentation(VerificationRequestV1 request,
                                                    List<SubjectClaimsProofInput> claimsProofInputs,
-                                                   List<GivenContext> filledRequestedContext,
+                                                   List<GivenContext> requestedContext,
                                                    CryptographicParameters globalContext) {
-        val input = new VerifiablePresentationV1Input(request, claimsProofInputs, filledRequestedContext, globalContext);
-        return getVerifiablePresentation(input);
+        if (claimsProofInputs.size() != request.getSubjectClaims().size()) {
+            throw new IllegalArgumentException(
+                    "There must be as many claims proof inputs as there are claims in the request"
+            );
+        }
+
+        val missingContextInfoLabels = Sets.newHashSet(request.getContext().getRequested());
+        for (GivenContext requestedContextInfo : requestedContext) {
+            missingContextInfoLabels.remove(requestedContextInfo.getLabel());
+        }
+        if (!missingContextInfoLabels.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Requested context information is missing: "
+                            + String.join(",", missingContextInfoLabels)
+            );
+        }
+
+        return getVerifiablePresentation(
+                new VerifiablePresentationV1Input(request, claimsProofInputs, requestedContext, globalContext)
+        );
     }
 
     static String getVerifiablePresentation(VerifiablePresentationV1Input input) {

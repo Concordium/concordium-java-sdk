@@ -92,7 +92,7 @@ public class VerifiablePresentationV1Test {
             )
             .transactionRef(Hash.from("0102030401020304010203040102030401020304010203040102030401020304"))
             .build();
-    private final List<GivenContext> FILLED_CONTEXT = ImmutableList.<GivenContext>builder()
+    private final List<GivenContext> REQUESTED_CONTEXT = ImmutableList.<GivenContext>builder()
             .add(
                     new GivenContext(GivenContext.BLOCK_HASH_LABEL,
                             "00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048")
@@ -121,7 +121,7 @@ public class VerifiablePresentationV1Test {
         val input = new VerifiablePresentationV1Input(
                 REQUEST,
                 Collections.singletonList(accountProofInput),
-                FILLED_CONTEXT,
+                REQUESTED_CONTEXT,
                 FileHelpers.getCryptographicParameters()
         );
 
@@ -150,7 +150,7 @@ public class VerifiablePresentationV1Test {
         val input = new VerifiablePresentationV1Input(
                 REQUEST,
                 Collections.singletonList(identityProofInput),
-                FILLED_CONTEXT,
+                REQUESTED_CONTEXT,
                 FileHelpers.getCryptographicParameters()
         );
 
@@ -164,5 +164,37 @@ public class VerifiablePresentationV1Test {
 
         // The input must work.
         VerifiablePresentationV1.getVerifiablePresentation(input);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @SneakyThrows
+    public void notProvidingRequestedContext() {
+        val identityClaims = (IdentityClaims) REQUEST.getSubjectClaims().get(0);
+        val wallet = ConcordiumHdWallet.fromHex(TEST_SEED, Network.TESTNET);
+        val identityProofInput = identityClaims.getIdentityProofInput(Network.TESTNET,
+                FileHelpers.getIdentityProviderInfo(),
+                FileHelpers.getAnonymityRevokerInfos(),
+                FileHelpers.getIdentityObject(),
+                wallet.getIdCredSec(0, 0),
+                wallet.getPrfKey(0, 0),
+                wallet.getSignatureBlindingRandomness(0, 0)
+        );
+        VerifiablePresentationV1.getVerifiablePresentation(
+                REQUEST,
+                Collections.singletonList(identityProofInput),
+                Collections.emptyList(),
+                null
+        );
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @SneakyThrows
+    public void notProvidingClaimsProofs() {
+        VerifiablePresentationV1.getVerifiablePresentation(
+                REQUEST,
+                Collections.emptyList(),
+                REQUESTED_CONTEXT,
+                null
+        );
     }
 }

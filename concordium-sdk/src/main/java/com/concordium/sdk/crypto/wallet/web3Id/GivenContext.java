@@ -1,14 +1,13 @@
 package com.concordium.sdk.crypto.wallet.web3Id;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 @Getter
 @Builder
 @Jacksonized
 @EqualsAndHashCode
+@AllArgsConstructor
 public class GivenContext {
 
     /**
@@ -21,17 +20,14 @@ public class GivenContext {
      * @see GivenContext#CONNECTION_ID_LABEL
      * @see GivenContext#NONCE_LABEL
      */
+    @NonNull
     private final String label;
 
     /**
      * The actual given information.
      */
+    @NonNull
     private final String context;
-
-    public GivenContext(String label, String context) {
-        this.label = label;
-        this.context = context;
-    }
 
     /**
      * Additional context information, a string value for general purposes.

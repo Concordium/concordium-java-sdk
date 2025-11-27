@@ -17,12 +17,12 @@ class VerifiablePresentationV1Input {
 
     VerifiablePresentationV1Input(VerificationRequestV1 request,
                                   List<SubjectClaimsProofInput> claimProofInputs,
-                                  List<GivenContext> filledRequestedContext,
+                                  List<GivenContext> requestedContext,
                                   CryptographicParameters globalContext) {
         val context = JsonMapper.INSTANCE.createObjectNode();
         context.put("type", "ConcordiumContextInformationV1");
         context.putPOJO("given", request.getContext().getGiven());
-        context.putPOJO("requested", filledRequestedContext);
+        context.putPOJO("requested", requestedContext);
 
         this.request = JsonMapper.INSTANCE.createObjectNode();
         this.request.put("type", "ConcordiumVerifiablePresentationRequestV1");
