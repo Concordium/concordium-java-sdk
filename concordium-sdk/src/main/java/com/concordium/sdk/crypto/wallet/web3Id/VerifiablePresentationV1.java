@@ -27,19 +27,22 @@ public class VerifiablePresentationV1 {
 
     /**
      * Satisfies given verification request by creating a verifiable presentation (proof) for it.
+     * <p>
      * Before calling this method, you must determine which identities or accounts to use
-     * for each requested subject claim and collect all the requested context information.
+     * for each requested {@link VerificationRequestV1#getSubjectClaims() subject claim}
+     * and collect all the {@link VerificationRequestV1#getContext() requested context information}.
      *
      * @param request                the request to create a presentation (proof) for
-     * @param qualifiedClaims        request claims qualified with identities or accounts
+     * @param qualifiedClaims        request claims qualified with identities or accounts,
+     *                               corresponds to {@link VerificationRequestV1#getSubjectClaims()}
      * @param filledRequestedContext provided requested context information,
      *                               corresponds to {@link UnfilledContextInformation#getRequested()}
-     *                               of {@link VerificationRequestV1#getContext()}
+     *                               from the {@link VerificationRequestV1#getContext() request context}
      * @param globalContext          chain cryptographic parameters, stored in the wallet or fetched from a node
      * @return verifiable presentation JSON (ConcordiumVerifiablePresentationV1)
-     * @see com.concordium.sdk.ClientV2#getCryptographicParameters(BlockQuery)
-     * @see IdentityClaim#qualify(Network, IdentityProviderInfo, Map, IdentityObject, BLSSecretKey, BLSSecretKey, String)
-     * @see IdentityClaim#qualify(Network, UInt32, CredentialRegistrationId, Map, Map)
+     * @see com.concordium.sdk.ClientV2#getCryptographicParameters(BlockQuery) Fetch global context (chain cryptographic parameters)
+     * @see IdentityClaim#qualify(Network, IdentityProviderInfo, Map, IdentityObject, BLSSecretKey, BLSSecretKey, String) Qualify for a claim with an identity
+     * @see IdentityClaim#qualify(Network, UInt32, CredentialRegistrationId, Map, Map) Qualify for a claim with an account
      */
     public static String getVerifiablePresentation(VerificationRequestV1 request,
                                                    List<QualifiedSubjectClaim> qualifiedClaims,

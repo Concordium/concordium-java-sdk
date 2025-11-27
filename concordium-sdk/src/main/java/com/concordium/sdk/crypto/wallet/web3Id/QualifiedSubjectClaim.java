@@ -8,15 +8,10 @@ import java.beans.Transient;
 import java.util.List;
 
 public interface QualifiedSubjectClaim {
-    @JsonProperty("type")
     String[] getType();
-
-    @JsonProperty("id")
     RequestIdentifier getId();
-
     @JsonProperty("statement")
-    List<AtomicStatement> getStatements();
-
+    List<AtomicStatement> getStatementInput();
     @Transient
     CommitmentInput getCommitmentInput();
 }

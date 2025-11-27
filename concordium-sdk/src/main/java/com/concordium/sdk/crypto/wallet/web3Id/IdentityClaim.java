@@ -4,6 +4,8 @@ import com.concordium.sdk.crypto.bls.BLSSecretKey;
 import com.concordium.sdk.crypto.wallet.Network;
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.AtomicStatement;
+import com.concordium.sdk.crypto.wallet.web3Id.Statement.AttributeValueStatement;
+import com.concordium.sdk.crypto.wallet.web3Id.Statement.RevealStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.did.AccountRequestIdentifier;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.did.IdentityProviderRequestIdentifier;
 import com.concordium.sdk.requests.BlockQuery;
@@ -20,10 +22,13 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * Statement requesting proofs from identity credentials issued by identity providers.
- * Can specify whether to accept proofs from identity credentials, account credentials, or both.
+ * Statements requesting proofs from identity credentials issued by identity providers.
+ * <p>
+ * Although it is called "identity claim", either identity credential, or account credential, or both
+ * can be used to prove this claim, depending on {@link IdentityClaim#source}.
  */
 @Getter
 @Builder
@@ -55,7 +60,8 @@ public class IdentityClaim implements SubjectClaim {
     private final List<IdentityProviderRequestIdentifier> issuers;
 
     /**
-     * Qualifies for this claim with an identity credential.
+     * Qualify for this claim with an identity credential.
+     * This is only possible if {@link IdentityClaim#source} contains {@value IDENTITY_CREDENTIAL_SOURCE}
      *
      * @param network            network on which the identity is issued
      * @param ipInfo             identity provider that issued the identity, stored in the wallet or fetched from a node
@@ -64,11 +70,12 @@ public class IdentityClaim implements SubjectClaim {
      * @param idCredSec          cred sec for the identity, derived with the HD wallet
      * @param prfKey             PRF key for the identity, derived with the HD wallet
      * @param blindingRandomness signature blinding randomness for the identity, derived with the HD wallet
-     * @see com.concordium.sdk.ClientV2#getIdentityProviders(BlockQuery)
-     * @see com.concordium.sdk.ClientV2#getAnonymityRevokers(BlockQuery)
-     * @see com.concordium.sdk.crypto.wallet.ConcordiumHdWallet#getIdCredSec(int, int)
-     * @see com.concordium.sdk.crypto.wallet.ConcordiumHdWallet#getPrfKey(int, int)
-     * @see com.concordium.sdk.crypto.wallet.ConcordiumHdWallet#getSignatureBlindingRandomness(int, int)
+     * @return qualified claim needed to create a verifiable presentation
+     * @see com.concordium.sdk.ClientV2#getIdentityProviders(BlockQuery) Fetch identity providers
+     * @see com.concordium.sdk.ClientV2#getAnonymityRevokers(BlockQuery) Fetch anonymity revokers
+     * @see com.concordium.sdk.crypto.wallet.ConcordiumHdWallet#getIdCredSec(int, int) Derive ID cred sec
+     * @see com.concordium.sdk.crypto.wallet.ConcordiumHdWallet#getPrfKey(int, int) Derive PRF key
+     * @see com.concordium.sdk.crypto.wallet.ConcordiumHdWallet#getSignatureBlindingRandomness(int, int) Derive signature blinding randomness
      */
     public IdentityQualifyingIdentityClaim qualify(Network network,
                                                    IdentityProviderInfo ipInfo,
@@ -84,14 +91,24 @@ public class IdentityClaim implements SubjectClaim {
 
         return IdentityQualifyingIdentityClaim.builder()
                 .id(new IdentityProviderRequestIdentifier(network, ipInfo.getIpIdentity()))
-                .statements(statements)
+                .statementInput(
+                        statements
+                                .stream()
+                                .map(statement ->
+                                        (statement instanceof RevealStatement)
+                                                ? new AttributeValueStatement((RevealStatement) statement, idObject)
+                                                : statement
+                                )
+                                .collect(Collectors.toList())
+                )
                 .commitmentInput(new IdentityCommitmentInput(ipInfo, arsInfos, idObject,
                         idCredSec, prfKey, blindingRandomness))
                 .build();
     }
 
     /**
-     * Qualifies for this claim with an account credential.
+     * Qualify for this claim with an account credential.
+     * This is only possible if {@link IdentityClaim#source} contains {@value ACCOUNT_CREDENTIAL_SOURCE}
      *
      * @param network             network on which the account is created
      * @param credId              account credential registration ID, stored in the wallet
@@ -99,7 +116,8 @@ public class IdentityClaim implements SubjectClaim {
      *                            stored in the wallet or fetched from a node
      * @param attributeValues     attribute values of this account's identity, stored in the wallet
      * @param attributeRandomness attribute randomness of the account, stored in the wallet
-     * @see com.concordium.sdk.ClientV2#getIdentityProviders(BlockQuery)
+     * @return qualified claim needed to create a verifiable presentation
+     * @see com.concordium.sdk.ClientV2#getIdentityProviders(BlockQuery) Fetch identity providers
      */
     public AccountQualifyingIdentityClaim qualify(Network network,
                                                   UInt32 ipIdentity,
@@ -114,7 +132,16 @@ public class IdentityClaim implements SubjectClaim {
         return AccountQualifyingIdentityClaim.builder()
                 .id(new AccountRequestIdentifier(network, credId))
                 .issuer(new IdentityProviderRequestIdentifier(network, ipIdentity))
-                .statements(statements)
+                .statementInput(
+                        statements
+                                .stream()
+                                .map(statement ->
+                                        (statement instanceof RevealStatement)
+                                                ? new AttributeValueStatement((RevealStatement) statement, attributeValues)
+                                                : statement
+                                )
+                                .collect(Collectors.toList())
+                )
                 .commitmentInput(new AccountCommitmentInput(ipIdentity, attributeValues, attributeRandomness))
                 .build();
     }

@@ -16,5 +16,5 @@ public class IdentityQualifyingIdentityClaim implements QualifiedSubjectClaim {
     @JsonProperty("issuer")
     private final IdentityProviderRequestIdentifier id;
     private final IdentityCommitmentInput commitmentInput;
-    private final List<AtomicStatement> statements;
+    private final List<AtomicStatement> statementInput;
 }

@@ -16,18 +16,24 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
 @JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = "type", visible = true)
-@JsonSubTypes ({@Type (value = RevealStatement.class), @Type (value = RangeStatement.class), @Type (value = MembershipStatement.class), @Type (value = NonMembershipStatement.class)})
+@JsonSubTypes({
+        @Type(value = RevealStatement.class),
+        @Type(value = RangeStatement.class),
+        @Type(value = MembershipStatement.class),
+        @Type(value = NonMembershipStatement.class),
+        @Type(value = AttributeValueStatement.class)
+})
 public abstract class AtomicStatement {
-   @JsonProperty("attributeTag")
-   public abstract String getAttributeTag();
+    @JsonProperty("attributeTag")
+    public abstract String getAttributeTag();
 
-   // TODO: add overload for web3Id credential
-   protected CredentialAttribute getAttributeValue(IdentityObject identityObject) throws JsonProcessingException, JsonParseException, MissingAttributeException {
-      AttributeType type = AttributeType.fromJSON(this.getAttributeTag());
-      String raw = identityObject.getChosenAttribute(type);
-      return CredentialAttribute.builder().value(raw).type(CredentialAttribute.CredentialAttributeType.STRING).build();
-   }
+    // TODO: add overload for web3Id credential
+    protected CredentialAttribute getAttributeValue(IdentityObject identityObject) throws JsonProcessingException, JsonParseException, MissingAttributeException {
+        AttributeType type = AttributeType.fromJSON(this.getAttributeTag());
+        String raw = identityObject.getChosenAttribute(type);
+        return CredentialAttribute.builder().value(raw).type(CredentialAttribute.CredentialAttributeType.STRING).build();
+    }
 
-   // TODO: add overload for web3Id credential
-   public abstract boolean canBeProvedBy(IdentityObject identityObject) throws Exception;
+    // TODO: add overload for web3Id credential
+    public abstract boolean canBeProvedBy(IdentityObject identityObject) throws Exception;
 }

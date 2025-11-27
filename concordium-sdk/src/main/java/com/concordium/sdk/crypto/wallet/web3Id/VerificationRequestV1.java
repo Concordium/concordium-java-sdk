@@ -15,9 +15,9 @@ import java.util.List;
  * are being requested from a credential holder.
  * This class encapsulates the request context, the specific credential subject claims needed,
  * and a reference to the blockchain transaction (its hash) that anchors the request.
- * <br><br>
+ * <p>
  * To satisfy this request, call
- * {@link VerifiablePresentationV1#getVerifiablePresentation(VerificationRequestV1, List, List, CryptographicParameters)}
+ * {@link VerifiablePresentationV1#getVerifiablePresentation(VerificationRequestV1, List, List, CryptographicParameters) VerifiablePresentationV1.getVerifiablePresentation()}
  */
 @Getter
 @Builder
@@ -33,6 +33,8 @@ public class VerificationRequestV1 {
 
     /**
      * The specific credential subject claims that are requested to be proven.
+     * <p>
+     * Currently, the only claim type is {@link IdentityClaim}.
      */
     @Singular
     private final List<SubjectClaim> subjectClaims;

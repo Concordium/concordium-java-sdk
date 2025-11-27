@@ -16,5 +16,5 @@ public class AccountQualifyingIdentityClaim implements QualifiedSubjectClaim {
     private final AccountRequestIdentifier id;
     private final IdentityProviderRequestIdentifier issuer;
     private final AccountCommitmentInput commitmentInput;
-    private final List<AtomicStatement> statements;
+    private final List<AtomicStatement> statementInput;
 }
