@@ -30,18 +30,15 @@ public class GivenContext {
     private final String context;
 
     /**
-     * Additional context information, a string value for general purposes.
-     */
-    public static final String CONTEXT_STRING_LABEL = "ContextString";
-
-    /**
-     * Resource identifier, could be a wallet connection session (pairing) public key.
+     * Resource which is being accessed, for example a site URL.
      */
     public static final String RESOURCE_ID_LABEL = "ResourceID";
 
     /**
-     * A Concordium block hash,
-     * could be the hash of the block in which the anchor transaction is found.
+     * Concordium block hash. When requested, it is the hash of the block
+     * in which the verification request anchor transaction is finalized.
+     *
+     * @see VerificationRequestAnchor
      */
     public static final String BLOCK_HASH_LABEL = "BlockHash";
 
@@ -51,7 +48,8 @@ public class GivenContext {
     public static final String PAYMENT_HASH_LABEL = "PaymentHash";
 
     /**
-     * Identifier of the verification session.
+     * Identifier of the verification session,
+     * for example a WalletConnect session public key.
      */
     public static final String CONNECTION_ID_LABEL = "ConnectionID";
 
@@ -59,4 +57,9 @@ public class GivenContext {
      * A cryptographic nonce.
      */
     public static final String NONCE_LABEL = "Nonce";
+
+    /**
+     * Additional context information, a string value for general purposes.
+     */
+    public static final String CONTEXT_STRING_LABEL = "ContextString";
 }

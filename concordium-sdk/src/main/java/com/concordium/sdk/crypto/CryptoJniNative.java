@@ -380,4 +380,14 @@ public class CryptoJniNative {
      * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
      */
     public static native String createPresentation(String input);
+
+    /**
+     * Computes an SHA-256 hash of a verification request for anchoring.
+     *
+     * @param input VerificationRequestV1Input JSON
+     * @return JSON representing {@link StringResult}.
+     * If successful the field 'result' contains HEX-encoded SHA-256 hash as a JSON string (with quotes).
+     * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
+     */
+    public static native String computeAnchorHash(String input);
 }

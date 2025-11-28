@@ -1,11 +1,14 @@
 package com.concordium.sdk.crypto.wallet.web3Id;
 
+import com.concordium.sdk.crypto.CryptoJniNative;
+import com.concordium.sdk.crypto.NativeResolver;
+import com.concordium.sdk.crypto.wallet.StringResult;
+import com.concordium.sdk.exceptions.CryptoJniException;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Singular;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
@@ -49,8 +52,32 @@ public class VerificationRequestV1 {
      * Hash of the blockchain transaction anchoring this request.
      *
      * @see VerificationRequestAnchor
+     * @see com.concordium.sdk.ClientV2#getBlockItemStatus(Hash) Fetch a transaction by hash
      */
     private final Hash transactionRef;
+
+    public boolean verifyAnchor(VerificationRequestAnchor anchor) {
+        return anchor.getHash().equals(getAnchorHash(context, subjectClaims));
+    }
+
+    public static Hash getAnchorHash(UnfilledContextInformation context,
+                                     List<SubjectClaims> subjectClaims) {
+        StringResult result;
+        try {
+            NativeResolver.loadLib();
+            val input = new VerificationRequestV1Input(context, subjectClaims, null);
+            String jsonStr = CryptoJniNative.computeAnchorHash(JsonMapper.INSTANCE.writeValueAsString(input));
+            result = JsonMapper.INSTANCE.readValue(jsonStr, StringResult.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (!result.isSuccess()) {
+            throw CryptoJniException.from(result.getErr());
+        }
+
+        return Hash.from(result.getResult().replace("\"", ""));
+    }
 
     public static final String TYPE = "ConcordiumVerificationRequestV1";
 }
