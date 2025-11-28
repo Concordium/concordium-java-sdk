@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added ability for wallets to create verifiable presentations (proofs) from identities and accounts. 
+  The entrypoint is `VerificationRequestV1`. This change does not include audit.
+
 ## 11.1.0
 
 - Made `TokenOperation`s deserializable from CBOR.
