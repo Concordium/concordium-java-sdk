@@ -21,7 +21,7 @@ public class VerificationRequestAnchorTest {
                 .version(VerificationRequestAnchor.V1)
                 .hash(Hash.from("3d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1"))
                 .build();
-        val expectedHex = "bf6776657273696f6e01646861736858203d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1647479706566434344565241ff";
+        val expectedHex = "bf6474797065664343445652416776657273696f6e01646861736858203d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1ff";
         Assert.assertEquals(
                 expectedHex,
                 Hex.encodeHexString(CborMapper.INSTANCE.writeValueAsBytes(anchor))
@@ -45,7 +45,7 @@ public class VerificationRequestAnchorTest {
                 .hash(Hash.from("3d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1"))
                 .publicInfo(publicInfo)
                 .build();
-        val expectedHex = "bf6776657273696f6e01646861736858203d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1647479706566434344565241667075626c696383010203ff";
+        val expectedHex = "bf6474797065664343445652416776657273696f6e01646861736858203d52e63350bfd21676ecbf6ce29688e3be6bff86cbacfe138aac107b64d29ba1667075626c696383010203ff";
         Assert.assertEquals(
                 expectedHex,
                 Hex.encodeHexString(CborMapper.INSTANCE.writeValueAsBytes(anchor))
