@@ -17,7 +17,11 @@ import java.util.List;
  * and a reference to the blockchain transaction (its hash) that anchors the request.
  * <p>
  * To satisfy this request, call
- * {@link VerifiablePresentationV1#getVerifiablePresentation(VerificationRequestV1, List, List, CryptographicParameters) VerifiablePresentationV1.getVerifiablePresentation()}
+ * {@link VerifiablePresentationV1#getVerifiablePresentation(VerificationRequestV1, List, List, CryptographicParameters) VerifiablePresentationV1.getVerifiablePresentation()}.
+ * <p>
+ * ⚠️ Verifiable presentation created for this request can be used to reveal the <b>whole</b> related identity via the
+ * <a href="https://docs.concordium.com/en/mainnet/docs/protocol/identity-disclosure-processes.html">identity disclosure process</a>
+ * even though there may never be any on-chain activity associated with this identity.
  */
 @Getter
 @Builder

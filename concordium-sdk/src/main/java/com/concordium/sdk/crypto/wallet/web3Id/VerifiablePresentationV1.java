@@ -32,6 +32,10 @@ public class VerifiablePresentationV1 {
      * Before calling this method, you must determine which identities or accounts to use
      * for each requested {@link VerificationRequestV1#getSubjectClaims() subject claim}
      * and collect all the {@link VerificationRequestV1#getContext() requested context information}.
+     * <p>
+     * ⚠️ Created verifiable presentation can be used to reveal the <b>whole</b> related identity via the
+     * <a href="https://docs.concordium.com/en/mainnet/docs/protocol/identity-disclosure-processes.html">identity disclosure process</a>
+     * even though there may never be any on-chain activity associated with this identity.
      *
      * @param request           the request to create a presentation (proof) for
      * @param claimsProofInputs request claims ready to be proven with identities or accounts,
