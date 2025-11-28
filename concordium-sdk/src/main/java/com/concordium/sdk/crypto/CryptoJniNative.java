@@ -374,7 +374,7 @@ public class CryptoJniNative {
     /**
      * Creates a verifiable presentation.
      *
-     * @param input PresenationV1Input JSON
+     * @param input PresentationV1Input JSON
      * @return JSON representing {@link StringResult}.
      * If successful the field 'result' contains ConcordiumVerifiablePresentationV1 JSON.
      * If not successful, the 'err' field contains a {@link JNIError} detailing what went wrong.
