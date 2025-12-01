@@ -54,7 +54,7 @@ public class GivenContext {
     public static final String CONNECTION_ID_LABEL = "ConnectionID";
 
     /**
-     * A cryptographic nonce.
+     * A 32 byte long cryptographic nonce, HEX-encoded.
      */
     public static final String NONCE_LABEL = "Nonce";
 
