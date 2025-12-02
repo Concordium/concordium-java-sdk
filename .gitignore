@@ -3,3 +3,4 @@
 .flattened-pom.xml
 pom.xml.versionsBackup
 .idea/
+*.DS_STORE

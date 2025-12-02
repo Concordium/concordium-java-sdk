@@ -3,13 +3,18 @@ package com.concordium.sdk.crypto.wallet.web3Id.Statement;
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.crypto.wallet.identityobject.MissingAttributeException;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 @Getter
+@Builder
+@Jacksonized
+@EqualsAndHashCode(callSuper = true)
 @JsonTypeName("RevealAttribute")
 public class RevealStatement extends AtomicStatement {
-    private String attributeTag;
+    private final String attributeTag;
 
     @Override
     public boolean canBeProvedBy(IdentityObject identityObject) throws Exception {

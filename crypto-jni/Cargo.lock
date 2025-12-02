@@ -409,7 +409,7 @@ dependencies = [
 
 [[package]]
 name = "concordium_base"
-version = "8.0.0"
+version = "9.0.0"
 dependencies = [
  "anyhow",
  "ark-bls12-381",
@@ -429,6 +429,7 @@ dependencies = [
  "ed25519-dalek",
  "either",
  "ff 0.13.0",
+ "generic-array",
  "hex",
  "itertools 0.14.0",
  "leb128",
@@ -452,7 +453,7 @@ dependencies = [
 
 [[package]]
 name = "concordium_base_derive"
-version = "1.1.0"
+version = "1.1.0-alpha.3"
 dependencies = [
  "convert_case 0.8.0",
  "darling",
@@ -872,9 +873,9 @@ checksum = "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c"
 
 [[package]]
 name = "generic-array"
-version = "0.14.6"
+version = "0.14.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bff49e947297f3312447abdca79f45f4738097cc82b06e72054d2223f601f1b9"
+checksum = "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a"
 dependencies = [
  "typenum",
  "version_check",

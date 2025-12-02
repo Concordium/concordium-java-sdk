@@ -1,12 +1,11 @@
 package com.concordium.sdk.crypto.wallet.web3Id;
 
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonTypeName;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+
+import java.util.Map;
 
 @Getter
 @Builder
