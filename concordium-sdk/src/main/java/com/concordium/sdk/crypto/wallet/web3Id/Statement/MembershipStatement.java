@@ -4,11 +4,10 @@ import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.crypto.wallet.identityobject.MissingAttributeException;
 import com.concordium.sdk.crypto.wallet.web3Id.CredentialAttribute;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
@@ -23,7 +22,8 @@ public class MembershipStatement extends AtomicStatement implements SetStatement
     private final List<CredentialAttribute> set;
 
     @Override
-    public boolean canBeProvedBy(IdentityObject identityObject) throws JsonParseException, JsonProcessingException {
+    @SneakyThrows
+    public boolean canBeProvedBy(IdentityObject identityObject) {
         try {
             CredentialAttribute value = this.getAttributeValue(identityObject);
             return set.contains(value);

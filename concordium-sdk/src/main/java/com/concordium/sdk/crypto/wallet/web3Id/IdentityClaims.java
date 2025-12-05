@@ -2,6 +2,7 @@ package com.concordium.sdk.crypto.wallet.web3Id;
 
 import com.concordium.sdk.crypto.bls.BLSSecretKey;
 import com.concordium.sdk.crypto.wallet.Network;
+import com.concordium.sdk.crypto.wallet.identityobject.AttributeList;
 import com.concordium.sdk.crypto.wallet.identityobject.IdentityObject;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.AtomicStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.AttributeValueStatement;
@@ -14,10 +15,7 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.types.UInt32;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Singular;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
@@ -52,7 +50,7 @@ public class IdentityClaims implements SubjectClaims {
 
     /**
      * Valid identity issuers for this statement, in form of identity provider DIDs.
-     * For example, <code>did:ccd:testnet:idp:0</code>
+     * For example, <code>did:ccd:testnet:idp:0</code> where <code>0</code> is the provider index (IP identity).
      *
      * @see IdentityProviderRequestIdentifier#fromString(String)
      */
@@ -60,8 +58,60 @@ public class IdentityClaims implements SubjectClaims {
     private final List<IdentityProviderRequestIdentifier> issuers;
 
     /**
+     * @return whether an identity credential is an acceptable source for these claims.
+     * @see IdentityClaims#canBeProvedBy(IdentityObject, UInt32)
+     * Check if a particular identity can actually prove these claims
+     */
+    public boolean areIdentitiesAccepted() {
+        return source.contains(IDENTITY_CREDENTIAL_SOURCE);
+    }
+
+    /**
+     * @return whether an account credential is an acceptable source for these claims.
+     * @see IdentityClaims#canBeProvedBy(IdentityObject, UInt32)
+     * Check if a particular account identity can actually prove these claims
+     */
+    public boolean areAccountsAccepted() {
+        return source.contains(ACCOUNT_CREDENTIAL_SOURCE);
+    }
+
+    /**
+     * @param idObject   identity itself or a particular account identity
+     * @param ipIdentity index of the identity provider that issued this identity
+     * @return whether the given identity itself or an account created from it
+     * can actually prove these claims.
+     * The identity must prove all the {@link IdentityClaims#getStatements() statements}
+     * and it must be issued by one of the allowed {@link IdentityClaims#getIssuers() issuers}.
+     */
+    public boolean canBeProvedBy(IdentityObject idObject,
+                                 UInt32 ipIdentity) {
+        return issuers.stream().anyMatch(issuerId -> issuerId.getIpIdentity().equals(ipIdentity))
+                && statements.stream().allMatch(statement -> statement.canBeProvedBy(idObject));
+    }
+
+    /**
+     * @param attributeValues attribute values of an identity itself or a particular account identity
+     * @param ipIdentity      index of the identity provider that issued this identity
+     * @return whether the given identity itself or an account created from it
+     * can actually prove these claims.
+     * The identity must prove all the {@link IdentityClaims#getStatements() statements}
+     * and it must be issued by one of the allowed {@link IdentityClaims#getIssuers() issuers}.
+     */
+    public boolean canBeProvedBy(Map<AttributeType, String> attributeValues,
+                                 UInt32 ipIdentity) {
+        val lightweightIdentityObject =
+                IdentityObject.builder()
+                        .attributeList(
+                                AttributeList.builder()
+                                        .chosenAttributes(attributeValues)
+                                        .build()
+                        )
+                        .build();
+        return canBeProvedBy(lightweightIdentityObject, ipIdentity);
+    }
+
+    /**
      * Prove these claims with an identity credential.
-     * This is only possible if {@link IdentityClaims#source} contains {@value IDENTITY_CREDENTIAL_SOURCE}
      *
      * @param network            network on which the identity is issued
      * @param ipInfo             identity provider that issued the identity, stored in the wallet or fetched from a node
@@ -71,6 +121,8 @@ public class IdentityClaims implements SubjectClaims {
      * @param prfKey             PRF key for the identity, derived with the HD wallet
      * @param blindingRandomness signature blinding randomness for the identity, derived with the HD wallet
      * @return input needed to create a verifiable presentation
+     * @see IdentityClaims#areIdentitiesAccepted() Check if identity credentials are even accepted
+     * @see IdentityClaims#canBeProvedBy(IdentityObject, UInt32) Check if a particular identity can prove the claims
      * @see com.concordium.sdk.ClientV2#getIdentityProviders(BlockQuery) Fetch identity providers
      * @see com.concordium.sdk.ClientV2#getAnonymityRevokers(BlockQuery) Fetch anonymity revokers
      * @see com.concordium.sdk.crypto.wallet.ConcordiumHdWallet#getIdCredSec(int, int) Derive ID cred sec
@@ -84,9 +136,13 @@ public class IdentityClaims implements SubjectClaims {
                                                                   BLSSecretKey idCredSec,
                                                                   BLSSecretKey prfKey,
                                                                   String blindingRandomness) {
-        if (!source.contains(IDENTITY_CREDENTIAL_SOURCE)) {
-            throw new IllegalStateException("Identity can't prove these claims, allowed sources are: " +
+        if (!areIdentitiesAccepted()) {
+            throw new IllegalStateException("Identities can't prove these claims, allowed sources are: " +
                     String.join(",", source));
+        }
+
+        if (!canBeProvedBy(idObject, ipInfo.getIpIdentity())) {
+            throw new IllegalArgumentException("This identity can't prove these claims");
         }
 
         return IdentityClaimsIdentityProofInput.builder()
@@ -108,7 +164,6 @@ public class IdentityClaims implements SubjectClaims {
 
     /**
      * Prove these claims with an account credential.
-     * This is only possible if {@link IdentityClaims#source} contains {@value ACCOUNT_CREDENTIAL_SOURCE}
      *
      * @param network             network on which the account is created
      * @param credId              account credential registration ID, stored in the wallet
@@ -117,6 +172,8 @@ public class IdentityClaims implements SubjectClaims {
      * @param attributeValues     attribute values of this account's identity, stored in the wallet
      * @param attributeRandomness attribute randomness of the account, stored in the wallet
      * @return input needed to create a verifiable presentation
+     * @see IdentityClaims#areAccountsAccepted() Check if account credentials are even accepted
+     * @see IdentityClaims#canBeProvedBy(IdentityObject, UInt32) Check if an account's identity can prove the
      * @see com.concordium.sdk.ClientV2#getIdentityProviders(BlockQuery) Fetch identity providers
      */
     public IdentityClaimsAccountProofInput getAccountProofInput(Network network,
@@ -124,9 +181,13 @@ public class IdentityClaims implements SubjectClaims {
                                                                 CredentialRegistrationId credId,
                                                                 Map<AttributeType, String> attributeValues,
                                                                 Map<AttributeType, String> attributeRandomness) {
-        if (!source.contains(ACCOUNT_CREDENTIAL_SOURCE)) {
-            throw new IllegalStateException("Account can't prove these claims, allowed sources are: " +
+        if (!areAccountsAccepted()) {
+            throw new IllegalStateException("Accounts can't prove these claims, allowed sources are: " +
                     String.join(",", source));
+        }
+
+        if (!canBeProvedBy(attributeValues, ipIdentity)) {
+            throw new IllegalArgumentException("This account's identity can't prove these claims");
         }
 
         return IdentityClaimsAccountProofInput.builder()

@@ -198,4 +198,30 @@ public class VerifiablePresentationV1Test {
                 null
         );
     }
+
+    @Test
+    @SneakyThrows
+    public void identityFromUnacceptableIssuerCantProve() {
+        val identityClaims = (IdentityClaims) REQUEST.getSubjectClaims().get(0);
+        Assert.assertFalse(
+                identityClaims.canBeProvedBy(
+                        FileHelpers.getIdentityObject(),
+                        UInt32.from(3040)
+                )
+        );
+    }
+
+    @Test
+    @SneakyThrows
+    public void identityWithUnacceptableAttributesCantProve() {
+        val identityClaims = (IdentityClaims) REQUEST.getSubjectClaims().get(0);
+        val tamperedIdObject = FileHelpers.getIdentityObject();
+        tamperedIdObject.getAttributeList().getChosenAttributes().clear();
+        Assert.assertFalse(
+                identityClaims.canBeProvedBy(
+                        tamperedIdObject,
+                        UInt32.from(0)
+                )
+        );
+    }
 }

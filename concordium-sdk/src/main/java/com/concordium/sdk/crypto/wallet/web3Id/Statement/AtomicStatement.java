@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.EqualsAndHashCode;
 
@@ -28,12 +27,12 @@ public abstract class AtomicStatement {
     public abstract String getAttributeTag();
 
     // TODO: add overload for web3Id credential
-    protected CredentialAttribute getAttributeValue(IdentityObject identityObject) throws JsonProcessingException, JsonParseException, MissingAttributeException {
+    protected CredentialAttribute getAttributeValue(IdentityObject identityObject) throws JsonProcessingException, MissingAttributeException {
         AttributeType type = AttributeType.fromJSON(this.getAttributeTag());
         String raw = identityObject.getChosenAttribute(type);
         return CredentialAttribute.builder().value(raw).type(CredentialAttribute.CredentialAttributeType.STRING).build();
     }
 
     // TODO: add overload for web3Id credential
-    public abstract boolean canBeProvedBy(IdentityObject identityObject) throws Exception;
+    public abstract boolean canBeProvedBy(IdentityObject identityObject);
 }

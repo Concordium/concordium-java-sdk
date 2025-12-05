@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.jackson.Jacksonized;
 
 @Getter
@@ -17,7 +18,8 @@ public class RevealStatement extends AtomicStatement {
     private final String attributeTag;
 
     @Override
-    public boolean canBeProvedBy(IdentityObject identityObject) throws Exception {
+    @SneakyThrows
+    public boolean canBeProvedBy(IdentityObject identityObject) {
         try {
             // Attempt to get the attribute
             this.getAttributeValue(identityObject);
