@@ -4,12 +4,11 @@ import com.concordium.sdk.crypto.wallet.web3Id.Statement.RevealStatement;
 import com.concordium.sdk.crypto.wallet.web3Id.Statement.did.IdentityProviderRequestIdentifier;
 import com.concordium.sdk.serializing.JsonMapper;
 import com.concordium.sdk.transactions.Hash;
+import com.google.common.collect.ImmutableSet;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Collections;
 
 public class VerificationRequestV1Test {
 
@@ -40,7 +39,10 @@ public class VerificationRequestV1Test {
             )
             .addSubjectClaims(
                     IdentityClaims.builder()
-                            .source(Collections.singletonList(IdentityClaims.IDENTITY_CREDENTIAL_SOURCE))
+                            .source(ImmutableSet.<String>builder()
+                                    .add(IdentityClaims.IDENTITY_CREDENTIAL_SOURCE)
+                                    .build()
+                            )
                             .statement(
                                     RevealStatement.builder()
                                             .attributeTag("firstName")

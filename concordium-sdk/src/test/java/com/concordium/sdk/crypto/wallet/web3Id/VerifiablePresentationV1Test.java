@@ -13,6 +13,7 @@ import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.UInt32;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +54,7 @@ public class VerifiablePresentationV1Test {
             .addSubjectClaims(
                     IdentityClaims.builder()
                             .source(
-                                    ImmutableList.<String>builder()
+                                    ImmutableSet.<String>builder()
                                             .add(IdentityClaims.ACCOUNT_CREDENTIAL_SOURCE)
                                             .add(IdentityClaims.IDENTITY_CREDENTIAL_SOURCE)
                                             .build()

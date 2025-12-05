@@ -22,6 +22,7 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -41,7 +42,7 @@ public class IdentityClaims implements SubjectClaims {
      * @see IdentityClaims#IDENTITY_CREDENTIAL_SOURCE
      * @see IdentityClaims#ACCOUNT_CREDENTIAL_SOURCE
      */
-    private final List<String> source;
+    private final Set<String> source;
 
     /**
      * Atomic statements about identity attributes to prove.
