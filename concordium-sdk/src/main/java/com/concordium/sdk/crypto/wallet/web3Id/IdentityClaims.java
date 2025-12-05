@@ -173,7 +173,7 @@ public class IdentityClaims implements SubjectClaims {
      * @param attributeRandomness attribute randomness of the account, stored in the wallet
      * @return input needed to create a verifiable presentation
      * @see IdentityClaims#areAccountsAccepted() Check if account credentials are even accepted
-     * @see IdentityClaims#canBeProvedBy(IdentityObject, UInt32) Check if an account's identity can prove the
+     * @see IdentityClaims#canBeProvedBy(IdentityObject, UInt32) Check if an account's identity can prove the claims
      * @see com.concordium.sdk.ClientV2#getIdentityProviders(BlockQuery) Fetch identity providers
      */
     public IdentityClaimsAccountProofInput getAccountProofInput(Network network,
