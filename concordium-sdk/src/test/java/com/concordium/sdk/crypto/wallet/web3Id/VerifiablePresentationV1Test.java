@@ -13,6 +13,7 @@ import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.UInt32;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +54,7 @@ public class VerifiablePresentationV1Test {
             .addSubjectClaims(
                     IdentityClaims.builder()
                             .source(
-                                    ImmutableList.<String>builder()
+                                    ImmutableSet.<String>builder()
                                             .add(IdentityClaims.ACCOUNT_CREDENTIAL_SOURCE)
                                             .add(IdentityClaims.IDENTITY_CREDENTIAL_SOURCE)
                                             .build()
@@ -195,6 +196,32 @@ public class VerifiablePresentationV1Test {
                 Collections.emptyList(),
                 REQUESTED_CONTEXT,
                 null
+        );
+    }
+
+    @Test
+    @SneakyThrows
+    public void identityFromUnacceptableIssuerCantProve() {
+        val identityClaims = (IdentityClaims) REQUEST.getSubjectClaims().get(0);
+        Assert.assertFalse(
+                identityClaims.canBeProvedBy(
+                        FileHelpers.getIdentityObject(),
+                        UInt32.from(3040)
+                )
+        );
+    }
+
+    @Test
+    @SneakyThrows
+    public void identityWithUnacceptableAttributesCantProve() {
+        val identityClaims = (IdentityClaims) REQUEST.getSubjectClaims().get(0);
+        val tamperedIdObject = FileHelpers.getIdentityObject();
+        tamperedIdObject.getAttributeList().getChosenAttributes().clear();
+        Assert.assertFalse(
+                identityClaims.canBeProvedBy(
+                        tamperedIdObject,
+                        UInt32.from(0)
+                )
         );
     }
 }

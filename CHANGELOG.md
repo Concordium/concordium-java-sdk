@@ -4,6 +4,7 @@
 
 - Added ability for wallets to create verifiable presentations (proofs) from identities and accounts. 
   The entrypoint is `VerificationRequestV1`. This change does not include audit.
+- Removed checked exception from `AtomicStatement.canBeProvedBy()`
 
 ## 11.1.0
 
