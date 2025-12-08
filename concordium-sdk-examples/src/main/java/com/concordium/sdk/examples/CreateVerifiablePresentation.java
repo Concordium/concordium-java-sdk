@@ -13,6 +13,7 @@ import com.concordium.sdk.responses.cryptographicparameters.CryptographicParamet
 import com.concordium.sdk.transactions.CredentialRegistrationId;
 import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.UInt32;
+import com.google.common.collect.ImmutableSet;
 import picocli.CommandLine;
 
 import java.net.URL;
@@ -72,7 +73,10 @@ public class CreateVerifiablePresentation implements Callable<Integer> {
                 )
                 .addSubjectClaims(
                         IdentityClaims.builder()
-                                .source(Collections.singletonList(IdentityClaims.ACCOUNT_CREDENTIAL_SOURCE))
+                                .source(ImmutableSet.<String>builder()
+                                        .add(IdentityClaims.ACCOUNT_CREDENTIAL_SOURCE)
+                                        .build()
+                                )
                                 .statement(
                                         RevealStatement.builder()
                                                 .attributeTag("firstName")
@@ -101,7 +105,7 @@ public class CreateVerifiablePresentation implements Callable<Integer> {
         System.out.println("Anchor is created");
 
         // The request should be verified against the anchor.
-        if (!request.verifyAnchor(anchor)){
+        if (!request.verifyAnchor(anchor)) {
             throw new IllegalStateException("Anchor is not valid");
         }
 
