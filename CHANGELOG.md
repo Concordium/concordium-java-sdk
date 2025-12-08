@@ -1,10 +1,12 @@
 # Changelog
 
-## Unreleased
+## 11.2.0
 
 - Added ability for wallets to create verifiable presentations (proofs) from identities and accounts. 
   The entrypoint is `VerificationRequestV1`. This change does not include audit.
 - Removed checked exception from `AtomicStatement.canBeProvedBy()`
+- `AtomicStatement`s now implement `equals()` and `hashCode()`
+- `Hash` is now fully JSON and CBOR serializable 
 
 ## 11.1.0
 
