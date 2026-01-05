@@ -1,5 +1,9 @@
 # Changelog
 
+## 11.2.1
+
+- Fixed discrepancies with JavaScript SDK in creation of verifiable presentation
+
 ## 11.2.0
 
 - Added ability for wallets to create verifiable presentations (proofs) from identities and accounts. 
