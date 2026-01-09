@@ -9,7 +9,6 @@ import lombok.*;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -71,6 +70,23 @@ public class TokenUpdate extends Payload {
             total = total.plus(operation.getBaseCost());
         }
         return total;
+    }
+
+    public static TokenUpdate fromBytes(ByteBuffer source) {
+        val symbolBytesLength = source.get();
+        val symbolBytes = new byte[symbolBytesLength];
+        source.get(symbolBytes);
+        val tokenSymbol = new String(symbolBytes, StandardCharsets.UTF_8);
+
+        val operationsBytesLength = source.getInt();
+        val operationsBytes = new byte[operationsBytesLength];
+        source.get(operationsBytes);
+
+        return TokenUpdate
+                .builder()
+                .tokenSymbol(tokenSymbol)
+                .operationsSerialized(operationsBytes)
+                .build();
     }
 
     @SuppressWarnings("unused")

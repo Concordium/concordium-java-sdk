@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 
 public class TokenUpdateTransactionTest {
 
@@ -205,6 +206,36 @@ public class TokenUpdateTransactionTest {
                         .tokenSymbol("TEST")
                         .operationsSerialized(Hex.decode(serializedOperationsHex))
                         .build()
+        );
+    }
+
+    @Test
+    @SneakyThrows
+    public void testTokenUpdatePayloadSerialization() {
+        val payload = TokenUpdate
+                .builder()
+                .tokenSymbol("TEST")
+                .operation(
+                        TransferTokenOperation
+                                .builder()
+                                .amount(new TokenOperationAmount(new BigDecimal("1.5"), 6))
+                                .recipient(new TaggedTokenHolderAccount(
+                                        AccountAddress.from(
+                                                "3CbvrNVpcHpL7tyT2mhXxQwNWHiPNYEJRgp3CMgEcMyXivms6B"
+                                        )
+                                ))
+                                .build()
+                )
+                .build();
+        val expectedHex = "04544553540000004e81bf687472616e73666572bf66616d6f756e74c482251a0016e36069726563697069656e74d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b7ffff";
+
+        Assert.assertEquals(
+                expectedHex,
+                Hex.toHexString(payload.getRawPayloadBytes())
+        );
+        Assert.assertEquals(
+                payload,
+                TokenUpdate.fromBytes(ByteBuffer.wrap(Hex.decode(expectedHex)))
         );
     }
 }

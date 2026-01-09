@@ -120,23 +120,26 @@ public class AccountTransaction extends BlockItem {
     public static AccountTransaction fromBytes(ByteBuffer source) {
         val signature = TransactionSignature.fromBytes(source);
         val header = TransactionHeader.fromBytes(source);
-        byte tag = source.get();
+        val payloadType = TransactionType.parse(source.get());
         Payload payload;
-        switch (tag) {
-            case 2:
+        switch (payloadType) {
+            case UPDATE_SMART_CONTRACT_INSTANCE:
                 payload = UpdateContract.fromBytes(source);
                 break;
-            case 3:
+            case SIMPLE_TRANSFER:
                 payload = Transfer.fromBytes(source);
                 break;
-            case 21:
+            case REGISTER_DATA:
                 payload = RegisterData.fromBytes(source);
                 break;
-            case 22:
+            case TRANSFER_WITH_MEMO:
                 payload = TransferWithMemo.fromBytes(source);
                 break;
+            case TOKEN_UPDATE:
+                payload = TokenUpdate.fromBytes(source);
+                break;
             default:
-                throw new UnsupportedOperationException("Unsupported transaction type: " + tag);
+                throw new UnsupportedOperationException("Unsupported transaction type: " + payloadType);
         }
 
         return new AccountTransaction(signature, header, payload);

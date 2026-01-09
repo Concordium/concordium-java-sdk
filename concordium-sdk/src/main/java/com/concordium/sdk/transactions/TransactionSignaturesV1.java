@@ -28,6 +28,7 @@ public class TransactionSignaturesV1 {
     @Nullable
     private final TransactionSignature sponsorSignature;
 
+    @SuppressWarnings("unused")
     public Optional<TransactionSignature> getSponsorSignature() {
         return Optional.ofNullable(sponsorSignature);
     }
