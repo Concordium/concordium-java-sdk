@@ -21,6 +21,7 @@ public class TransactionSignaturesV1 {
     /**
      * The signature on the transaction by the source account.
      */
+    @NonNull
     private final TransactionSignature senderSignature;
 
     /**

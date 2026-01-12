@@ -1,7 +1,9 @@
 package com.concordium.sdk.transactions;
 
-import lombok.*;
-import org.apache.commons.lang3.NotImplementedException;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.ToString;
 
 import java.nio.ByteBuffer;
 
@@ -12,16 +14,15 @@ import static com.google.common.primitives.Bytes.concat;
  * Such a transaction can be sponsored, in which case its cost is not paid
  * by the sender.
  */
-@Builder
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class AccountTransactionV1 extends BlockItem {
 
     /**
-     * Transaction payload, defines what this transaction does.
+     * The signatures on the transaction by the source account and optionally a sponsor account.
      */
-    private final Payload payload;
+    private final TransactionSignaturesV1 signatures;
 
     /**
      * Transaction header data.
@@ -29,17 +30,17 @@ public class AccountTransactionV1 extends BlockItem {
     private final TransactionHeaderV1 header;
 
     /**
-     * The signatures on the transaction by the source account and optionally a sponsor account.
+     * Transaction payload, defines what this transaction does.
      */
-    private final TransactionSignaturesV1 signatures;
+    private final Payload payload;
 
-    public AccountTransactionV1(@NonNull Payload payload,
+    public AccountTransactionV1(@NonNull TransactionSignaturesV1 signatures,
                                 @NonNull TransactionHeaderV1 header,
-                                @NonNull TransactionSignaturesV1 signatures) {
+                                @NonNull Payload payload) {
         super(BlockItemType.ACCOUNT_TRANSACTION_V1);
-        this.payload = payload;
-        this.header = header;
         this.signatures = signatures;
+        this.header = header;
+        this.payload = payload;
     }
 
     @Override
@@ -51,8 +52,20 @@ public class AccountTransactionV1 extends BlockItem {
         );
     }
 
+    /**
+     * @param source a buffer to read transaction bytes from, without {@link BlockItemType} byte.
+     * @return deserialized {@link AccountTransactionV1}
+     * @throws UnsupportedOperationException if payload can't be read.
+     *                                       Not all transaction (payload) types can be read.
+     *                                       For unsupported types, get the payload size
+     *                                       from the manually read {@link TransactionHeaderV1}
+     *                                       and then proceed with {@link RawPayload}.
+     */
     public static AccountTransactionV1 fromBytes(ByteBuffer source) {
-        // TODO implement payload from bytes
-        throw new NotImplementedException("TODO");
+        return new AccountTransactionV1(
+                TransactionSignaturesV1.fromBytes(source),
+                TransactionHeaderV1.fromBytes(source),
+                Payload.fromBytes(source)
+        );
     }
 }

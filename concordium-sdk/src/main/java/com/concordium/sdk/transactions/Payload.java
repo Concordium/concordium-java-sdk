@@ -137,4 +137,28 @@ public abstract class Payload {
      */
     protected abstract byte[] getRawPayloadBytes();
 
+    /**
+     * @param source a buffer to read payload bytes from, including {@link TransactionType} byte.
+     * @return deserialized {@link Payload}
+     * @throws UnsupportedOperationException if payload can't be read.
+     *                                       Not all payload types can be read.
+     *                                       Use {@link RawPayload} for unsupported types.
+     */
+    public static Payload fromBytes(ByteBuffer source) {
+        val payloadType = TransactionType.parse(source.get());
+        switch (payloadType) {
+            case UPDATE_SMART_CONTRACT_INSTANCE:
+                return UpdateContract.fromBytes(source);
+            case SIMPLE_TRANSFER:
+                return Transfer.fromBytes(source);
+            case REGISTER_DATA:
+                return RegisterData.fromBytes(source);
+            case TRANSFER_WITH_MEMO:
+                return TransferWithMemo.fromBytes(source);
+            case TOKEN_UPDATE:
+                return TokenUpdate.fromBytes(source);
+            default:
+                throw new UnsupportedOperationException("Unsupported payload type: " + payloadType + ". Use RawPayload instead");
+        }
+    }
 }

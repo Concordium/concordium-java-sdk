@@ -117,31 +117,20 @@ public class AccountTransaction extends BlockItem {
         return concat(signature.getBytes(), header.getBytes(), getPayload().getBytes());
     }
 
+    /**
+     * @param source a buffer to read transaction bytes from, without {@link BlockItemType} byte.
+     * @return deserialized {@link AccountTransaction}
+     * @throws UnsupportedOperationException if payload can't be read.
+     *                                       Not all transaction (payload) types can be read.
+     *                                       For unsupported types, get the payload size
+     *                                       from the manually read {@link TransactionHeader}
+     *                                       and then proceed with {@link RawPayload}.
+     */
     public static AccountTransaction fromBytes(ByteBuffer source) {
-        val signature = TransactionSignature.fromBytes(source);
-        val header = TransactionHeader.fromBytes(source);
-        val payloadType = TransactionType.parse(source.get());
-        Payload payload;
-        switch (payloadType) {
-            case UPDATE_SMART_CONTRACT_INSTANCE:
-                payload = UpdateContract.fromBytes(source);
-                break;
-            case SIMPLE_TRANSFER:
-                payload = Transfer.fromBytes(source);
-                break;
-            case REGISTER_DATA:
-                payload = RegisterData.fromBytes(source);
-                break;
-            case TRANSFER_WITH_MEMO:
-                payload = TransferWithMemo.fromBytes(source);
-                break;
-            case TOKEN_UPDATE:
-                payload = TokenUpdate.fromBytes(source);
-                break;
-            default:
-                throw new UnsupportedOperationException("Unsupported transaction type: " + payloadType);
-        }
-
-        return new AccountTransaction(signature, header, payload);
+        return new AccountTransaction(
+                TransactionSignature.fromBytes(source),
+                TransactionHeader.fromBytes(source),
+                Payload.fromBytes(source)
+        );
     }
 }
