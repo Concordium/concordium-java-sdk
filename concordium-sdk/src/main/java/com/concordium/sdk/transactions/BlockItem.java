@@ -39,6 +39,8 @@ public abstract class BlockItem implements Transaction {
         switch (kind) {
             case ACCOUNT_TRANSACTION:
                 return AccountTransaction.fromBytes(source);
+            case ACCOUNT_TRANSACTION_V1:
+                return AccountTransactionV1.fromBytes(source);
             case CREDENTIAL_DEPLOYMENT:
                 throw new UnsupportedOperationException("Only account transactions are supported in this version. Credential deployments are not.");
             case UPDATE_INSTRUCTION:

@@ -10,7 +10,8 @@ import java.util.Optional;
 import static com.google.common.primitives.Bytes.concat;
 
 /**
- * The transaction header used for the extended transaction format.
+ * The transaction header used for the extended transaction format,
+ * used for {@link AccountTransactionV1}.
  */
 @RequiredArgsConstructor
 @Builder

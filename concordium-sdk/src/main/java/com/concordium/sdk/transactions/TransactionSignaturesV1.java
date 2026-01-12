@@ -11,6 +11,7 @@ import static com.google.common.primitives.Bytes.concat;
 /**
  * The signatures for the extended transaction format.
  * Contain not only the sender, but also the sponsor signature.
+ * Used for {@link AccountTransactionV1}.
  */
 @RequiredArgsConstructor
 @Getter

@@ -19,7 +19,14 @@ public enum BlockItemType {
     /**
      * Update transaction for various on chain parameters.
      */
-    UPDATE_INSTRUCTION((byte) 2);
+    UPDATE_INSTRUCTION((byte) 2),
+
+    /**
+     * An extended transaction format originating from a particular account.
+     */
+    ACCOUNT_TRANSACTION_V1((byte) 3),
+
+    ;
 
     private final byte value;
 
@@ -40,6 +47,8 @@ public enum BlockItemType {
                 return CREDENTIAL_DEPLOYMENT;
             case 2:
                 return UPDATE_INSTRUCTION;
+            case 3:
+                return ACCOUNT_TRANSACTION_V1;
             default:
                 throw new IllegalArgumentException();
         }
