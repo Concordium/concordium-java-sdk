@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.crypto.SHA256;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -66,6 +67,24 @@ public class AccountTransactionV1 extends BlockItem {
                 TransactionSignaturesV1.fromBytes(source),
                 TransactionHeaderV1.fromBytes(source),
                 Payload.fromBytes(source)
+        );
+    }
+
+    public static byte[] getDataToSign(
+            TransactionHeaderV1 header,
+            Payload payload
+    ) {
+        return SHA256.hash(
+                concat(
+                        // 32 byte prefix defining the transaction version.
+                        new byte[]{
+                                0, 0, 0, 0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0, 0, 0, 1,
+                        },
+                        header.getBytes(),
+                        payload.getBytes()
+                )
         );
     }
 }

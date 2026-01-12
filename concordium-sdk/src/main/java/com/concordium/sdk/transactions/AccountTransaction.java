@@ -1,5 +1,6 @@
 package com.concordium.sdk.transactions;
 
+import com.concordium.sdk.crypto.SHA256;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
@@ -131,6 +132,18 @@ public class AccountTransaction extends BlockItem {
                 TransactionSignature.fromBytes(source),
                 TransactionHeader.fromBytes(source),
                 Payload.fromBytes(source)
+        );
+    }
+
+    public static byte[] getDataToSign(
+            TransactionHeader header,
+            Payload payload
+    ) {
+        return SHA256.hash(
+                concat(
+                        header.getBytes(),
+                        payload.getBytes()
+                )
         );
     }
 }
