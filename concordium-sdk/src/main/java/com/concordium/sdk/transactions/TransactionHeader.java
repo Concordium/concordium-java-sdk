@@ -74,8 +74,8 @@ public class TransactionHeader {
                 .build();
     }
 
-    private final static int CONSTANT_A = 100;
-    private final static int CONSTANT_B = 1;
+    public final static int COST_CONSTANT_A = 100;
+    public final static int COST_CONSTANT_B = 1;
 
     /**
      * Calculate the maximum amount of energy that can be spent on executing a transaction.
@@ -90,8 +90,8 @@ public class TransactionHeader {
                                                 int payloadSize,
                                                 UInt64 transactionSpecificCost) {
         return UInt64.from((long)
-                CONSTANT_A * noOfSignatures +
-                CONSTANT_B * (TransactionHeader.BYTES + payloadSize)
+                COST_CONSTANT_A * noOfSignatures +
+                COST_CONSTANT_B * (TransactionHeader.BYTES + payloadSize)
                 + transactionSpecificCost.getValue());
     }
 
