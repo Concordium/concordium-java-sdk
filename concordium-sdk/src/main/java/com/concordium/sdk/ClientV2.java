@@ -38,7 +38,7 @@ import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.smartcontracts.InvokeInstanceResult;
 import com.concordium.sdk.responses.winningbaker.WinningBaker;
 import com.concordium.sdk.transactions.AccountTransaction;
-import com.concordium.sdk.transactions.BlockItem;
+import com.concordium.sdk.transactions.AccountTransactionV1;import com.concordium.sdk.transactions.BlockItem;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.types.AbsoluteBlockHeight;
@@ -299,6 +299,19 @@ public final class ClientV2 {
      * @return Transaction {@link Hash}.
      */
     public Hash sendTransaction(final AccountTransaction accountTransaction) {
+        val req = ClientV2MapperExtensions.to(accountTransaction);
+        val grpcOutput = this.server().sendBlockItem(req);
+
+        return to(grpcOutput);
+    }
+
+    /**
+     * Sends a sponsored transaction to the Concordium Node.
+     *
+     * @param accountTransaction Account Transaction to send.
+     * @return Transaction {@link Hash}.
+     */
+    public Hash sendTransaction(final AccountTransactionV1 accountTransaction) {
         val req = ClientV2MapperExtensions.to(accountTransaction);
         val grpcOutput = this.server().sendBlockItem(req);
 

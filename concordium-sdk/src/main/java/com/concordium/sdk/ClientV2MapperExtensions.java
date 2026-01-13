@@ -82,6 +82,7 @@ import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.AccountTransaction;
+import com.concordium.sdk.transactions.AccountTransactionV1;
 import com.concordium.sdk.transactions.InitName;
 import com.concordium.sdk.transactions.Parameter;
 import com.concordium.sdk.transactions.ReceiveName;
@@ -1100,6 +1101,18 @@ interface ClientV2MapperExtensions {
                 .build();
     }
 
+    static SendBlockItemRequest to(AccountTransactionV1 accountTransaction) {
+        return SendBlockItemRequest.newBuilder()
+                .setAccountTransactionV1(com.concordium.grpc.v2.AccountTransactionV1.newBuilder()
+                        .setHeader(to(accountTransaction.getHeader()))
+                        .setPayload(AccountTransactionPayload.newBuilder()
+                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayload().getBytes()))
+                                .build())
+                        .setSignatures(to(accountTransaction.getSignatures()))
+                        .build())
+                .build();
+    }
+
     static SendBlockItemRequest to(CredentialDeploymentTransaction credentialDeploymentTransaction) {
         TransactionTime time = to(credentialDeploymentTransaction.getExpiry().getValue());
 
@@ -1120,6 +1133,15 @@ interface ClientV2MapperExtensions {
                         ClientV2MapperExtensions::to,
                         ClientV2MapperExtensions::to))
                 .build();
+    }
+
+    static AccountTransactionV1Signatures to(TransactionSignaturesV1 signatures){
+        val builder = AccountTransactionV1Signatures.newBuilder()
+                .setSenderSignatures(to(signatures.getSenderSignature()));
+        if (signatures.getSponsorSignature().isPresent()){
+            builder.setSponsorSignatures(to(signatures.getSponsorSignature().get()));
+        }
+        return builder.build();
     }
 
     static AccountSignatureMap to(TransactionSignatureAccountSignatureMap v) {
@@ -1149,6 +1171,20 @@ interface ClientV2MapperExtensions {
                 .setExpiry(to(header.getExpiry().getValue()))
                 .setEnergyAmount(toEnergy(header.getMaxEnergyCost()))
                 .build();
+    }
+
+    static AccountTransactionHeaderV1 to(TransactionHeaderV1 header) {
+        val builder = AccountTransactionHeaderV1.newBuilder()
+                .setSequenceNumber(SequenceNumber.newBuilder()
+                        .setValue(to(header.getNonce()))
+                        .build())
+                .setSender(to(header.getSender()))
+                .setExpiry(to(header.getExpiry().getValue()))
+                .setEnergyAmount(toEnergy(header.getMaxEnergyCost()));
+        if (header.getSponsor().isPresent()) {
+            builder.setSponsor(to(header.getSponsor().get()));
+        }
+        return builder.build();
     }
 
     static Energy toEnergy(UInt64 maxEnergyCost) {
