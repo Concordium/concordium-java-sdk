@@ -47,7 +47,7 @@ public class ClientV2GetItemsTest {
     private static final long ACCOUNT_TRANSACTION_ENERGY = 300;
     private static final long ACCOUNT_TRANSACTION_EXPIRY = 8989;
     private static final long ACCOUNT_TRANSACTION_SEQ_NO = 7;
-    private static final int ACCOUNT_TRANSACTION_PAYLOAD_SIZE = 11;
+    private static final int ACCOUNT_TRANSACTION_PAYLOAD_SIZE = 12;
     private static final byte[] ACCOUNT_TRANSACTION_SIGNATURE_BYTES = new byte[]{1, 1, 1};
     private static final byte[] MODULE_V0_BYTES = new byte[]{0, 1, 1};
     private static final long CREDENTIAL_DEPLOYMENT_EXPIRY_TIMESTAMP = 100000;
@@ -207,7 +207,7 @@ public class ClientV2GetItemsTest {
                 .build());
         val expected = new com.concordium.sdk.transactions.AccountTransaction(
                 ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED,
-                ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(27)).build(),
+                ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(28)).build(),
                 InitContract.from(amount,
                         moduleRef,
                         initName,
@@ -239,7 +239,7 @@ public class ClientV2GetItemsTest {
                 .build());
         val expected = new com.concordium.sdk.transactions.AccountTransaction(
                 ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED,
-                ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(46)).build(),
+                ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(47)).build(),
                 UpdateContract.from(amount,
                         com.concordium.sdk.types.ContractAddress.from(1, 0),
                         "contract",
@@ -261,7 +261,7 @@ public class ClientV2GetItemsTest {
                 .build());
         val expected = new com.concordium.sdk.transactions.AccountTransaction(
                 ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED,
-                ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(5)).build(),
+                ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(6)).build(),
                 new RegisterData(Data.from(dataBytes))
         );
 
@@ -286,7 +286,7 @@ public class ClientV2GetItemsTest {
                 .build());
         val expected = new com.concordium.sdk.transactions.AccountTransaction(
                 ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED,
-                ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(40)).build(),
+                ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(41)).build(),
                 new Transfer(
                         com.concordium.sdk.types.AccountAddress.from(recieverAccountAddress),
                         CCDAmount.fromMicro(amount))
@@ -297,7 +297,6 @@ public class ClientV2GetItemsTest {
 
     @Test
     public void shouldMapTransferWithMemoTransaction() {
-        final byte[] dataBytes = new byte[]{9, 9, 9};
         final long amount = 10L;
         final byte[] recieverAccountAddress = com.concordium.sdk.types.AccountAddress
                 .from("37UHs4b9VH3F366cdmrA4poBURzzARJLWxdXZ18zoa9pnfhhDf").getBytes();
@@ -316,7 +315,7 @@ public class ClientV2GetItemsTest {
                 .build());
         val expected = new com.concordium.sdk.transactions.AccountTransaction(
                 ACCOUNT_TRANSACTION_SIGNATURE_EXPECTED,
-                ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(45)).build(),
+                ACCOUNT_TRANSACTION_HEADER_EXPECTED.toBuilder().payloadSize(UInt32.from(46)).build(),
                 new TransferWithMemo(
                         com.concordium.sdk.types.AccountAddress.from(recieverAccountAddress),
                         CCDAmount.fromMicro(amount),
