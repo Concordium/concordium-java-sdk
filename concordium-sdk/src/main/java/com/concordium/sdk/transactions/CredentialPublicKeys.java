@@ -2,11 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -17,6 +13,7 @@ import java.util.Map;
 @Getter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 public class CredentialPublicKeys {
 
     /**

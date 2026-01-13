@@ -29,11 +29,6 @@ public class RawTransaction implements Transaction {
         return Hash.from(SHA256.hash(bytes));
     }
 
-    @Override
-    public int getNetworkId() {
-        return Transaction.DEFAULT_NETWORK_ID;
-    }
-
     /**
      * Create a {@link Transaction} from raw bytes
      *

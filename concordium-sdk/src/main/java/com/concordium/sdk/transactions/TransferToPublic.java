@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)
-@RequiredArgsConstructor
 @ToString
 public final class TransferToPublic extends Payload {
 
@@ -37,13 +36,19 @@ public final class TransferToPublic extends Payload {
      */
     private final SecToPubAmountTransferProof proof;
 
-    @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.TRANSFER_TO_PUBLIC;
+    public TransferToPublic(@NonNull EncryptedAmount remainingAmount,
+                            @NonNull CCDAmount transferAmount,
+                            @NonNull UInt64 index,
+                            @NonNull SecToPubAmountTransferProof proof) {
+        super(TransactionType.TRANSFER_TO_PUBLIC);
+        this.remainingAmount = remainingAmount;
+        this.transferAmount = transferAmount;
+        this.index = index;
+        this.proof = proof;
     }
 
     @Override
-    protected byte[] getRawPayloadBytes() {
+    protected byte[] getPayloadBytes() {
         val proofBytes = this.proof.getBytes();
         val remainingAmountBytes = this.remainingAmount.getBytes();
         val buffer = ByteBuffer.allocate(remainingAmountBytes.length
@@ -56,13 +61,5 @@ public final class TransferToPublic extends Payload {
         buffer.put(proofBytes);
 
         return buffer.array();
-    }
-
-    static TransferToPublic createNew(
-            EncryptedAmount remainingAmount,
-            CCDAmount transferAmount,
-            UInt64 index,
-            SecToPubAmountTransferProof proof) {
-        return new TransferToPublic(remainingAmount, transferAmount, index, proof);
     }
 }

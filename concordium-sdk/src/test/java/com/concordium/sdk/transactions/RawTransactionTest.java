@@ -15,8 +15,8 @@ public class RawTransactionTest {
     @SneakyThrows
     @Test
     public void testRawTransactionCorrespondsToATransfer() {
-        val transfer = TransferTransaction
-                .builder()
+        val transfer = TransactionFactory
+                .newTransfer()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
                 .amount(CCDAmount.fromMicro(17))

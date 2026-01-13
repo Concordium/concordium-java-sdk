@@ -1,5 +1,6 @@
 package com.concordium.sdk;
 
+import com.concordium.grpc.v2.*;
 import com.concordium.grpc.v2.AbsoluteBlockHeight;
 import com.concordium.grpc.v2.AccessStructure;
 import com.concordium.grpc.v2.AccountAddress;
@@ -24,7 +25,6 @@ import com.concordium.grpc.v2.NextUpdateSequenceNumbers;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ProtocolVersion;
 import com.concordium.grpc.v2.ReleaseSchedule;
-import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
@@ -35,22 +35,22 @@ import com.concordium.sdk.crypto.vrf.VRFPublicKey;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.requests.EpochQuery;
+import com.concordium.sdk.responses.*;
 import com.concordium.sdk.responses.Epoch;
 import com.concordium.sdk.responses.FinalizerIndex;
 import com.concordium.sdk.responses.Round;
 import com.concordium.sdk.responses.TimeoutParameters;
-import com.concordium.sdk.responses.*;
+import com.concordium.sdk.responses.accountinfo.*;
 import com.concordium.sdk.responses.accountinfo.BakerPoolInfo;
 import com.concordium.sdk.responses.accountinfo.CommissionRates;
-import com.concordium.sdk.responses.accountinfo.*;
-import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.accountinfo.credential.*;
+import com.concordium.sdk.responses.accountinfo.credential.CredentialType;
 import com.concordium.sdk.responses.bakersrewardperiod.BakerInfo;
 import com.concordium.sdk.responses.blockcertificates.QuorumSignature;
 import com.concordium.sdk.responses.blockcertificates.SuccessorProof;
 import com.concordium.sdk.responses.blockcertificates.TimeoutSignature;
-import com.concordium.sdk.responses.blockitemsummary.AccountCreationDetails;
 import com.concordium.sdk.responses.blockitemsummary.*;
+import com.concordium.sdk.responses.blockitemsummary.AccountCreationDetails;
 import com.concordium.sdk.responses.blocksummary.FinalizationData;
 import com.concordium.sdk.responses.blocksummary.Finalizer;
 import com.concordium.sdk.responses.blocksummary.specialoutcomes.*;
@@ -60,6 +60,7 @@ import com.concordium.sdk.responses.blocksummary.updates.queues.AnonymityRevoker
 import com.concordium.sdk.responses.blocksummary.updates.queues.IdentityProviderInfo;
 import com.concordium.sdk.responses.blocksummary.updates.queues.PendingUpdateType;
 import com.concordium.sdk.responses.branch.Branch;
+import com.concordium.sdk.responses.chainparameters.*;
 import com.concordium.sdk.responses.chainparameters.ChainParametersV0;
 import com.concordium.sdk.responses.chainparameters.ChainParametersV1;
 import com.concordium.sdk.responses.chainparameters.ChainParametersV2;
@@ -67,7 +68,6 @@ import com.concordium.sdk.responses.chainparameters.ChainParametersV3;
 import com.concordium.sdk.responses.chainparameters.CooldownParametersCpv1;
 import com.concordium.sdk.responses.chainparameters.FinalizationCommitteeParameters;
 import com.concordium.sdk.responses.chainparameters.ValidatorScoreParameters;
-import com.concordium.sdk.responses.chainparameters.*;
 import com.concordium.sdk.responses.consensusstatus.BlockSignature;
 import com.concordium.sdk.responses.consensusstatus.ConsensusDetailedStatus;
 import com.concordium.sdk.responses.consensusstatus.ConsensusStatus;
@@ -80,19 +80,16 @@ import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.smartcontracts.ContractVersion;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
+import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.AccountTransaction;
-import com.concordium.sdk.transactions.InitContractPayload;
 import com.concordium.sdk.transactions.InitName;
 import com.concordium.sdk.transactions.Parameter;
 import com.concordium.sdk.transactions.ReceiveName;
 import com.concordium.sdk.transactions.Signature;
-import com.concordium.sdk.transactions.TransferPayload;
-import com.concordium.sdk.transactions.TransferWithMemoPayload;
-import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.transactions.smartcontracts.WasmModuleVersion;
-import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.*;
+import com.concordium.sdk.types.Timestamp;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -877,76 +874,69 @@ interface ClientV2MapperExtensions {
         val payload = transaction.getPayload();
 
         switch (payload.getPayloadCase()) {
-            case DEPLOY_MODULE: {
-                final WasmModule deployModulePayload = to(payload.getDeployModule());
-                return DeployModuleTransaction
-                        .builderBlockItem()
-                        .header(to(transaction.getHeader(), deployModulePayload.getBytes().length))
-                        .signature(to(transaction.getSignature()))
-                        .payload(DeployModule.builder().module(deployModulePayload).build())
-                        .build();
-            }
-            case INIT_CONTRACT: {
-                final InitContractPayload initContractPayload = to(payload.getInitContract());
-                return InitContractTransaction.builderBlockItem()
-                        .header(to(transaction.getHeader(), initContractPayload.getBytes().length))
-                        .signature(to(transaction.getSignature()))
-                        .payload(initContractPayload)
-                        .build();
-            }
+            case DEPLOY_MODULE:
+                final DeployModule deployModulePayload = new DeployModule(to(payload.getDeployModule()));
+                return new AccountTransaction(
+                        to(transaction.getSignature()),
+                        to(transaction.getHeader(), deployModulePayload.getBytes().length),
+                        deployModulePayload
+                );
+            case INIT_CONTRACT:
+                final InitContract initContract = to(payload.getInitContract());
+                return new AccountTransaction(
+                        to(transaction.getSignature()),
+                        to(transaction.getHeader(), initContract.getBytes().length),
+                        initContract
+                );
             case UPDATE_CONTRACT:
                 final UpdateContract updateContractPayload = to(payload.getUpdateContract());
-                return UpdateContractTransaction.builderAccountTransactionBlockItem()
-                        .header(to(transaction.getHeader(), updateContractPayload.getRawPayloadBytes().length))
-                        .signature(to(transaction.getSignature()))
-                        .payload(updateContractPayload)
-                        .build();
+                return new AccountTransaction(
+                        to(transaction.getSignature()),
+                        to(transaction.getHeader(), updateContractPayload.getBytes().length),
+                        updateContractPayload
+                );
             case REGISTER_DATA:
-                final Data registerDataPayload = to(payload.getRegisterData());
-                return RegisterDataTransaction
-                        .builderBlockItem()
-                        .header(to(transaction.getHeader(), registerDataPayload.getBytes().length))
-                        .signature(to(transaction.getSignature()))
-                        .payload(registerDataPayload)
-                        .build();
+                final RegisterData registerDataPayload = new RegisterData(to(payload.getRegisterData()));
+                return new AccountTransaction(
+                        to(transaction.getSignature()),
+                        to(transaction.getHeader(), registerDataPayload.getBytes().length),
+                        registerDataPayload
+                );
             case TRANSFER:
-                final TransferPayload transferPayload = to(payload.getTransfer());
-                return TransferTransaction
-                        .builderBlockItem()
-                        .header(to(transaction.getHeader(), transferPayload.getBytes().length))
-                        .signature(to(transaction.getSignature()))
-                        .payload(transferPayload)
-                        .build();
+                final Transfer transferPayload = to(payload.getTransfer());
+                return new AccountTransaction(
+                        to(transaction.getSignature()),
+                        to(transaction.getHeader(), transferPayload.getBytes().length),
+                        transferPayload
+                );
             case TRANSFER_WITH_MEMO:
-                final TransferWithMemoPayload transferWithMemoPayload = to(payload.getTransferWithMemo());
-                return TransferWithMemoTransaction
-                        .builderBlockItem()
-                        .header(to(transaction.getHeader(), transferWithMemoPayload.getBytes().length))
-                        .signature(to(transaction.getSignature()))
-                        .payload(transferWithMemoPayload)
-                        .build();
+                final TransferWithMemo transferWithMemoPayload = to(payload.getTransferWithMemo());
+                return new AccountTransaction(
+                        to(transaction.getSignature()),
+                        to(transaction.getHeader(), transferWithMemoPayload.getBytes().length),
+                        transferWithMemoPayload
+                );
             case RAW_PAYLOAD:
-                final byte[] rawPayloadBytes = payload.getRawPayload().toByteArray();
-                return com.concordium.sdk.transactions.AccountTransaction
-                        .builderAccountTransactionBlockItem()
-                        .header(to(transaction.getHeader(), rawPayloadBytes.length))
-                        .signature(to(transaction.getSignature()))
-                        .payload(RawPayload.from(rawPayloadBytes))
-                        .build();
-            default:
+                final RawPayload rawPayload = new RawPayload(payload.getRawPayload().toByteArray());
+                return new AccountTransaction(
+                        to(transaction.getSignature()),
+                        to(transaction.getHeader(), rawPayload.getBytes().length),
+                        rawPayload
+                );
             case PAYLOAD_NOT_SET:
+            default:
                 throw new IllegalArgumentException("Cannot parse account transaction as payload tag was not set.");
         }
     }
 
-    static TransferWithMemoPayload to(com.concordium.grpc.v2.TransferWithMemoPayload transferWithMemo) {
-        return TransferWithMemoPayload.from(to(transferWithMemo.getReceiver()),
+    static TransferWithMemo to(com.concordium.grpc.v2.TransferWithMemoPayload transferWithMemo) {
+        return new TransferWithMemo(to(transferWithMemo.getReceiver()),
                 to(transferWithMemo.getAmount()),
                 to(transferWithMemo.getMemo()));
     }
 
-    static TransferPayload to(com.concordium.grpc.v2.TransferPayload transfer) {
-        return TransferPayload.from(to(transfer.getReceiver()), to(transfer.getAmount()));
+    static Transfer to(com.concordium.grpc.v2.TransferPayload transfer) {
+        return new Transfer(to(transfer.getReceiver()), to(transfer.getAmount()));
     }
 
     static Data to(RegisteredData registerData) {
@@ -961,8 +951,8 @@ interface ClientV2MapperExtensions {
                 updateContract.hasParameter() ? to(updateContract.getParameter()) : Parameter.EMPTY);
     }
 
-    static InitContractPayload to(com.concordium.grpc.v2.InitContractPayload initContract) {
-        return InitContractPayload.from(to(initContract.getAmount()),
+    static InitContract to(com.concordium.grpc.v2.InitContractPayload initContract) {
+        return InitContract.from(to(initContract.getAmount()),
                 to(initContract.getModuleRef()),
                 to(initContract.getInitName()),
                 initContract.hasParameter() ? to(initContract.getParameter()) : Parameter.EMPTY);
@@ -1024,15 +1014,13 @@ interface ClientV2MapperExtensions {
     }
 
     static TransactionHeader to(AccountTransactionHeader header, int payloadSize) {
-        val ret = TransactionHeader.builder()
+        return TransactionHeader.builder()
                 .sender(to(header.getSender()))
-                .expiry(to(header.getExpiry()))
-                .Nonce(to(header.getSequenceNumber()))
+                .expiry(Expiry.from(to(header.getExpiry())))
+                .nonce(to(header.getSequenceNumber()))
+                .maxEnergyCost(to(header.getEnergyAmount()))
+                .payloadSize(UInt32.from(payloadSize))
                 .build();
-        ret.setMaxEnergyCost(to(header.getEnergyAmount()));
-        ret.setPayloadSize(UInt32.from(payloadSize));
-
-        return ret;
     }
 
     static UInt64 to(Energy energyAmount) {
@@ -1158,7 +1146,7 @@ interface ClientV2MapperExtensions {
                         .setValue(to(header.getNonce()))
                         .build())
                 .setSender(to(header.getSender()))
-                .setExpiry(to(header.getExpiry()))
+                .setExpiry(to(header.getExpiry().getValue()))
                 .setEnergyAmount(toEnergy(header.getMaxEnergyCost()))
                 .build();
     }

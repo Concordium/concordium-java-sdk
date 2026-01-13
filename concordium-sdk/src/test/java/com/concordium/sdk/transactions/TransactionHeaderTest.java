@@ -14,11 +14,11 @@ public class TransactionHeaderTest {
         val header = TransactionHeader
                 .builder()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .Nonce(Nonce.from(78910))
-                .expiry(UInt64.from(123456))
+                .nonce(Nonce.from(78910))
+                .expiry(Expiry.from(123456))
+                .payloadSize(UInt32.from(41))
+                .maxEnergyCost(UInt64.from(610))
                 .build();
-        header.setPayloadSize(UInt32.from(41));
-        header.setMaxEnergyCost(UInt64.from(610));
 
         val headerBytes = header.getBytes();
         Assert.assertEquals(AccountAddress.BYTES + UInt64.BYTES + UInt64.BYTES + UInt32.BYTES + UInt64.BYTES, headerBytes.length);

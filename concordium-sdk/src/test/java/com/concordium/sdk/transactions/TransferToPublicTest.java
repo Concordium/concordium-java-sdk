@@ -578,11 +578,13 @@ public class TransferToPublicTest {
                 .genesisString("Concordium Testnet Version 5")
                 .build();
 
-        val transaction = TransactionFactory.newTransferToPublic(
+        val transaction = TransactionFactory
+                .newTransferToPublicWithSecretKey(
                         cryptographicParameters,
                         accountInfo.getAccountEncryptedAmount(),
                         accountSecretKey,
-                        amountToMakePublic)
+                        amountToMakePublic
+                )
                 .sender(accountInfo.getAccountAddress())
                 .nonce(accountInfo.getNonce())
                 .expiry(Expiry.from(123456))
@@ -634,11 +636,12 @@ public class TransferToPublicTest {
 
         for (CryptographicParameters cryptographicParameters : cases) {
             try {
-                TransactionFactory.newTransferToPublic(
+                TransactionFactory.newTransferToPublicWithSecretKey(
                                 cryptographicParameters,
                                 accountInfo.getAccountEncryptedAmount(),
                                 accountSecretKey,
-                                amountToMakePublic)
+                                amountToMakePublic
+                        )
                         .sender(accountInfo.getAccountAddress())
                         .nonce(accountInfo.getNonce())
                         .expiry(Expiry.from(123456))

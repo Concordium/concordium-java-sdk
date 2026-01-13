@@ -31,7 +31,8 @@ public class UpdateCredentialKeysTest {
         CredentialRegistrationId regId = CredentialRegistrationId.fromBytes(new byte[]{-90, 67, -42, 8, 42, -113, -128, 70, 15, -1, 39, -13, -1, 39, -2, -37, -3, -58, 0, 57, 82, 116, 2, -72, 24, -113, -56, 69, -88, 73, 66, -117, 84, -124, -56, 42, 21, -119, -54, -73, 96, 76, 26, 43, -23, 120, -61, -100});
         CredentialPublicKeys credentialPublicKeys = CredentialPublicKeys.from(keys, 1);
 
-        UpdateCredentialKeysTransaction tx = TransactionFactory.newUpdateCredentialKeys()
+        AccountTransaction tx = TransactionFactory
+                .newUpdateCredentialKeys()
                 .credentialRegistrationID(regId)
                 .keys(credentialPublicKeys)
                 .numExistingCredentials(UInt16.from(5))
@@ -50,18 +51,16 @@ public class UpdateCredentialKeysTest {
         val transferBytesLength = payload.getBytes().length;
         assertEquals(85, transferBytesLength);
 
-        val transferSignData = payload.getDataToSign();
+        val transferSignData = AccountTransaction.getDataToSign(tx.getHeader(), payload);
         assertEquals("4bc4ba29186577608baabc97c1f9df9cc37014aaa66f0dc300b91540fe4a2098", Hex.encodeHexString(transferSignData));
 
-        val blockItem = payload.toAccountTransaction();
-
-        val blockItemBytes = blockItem.getBytes();
+        val blockItemBytes = tx.getBytes();
         assertArrayEquals(EXPECTED_UPDATE_CREDENTIAL_KEYS_BLOCK_ITEM_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));
 
-        val blockItemVersionedBytes = blockItem.getVersionedBytes();
+        val blockItemVersionedBytes = tx.getVersionedBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_TRANSFER_WITH_UPDATE_CREDENTIAL_KEYS_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemVersionedBytes));
 
-        val blockItemHash = blockItem.getHash();
+        val blockItemHash = tx.getHash();
         assertEquals("4c0d29171c4de386db2ef544e7c9d323745c09265943ca9d5e89deeebf607056", blockItemHash.asHex());
     }
 }

@@ -16,7 +16,6 @@ import java.util.List;
  * containing the actual operations.
  */
 @ToString
-@Builder
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class TokenUpdate extends Payload {
@@ -29,12 +28,14 @@ public class TokenUpdate extends Payload {
     /**
      * Operations to execute.
      */
-    @Singular
     private final List<TokenOperation> operations;
 
-    @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.TOKEN_UPDATE;
+    @Builder
+    public TokenUpdate(@NonNull String tokenSymbol,
+                       @NonNull @Singular List<TokenOperation> operations) {
+        super(TransactionType.TOKEN_UPDATE);
+        this.tokenSymbol = tokenSymbol;
+        this.operations = operations;
     }
 
     /**
@@ -48,7 +49,7 @@ public class TokenUpdate extends Payload {
     }
 
     @Override
-    protected byte[] getRawPayloadBytes() {
+    protected byte[] getPayloadBytes() {
         val symbolBytes = tokenSymbol.getBytes(StandardCharsets.UTF_8);
         val operationsBytes = getOperationsSerialized();
 

@@ -12,11 +12,11 @@ import java.nio.ByteBuffer;
 
 import static org.junit.Assert.*;
 
-public class TransferWithRegisterDataTest {
+public class RegisterDataTest {
     @Test
-    public void testCreateTransferWithRegisterData() {
+    public void testRegisterData() {
         try {
-            RegisterDataTransaction tx = TransactionFactory.newRegisterData()
+            AccountTransaction tx = TransactionFactory.newRegisterData()
                     .data(Data.from(new byte[]{1, 2, 3, 4, 5}))
                     .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                     .nonce(Nonce.from(78910))
@@ -28,14 +28,13 @@ public class TransferWithRegisterDataTest {
                                     ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
                     ))
                     .build();
-            val transferWithRegisterData = tx.getPayload();
+            val payload = tx.getPayload();
 
-            assertEquals(UInt64.from(568), transferWithRegisterData.header.getMaxEnergyCost());
-            assertEquals(8, transferWithRegisterData.getBytes().length);
-            val blockItem = transferWithRegisterData.toBlockItem();
-            assertEquals(Hash.from("0ad44be061cbdfc22fdcf14e2cd48d7c34d543ea60cb9cf5298cb40d89c25d83"), blockItem.getHash());
-            assertEquals(blockItem.getHash(), BlockItem.fromVersionedBytes(ByteBuffer.wrap(blockItem.getVersionedBytes())).getHash());
-            assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_TRANSFER_WITH_REGISTER_DATA_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(blockItem.getVersionedBytes()));
+            assertEquals(UInt64.from(568), tx.getHeader().getMaxEnergyCost());
+            assertEquals(8, payload.getBytes().length);
+            assertEquals(Hash.from("0ad44be061cbdfc22fdcf14e2cd48d7c34d543ea60cb9cf5298cb40d89c25d83"), tx.getHash());
+            assertEquals(tx.getHash(), BlockItem.fromVersionedBytes(ByteBuffer.wrap(tx.getVersionedBytes())).getHash());
+            assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_TRANSFER_WITH_REGISTER_DATA_VERSIONED_BYTES, TestUtils.signedByteArrayToUnsigned(tx.getVersionedBytes()));
         } catch (TransactionCreationException e) {
             fail("Unexpected error: " + e.getMessage());
         }

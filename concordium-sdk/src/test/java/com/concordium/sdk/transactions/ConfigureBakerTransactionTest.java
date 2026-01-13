@@ -22,7 +22,7 @@ public class ConfigureBakerTransactionTest {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
 
         BakerKeys bakerKeys = BakerKeys.createBakerKeys();
-        val payload = ConfigureBakerPayload.builder()
+        val payload = ConfigureBaker.builder()
                 .capital(CCDAmount.fromMicro("14000000000"))
                 .restakeEarnings(true)
                 .openForDelegation(OpenStatus.OPEN_FOR_ALL)
@@ -51,7 +51,7 @@ public class ConfigureBakerTransactionTest {
     public void shouldConfigureEmptyBakerTest() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
 
-        val payload = ConfigureBakerPayload.builder()
+        val payload = ConfigureBaker.builder()
                 .build();
 
 
@@ -71,7 +71,7 @@ public class ConfigureBakerTransactionTest {
     public void shouldAddBakerKeysWithoutMetadataUrlTest() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
 
-        val payload = ConfigureBakerPayload.builder()
+        val payload = ConfigureBaker.builder()
                 .capital(CCDAmount.fromMicro("14000000000"))
                 .restakeEarnings(true)
                 .openForDelegation(OpenStatus.OPEN_FOR_ALL)
@@ -98,7 +98,7 @@ public class ConfigureBakerTransactionTest {
     public void shouldConfigureBakerKeysWithOnlyKeysTest() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
 
-        val payload = ConfigureBakerPayload.builder()
+        val payload = ConfigureBaker.builder()
                 .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, BakerKeys.createBakerKeys()))
                 .build();
 
@@ -126,7 +126,7 @@ public class ConfigureBakerTransactionTest {
     public void shouldConfigureSuspendedBakerTest() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
 
-        val payload = ConfigureBakerPayload.builder()
+        val payload = ConfigureBaker.builder()
                 .suspended(true)
                 .build();
 

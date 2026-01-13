@@ -1,7 +1,7 @@
 package com.concordium.sdk.transactions.smartcontracts;
 
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
-import com.concordium.sdk.transactions.InitContractPayload;
+import com.concordium.sdk.transactions.InitContract;
 import com.concordium.sdk.transactions.UpdateContract;
 
 /**
@@ -9,7 +9,7 @@ import com.concordium.sdk.transactions.UpdateContract;
  */
 public enum ParameterType {
     /**
-     * A Parameter for {@link InitContractPayload}.
+     * A Parameter for {@link InitContract}.
      */
     INIT,
     /**

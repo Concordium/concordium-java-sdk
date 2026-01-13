@@ -18,14 +18,13 @@ public class ConfigureDelegationTransactionTest {
     public void shouldConfigureDelegationTransaction() {
         val accountAddress = AccountAddress.from("48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e");
 
-        val payload = ConfigureDelegationPayload.builder()
+        val payload = ConfigureDelegation.builder()
                 .capital(CCDAmount.fromMicro("500000"))
                 .restakeEarnings(true)
                 .delegationTarget(DelegationTarget.newPassiveDelegationTarget())
                 .build();
 
-
-        val transaction = ConfigureDelegationTransaction.builder()
+        val transaction = TransactionFactory.newConfigureDelegation()
                 .sender(accountAddress)
                 .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
@@ -39,73 +38,73 @@ public class ConfigureDelegationTransactionTest {
 
     @Test
     public void serializeConfigurePassivePoolNoRestake() {
-        val payload = ConfigureDelegationPayload
+        val payload = ConfigureDelegation
                 .builder()
                 .delegationTarget(DelegationTarget.builder().type(DelegationTarget.DelegationType.PASSIVE).build())
                 .capital(CCDAmount.from(100))
                 .restakeEarnings(false)
                 .build();
-        assertEquals("00070000000005f5e1000000", Hex.encodeHexString(payload.getBytes()));
+        assertEquals("1a00070000000005f5e1000000", Hex.encodeHexString(payload.getBytes()));
     }
 
     @Test
     public void serializeConfigurePassivePoolRestake() {
-        val payload = ConfigureDelegationPayload
+        val payload = ConfigureDelegation
                 .builder()
                 .delegationTarget(DelegationTarget.builder().type(DelegationTarget.DelegationType.PASSIVE).build())
                 .capital(CCDAmount.from(100))
                 .restakeEarnings(true)
                 .build();
-        assertEquals("00070000000005f5e1000100", Hex.encodeHexString(payload.getBytes()));
+        assertEquals("1a00070000000005f5e1000100", Hex.encodeHexString(payload.getBytes()));
     }
 
     @Test
     public void serializeConfigureBakerPoolNoRestake() {
-        val payload = ConfigureDelegationPayload
+        val payload = ConfigureDelegation
                 .builder()
                 .delegationTarget(DelegationTarget.builder().type(DelegationTarget.DelegationType.BAKER).bakerId(BakerId.from(1234)).build())
                 .restakeEarnings(false)
                 .capital(CCDAmount.from(100))
                 .build();
-        assertEquals("00070000000005f5e100000100000000000004d2", Hex.encodeHexString(payload.getBytes()));
+        assertEquals("1a00070000000005f5e100000100000000000004d2", Hex.encodeHexString(payload.getBytes()));
     }
 
     @Test
     public void serializeConfigureBakerPoolRestake() {
-        val payload = ConfigureDelegationPayload
+        val payload = ConfigureDelegation
                 .builder()
                 .delegationTarget(DelegationTarget.builder().type(DelegationTarget.DelegationType.BAKER).bakerId(BakerId.from(1234)).build())
                 .capital(CCDAmount.from(100))
                 .restakeEarnings(true)
                 .build();
-        assertEquals("00070000000005f5e100010100000000000004d2", Hex.encodeHexString(payload.getBytes()));
+        assertEquals("1a00070000000005f5e100010100000000000004d2", Hex.encodeHexString(payload.getBytes()));
     }
 
     @Test
     public void serializeDeregisterPayload() {
-        val payload = ConfigureDelegationPayload
+        val payload = ConfigureDelegation
                 .builder()
                 .capital(CCDAmount.from(0))
                 .build();
-        assertEquals("00010000000000000000", Hex.encodeHexString(payload.getBytes()));
+        assertEquals("1a00010000000000000000", Hex.encodeHexString(payload.getBytes()));
     }
 
     @Test
     public void serializeStopRestake() {
-        val payload = ConfigureDelegationPayload
+        val payload = ConfigureDelegation
                 .builder()
                 .restakeEarnings(false)
                 .build();
-        assertEquals("000200", Hex.encodeHexString(payload.getBytes()));
+        assertEquals("1a000200", Hex.encodeHexString(payload.getBytes()));
     }
 
     @Test
     public void serializeEnableRestake() {
-        val payload = ConfigureDelegationPayload
+        val payload = ConfigureDelegation
                 .builder()
                 .restakeEarnings(true)
                 .build();
-        assertEquals("000201", Hex.encodeHexString(payload.getBytes()));
+        assertEquals("1a000201", Hex.encodeHexString(payload.getBytes()));
     }
 
 }

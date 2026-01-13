@@ -22,16 +22,6 @@ public enum TransactionTypeCost {
     CONFIGURE_DELEGATION(300),
 
     /**
-     * Constant representing the cost of encrypted transfer
-     */
-    ENCRYPTED_TRANSFER(27000),
-
-    /**
-     * Constant representing the cost of transfer to encrypted
-     */
-    TRANSFER_TO_ENCRYPTED(600),
-
-    /**
      * Constant representing the cost of transfer to public wallet.
      */
     TRANSFER_TO_PUBLIC(14850),
@@ -76,5 +66,4 @@ public enum TransactionTypeCost {
     TransactionTypeCost(int energy) {
         this.value = UInt64.from(energy);
     }
-
 }

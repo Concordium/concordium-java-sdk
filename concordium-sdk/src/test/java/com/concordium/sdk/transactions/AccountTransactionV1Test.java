@@ -51,11 +51,11 @@ public class AccountTransactionV1Test {
                         .sender(AccountAddress.from("3VwCfvVskERFAJ3GeJy2mNFrzfChqUymSJJCvoLAP9rtAwMGYt"))
                         .sponsor(AccountAddress.from("4ZJBYQbVp3zVZyjCXfZAAYBVkJMyVj8UKUNj9ox5YqTCBdBq2M"))
                         .nonce(Nonce.from(1))
-                        .expiry(UInt64.from(1700000000))
+                        .expiry(Expiry.from(1700000000))
                         .maxEnergyCost(UInt64.from(500))
                         .payloadSize(UInt32.from(41))
                         .build(),
-                Transfer.createNew(
+                new Transfer(
                         AccountAddress.from("4ZJBYQbVp3zVZyjCXfZAAYBVkJMyVj8UKUNj9ox5YqTCBdBq2M"),
                         CCDAmount.fromMicro(1000000)
                 )
@@ -97,11 +97,11 @@ public class AccountTransactionV1Test {
                         .sender(AccountAddress.from("3VwCfvVskERFAJ3GeJy2mNFrzfChqUymSJJCvoLAP9rtAwMGYt"))
                         .sponsor(null)
                         .nonce(Nonce.from(1))
-                        .expiry(UInt64.from(1700000000))
+                        .expiry(Expiry.from(1700000000))
                         .maxEnergyCost(UInt64.from(500))
                         .payloadSize(UInt32.from(41))
                         .build(),
-                Transfer.createNew(
+                new Transfer(
                         AccountAddress.from("4ZJBYQbVp3zVZyjCXfZAAYBVkJMyVj8UKUNj9ox5YqTCBdBq2M"),
                         CCDAmount.fromMicro(1000000)
                 )

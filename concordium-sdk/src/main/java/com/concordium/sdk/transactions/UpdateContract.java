@@ -31,11 +31,11 @@ public final class UpdateContract extends Payload {
      */
     private final Parameter param;
 
-
     private UpdateContract(@NonNull final CCDAmount amount,
                            @NonNull final ContractAddress contractAddress,
                            @NonNull final ReceiveName receiveName,
                            @NonNull final Parameter param) {
+        super(TransactionType.UPDATE_SMART_CONTRACT_INSTANCE);
         this.amount = amount;
         this.contractAddress = contractAddress;
         this.receiveName = receiveName;
@@ -112,14 +112,8 @@ public final class UpdateContract extends Payload {
         return from(amount, contractAddress, schemaParameter.getReceiveName(), Parameter.from(schemaParameter));
     }
 
-
     @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.UPDATE_SMART_CONTRACT_INSTANCE;
-    }
-
-    @Override
-    public byte[] getRawPayloadBytes() {
+    protected byte[] getPayloadBytes() {
         val amountBytes = amount.getBytes();
         val contractAddressBytes = contractAddress.getBytes();
         val receiveNameBytes = receiveName.getBytes();

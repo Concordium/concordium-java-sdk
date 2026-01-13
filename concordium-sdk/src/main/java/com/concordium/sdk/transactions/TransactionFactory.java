@@ -5,130 +5,178 @@ import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
 import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
 import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
 import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.transactions.smartcontracts.WasmModule;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
+import com.concordium.sdk.types.UInt16;
+import com.concordium.sdk.types.UInt64;
+import lombok.Builder;
+import lombok.NonNull;
 import lombok.val;
 
 /**
  * TransactionFactory provides convenient functions for building a
- * {@link Transaction}
+ * {@link AccountTransaction}
  */
-@SuppressWarnings("DeprecatedIsStillUsed")
+@SuppressWarnings("unused")
 public class TransactionFactory {
 
-    /**
-     * Creates a new {@link TransferTransaction.TransferTransactionBuilder} for
-     * creating a {@link TransferTransaction}
-     *
-     * @return the builder for a {@link TransferTransaction}
-     */
-    public static TransferTransaction.TransferTransactionBuilder newTransfer() {
-        return TransferTransaction.builder();
+    @Builder(
+            builderMethodName = "newTransfer",
+            builderClassName = "TransferAccountTransactionBuilder"
+    )
+    private static AccountTransaction transferBuilder(@NonNull AccountAddress sender,
+                                                      @NonNull AccountAddress receiver,
+                                                      @NonNull CCDAmount amount,
+                                                      @NonNull Nonce nonce,
+                                                      @NonNull Expiry expiry,
+                                                      @NonNull TransactionSigner signer) {
+        val payload = new Transfer(receiver, amount);
+        val cost = TransactionTypeCost.TRANSFER_BASE_COST.getValue();
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
+    }
+
+    @Builder(
+            builderMethodName = "newTransferWithMemo",
+            builderClassName = "TransferWithMemoAccountTransactionBuilder"
+    )
+    private static AccountTransaction transferWithMemoBuilder(@NonNull AccountAddress sender,
+                                                              @NonNull AccountAddress receiver,
+                                                              @NonNull CCDAmount amount,
+                                                              @NonNull Memo memo,
+                                                              @NonNull Nonce nonce,
+                                                              @NonNull Expiry expiry,
+                                                              @NonNull TransactionSigner signer) {
+        val payload = new TransferWithMemo(receiver, amount, memo);
+        val cost = TransactionTypeCost.TRANSFER_WITH_MEMO.getValue();
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
+    }
+
+    @Builder(
+            builderMethodName = "newRegisterData",
+            builderClassName = "RegisterDataAccountTransactionBuilder"
+    )
+    private static AccountTransaction registerDataBuilder(@NonNull AccountAddress sender,
+                                                          @NonNull Data data,
+                                                          @NonNull Nonce nonce,
+                                                          @NonNull Expiry expiry,
+                                                          @NonNull TransactionSigner signer) {
+        val payload = new RegisterData(data);
+        val cost = TransactionTypeCost.REGISTER_DATA.getValue();
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
+    }
+
+    @Builder(
+            builderMethodName = "newInitContract",
+            builderClassName = "InitContractAccountTransactionBuilder"
+    )
+    private static AccountTransaction initContractBuilder(@NonNull InitContract payload,
+                                                          @NonNull AccountAddress sender,
+                                                          @NonNull Nonce nonce,
+                                                          @NonNull Expiry expiry,
+                                                          @NonNull TransactionSigner signer,
+                                                          @NonNull UInt64 maxContractExecutionEnergy) {
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, maxContractExecutionEnergy);
+    }
+
+    @Builder(
+            builderMethodName = "newUpdateContract",
+            builderClassName = "UpdateContractAccountTransactionBuilder"
+    )
+    private static AccountTransaction updateContractBuilder(@NonNull UpdateContract payload,
+                                                            @NonNull AccountAddress sender,
+                                                            @NonNull Nonce nonce,
+                                                            @NonNull Expiry expiry,
+                                                            @NonNull TransactionSigner signer,
+                                                            @NonNull UInt64 maxContractExecutionEnergy) {
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, maxContractExecutionEnergy);
+    }
+
+    @Builder(
+            builderMethodName = "newDeployModule",
+            builderClassName = "DeployModuleAccountTransactionBuilder"
+    )
+    private static AccountTransaction deployModuleBuilder(@NonNull AccountAddress sender,
+                                                          @NonNull Nonce nonce,
+                                                          @NonNull Expiry expiry,
+                                                          @NonNull TransactionSigner signer,
+                                                          @NonNull WasmModule module,
+                                                          @NonNull UInt64 maxContractExecutionEnergy) {
+        val payload = new DeployModule(module);
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, maxContractExecutionEnergy);
+    }
+
+    @Builder(
+            builderMethodName = "newScheduledTransfer",
+            builderClassName = "ScheduledTransferAccountTransactionBuilder"
+    )
+    private static AccountTransaction scheduledTransferBuilder(@NonNull AccountAddress sender,
+                                                               @NonNull AccountAddress to,
+                                                               @NonNull Schedule[] schedule,
+                                                               @NonNull Nonce nonce,
+                                                               @NonNull Expiry expiry,
+                                                               @NonNull TransactionSigner signer) {
+        val payload = new TransferSchedule(to, schedule);
+        val cost = UInt64.from((long) schedule.length * (300 + 64));
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
+    }
+
+    @Builder(
+            builderMethodName = "newScheduledTransferWithMemo",
+            builderClassName = "ScheduledTransferWithMemoAccountTransactionBuilder"
+    )
+    private static AccountTransaction scheduledTransferWithMemoBuilder(@NonNull AccountAddress sender,
+                                                                       @NonNull AccountAddress to,
+                                                                       @NonNull Schedule[] schedule,
+                                                                       @NonNull Memo memo,
+                                                                       @NonNull Nonce nonce,
+                                                                       @NonNull Expiry expiry,
+                                                                       @NonNull TransactionSigner signer) {
+        val payload = new TransferScheduleWithMemo(to, schedule, memo);
+        val cost = UInt64.from((long) schedule.length * (300 + 64));
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
+    }
+
+    @Builder(
+            builderMethodName = "newUpdateCredentialKeys",
+            builderClassName = "UpdateCredentialKeysAccountTransactionBuilder"
+    )
+    private static AccountTransaction updateCredentialKeysBuilder(@NonNull CredentialRegistrationId credentialRegistrationID,
+                                                                  @NonNull CredentialPublicKeys keys,
+                                                                  @NonNull UInt16 numExistingCredentials,
+                                                                  @NonNull AccountAddress sender,
+                                                                  @NonNull Nonce nonce,
+                                                                  @NonNull Expiry expiry,
+                                                                  @NonNull TransactionSigner signer) {
+        val payload = new UpdateCredentialKeys(credentialRegistrationID, keys, numExistingCredentials);
+        val cost = UInt64.from(500L * numExistingCredentials.getValue() + 100L * keys.getKeys().size());
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
     }
 
     /**
-     * Creates a new {@link TransferWithMemoTransaction.TransferWithMemoTransactionBuilder} for
-     * creating a {@link TransferWithMemoTransaction}
-     *
-     * @return the builder for a {@link TransferWithMemoTransaction}
+     * @see TransactionFactory#newTransferToPublicWithSecretKey(CryptographicParameters, AccountEncryptedAmount, ElgamalSecretKey, CCDAmount)
      */
-    public static TransferWithMemoTransaction.TransferWithMemoTransactionBuilder newTransferWithMemo() {
-        return TransferWithMemoTransaction.builder();
+    @Builder(
+            builderMethodName = "newTransferToPublic",
+            builderClassName = "TransferToPublicAccountTransactionBuilder"
+    )
+    private static AccountTransaction transferToPublicBuilder(@NonNull EncryptedAmount remainingAmount,
+                                                              @NonNull CCDAmount transferAmount,
+                                                              @NonNull UInt64 index,
+                                                              @NonNull SecToPubAmountTransferProof proof,
+                                                              @NonNull AccountAddress sender,
+                                                              @NonNull Nonce nonce,
+                                                              @NonNull Expiry expiry,
+                                                              @NonNull TransactionSigner signer) {
+        val payload = new TransferToPublic(remainingAmount, transferAmount, index, proof);
+        val cost = TransactionTypeCost.TRANSFER_TO_PUBLIC.getValue();
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
     }
 
-    /**
-     * Creates a new {@link RegisterDataTransaction.RegisterDataTransactionBuilder} for
-     * creating a {@link RegisterDataTransaction}
-     *
-     * @return the builder for a {@link RegisterDataTransaction}
-     */
-    public static RegisterDataTransaction.RegisterDataTransactionBuilder newRegisterData() {
-        return RegisterDataTransaction.builder();
-    }
-
-    /**
-     * Creates a new {@link InitContractTransaction.InitContractTransactionBuilder} for
-     * creating a {@link InitContractTransaction}
-     *
-     * @return the builder for a {@link InitContractTransaction}
-     */
-    public static InitContractTransaction.InitContractTransactionBuilder newInitContract() {
-        return InitContractTransaction.builder();
-    }
-
-
-    /**
-     * Creates a new {@link UpdateContractTransaction.UpdateContractTransactionBuilder} for
-     * creating a {@link UpdateContractTransaction}
-     *
-     * @return the builder for a {@link UpdateContractTransaction}
-     */
-    public static UpdateContractTransaction.UpdateContractTransactionBuilder newUpdateContract() {
-        return UpdateContractTransaction.builder();
-    }
-
-    /**
-     * Creates a new {@link DeployModuleTransaction.DeployModuleTransactionBuilder} for
-     * creating a {@link DeployModuleTransaction}
-     *
-     * @return the builder for a {@link DeployModuleTransaction}
-     */
-    public static DeployModuleTransaction.DeployModuleTransactionBuilder newDeployModule() {
-        return DeployModuleTransaction.builder();
-    }
-
-
-    /**
-     * Creates a new {@link TransferScheduleTransaction.TransferScheduleTransactionBuilder} for
-     * creating a {@link TransferScheduleTransaction}
-     *
-     * @return the builder for a {@link TransferScheduleTransaction}
-     */
-    public static TransferScheduleTransaction.TransferScheduleTransactionBuilder newScheduledTransfer() {
-        return TransferScheduleTransaction.builder();
-    }
-
-    /**
-     * Creates a new {@link TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder} for
-     * creating a {@link TransferScheduleWithMemoTransaction}
-     *
-     * @return the builder for a {@link TransferScheduleWithMemoTransaction}
-     */
-    public static TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder newScheduledTransferWithMemo() {
-        return TransferScheduleWithMemoTransaction.builder();
-    }
-
-    /**
-     * Creates a new {@link UpdateCredentialKeysTransaction.UpdateCredentialKeysTransactionBuilder} for
-     * creating a {@link UpdateCredentialKeysTransaction}
-     *
-     * @return the builder for a {@link UpdateCredentialKeysTransaction}
-     */
-    public static UpdateCredentialKeysTransaction.UpdateCredentialKeysTransactionBuilder newUpdateCredentialKeys() {
-        return UpdateCredentialKeysTransaction.builder();
-    }
-
-    /**
-     * Creates a new {@link TransferToPublicTransaction.TransferToPublicTransactionBuilder} for
-     * creating a {@link TransferToPublicTransaction}
-     *
-     * @return the builder for a {@link TransferToPublicTransaction}
-     */
-    public static TransferToPublicTransaction.TransferToPublicTransactionBuilder newTransferToPublic() {
-        return TransferToPublicTransaction.builder();
-    }
-
-    /**
-     * Creates a new {@link TransferToPublicTransaction.TransferToPublicTransactionBuilder} for
-     * creating a {@link TransferToPublicTransaction}
-     *
-     * @return the builder for a {@link TransferToPublicTransaction}
-     */
-    public static TransferToPublicTransaction.TransferToPublicTransactionBuilder newTransferToPublic(
-            CryptographicParameters cryptographicParameters,
-            AccountEncryptedAmount accountEncryptedAmount,
-            ElgamalSecretKey accountSecretKey,
-            CCDAmount amountToMakePublic) {
-
+    public static TransferToPublicAccountTransactionBuilder newTransferToPublicWithSecretKey(CryptographicParameters cryptographicParameters,
+                                                                                             AccountEncryptedAmount accountEncryptedAmount,
+                                                                                             ElgamalSecretKey accountSecretKey,
+                                                                                             CCDAmount amountToMakePublic) {
         val jniOutput = EncryptedTransfers.createSecToPubTransferPayload(
                 cryptographicParameters,
                 accountEncryptedAmount,
@@ -136,94 +184,115 @@ public class TransactionFactory {
                 amountToMakePublic
         );
 
-        return TransferToPublicTransaction
-                .builder()
+        return newTransferToPublic()
                 .transferAmount(jniOutput.getTransferAmount())
                 .index(jniOutput.getIndex())
                 .proof(jniOutput.getProof())
                 .remainingAmount(jniOutput.getRemainingAmount());
     }
 
-    /**
-     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
-     * creating a {@link ConfigureBakerTransaction}
-     *
-     * @return the builder for a {@link ConfigureBakerTransaction}
-     */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newConfigureBaker() {
-        return ConfigureBakerTransaction.builder();
+    @Builder(
+            builderMethodName = "newConfigureBaker",
+            builderClassName = "ConfigureBakerAccountTransactionBuilder"
+    )
+    private static AccountTransaction configureBakerBuilder(@NonNull ConfigureBaker payload,
+                                                            @NonNull AccountAddress sender,
+                                                            @NonNull Nonce nonce,
+                                                            @NonNull Expiry expiry,
+                                                            @NonNull TransactionSigner signer) {
+        val cost = (payload.getKeysWithProofs() != null)
+                ? TransactionTypeCost.CONFIGURE_BAKER_WITH_PROOFS.getValue()
+                : TransactionTypeCost.CONFIGURE_BAKER.getValue();
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
     }
 
-    /**
-     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
-     * creating a {@link ConfigureBakerTransaction} to remove Baker
-     *
-     * @return the builder for a {@link ConfigureBakerTransaction}
-     */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newRemoveBaker() {
-        val payload = ConfigureBakerPayload.builder()
+    @Builder(
+            builderMethodName = "newRemoveBaker",
+            builderClassName = "RemoveBakerAccountTransactionBuilder"
+    )
+    private static AccountTransaction removeBakerBuilder(@NonNull AccountAddress sender,
+                                                         @NonNull Nonce nonce,
+                                                         @NonNull Expiry expiry,
+                                                         @NonNull TransactionSigner signer) {
+        val payload = ConfigureBaker.builder()
                 .capital(CCDAmount.fromMicro(0))
                 .build();
-        return ConfigureBakerTransaction.builder().payload(payload);
+        val cost = TransactionTypeCost.CONFIGURE_BAKER.getValue();
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
     }
 
-    /**
-     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
-     * creating a {@link ConfigureBakerTransaction} to update Baker Stake
-     *
-     * @return the builder for a {@link ConfigureBakerTransaction}
-     */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerStake(CCDAmount stake) {
-        val payload = ConfigureBakerPayload.builder()
+    @Builder(
+            builderMethodName = "newUpdateBakerStake",
+            builderClassName = "UpdateBakerStakeAccountTransactionBuilder"
+    )
+    private static AccountTransaction updateBakerStakeBuilder(@NonNull CCDAmount stake,
+                                                              @NonNull AccountAddress sender,
+                                                              @NonNull Nonce nonce,
+                                                              @NonNull Expiry expiry,
+                                                              @NonNull TransactionSigner signer) {
+        val payload = ConfigureBaker.builder()
                 .capital(stake)
                 .build();
-        return ConfigureBakerTransaction.builder().payload(payload);
+        val cost = TransactionTypeCost.CONFIGURE_BAKER.getValue();
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
     }
 
-    /**
-     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
-     * creating a {@link ConfigureBakerTransaction} to update restakeEarnings
-     *
-     * @return the builder for a {@link ConfigureBakerTransaction}
-     */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerRestakeEarnings(boolean restakeEarnings) {
-        val payload = ConfigureBakerPayload.builder()
+    @Builder(
+            builderMethodName = "newUpdateBakerRestakeEarnings",
+            builderClassName = "UpdateBakerRestakeEarningsAccountTransactionBuilder"
+    )
+    private static AccountTransaction updateBakerRestakeEarningsBuilder(boolean restakeEarnings,
+                                                                        @NonNull AccountAddress sender,
+                                                                        @NonNull Nonce nonce,
+                                                                        @NonNull Expiry expiry,
+                                                                        @NonNull TransactionSigner signer) {
+        val payload = ConfigureBaker.builder()
                 .restakeEarnings(restakeEarnings)
                 .build();
-        return ConfigureBakerTransaction.builder().payload(payload);
+        val cost = TransactionTypeCost.CONFIGURE_BAKER.getValue();
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
     }
 
-    /**
-     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
-     * creating a {@link ConfigureBakerTransaction} to update baker keys
-     *
-     * @return the builder for a {@link ConfigureBakerTransaction}
-     */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerKeys(AccountAddress accountAddress, BakerKeys bakerKeys) {
-        val payload = ConfigureBakerPayload.builder()
+    @Builder(
+            builderMethodName = "newUpdateBakerKeys",
+            builderClassName = "UpdateBakerKeysAccountTransactionBuilder"
+    )
+    private static AccountTransaction updateBakerKeysBuilder(@NonNull AccountAddress accountAddress,
+                                                             @NonNull BakerKeys bakerKeys,
+                                                             @NonNull AccountAddress sender,
+                                                             @NonNull Nonce nonce,
+                                                             @NonNull Expiry expiry,
+                                                             @NonNull TransactionSigner signer) {
+        val payload = ConfigureBaker.builder()
                 .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, bakerKeys))
                 .build();
-        return ConfigureBakerTransaction.builder().payload(payload);
+        val cost = TransactionTypeCost.CONFIGURE_BAKER_WITH_PROOFS.getValue();
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
     }
 
-    /**
-     * Creates a new {@link ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder} for
-     * creating a {@link ConfigureDelegationTransaction} to update baker keys
-     *
-     * @return the builder for a {@link ConfigureDelegationTransaction}
-     */
-    public static ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder newConfigureDelegation() {
-        return ConfigureDelegationTransaction.builder();
+    @Builder(
+            builderMethodName = "newConfigureDelegation",
+            builderClassName = "ConfigureDelegationAccountTransactionBuilder"
+    )
+    private static AccountTransaction configureDelegationBuilder(@NonNull ConfigureDelegation payload,
+                                                                 @NonNull AccountAddress sender,
+                                                                 @NonNull Nonce nonce,
+                                                                 @NonNull Expiry expiry,
+                                                                 @NonNull TransactionSigner signer) {
+        val cost = TransactionTypeCost.CONFIGURE_DELEGATION.getValue();
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
     }
 
-    /**
-     * Creates a new {@link TokenUpdateTransaction.TokenUpdateTransactionBuilder} for creating a
-     * {@link TokenUpdateTransaction} to execute protocol-level token (PLT) operations
-     * such as transferring, minting, etc.
-     *
-     * @return the builder for a {@link TokenUpdateTransaction}
-     */
-    public static TokenUpdateTransaction.TokenUpdateTransactionBuilder newTokenUpdate() {
-        return TokenUpdateTransaction.builder();
+    @Builder(
+            builderMethodName = "newTokenUpdate",
+            builderClassName = "TokenUpdateAccountTransactionBuilder"
+    )
+    private static AccountTransaction tokenUpdateBuilder(@NonNull TokenUpdate payload,
+                                                         @NonNull AccountAddress sender,
+                                                         @NonNull Nonce nonce,
+                                                         @NonNull Expiry expiry,
+                                                         @NonNull TransactionSigner signer) {
+        val cost = TransactionTypeCost.TOKEN_UPDATE_BASE_COST.getValue().plus(payload.getOperationsBaseCost());
+        return AccountTransaction.from(sender, nonce, expiry, signer, payload, cost);
     }
 }

@@ -42,18 +42,16 @@ public class TransferScheduleWithMemoTest {
         val transferBytesLength = payload.getBytes().length;
         assertEquals(57, transferBytesLength);
 
-        val transferSignedData = payload.getDataToSign();
+        val transferSignedData = AccountTransaction.getDataToSign(tx.getHeader(), payload);
         assertEquals("d1ca550b56c40614e0ecfe91b690ebe393e32b0b2ebae5d3a58f6bf8bbeb363d", Hex.encodeHexString(transferSignedData));
 
-        val blockItem = payload.toAccountTransaction();
-
-        val blockItemBytes = blockItem.getBytes();
+        val blockItemBytes = tx.getBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));
 
-        val blockItemVersionedBytesBytes = blockItem.getVersionedBytes();
+        val blockItemVersionedBytesBytes = tx.getVersionedBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_VERSIONED_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemVersionedBytesBytes));
 
-        val blockItemHash = blockItem.getHash();
+        val blockItemHash = tx.getHash();
         assertEquals("9fe5011512b33f45095b95cf731765648f6047b1c7c87da9be2ed41e4292bef5", blockItemHash.asHex());
     }
 }

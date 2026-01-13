@@ -33,19 +33,17 @@ public final class UpdateCredentialKeys extends Payload {
      */
     private final UInt16 numExistingCredentials;
 
-    public UpdateCredentialKeys(CredentialRegistrationId credentialRegistrationID, CredentialPublicKeys keys, UInt16 numExistingCredentials) {
+    public UpdateCredentialKeys(CredentialRegistrationId credentialRegistrationID,
+                                CredentialPublicKeys keys,
+                                UInt16 numExistingCredentials) {
+        super(TransactionType.UPDATE_CREDENTIAL_KEYS);
         this.credentialRegistrationID = credentialRegistrationID;
         this.keys = keys;
         this.numExistingCredentials = numExistingCredentials;
     }
 
     @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.UPDATE_CREDENTIAL_KEYS;
-    }
-
-    @Override
-    protected byte[] getRawPayloadBytes() {
+    protected byte[] getPayloadBytes() {
         val credentialRegistrationIdBytes = credentialRegistrationID.getRegId();
         val keysBytes = keys.getBytes();
         val buffer = ByteBuffer.allocate(credentialRegistrationIdBytes.length + keysBytes.length);
@@ -53,9 +51,5 @@ public final class UpdateCredentialKeys extends Payload {
         buffer.put(keysBytes);
 
         return buffer.array();
-    }
-
-    static UpdateCredentialKeys createNew(CredentialRegistrationId credentialRegistrationID, CredentialPublicKeys keys, UInt16 numExistingCredentials) {
-        return new UpdateCredentialKeys(credentialRegistrationID, keys, numExistingCredentials);
     }
 }

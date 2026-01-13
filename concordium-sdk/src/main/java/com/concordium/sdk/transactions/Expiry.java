@@ -3,17 +3,17 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.types.Timestamp;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.EqualsAndHashCode;
 
+import java.nio.ByteBuffer;
 import java.util.Date;
 
 /**
- * Unix timestamp i.e. seconds since unix epoch.
+ * A Unix timestamp (i.e. seconds since unix epoch) indicating when a transaction should expire.
  */
 @EqualsAndHashCode
 public final class Expiry {
-    
+
     public static final int BYTES = UInt64.BYTES;
 
     // The expiry in seconds since unix epoch.
@@ -29,6 +29,7 @@ public final class Expiry {
 
     /**
      * Create a new `Expiry` with current offset added the amount of minutes.
+     *
      * @param minutes minutes to add.
      *                The amount of minutes must be strictly positive.
      * @return The Expiry with the added minutes.
@@ -42,6 +43,7 @@ public final class Expiry {
 
     /**
      * Create a new `Expiry` with current offset added the amount of seconds.
+     *
      * @param seconds seconds to add.
      *                The amount of seconds provided must be strictly positive.
      * @return The Expiry with the added minutes.
@@ -55,6 +57,7 @@ public final class Expiry {
 
     /**
      * Create an `Expiry` from a raw unix timestamp in seconds.
+     *
      * @param value the raw unix timestamp i.e., seconds since unix epoch.
      * @return the Expiry
      */
@@ -67,6 +70,7 @@ public final class Expiry {
 
     /**
      * Create a new `Expiry` with an offset of the current time.
+     *
      * @return the Expiry
      */
     public static Expiry createNew() {
@@ -77,6 +81,7 @@ public final class Expiry {
      * Create an `Expiry` from a {@link Date}. Note that there is a loss of precision
      * when using this as a {@link Date} holds milliseconds and the internal
      * value of a {@link Expiry} is in seconds.
+     *
      * @param date the date
      * @return the expiry
      */
@@ -88,11 +93,20 @@ public final class Expiry {
      * Create an `Expiry` from a {@link Timestamp}. Note that there is a loss of precision
      * when using this as a {@link Timestamp} holds milliseconds and the internal
      * value of a {@link Expiry} is in seconds.
+     *
      * @param timestamp the timestamp
      * @return the expiry
      */
     public static Expiry from(Timestamp timestamp) {
         return new Expiry(UInt64.from(timestamp.getMillis() / MILLISECONDS_PER_SECOND));
+    }
+
+    public static Expiry from(UInt64 value) {
+        return new Expiry(value);
+    }
+
+    public static Expiry fromBytes(ByteBuffer source) {
+        return new Expiry(UInt64.fromBytes(source));
     }
 
     public UInt64 getValue() {

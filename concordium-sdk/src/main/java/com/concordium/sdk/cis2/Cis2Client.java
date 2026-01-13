@@ -59,7 +59,7 @@ public class Cis2Client {
         val parameters = SerializationUtils.serializeTransfers(listOfTransfers);
         return this.client.sendTransaction(
                 TransactionFactory.newUpdateContract()
-                        .maxEnergyCost(maxEnergyCost.getValue())
+                        .maxContractExecutionEnergy(maxEnergyCost.getValue())
                         .payload(UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters))
                         .expiry(Expiry.createNew().addMinutes(5))
                         .nonce(nextNonce)
@@ -82,7 +82,7 @@ public class Cis2Client {
         val parameters = SerializationUtils.serializeUpdateOperators(operatorUpdates);
         return this.client.sendTransaction(
                 TransactionFactory.newUpdateContract()
-                        .maxEnergyCost(maxEnergyCost.getValue())
+                        .maxContractExecutionEnergy(maxEnergyCost.getValue())
                         .payload(UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters))
                         .expiry(Expiry.createNew().addMinutes(5))
                         .nonce(nextNonce)

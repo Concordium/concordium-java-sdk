@@ -28,6 +28,7 @@ public class TransferSchedule extends Payload {
     private final Schedule[] amount;
 
     public TransferSchedule(AccountAddress to, Schedule[] amount) {
+        super(TransactionType.TRANSFER_WITH_SCHEDULE);
         this.to = to;
         this.amount = amount;
     }
@@ -36,15 +37,8 @@ public class TransferSchedule extends Payload {
         return new TransferSchedule(to, amount);
     }
 
-    /**
-     * This function returns the transaction type of the transaction.
-     */
-    public TransactionType getTransactionType() {
-        return TransactionType.TRANSFER_WITH_SCHEDULE;
-    }
-
     @Override
-    protected byte[] getRawPayloadBytes() {
+    protected byte[] getPayloadBytes() {
         val scheduleLen = amount.length;
         val scheduleBufferSize = UInt64.BYTES * scheduleLen * 2;
 

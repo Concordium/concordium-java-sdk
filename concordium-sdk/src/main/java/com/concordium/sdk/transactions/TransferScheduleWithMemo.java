@@ -2,10 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.UInt64;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
@@ -19,9 +16,10 @@ import static com.concordium.sdk.transactions.TransferSchedule.SCHEDULE_LENGTH_B
 @EqualsAndHashCode(callSuper = true)
 public final class TransferScheduleWithMemo extends Payload {
     /**
-     * The account address of the recepient.
+     * The account address of the recipient.
      */
     private final AccountAddress to;
+
     /**
      * The release schedule. This can be at most 255 elements.
      */
@@ -32,25 +30,18 @@ public final class TransferScheduleWithMemo extends Payload {
      */
     private final Memo memo;
 
-    public TransferScheduleWithMemo(AccountAddress to, Schedule[] amount, Memo memo) {
+    @Builder
+    public TransferScheduleWithMemo(AccountAddress to,
+                                    Schedule[] amount,
+                                    Memo memo) {
+        super(TransactionType.TRANSFER_WITH_SCHEDULE_AND_MEMO);
         this.to = to;
         this.amount = amount;
         this.memo = memo;
     }
 
-    static TransferScheduleWithMemo createNew(AccountAddress to, Schedule[] amount, Memo memo) {
-        return new TransferScheduleWithMemo(to, amount, memo);
-    }
-
-    /**
-     * This function returns the transaction type of this transaction.
-     */
-    public TransactionType getTransactionType() {
-        return TransactionType.TRANSFER_WITH_SCHEDULE_AND_MEMO;
-    }
-
     @Override
-    protected byte[] getRawPayloadBytes() {
+    protected byte[] getPayloadBytes() {
         val schedule_len = amount.length;
         val schedule_buffer_size = UInt64.BYTES * schedule_len * 2;
         val buffer = ByteBuffer.allocate(

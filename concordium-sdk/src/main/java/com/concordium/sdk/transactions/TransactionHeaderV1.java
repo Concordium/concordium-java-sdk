@@ -14,7 +14,7 @@ import static com.google.common.primitives.Bytes.concat;
  * used for {@link AccountTransactionV1}.
  */
 @RequiredArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -22,6 +22,7 @@ public class TransactionHeaderV1 {
     /**
      * The address of the account that is the source of the transaction.
      */
+    @NonNull
     private final AccountAddress sender;
 
     /**
@@ -34,17 +35,20 @@ public class TransactionHeaderV1 {
      * The sequence number of the transaction, sender (source) account nonce.
      * Transactions executed on an account must have sequential sequence numbers, starting from 1.
      */
+    @NonNull
     private final Nonce nonce;
 
     /**
      * The amount of energy allocated for executing this transaction.
      * This is the maximum amount of energy that can be spent on executing this transaction.
      */
+    @NonNull
     private final UInt64 maxEnergyCost;
 
     /**
      * The size of the transaction payload in bytes.
      */
+    @NonNull
     private final UInt32 payloadSize;
 
     /**
@@ -52,7 +56,8 @@ public class TransactionHeaderV1 {
      * A transaction cannot be included in a block with a timestamp
      * later than the transaction’s expiry time.
      */
-    private final UInt64 expiry;
+    @NonNull
+    private final Expiry expiry;
 
     public Optional<AccountAddress> getSponsor() {
         return Optional.ofNullable(sponsor);
@@ -70,7 +75,7 @@ public class TransactionHeaderV1 {
                 nonce.getBytes(),
                 maxEnergyCost.getBytes(),
                 payloadSize.getBytes(),
-                expiry.getBytes(),
+                expiry.getValue().getBytes(),
                 (sponsor != null) ? sponsor.getBytes() : new byte[]{}
         );
     }
@@ -83,7 +88,7 @@ public class TransactionHeaderV1 {
         val nonce = Nonce.fromBytes(source);
         val maxEnergyCost = UInt64.fromBytes(source);
         val payloadSize = UInt32.fromBytes(source);
-        val expiry = UInt64.fromBytes(source);
+        val expiry = Expiry.fromBytes(source);
         val sponsor = (hasSponsor) ? AccountAddress.fromBytes(source) : null;
 
         return new TransactionHeaderV1(

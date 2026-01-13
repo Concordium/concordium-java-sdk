@@ -16,7 +16,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 
-public class TokenUpdateTransactionTest {
+public class TokenUpdateTest {
 
     @Test
     @SneakyThrows
@@ -231,7 +231,7 @@ public class TokenUpdateTransactionTest {
 
         Assert.assertEquals(
                 expectedHex,
-                Hex.toHexString(payload.getRawPayloadBytes())
+                Hex.toHexString(payload.getPayloadBytes())
         );
         Assert.assertEquals(
                 payload,

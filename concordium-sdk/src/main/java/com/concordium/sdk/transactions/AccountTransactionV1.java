@@ -35,6 +35,11 @@ public class AccountTransactionV1 extends BlockItem {
      */
     private final Payload payload;
 
+    /**
+     * @param signatures The signatures on the transaction by the source account and optionally a sponsor account.
+     * @param header     Transaction header data.
+     * @param payload    Transaction payload, defines what this transaction does.
+     */
     public AccountTransactionV1(@NonNull TransactionSignaturesV1 signatures,
                                 @NonNull TransactionHeaderV1 header,
                                 @NonNull Payload payload) {
@@ -70,10 +75,8 @@ public class AccountTransactionV1 extends BlockItem {
         );
     }
 
-    public static byte[] getDataToSign(
-            TransactionHeaderV1 header,
-            Payload payload
-    ) {
+    public static byte[] getDataToSign(TransactionHeaderV1 header,
+                                       Payload payload) {
         return SHA256.hash(
                 concat(
                         // 32 byte prefix defining the transaction version.
