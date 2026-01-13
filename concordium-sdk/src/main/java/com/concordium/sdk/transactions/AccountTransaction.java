@@ -99,9 +99,9 @@ public class AccountTransaction extends BlockItem {
      * @param expiry                  A Unix timestamp indicating when the transaction should expire.
      * @param signer                  Signer of the transaction
      * @param payload                 Transaction payload, defines what this transaction does.
-     * @param transactionSpecificCost Cost of executing this specific payload
+     * @param transactionSpecificCost Cost of executing this specific payload.
      * @return a ready to submit transaction
-     * @throws TransactionCreationException if something went wrong
+     * @throws TransactionCreationException if something goes wrong
      * @see TransactionSigner#from(SignerEntry...)
      * @see TransactionTypeCost
      */

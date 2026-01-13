@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.SHA256;
+import com.concordium.sdk.exceptions.TransactionCreationException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -14,6 +15,10 @@ import static com.google.common.primitives.Bytes.concat;
  * An extended transaction format originating from a particular account.
  * Such a transaction can be sponsored, in which case its cost is not paid
  * by the sender.
+ *
+ * @see AccountTransactionV1#from(PartiallySignedSponsoredTransaction, TransactionSignature) Create from a partially signed sponsored transaction
+ * @see PartiallySignedSponsoredTransaction#buildSignedBySender() Build a partially signed sponsored transaction on the sender side
+ * @see PartiallySignedSponsoredTransaction#buildSignedBySponsor() Build a partially signed sponsored transaction on the sponsor side
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -72,6 +77,42 @@ public class AccountTransactionV1 extends BlockItem {
                 TransactionSignaturesV1.fromBytes(source),
                 TransactionHeaderV1.fromBytes(source),
                 Payload.fromBytes(source)
+        );
+    }
+
+    /**
+     * @param partiallySigned    sponsored transaction signed by either sender or sponsor
+     * @param remainingSignature the signature missing from the partially signed transaction
+     * @return fully signed {@link AccountTransactionV1}
+     * @throws TransactionCreationException when something goes wrong
+     */
+    public static AccountTransactionV1 from(@NonNull PartiallySignedSponsoredTransaction partiallySigned,
+                                            @NonNull TransactionSignature remainingSignature) {
+        try {
+            return new AccountTransactionV1(
+                    new TransactionSignaturesV1(
+                            partiallySigned.getSenderSignature().orElse(remainingSignature),
+                            partiallySigned.getSponsorSignature().orElse(remainingSignature)
+                    ),
+                    partiallySigned.getHeader(),
+                    partiallySigned.getPayload()
+            );
+        } catch (Exception e) {
+            throw TransactionCreationException.from(e);
+        }
+    }
+
+    /**
+     * @param partiallySigned sponsored transaction signed by either sender or sponsor
+     * @param remainingSigner signer whose signature is missing from the partially signed transaction
+     * @return fully signed {@link AccountTransactionV1}
+     * @throws TransactionCreationException when something goes wrong
+     */
+    public static AccountTransactionV1 from(@NonNull PartiallySignedSponsoredTransaction partiallySigned,
+                                            @NonNull TransactionSigner remainingSigner) {
+        return from(
+                partiallySigned,
+                remainingSigner.sign(getDataToSign(partiallySigned.getHeader(), partiallySigned.getPayload()))
         );
     }
 

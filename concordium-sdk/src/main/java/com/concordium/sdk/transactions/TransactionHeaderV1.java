@@ -54,7 +54,7 @@ public class TransactionHeaderV1 {
     private final Expiry expiry;
 
     /**
-     * The optional address of an account that sponsors the transaction.
+     * The optional address of an account that sponsors the transaction (pays the cost).
      */
     @Nullable
     private final AccountAddress sponsor;
@@ -110,24 +110,24 @@ public class TransactionHeaderV1 {
     /**
      * Calculate the maximum amount of energy that can be spent on executing a transaction.
      *
-     * @param noOfSenderSignatures    number of signatures by the sender in the transaction
+     * @param senderSignatureCount    number of signatures by the sender in the transaction
      *                                ({@link TransactionSigner#size()})
-     * @param noOfSponsorSignatures   number of signatures by the sponsor in the transaction
+     * @param sponsorSignatureCount   number of signatures by the sponsor in the transaction
      *                                ({@link TransactionSigner#size()})
      * @param payloadSize             size of the transaction payload in bytes
      * @param transactionSpecificCost cost of the specific transaction (payload) type
      * @return the energy cost for the transaction, to be set in the transaction header.
      * @see TransactionTypeCost
      */
-    public static UInt64 calculateMaxEnergyCost(int noOfSenderSignatures,
-                                                int noOfSponsorSignatures,
+    public static UInt64 calculateMaxEnergyCost(int senderSignatureCount,
+                                                int sponsorSignatureCount,
                                                 int payloadSize,
                                                 UInt64 transactionSpecificCost) {
-        val headerSize = (noOfSponsorSignatures > 0)
+        val headerSize = (sponsorSignatureCount > 0)
                 ? BYTES_WITH_SPONSOR
                 : BYTES_WITHOUT_SPONSOR;
         return UInt64.from((long)
-                TransactionHeader.COST_CONSTANT_A * (noOfSponsorSignatures + noOfSenderSignatures) +
+                TransactionHeader.COST_CONSTANT_A * (sponsorSignatureCount + senderSignatureCount) +
                 TransactionHeader.COST_CONSTANT_B * (headerSize + payloadSize)
                 + transactionSpecificCost.getValue());
     }

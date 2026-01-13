@@ -80,17 +80,17 @@ public class TransactionHeader {
     /**
      * Calculate the maximum amount of energy that can be spent on executing a transaction.
      *
-     * @param noOfSignatures          number of signatures in the transaction ({@link TransactionSigner#size()})
+     * @param signatureCount          number of signatures in the transaction ({@link TransactionSigner#size()})
      * @param payloadSize             size of the transaction payload in bytes
      * @param transactionSpecificCost cost of the specific transaction (payload) type
      * @return the energy cost for the transaction, to be set in the transaction header.
      * @see TransactionTypeCost
      */
-    public static UInt64 calculateMaxEnergyCost(int noOfSignatures,
+    public static UInt64 calculateMaxEnergyCost(int signatureCount,
                                                 int payloadSize,
                                                 UInt64 transactionSpecificCost) {
         return UInt64.from((long)
-                COST_CONSTANT_A * noOfSignatures +
+                COST_CONSTANT_A * signatureCount +
                 COST_CONSTANT_B * (TransactionHeader.BYTES + payloadSize)
                 + transactionSpecificCost.getValue());
     }
