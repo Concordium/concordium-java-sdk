@@ -14,14 +14,11 @@ public class TransactionFactoryTest {
     @SneakyThrows
     public void testCreationTransactionWithInvalidSignerFails() {
         TransactionFactory
-                .newTransfer()
+                .newRemoveBaker()
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .receiver(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .amount(CCDAmount.fromMicro(17))
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .signer(getSignerWithMalformedSecretKey())
-                .build();
+                .sign(getSignerWithMalformedSecretKey());
     }
 
     private TransactionSigner getSignerWithMalformedSecretKey() {

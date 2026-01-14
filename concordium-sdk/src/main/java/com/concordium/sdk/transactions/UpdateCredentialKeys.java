@@ -1,10 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.UInt16;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
@@ -33,9 +30,10 @@ public final class UpdateCredentialKeys extends Payload {
      */
     private final UInt16 numExistingCredentials;
 
-    public UpdateCredentialKeys(CredentialRegistrationId credentialRegistrationID,
-                                CredentialPublicKeys keys,
-                                UInt16 numExistingCredentials) {
+    @Builder
+    public UpdateCredentialKeys(@NonNull CredentialRegistrationId credentialRegistrationID,
+                                @NonNull CredentialPublicKeys keys,
+                                @NonNull UInt16 numExistingCredentials) {
         super(TransactionType.UPDATE_CREDENTIAL_KEYS);
         this.credentialRegistrationID = credentialRegistrationID;
         this.keys = keys;

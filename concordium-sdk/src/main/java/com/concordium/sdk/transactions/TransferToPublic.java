@@ -1,6 +1,10 @@
 package com.concordium.sdk.transactions;
 
 
+import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
+import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
+import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
+import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
@@ -61,5 +65,25 @@ public final class TransferToPublic extends Payload {
         buffer.put(proofBytes);
 
         return buffer.array();
+    }
+
+    @Builder
+    public static TransferToPublic from(@NonNull CryptographicParameters cryptographicParameters,
+                                        @NonNull AccountEncryptedAmount accountEncryptedAmount,
+                                        @NonNull ElgamalSecretKey accountSecretKey,
+                                        @NonNull CCDAmount amountToMakePublic) {
+        val jniOutput = EncryptedTransfers.createSecToPubTransferPayload(
+                cryptographicParameters,
+                accountEncryptedAmount,
+                accountSecretKey,
+                amountToMakePublic
+        );
+
+        return new TransferToPublic(
+                jniOutput.getRemainingAmount(),
+                jniOutput.getTransferAmount(),
+                jniOutput.getIndex(),
+                jniOutput.getProof()
+        );
     }
 }

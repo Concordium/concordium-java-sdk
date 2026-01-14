@@ -34,13 +34,12 @@ public class ConfigureBakerTransactionTest {
                 .build();
 
 
-        val transaction = TransactionFactory.newConfigureBaker()
+        val transaction = TransactionFactory
+                .newConfigureBaker(payload)
                 .sender(accountAddress)
                 .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
-                .signer(TransactionTestHelper.getValidSigner())
-                .payload(payload)
-                .build();
+                .sign(TransactionTestHelper.getValidSigner());
 
         assertEquals(589, transaction.getVersionedBytes().length);
     }
@@ -54,14 +53,12 @@ public class ConfigureBakerTransactionTest {
         val payload = ConfigureBaker.builder()
                 .build();
 
-
-        val transaction = TransactionFactory.newConfigureBaker()
+        val transaction = TransactionFactory
+                .newConfigureBaker(payload)
                 .sender(accountAddress)
                 .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
-                .signer(TransactionTestHelper.getValidSigner())
-                .payload(payload)
-                .build();
+                .sign(TransactionTestHelper.getValidSigner());
 
         assertEquals(202, transaction.getVersionedBytes().length);
     }
@@ -82,13 +79,12 @@ public class ConfigureBakerTransactionTest {
                 .build();
 
 
-        val transaction = TransactionFactory.newConfigureBaker()
+        val transaction = TransactionFactory
+                .newConfigureBaker(payload)
                 .sender(accountAddress)
                 .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
-                .signer(TransactionTestHelper.getValidSigner())
-                .payload(payload)
-                .build();
+                .sign(TransactionTestHelper.getValidSigner());
 
         assertEquals(576, transaction.getVersionedBytes().length);
     }
@@ -103,13 +99,12 @@ public class ConfigureBakerTransactionTest {
                 .build();
 
 
-        val transaction = TransactionFactory.newConfigureBaker()
+        val transaction = TransactionFactory
+                .newConfigureBaker(payload)
                 .sender(accountAddress)
                 .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
-                .signer(TransactionTestHelper.getValidSigner())
-                .payload(payload)
-                .build();
+                .sign(TransactionTestHelper.getValidSigner());
 
         assertEquals(554, transaction.getVersionedBytes().length);
     }
@@ -130,13 +125,12 @@ public class ConfigureBakerTransactionTest {
                 .suspended(true)
                 .build();
 
-        val transaction = TransactionFactory.newConfigureBaker()
+        val transaction = TransactionFactory
+                .newConfigureBaker(payload)
                 .sender(accountAddress)
                 .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
-                .signer(TransactionTestHelper.getValidSigner())
-                .payload(payload)
-                .build();
+                .sign(TransactionTestHelper.getValidSigner());
 
         assertEquals(203, transaction.getVersionedBytes().length);
     }

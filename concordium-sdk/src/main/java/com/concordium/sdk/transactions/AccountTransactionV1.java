@@ -16,9 +16,10 @@ import static com.google.common.primitives.Bytes.concat;
  * Such a transaction can be sponsored, in which case its cost is not paid
  * by the sender.
  *
+ * @see TransactionFactory Transaction factory, that also supports sponsored transactions
  * @see AccountTransactionV1#from(PartiallySignedSponsoredTransaction, TransactionSignature) Create from a partially signed sponsored transaction
- * @see PartiallySignedSponsoredTransaction#buildSignedBySender() Build a partially signed sponsored transaction on the sender side
- * @see PartiallySignedSponsoredTransaction#buildSignedBySponsor() Build a partially signed sponsored transaction on the sponsor side
+ * @see PartiallySignedSponsoredTransaction#builderForSender() Build a partially signed sponsored transaction on the sender side
+ * @see PartiallySignedSponsoredTransaction#builderForSponsor() Build a partially signed sponsored transaction on the sponsor side
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)

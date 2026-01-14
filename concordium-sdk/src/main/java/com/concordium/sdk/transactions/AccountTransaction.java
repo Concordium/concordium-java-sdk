@@ -12,6 +12,11 @@ import java.nio.ByteBuffer;
 
 import static com.google.common.primitives.Bytes.concat;
 
+/**
+ * A transaction originating from a particular account.
+ *
+ * @see TransactionFactory Transaction factory that provides convenient builders for account transactions
+ */
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

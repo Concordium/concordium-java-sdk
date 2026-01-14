@@ -17,19 +17,23 @@ public class TransferTest {
     @SneakyThrows
     @Test
     public void testCreateTransfer() {
-        AccountTransaction tx = TransactionFactory.newTransfer()
+        AccountTransaction tx = TransactionFactory
+                .newTransfer(
+                        Transfer
+                                .builder()
+                                .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
+                                .amount(CCDAmount.fromMicro(17))
+                                .build()
+                )
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                .amount(CCDAmount.fromMicro(17))
-                .signer(TransactionSigner.from(
+                .sign(TransactionSigner.from(
                         SignerEntry.from(Index.from(0), Index.from(0),
                                 ED25519SecretKey.from("7100071c835a0a35e86dccba7ee9d10b89e36d1e596771cdc8ee36a17f7abbf2")),
                         SignerEntry.from(Index.from(0), Index.from(1),
                                 ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
-                ))
-                .build();
+                ));
         val transfer = tx.getPayload();
 
         assertEquals(41, transfer.getBytes().length);

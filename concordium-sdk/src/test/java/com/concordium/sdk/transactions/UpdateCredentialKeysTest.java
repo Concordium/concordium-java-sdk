@@ -5,7 +5,6 @@ import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt16;
-import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
@@ -32,20 +31,23 @@ public class UpdateCredentialKeysTest {
         CredentialPublicKeys credentialPublicKeys = CredentialPublicKeys.from(keys, 1);
 
         AccountTransaction tx = TransactionFactory
-                .newUpdateCredentialKeys()
-                .credentialRegistrationID(regId)
-                .keys(credentialPublicKeys)
-                .numExistingCredentials(UInt16.from(5))
+                .newUpdateCredentialKeys(
+                        UpdateCredentialKeys
+                                .builder()
+                                .credentialRegistrationID(regId)
+                                .keys(credentialPublicKeys)
+                                .numExistingCredentials(UInt16.from(5))
+                                .build()
+                )
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(Nonce.from(525))
                 .expiry(Expiry.from(1669466666))
-                .signer(TransactionSigner.from(
+                .sign(TransactionSigner.from(
                         SignerEntry.from(Index.from(0), Index.from(0),
                                 ED25519SecretKey.from("7100071c835a0a35e86dccba7ee9d10b89e36d1e596771cdc8ee36a17f7abbf2")),
                         SignerEntry.from(Index.from(0), Index.from(1),
                                 ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
-                ))
-                .build();
+                ));
         val payload = tx.getPayload();
 
         val transferBytesLength = payload.getBytes().length;

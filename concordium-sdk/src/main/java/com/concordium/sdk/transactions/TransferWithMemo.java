@@ -16,8 +16,8 @@ public class TransferWithMemo extends Payload {
 
     @Builder
     public TransferWithMemo(@NonNull AccountAddress receiver,
-                             @NonNull CCDAmount amount,
-                             @NonNull Memo memo) {
+                            @NonNull CCDAmount amount,
+                            @NonNull Memo memo) {
         super(TransactionType.TRANSFER_WITH_MEMO);
         this.receiver = receiver;
         this.amount = amount;

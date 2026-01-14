@@ -579,17 +579,18 @@ public class TransferToPublicTest {
                 .build();
 
         val transaction = TransactionFactory
-                .newTransferToPublicWithSecretKey(
-                        cryptographicParameters,
-                        accountInfo.getAccountEncryptedAmount(),
-                        accountSecretKey,
-                        amountToMakePublic
+                .newTransferToPublic(
+                        TransferToPublic.from(
+                                cryptographicParameters,
+                                accountInfo.getAccountEncryptedAmount(),
+                                accountSecretKey,
+                                amountToMakePublic
+                        )
                 )
                 .sender(accountInfo.getAccountAddress())
                 .nonce(accountInfo.getNonce())
                 .expiry(Expiry.from(123456))
-                .signer(TransactionTestHelper.getValidSigner())
-                .build();
+                .sign(TransactionTestHelper.getValidSigner());
 
         assertEquals(1604, transaction.getVersionedBytes().length);
         assertEquals(
@@ -636,17 +637,19 @@ public class TransferToPublicTest {
 
         for (CryptographicParameters cryptographicParameters : cases) {
             try {
-                TransactionFactory.newTransferToPublicWithSecretKey(
-                                cryptographicParameters,
-                                accountInfo.getAccountEncryptedAmount(),
-                                accountSecretKey,
-                                amountToMakePublic
+                TransactionFactory
+                        .newTransferToPublic(
+                                TransferToPublic.from(
+                                        cryptographicParameters,
+                                        accountInfo.getAccountEncryptedAmount(),
+                                        accountSecretKey,
+                                        amountToMakePublic
+                                )
                         )
                         .sender(accountInfo.getAccountAddress())
                         .nonce(accountInfo.getNonce())
                         .expiry(Expiry.from(123456))
-                        .signer(TransactionTestHelper.getValidSigner())
-                        .build();
+                        .sign(TransactionTestHelper.getValidSigner());
             } catch (CryptoJniException ex) {
                 Assert.assertNotNull(ex.getErrorMessage());
                 continue;

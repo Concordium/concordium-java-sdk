@@ -26,17 +26,13 @@ public class PartiallySignedSponsoredTransactionTest {
     @Test
     @SneakyThrows
     public void serializationSignedBySender() {
-        val transaction = PartiallySignedSponsoredTransaction
-                .builderForSender()
+        val transaction = TransactionFactory
+                .newPayloadSubmission(new RawPayload(new byte[]{0, 1, 2, 3}), UInt64.from(300))
                 .sender(SENDER)
-                .sponsor(SPONSOR)
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .payload(new RawPayload(new byte[]{0, 1, 2, 3}))
-                .transactionSpecificCost(UInt64.from(300))
-                .senderSigner(SENDER_SIGNER)
-                .sponsorSignatureCount(1)
-                .build();
+                .sponsoredBy(SPONSOR)
+                .signAsSender(SENDER_SIGNER, 1);
         val expectedJson = "{\"senderSignature\":\"010001000040c61f531faaeef7e4d461076fdf7e1df6db48fbf00b1cebab23f3f42e9a84a40a32d44d656e7fce40c8a7a1bc9fdf0e69e2b9cdba78e1dc5a469d1412a724b30e\",\"header\":\"0001301d6b1710b5735afc24589801213d13aa6b4478890fdfe8195bca0eaf22614e000000000001343e000000000000025600000004000000000001e240637388bcd6cccb39c324bb96265262cadb806d884b36e8541fdd12f6a1c10ee1\",\"payload\":\"00010203\"}";
 
         Assert.assertEquals(
@@ -52,17 +48,13 @@ public class PartiallySignedSponsoredTransactionTest {
     @Test
     @SneakyThrows
     public void serializationSignedBySponsor() {
-        val transaction = PartiallySignedSponsoredTransaction
-                .builderForSponsor()
+        val transaction = TransactionFactory
+                .newPayloadSubmission(new RawPayload(new byte[]{0, 1, 2, 3}), UInt64.from(300))
                 .sender(SENDER)
-                .sponsor(SPONSOR)
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .payload(new RawPayload(new byte[]{0, 1, 2, 3}))
-                .transactionSpecificCost(UInt64.from(300))
-                .sponsorSigner(SPONSOR_SIGNER)
-                .senderSignatureCount(1)
-                .build();
+                .sponsoredBy(SPONSOR)
+                .signAsSponsor(SPONSOR_SIGNER, 1);
         val expectedJson = "{\"sponsorSignature\":\"0100010000401663d5cfd87beb9bd6a90f37251d616a08d03dc9ba26d26776c11227e75d95a3524602e05c5aecef01dc08c282e5db383fabcabcc3b4bd134a7f11c8d3ef2b09\",\"header\":\"0001301d6b1710b5735afc24589801213d13aa6b4478890fdfe8195bca0eaf22614e000000000001343e000000000000025600000004000000000001e240637388bcd6cccb39c324bb96265262cadb806d884b36e8541fdd12f6a1c10ee1\",\"payload\":\"00010203\"}";
 
         Assert.assertEquals(

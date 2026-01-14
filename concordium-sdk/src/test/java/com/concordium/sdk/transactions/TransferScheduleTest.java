@@ -29,14 +29,18 @@ public class TransferScheduleTest {
                 SignerEntry.from(Index.from(0), Index.from(1),
                         ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
         );
-        val tx = TransactionFactory.newScheduledTransfer()
+        val tx = TransactionFactory
+                .newScheduledTransfer(
+                        TransferSchedule
+                                .builder()
+                                .to(to)
+                                .amount(schedule)
+                                .build()
+                )
                 .sender(sender)
-                .to(to)
-                .schedule(schedule)
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .signer(signer)
-                .build();
+                .sign(signer);
         Payload transfer = tx.getPayload();
 
         val transferBytesLength = transfer.getBytes().length;

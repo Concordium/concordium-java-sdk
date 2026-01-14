@@ -24,13 +24,12 @@ public class ConfigureDelegationTransactionTest {
                 .delegationTarget(DelegationTarget.newPassiveDelegationTarget())
                 .build();
 
-        val transaction = TransactionFactory.newConfigureDelegation()
+        val transaction = TransactionFactory
+                .newConfigureDelegation(payload)
                 .sender(accountAddress)
                 .nonce(Nonce.from(123))
                 .expiry(Expiry.from(413223))
-                .signer(TransactionTestHelper.getValidSigner())
-                .payload(payload)
-                .build();
+                .sign(TransactionTestHelper.getValidSigner());
 
         assertEquals(212, transaction.getVersionedBytes().length);
     }

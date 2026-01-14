@@ -24,9 +24,7 @@ public class TokenUpdateTest {
         Assert.assertEquals(
                 "9f743fdb00d9697cde98dc3e75621b40535ec84b953e83f8a4116cb2c61519c0",
                 TransactionFactory
-                        .newTokenUpdate()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .payload(
+                        .newTokenUpdate(
                                 TokenUpdate
                                         .builder()
                                         .tokenSymbol("TEST")
@@ -51,10 +49,10 @@ public class TokenUpdateTest {
                                         )
                                         .build()
                         )
+                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .nonce(Nonce.from(78910))
                         .expiry(Expiry.from(123456))
-                        .signer(TransactionTestHelper.getValidSigner())
-                        .build()
+                        .sign(TransactionTestHelper.getValidSigner())
                         .getHash()
                         .asHex()
         );
@@ -66,9 +64,7 @@ public class TokenUpdateTest {
         Assert.assertEquals(
                 "3945fe655328c62cc75be7e06cc24c91336b0bd4854d930ed017757c42a3ffc2",
                 TransactionFactory
-                        .newTokenUpdate()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .payload(
+                        .newTokenUpdate(
                                 TokenUpdate
                                         .builder()
                                         .tokenSymbol("TEST")
@@ -90,10 +86,10 @@ public class TokenUpdateTest {
                                         )
                                         .build()
                         )
+                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .nonce(Nonce.from(78910))
                         .expiry(Expiry.from(123456))
-                        .signer(TransactionTestHelper.getValidSigner())
-                        .build()
+                        .sign(TransactionTestHelper.getValidSigner())
                         .getHash()
                         .asHex()
         );
@@ -105,9 +101,7 @@ public class TokenUpdateTest {
         Assert.assertEquals(
                 UInt64.from("745"),
                 TransactionFactory
-                        .newTokenUpdate()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .payload(
+                        .newTokenUpdate(
                                 TokenUpdate
                                         .builder()
                                         .tokenSymbol("TEST")
@@ -129,10 +123,10 @@ public class TokenUpdateTest {
                                         )
                                         .build()
                         )
+                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .nonce(Nonce.from(78910))
                         .expiry(Expiry.from(123456))
-                        .signer(TransactionTestHelper.getValidSigner())
-                        .build()
+                        .sign(TransactionTestHelper.getValidSigner())
                         .getHeader()
                         .getMaxEnergyCost()
         );
@@ -144,9 +138,7 @@ public class TokenUpdateTest {
         Assert.assertEquals(
                 UInt64.from("828"),
                 TransactionFactory
-                        .newTokenUpdate()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .payload(
+                        .newTokenUpdate(
                                 TokenUpdate
                                         .builder()
                                         .tokenSymbol("TEST")
@@ -171,10 +163,10 @@ public class TokenUpdateTest {
                                         )
                                         .build()
                         )
+                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .nonce(Nonce.from(78910))
                         .expiry(Expiry.from(123456))
-                        .signer(TransactionTestHelper.getValidSigner())
-                        .build()
+                        .sign(TransactionTestHelper.getValidSigner())
                         .getHeader()
                         .getMaxEnergyCost()
         );

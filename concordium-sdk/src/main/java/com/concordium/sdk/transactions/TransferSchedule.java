@@ -2,10 +2,7 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.UInt64;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
@@ -27,14 +24,11 @@ public class TransferSchedule extends Payload {
      */
     private final Schedule[] amount;
 
+    @Builder
     public TransferSchedule(AccountAddress to, Schedule[] amount) {
         super(TransactionType.TRANSFER_WITH_SCHEDULE);
         this.to = to;
         this.amount = amount;
-    }
-
-    static TransferSchedule createNew(AccountAddress to, Schedule[] amount) {
-        return new TransferSchedule(to, amount);
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.Timestamp;
-import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
@@ -22,20 +21,24 @@ public class TransferScheduleWithMemoTest {
     public void testTransferScheduleWithMemo() {
         Schedule[] schedule = new Schedule[1];
         schedule[0] = Schedule.from(Timestamp.newMillis(1662869154000L), 10);
-        val tx = TransactionFactory.newScheduledTransferWithMemo()
-                .schedule(schedule)
-                .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
-                .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
+        val tx = TransactionFactory
+                .newScheduledTransferWithMemo(
+                        TransferScheduleWithMemo
+                                .builder()
+                                .to(AccountAddress.from("3bzmSxeKVgHR4M7pF347WeehXcu43kypgHqhSfDMs9SvcP5zto"))
+                                .amount(schedule)
+                                .memo(Memo.from(new byte[]{1, 2, 3, 4, 5}))
+                                .build()
+                )
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .signer(TransactionSigner.from(
+                .sign(TransactionSigner.from(
                         SignerEntry.from(Index.from(0), Index.from(0),
                                 ED25519SecretKey.from("7100071c835a0a35e86dccba7ee9d10b89e36d1e596771cdc8ee36a17f7abbf2")),
                         SignerEntry.from(Index.from(0), Index.from(1),
                                 ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
-                ))
-                .build();
+                ));
 
         val payload = tx.getPayload();
 

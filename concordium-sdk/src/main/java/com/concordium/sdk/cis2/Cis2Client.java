@@ -9,7 +9,9 @@ import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
 import com.concordium.sdk.responses.blocksatheight.BlocksAtHeightRequest;
 import com.concordium.sdk.responses.transactionstatus.Outcome;
 import com.concordium.sdk.transactions.*;
-import com.concordium.sdk.types.*;
+import com.concordium.sdk.types.AbstractAddress;
+import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.ContractAddress;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.val;
@@ -58,14 +60,16 @@ public class Cis2Client {
         val endpoint = ReceiveName.from(contractName, "transfer");
         val parameters = SerializationUtils.serializeTransfers(listOfTransfers);
         return this.client.sendTransaction(
-                TransactionFactory.newUpdateContract()
-                        .maxContractExecutionEnergy(maxEnergyCost.getValue())
-                        .payload(UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters))
+                TransactionFactory
+                        .newUpdateContract(
+                                UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters),
+                                maxEnergyCost.getValue()
+                        )
                         .expiry(Expiry.createNew().addMinutes(5))
                         .nonce(nextNonce)
                         .sender(sender)
-                        .signer(signer)
-                        .build());
+                        .sign(signer)
+        );
     }
 
     /**
@@ -81,15 +85,16 @@ public class Cis2Client {
         val endpoint = ReceiveName.from(contractName, "updateOperator");
         val parameters = SerializationUtils.serializeUpdateOperators(operatorUpdates);
         return this.client.sendTransaction(
-                TransactionFactory.newUpdateContract()
-                        .maxContractExecutionEnergy(maxEnergyCost.getValue())
-                        .payload(UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters))
+                TransactionFactory
+                        .newUpdateContract(
+                                UpdateContract.from(CCDAmount.from(0), this.contractAddress, endpoint, parameters),
+                                maxEnergyCost.getValue()
+                        )
                         .expiry(Expiry.createNew().addMinutes(5))
                         .nonce(nextNonce)
                         .sender(sender)
-                        .signer(signer)
-                        .build());
-
+                        .sign(signer)
+        );
     }
 
     /**

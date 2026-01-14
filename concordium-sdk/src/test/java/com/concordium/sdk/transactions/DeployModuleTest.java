@@ -22,14 +22,12 @@ public class DeployModuleTest {
     public void testDeployVersionedModule() {
         val module = WasmModule.from(
                 Files.readAllBytes(Paths.get("src/test/java/com/concordium/sdk/binaries/module.wasm.v1")));
-        AccountTransaction tx = TransactionFactory.newDeployModule()
-                .module(module)
+        AccountTransaction tx = TransactionFactory
+                .newDeployModule(new DeployModule(module), UInt64.from(6000))
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .maxContractExecutionEnergy(UInt64.from(6000))
-                .signer(getValidSigner())
-                .build();
+                .sign(getValidSigner());
         val payload = tx.getPayload();
 
         assertEquals(87146, payload.getBytes().length);
@@ -45,14 +43,12 @@ public class DeployModuleTest {
         val module = WasmModule.from(
                 Files.readAllBytes(Paths.get("src/test/java/com/concordium/sdk/binaries/module.wasm")),
                 WasmModuleVersion.V0);
-        AccountTransaction tx = TransactionFactory.newDeployModule()
-                .module(module)
+        AccountTransaction tx = TransactionFactory
+                .newDeployModule(new DeployModule(module), UInt64.from(6000))
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .maxContractExecutionEnergy(UInt64.from(6000))
-                .signer(getValidSigner())
-                .build();
+                .sign(getValidSigner());
         val payload = tx.getPayload();
 
         assertEquals(41541, payload.getBytes().length);

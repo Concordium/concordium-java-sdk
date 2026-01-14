@@ -6,6 +6,7 @@ import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt32;
 import lombok.*;
 
+import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
@@ -21,55 +22,64 @@ public class ConfigureBaker extends Payload {
      * The equity capital of the baker.
      * I.e. the effective stake of the baker.
      */
+    @Nullable
     private final CCDAmount capital;
     /**
      * Whether the baker's earnings are restaked.
      */
+    @Nullable
     private final Boolean restakeEarnings;
     /**
      * Whether the pool is open for delegators.
      */
+    @Nullable
     private final OpenStatus openForDelegation;
     /**
      * The key/proof pairs to verify the baker.
      */
+    @Nullable
     private final ConfigureBakerKeysPayload keysWithProofs;
     /**
      * The URL referencing the baker's metadata.
      */
+    @Nullable
     private final String metadataUrl;
 
     /**
      * The commission the pool owner takes on transaction fees.
      * The supplied value is interpreted as "the value" / 100_000
      */
+    @Nullable
     private final PartsPerHundredThousand transactionFeeCommission;
     /**
      * The commission the pool owner takes on baking rewards.
      * The supplied value is interpreted as "the value" / 100_000
      */
+    @Nullable
     private final PartsPerHundredThousand bakingRewardCommission;
     /**
      * The commission the pool owner takes on finalization rewards.
      * The supplied value is interpreted as "the value" / 100_000
      */
+    @Nullable
     private final PartsPerHundredThousand finalizationRewardCommission;
     /**
      * Whether the validator is suspended.
      * This is only supported from protocol version 8 onwards
      */
+    @Nullable
     private final Boolean suspended;
 
     @Builder
-    public ConfigureBaker(CCDAmount capital,
-                          Boolean restakeEarnings,
-                          OpenStatus openForDelegation,
-                          ConfigureBakerKeysPayload keysWithProofs,
-                          String metadataUrl,
-                          PartsPerHundredThousand transactionFeeCommission,
-                          PartsPerHundredThousand bakingRewardCommission,
-                          PartsPerHundredThousand finalizationRewardCommission,
-                          Boolean suspended) {
+    public ConfigureBaker(@Nullable CCDAmount capital,
+                          @Nullable Boolean restakeEarnings,
+                          @Nullable OpenStatus openForDelegation,
+                          @Nullable ConfigureBakerKeysPayload keysWithProofs,
+                          @Nullable String metadataUrl,
+                          @Nullable PartsPerHundredThousand transactionFeeCommission,
+                          @Nullable PartsPerHundredThousand bakingRewardCommission,
+                          @Nullable PartsPerHundredThousand finalizationRewardCommission,
+                          @Nullable Boolean suspended) {
         super(TransactionType.CONFIGURE_BAKER);
         this.capital = capital;
         this.restakeEarnings = restakeEarnings;

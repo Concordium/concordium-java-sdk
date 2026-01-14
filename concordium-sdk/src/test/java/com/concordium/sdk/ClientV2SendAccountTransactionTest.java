@@ -1,8 +1,8 @@
 package com.concordium.sdk;
 
+import com.concordium.grpc.v2.*;
 import com.concordium.grpc.v2.AccountTransaction;
 import com.concordium.grpc.v2.Signature;
-import com.concordium.grpc.v2.*;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AccountAddress;
@@ -94,14 +94,19 @@ public class ClientV2SendAccountTransactionTest {
                         ED25519SecretKey
                                 .from("56f60de843790c308dac2d59a5eec9f6b1649513f827e5a13d7038accfe31784")));
 
-        var transactionHash = client.sendTransaction(TransactionFactory.newTransfer()
+        var transactionHash = client.sendTransaction(TransactionFactory
+                .newTransfer(
+                        Transfer
+                                .builder()
+                                .receiver(RECEIVER_ACCOUNT_ADDRESS)
+                                .amount(CCDAmount.fromMicro(AMOUNT))
+                                .build()
+                )
                 .sender(SENDER_ACCOUNT_ADDRESS)
-                .receiver(RECEIVER_ACCOUNT_ADDRESS)
-                .amount(CCDAmount.fromMicro(AMOUNT))
                 .nonce(Nonce.from(SEQUENCE_NUMBER))
                 .expiry(Expiry.from(EXPIRY))
-                .signer(signer)
-                .build());
+                .sign(signer)
+        );
 
         var expectedBlockItem = SendBlockItemRequest.newBuilder()
                 .setAccountTransaction(AccountTransaction.newBuilder()
