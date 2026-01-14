@@ -82,7 +82,6 @@ import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.transactions.AccountTransaction;
-import com.concordium.sdk.transactions.AccountTransactionV1;
 import com.concordium.sdk.transactions.InitName;
 import com.concordium.sdk.transactions.Parameter;
 import com.concordium.sdk.transactions.ReceiveName;
@@ -620,8 +619,8 @@ interface ClientV2MapperExtensions {
                 return Optional.of(RemoveStakeChange.builder()
                         .effectiveTime(Timestamp.from(pendingChange.getRemove()))
                         .build());
-            default:
             case CHANGE_NOT_SET:
+            default:
                 return Optional.empty();
         }
     }
@@ -1089,69 +1088,6 @@ interface ClientV2MapperExtensions {
         return Round.from(currentRound.getValue());
     }
 
-    static SendBlockItemRequest to(AccountTransaction accountTransaction) {
-        return SendBlockItemRequest.newBuilder()
-                .setAccountTransaction(com.concordium.grpc.v2.AccountTransaction.newBuilder()
-                        .setHeader(to(accountTransaction.getHeader()))
-                        .setPayload(AccountTransactionPayload.newBuilder()
-                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayload().getBytes()))
-                                .build())
-                        .setSignature(to(accountTransaction.getSignature()))
-                        .build())
-                .build();
-    }
-
-    static SendBlockItemRequest to(AccountTransactionV1 accountTransaction) {
-        return SendBlockItemRequest.newBuilder()
-                .setAccountTransactionV1(com.concordium.grpc.v2.AccountTransactionV1.newBuilder()
-                        .setHeader(to(accountTransaction.getHeader()))
-                        .setPayload(AccountTransactionPayload.newBuilder()
-                                .setRawPayload(ByteString.copyFrom(accountTransaction.getPayload().getBytes()))
-                                .build())
-                        .setSignatures(to(accountTransaction.getSignatures()))
-                        .build())
-                .build();
-    }
-
-    static SendBlockItemRequest to(CredentialDeploymentTransaction credentialDeploymentTransaction) {
-        TransactionTime time = to(credentialDeploymentTransaction.getExpiry().getValue());
-
-        return SendBlockItemRequest.newBuilder()
-                .setCredentialDeployment(
-                        CredentialDeployment.newBuilder()
-                                .setMessageExpiry(time)
-                                .setRawPayload(ByteString.copyFrom(credentialDeploymentTransaction.getPayloadBytes()))
-                                .build()
-                )
-                .build();
-    }
-
-    static AccountTransactionSignature to(TransactionSignature signature) {
-        return AccountTransactionSignature.newBuilder()
-                .putAllSignatures(to(
-                        signature.getSignatures(),
-                        ClientV2MapperExtensions::to,
-                        ClientV2MapperExtensions::to))
-                .build();
-    }
-
-    static AccountTransactionV1Signatures to(TransactionSignaturesV1 signatures){
-        val builder = AccountTransactionV1Signatures.newBuilder()
-                .setSenderSignatures(to(signatures.getSenderSignature()));
-        if (signatures.getSponsorSignature().isPresent()){
-            builder.setSponsorSignatures(to(signatures.getSponsorSignature().get()));
-        }
-        return builder.build();
-    }
-
-    static AccountSignatureMap to(TransactionSignatureAccountSignatureMap v) {
-        return AccountSignatureMap.newBuilder().putAllSignatures(to(
-                        v.getSignatures(),
-                        ClientV2MapperExtensions::to,
-                        ClientV2MapperExtensions::to))
-                .build();
-    }
-
     static Integer to(Index index) {
         return (int) index.getValue();
     }
@@ -1160,35 +1096,6 @@ interface ClientV2MapperExtensions {
         return com.concordium.grpc.v2.Signature.newBuilder()
                 .setValue(ByteString.copyFrom(signature.getBytes()))
                 .build();
-    }
-
-    static AccountTransactionHeader to(TransactionHeader header) {
-        return AccountTransactionHeader.newBuilder()
-                .setSequenceNumber(SequenceNumber.newBuilder()
-                        .setValue(to(header.getNonce()))
-                        .build())
-                .setSender(to(header.getSender()))
-                .setExpiry(to(header.getExpiry().getValue()))
-                .setEnergyAmount(toEnergy(header.getMaxEnergyCost()))
-                .build();
-    }
-
-    static AccountTransactionHeaderV1 to(TransactionHeaderV1 header) {
-        val builder = AccountTransactionHeaderV1.newBuilder()
-                .setSequenceNumber(SequenceNumber.newBuilder()
-                        .setValue(to(header.getNonce()))
-                        .build())
-                .setSender(to(header.getSender()))
-                .setExpiry(to(header.getExpiry().getValue()))
-                .setEnergyAmount(toEnergy(header.getMaxEnergyCost()));
-        if (header.getSponsor().isPresent()) {
-            builder.setSponsor(to(header.getSponsor().get()));
-        }
-        return builder.build();
-    }
-
-    static Energy toEnergy(UInt64 maxEnergyCost) {
-        return Energy.newBuilder().setValue(maxEnergyCost.getValue()).build();
     }
 
     static TransactionTime to(UInt64 expiry) {
@@ -1563,10 +1470,7 @@ interface ClientV2MapperExtensions {
 
     static com.concordium.sdk.responses.intanceinfo.InstanceInfo to(com.concordium.grpc.v2.InstanceInfo instanceInfo) {
         switch (instanceInfo.getVersionCase()) {
-            default:
-            case VERSION_NOT_SET:
-                throw new IllegalArgumentException("Invalid Version");
-            case V0:
+           case V0:
                 val v0 = instanceInfo.getV0();
                 return com.concordium.sdk.responses.intanceinfo.InstanceInfo.builder()
                         .amount(to(v0.getAmount()))
@@ -1588,6 +1492,9 @@ interface ClientV2MapperExtensions {
                         .sourceModule(to(v1.getSourceModule()))
                         .name(v1.getName().getValue())
                         .build();
+            case VERSION_NOT_SET:
+            default:
+                throw new IllegalArgumentException("Invalid Version");
         }
     }
 
@@ -1776,8 +1683,8 @@ interface ClientV2MapperExtensions {
                         .type(PendingUpdateType.ValidatorScoreParameters)
                         .update(ValidatorScoreParameters.from(u.getValidatorScoreParameters()))
                         .build();
-            default:
             case EFFECT_NOT_SET:
+            default:
                 throw new IllegalArgumentException("Unexpected effect case");
         }
     }

@@ -1,8 +1,8 @@
 package com.concordium.sdk;
 
-import com.concordium.grpc.v2.*;
-import com.concordium.grpc.v2.AccountTransaction;
-import com.concordium.grpc.v2.Signature;
+import com.concordium.grpc.v2.QueriesGrpc;
+import com.concordium.grpc.v2.SendBlockItemRequest;
+import com.concordium.grpc.v2.TransactionHash;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.transactions.*;
 import com.concordium.sdk.types.AccountAddress;
@@ -13,6 +13,7 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
+import lombok.val;
 import lombok.var;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -32,17 +33,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ClientV2SendAccountTransactionTest {
-    private static final long ENERGY = 501L;
+public class ClientV2SendTransactionTest {
     private static final long SEQUENCE_NUMBER = 60L;
     private static final long EXPIRY = 1000000L;
-    private static final byte[] RAW_PAYLOAD = new byte[]{
-            3, 74, -128, 120, 81, -55, 58, -115, 27, -8, 74, -74, 29, -37, 31, -113, 115, -36, -123, -51, -58, -33, 20,
-            80, 40, 15, 28, -101, 43, -10, -109, 105, -77, 0, 0, 0, 0, 0, 15, 66, 64};
-    private static final byte[] SIGNATURE_BYTES = new byte[]{
-            -88, 8, -79, -3, -5, 6, 102, 90, -65, -14, 107, -24, 98, 45, 66, -84, -119, -89, 64, -98, 89, 40, -114, 58,
-            -66, 33, -61, -79, 90, -124, -103, 33, -67, 117, 111, 82, 7, -103, 57, -58, -62, -122, -120, -3, 48, -77,
-            -76, -4, 59, -98, -103, 36, 123, 43, -89, -37, -4, 44, -71, 98, -17, 99, -124, 0};
     private static final byte[] TRANSACTION_HASH_BYTES;
 
     static {
@@ -94,7 +87,7 @@ public class ClientV2SendAccountTransactionTest {
                         ED25519SecretKey
                                 .from("56f60de843790c308dac2d59a5eec9f6b1649513f827e5a13d7038accfe31784")));
 
-        var transactionHash = client.sendTransaction(TransactionFactory
+        val transaction = TransactionFactory
                 .newTransfer(
                         Transfer
                                 .builder()
@@ -105,30 +98,11 @@ public class ClientV2SendAccountTransactionTest {
                 .sender(SENDER_ACCOUNT_ADDRESS)
                 .nonce(Nonce.from(SEQUENCE_NUMBER))
                 .expiry(Expiry.from(EXPIRY))
-                .sign(signer)
-        );
+                .sign(signer);
+        val transactionHash = client.sendTransaction(transaction);
 
         var expectedBlockItem = SendBlockItemRequest.newBuilder()
-                .setAccountTransaction(AccountTransaction.newBuilder()
-                        .setHeader(AccountTransactionHeader.newBuilder()
-                                .setEnergyAmount(Energy.newBuilder().setValue(ENERGY).build())
-                                .setSequenceNumber(SequenceNumber.newBuilder().setValue(SEQUENCE_NUMBER).build())
-                                .setExpiry(TransactionTime.newBuilder().setValue(EXPIRY).build())
-                                .setSender(com.concordium.grpc.v2.AccountAddress.newBuilder()
-                                        .setValue(ByteString.copyFrom(SENDER_ACCOUNT_ADDRESS.getBytes()))
-                                        .build())
-                                .build())
-                        .setPayload(AccountTransactionPayload.newBuilder()
-                                .setRawPayload(ByteString.copyFrom(RAW_PAYLOAD))
-                                .build())
-                        .setSignature(AccountTransactionSignature.newBuilder()
-                                .putSignatures(0, AccountSignatureMap.newBuilder()
-                                        .putSignatures(0, Signature.newBuilder()
-                                                .setValue(ByteString.copyFrom(SIGNATURE_BYTES))
-                                                .build())
-                                        .build())
-                                .build())
-                        .build())
+                .setRawBlockItem(ByteString.copyFrom(transaction.getBytes()))
                 .build();
 
         verify(serviceImpl).sendBlockItem(eq(expectedBlockItem), any(StreamObserver.class));
