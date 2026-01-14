@@ -4,13 +4,38 @@ import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
-import lombok.Getter;
+import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
 /**
  * Provides convenient builders for account transactions.
+ * <br><br>
+ * Example: Create a CCD transfer transaction
+ * <pre>
+ * {@code
+ * TransactionFactory
+ *      .newTransfer(new Transfer(receiverAccountAddress, ccdAmount))
+ *      .sender(senderAccountAddress)
+ *      .nonce(senderNonce)
+ *      .expiry(Expiry.createNew().addMinutes(5))
+ *      .sign(senderSigner)
+ * }
+ * </pre>
+ * <br>
+ * Example: Create a sponsored CCD transfer transaction on the sponsor's server:
+ * <pre>
+ * {@code
+ * TransactionFactory
+ *      .newTransfer(new Transfer(receiverAccountAddress, ccdAmount))
+ *      .sender(senderAccountAddress)
+ *      .nonce(senderNonce)
+ *      .expiry(Expiry.createNew().addMinutes(5))
+ *      .sponsoredBy(sponsorAccountAddress)
+ *      .signAsSponsor(sponsorSigner)
+ * }
+ * </pre>
  */
 public class TransactionFactory {
 
@@ -177,8 +202,7 @@ public class TransactionFactory {
         return newPayloadSubmission(tokenUpdate, cost);
     }
 
-    @Getter
-    @RequiredArgsConstructor
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PayloadSubmissionBuilder {
         @NonNull
         private final Payload payload;
@@ -228,8 +252,7 @@ public class TransactionFactory {
         }
     }
 
-    @Getter
-    @RequiredArgsConstructor
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static class SponsoredPayloadSubmissionBuilder {
         private final PayloadSubmissionBuilder payloadSubmission;
         private final AccountAddress sponsor;
@@ -255,6 +278,13 @@ public class TransactionFactory {
         }
 
         /**
+         * Build a partially signed sponsored transaction to be completed by the sender.
+         */
+        public PartiallySignedSponsoredTransaction signAsSponsor(@NonNull TransactionSigner sponsorSigner) {
+            return signAsSponsor(sponsorSigner, 1);
+        }
+
+        /**
          * Build a partially signed sponsored transaction to be completed by the sponsor.
          *
          * @param sponsorSignatureCount Expected number of signatures by the sponsor, in a Singlesig wallet it is 1
@@ -263,15 +293,22 @@ public class TransactionFactory {
                                                                 int sponsorSignatureCount) {
             return PartiallySignedSponsoredTransaction
                     .builderForSender()
-                    .sender(payloadSubmission.getSender())
-                    .nonce(payloadSubmission.getNonce())
-                    .expiry(payloadSubmission.getExpiry())
+                    .sender(payloadSubmission.sender)
+                    .nonce(payloadSubmission.nonce)
+                    .expiry(payloadSubmission.expiry)
                     .senderSigner(senderSigner)
                     .payload(payloadSubmission.payload)
                     .transactionSpecificCost(payloadSubmission.transactionSpecificCost)
                     .sponsor(sponsor)
                     .sponsorSignatureCount(sponsorSignatureCount)
                     .build();
+        }
+
+        /**
+         * Build a partially signed sponsored transaction to be completed by the sponsor.
+         */
+        public PartiallySignedSponsoredTransaction signAsSender(@NonNull TransactionSigner senderSigner) {
+            return signAsSender(senderSigner, 1);
         }
     }
 }

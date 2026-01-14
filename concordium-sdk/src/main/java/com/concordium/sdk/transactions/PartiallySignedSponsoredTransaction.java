@@ -21,6 +21,7 @@ import org.bouncycastle.util.encoders.Hex;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -30,9 +31,8 @@ import java.util.Optional;
  * @see TransactionFactory Transaction factory, that also supports sponsored transactions
  * @see PartiallySignedSponsoredTransaction#builderForSender() Build on the sender side, to be completed by the sponsor
  * @see PartiallySignedSponsoredTransaction#builderForSponsor() Build on the sponsor side, to be completed by the sender
- * @see PartiallySignedSponsoredTransaction#builderForCompletion() Build on the side that completes the transaction
- * @see PartiallySignedSponsoredTransaction#complete(TransactionSigner) Complete with the remaining signer
- * @see PartiallySignedSponsoredTransaction#complete(TransactionSignature) Complete with the remaining signature
+ * @see PartiallySignedSponsoredTransaction#completeAsSender(TransactionSigner) Complete by the sender
+ * @see PartiallySignedSponsoredTransaction#completeAsSponsor(TransactionSigner) Complete by the sponsor
  */
 @Getter
 @ToString
@@ -49,24 +49,6 @@ public class PartiallySignedSponsoredTransaction {
     @NonNull
     private final RawPayload payload;
 
-    /**
-     * Creates a partially signed sponsored transaction on the completion side
-     * (i.e. when received by sender from sponsor or vice versa)
-     *
-     * @param senderSignature  signature of the transaction sender,
-     *                         which means the transaction must be completed by the sponsor
-     * @param sponsorSignature signature of the transaction sponsor,
-     *                         which means the transaction must be completed by the sender
-     * @param header           {@link AccountTransactionV1#getHeader() AccountTransactionV1 header}
-     * @param payload          {@link AccountTransactionV1#getPayload() AccountTransactionV1 payload}
-     * @throws TransactionCreationException if something goes wrong
-     * @see PartiallySignedSponsoredTransaction#complete(TransactionSigner) Complete with the remaining signer
-     * @see PartiallySignedSponsoredTransaction#complete(TransactionSignature) Complete with the remaining signature
-     */
-    @Builder(
-            builderMethodName = "builderForCompletion",
-            builderClassName = "PartiallySignedSponsoredTransactionBuilderForCompletion"
-    )
     public PartiallySignedSponsoredTransaction(@Nullable TransactionSignature senderSignature,
                                                @Nullable TransactionSignature sponsorSignature,
                                                @NonNull TransactionHeaderV1 header,
@@ -75,6 +57,10 @@ public class PartiallySignedSponsoredTransaction {
             throw TransactionCreationException.from(new IllegalArgumentException(
                     "There must be either sponsor or sender signature"
             ));
+        } else if (sponsorSignature != null && senderSignature != null) {
+            throw TransactionCreationException.from(new IllegalArgumentException(
+                    "If there are both signatures, create AccountTransactionV1 instead"
+            ));
         }
         this.senderSignature = senderSignature;
         this.sponsorSignature = sponsorSignature;
@@ -82,20 +68,50 @@ public class PartiallySignedSponsoredTransaction {
         this.payload = new RawPayload(payload.getBytes());
     }
 
+    @SuppressWarnings("unused")
     public Optional<TransactionSignature> getSenderSignature() {
         return Optional.ofNullable(senderSignature);
     }
 
+    @SuppressWarnings("unused")
     public Optional<TransactionSignature> getSponsorSignature() {
         return Optional.ofNullable(sponsorSignature);
     }
 
-    public AccountTransactionV1 complete(@NonNull TransactionSignature remainingSignature) {
-        return AccountTransactionV1.from(this, remainingSignature);
+    /**
+     * Complete the transaction when it is already signed by the sponsor.
+     */
+    public AccountTransactionV1 completeAsSender(@NonNull TransactionSigner senderSigner) {
+        try {
+            return new AccountTransactionV1(
+                    new TransactionSignaturesV1(
+                            senderSigner.sign(AccountTransactionV1.getDataToSign(header, payload)),
+                            Objects.requireNonNull(sponsorSignature, "Missing sponsor signature")
+                    ),
+                    header,
+                    payload
+            );
+        } catch (Exception e) {
+            throw TransactionCreationException.from(e);
+        }
     }
 
-    public AccountTransactionV1 complete(@NonNull TransactionSigner remainingSigner) {
-        return AccountTransactionV1.from(this, remainingSigner);
+    /**
+     * Complete the transaction when it is already signed by the sender.
+     */
+    public AccountTransactionV1 completeAsSponsor(@NonNull TransactionSigner sponsorSigner) {
+        try {
+            return new AccountTransactionV1(
+                    new TransactionSignaturesV1(
+                            Objects.requireNonNull(senderSignature, "Missing sender signature"),
+                            sponsorSigner.sign(AccountTransactionV1.getDataToSign(header, payload))
+                    ),
+                    header,
+                    payload
+            );
+        } catch (Exception e) {
+            throw TransactionCreationException.from(e);
+        }
     }
 
     /**
@@ -212,24 +228,6 @@ public class PartiallySignedSponsoredTransaction {
         } catch (Exception e) {
             throw TransactionCreationException.from(e);
         }
-    }
-
-
-    public static PartiallySignedSponsoredTransaction from(@Nullable TransactionSignature senderSignature,
-                                                           @Nullable TransactionSignature sponsorSignature,
-                                                           @NonNull TransactionHeaderV1 header,
-                                                           @NonNull Payload payload) {
-        if (sponsorSignature == null && senderSignature == null) {
-            throw TransactionCreationException.from(new IllegalArgumentException(
-                    "There must be either sponsor or sender signature"
-            ));
-        }
-        return new PartiallySignedSponsoredTransaction(
-                senderSignature,
-                sponsorSignature,
-                header,
-                new RawPayload(payload.getBytes())
-        );
     }
 
     static class Serializer extends StdSerializer<PartiallySignedSponsoredTransaction> {

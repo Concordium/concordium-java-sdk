@@ -62,6 +62,11 @@ public class TaggedTokenHolderAccount {
         return Arrays.hashCode(data);
     }
 
+    @Override
+    public String toString() {
+        return getAddress().toString();
+    }
+
     static class CborSerializer extends StdSerializer<TaggedTokenHolderAccount> {
 
         protected CborSerializer() {
