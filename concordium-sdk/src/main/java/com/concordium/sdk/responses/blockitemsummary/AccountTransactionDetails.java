@@ -35,7 +35,7 @@ public class AccountTransactionDetails {
 
     /**
      * The optional sponsor details of the transaction.
-     * Present if transaction was sponsored.
+     * Present if the transaction was sponsored.
      */
     private final SponsorDetails sponsorDetails;
 
