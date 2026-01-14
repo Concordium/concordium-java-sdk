@@ -57,25 +57,26 @@ public class ConfigureBaking implements Callable<Integer> {
         AccountInfo accountInfo = client.getAccountInfo(BlockQuery.LAST_FINAL, AccountQuery.from(sender));
         BakerKeys bakerkeys = BakerKeys.createBakerKeys();
         System.out.println(bakerkeys.toJson());
-        val tx = TransactionFactory.newConfigureBaker()
+        val tx = TransactionFactory
+                .newConfigureBaker(
+                        ConfigureBaker.builder()
+                                .capital(CCDAmount.from(10000))
+                                .openForDelegation(OpenStatus.OPEN_FOR_ALL)
+                                .restakeEarnings(true)
+                                .bakingRewardCommission(PartsPerHundredThousand.from(5000))
+                                .finalizationRewardCommission(PartsPerHundredThousand.from(100000))
+                                .transactionFeeCommission(PartsPerHundredThousand.from(80000))
+                                .metadataUrl("")
+                                .keysWithProofs(
+                                        ConfigureBakerKeysPayload
+                                                .getNewConfigureBakerKeysPayload(sender, bakerkeys))
+                                .suspended(false)
+                                .build()
+                )
                 .nonce(accountInfo.getNonce())
                 .expiry(Expiry.createNew().addMinutes(5))
-                .signer(signer)
                 .sender(sender)
-                .payload(ConfigureBakerPayload.builder()
-                        .capital(CCDAmount.from(10000))
-                        .openForDelegation(OpenStatus.OPEN_FOR_ALL)
-                        .restakeEarnings(true)
-                        .bakingRewardCommission(PartsPerHundredThousand.from(5000))
-                        .finalizationRewardCommission(PartsPerHundredThousand.from(100000))
-                        .transactionFeeCommission(PartsPerHundredThousand.from(80000))
-                        .metadataUrl("")
-                        .keysWithProofs(
-                                ConfigureBakerKeysPayload
-                                        .getNewConfigureBakerKeysPayload(sender, bakerkeys))
-                        .suspended(false)
-                        .build())
-                .build();
+                .sign(signer);
         Hash hash = client.sendTransaction(tx);
         System.out.println(hash);
         Optional<FinalizedBlockItem> finalizedBlockItem = client.waitUntilFinalized(hash, this.timeout);

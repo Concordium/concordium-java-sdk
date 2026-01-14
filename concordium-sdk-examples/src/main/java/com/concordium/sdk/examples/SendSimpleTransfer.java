@@ -55,14 +55,19 @@ public class SendSimpleTransfer implements Callable<Integer> {
         var client = ClientV2.from(connection);
         var senderInfo = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(sender));
         var nonce = senderInfo.getNonce();
-        var txnHash = client.sendTransaction(TransactionFactory.newTransfer()
-                .sender(sender)
-                .receiver(receiver)
-                .amount(amount)
-                .nonce(nonce)
-                .expiry(expiry)
-                .signer(signer)
-                .build());
+        var txnHash = client.sendTransaction(
+                TransactionFactory
+                        .newTransfer(
+                                Transfer
+                                        .builder()
+                                        .receiver(receiver)
+                                        .amount(amount)
+                                        .build()
+                        )
+                        .sender(sender)
+                        .nonce(nonce)
+                        .expiry(expiry)
+                        .sign(signer));
         System.out.println(txnHash);
         Optional<FinalizedBlockItem> finalizedBlockItem = client.waitUntilFinalized(txnHash, this.timeout);
         System.out.println(finalizedBlockItem);
