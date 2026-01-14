@@ -231,7 +231,7 @@ public class TransactionFactory {
     @Getter
     @RequiredArgsConstructor
     public static class SponsoredPayloadSubmissionBuilder {
-        private final PayloadSubmissionBuilder payloadSubmissionBuilder;
+        private final PayloadSubmissionBuilder payloadSubmission;
         private final AccountAddress sponsor;
 
         /**
@@ -243,12 +243,12 @@ public class TransactionFactory {
                                                                  int senderSignatureCount) {
             return PartiallySignedSponsoredTransaction
                     .builderForSponsor()
-                    .sender(payloadSubmissionBuilder.getSender())
-                    .nonce(payloadSubmissionBuilder.getNonce())
-                    .expiry(payloadSubmissionBuilder.getExpiry())
+                    .sender(payloadSubmission.sender)
+                    .nonce(payloadSubmission.nonce)
+                    .expiry(payloadSubmission.expiry)
                     .senderSignatureCount(senderSignatureCount)
-                    .payload(payloadSubmissionBuilder.payload)
-                    .transactionSpecificCost(payloadSubmissionBuilder.transactionSpecificCost)
+                    .payload(payloadSubmission.payload)
+                    .transactionSpecificCost(payloadSubmission.transactionSpecificCost)
                     .sponsor(sponsor)
                     .sponsorSigner(sponsorSigner)
                     .build();
@@ -263,12 +263,12 @@ public class TransactionFactory {
                                                                 int sponsorSignatureCount) {
             return PartiallySignedSponsoredTransaction
                     .builderForSender()
-                    .sender(payloadSubmissionBuilder.getSender())
-                    .nonce(payloadSubmissionBuilder.getNonce())
-                    .expiry(payloadSubmissionBuilder.getExpiry())
+                    .sender(payloadSubmission.getSender())
+                    .nonce(payloadSubmission.getNonce())
+                    .expiry(payloadSubmission.getExpiry())
                     .senderSigner(senderSigner)
-                    .payload(payloadSubmissionBuilder.payload)
-                    .transactionSpecificCost(payloadSubmissionBuilder.transactionSpecificCost)
+                    .payload(payloadSubmission.payload)
+                    .transactionSpecificCost(payloadSubmission.transactionSpecificCost)
                     .sponsor(sponsor)
                     .sponsorSignatureCount(sponsorSignatureCount)
                     .build();
