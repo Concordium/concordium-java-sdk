@@ -26,7 +26,9 @@ import java.util.Optional;
 
 /**
  * A sponsored transaction ({@link AccountTransactionV1}) signed by either sender or sponsor,
- * can be completed by the remaining side. JSON-serializable.
+ * must be completed by the other side. JSON-serializable.
+ * If a transaction is signed by the sender, it must be completed by the sponsor.
+ * If a transaction is signed by the sponsor, it must be completed by the sender.
  *
  * @see TransactionFactory Transaction factory, that also supports sponsored transactions
  * @see PartiallySignedSponsoredTransaction#builderForSender() Build on the sender side, to be completed by the sponsor

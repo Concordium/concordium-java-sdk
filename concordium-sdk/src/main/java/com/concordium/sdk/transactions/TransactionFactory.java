@@ -1,6 +1,7 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
+import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
@@ -134,7 +135,7 @@ public class TransactionFactory {
      * A builder for a validator (baker) set up or update transaction.
      */
     public static PayloadSubmissionBuilder newConfigureBaker(@NonNull ConfigureBaker configureBaker) {
-        UInt64 cost = (configureBaker.getKeysWithProofs() != null)
+        val cost = (configureBaker.getKeysWithProofs() != null)
                 ? TransactionTypeCost.CONFIGURE_BAKER_WITH_PROOFS.getValue()
                 : TransactionTypeCost.CONFIGURE_BAKER.getValue();
         return newPayloadSubmission(configureBaker, cost);
@@ -239,76 +240,94 @@ public class TransactionFactory {
 
         /**
          * Proceed to building a sponsored transaction, for its cost to be paid by the {@code sponsor}.
+         * Nonce, expiry and sender must be set before proceeding to sponsorship.
          */
-        public SponsoredPayloadSubmissionBuilder sponsoredBy(@NonNull AccountAddress sponsor) {
-            return new SponsoredPayloadSubmissionBuilder(this, sponsor);
+        public SponsoredBuilder sponsoredBy(@NonNull AccountAddress sponsor) {
+            if (sender == null) {
+                throw new IllegalStateException("Sender must be set before proceeding to sponsorship");
+            }
+            if (nonce == null) {
+                throw new IllegalStateException("Nonce must be set before proceeding to sponsorship");
+            }
+            if (expiry == null) {
+                throw new IllegalStateException("Expiry must be set before proceeding to sponsorship");
+            }
+            return new SponsoredBuilder(sponsor);
         }
 
         /**
          * Build a signed account transaction.
+         *
+         * @throws TransactionCreationException if something goes wrong
          */
         public AccountTransaction sign(@NonNull TransactionSigner signer) {
             return AccountTransaction.from(sender, nonce, expiry, signer, payload, transactionSpecificCost);
         }
-    }
 
-    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class SponsoredPayloadSubmissionBuilder {
-        private final PayloadSubmissionBuilder payloadSubmission;
-        private final AccountAddress sponsor;
+        @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+        public class SponsoredBuilder {
+            @NonNull
+            private final AccountAddress sponsor;
 
-        /**
-         * Build a partially signed sponsored transaction to be completed by the sender.
-         *
-         * @param senderSignatureCount Expected number of signatures by the sender, in a Singlesig wallet it is 1
-         */
-        public PartiallySignedSponsoredTransaction signAsSponsor(@NonNull TransactionSigner sponsorSigner,
-                                                                 int senderSignatureCount) {
-            return PartiallySignedSponsoredTransaction
-                    .builderForSponsor()
-                    .sender(payloadSubmission.sender)
-                    .nonce(payloadSubmission.nonce)
-                    .expiry(payloadSubmission.expiry)
-                    .senderSignatureCount(senderSignatureCount)
-                    .payload(payloadSubmission.payload)
-                    .transactionSpecificCost(payloadSubmission.transactionSpecificCost)
-                    .sponsor(sponsor)
-                    .sponsorSigner(sponsorSigner)
-                    .build();
-        }
+            /**
+             * Build a partially signed sponsored transaction to be completed by the sender.
+             *
+             * @param senderSignatureCount Expected number of signatures by the sender, in a Singlesig wallet it is 1
+             * @throws TransactionCreationException if something goes wrong
+             */
+            public PartiallySignedSponsoredTransaction signAsSponsor(@NonNull TransactionSigner sponsorSigner,
+                                                                     int senderSignatureCount) {
+                return PartiallySignedSponsoredTransaction
+                        .builderForSponsor()
+                        .sender(sender)
+                        .nonce(nonce)
+                        .expiry(expiry)
+                        .senderSignatureCount(senderSignatureCount)
+                        .payload(payload)
+                        .transactionSpecificCost(transactionSpecificCost)
+                        .sponsor(sponsor)
+                        .sponsorSigner(sponsorSigner)
+                        .build();
+            }
 
-        /**
-         * Build a partially signed sponsored transaction to be completed by the sender.
-         */
-        public PartiallySignedSponsoredTransaction signAsSponsor(@NonNull TransactionSigner sponsorSigner) {
-            return signAsSponsor(sponsorSigner, 1);
-        }
+            /**
+             * Build a partially signed sponsored transaction to be completed by the sender.
+             *
+             * @throws TransactionCreationException if something goes wrong
+             */
+            public PartiallySignedSponsoredTransaction signAsSponsor(@NonNull TransactionSigner sponsorSigner) {
+                return signAsSponsor(sponsorSigner, 1);
+            }
 
-        /**
-         * Build a partially signed sponsored transaction to be completed by the sponsor.
-         *
-         * @param sponsorSignatureCount Expected number of signatures by the sponsor, in a Singlesig wallet it is 1
-         */
-        public PartiallySignedSponsoredTransaction signAsSender(@NonNull TransactionSigner senderSigner,
-                                                                int sponsorSignatureCount) {
-            return PartiallySignedSponsoredTransaction
-                    .builderForSender()
-                    .sender(payloadSubmission.sender)
-                    .nonce(payloadSubmission.nonce)
-                    .expiry(payloadSubmission.expiry)
-                    .senderSigner(senderSigner)
-                    .payload(payloadSubmission.payload)
-                    .transactionSpecificCost(payloadSubmission.transactionSpecificCost)
-                    .sponsor(sponsor)
-                    .sponsorSignatureCount(sponsorSignatureCount)
-                    .build();
-        }
+            /**
+             * Build a partially signed sponsored transaction to be completed by the sponsor.
+             *
+             * @param sponsorSignatureCount Expected number of signatures by the sponsor, in a Singlesig wallet it is 1
+             * @throws TransactionCreationException if something goes wrong
+             */
+            public PartiallySignedSponsoredTransaction signAsSender(@NonNull TransactionSigner senderSigner,
+                                                                    int sponsorSignatureCount) {
+                return PartiallySignedSponsoredTransaction
+                        .builderForSender()
+                        .sender(sender)
+                        .nonce(nonce)
+                        .expiry(expiry)
+                        .senderSigner(senderSigner)
+                        .payload(payload)
+                        .transactionSpecificCost(transactionSpecificCost)
+                        .sponsor(sponsor)
+                        .sponsorSignatureCount(sponsorSignatureCount)
+                        .build();
+            }
 
-        /**
-         * Build a partially signed sponsored transaction to be completed by the sponsor.
-         */
-        public PartiallySignedSponsoredTransaction signAsSender(@NonNull TransactionSigner senderSigner) {
-            return signAsSender(senderSigner, 1);
+            /**
+             * Build a partially signed sponsored transaction to be completed by the sponsor.
+             *
+             * @throws TransactionCreationException if something goes wrong
+             */
+            public PartiallySignedSponsoredTransaction signAsSender(@NonNull TransactionSigner senderSigner) {
+                return signAsSender(senderSigner, 1);
+            }
         }
     }
 }
