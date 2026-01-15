@@ -1,6 +1,5 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
@@ -175,12 +174,11 @@ public class TransactionFactory {
     /**
      * A builder for an existing validator (baker) keys update transaction.
      */
-    public static PayloadSubmissionBuilder newUpdateBakerKeys(@NonNull AccountAddress accountAddress,
-                                                              @NonNull BakerKeys bakerKeys) {
+    public static PayloadSubmissionBuilder newUpdateBakerKeys(@NonNull ConfigureBakerKeysPayload keysWithProofs) {
         return newConfigureBaker(
                 ConfigureBaker
                         .builder()
-                        .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, bakerKeys))
+                        .keysWithProofs(keysWithProofs)
                         .build()
         );
     }
