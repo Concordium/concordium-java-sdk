@@ -1,5 +1,67 @@
 # Changelog
 
+## 12.0.0
+
+- Support for Protocol 10
+- Added `ProtocolVersion.V10` corresponding to Protocol version 10
+- Added `AccountTransactionV1` which is the sponsored transaction,
+  signed by both the sender and the sponsor
+- Added `BlockItemType.ACCOUNT_TRANSACTION_V1` corresponding to `AccountTransactionV1`
+- Added ability to create and complete sponsored transactions via
+  `TransactionFactory` and `PartiallySignedSponsoredTransaction`
+- Added [`SponsoredTransaction` example](concordium-sdk-examples/src/main/java/com/concordium/sdk/examples/SponsoredTransaction.java)
+- Added `TransactionFactory.newPayloadSubmission()` builder to create transactions
+  with any payload, including `RawPayload`
+- Changed `ClientV2.sendTransaction()` method to accept any `BlockItem`
+- Removed `ClientV2.sendCredentialDeploymentTransaction()` method.
+  Such a transaction can now be submitted via the `sendTransaction()` method
+- Added optional `sponsorDetails` to `AccountTransactionDetails`,
+  which is present if the transaction was sponsored
+- Added `Payload.fromBytes()` deserialization method
+- Added `TokenUpdate.fromBytes()` deserialization method
+- Removed long unsupported `EncryptedTransfer` and `TransferToEncrypted`.
+  Only `TransferToPublic` remained
+- Added `Expiry.from()` method to create it from `UInt64`
+- Add human-readable `toString()` implementation for `TransferTokenOperation
+
+### Breaking changes in handling of the transactions
+
+Since the sponsored transactions feature from Protocol 10 introduces a new way of representing
+the same transactions, existing conveniences around `AccountTransaction` are rendered useless.
+Please, go through the following list of changes to understand how to fix the code after updating to `12.0.0`.
+There are also [updated examples](concordium-sdk-examples/src/main/java/com/concordium/sdk/examples/).
+
+- `Payload` no longer holds `TransactionHeader` and `TransactionSignature`.
+  Its purpose is now purely to define the action executed by either `AccountTransaction`
+  or `AccountTransactionV1`. If you used `Payload` `withHeader()` and `signWith()` methods to create transactions,
+  use either `TransactionFactory` or `AccountTransaction.builder()` instead
+- Removed `Payload.getDataToSign()` method. Use the `getDataToSign()` method from
+  either `AccountTransaction` or `AccountTransactionV1` instead
+  (the data differs for a sponsored transaction)
+- Removed `Payload.calculateEnergyCost()` method. Use the `calculateMaxEnergyCost` method from
+  either `TransactionHeader` or `TransactionHeaderV1` instead
+  (the cost is bigger for a sponsored transaction)
+- Renamed `Payload` `getTrasnactionType()` method to just `getType()`
+- `TransactionFactory.new***()` methods now require `Payload` as an argument.
+  For example, `newTransfer()` requires `Transfer` payload.
+  Methods invoking smart contracts, like `newUpdateContract()`, also take max contract execution energy
+  as the second argument (what used to be set through the `maxEnergyCost()` method)
+- Replaced `TransactionFactory` builder `signer()` and `build()` methods with just `sign()`,
+  which now returns the final `AccountTransaction`
+- `TransactionFactory` now only returns `AccountTransaction`, 
+  or `AccountTransactionV1` for sponsored transactions
+- Removed specific `AccountTrasnaction` implementations like `TransferTransaction`,
+  `TokenUpdateTransaction`, etc. Replace occurrences of the removed types with `AccountTransaction`
+  and use `TransactionFactory` to create such transactions
+- Merged `TransferPayload` and `Transfer` to just `Transfer`
+- Merged `TransferWithMemoPayload` and `TransferWithMemo` to just `TransferWithMemo`
+- Merged `ConfigureBakerPayload` and `ConfigureBaker` to just `ConfigureBaker`
+- Merged `ConfigureDelegationPayload` and `ConfigureDelegation` to just `ConfigureDelegation`
+- Merged `InitContractPayload` and `InitContract` to just `InitContract`
+- Changed `TransactionHeader.expiry` field type from `UInt64` to `Expiry`
+- Removed various `TransactionHeader` builders. Do not manipulate headers directly,
+  use `TransactionFactory` instead
+
 ## 11.2.1
 
 - Fixed discrepancies with JavaScript SDK in creation of verifiable presentation
