@@ -74,7 +74,16 @@ public class TransactionHeader {
                 .build();
     }
 
+    /**
+     * The "A" constant for NRG assignment.
+     * This scales the effect of the number of signatures on the energy.
+     */
     public final static int COST_CONSTANT_A = 100;
+
+    /**
+     * The "B" constant for NRG assignment.
+     * This scales the effect of transaction size on the energy.
+     */
     public final static int COST_CONSTANT_B = 1;
 
     /**
