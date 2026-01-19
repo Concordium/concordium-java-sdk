@@ -9,7 +9,6 @@ import lombok.*;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,7 +16,6 @@ import java.util.List;
  * containing the actual operations.
  */
 @ToString
-@Builder
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class TokenUpdate extends Payload {
@@ -30,12 +28,14 @@ public class TokenUpdate extends Payload {
     /**
      * Operations to execute.
      */
-    @Singular
     private final List<TokenOperation> operations;
 
-    @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.TOKEN_UPDATE;
+    @Builder
+    public TokenUpdate(@NonNull String tokenSymbol,
+                       @NonNull @Singular List<TokenOperation> operations) {
+        super(TransactionType.TOKEN_UPDATE);
+        this.tokenSymbol = tokenSymbol;
+        this.operations = operations;
     }
 
     /**
@@ -49,7 +49,7 @@ public class TokenUpdate extends Payload {
     }
 
     @Override
-    protected byte[] getRawPayloadBytes() {
+    protected byte[] getPayloadBytes() {
         val symbolBytes = tokenSymbol.getBytes(StandardCharsets.UTF_8);
         val operationsBytes = getOperationsSerialized();
 
@@ -71,6 +71,23 @@ public class TokenUpdate extends Payload {
             total = total.plus(operation.getBaseCost());
         }
         return total;
+    }
+
+    public static TokenUpdate fromBytes(ByteBuffer source) {
+        val symbolBytesLength = source.get();
+        val symbolBytes = new byte[symbolBytesLength];
+        source.get(symbolBytes);
+        val tokenSymbol = new String(symbolBytes, StandardCharsets.UTF_8);
+
+        val operationsBytesLength = source.getInt();
+        val operationsBytes = new byte[operationsBytesLength];
+        source.get(operationsBytes);
+
+        return TokenUpdate
+                .builder()
+                .tokenSymbol(tokenSymbol)
+                .operationsSerialized(operationsBytes)
+                .build();
     }
 
     @SuppressWarnings("unused")

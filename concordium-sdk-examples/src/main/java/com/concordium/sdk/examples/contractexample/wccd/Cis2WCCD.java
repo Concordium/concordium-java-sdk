@@ -137,15 +137,14 @@ public class Cis2WCCD implements Callable<Integer> {
 
     private void handleInit(ClientV2 client, Nonce nonce) {
         InitName initName = InitName.from("init_cis2_wCCD");
-        InitContractPayload payload = InitContractPayload.from(CCDAmount.fromMicro(0), MODULE_REF, initName, Parameter.EMPTY);
-        InitContractTransaction initContractTransaction = TransactionFactory.newInitContract()
-                .sender(AccountAddress.from(SENDER_ADDRESS))
-                .payload(payload)
-                .expiry(EXPIRY)
-                .nonce(nonce)
-                .signer(SIGNER)
-                .maxEnergyCost(UInt64.from(10000))
-                .build();
+        InitContract payload = InitContract.from(CCDAmount.fromMicro(0), MODULE_REF, initName, Parameter.EMPTY);
+        AccountTransaction initContractTransaction =
+                TransactionFactory
+                        .newInitContract(payload, UInt64.from(10000))
+                        .sender(AccountAddress.from(SENDER_ADDRESS))
+                        .expiry(EXPIRY)
+                        .nonce(nonce)
+                        .sign(SIGNER);
         Hash txHash = client.sendTransaction(initContractTransaction);
         System.out.println("Submitted transaction for " + this.methodName + " with hash: " + txHash);
         Optional<FinalizedBlockItem> finalizedTransaction = client.waitUntilFinalized(txHash, wait);
@@ -167,14 +166,13 @@ public class Cis2WCCD implements Callable<Integer> {
         System.out.println("Price of transaction is: " + usedEnergy + " = " + euros + " euros = " + ccd + " micro CCD");
 
         UpdateContract payload = UpdateContract.from(CONTRACT_ADDRESS, parameter);
-        UpdateContractTransaction transaction = TransactionFactory.newUpdateContract()
-                .sender(AccountAddress.from(SENDER_ADDRESS))
-                .payload(payload)
-                .expiry(EXPIRY)
-                .nonce(nonce)
-                .signer(SIGNER)
-                .maxEnergyCost(UInt64.from(10000))
-                .build();
+        AccountTransaction transaction =
+                TransactionFactory
+                        .newUpdateContract(payload, UInt64.from(10000))
+                        .sender(AccountAddress.from(SENDER_ADDRESS))
+                        .expiry(EXPIRY)
+                        .nonce(nonce)
+                        .sign(SIGNER);
         Hash txHash = client.sendTransaction(transaction);
         System.out.println("Submitted transaction for " + this.methodName + " with hash: " + txHash);
         Optional<FinalizedBlockItem> finalizedTransaction = client.waitUntilFinalized(txHash, wait);

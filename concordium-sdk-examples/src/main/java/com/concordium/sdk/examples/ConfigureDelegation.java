@@ -54,19 +54,20 @@ public class ConfigureDelegation implements Callable<Integer> {
                         ED25519SecretKey
                                 .from("56f60de843790c308dac2d59a5eec9f6b1649513f827e5a13d7038accfe31784")));
         AccountInfo accountInfo = client.getAccountInfo(BlockQuery.LAST_FINAL, AccountQuery.from(sender));
-        val tx = TransactionFactory.newConfigureDelegation()
+        val tx = TransactionFactory
+                .newConfigureDelegation(
+                        com.concordium.sdk.transactions.ConfigureDelegation.builder()
+                                .capital(CCDAmount.from(200))
+                                .delegationTarget(DelegationTarget.builder()
+                                        .type(DelegationTarget.DelegationType.BAKER)
+                                        .bakerId(BakerId.from(207))
+                                        .build())
+                                .build()
+                )
                 .nonce(accountInfo.getNonce())
                 .expiry(Expiry.createNew().addMinutes(5))
-                .signer(signer)
                 .sender(sender)
-                .payload(ConfigureDelegationPayload.builder()
-                        .capital(CCDAmount.from(200))
-                        .delegationTarget(DelegationTarget.builder()
-                                .type(DelegationTarget.DelegationType.BAKER)
-                                .bakerId(BakerId.from(207))
-                                .build())
-                        .build())
-                .build();
+                .sign(signer);
         Hash hash = client.sendTransaction(tx);
         System.out.println(hash);
         Optional<FinalizedBlockItem> finalizedBlockItem = client.waitUntilFinalized(hash, this.timeout);

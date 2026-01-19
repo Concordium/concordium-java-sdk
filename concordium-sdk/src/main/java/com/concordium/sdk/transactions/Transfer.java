@@ -1,42 +1,38 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.AccountAddress;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import com.concordium.sdk.types.UInt64;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
-@ToString
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public final class Transfer extends Payload {
+@ToString
+public class Transfer extends Payload {
+    private final AccountAddress receiver;
+    private final CCDAmount amount;
 
-    private final TransferPayload payload;
+    @Builder
+    public Transfer(@NonNull AccountAddress receiver,
+                    @NonNull CCDAmount amount) {
+        super(TransactionType.SIMPLE_TRANSFER);
+        this.receiver = receiver;
+        this.amount = amount;
+    }
 
-    private Transfer(AccountAddress receiver, CCDAmount amount) {
-        this.payload = TransferPayload.from(receiver, amount);
+    @Override
+    protected byte[] getPayloadBytes() {
+        val buffer = ByteBuffer.allocate(AccountAddress.BYTES + UInt64.BYTES);
+        buffer.put(receiver.getBytes());
+        buffer.put(amount.getBytes());
+        return buffer.array();
     }
 
     public static Transfer fromBytes(ByteBuffer source) {
-        val receiver = AccountAddress.fromBytes(source);
-        val amount = CCDAmount.fromBytes(source);
-        return new Transfer(receiver, amount);
+        return new Transfer(
+                AccountAddress.fromBytes(source),
+                CCDAmount.fromBytes(source)
+        );
     }
-
-    @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.SIMPLE_TRANSFER;
-    }
-
-    @Override
-    protected byte[] getRawPayloadBytes() {
-        return payload.getBytes();
-    }
-
-    static Transfer createNew(AccountAddress receiver, CCDAmount amount) {
-        return new Transfer(receiver, amount);
-    }
-
 }

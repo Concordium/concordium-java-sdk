@@ -1,5 +1,6 @@
 package com.concordium.sdk.responses.blockitemsummary;
 
+import com.concordium.grpc.v2.SponsorDetails;
 import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.modulelist.ModuleRef;
@@ -33,8 +34,16 @@ public class AccountTransactionDetails {
     private final AccountAddress sender;
 
     /**
+     * The optional sponsor details of the transaction.
+     * Present if the transaction was sponsored.
+     */
+    private final SponsorDetails sponsorDetails;
+
+    /**
      * The amount that was deducted from the sender account
      * as a result of this transaction.
+     * If the transaction was sponsored, this cost is zero, while the cost paid by the sponsor
+     * is in the {@link AccountTransactionDetails#sponsorDetails}
      */
     private final CCDAmount cost;
 
@@ -85,7 +94,7 @@ public class AccountTransactionDetails {
     /**
      * The result of an account transfer if the transaction
      * updated was such one.
-     * Present if the transaction was a {@link TransferTransaction}
+     * Present if the transaction was a {@link Transfer}
      */
     private final TransferredResult accountTransfer;
 
@@ -123,13 +132,13 @@ public class AccountTransactionDetails {
 
     /**
      * The result of a transaction that is transferring CCD with a schedule.
-     * Present if the transaction was a {@link TransferScheduleTransaction}.
+     * Present if the transaction was a {@link TransferSchedule}.
      */
     private final TransferredWithScheduleResult transferredWithSchedule;
 
     /**
      * The result of the sender updating keys.
-     * Present if the transaction was a {@link UpdateCredentialKeysTransaction}.
+     * Present if the transaction was a {@link UpdateCredentialKeys}.
      */
     private final CredentialKeysUpdatedResult credentialKeysUpdated;
 
@@ -140,7 +149,7 @@ public class AccountTransactionDetails {
 
     /**
      * The result of the sender registering data on the chain.
-     * Present if the transaction was a {@link RegisterDataTransaction}.
+     * Present if the transaction was a {@link RegisterData}.
      */
     private final DataRegisteredResult dataRegistered;
 
@@ -158,14 +167,12 @@ public class AccountTransactionDetails {
 
     /**
      * The result of the sender sending an encrypted transfer.
-     * Present if the transaction was an {@link EncryptedTransfer}.
      */
     private final EncryptedTransferResult encryptedTransfer;
 
     /**
      * The result of the sender adding CCD to its encrypted balance from its
      * non-encrypted balance.
-     * Present if the transaction was a {@link TransferToEncrypted}.
      */
     private final EncryptedSelfAmountAddedResult addedToEncryptedBalance;
 
@@ -184,7 +191,13 @@ public class AccountTransactionDetails {
 
     public static AccountTransactionDetails from(com.concordium.grpc.v2.AccountTransactionDetails tx) {
         val sender = AccountAddress.from(tx.getSender());
-        val detailsBuilder = AccountTransactionDetails.builder().sender(sender).cost(CCDAmount.from(tx.getCost())).successful(true);
+        val detailsBuilder = AccountTransactionDetails.builder()
+                .sender(sender)
+                .cost(CCDAmount.from(tx.getCost()))
+                .successful(true);
+        if (tx.hasSponsor()) {
+            detailsBuilder.sponsorDetails(tx.getSponsor());
+        }
         val effects = tx.getEffects();
         switch (effects.getEffectCase()) {
             case NONE:

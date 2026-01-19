@@ -4,7 +4,6 @@ import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.Timestamp;
-import com.concordium.sdk.types.UInt64;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.codec.binary.Hex;
@@ -30,31 +29,33 @@ public class TransferScheduleTest {
                 SignerEntry.from(Index.from(0), Index.from(1),
                         ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
         );
-        val tx = TransactionFactory.newScheduledTransfer()
+        val tx = TransactionFactory
+                .newScheduledTransfer(
+                        TransferSchedule
+                                .builder()
+                                .to(to)
+                                .amount(schedule)
+                                .build()
+                )
                 .sender(sender)
-                .to(to)
-                .schedule(schedule)
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .signer(signer)
-                .build();
+                .sign(signer);
         Payload transfer = tx.getPayload();
 
         val transferBytesLength = transfer.getBytes().length;
         assertEquals(50, transferBytesLength);
 
-        val transferSignedData = transfer.getDataToSign();
+        val transferSignedData = AccountTransaction.getDataToSign(tx.getHeader(), transfer);
         assertEquals("fb6c9e116213a0b7b8f25a694de778ea9ca4f988edb298684fac3ddd98253239", Hex.encodeHexString(transferSignedData));
 
-        val blockItem = transfer.toAccountTransaction();
-
-        val blockItemBytes = blockItem.getBytes();
+        val blockItemBytes = tx.getBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemBytes));
 
-        val blockItemVersionedBytesBytes = blockItem.getVersionedBytes();
+        val blockItemVersionedBytesBytes = tx.getVersionedBytes();
         assertArrayEquals(EXPECTED_BLOCK_ITEM_DEPLOY_MODULE_VERSIONED_DATA_BYTES, TestUtils.signedByteArrayToUnsigned(blockItemVersionedBytesBytes));
 
-        val blockItemHash = blockItem.getHash();
+        val blockItemHash = tx.getHash();
         assertEquals("cd4a0cef4600d3f228eb91874f080e928abbd488e1d7bb16cd96ccdfafd2fee8", blockItemHash.asHex());
     }
 }

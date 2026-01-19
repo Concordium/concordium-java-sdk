@@ -14,8 +14,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 
-public class TokenUpdateTransactionTest {
+public class TokenUpdateTest {
 
     @Test
     @SneakyThrows
@@ -23,9 +24,7 @@ public class TokenUpdateTransactionTest {
         Assert.assertEquals(
                 "9f743fdb00d9697cde98dc3e75621b40535ec84b953e83f8a4116cb2c61519c0",
                 TransactionFactory
-                        .newTokenUpdate()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .payload(
+                        .newTokenUpdate(
                                 TokenUpdate
                                         .builder()
                                         .tokenSymbol("TEST")
@@ -50,10 +49,10 @@ public class TokenUpdateTransactionTest {
                                         )
                                         .build()
                         )
+                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .nonce(Nonce.from(78910))
                         .expiry(Expiry.from(123456))
-                        .signer(TransactionTestHelper.getValidSigner())
-                        .build()
+                        .sign(TransactionTestHelper.getValidSigner())
                         .getHash()
                         .asHex()
         );
@@ -65,9 +64,7 @@ public class TokenUpdateTransactionTest {
         Assert.assertEquals(
                 "3945fe655328c62cc75be7e06cc24c91336b0bd4854d930ed017757c42a3ffc2",
                 TransactionFactory
-                        .newTokenUpdate()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .payload(
+                        .newTokenUpdate(
                                 TokenUpdate
                                         .builder()
                                         .tokenSymbol("TEST")
@@ -89,10 +86,10 @@ public class TokenUpdateTransactionTest {
                                         )
                                         .build()
                         )
+                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .nonce(Nonce.from(78910))
                         .expiry(Expiry.from(123456))
-                        .signer(TransactionTestHelper.getValidSigner())
-                        .build()
+                        .sign(TransactionTestHelper.getValidSigner())
                         .getHash()
                         .asHex()
         );
@@ -104,9 +101,7 @@ public class TokenUpdateTransactionTest {
         Assert.assertEquals(
                 UInt64.from("745"),
                 TransactionFactory
-                        .newTokenUpdate()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .payload(
+                        .newTokenUpdate(
                                 TokenUpdate
                                         .builder()
                                         .tokenSymbol("TEST")
@@ -128,10 +123,10 @@ public class TokenUpdateTransactionTest {
                                         )
                                         .build()
                         )
+                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .nonce(Nonce.from(78910))
                         .expiry(Expiry.from(123456))
-                        .signer(TransactionTestHelper.getValidSigner())
-                        .build()
+                        .sign(TransactionTestHelper.getValidSigner())
                         .getHeader()
                         .getMaxEnergyCost()
         );
@@ -143,9 +138,7 @@ public class TokenUpdateTransactionTest {
         Assert.assertEquals(
                 UInt64.from("828"),
                 TransactionFactory
-                        .newTokenUpdate()
-                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                        .payload(
+                        .newTokenUpdate(
                                 TokenUpdate
                                         .builder()
                                         .tokenSymbol("TEST")
@@ -170,10 +163,10 @@ public class TokenUpdateTransactionTest {
                                         )
                                         .build()
                         )
+                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                         .nonce(Nonce.from(78910))
                         .expiry(Expiry.from(123456))
-                        .signer(TransactionTestHelper.getValidSigner())
-                        .build()
+                        .sign(TransactionTestHelper.getValidSigner())
                         .getHeader()
                         .getMaxEnergyCost()
         );
@@ -205,6 +198,36 @@ public class TokenUpdateTransactionTest {
                         .tokenSymbol("TEST")
                         .operationsSerialized(Hex.decode(serializedOperationsHex))
                         .build()
+        );
+    }
+
+    @Test
+    @SneakyThrows
+    public void testTokenUpdatePayloadSerialization() {
+        val payload = TokenUpdate
+                .builder()
+                .tokenSymbol("TEST")
+                .operation(
+                        TransferTokenOperation
+                                .builder()
+                                .amount(new TokenOperationAmount(new BigDecimal("1.5"), 6))
+                                .recipient(new TaggedTokenHolderAccount(
+                                        AccountAddress.from(
+                                                "3CbvrNVpcHpL7tyT2mhXxQwNWHiPNYEJRgp3CMgEcMyXivms6B"
+                                        )
+                                ))
+                                .build()
+                )
+                .build();
+        val expectedHex = "04544553540000004e81bf687472616e73666572bf66616d6f756e74c482251a0016e36069726563697069656e74d99d73a103582021bc8745c81c07ca7f3fb79a8bd161624cb1d5da788baec13f5a5d9eac3a29b7ffff";
+
+        Assert.assertEquals(
+                expectedHex,
+                Hex.toHexString(payload.getPayloadBytes())
+        );
+        Assert.assertEquals(
+                payload,
+                TokenUpdate.fromBytes(ByteBuffer.wrap(Hex.decode(expectedHex)))
         );
     }
 }

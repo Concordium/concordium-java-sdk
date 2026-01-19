@@ -66,7 +66,7 @@ public abstract class SchemaParameter {
     private boolean initialized;
     /**
      * Type of the parameter.
-     * {@link ParameterType#INIT} to be used with {@link InitContractPayload}.
+     * {@link ParameterType#INIT} to be used with {@link InitContract}.
      * {@link ParameterType#RECEIVE} to be used with {@link UpdateContractPayload} and {@link InvokeInstanceRequest}.
      */
     @JsonIgnore
@@ -79,7 +79,7 @@ public abstract class SchemaParameter {
     private byte[] serializedParameter;
 
     /**
-     * Creates a {@link SchemaParameter} of type {@link ParameterType#INIT} for use with {@link InitContractPayload}.
+     * Creates a {@link SchemaParameter} of type {@link ParameterType#INIT} for use with {@link InitContract}.
      * Parameter must be initialized with {@link SchemaParameter#initialize()} before use.
      *
      * @param schema   {@link Schema} of the module.

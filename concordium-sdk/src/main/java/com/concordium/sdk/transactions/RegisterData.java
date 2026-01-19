@@ -14,12 +14,9 @@ public final class RegisterData extends Payload {
 
     private final Data data;
 
-    private RegisterData(Data data) {
+    public RegisterData(Data data) {
+        super(TransactionType.REGISTER_DATA);
         this.data = data;
-    }
-
-    static RegisterData createNew(Data data) {
-        return new RegisterData(data);
     }
 
     public static RegisterData fromBytes(ByteBuffer source) {
@@ -28,13 +25,7 @@ public final class RegisterData extends Payload {
     }
 
     @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.REGISTER_DATA;
-    }
-
-    @Override
-    protected byte[] getRawPayloadBytes() {
+    protected byte[] getPayloadBytes() {
         return data.getBytes();
     }
-
 }

@@ -1,7 +1,6 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -14,29 +13,13 @@ public class DeployModule extends Payload {
      */
     private final WasmModule module;
 
-
-    private DeployModule(@NonNull final WasmModule module) {
+    public DeployModule(@NonNull final WasmModule module) {
+        super(TransactionType.DEPLOY_MODULE);
         this.module = module;
     }
 
-    /**
-     * It creates a new instance of the DeployModule class.
-     *
-     * @param module        The module to be deployed.
-     * @return A new DeployModule object.
-     */
-    @Builder
-    static DeployModule createNew(final WasmModule module) {
-        return new DeployModule(module);
-    }
-
     @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.DEPLOY_MODULE;
-    }
-
-    @Override
-    protected byte[] getRawPayloadBytes() {
+    protected byte[] getPayloadBytes() {
         return module.getBytes();
     }
 }

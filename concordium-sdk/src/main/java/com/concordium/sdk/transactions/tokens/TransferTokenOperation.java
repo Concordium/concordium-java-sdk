@@ -1,10 +1,7 @@
 package com.concordium.sdk.transactions.tokens;
 
 import com.concordium.sdk.types.UInt64;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.Optional;
@@ -17,6 +14,7 @@ import java.util.Optional;
 @Getter
 @Builder
 @EqualsAndHashCode
+@ToString
 // This is for CBOR serialization to use the generated builder.
 @Jacksonized
 public class TransferTokenOperation implements TokenOperation {

@@ -15,15 +15,18 @@ public class RawTransactionTest {
     @SneakyThrows
     @Test
     public void testRawTransactionCorrespondsToATransfer() {
-        val transfer = TransferTransaction
-                .builder()
+        val transfer = TransactionFactory
+                .newTransfer(
+                        Transfer
+                                .builder()
+                                .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
+                                .amount(CCDAmount.fromMicro(17))
+                                .build()
+                )
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
-                .amount(CCDAmount.fromMicro(17))
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .signer(TransactionTestHelper.getValidSigner())
-                .build();
+                .sign(TransactionTestHelper.getValidSigner());
         assertArrayEquals(TestUtils.EXPECTED_BLOCK_ITEM_VERSIONED_BYTES, signedByteArrayToUnsigned(transfer.getVersionedBytes()));
         assertEquals("6a209eab54720aad71370a6adb4f0661d3606fca25ac544dc0ac0e76e099feba", transfer.getHash().asHex());
 

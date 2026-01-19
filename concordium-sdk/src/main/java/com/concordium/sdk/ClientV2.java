@@ -2,16 +2,16 @@ package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
 import com.concordium.sdk.exceptions.ClientInitializationException;
+import com.concordium.sdk.requests.*;
 import com.concordium.sdk.requests.ConsensusDetailedStatusQuery;
 import com.concordium.sdk.requests.Range;
-import com.concordium.sdk.requests.*;
 import com.concordium.sdk.requests.dumpstart.DumpRequest;
 import com.concordium.sdk.requests.smartcontracts.InvokeInstanceRequest;
+import com.concordium.sdk.responses.*;
 import com.concordium.sdk.responses.AccountIndex;
 import com.concordium.sdk.responses.BakerId;
 import com.concordium.sdk.responses.DelegatorInfo;
 import com.concordium.sdk.responses.DelegatorRewardPeriodInfo;
-import com.concordium.sdk.responses.*;
 import com.concordium.sdk.responses.accountinfo.AccountInfo;
 import com.concordium.sdk.responses.bakersrewardperiod.BakerRewardPeriodInfo;
 import com.concordium.sdk.responses.blockcertificates.BlockCertificates;
@@ -37,15 +37,15 @@ import com.concordium.sdk.responses.poolstatus.BakerPoolStatus;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.smartcontracts.InvokeInstanceResult;
 import com.concordium.sdk.responses.winningbaker.WinningBaker;
-import com.concordium.sdk.transactions.AccountTransaction;
 import com.concordium.sdk.transactions.BlockItem;
-import com.concordium.sdk.transactions.*;
+import com.concordium.sdk.transactions.CCDAmount;
+import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.transactions.smartcontracts.WasmModule;
+import com.concordium.sdk.types.*;
 import com.concordium.sdk.types.AbsoluteBlockHeight;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.Timestamp;
-import com.concordium.sdk.types.*;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
@@ -293,27 +293,17 @@ public final class ClientV2 {
     }
 
     /**
-     * Sends an Account Transaction to the Concordium Node.
+     * Sends a transaction block item to the Concordium Node.
      *
-     * @param accountTransaction Account Transaction to send.
+     * @param transaction Transaction to send.
      * @return Transaction {@link Hash}.
      */
-    public Hash sendTransaction(final AccountTransaction accountTransaction) {
-        val req = ClientV2MapperExtensions.to(accountTransaction);
+    public Hash sendTransaction(final BlockItem transaction) {
+        val req = SendBlockItemRequest.newBuilder()
+                .setRawBlockItem(ByteString.copyFrom(transaction.getBytes()))
+                .build();
         val grpcOutput = this.server().sendBlockItem(req);
 
-        return to(grpcOutput);
-    }
-
-    /**
-     * Sends a credential deployment transaction to the Concordium Node.
-     *
-     * @param credentialDeploymentTransaction the credential deployment to send.
-     * @return Transaction {@link Hash}.
-     */
-    public Hash sendCredentialDeploymentTransaction(CredentialDeploymentTransaction credentialDeploymentTransaction) {
-        val req = ClientV2MapperExtensions.to(credentialDeploymentTransaction);
-        val grpcOutput = this.server().sendBlockItem(req);
         return to(grpcOutput);
     }
 
@@ -378,7 +368,7 @@ public final class ClientV2 {
     /**
      * Retrieves the next {@link Nonce} for an account.
      * This is the {@link Nonce} to use for future transactions
-     * E.g. when using {@link ClientV2#sendTransaction(AccountTransaction)}
+     * E.g. when using {@link ClientV2#sendTransaction(BlockItem)}
      * When this function is queried with a non-existent account it will report the next available account nonce to be 1 and all transactions as finalized.
      *
      * @param address The {@link AccountAddress}

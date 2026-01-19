@@ -22,21 +22,19 @@ public class DeployModuleTest {
     public void testDeployVersionedModule() {
         val module = WasmModule.from(
                 Files.readAllBytes(Paths.get("src/test/java/com/concordium/sdk/binaries/module.wasm.v1")));
-        DeployModuleTransaction tx = TransactionFactory.newDeployModule()
-                .module(module)
+        AccountTransaction tx = TransactionFactory
+                .newDeployModule(new DeployModule(module), UInt64.from(6000))
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .maxEnergyCost(UInt64.from(6000))
-                .signer(getValidSigner())
-                .build();
+                .sign(getValidSigner());
         val payload = tx.getPayload();
 
         assertEquals(87146, payload.getBytes().length);
         assertEquals("5654319dff40a71f183104f8faf126be3dfc242918820381a9ac27838d89e72f",
-                Hex.encodeHexString(payload.getDataToSign()));
+                Hex.encodeHexString(AccountTransaction.getDataToSign(tx.getHeader(), payload)));
         assertEquals("f1ca38ef26bd82515bb4be98b497fa2a33d3474fab27d001c54ac09219c5873f",
-                payload.toAccountTransaction().getHash().asHex());
+                tx.getHash().asHex());
     }
 
     @SneakyThrows
@@ -45,20 +43,18 @@ public class DeployModuleTest {
         val module = WasmModule.from(
                 Files.readAllBytes(Paths.get("src/test/java/com/concordium/sdk/binaries/module.wasm")),
                 WasmModuleVersion.V0);
-        DeployModuleTransaction tx = TransactionFactory.newDeployModule()
-                .module(module)
+        AccountTransaction tx = TransactionFactory
+                .newDeployModule(new DeployModule(module), UInt64.from(6000))
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
-                .maxEnergyCost(UInt64.from(6000))
-                .signer(getValidSigner())
-                .build();
+                .sign(getValidSigner());
         val payload = tx.getPayload();
 
         assertEquals(41541, payload.getBytes().length);
         assertEquals("f010b82e89fda27e785b3804e3a5cf474ee7601836f0daf355b67c5577d81c3a",
-                Hex.encodeHexString(payload.getDataToSign()));
+                Hex.encodeHexString(AccountTransaction.getDataToSign(tx.getHeader(), payload)));
         assertEquals("5da6812f05b77f85f86b76f058a3328afba3a6888b66bbb6f27703a68bb201ec",
-                payload.toAccountTransaction().getHash().asHex());
+                tx.getHash().asHex());
     }
 }

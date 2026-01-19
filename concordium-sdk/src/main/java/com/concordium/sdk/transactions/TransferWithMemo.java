@@ -1,10 +1,8 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.types.AccountAddress;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.val;
+import com.concordium.sdk.types.UInt64;
+import lombok.*;
 
 import java.nio.ByteBuffer;
 
@@ -12,17 +10,28 @@ import java.nio.ByteBuffer;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class TransferWithMemo extends Payload {
+    private final AccountAddress receiver;
+    private final CCDAmount amount;
+    private final Memo memo;
 
-    private final static TransactionType TYPE = TransactionType.TRANSFER_WITH_MEMO;
-
-    private final TransferWithMemoPayload payload;
-
-    private TransferWithMemo(AccountAddress receiver, CCDAmount amount, Memo memo) {
-        this.payload = TransferWithMemoPayload.from(receiver, amount, memo);
+    @Builder
+    public TransferWithMemo(@NonNull AccountAddress receiver,
+                            @NonNull CCDAmount amount,
+                            @NonNull Memo memo) {
+        super(TransactionType.TRANSFER_WITH_MEMO);
+        this.receiver = receiver;
+        this.amount = amount;
+        this.memo = memo;
     }
 
-    static TransferWithMemo createNew(AccountAddress receiver, CCDAmount amount, Memo memo) {
-        return new TransferWithMemo(receiver, amount, memo);
+    @Override
+    protected byte[] getPayloadBytes() {
+        val buffer = ByteBuffer.allocate(AccountAddress.BYTES + UInt64.BYTES + memo.getLength());
+        buffer.put(getReceiver().getBytes());
+        buffer.put(memo.getBytes());
+        buffer.put(getAmount().getValue().getBytes());
+
+        return buffer.array();
     }
 
     public static TransferWithMemo fromBytes(ByteBuffer source) {
@@ -30,15 +39,5 @@ public class TransferWithMemo extends Payload {
         val memo = Memo.fromBytes(source);
         val amount = CCDAmount.fromBytes(source);
         return new TransferWithMemo(receiver, amount, memo);
-    }
-
-    @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.TRANSFER_WITH_MEMO;
-    }
-
-    @Override
-    protected byte[] getRawPayloadBytes() {
-        return payload.getBytes();
     }
 }

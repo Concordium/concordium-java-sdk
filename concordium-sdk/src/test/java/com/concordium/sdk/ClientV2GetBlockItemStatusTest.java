@@ -37,11 +37,20 @@ public class ClientV2GetBlockItemStatusTest {
     private static final int TRANSACTION_INDEX = 5;
     private static final int ENERGY_COST = 500000;
     private static final String SENDER_ADDRESS = "48x2Uo8xCMMxwGuSQnwbqjzKtVqK5MaUud4vG7QEUgDmYkV85e";
+    private static final String SPONSOR_ADDRESS = "3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc";
     private static final String BLOCK_HASH = "d1bf95c1a2acc0947ec3900040c2ba172071aa759adf269c55ebb896aa6825c2";
     private static final String TRANSACTION_HASH = "1ea074f0e12e18684f2d6bbf2039c6db32d2fd5c28e6ba74c8e92f36e88b1901";
     private static final long TRANSACTION_COST = 123121;
 
     private static final long TRANSFERRED = TRANSACTION_COST - 42;
+
+    private static final SponsorDetails SPONSOR_DETAILS = SponsorDetails.newBuilder()
+            .setCost(Amount.newBuilder()
+                    .setValue(TRANSACTION_COST))
+            .setSponsor(
+                    to(AccountAddress
+                            .from(SPONSOR_ADDRESS)))
+            .build();
 
     private static final BlockItemStatus GRPC_BLOCK_ITEM_STATUS = BlockItemStatus.newBuilder()
             .setFinalized(
@@ -78,8 +87,8 @@ public class ClientV2GetBlockItemStatusTest {
                                                                                                             .newBuilder()
                                                                                                             .setReceiver(to(AccountAddress.from(SENDER_ADDRESS)))
                                                                                                             .setAmount(to(CCDAmount.fromMicro(TRANSFERRED)))
-                                                                                                            .build())))
-
+                                                                                                            .build()))
+                                                                            .setSponsor(SPONSOR_DETAILS))
                                             )
 
                             )).build();
@@ -96,6 +105,7 @@ public class ClientV2GetBlockItemStatusTest {
                             .successful(true)
                             .type(TransactionResultEventType.TRANSFERRED)
                             .sender(AccountAddress.from(SENDER_ADDRESS))
+                            .sponsorDetails(SPONSOR_DETAILS)
                             .cost(CCDAmount.fromMicro(TRANSACTION_COST))
                             .accountTransfer(TransferredResult
                                     .builder()

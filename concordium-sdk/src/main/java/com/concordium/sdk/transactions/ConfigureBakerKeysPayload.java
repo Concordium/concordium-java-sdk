@@ -1,24 +1,26 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.crypto.bakertransactions.*;
+import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
+import com.concordium.sdk.crypto.bakertransactions.ConfigureBakerKeys;
+import com.concordium.sdk.crypto.bakertransactions.ConfigureBakerKeysJniInput;
+import com.concordium.sdk.crypto.bakertransactions.ConfigureBakerKeysJniOutput;
 import com.concordium.sdk.types.AccountAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Hex;
 
 /**
- * The payload of ConfigureBakerKeysPayload
+ * Baker keys with proofs.
  */
 @Getter
 @EqualsAndHashCode
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConfigureBakerKeysPayload {
     private final byte[] bytes;
-
-    private ConfigureBakerKeysPayload(byte[] bytes) {
-        this.bytes = bytes;
-    }
 
     @JsonCreator
     public static ConfigureBakerKeysPayload from(ConfigureBakerKeysJniOutput jniOutput) {
@@ -41,8 +43,7 @@ public class ConfigureBakerKeysPayload {
         // Call the JNI function to generate the configure baker keys payload
         ConfigureBakerKeysJniOutput output = ConfigureBakerKeys.generateConfigureBakerKeysPayload(input);
         // Create a ConfigureBakerKeysPayload object with the JNI output
-        ConfigureBakerKeysPayload keysWithProofs = ConfigureBakerKeysPayload.from(output);
-        return keysWithProofs;
+        return ConfigureBakerKeysPayload.from(output);
     }
 
     @Override

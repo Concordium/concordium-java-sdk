@@ -1,6 +1,10 @@
 package com.concordium.sdk.transactions;
 
 
+import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
+import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
+import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
+import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
 
@@ -11,7 +15,6 @@ import java.nio.ByteBuffer;
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)
-@RequiredArgsConstructor
 @ToString
 public final class TransferToPublic extends Payload {
 
@@ -37,13 +40,19 @@ public final class TransferToPublic extends Payload {
      */
     private final SecToPubAmountTransferProof proof;
 
-    @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.TRANSFER_TO_PUBLIC;
+    public TransferToPublic(@NonNull EncryptedAmount remainingAmount,
+                            @NonNull CCDAmount transferAmount,
+                            @NonNull UInt64 index,
+                            @NonNull SecToPubAmountTransferProof proof) {
+        super(TransactionType.TRANSFER_TO_PUBLIC);
+        this.remainingAmount = remainingAmount;
+        this.transferAmount = transferAmount;
+        this.index = index;
+        this.proof = proof;
     }
 
     @Override
-    protected byte[] getRawPayloadBytes() {
+    protected byte[] getPayloadBytes() {
         val proofBytes = this.proof.getBytes();
         val remainingAmountBytes = this.remainingAmount.getBytes();
         val buffer = ByteBuffer.allocate(remainingAmountBytes.length
@@ -58,11 +67,23 @@ public final class TransferToPublic extends Payload {
         return buffer.array();
     }
 
-    static TransferToPublic createNew(
-            EncryptedAmount remainingAmount,
-            CCDAmount transferAmount,
-            UInt64 index,
-            SecToPubAmountTransferProof proof) {
-        return new TransferToPublic(remainingAmount, transferAmount, index, proof);
+    @Builder
+    public static TransferToPublic from(@NonNull CryptographicParameters cryptographicParameters,
+                                        @NonNull AccountEncryptedAmount accountEncryptedAmount,
+                                        @NonNull ElgamalSecretKey accountSecretKey,
+                                        @NonNull CCDAmount amountToMakePublic) {
+        val jniOutput = EncryptedTransfers.createSecToPubTransferPayload(
+                cryptographicParameters,
+                accountEncryptedAmount,
+                accountSecretKey,
+                amountToMakePublic
+        );
+
+        return new TransferToPublic(
+                jniOutput.getRemainingAmount(),
+                jniOutput.getTransferAmount(),
+                jniOutput.getIndex(),
+                jniOutput.getProof()
+        );
     }
 }

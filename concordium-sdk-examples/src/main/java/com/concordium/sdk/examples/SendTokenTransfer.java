@@ -68,26 +68,21 @@ public class SendTokenTransfer implements Callable<Integer> {
         var nonce = senderInfo.getNonce();
         var txnHash = client.sendTransaction(
                 TransactionFactory
-                        .newTokenUpdate()
-                        .sender(sender)
-                        .payload(
-                                TokenUpdate
-                                        .builder()
-                                        .tokenSymbol(tokenSymbol)
-                                        .operation(
-                                                TransferTokenOperation
-                                                        .builder()
-                                                        .recipient(new TaggedTokenHolderAccount(receiver))
-                                                        .amount(amount)
-                                                        .memo(CborMemo.from("You must see a multi-byte white woman scientist emoji: 👩🏻‍🔬"))
-                                                        .build()
-                                        )
-                                        .build()
-                        )
+                        .newTokenUpdate( TokenUpdate
+                                .builder()
+                                .tokenSymbol(tokenSymbol)
+                                .operation(
+                                        TransferTokenOperation
+                                                .builder()
+                                                .recipient(new TaggedTokenHolderAccount(receiver))
+                                                .amount(amount)
+                                                .memo(CborMemo.from("You must see a multi-byte white woman scientist emoji: 👩🏻‍🔬"))
+                                                .build()
+                                )
+                                .build())
                         .nonce(nonce)
                         .expiry(expiry)
-                        .signer(signer)
-                        .build()
+                        .sign(signer)
         );
         System.out.println(txnHash);
         Optional<FinalizedBlockItem> finalizedBlockItem = client.waitUntilFinalized(txnHash, this.timeout);

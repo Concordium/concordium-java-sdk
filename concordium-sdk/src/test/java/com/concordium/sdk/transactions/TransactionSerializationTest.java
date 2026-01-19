@@ -4,17 +4,17 @@ import com.concordium.sdk.cis2.Cis2Transfer;
 import com.concordium.sdk.cis2.SerializationUtils;
 import com.concordium.sdk.cis2.TokenAmount;
 import com.concordium.sdk.cis2.TokenId;
-import com.concordium.sdk.cis2.events.Cis2Event;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
-import com.concordium.sdk.types.*;
+import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.ContractAddress;
+import com.concordium.sdk.types.Nonce;
+import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.Lists;
 import lombok.SneakyThrows;
-import lombok.val;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.util.Arrays;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -27,13 +27,13 @@ public class TransactionSerializationTest {
         ByteBuffer serializedBi = ByteBuffer.wrap(bi.getVersionedBytes());
         BlockItem deserializedBlockItem = BlockItem.fromVersionedBytes(serializedBi);
         assertEquals("Block items should match", bi, deserializedBlockItem);
-        if(deserializedBlockItem.getBlockItemType() == BlockItemType.ACCOUNT_TRANSACTION) {
-            AccountTransaction accountTransaction = (AccountTransaction)deserializedBlockItem;
-            TransactionType transactionType = accountTransaction.getPayload().getTransactionType();
-            if(transactionType == TransactionType.SIMPLE_TRANSFER) {
+        if (deserializedBlockItem.getBlockItemType() == BlockItemType.ACCOUNT_TRANSACTION) {
+            AccountTransaction accountTransaction = (AccountTransaction) deserializedBlockItem;
+            TransactionType transactionType = accountTransaction.getPayload().getType();
+            if (transactionType == TransactionType.SIMPLE_TRANSFER) {
                 Transfer payload = (Transfer) accountTransaction.getPayload();
-                assertEquals(payload.getPayload().getAmount(), CCDAmount.fromMicro(17));
-            }else {
+                assertEquals(payload.getAmount(), CCDAmount.fromMicro(17));
+            } else {
                 throw new RuntimeException("Should be a simple transfer");
             }
         } else {
@@ -55,13 +55,13 @@ public class TransactionSerializationTest {
         TransactionHeader header = ((AccountTransaction) blockItem).getHeader();
         assertEquals(AccountAddress.from("3LFSxgiU4d7i1irUx1pNrQFFC74RxHBRaNztKWKDVJ1FJN8UP1"), header.getSender());
         assertEquals(Nonce.from(1), header.getNonce());
-        assertEquals(UInt64.from(1690898672), header.getExpiry());
+        assertEquals(Expiry.from(1690898672), header.getExpiry());
         // check payload
-        TransactionType transactionType = payload.getTransactionType();
+        TransactionType transactionType = payload.getType();
         assertEquals(TransactionType.SIMPLE_TRANSFER, transactionType);
         Transfer simpleTransfer = (Transfer) payload;
-        assertEquals(CCDAmount.fromMicro(0), simpleTransfer.getPayload().getAmount());
-        assertEquals(AccountAddress.from("2xM9xfrWisXeg4nBSyL4XzpGoZsx3L9otPdotcvp7euj3SB4y2"), simpleTransfer.getPayload().getReceiver());
+        assertEquals(CCDAmount.fromMicro(0), simpleTransfer.getAmount());
+        assertEquals(AccountAddress.from("2xM9xfrWisXeg4nBSyL4XzpGoZsx3L9otPdotcvp7euj3SB4y2"), simpleTransfer.getReceiver());
     }
 
     @Test
@@ -78,14 +78,14 @@ public class TransactionSerializationTest {
         TransactionHeader header = ((AccountTransaction) blockItem).getHeader();
         assertEquals(AccountAddress.from("4aM9746fwvhvh567MWWvmAgEtYmN9TwfhdEbWLRY8FzomGrtps"), header.getSender());
         assertEquals(Nonce.from(5), header.getNonce());
-        assertEquals(UInt64.from(1690969995), header.getExpiry());
+        assertEquals(Expiry.from(1690969995), header.getExpiry());
         // check payload
-        TransactionType transactionType = payload.getTransactionType();
+        TransactionType transactionType = payload.getType();
         assertEquals(TransactionType.TRANSFER_WITH_MEMO, transactionType);
         TransferWithMemo memoTransfer = (TransferWithMemo) payload;
-        assertEquals(CCDAmount.from(200), memoTransfer.getPayload().getAmount());
-        assertEquals(AccountAddress.from("3NxJgE2G3pfbVk1N1FuQdBqxsketNdYAudm6nNnNtAw2eDfvTi"), memoTransfer.getPayload().getReceiver());
-        assertEquals(Memo.from(new byte[]{100, 116, 101, 115, 116}), memoTransfer.getPayload().getMemo());
+        assertEquals(CCDAmount.from(200), memoTransfer.getAmount());
+        assertEquals(AccountAddress.from("3NxJgE2G3pfbVk1N1FuQdBqxsketNdYAudm6nNnNtAw2eDfvTi"), memoTransfer.getReceiver());
+        assertEquals(Memo.from(new byte[]{100, 116, 101, 115, 116}), memoTransfer.getMemo());
     }
 
     @SneakyThrows
@@ -102,9 +102,9 @@ public class TransactionSerializationTest {
         TransactionHeader header = ((AccountTransaction) blockItem).getHeader();
         assertEquals(AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), header.getSender());
         assertEquals(Nonce.from(21), header.getNonce());
-        assertEquals(UInt64.from(1706724577), header.getExpiry());
+        assertEquals(Expiry.from(1706724577), header.getExpiry());
         // check payload
-        TransactionType transactionType = payload.getTransactionType();
+        TransactionType transactionType = payload.getType();
         assertEquals(TransactionType.UPDATE_SMART_CONTRACT_INSTANCE, transactionType);
         UpdateContract updateContract = (UpdateContract) payload;
         assertEquals(CCDAmount.from(0), updateContract.getAmount());
@@ -124,23 +124,23 @@ public class TransactionSerializationTest {
     private static final String BI_TRANSFER_WITH_MEMO = "000001000100004052545c8418bf3228469cde4aa33ed8bb646aaffc6595c7bfcc1c0a4f353c1b1b874f5bd54a4e953c4a38e6529ae2e1b9a44597505d0676b8f7d15741b62fba00d6cea90316c56d994abd205876e423c6f6c9488e2d7c4f0b044539de501f1174000000000000000500000000000001fc000000300000000064ca278b16393d88b218e44301cceb22bd64184edba56996498523710ebb43b4cf430db89700056474657374000000000bebc200";
 
     private static final String BI_CONTRACT_UPDATE = "0000010001000040a3e911353ae8558d42b149683c5f96c5bd2fe7a7b03f6ad879f9fe7c12f95b6bd51fba0fd305d680a37a0555c9d281e3ba5c5091f6584e784f7bb1c73855b6089e15fc57bbe167411d4d9c0686e31e8e937d751625972f7c566de4a97f650dc500000000000000150000000000002831000000810000000065ba8ce102000000000000000000000000000024ae000000000000000000196575726f655f737461626c65636f696e2e7472616e73666572004b010000a995a405009e15fc57bbe167411d4d9c0686e31e8e937d751625972f7c566de4a97f650dc500fd3dd07c83e42461554cf0dd90d73c1ff04531fc2b9c90b9762df8793319e48d0000";
-    private static final BlockItem bi = Transfer.createNew(
-                    AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"),
-                    CCDAmount.fromMicro(17))
-            .withHeader(TransactionHeader
-                    .builder()
-                    .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
-                    .Nonce(Nonce.from(78910))
-                    .expiry(UInt64.from(123456))
-                    .build())
-            .signWith(
+    private static final BlockItem bi = TransactionFactory
+            .newTransfer(
+                    Transfer
+                            .builder()
+                            .amount(CCDAmount.fromMicro(17))
+                            .receiver(AccountAddress.from("3hYXYEPuGyhFcVRhSk2cVgKBhzVcAryjPskYk4SecpwGnoHhuM"))
+                            .build()
+            )
+            .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
+            .nonce(Nonce.from(78910))
+            .expiry(Expiry.from(123456))
+            .sign(
                     TransactionSigner.from(
                             SignerEntry.from(Index.from(0), Index.from(0),
                                     ED25519SecretKey.from("7100071c835a0a35e86dccba7ee9d10b89e36d1e596771cdc8ee36a17f7abbf2")),
                             SignerEntry.from(Index.from(0), Index.from(1),
                                     ED25519SecretKey.from("cd20ea0127cddf77cf2c20a18ec4516a99528a72e642ac7deb92131a9d108ae9"))
                     )
-            ).toBlockItem();
-
-
+            );
 }

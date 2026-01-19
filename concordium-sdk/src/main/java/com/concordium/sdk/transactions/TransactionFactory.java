@@ -1,229 +1,466 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.crypto.bakertransactions.BakerKeys;
-import com.concordium.sdk.crypto.elgamal.ElgamalSecretKey;
-import com.concordium.sdk.crypto.encryptedtransfers.EncryptedTransfers;
-import com.concordium.sdk.responses.accountinfo.AccountEncryptedAmount;
-import com.concordium.sdk.responses.cryptographicparameters.CryptographicParameters;
+import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
+import com.concordium.sdk.types.Nonce;
+import com.concordium.sdk.types.UInt32;
+import com.concordium.sdk.types.UInt64;
+import lombok.AccessLevel;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 
 /**
- * TransactionFactory provides convenient functions for building a
- * {@link Transaction}
+ * Provides convenient builders for account transactions.
+ * <br><br>
+ * Example: Create a CCD transfer transaction
+ * <pre>
+ * {@code
+ * AccountTransaction tx =
+ *      TransactionFactory
+ *          .newTransfer(new Transfer(receiverAccountAddress, ccdAmount))
+ *          .sender(senderAccountAddress)
+ *          .nonce(senderNonce)
+ *          .expiry(Expiry.createNew().addMinutes(5))
+ *          .sign(senderSigner)
+ * }
+ * </pre>
+ * <br>
+ * Example: Create a sponsored CCD transfer transaction on the sponsor's server:
+ * <pre>
+ * {@code
+ * PartiallySignedSponsoredTransaction partiallySignedTx =
+ *      TransactionFactory
+ *          .newTransfer(new Transfer(receiverAccountAddress, ccdAmount))
+ *          .sender(senderAccountAddress)
+ *          .nonce(senderNonce)
+ *          .expiry(Expiry.createNew().addMinutes(5))
+ *          .sponsoredBy(sponsorAccountAddress)
+ *          .signAsSponsor(sponsorSigner)
+ * }
+ * </pre>
+ <br>
+ * Example: Complete a sponsored CCD transfer transaction in the sender's wallet:
+ * <pre>
+ * {@code
+ * AccountTransactionV1 tx =
+ *      TransactionFactory
+ *          .completeSponsoredTransaction(partiallySignedTx)
+ *          .asSender(senderSigner)
+ * }
+ * </pre>
  */
-@SuppressWarnings("DeprecatedIsStillUsed")
 public class TransactionFactory {
 
     /**
-     * Creates a new {@link TransferTransaction.TransferTransactionBuilder} for
-     * creating a {@link TransferTransaction}
-     *
-     * @return the builder for a {@link TransferTransaction}
+     * Complete a partially signed sponsored transaction.
      */
-    public static TransferTransaction.TransferTransactionBuilder newTransfer() {
-        return TransferTransaction.builder();
+    public static SponsoredCompletionBuilder completeSponsoredTransaction(@NonNull PartiallySignedSponsoredTransaction partiallySigned) {
+        return new SponsoredCompletionBuilder(partiallySigned);
     }
 
     /**
-     * Creates a new {@link TransferWithMemoTransaction.TransferWithMemoTransactionBuilder} for
-     * creating a {@link TransferWithMemoTransaction}
-     *
-     * @return the builder for a {@link TransferWithMemoTransaction}
+     * General account transaction builder. Using it requires specifying
+     * the cost (max energy that can be spent on executing this transaction) explicitly.
+     * <br>
+     * For specific transactions, such as transfer, protocol-level token transaction, etc. use dedicated builders.
      */
-    public static TransferWithMemoTransaction.TransferWithMemoTransactionBuilder newTransferWithMemo() {
-        return TransferWithMemoTransaction.builder();
+    public static PayloadSubmissionBuilder newPayloadSubmission(@NonNull Payload payload,
+                                                                @NonNull UInt64 transactionSpecificCost) {
+        return new PayloadSubmissionBuilder(payload, transactionSpecificCost);
     }
 
     /**
-     * Creates a new {@link RegisterDataTransaction.RegisterDataTransactionBuilder} for
-     * creating a {@link RegisterDataTransaction}
-     *
-     * @return the builder for a {@link RegisterDataTransaction}
+     * @return A builder for a CCD transfer transaction.
      */
-    public static RegisterDataTransaction.RegisterDataTransactionBuilder newRegisterData() {
-        return RegisterDataTransaction.builder();
+    public static PayloadSubmissionBuilder newTransfer(@NonNull Transfer transfer) {
+        return newPayloadSubmission(transfer, TransactionTypeCost.TRANSFER_BASE_COST.getValue());
     }
 
     /**
-     * Creates a new {@link InitContractTransaction.InitContractTransactionBuilder} for
-     * creating a {@link InitContractTransaction}
-     *
-     * @return the builder for a {@link InitContractTransaction}
+     * @return A builder for a CCD transfer transaction with a memo (short text message or binary data).
      */
-    public static InitContractTransaction.InitContractTransactionBuilder newInitContract() {
-        return InitContractTransaction.builder();
-    }
-
-
-    /**
-     * Creates a new {@link UpdateContractTransaction.UpdateContractTransactionBuilder} for
-     * creating a {@link UpdateContractTransaction}
-     *
-     * @return the builder for a {@link UpdateContractTransaction}
-     */
-    public static UpdateContractTransaction.UpdateContractTransactionBuilder newUpdateContract() {
-        return UpdateContractTransaction.builder();
+    public static PayloadSubmissionBuilder newTransferWithMemo(@NonNull TransferWithMemo transferWithMemo) {
+        return newPayloadSubmission(transferWithMemo, TransactionTypeCost.TRANSFER_WITH_MEMO.getValue());
     }
 
     /**
-     * Creates a new {@link DeployModuleTransaction.DeployModuleTransactionBuilder} for
-     * creating a {@link DeployModuleTransaction}
-     *
-     * @return the builder for a {@link DeployModuleTransaction}
+     * @return A builder for a data submission transaction.
      */
-    public static DeployModuleTransaction.DeployModuleTransactionBuilder newDeployModule() {
-        return DeployModuleTransaction.builder();
-    }
-
-
-    /**
-     * Creates a new {@link TransferScheduleTransaction.TransferScheduleTransactionBuilder} for
-     * creating a {@link TransferScheduleTransaction}
-     *
-     * @return the builder for a {@link TransferScheduleTransaction}
-     */
-    public static TransferScheduleTransaction.TransferScheduleTransactionBuilder newScheduledTransfer() {
-        return TransferScheduleTransaction.builder();
+    public static PayloadSubmissionBuilder newRegisterData(@NonNull RegisterData registerData) {
+        return newPayloadSubmission(registerData, TransactionTypeCost.REGISTER_DATA.getValue());
     }
 
     /**
-     * Creates a new {@link TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder} for
-     * creating a {@link TransferScheduleWithMemoTransaction}
-     *
-     * @return the builder for a {@link TransferScheduleWithMemoTransaction}
+     * @param maxContractExecutionEnergy max energy that can be spent on the initialization
+     * @return A builder for a smart contract initialization transaction.
      */
-    public static TransferScheduleWithMemoTransaction.TransferScheduleWithMemoTransactionBuilder newScheduledTransferWithMemo() {
-        return TransferScheduleWithMemoTransaction.builder();
+    public static PayloadSubmissionBuilder newInitContract(@NonNull InitContract initContract,
+                                                           @NonNull UInt64 maxContractExecutionEnergy) {
+        return newPayloadSubmission(initContract, maxContractExecutionEnergy);
     }
 
     /**
-     * Creates a new {@link UpdateCredentialKeysTransaction.UpdateCredentialKeysTransactionBuilder} for
-     * creating a {@link UpdateCredentialKeysTransaction}
-     *
-     * @return the builder for a {@link UpdateCredentialKeysTransaction}
+     * @param maxContractExecutionEnergy max energy that can be spent on the update
+     * @return A builder for an existing smart contract state update transaction.
      */
-    public static UpdateCredentialKeysTransaction.UpdateCredentialKeysTransactionBuilder newUpdateCredentialKeys() {
-        return UpdateCredentialKeysTransaction.builder();
+    public static PayloadSubmissionBuilder newUpdateContract(@NonNull UpdateContract updateContract,
+                                                             @NonNull UInt64 maxContractExecutionEnergy) {
+        return newPayloadSubmission(updateContract, maxContractExecutionEnergy);
     }
 
     /**
-     * Creates a new {@link TransferToPublicTransaction.TransferToPublicTransactionBuilder} for
-     * creating a {@link TransferToPublicTransaction}
-     *
-     * @return the builder for a {@link TransferToPublicTransaction}
+     * @param maxContractExecutionEnergy max energy that can be spent on the deployment
+     * @return A builder for compiled smart contract module deployment transaction.
      */
-    public static TransferToPublicTransaction.TransferToPublicTransactionBuilder newTransferToPublic() {
-        return TransferToPublicTransaction.builder();
+    public static PayloadSubmissionBuilder newDeployModule(@NonNull DeployModule deployModule,
+                                                           @NonNull UInt64 maxContractExecutionEnergy) {
+        return newPayloadSubmission(deployModule, maxContractExecutionEnergy);
     }
 
     /**
-     * Creates a new {@link TransferToPublicTransaction.TransferToPublicTransactionBuilder} for
-     * creating a {@link TransferToPublicTransaction}
-     *
-     * @return the builder for a {@link TransferToPublicTransaction}
+     * @return A builder for a scheduled (delayed) CCD transfer transaction.
      */
-    public static TransferToPublicTransaction.TransferToPublicTransactionBuilder newTransferToPublic(
-            CryptographicParameters cryptographicParameters,
-            AccountEncryptedAmount accountEncryptedAmount,
-            ElgamalSecretKey accountSecretKey,
-            CCDAmount amountToMakePublic) {
+    public static PayloadSubmissionBuilder newScheduledTransfer(@NonNull TransferSchedule transferSchedule) {
+        UInt64 cost = UInt64.from((long) transferSchedule.getAmount().length * (300 + 64));
+        return newPayloadSubmission(transferSchedule, cost);
+    }
 
-        val jniOutput = EncryptedTransfers.createSecToPubTransferPayload(
-                cryptographicParameters,
-                accountEncryptedAmount,
-                accountSecretKey,
-                amountToMakePublic
+    /**
+     * @return A builder for a scheduled (delayed) CCD transfer transaction with a memo (short text message or binary data).
+     */
+    public static PayloadSubmissionBuilder newScheduledTransferWithMemo(@NonNull TransferScheduleWithMemo transferScheduleWithMemo) {
+        UInt64 cost = UInt64.from((long) transferScheduleWithMemo.getAmount().length * (300 + 64));
+        return newPayloadSubmission(transferScheduleWithMemo, cost);
+    }
+
+    /**
+     * @return A builder for a specific credential signing keys update transaction.
+     */
+    public static PayloadSubmissionBuilder newUpdateCredentialKeys(@NonNull UpdateCredentialKeys updateCredentialKeys) {
+        val cost = UInt64.from(500L * updateCredentialKeys.getNumExistingCredentials().getValue() +
+                100L * updateCredentialKeys.getKeys().getKeys().size());
+        return newPayloadSubmission(updateCredentialKeys, cost);
+    }
+
+    /**
+     * @return A builder for an unshielding transaction (making certain encrypted CCD amount public again).
+     */
+    public static PayloadSubmissionBuilder newTransferToPublic(@NonNull TransferToPublic transferToPublic) {
+        return newPayloadSubmission(transferToPublic, TransactionTypeCost.TRANSFER_TO_PUBLIC.getValue());
+    }
+
+    /**
+     * A builder for a validator (baker) set up or update transaction.
+     */
+    public static PayloadSubmissionBuilder newConfigureBaker(@NonNull ConfigureBaker configureBaker) {
+        val cost = (configureBaker.getKeysWithProofs() != null)
+                ? TransactionTypeCost.CONFIGURE_BAKER_WITH_PROOFS.getValue()
+                : TransactionTypeCost.CONFIGURE_BAKER.getValue();
+        return newPayloadSubmission(configureBaker, cost);
+    }
+
+    /**
+     * A builder for an existing validator (baker) stake update transaction.
+     */
+    public static PayloadSubmissionBuilder newUpdateBakerStake(@NonNull CCDAmount stake) {
+        return newConfigureBaker(
+                ConfigureBaker
+                        .builder()
+                        .capital(stake)
+                        .build()
         );
-
-        return TransferToPublicTransaction
-                .builder()
-                .transferAmount(jniOutput.getTransferAmount())
-                .index(jniOutput.getIndex())
-                .proof(jniOutput.getProof())
-                .remainingAmount(jniOutput.getRemainingAmount());
     }
 
     /**
-     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
-     * creating a {@link ConfigureBakerTransaction}
-     *
-     * @return the builder for a {@link ConfigureBakerTransaction}
+     * A builder for an existing validator (baker) removal transaction.
      */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newConfigureBaker() {
-        return ConfigureBakerTransaction.builder();
+    public static PayloadSubmissionBuilder newRemoveBaker() {
+        return newUpdateBakerStake(CCDAmount.from(0));
     }
 
     /**
-     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
-     * creating a {@link ConfigureBakerTransaction} to remove Baker
-     *
-     * @return the builder for a {@link ConfigureBakerTransaction}
+     * A builder for an existing validator (baker) restake preference update transaction.
      */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newRemoveBaker() {
-        val payload = ConfigureBakerPayload.builder()
-                .capital(CCDAmount.fromMicro(0))
-                .build();
-        return ConfigureBakerTransaction.builder().payload(payload);
+    public static PayloadSubmissionBuilder newUpdateBakerRestakeEarnings(boolean restakeEarnings) {
+        return newConfigureBaker(
+                ConfigureBaker
+                        .builder()
+                        .restakeEarnings(restakeEarnings)
+                        .build()
+        );
     }
 
     /**
-     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
-     * creating a {@link ConfigureBakerTransaction} to update Baker Stake
-     *
-     * @return the builder for a {@link ConfigureBakerTransaction}
+     * A builder for an existing validator (baker) keys update transaction.
      */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerStake(CCDAmount stake) {
-        val payload = ConfigureBakerPayload.builder()
-                .capital(stake)
-                .build();
-        return ConfigureBakerTransaction.builder().payload(payload);
+    public static PayloadSubmissionBuilder newUpdateBakerKeys(@NonNull ConfigureBakerKeysPayload keysWithProofs) {
+        return newConfigureBaker(
+                ConfigureBaker
+                        .builder()
+                        .keysWithProofs(keysWithProofs)
+                        .build()
+        );
     }
 
     /**
-     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
-     * creating a {@link ConfigureBakerTransaction} to update restakeEarnings
-     *
-     * @return the builder for a {@link ConfigureBakerTransaction}
+     * A builder for a delegation set up or update transaction.
      */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerRestakeEarnings(boolean restakeEarnings) {
-        val payload = ConfigureBakerPayload.builder()
-                .restakeEarnings(restakeEarnings)
-                .build();
-        return ConfigureBakerTransaction.builder().payload(payload);
+    public static PayloadSubmissionBuilder newConfigureDelegation(@NonNull ConfigureDelegation configureDelegation) {
+        return newPayloadSubmission(configureDelegation, TransactionTypeCost.CONFIGURE_DELEGATION.getValue());
     }
 
     /**
-     * Creates a new {@link ConfigureBakerTransaction.ConfigureBakerTransactionBuilder} for
-     * creating a {@link ConfigureBakerTransaction} to update baker keys
-     *
-     * @return the builder for a {@link ConfigureBakerTransaction}
+     * A builder for a protocol-level token state update transaction.
+     * This is the entry point, while the actual token operations (transfer, etc.) are defined
+     * by the {@link TokenUpdate} payload.
      */
-    public static ConfigureBakerTransaction.ConfigureBakerTransactionBuilder newUpdateBakerKeys(AccountAddress accountAddress, BakerKeys bakerKeys) {
-        val payload = ConfigureBakerPayload.builder()
-                .keysWithProofs(ConfigureBakerKeysPayload.getNewConfigureBakerKeysPayload(accountAddress, bakerKeys))
-                .build();
-        return ConfigureBakerTransaction.builder().payload(payload);
+    public static PayloadSubmissionBuilder newTokenUpdate(@NonNull TokenUpdate tokenUpdate) {
+        UInt64 cost = TransactionTypeCost.TOKEN_UPDATE_BASE_COST.getValue()
+                .plus(tokenUpdate.getOperationsBaseCost());
+        return newPayloadSubmission(tokenUpdate, cost);
     }
 
-    /**
-     * Creates a new {@link ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder} for
-     * creating a {@link ConfigureDelegationTransaction} to update baker keys
-     *
-     * @return the builder for a {@link ConfigureDelegationTransaction}
-     */
-    public static ConfigureDelegationTransaction.ConfigureDelegationTransactionBuilder newConfigureDelegation() {
-        return ConfigureDelegationTransaction.builder();
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class PayloadSubmissionBuilder {
+        @NonNull
+        private final Payload payload;
+        @NonNull
+        private final UInt64 transactionSpecificCost;
+
+        private AccountAddress sender = null;
+        private Nonce nonce = null;
+        private Expiry expiry = null;
+
+        /**
+         * Set the address of the account that is the source (sender) of the transaction.
+         */
+        public PayloadSubmissionBuilder sender(@NonNull AccountAddress sender) {
+            this.sender = sender;
+            return this;
+        }
+
+        /**
+         * Set the time when the transaction should expire.
+         */
+        public PayloadSubmissionBuilder expiry(@NonNull Expiry expiry) {
+            this.expiry = expiry;
+            return this;
+        }
+
+        /**
+         * Set the sequence number of the transaction, sender (source) account nonce.
+         */
+        public PayloadSubmissionBuilder nonce(@NonNull Nonce nonce) {
+            this.nonce = nonce;
+            return this;
+        }
+
+        /**
+         * Proceed to building a sponsored transaction, for its cost to be paid by the {@code sponsor}.
+         * Nonce, expiry and sender must be set before proceeding to sponsorship.
+         */
+        public PartiallySignedSponsoredBuilder sponsoredBy(@NonNull AccountAddress sponsor) {
+            if (sender == null) {
+                throw new IllegalStateException("Sender must be set before proceeding to sponsorship");
+            }
+            if (nonce == null) {
+                throw new IllegalStateException("Nonce must be set before proceeding to sponsorship");
+            }
+            if (expiry == null) {
+                throw new IllegalStateException("Expiry must be set before proceeding to sponsorship");
+            }
+            return new PartiallySignedSponsoredBuilder(sponsor);
+        }
+
+        /**
+         * Build a signed account transaction.
+         *
+         * @throws TransactionCreationException if something goes wrong
+         */
+        public AccountTransaction sign(@NonNull TransactionSigner signer) {
+            try {
+                val payloadSize = payload.getBytes().length;
+                val header = TransactionHeader
+                        .builder()
+                        .sender(sender)
+                        .nonce(nonce)
+                        .expiry(expiry)
+                        .payloadSize(UInt32.from(payloadSize))
+                        .maxEnergyCost(
+                                TransactionHeader.calculateMaxEnergyCost(
+                                        signer.size(),
+                                        payloadSize,
+                                        transactionSpecificCost
+                                )
+                        )
+                        .build();
+                val signature = signer.sign(AccountTransaction.getDataToSign(header, payload));
+                return new AccountTransaction(signature, header, payload);
+            } catch (Exception e) {
+                throw TransactionCreationException.from(e);
+            }
+        }
+
+        @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+        public class PartiallySignedSponsoredBuilder {
+            @NonNull
+            private final AccountAddress sponsor;
+
+            /**
+             * Build a partially signed sponsored transaction to be completed by the sender.
+             *
+             * @param senderSignatureCount Expected number of signatures by the sender, in a Singlesig wallet it is 1
+             * @throws TransactionCreationException if something goes wrong
+             */
+            public PartiallySignedSponsoredTransaction signAsSponsor(@NonNull TransactionSigner sponsorSigner,
+                                                                     int senderSignatureCount) {
+                try {
+                    val payloadBytes = payload.getBytes();
+                    val rawPayload = new RawPayload(payloadBytes);
+                    val header = TransactionHeaderV1
+                            .builder()
+                            .sender(sender)
+                            .nonce(nonce)
+                            .expiry(expiry)
+                            .payloadSize(UInt32.from(payloadBytes.length))
+                            .sponsor(sponsor)
+                            .maxEnergyCost(
+                                    TransactionHeaderV1.calculateMaxEnergyCost(
+                                            senderSignatureCount,
+                                            sponsorSigner.size(),
+                                            payloadBytes.length,
+                                            transactionSpecificCost
+                                    )
+                            )
+                            .build();
+                    val sponsorSignature = sponsorSigner.sign(AccountTransactionV1.getDataToSign(header, rawPayload));
+                    return new PartiallySignedSponsoredTransaction(
+                            null,
+                            sponsorSignature,
+                            header,
+                            rawPayload
+                    );
+                } catch (Exception e) {
+                    throw TransactionCreationException.from(e);
+                }
+            }
+
+            /**
+             * Build a partially signed sponsored transaction to be completed by the sender.
+             *
+             * @throws TransactionCreationException if something goes wrong
+             */
+            public PartiallySignedSponsoredTransaction signAsSponsor(@NonNull TransactionSigner sponsorSigner) {
+                return signAsSponsor(sponsorSigner, 1);
+            }
+
+            /**
+             * Build a partially signed sponsored transaction to be completed by the sponsor.
+             *
+             * @param sponsorSignatureCount Expected number of signatures by the sponsor, in a Singlesig wallet it is 1
+             * @throws TransactionCreationException if something goes wrong
+             */
+            public PartiallySignedSponsoredTransaction signAsSender(@NonNull TransactionSigner senderSigner,
+                                                                    int sponsorSignatureCount) {
+                try {
+                    val payloadBytes = payload.getBytes();
+                    val rawPayload = new RawPayload(payloadBytes);
+                    val header = TransactionHeaderV1
+                            .builder()
+                            .sender(sender)
+                            .nonce(nonce)
+                            .expiry(expiry)
+                            .payloadSize(UInt32.from(payloadBytes.length))
+                            .sponsor(sponsor)
+                            .maxEnergyCost(
+                                    TransactionHeaderV1.calculateMaxEnergyCost(
+                                            senderSigner.size(),
+                                            sponsorSignatureCount,
+                                            payloadBytes.length,
+                                            transactionSpecificCost
+                                    )
+                            )
+                            .build();
+                    val senderSignature = senderSigner.sign(AccountTransactionV1.getDataToSign(header, rawPayload));
+                    return new PartiallySignedSponsoredTransaction(
+                            senderSignature,
+                            null,
+                            header,
+                            rawPayload
+                    );
+                } catch (Exception e) {
+                    throw TransactionCreationException.from(e);
+                }
+            }
+
+            /**
+             * Build a partially signed sponsored transaction to be completed by the sponsor.
+             *
+             * @throws TransactionCreationException if something goes wrong
+             */
+            public PartiallySignedSponsoredTransaction signAsSender(@NonNull TransactionSigner senderSigner) {
+                return signAsSender(senderSigner, 1);
+            }
+        }
     }
 
-    /**
-     * Creates a new {@link TokenUpdateTransaction.TokenUpdateTransactionBuilder} for creating a
-     * {@link TokenUpdateTransaction} to execute protocol-level token (PLT) operations
-     * such as transferring, minting, etc.
-     *
-     * @return the builder for a {@link TokenUpdateTransaction}
-     */
-    public static TokenUpdateTransaction.TokenUpdateTransactionBuilder newTokenUpdate() {
-        return TokenUpdateTransaction.builder();
+
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class SponsoredCompletionBuilder {
+        @NonNull
+        private final PartiallySignedSponsoredTransaction partiallySigned;
+
+        /**
+         * Complete (sign) the transaction that it is already signed by the sponsor.
+         */
+        public AccountTransactionV1 asSender(@NonNull TransactionSigner senderSigner) {
+            try {
+                if (!partiallySigned.getSponsorSignature().isPresent()) {
+                    throw new IllegalStateException("Missing sponsor signature");
+                }
+                return new AccountTransactionV1(
+                        new TransactionSignaturesV1(
+                                senderSigner.sign(
+                                        AccountTransactionV1.getDataToSign(
+                                                partiallySigned.getHeader(),
+                                                partiallySigned.getPayload()
+                                        )
+                                ),
+                                partiallySigned.getSponsorSignature().get()
+                        ),
+                        partiallySigned.getHeader(),
+                        partiallySigned.getPayload()
+                );
+            } catch (Exception e) {
+                throw TransactionCreationException.from(e);
+            }
+        }
+
+        /**
+         * Complete (sign) the transaction that it is already signed by the sender.
+         */
+        public AccountTransactionV1 asSponsor(@NonNull TransactionSigner sponsorSigner) {
+            try {
+                if (!partiallySigned.getSenderSignature().isPresent()) {
+                    throw new IllegalStateException("Missing sender signature");
+                }
+                return new AccountTransactionV1(
+                        new TransactionSignaturesV1(
+                                partiallySigned.getSenderSignature().get(),
+                                sponsorSigner.sign(
+                                        AccountTransactionV1.getDataToSign(
+                                                partiallySigned.getHeader(),
+                                                partiallySigned.getPayload()
+                                        )
+                                )
+                        ),
+                        partiallySigned.getHeader(),
+                        partiallySigned.getPayload()
+                );
+            } catch (Exception e) {
+                throw TransactionCreationException.from(e);
+            }
+        }
     }
 }

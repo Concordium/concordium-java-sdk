@@ -1,38 +1,107 @@
 package com.concordium.sdk.transactions;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
+import com.concordium.sdk.types.UInt16;
+import lombok.*;
 
+import javax.annotation.Nullable;
+import java.nio.ByteBuffer;
 
 /**
- * Payload of the `ConfigureDelegation` transaction. This transaction
- * configure an account's stake delegation.
+ * The ConfigureDelegationPayload class represents the payload of the ConfigureDelegation transaction.
+ * It contains the capital delegated to the pool, whether the delegator's earnings are restaked, and the target of the delegation.
+ * The class contains methods to convert the payload to bytes, and a bitmap representation of the non-null fields in the payload.
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)
-@RequiredArgsConstructor
-@ToString
-public final class ConfigureDelegation extends Payload {
+public class ConfigureDelegation extends Payload {
+    /**
+     * The capital delegated to the pool.
+     */
+    @Nullable
+    private final CCDAmount capital;
+    /**
+     * Whether the delegator's earnings are restaked.
+     */
+    @Nullable
+    private final Boolean restakeEarnings;
+    /**
+     * The target of the delegation.
+     */
+    @Nullable
+    private final DelegationTarget delegationTarget;
+
+    @Builder
+    public ConfigureDelegation(@Nullable CCDAmount capital,
+                               @Nullable Boolean restakeEarnings,
+                               @Nullable DelegationTarget delegationTarget) {
+        super(TransactionType.CONFIGURE_DELEGATION);
+        this.capital = capital;
+        this.restakeEarnings = restakeEarnings;
+        this.delegationTarget = delegationTarget;
+    }
+
+    ByteBuffer createNotNullBuffer(byte[] bufferBytes) {
+        val buffer = ByteBuffer.allocate(bufferBytes.length);
+        buffer.put(bufferBytes);
+        return buffer;
+    }
 
     /**
-     * The payload for configuring delegation.
+     * This method returns an array of bytes that represents the bitmap of the fields that are not null
+     * in the ConfigureDelegationPayload object
+     *
+     * @return byte[]
      */
-    private final ConfigureDelegationPayload payload;
+    public byte[] getBitMapBytes() {
+        int bitValue = 0;
+        int it = 1;
 
-    @Override
-    public TransactionType getTransactionType() {
-        return TransactionType.CONFIGURE_DELEGATION;
+        bitValue |= ((this.capital != null) ? it : 0);
+        it *= 2;
+        bitValue |= ((this.restakeEarnings != null) ? it : 0);
+        it *= 2;
+        bitValue |= ((this.delegationTarget != null) ? it : 0);
+
+        return UInt16.from(bitValue).getBytes();
     }
 
     @Override
-    protected byte[] getRawPayloadBytes() {
-        return payload.getBytes();
-    }
+    protected byte[] getPayloadBytes() {
+        int bufferLength = 0;
+        ByteBuffer capitalBuffer = ByteBuffer.allocate(bufferLength);
+        ByteBuffer restakeEarningBuffer = ByteBuffer.allocate(bufferLength);
+        ByteBuffer delegationTargetBuffer = ByteBuffer.allocate(bufferLength);
 
-    static ConfigureDelegation createNew(ConfigureDelegationPayload payload) {
-        return new ConfigureDelegation(payload);
-    }
+        byte[] bitMapBytes = getBitMapBytes();
+        bufferLength += UInt16.BYTES;
 
+        if (this.capital != null) {
+            val capitalBufferBytes = this.capital.getBytes();
+            capitalBuffer = createNotNullBuffer(capitalBufferBytes);
+            bufferLength += capitalBufferBytes.length;
+        }
+
+        if (this.restakeEarnings != null) {
+            val restakeEarningsByte = (byte) (this.restakeEarnings ? 1 : 0);
+            restakeEarningBuffer = createNotNullBuffer(new byte[]{restakeEarningsByte});
+            bufferLength += 1; // 1 byte indicates whether restaking should be set or not.
+        }
+
+        if (this.delegationTarget != null) {
+            val openForDelegationBytes = this.delegationTarget.getBytes();
+            delegationTargetBuffer = createNotNullBuffer(openForDelegationBytes);
+            bufferLength += openForDelegationBytes.length;
+        }
+
+        val buffer = ByteBuffer.allocate(bufferLength);
+
+        buffer.put(bitMapBytes);
+
+        buffer.put(capitalBuffer.array());
+        buffer.put(restakeEarningBuffer.array());
+        buffer.put(delegationTargetBuffer.array());
+
+        return buffer.array();
+    }
 }
