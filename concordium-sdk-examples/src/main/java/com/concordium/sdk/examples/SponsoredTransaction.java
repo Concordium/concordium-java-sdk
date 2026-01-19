@@ -87,7 +87,7 @@ public class SponsoredTransaction implements Callable<Integer> {
 
         System.out.println("Partially signed payment transaction sent from the merchant's server to the buyer's wallet:");
         System.out.println(partiallySignedPaymentTransactionJson);
-        
+
         // region --- Buyer wallet side ---
 
         // Payment transaction signed by the merchant is received over WalletConnect.
@@ -112,7 +112,10 @@ public class SponsoredTransaction implements Callable<Integer> {
 
         // The transaction is signed and submitted.
         // Once it is finalized, the merchant's server will process it and finish the purchase.
-        AccountTransactionV1 transactionToSubmit = partiallySignedPaymentTransaction.completeAsSender(buyerSigner);
+        AccountTransactionV1 transactionToSubmit =
+                TransactionFactory
+                        .completeSponsoredTransaction(partiallySignedPaymentTransaction)
+                        .asSender(buyerSigner);
         submitTransaction(transactionToSubmit);
 
         // endregion --- Buyer wallet side ---
@@ -121,19 +124,20 @@ public class SponsoredTransaction implements Callable<Integer> {
     }
 
     private Nonce getAccountNonce(AccountAddress accountAddress) {
+        // In a real scenario, the nonce is fetched from the node.
         return Nonce.from(12345);
     }
 
     private void showTransferConfirmation(TokenUpdate transfer) {
+        // In a real scenario, the transfer summary is presented in the wallet UI.
         System.out.println("Transfer to confirm in the buyer's wallet:");
         System.out.println(transfer.toString());
-        // ...
     }
 
     private void submitTransaction(AccountTransactionV1 transaction) {
+        // In a real scenario, the transaction is submitted to the node.
         System.out.println("Confirmed and submitted transaction:");
         System.out.println(Hex.toHexString(transaction.getBytes()));
-        // ...
     }
 
     public static void main(String[] args) {

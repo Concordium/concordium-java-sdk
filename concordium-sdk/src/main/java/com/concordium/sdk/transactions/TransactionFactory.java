@@ -16,29 +16,48 @@ import lombok.val;
  * Example: Create a CCD transfer transaction
  * <pre>
  * {@code
- * TransactionFactory
- *      .newTransfer(new Transfer(receiverAccountAddress, ccdAmount))
- *      .sender(senderAccountAddress)
- *      .nonce(senderNonce)
- *      .expiry(Expiry.createNew().addMinutes(5))
- *      .sign(senderSigner)
+ * AccountTransaction tx =
+ *      TransactionFactory
+ *          .newTransfer(new Transfer(receiverAccountAddress, ccdAmount))
+ *          .sender(senderAccountAddress)
+ *          .nonce(senderNonce)
+ *          .expiry(Expiry.createNew().addMinutes(5))
+ *          .sign(senderSigner)
  * }
  * </pre>
  * <br>
  * Example: Create a sponsored CCD transfer transaction on the sponsor's server:
  * <pre>
  * {@code
- * TransactionFactory
- *      .newTransfer(new Transfer(receiverAccountAddress, ccdAmount))
- *      .sender(senderAccountAddress)
- *      .nonce(senderNonce)
- *      .expiry(Expiry.createNew().addMinutes(5))
- *      .sponsoredBy(sponsorAccountAddress)
- *      .signAsSponsor(sponsorSigner)
+ * PartiallySignedSponsoredTransaction partiallySignedTx =
+ *      TransactionFactory
+ *          .newTransfer(new Transfer(receiverAccountAddress, ccdAmount))
+ *          .sender(senderAccountAddress)
+ *          .nonce(senderNonce)
+ *          .expiry(Expiry.createNew().addMinutes(5))
+ *          .sponsoredBy(sponsorAccountAddress)
+ *          .signAsSponsor(sponsorSigner)
+ * }
+ * </pre>
+ <br>
+ * Example: Complete a sponsored CCD transfer transaction in the sender's wallet:
+ * <pre>
+ * {@code
+ * AccountTransactionV1 tx =
+ *      TransactionFactory
+ *          .completeSponsoredTransaction(partiallySignedTx)
+ *          .asSender(senderSigner)
  * }
  * </pre>
  */
 public class TransactionFactory {
+
+    /**
+     * Complete a partially signed sponsored transaction.
+     */
+    public static SponsoredCompletionBuilder completeSponsoredTransaction(@NonNull PartiallySignedSponsoredTransaction partiallySigned) {
+        return new SponsoredCompletionBuilder(partiallySigned);
+    }
 
     /**
      * General account transaction builder. Using it requires specifying
@@ -241,7 +260,7 @@ public class TransactionFactory {
          * Proceed to building a sponsored transaction, for its cost to be paid by the {@code sponsor}.
          * Nonce, expiry and sender must be set before proceeding to sponsorship.
          */
-        public SponsoredBuilder sponsoredBy(@NonNull AccountAddress sponsor) {
+        public PartiallySignedSponsoredBuilder sponsoredBy(@NonNull AccountAddress sponsor) {
             if (sender == null) {
                 throw new IllegalStateException("Sender must be set before proceeding to sponsorship");
             }
@@ -251,7 +270,7 @@ public class TransactionFactory {
             if (expiry == null) {
                 throw new IllegalStateException("Expiry must be set before proceeding to sponsorship");
             }
-            return new SponsoredBuilder(sponsor);
+            return new PartiallySignedSponsoredBuilder(sponsor);
         }
 
         /**
@@ -284,7 +303,7 @@ public class TransactionFactory {
         }
 
         @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-        public class SponsoredBuilder {
+        public class PartiallySignedSponsoredBuilder {
             @NonNull
             private final AccountAddress sponsor;
 
@@ -382,6 +401,65 @@ public class TransactionFactory {
              */
             public PartiallySignedSponsoredTransaction signAsSender(@NonNull TransactionSigner senderSigner) {
                 return signAsSender(senderSigner, 1);
+            }
+        }
+    }
+
+
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class SponsoredCompletionBuilder {
+        @NonNull
+        private final PartiallySignedSponsoredTransaction partiallySigned;
+
+        /**
+         * Complete (sign) the transaction that it is already signed by the sponsor.
+         */
+        public AccountTransactionV1 asSender(@NonNull TransactionSigner senderSigner) {
+            try {
+                if (!partiallySigned.getSponsorSignature().isPresent()) {
+                    throw new IllegalStateException("Missing sponsor signature");
+                }
+                return new AccountTransactionV1(
+                        new TransactionSignaturesV1(
+                                senderSigner.sign(
+                                        AccountTransactionV1.getDataToSign(
+                                                partiallySigned.getHeader(),
+                                                partiallySigned.getPayload()
+                                        )
+                                ),
+                                partiallySigned.getSponsorSignature().get()
+                        ),
+                        partiallySigned.getHeader(),
+                        partiallySigned.getPayload()
+                );
+            } catch (Exception e) {
+                throw TransactionCreationException.from(e);
+            }
+        }
+
+        /**
+         * Complete (sign) the transaction that it is already signed by the sender.
+         */
+        public AccountTransactionV1 asSponsor(@NonNull TransactionSigner sponsorSigner) {
+            try {
+                if (!partiallySigned.getSenderSignature().isPresent()) {
+                    throw new IllegalStateException("Missing sender signature");
+                }
+                return new AccountTransactionV1(
+                        new TransactionSignaturesV1(
+                                partiallySigned.getSenderSignature().get(),
+                                sponsorSigner.sign(
+                                        AccountTransactionV1.getDataToSign(
+                                                partiallySigned.getHeader(),
+                                                partiallySigned.getPayload()
+                                        )
+                                )
+                        ),
+                        partiallySigned.getHeader(),
+                        partiallySigned.getPayload()
+                );
+            } catch (Exception e) {
+                throw TransactionCreationException.from(e);
             }
         }
     }

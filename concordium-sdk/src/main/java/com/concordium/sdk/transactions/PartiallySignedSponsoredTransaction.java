@@ -17,7 +17,6 @@ import org.bouncycastle.util.encoders.Hex;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -26,9 +25,7 @@ import java.util.Optional;
  * If a transaction is signed by the sender, it must be completed by the sponsor.
  * If a transaction is signed by the sponsor, it must be completed by the sender.
  *
- * @see TransactionFactory Transaction factory, that also supports sponsored transactions
- * @see PartiallySignedSponsoredTransaction#completeAsSender(TransactionSigner) Complete by the sender
- * @see PartiallySignedSponsoredTransaction#completeAsSponsor(TransactionSigner) Complete by the sponsor
+ * @see TransactionFactory Transaction factory, that lets create and complete sponsored transactions
  */
 @Getter
 @ToString
@@ -72,42 +69,6 @@ public class PartiallySignedSponsoredTransaction {
     @SuppressWarnings("unused")
     public Optional<TransactionSignature> getSponsorSignature() {
         return Optional.ofNullable(sponsorSignature);
-    }
-
-    /**
-     * Complete the transaction when it is already signed by the sponsor.
-     */
-    public AccountTransactionV1 completeAsSender(@NonNull TransactionSigner senderSigner) {
-        try {
-            return new AccountTransactionV1(
-                    new TransactionSignaturesV1(
-                            senderSigner.sign(AccountTransactionV1.getDataToSign(header, payload)),
-                            Objects.requireNonNull(sponsorSignature, "Missing sponsor signature")
-                    ),
-                    header,
-                    payload
-            );
-        } catch (Exception e) {
-            throw TransactionCreationException.from(e);
-        }
-    }
-
-    /**
-     * Complete the transaction when it is already signed by the sender.
-     */
-    public AccountTransactionV1 completeAsSponsor(@NonNull TransactionSigner sponsorSigner) {
-        try {
-            return new AccountTransactionV1(
-                    new TransactionSignaturesV1(
-                            Objects.requireNonNull(senderSignature, "Missing sender signature"),
-                            sponsorSigner.sign(AccountTransactionV1.getDataToSign(header, payload))
-                    ),
-                    header,
-                    payload
-            );
-        } catch (Exception e) {
-            throw TransactionCreationException.from(e);
-        }
     }
 
     static class Serializer extends StdSerializer<PartiallySignedSponsoredTransaction> {

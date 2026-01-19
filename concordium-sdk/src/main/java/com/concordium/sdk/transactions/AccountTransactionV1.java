@@ -14,7 +14,7 @@ import static com.google.common.primitives.Bytes.concat;
  * An extended transaction format originating from a particular account.
  * Such a transaction can be sponsored, in which case its cost is not paid by the sender.
  *
- * @see TransactionFactory Transaction factory, that also supports sponsored transactions
+ * @see TransactionFactory Transaction factory, that lets create and complete sponsored transactions
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)
