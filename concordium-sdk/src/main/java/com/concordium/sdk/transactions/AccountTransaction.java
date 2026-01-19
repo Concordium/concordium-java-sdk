@@ -1,12 +1,12 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.SHA256;
-import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
-import com.concordium.sdk.types.UInt32;
-import com.concordium.sdk.types.UInt64;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.ToString;
 
 import java.nio.ByteBuffer;
 
@@ -96,48 +96,6 @@ public class AccountTransaction extends BlockItem {
                 TransactionHeader.fromBytes(source),
                 Payload.fromBytes(source)
         );
-    }
-
-    /**
-     * @param sender                  The address of the account that is the source of the transaction.
-     * @param nonce                   The sequence number of the transaction, sender (source) account nonce.
-     * @param expiry                  A Unix timestamp indicating when the transaction should expire.
-     * @param signer                  Signer of the transaction
-     * @param payload                 Transaction payload, defines what this transaction does.
-     * @param transactionSpecificCost Cost of executing this specific payload.
-     * @return a ready to submit transaction
-     * @throws TransactionCreationException if something goes wrong
-     * @see TransactionSigner#from(SignerEntry...)
-     * @see TransactionTypeCost
-     */
-    @Builder
-    public static AccountTransaction from(@NonNull final AccountAddress sender,
-                                          @NonNull final Nonce nonce,
-                                          @NonNull final Expiry expiry,
-                                          @NonNull final TransactionSigner signer,
-                                          @NonNull final Payload payload,
-                                          @NonNull UInt64 transactionSpecificCost) {
-        try {
-            val payloadSize = payload.getBytes().length;
-            val header = TransactionHeader
-                    .builder()
-                    .sender(sender)
-                    .nonce(nonce)
-                    .expiry(expiry)
-                    .payloadSize(UInt32.from(payloadSize))
-                    .maxEnergyCost(
-                            TransactionHeader.calculateMaxEnergyCost(
-                                    signer.size(),
-                                    payloadSize,
-                                    transactionSpecificCost
-                            )
-                    )
-                    .build();
-            val signature = signer.sign(getDataToSign(header, payload));
-            return new AccountTransaction(signature, header, payload);
-        } catch (Exception e) {
-            throw TransactionCreationException.from(e);
-        }
     }
 
     public static byte[] getDataToSign(TransactionHeader header,

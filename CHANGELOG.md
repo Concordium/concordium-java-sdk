@@ -7,8 +7,7 @@
 - Added `AccountTransactionV1` which is the sponsored transaction,
   signed by both the sender and the sponsor
 - Added `BlockItemType.ACCOUNT_TRANSACTION_V1` corresponding to `AccountTransactionV1`
-- Added ability to create and complete sponsored transactions via
-  `TransactionFactory` and `PartiallySignedSponsoredTransaction`
+- Added ability to create and complete sponsored transactions via `TransactionFactory`
 - Added [`SponsoredTransaction` example](concordium-sdk-examples/src/main/java/com/concordium/sdk/examples/SponsoredTransaction.java)
 - Added `TransactionFactory.newPayloadSubmission()` builder to create transactions
   with any payload, including `RawPayload`
@@ -22,7 +21,7 @@
 - Removed long unsupported `EncryptedTransfer` and `TransferToEncrypted`.
   Only `TransferToPublic` remained
 - Added `Expiry.from()` method to create it from `UInt64`
-- Add human-readable `toString()` implementation for `TransferTokenOperation
+- Add human-readable `toString()` implementation for `TransferTokenOperation`
 
 ### Breaking changes in handling of the transactions
 
@@ -33,8 +32,7 @@ There are also [updated examples](concordium-sdk-examples/src/main/java/com/conc
 
 - `Payload` no longer holds `TransactionHeader` and `TransactionSignature`.
   Its purpose is now purely to define the action executed by either `AccountTransaction`
-  or `AccountTransactionV1`. If you used `Payload` `withHeader()` and `signWith()` methods to create transactions,
-  use either `TransactionFactory` or `AccountTransaction.builder()` instead
+  or `AccountTransactionV1`. Use `TransactionFactory` instead
 - Removed `Payload.getDataToSign()` method. Use the `getDataToSign()` method from
   either `AccountTransaction` or `AccountTransactionV1` instead
   (the data differs for a sponsored transaction)
@@ -61,6 +59,8 @@ There are also [updated examples](concordium-sdk-examples/src/main/java/com/conc
 - Changed `TransactionHeader.expiry` field type from `UInt64` to `Expiry`
 - Removed various `TransactionHeader` builders. Do not manipulate headers directly,
   use `TransactionFactory` instead
+- Removed `AccountTransaction` builder and extended constructor. 
+  Use `TransactionFactory` instead
 
 ## 11.2.1
 

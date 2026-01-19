@@ -27,8 +27,6 @@ import java.util.Optional;
  * If a transaction is signed by the sponsor, it must be completed by the sender.
  *
  * @see TransactionFactory Transaction factory, that also supports sponsored transactions
- * @see PartiallySignedSponsoredTransaction#builderForSender() Build on the sender side, to be completed by the sponsor
- * @see PartiallySignedSponsoredTransaction#builderForSponsor() Build on the sponsor side, to be completed by the sender
  * @see PartiallySignedSponsoredTransaction#completeAsSender(TransactionSigner) Complete by the sender
  * @see PartiallySignedSponsoredTransaction#completeAsSponsor(TransactionSigner) Complete by the sponsor
  */

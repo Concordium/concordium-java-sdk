@@ -260,7 +260,27 @@ public class TransactionFactory {
          * @throws TransactionCreationException if something goes wrong
          */
         public AccountTransaction sign(@NonNull TransactionSigner signer) {
-            return AccountTransaction.from(sender, nonce, expiry, signer, payload, transactionSpecificCost);
+            try {
+                val payloadSize = payload.getBytes().length;
+                val header = TransactionHeader
+                        .builder()
+                        .sender(sender)
+                        .nonce(nonce)
+                        .expiry(expiry)
+                        .payloadSize(UInt32.from(payloadSize))
+                        .maxEnergyCost(
+                                TransactionHeader.calculateMaxEnergyCost(
+                                        signer.size(),
+                                        payloadSize,
+                                        transactionSpecificCost
+                                )
+                        )
+                        .build();
+                val signature = signer.sign(AccountTransaction.getDataToSign(header, payload));
+                return new AccountTransaction(signature, header, payload);
+            } catch (Exception e) {
+                throw TransactionCreationException.from(e);
+            }
         }
 
         @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
