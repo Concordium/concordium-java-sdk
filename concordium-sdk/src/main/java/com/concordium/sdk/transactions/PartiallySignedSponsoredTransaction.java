@@ -1,10 +1,6 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.exceptions.TransactionCreationException;
-import com.concordium.sdk.types.AccountAddress;
-import com.concordium.sdk.types.Nonce;
-import com.concordium.sdk.types.UInt32;
-import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -110,122 +106,6 @@ public class PartiallySignedSponsoredTransaction {
                     ),
                     header,
                     payload
-            );
-        } catch (Exception e) {
-            throw TransactionCreationException.from(e);
-        }
-    }
-
-    /**
-     * Creates a partially signed sponsored transaction on the sponsor side.
-     * The transaction then needs to be completed by the sender.
-     *
-     * @param sender                  The address of the account that is the source of the transaction.
-     * @param nonce                   The sequence number of the transaction, sender (source) account nonce.
-     * @param expiry                  A Unix timestamp indicating when the transaction should expire.
-     * @param senderSignatureCount    Expected number of signatures by the sender, in a Singlesig wallet it is 1
-     * @param payload                 Transaction payload, defines what this transaction does.
-     * @param transactionSpecificCost Cost of executing this specific payload.
-     * @param sponsor                 The address of the account that sponsors the transaction (pays the cost).
-     * @param sponsorSigner           Signer of the sponsor.
-     * @return partially signed sponsored transaction that can be completed by the sender
-     * @throws TransactionCreationException if something goes wrong
-     */
-    @Builder(
-            builderMethodName = "builderForSponsor",
-            builderClassName = "PartiallySignedSponsoredTransactionBuilderForSponsor"
-    )
-    public static PartiallySignedSponsoredTransaction from(@NonNull AccountAddress sender,
-                                                           @NonNull Nonce nonce,
-                                                           @NonNull Expiry expiry,
-                                                           @NonNull Integer senderSignatureCount,
-                                                           @NonNull Payload payload,
-                                                           @NonNull UInt64 transactionSpecificCost,
-                                                           @NonNull AccountAddress sponsor,
-                                                           @NonNull TransactionSigner sponsorSigner) {
-        try {
-            val payloadBytes = payload.getBytes();
-            val rawPayload = new RawPayload(payloadBytes);
-            val header = TransactionHeaderV1
-                    .builder()
-                    .sender(sender)
-                    .nonce(nonce)
-                    .expiry(expiry)
-                    .payloadSize(UInt32.from(payloadBytes.length))
-                    .sponsor(sponsor)
-                    .maxEnergyCost(
-                            TransactionHeaderV1.calculateMaxEnergyCost(
-                                    senderSignatureCount,
-                                    sponsorSigner.size(),
-                                    payloadBytes.length,
-                                    transactionSpecificCost
-                            )
-                    )
-                    .build();
-            val sponsorSignature = sponsorSigner.sign(AccountTransactionV1.getDataToSign(header, rawPayload));
-            return new PartiallySignedSponsoredTransaction(
-                    null,
-                    sponsorSignature,
-                    header,
-                    rawPayload
-            );
-        } catch (Exception e) {
-            throw TransactionCreationException.from(e);
-        }
-    }
-
-    /**
-     * Creates a partially signed sponsored transaction on the sender side.
-     * The transaction then needs to be completed by the sponsor.
-     *
-     * @param sender                  The address of the account that is the source of the transaction.
-     * @param nonce                   The sequence number of the transaction, sender (source) account nonce.
-     * @param expiry                  A Unix timestamp indicating when the transaction should expire.
-     * @param senderSigner            Signer of the sender.
-     * @param payload                 Transaction payload, defines what this transaction does.
-     * @param transactionSpecificCost Cost of executing this specific payload.
-     * @param sponsor                 The address of the account that sponsors the transaction (pays the cost).
-     * @param sponsorSignatureCount   Expected number of signatures by the sponsor, in a Singlesig wallet it is 1
-     * @return partially signed sponsored transaction that can be completed by the sender
-     * @throws TransactionCreationException if something goes wrong
-     */
-    @Builder(
-            builderMethodName = "builderForSender",
-            builderClassName = "PartiallySignedSponsoredTransactionBuilderForSender"
-    )
-    public static PartiallySignedSponsoredTransaction from(@NonNull AccountAddress sender,
-                                                           @NonNull Nonce nonce,
-                                                           @NonNull Expiry expiry,
-                                                           @NonNull TransactionSigner senderSigner,
-                                                           @NonNull Payload payload,
-                                                           @NonNull UInt64 transactionSpecificCost,
-                                                           @NonNull AccountAddress sponsor,
-                                                           @NonNull Integer sponsorSignatureCount) {
-        try {
-            val payloadBytes = payload.getBytes();
-            val rawPayload = new RawPayload(payloadBytes);
-            val header = TransactionHeaderV1
-                    .builder()
-                    .sender(sender)
-                    .nonce(nonce)
-                    .expiry(expiry)
-                    .payloadSize(UInt32.from(payloadBytes.length))
-                    .sponsor(sponsor)
-                    .maxEnergyCost(
-                            TransactionHeaderV1.calculateMaxEnergyCost(
-                                    senderSigner.size(),
-                                    sponsorSignatureCount,
-                                    payloadBytes.length,
-                                    transactionSpecificCost
-                            )
-                    )
-                    .build();
-            val senderSignature = senderSigner.sign(AccountTransactionV1.getDataToSign(header, rawPayload));
-            return new PartiallySignedSponsoredTransaction(
-                    senderSignature,
-                    null,
-                    header,
-                    rawPayload
             );
         } catch (Exception e) {
             throw TransactionCreationException.from(e);

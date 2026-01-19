@@ -1,7 +1,10 @@
 package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.crypto.SHA256;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.ToString;
 
 import java.nio.ByteBuffer;
 
@@ -12,10 +15,6 @@ import static com.google.common.primitives.Bytes.concat;
  * Such a transaction can be sponsored, in which case its cost is not paid by the sender.
  *
  * @see TransactionFactory Transaction factory, that also supports sponsored transactions
- * @see PartiallySignedSponsoredTransaction#builderForSender() Build a partially signed sponsored transaction on the sender side
- * @see PartiallySignedSponsoredTransaction#builderForSponsor() Build a partially signed sponsored transaction on the sponsor side
- * @see PartiallySignedSponsoredTransaction#completeAsSender(TransactionSigner) Complete a partially signed sponsored transaction on the sender side
- * @see PartiallySignedSponsoredTransaction#completeAsSponsor(TransactionSigner) Complete a partially signed sponsored transaction on the sponsor side
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)

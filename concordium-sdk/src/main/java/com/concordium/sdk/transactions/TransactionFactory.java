@@ -3,6 +3,7 @@ package com.concordium.sdk.transactions;
 import com.concordium.sdk.exceptions.TransactionCreationException;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
+import com.concordium.sdk.types.UInt32;
 import com.concordium.sdk.types.UInt64;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -275,17 +276,35 @@ public class TransactionFactory {
              */
             public PartiallySignedSponsoredTransaction signAsSponsor(@NonNull TransactionSigner sponsorSigner,
                                                                      int senderSignatureCount) {
-                return PartiallySignedSponsoredTransaction
-                        .builderForSponsor()
-                        .sender(sender)
-                        .nonce(nonce)
-                        .expiry(expiry)
-                        .senderSignatureCount(senderSignatureCount)
-                        .payload(payload)
-                        .transactionSpecificCost(transactionSpecificCost)
-                        .sponsor(sponsor)
-                        .sponsorSigner(sponsorSigner)
-                        .build();
+                try {
+                    val payloadBytes = payload.getBytes();
+                    val rawPayload = new RawPayload(payloadBytes);
+                    val header = TransactionHeaderV1
+                            .builder()
+                            .sender(sender)
+                            .nonce(nonce)
+                            .expiry(expiry)
+                            .payloadSize(UInt32.from(payloadBytes.length))
+                            .sponsor(sponsor)
+                            .maxEnergyCost(
+                                    TransactionHeaderV1.calculateMaxEnergyCost(
+                                            senderSignatureCount,
+                                            sponsorSigner.size(),
+                                            payloadBytes.length,
+                                            transactionSpecificCost
+                                    )
+                            )
+                            .build();
+                    val sponsorSignature = sponsorSigner.sign(AccountTransactionV1.getDataToSign(header, rawPayload));
+                    return new PartiallySignedSponsoredTransaction(
+                            null,
+                            sponsorSignature,
+                            header,
+                            rawPayload
+                    );
+                } catch (Exception e) {
+                    throw TransactionCreationException.from(e);
+                }
             }
 
             /**
@@ -305,17 +324,35 @@ public class TransactionFactory {
              */
             public PartiallySignedSponsoredTransaction signAsSender(@NonNull TransactionSigner senderSigner,
                                                                     int sponsorSignatureCount) {
-                return PartiallySignedSponsoredTransaction
-                        .builderForSender()
-                        .sender(sender)
-                        .nonce(nonce)
-                        .expiry(expiry)
-                        .senderSigner(senderSigner)
-                        .payload(payload)
-                        .transactionSpecificCost(transactionSpecificCost)
-                        .sponsor(sponsor)
-                        .sponsorSignatureCount(sponsorSignatureCount)
-                        .build();
+                try {
+                    val payloadBytes = payload.getBytes();
+                    val rawPayload = new RawPayload(payloadBytes);
+                    val header = TransactionHeaderV1
+                            .builder()
+                            .sender(sender)
+                            .nonce(nonce)
+                            .expiry(expiry)
+                            .payloadSize(UInt32.from(payloadBytes.length))
+                            .sponsor(sponsor)
+                            .maxEnergyCost(
+                                    TransactionHeaderV1.calculateMaxEnergyCost(
+                                            senderSigner.size(),
+                                            sponsorSignatureCount,
+                                            payloadBytes.length,
+                                            transactionSpecificCost
+                                    )
+                            )
+                            .build();
+                    val senderSignature = senderSigner.sign(AccountTransactionV1.getDataToSign(header, rawPayload));
+                    return new PartiallySignedSponsoredTransaction(
+                            senderSignature,
+                            null,
+                            header,
+                            rawPayload
+                    );
+                } catch (Exception e) {
+                    throw TransactionCreationException.from(e);
+                }
             }
 
             /**
