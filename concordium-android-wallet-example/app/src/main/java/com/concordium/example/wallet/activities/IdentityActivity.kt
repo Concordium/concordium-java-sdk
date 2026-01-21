@@ -75,8 +75,9 @@ class IdentityActivity : ComponentActivity() {
         )
         val credentialPayload = Credential.serializeCredentialDeploymentPayload(context)
         val credentialDeploymentTransaction = CredentialDeploymentTransaction.from(expiry, credentialPayload)
-        ConcordiumClientService.getClient()
-            .sendCredentialDeploymentTransaction(credentialDeploymentTransaction)
+        ConcordiumClientService
+            .getClient()
+            .sendTransaction(credentialDeploymentTransaction)
 
         // Save the address of the account
         val address =

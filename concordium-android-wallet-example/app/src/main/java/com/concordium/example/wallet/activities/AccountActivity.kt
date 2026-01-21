@@ -30,6 +30,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.concordium.example.wallet.Constants
+import com.concordium.example.wallet.Storage
+import com.concordium.example.wallet.services.ConcordiumClientService
+import com.concordium.example.wallet.ui.Container
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey
 import com.concordium.sdk.requests.AccountQuery
 import com.concordium.sdk.requests.BlockQuery
@@ -40,10 +44,6 @@ import com.concordium.sdk.transactions.SignerEntry
 import com.concordium.sdk.transactions.TransactionFactory
 import com.concordium.sdk.transactions.TransactionSigner
 import com.concordium.sdk.types.AccountAddress
-import com.concordium.example.wallet.Constants
-import com.concordium.example.wallet.Storage
-import com.concordium.example.wallet.services.ConcordiumClientService
-import com.concordium.example.wallet.ui.Container
 
 
 class AccountActivity : ComponentActivity() {
@@ -71,14 +71,18 @@ class AccountActivity : ComponentActivity() {
         val senderInfo = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(sender))
         val nonce = senderInfo.nonce
         val transactionHash = client.sendTransaction(
-            TransactionFactory.newTransfer()
+            TransactionFactory
+                .newTransfer(
+                    com.concordium.sdk.transactions.Transfer
+                        .builder()
+                        .receiver(receiver)
+                        .amount(amount)
+                        .build()
+                )
                 .sender(sender)
-                .receiver(receiver)
-                .amount(amount)
                 .nonce(nonce)
                 .expiry(expiry)
-                .signer(signer)
-                .build()
+                .sign(signer)
         )
         return transactionHash.asHex()
     }
