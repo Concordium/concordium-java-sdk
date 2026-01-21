@@ -20,14 +20,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cash.z.ecc.android.bip39.Mnemonics.MnemonicCode
 import com.concordium.example.wallet.Storage
 import com.concordium.example.wallet.ui.Container
+import org.bitcoinj.crypto.MnemonicCode
 
 class SeedPhraseActivity : ComponentActivity() {
     private fun submit(phrase: String, storage: Storage) {
         // Save seed phrase in SharedPreferences
-        storage.seedPhrase.set(phrase)
+        storage.seedPhrase.set(
+            phrase
+                .trim()
+                .split("\\s".toRegex())
+                .joinToString(separator = " ")
+        )
         // Go to identity issuance
         val myIntent = Intent(this, NewIdentityActivity::class.java)
         startActivity(myIntent)
@@ -46,7 +51,11 @@ class SeedPhraseActivity : ComponentActivity() {
 
 fun validatePhrase(phrase: String): Boolean {
     return try {
-        MnemonicCode(phrase.toCharArray()).validate()
+        MnemonicCode.INSTANCE.check(
+            phrase
+                .trim()
+                .split("\\s".toRegex())
+        )
         true
     } catch (e: Exception) {
         false
@@ -64,7 +73,9 @@ fun SeedPhraseView(initialPhrase: String, onSubmit: (phrase: String) -> Unit) {
                 value = phrase,
                 onValueChange = { phrase = it },
                 label = { Text("Enter your seed phrase") },
-                modifier = Modifier.fillMaxWidth().height(128.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(128.dp)
             )
             Button(onClick = { onSubmit(phrase) }, enabled = validPhrase) {
                 Text(text = "Submit")
