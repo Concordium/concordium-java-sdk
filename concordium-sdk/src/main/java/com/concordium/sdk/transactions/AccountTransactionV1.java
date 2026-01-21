@@ -84,6 +84,7 @@ public class AccountTransactionV1 extends BlockItem {
                         new byte[]{
                                 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 0, 0, 1,
                         },
                         header.getBytes(),
