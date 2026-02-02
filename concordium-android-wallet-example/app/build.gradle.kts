@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-    implementation("com.concordium.sdk:concordium-android-sdk:12.0.0-alpha.2")
+    implementation("com.concordium.sdk:concordium-android-sdk:12.0.0")
 
     implementation("androidx.browser:browser:1.7.0")
     compileOnly("org.apache.tomcat:annotations-api:6.0.53") // necessary for Java 9+
