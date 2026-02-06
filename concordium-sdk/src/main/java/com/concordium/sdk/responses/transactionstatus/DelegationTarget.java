@@ -1,8 +1,6 @@
 package com.concordium.sdk.responses.transactionstatus;
 
 import com.concordium.sdk.responses.BakerId;
-import com.concordium.sdk.transactions.TransactionType;
-import com.concordium.sdk.types.UInt16;
 import com.concordium.sdk.types.UInt64;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -60,6 +58,18 @@ public class DelegationTarget {
             return buffer.array();
         }
         throw new IllegalArgumentException("Illegal DelegationType. Must be either PASSIVE or BAKER");
+    }
+
+    public static DelegationTarget fromBytes(ByteBuffer source) {
+        val tag = source.get();
+        switch (tag) {
+            case 0:
+                return newPassiveDelegationTarget();
+            case 1:
+                return newBakerDelegationTarget(BakerId.from(UInt64.fromBytes(source).getValue()));
+            default:
+                throw new IllegalArgumentException("Unrecognized delegation target type");
+        }
     }
 
     @ToString

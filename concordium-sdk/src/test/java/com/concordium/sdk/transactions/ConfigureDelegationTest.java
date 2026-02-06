@@ -9,6 +9,8 @@ import lombok.val;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 
+import java.nio.ByteBuffer;
+
 import static org.junit.Assert.assertEquals;
 
 public class ConfigureDelegationTest {
@@ -34,7 +36,7 @@ public class ConfigureDelegationTest {
         assertEquals(212, transaction.getVersionedBytes().length);
     }
 
-
+    @SneakyThrows
     @Test
     public void serializeConfigurePassivePoolNoRestake() {
         val payload = ConfigureDelegation
@@ -43,9 +45,12 @@ public class ConfigureDelegationTest {
                 .capital(CCDAmount.from(100))
                 .restakeEarnings(false)
                 .build();
-        assertEquals("1a00070000000005f5e1000000", Hex.encodeHexString(payload.getBytes()));
+        val expectedHex = "1a00070000000005f5e1000000";
+        assertEquals(expectedHex, Hex.encodeHexString(payload.getBytes()));
+        assertEquals(payload, Payload.fromBytes(ByteBuffer.wrap(Hex.decodeHex(expectedHex))));
     }
 
+    @SneakyThrows
     @Test
     public void serializeConfigurePassivePoolRestake() {
         val payload = ConfigureDelegation
@@ -54,9 +59,12 @@ public class ConfigureDelegationTest {
                 .capital(CCDAmount.from(100))
                 .restakeEarnings(true)
                 .build();
-        assertEquals("1a00070000000005f5e1000100", Hex.encodeHexString(payload.getBytes()));
+        val expectedHex = "1a00070000000005f5e1000100";
+        assertEquals(expectedHex, Hex.encodeHexString(payload.getBytes()));
+        assertEquals(payload, Payload.fromBytes(ByteBuffer.wrap(Hex.decodeHex(expectedHex))));
     }
 
+    @SneakyThrows
     @Test
     public void serializeConfigureBakerPoolNoRestake() {
         val payload = ConfigureDelegation
@@ -65,9 +73,12 @@ public class ConfigureDelegationTest {
                 .restakeEarnings(false)
                 .capital(CCDAmount.from(100))
                 .build();
-        assertEquals("1a00070000000005f5e100000100000000000004d2", Hex.encodeHexString(payload.getBytes()));
+        val expectedHex = "1a00070000000005f5e100000100000000000004d2";
+        assertEquals(expectedHex, Hex.encodeHexString(payload.getBytes()));
+        assertEquals(payload, Payload.fromBytes(ByteBuffer.wrap(Hex.decodeHex(expectedHex))));
     }
 
+    @SneakyThrows
     @Test
     public void serializeConfigureBakerPoolRestake() {
         val payload = ConfigureDelegation
@@ -76,34 +87,44 @@ public class ConfigureDelegationTest {
                 .capital(CCDAmount.from(100))
                 .restakeEarnings(true)
                 .build();
-        assertEquals("1a00070000000005f5e100010100000000000004d2", Hex.encodeHexString(payload.getBytes()));
+        val expectedHex = "1a00070000000005f5e100010100000000000004d2";
+        assertEquals(expectedHex, Hex.encodeHexString(payload.getBytes()));
+        assertEquals(payload, Payload.fromBytes(ByteBuffer.wrap(Hex.decodeHex(expectedHex))));
     }
 
+    @SneakyThrows
     @Test
     public void serializeDeregisterPayload() {
         val payload = ConfigureDelegation
                 .builder()
                 .capital(CCDAmount.from(0))
                 .build();
-        assertEquals("1a00010000000000000000", Hex.encodeHexString(payload.getBytes()));
+        val expectedHex = "1a00010000000000000000";
+        assertEquals(expectedHex, Hex.encodeHexString(payload.getBytes()));
+        assertEquals(payload, Payload.fromBytes(ByteBuffer.wrap(Hex.decodeHex(expectedHex))));
     }
 
+    @SneakyThrows
     @Test
     public void serializeStopRestake() {
         val payload = ConfigureDelegation
                 .builder()
                 .restakeEarnings(false)
                 .build();
-        assertEquals("1a000200", Hex.encodeHexString(payload.getBytes()));
+        val expectedHex = "1a000200";
+        assertEquals(expectedHex, Hex.encodeHexString(payload.getBytes()));
+        assertEquals(payload, Payload.fromBytes(ByteBuffer.wrap(Hex.decodeHex(expectedHex))));
     }
 
+    @SneakyThrows
     @Test
     public void serializeEnableRestake() {
         val payload = ConfigureDelegation
                 .builder()
                 .restakeEarnings(true)
                 .build();
-        assertEquals("1a000201", Hex.encodeHexString(payload.getBytes()));
+        val expectedHex = "1a000201";
+        assertEquals(expectedHex, Hex.encodeHexString(payload.getBytes()));
+        assertEquals(payload, Payload.fromBytes(ByteBuffer.wrap(Hex.decodeHex(expectedHex))));
     }
-
 }
