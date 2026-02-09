@@ -1,5 +1,10 @@
 # Changelog
 
+## 12.1.0
+
+- Added deserialization for the `ConfigureDelegation` payload
+- Fixed incorrect deserialization of the `UpdateContract` payload parameter
+
 ## 12.0.0
 
 - Support for Protocol 10

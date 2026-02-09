@@ -63,6 +63,8 @@ public abstract class Payload {
                 return RegisterData.fromBytes(source);
             case TRANSFER_WITH_MEMO:
                 return TransferWithMemo.fromBytes(source);
+            case CONFIGURE_DELEGATION:
+                return ConfigureDelegation.fromBytes(source);
             case TOKEN_UPDATE:
                 return TokenUpdate.fromBytes(source);
             default:

@@ -8,11 +8,9 @@ import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.ContractAddress;
 import com.concordium.sdk.types.Nonce;
-import com.concordium.sdk.types.UInt16;
 import com.google.common.collect.Lists;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Hex;
-import org.bouncycastle.util.Arrays;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
@@ -113,7 +111,7 @@ public class TransactionSerializationTest {
         Cis2Transfer expectedParameters = new Cis2Transfer(TokenId.from(new byte[0]), TokenAmount.from(11078313), AccountAddress.from("49NGYqmPtbuCkXSQt7298mL6Xp52UpSR4U2jVzJjKW9P3b3whw"), AccountAddress.from("4sGtbuGKgakv5pKSMsy3CEQbW3sn2PbTzTVLZLA6zxX5bB3C5a"), null);
         byte[] expectedParams = updateContract.getParam().getBytes();
         byte[] cis2TransferParams = SerializationUtils.serializeTransfers(Lists.newArrayList(expectedParameters)).getBytes();
-        assertArrayEquals(expectedParams, Arrays.concatenate(UInt16.from(cis2TransferParams.length).getBytes(), cis2TransferParams));
+        assertArrayEquals(expectedParams, cis2TransferParams);
     }
 
 

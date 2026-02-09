@@ -2,7 +2,10 @@ package com.concordium.sdk.transactions;
 
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.types.UInt16;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.val;
 
 import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
@@ -103,5 +106,18 @@ public class ConfigureDelegation extends Payload {
         buffer.put(delegationTargetBuffer.array());
 
         return buffer.array();
+    }
+
+    public static ConfigureDelegation fromBytes(ByteBuffer source) {
+        int bitmap = UInt16.fromBytes(source).getValue();
+        boolean hasCapital = (bitmap & 1) != 0;
+        boolean hasRestakeEarnings = (bitmap & (1 << 1)) != 0;
+        boolean hasDelegationTarget = (bitmap & (1 << 2)) != 0;
+
+        return new ConfigureDelegation(
+                (hasCapital) ? CCDAmount.fromBytes(source) : null,
+                (hasRestakeEarnings) ? source.get() != 0 : null,
+                (hasDelegationTarget) ? DelegationTarget.fromBytes(source) : null
+        );
     }
 }

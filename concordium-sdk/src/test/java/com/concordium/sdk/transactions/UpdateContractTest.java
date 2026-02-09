@@ -10,6 +10,8 @@ import lombok.val;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 
+import java.nio.ByteBuffer;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -25,7 +27,7 @@ public class UpdateContractTest {
         byte[] emptyArray = new byte[0];
         UpdateContract updateContractPayload = UpdateContract.from(0, ContractAddress.from(81, 0), "CIS2-NFT", "mint", emptyArray);
         AccountTransaction tx = TransactionFactory
-                .newUpdateContract(updateContractPayload,UInt64.from(3000))
+                .newUpdateContract(updateContractPayload, UInt64.from(3000))
                 .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
                 .nonce(Nonce.from(78910))
                 .expiry(Expiry.from(123456))
@@ -50,5 +52,26 @@ public class UpdateContractTest {
 
         val blockItemHash = tx.getHash();
         assertEquals("0a869928f2491d0652a708eac0231582e24c0cc036481f209862147856531d20", blockItemHash.asHex());
+    }
+
+    @SneakyThrows
+    @Test
+    public void testUpdateContractPayloadSerialization() {
+        UpdateContract updateContractPayload = UpdateContract.from(
+                1,
+                ContractAddress.from(81, 0),
+                "CIS2-NFT",
+                "mint",
+                new byte[]{1, 2, 3}
+        );
+        val expectedHex = "02000000000000000100000000000000510000000000000000000d434953322d4e46542e6d696e740003010203";
+        assertEquals(
+                expectedHex,
+                Hex.encodeHexString(updateContractPayload.getBytes())
+        );
+        assertEquals(
+                updateContractPayload,
+                Payload.fromBytes(ByteBuffer.wrap(Hex.decodeHex(expectedHex)))
+        );
     }
 }

@@ -74,4 +74,11 @@ public final class Parameter {
      * @return converted {@link Parameter}.
      */
     public static Parameter from(SchemaParameter param)  {return from(param.toBytes());}
+
+    public static Parameter fromBytes(ByteBuffer source) {
+        val length = UInt16.fromBytes(source);
+        val bytes = new byte[length.getValue()];
+        source.get(bytes);
+        return new Parameter(bytes);
+    }
 }

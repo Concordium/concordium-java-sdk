@@ -135,8 +135,7 @@ public final class UpdateContract extends Payload {
         val amount = CCDAmount.fromBytes(source);
         val contractAddress = ContractAddress.from(source);
         val receiveName = ReceiveName.from(source);
-        byte[] parameterBuffer = new byte[source.remaining()];
-        source.get(parameterBuffer);
-        return UpdateContract.from(amount, contractAddress, receiveName, Parameter.from(parameterBuffer));
+        val parameter = Parameter.fromBytes(source);
+        return UpdateContract.from(amount, contractAddress, receiveName, parameter);
     }
 }
