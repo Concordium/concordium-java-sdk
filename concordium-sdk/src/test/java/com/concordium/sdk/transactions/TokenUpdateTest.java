@@ -233,7 +233,7 @@ public class TokenUpdateTest {
     @SneakyThrows
     public void testTokenUpdateMintTransactionEnergy() {
         Assert.assertEquals(
-                UInt64.from("692"),
+                UInt64.from("642"),
                 TransactionFactory
                         .newTokenUpdate(
                                 TokenUpdate

@@ -27,7 +27,7 @@ public class MintTokenOperation implements TokenOperation {
 
     @Override
     public UInt64 getBaseCost() {
-        return UInt64.from(100);
+        return UInt64.from(50);
     }
 
     @Override
