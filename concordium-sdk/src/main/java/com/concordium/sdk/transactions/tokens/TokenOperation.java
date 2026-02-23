@@ -33,6 +33,10 @@ import java.util.List;
         @JsonSubTypes.Type(
                 value = TransferTokenOperation.class,
                 name = TransferTokenOperation.TYPE
+        ),
+        @JsonSubTypes.Type(
+                value = MintTokenOperation.class,
+                name = MintTokenOperation.TYPE
         )
 })
 public interface TokenOperation {

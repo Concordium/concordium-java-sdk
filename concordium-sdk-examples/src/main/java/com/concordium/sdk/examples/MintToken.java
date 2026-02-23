@@ -2,15 +2,12 @@ package com.concordium.sdk.examples;
 
 import com.concordium.sdk.ClientV2;
 import com.concordium.sdk.Connection;
-import com.concordium.sdk.TLSConfig;
 import com.concordium.sdk.crypto.ed25519.ED25519SecretKey;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.AccountQuery;
 import com.concordium.sdk.requests.BlockQuery;
 import com.concordium.sdk.responses.blockitemstatus.FinalizedBlockItem;
 import com.concordium.sdk.transactions.*;
-import com.concordium.sdk.transactions.tokens.CborMemo;
-import com.concordium.sdk.transactions.tokens.TaggedTokenHolderAccount;
 import com.concordium.sdk.transactions.tokens.TokenOperationAmount;
 import com.concordium.sdk.transactions.tokens.MintTokenOperation;
 import com.concordium.sdk.types.AccountAddress;
@@ -30,7 +27,7 @@ public class MintToken implements Callable<Integer> {
     @Option(
             names = {"--endpoint"},
             description = "GRPC interface of the node.",
-            defaultValue = "https://grpc.devnet-plt-beta.concordium.com:20000")
+            defaultValue = "https://127.0.0.1:7000")
     private String endpoint;
 
     @Option(
@@ -46,22 +43,24 @@ public class MintToken implements Callable<Integer> {
         Connection connection = Connection.newBuilder()
                 .host(endpointUrl.getHost())
                 .port(endpointUrl.getPort())
-                .useTLS(TLSConfig.auto())
+                //.useTLS(TLSConfig.auto()) //update this as necessary if using tls or not
                 .build();
 
-        String tokenSymbol = "TestTokenSDK";
+        String tokenSymbol = "RRR10"; // Replace this with the appropriate token symbol in your node
         TokenOperationAmount amount = new TokenOperationAmount(
-                new BigDecimal("10"),
-                10
+                new BigDecimal("1"),
+                6 //ensure the decimal precision here matches the value of the decimal during token creation
         );
 
-        AccountAddress sender = AccountAddress.from("49jjCXb13jWeXjHmb4k5wLHz6VGzxmWijua5VV99keQCo2uMdU");
+        //use an address valid in the node being used
+        AccountAddress sender = AccountAddress.from("4FbFhx5C5XaSUKdnTdrRVbtNW6rtgYYdKRJtggYGBSiktiymsX");
         Expiry expiry = Expiry.createNew().addMinutes(5);
 
+        //replace with a valid sign key value from the accounts of the node being used
         TransactionSigner signer = TransactionSigner.from(
                 SignerEntry.from(Index.from(0), Index.from(0),
                         ED25519SecretKey
-                                .from("0ee537b1eb7108a54dce9e506c3316e500c1c9997d3e83c8245cdd5fc326290f")));
+                                .from("b4cef1510079ba946c093826d3cf9cdd3132fa9dd8aaaf9c01442bf12d6614fd")));
 
         var client = ClientV2.from(connection);
         var senderInfo = client.getAccountInfo(BlockQuery.BEST, AccountQuery.from(sender));
