@@ -1,7 +1,8 @@
 # Changelog
 
-## 12.1.0
-
+## Unreleased
+- Added `MintTokenOperation` implementing protocol level token mint
+- Added protocol level token mint example, see `MintToken` in `concordium-sdk-examples`
 - Added deserialization for the `ConfigureDelegation` payload
 - Fixed incorrect deserialization of the `UpdateContract` payload parameter
 

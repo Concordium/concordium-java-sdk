@@ -1,9 +1,6 @@
 package com.concordium.sdk.transactions;
 
-import com.concordium.sdk.transactions.tokens.CborMemo;
-import com.concordium.sdk.transactions.tokens.TaggedTokenHolderAccount;
-import com.concordium.sdk.transactions.tokens.TokenOperationAmount;
-import com.concordium.sdk.transactions.tokens.TransferTokenOperation;
+import com.concordium.sdk.transactions.tokens.*;
 import com.concordium.sdk.types.AccountAddress;
 import com.concordium.sdk.types.Nonce;
 import com.concordium.sdk.types.UInt64;
@@ -230,4 +227,38 @@ public class TokenUpdateTest {
                 TokenUpdate.fromBytes(ByteBuffer.wrap(Hex.decode(expectedHex)))
         );
     }
+
+
+    @Test
+    @SneakyThrows
+    public void testTokenUpdateMintTransactionEnergy() {
+        Assert.assertEquals(
+                UInt64.from("642"),
+                TransactionFactory
+                        .newTokenUpdate(
+                                TokenUpdate
+                                        .builder()
+                                        .tokenSymbol("TEST")
+                                        .operation(
+                                                MintTokenOperation
+                                                        .builder()
+                                                        .amount(
+                                                                new TokenOperationAmount(
+                                                                        new BigDecimal("1.5"),
+                                                                        2
+                                                                )
+                                                        )
+                                                        .build()
+                                        )
+                                        .build()
+                        )
+                        .sender(AccountAddress.from("3JwD2Wm3nMbsowCwb1iGEpnt47UQgdrtnq2qT6opJc3z2AgCrc"))
+                        .nonce(Nonce.from(78910))
+                        .expiry(Expiry.from(123456))
+                        .sign(TransactionTestHelper.getValidSigner())
+                        .getHeader()
+                        .getMaxEnergyCost()
+        );
+    }
+
 }
