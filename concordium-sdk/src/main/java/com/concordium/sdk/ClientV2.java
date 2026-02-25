@@ -745,6 +745,18 @@ public final class ClientV2 {
     }
 
     /**
+     * Get list of protocol-level token (PLT) IDs at the end of the given block.
+     *
+     * @param input {@link BlockQuery}.
+     * @return {@link Iterator} of token ID strings.
+     */
+    public Iterator<String> getTokenList(BlockQuery input) {
+        val grpcOutput = this.server().getTokenList(to(input));
+
+        return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
      * Shut down the node. Return a GRPC error if the shutdown failed.
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")

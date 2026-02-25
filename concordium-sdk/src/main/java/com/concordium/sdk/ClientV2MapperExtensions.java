@@ -25,6 +25,7 @@ import com.concordium.grpc.v2.NextUpdateSequenceNumbers;
 import com.concordium.grpc.v2.Policy;
 import com.concordium.grpc.v2.ProtocolVersion;
 import com.concordium.grpc.v2.ReleaseSchedule;
+import com.concordium.grpc.v2.plt.TokenId;
 import com.concordium.sdk.crypto.bls.BLSPublicKey;
 import com.concordium.sdk.crypto.bulletproof.BulletproofGenerators;
 import com.concordium.sdk.crypto.ed25519.ED25519PublicKey;
@@ -968,6 +969,10 @@ interface ClientV2MapperExtensions {
 
     static com.concordium.sdk.responses.modulelist.ModuleRef to(ModuleRef moduleRef) {
         return com.concordium.sdk.responses.modulelist.ModuleRef.from(moduleRef.getValue().toByteArray());
+    }
+
+    static String to(TokenId tokenId) {
+        return tokenId.getValue();
     }
 
     static com.concordium.sdk.transactions.Memo to(Memo memo) {
