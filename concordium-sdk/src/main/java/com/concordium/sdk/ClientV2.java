@@ -757,6 +757,11 @@ public final class ClientV2 {
         return to(grpcOutput, ClientV2MapperExtensions::to);
     }
 
+    /**
+     * Given a token ID, return back more detailed information about the token
+     * @param tokenId
+     * @return
+     */
     public com.concordium.sdk.responses.token.TokenInfo getTokenInfo(String tokenId) {
         TokenInfoRequest tokenInfoRequest =
                 TokenInfoRequest.newBuilder()
