@@ -1,6 +1,7 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
+import com.concordium.grpc.v2.plt.TokenId;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.*;
 import com.concordium.sdk.requests.ConsensusDetailedStatusQuery;
@@ -755,6 +756,19 @@ public final class ClientV2 {
 
         return to(grpcOutput, ClientV2MapperExtensions::to);
     }
+
+    public com.concordium.sdk.responses.token.TokenInfo getTokenInfo(String tokenId) {
+        TokenInfoRequest tokenInfoRequest =
+                TokenInfoRequest.newBuilder()
+                        .setTokenId(TokenId.newBuilder().setValue(tokenId).build())
+                        .setBlockHash(to(BlockQuery.BEST))
+                        .build();
+
+        val grpcOutput = this.server().getTokenInfo(tokenInfoRequest);
+
+        return ClientV2MapperExtensions.to(grpcOutput);
+    }
+
 
     /**
      * Shut down the node. Return a GRPC error if the shutdown failed.

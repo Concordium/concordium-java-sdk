@@ -79,6 +79,9 @@ import com.concordium.sdk.responses.poolstatus.PendingChangeReduceBakerCapital;
 import com.concordium.sdk.responses.poolstatus.PendingChangeRemovePool;
 import com.concordium.sdk.responses.rewardstatus.RewardsOverview;
 import com.concordium.sdk.responses.smartcontracts.ContractVersion;
+import com.concordium.sdk.responses.token.TokenModuleState;
+import com.concordium.sdk.responses.token.TokenState;
+import com.concordium.sdk.responses.token.TokenTotalSupply;
 import com.concordium.sdk.responses.transactionstatus.DelegationTarget;
 import com.concordium.sdk.responses.transactionstatus.PartsPerHundredThousand;
 import com.concordium.sdk.transactions.*;
@@ -973,6 +976,19 @@ interface ClientV2MapperExtensions {
 
     static String to(TokenId tokenId) {
         return tokenId.getValue();
+    }
+
+    static com.concordium.sdk.responses.token.TokenInfo to(TokenInfo info) {
+        return com.concordium.sdk.responses.token.TokenInfo.builder()
+                .tokenId(info.getTokenId().getValue())
+                .tokenState(TokenState.builder()
+                        .totalSupply(
+                                TokenTotalSupply.builder()
+                                        .decimals(info.getTokenState().getTotalSupply().getDecimals())
+                                        .value(info.getTokenState().getTotalSupply().getValue())
+                                        .build()
+                        ).build())
+                .build();
     }
 
     static com.concordium.sdk.transactions.Memo to(Memo memo) {
