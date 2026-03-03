@@ -5,6 +5,7 @@
 - Added protocol level token mint example, see `MintToken` in `concordium-sdk-examples`
 - Added deserialization for the `ConfigureDelegation` payload
 - Fixed incorrect deserialization of the `UpdateContract` payload parameter
+- Fixed inability to create verifiable presentations (proofs) with certain order of statements
 
 ## 12.0.0
 
