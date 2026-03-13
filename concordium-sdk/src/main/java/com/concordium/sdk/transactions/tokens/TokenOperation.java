@@ -37,6 +37,10 @@ import java.util.List;
         @JsonSubTypes.Type(
                 value = MintTokenOperation.class,
                 name = MintTokenOperation.TYPE
+        ),
+        @JsonSubTypes.Type(
+                value = AssignAdminRolesTokenOperation.class,
+                name = AssignAdminRolesTokenOperation.TYPE
         )
 })
 public interface TokenOperation {
@@ -53,9 +57,6 @@ public interface TokenOperation {
     @JsonIgnore
     UInt64 getBaseCost();
 
-    TypeReference<List<TokenOperation>> LIST_TYPE =
-            new TypeReference<List<TokenOperation>>() {
-                // TypeReference is needed as Java erases types from generics
-                // leaving the deserializer clueless about the TokenOperation hierarchy.
-            };
+    TypeReference<List<TokenOperation>> LIST_TYPE = new TypeReference<List<TokenOperation>>() {
+    };
 }
