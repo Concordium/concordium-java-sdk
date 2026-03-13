@@ -36,7 +36,6 @@ public enum TokenAdminRole {
         throw new IllegalArgumentException("Unsupported TokenAdminRole: " + identifier);
     }
 
-    public static final TypeReference<List<TokenAdminRole>> LIST_TYPE =
-            new TypeReference<List<TokenAdminRole>>() {
-            };
+    public static final TypeReference<List<TokenAdminRole>> LIST_TYPE = new TypeReference<List<TokenAdminRole>>() {
+    };
 }
