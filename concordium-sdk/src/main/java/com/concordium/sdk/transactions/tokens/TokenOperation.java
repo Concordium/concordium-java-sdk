@@ -41,6 +41,10 @@ import java.util.List;
         @JsonSubTypes.Type(
                 value = AssignAdminRolesTokenOperation.class,
                 name = AssignAdminRolesTokenOperation.TYPE
+        ),
+        @JsonSubTypes.Type(
+                value = RevokeAdminRolesTokenOperation.class,
+                name = RevokeAdminRolesTokenOperation.TYPE
         )
 })
 public interface TokenOperation {
