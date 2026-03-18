@@ -41,6 +41,10 @@ public enum ProtocolVersion {
      * <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P10.txt">Protocol Version: 10</a>
      */
     V10,
+    /**
+     * <a href="https://github.com/Concordium/concordium-update-proposals/blob/main/updates/P11.txt">Protocol Version: 11</a>
+     */
+    V11,
     ;
 
     /**
@@ -71,6 +75,8 @@ public enum ProtocolVersion {
                 return V9;
             case PROTOCOL_VERSION_10:
                 return V10;
+            case PROTOCOL_VERSION_11:
+                return V11;
             default:
                 throw new IllegalArgumentException("Unrecognized protocol version " + protocolVersion);
         }
