@@ -1,13 +1,14 @@
 package com.concordium.sdk.transactions.tokens;
 
+import com.concordium.sdk.transactions.Hash;
 import com.concordium.sdk.types.UInt64;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
- * Revoke admin role(s) from an account.
+ * Update the token metadata of a token.
  * Supported from protocol version 11.
  */
 @Getter
@@ -16,19 +17,22 @@ import java.util.List;
 @ToString
 // This is for CBOR serialization to use the generated builder.
 @Jacksonized
-public class RevokeAdminRolesTokenOperation implements TokenOperation {
+public class UpdateMetadataTokenOperation implements TokenOperation {
 
     /**
-     * The account to revoke roles from.
+     * Metadata JSON URL.
      */
     @NonNull
-    private final TaggedTokenHolderAccount account;
+    private final String url;
 
     /**
-     * The roles to revoke.
+     * An optional 32 byte SHA-256 checksum of the metadata JSON.
      */
-    @NonNull
-    private final List<TokenAdminRole> roles;
+    private final Hash checksumSha256;
+
+    public Optional<Hash> getChecksumSha256() {
+        return Optional.ofNullable(checksumSha256);
+    }
 
     @Override
     public UInt64 getBaseCost() {
@@ -41,5 +45,5 @@ public class RevokeAdminRolesTokenOperation implements TokenOperation {
         return TYPE;
     }
 
-    public static final String TYPE = "revokeAdminRoles";
+    public static final String TYPE = "updateMetadata";
 }

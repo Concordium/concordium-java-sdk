@@ -45,6 +45,10 @@ import java.util.List;
         @JsonSubTypes.Type(
                 value = RevokeAdminRolesTokenOperation.class,
                 name = RevokeAdminRolesTokenOperation.TYPE
+        ),
+        @JsonSubTypes.Type(
+                value = UpdateMetadataTokenOperation.class,
+                name = UpdateMetadataTokenOperation.TYPE
         )
 })
 public interface TokenOperation {
