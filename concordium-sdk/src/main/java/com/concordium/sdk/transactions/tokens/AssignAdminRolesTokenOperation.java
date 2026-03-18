@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Assign admin role(s) to an account.
+ * Supported from protocol version 11.
  */
 @Getter
 @Builder

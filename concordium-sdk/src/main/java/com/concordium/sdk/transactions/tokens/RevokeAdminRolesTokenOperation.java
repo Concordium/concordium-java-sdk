@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Revoke admin role(s) from an account.
+ * Supported from protocol version 11.
  */
 @Getter
 @Builder
