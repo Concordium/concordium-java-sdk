@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Support for Protocol 11
+- Added `ProtocolVersion.V11` corresponding to Protocol version 11
+- Added `getTokenList` endpoint for querying the list of protocol level tokens
+- Added `getTokenAuthorizations` endpoint for querying authorizations of a given token
+- Added `UpdateMetadataTokenOperation` updating the metadata of a given token
+- Added `TokenAdminRole` enum holding admin roles defined for the current token module implementation
+- Added `AssignAdminRolesTokenOperation` and `RevokeAdminRolesTokenOperation` managing admin roles
+  of a given account for a given token
+
 ## 12.1.0
 
 - Added `MintTokenOperation` implementing protocol level token mint
