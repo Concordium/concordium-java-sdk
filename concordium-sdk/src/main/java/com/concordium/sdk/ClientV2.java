@@ -1,6 +1,8 @@
 package com.concordium.sdk;
 
 import com.concordium.grpc.v2.*;
+import com.concordium.grpc.v2.plt.TokenAuthorizations;
+import com.concordium.grpc.v2.plt.TokenId;
 import com.concordium.sdk.exceptions.ClientInitializationException;
 import com.concordium.sdk.requests.*;
 import com.concordium.sdk.requests.ConsensusDetailedStatusQuery;
@@ -290,6 +292,21 @@ public final class ClientV2 {
     public Iterator<AccountIndex> getPrePreCooldownAccounts(BlockQuery input) {
         val grpcOutput = this.server().getPrePreCooldownAccounts(to(input));
         return to(grpcOutput, ClientV2MapperExtensions::to);
+    }
+
+    /**
+     * Get the list of protocol level tokens that exist
+     * at the end of the given block.
+     */
+    public Iterator<TokenId> getTokenList(BlockQuery input) {
+        return this.server().getTokenList(to(input));
+    }
+
+    /**
+     * Get the authorizations of a given token in the given block.
+     */
+    public TokenAuthorizations getTokenAuthorizations(TokenAuthorizationsRequest input) {
+        return this.server().getTokenAuthorizations(input);
     }
 
     /**
